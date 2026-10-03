@@ -1,0 +1,9 @@
+modLoader="javafml"
+loaderVersion="[1,)"
+license="MIT"
+
+[[mods]]
+modId="shaderlod_dev"
+version="0.1.0"
+displayName="ShaderLOD Development Harness"
+description="Local opt-in world and screenshot smoke test. Never bundled in the mod jar."

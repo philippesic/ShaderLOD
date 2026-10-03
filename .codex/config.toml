@@ -1,0 +1,13 @@
+# Repository-specific behavior only; inherit the user's model and limits.
+[features]
+hooks = true
+
+[[hooks.SessionStart]]
+matcher = "^(startup|resume|compact)$"
+
+[[hooks.SessionStart.hooks]]
+type = "command"
+command = '/usr/bin/python3 "$(git rev-parse --show-toplevel)/.codex/hooks/compaction_handoff.py"'
+timeout = 10
+additionalContextLimit = 1800
+statusMessage = "Loading ShaderLOD goal checkpoint"

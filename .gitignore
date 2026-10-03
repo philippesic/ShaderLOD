@@ -1,0 +1,14 @@
+.gradle/
+build/
+run/
+run-iris/
+dev/runtime/
+dev/upstream/
+dev/logs/
+dev/runtime-doctor.json
+.idea/
+*.iml
+.DS_Store
+__pycache__/
+*.pyc
+.venv/

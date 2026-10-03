@@ -1,0 +1,4 @@
+interface:
+  display_name: "Start Goal Team"
+  short_description: "Coordinate a ShaderLOD goal and scoped agents"
+  default_prompt: "Use $start-goal-team to turn this request into a ShaderLOD goal and coordinate the right agents."

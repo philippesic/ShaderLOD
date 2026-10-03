@@ -1,0 +1,96 @@
+{
+  "schema": 1,
+  "base_version": "v1.3b",
+  "patches": [
+    {
+      "path": "shaders/settings.glsl",
+      "source_sha256": "93401d268fe859cc1df81929ad41156757a98db80f80cf32af80d9cdca96c394",
+      "before": "const int noiseTextureResolution = 512;",
+      "after": "// ShaderLOD options (mod bridge falls back to these when ShaderLOD is absent).\n  #define SHADERLOD_ENABLED\n  #define SHADERLOD_USE_MOD_CONFIG\n  #define SHADERLOD_NEAR 32.0 // [16.0 24.0 32.0 48.0 64.0]\n  #define SHADERLOD_FAR 96.0 // [48.0 64.0 96.0 128.0 192.0 256.0]\n  #define SHADERLOD_TRANSITION 8.0 // [0.0 4.0 8.0 16.0 24.0 32.0]\n//#define SHADERLOD_DEBUG\n\nconst int noiseTextureResolution = 512;"
+    },
+    {
+      "path": "shaders/shaders.properties",
+      "source_sha256": "f8cc8df60f930612e8817e4176a34886c1a9de778c15427a5468ecbc4f71ee9a",
+      "before": "screen              = INFO <profile> <empty> <empty> [world] [lighting] [sky] [fog] [materials] [water] [post] [misc]",
+      "after": "screen              = INFO <profile> <empty> <empty> [world] [lighting] [sky] [fog] [materials] [water] [post] [misc] [shaderlod]\nscreen.shaderlod = SHADERLOD_ENABLED SHADERLOD_USE_MOD_CONFIG SHADERLOD_NEAR SHADERLOD_FAR SHADERLOD_TRANSITION SHADERLOD_DEBUG"
+    },
+    {
+      "path": "shaders/lang/en_US.lang",
+      "source_sha256": "fa0dad5cf1048c70532d562eb3ac3f0c2739aa81e7bedc29fce049a6c45809f8",
+      "before": "# Profiles",
+      "after": "# ShaderLOD\nscreen.shaderlod = ShaderLOD\noption.SHADERLOD_ENABLED = Distance LOD\noption.SHADERLOD_ENABLED.comment = Reduce opaque vanilla terrain shadow filtering with distance.\noption.SHADERLOD_USE_MOD_CONFIG = Use ShaderLOD mod config\noption.SHADERLOD_USE_MOD_CONFIG.comment = Use live mod values when bridge version 1 is available; otherwise use these options.\noption.SHADERLOD_NEAR = Near boundary (blocks)\noption.SHADERLOD_FAR = Far boundary (blocks)\noption.SHADERLOD_TRANSITION = Transition width (blocks)\noption.SHADERLOD_DEBUG = Show LOD zones\noption.SHADERLOD_DEBUG.comment = Tint opaque vanilla terrain green/full, amber/medium, red/far. Excludes DH and hand.\n\n# Profiles"
+    },
+    {
+      "path": "shaders/include/lighting/shadows/pcss.glsl",
+      "source_sha256": "c12e98fa923306687bfa5ac2b00214d45b1614ebafb719e22839f3420750a76b",
+      "before": "    float penumbra_size,\n    float dither\n) {",
+      "after": "    float penumbra_size,\n    float dither,\n    int shaderlod_quality\n) {"
+    },
+    {
+      "path": "shaders/include/lighting/shadows/pcss.glsl",
+      "source_sha256": "c12e98fa923306687bfa5ac2b00214d45b1614ebafb719e22839f3420750a76b",
+      "before": "    step_count = min(step_count, SHADOW_PCF_STEPS_MAX);",
+      "after": "    step_count = min(step_count, SHADOW_PCF_STEPS_MAX);\n    // Keep Photon's near work; cap only the expensive PCF operation at distance.\n    if (shaderlod_quality == 1) step_count = min(step_count, 4);\n    if (shaderlod_quality == 2) step_count = 1;\n    int initial_steps = min(4, step_count);"
+    },
+    {
+      "path": "shaders/include/lighting/shadows/pcss.glsl",
+      "source_sha256": "c12e98fa923306687bfa5ac2b00214d45b1614ebafb719e22839f3420750a76b",
+      "before": "    // perform first 4 iterations and filter shadow color\n    for (int i = 0; i < 4; ++i) {\n        vec2 offset =\n            vogel_disc_sample(i, step_count, dither * tau) * filter_radius;",
+      "after": "    // Filter color with the actual sample budget; one far sample is centered.\n    for (int i = 0; i < initial_steps; ++i) {\n        vec2 offset = step_count == 1 ? vec2(0.0) :\n            vogel_disc_sample(i, step_count, dither * tau) * filter_radius;"
+    },
+    {
+      "path": "shaders/include/lighting/shadows/pcss.glsl",
+      "source_sha256": "c12e98fa923306687bfa5ac2b00214d45b1614ebafb719e22839f3420750a76b",
+      "before": "    if (shadow > 4.0 - eps) {",
+      "after": "    if (shadow > float(initial_steps) - eps) {"
+    },
+    {
+      "path": "shaders/include/lighting/shadows/pcss.glsl",
+      "source_sha256": "c12e98fa923306687bfa5ac2b00214d45b1614ebafb719e22839f3420750a76b",
+      "before": "    for (int i = 4; i < step_count; ++i) {",
+      "after": "    for (int i = initial_steps; i < step_count; ++i) {"
+    },
+    {
+      "path": "shaders/include/lighting/shadows/pcss.glsl",
+      "source_sha256": "c12e98fa923306687bfa5ac2b00214d45b1614ebafb719e22839f3420750a76b",
+      "before": "    inout float distance_fade,\n    inout float sss_depth\n) {",
+      "after": "    inout float distance_fade,\n    inout float sss_depth,\n    int shaderlod_quality\n) {"
+    },
+    {
+      "path": "shaders/include/lighting/shadows/pcss.glsl",
+      "source_sha256": "c12e98fa923306687bfa5ac2b00214d45b1614ebafb719e22839f3420750a76b",
+      "before": "        penumbra_size,\n        dither\n    );",
+      "after": "        penumbra_size,\n        dither,\n        shaderlod_quality\n    );"
+    },
+    {
+      "path": "shaders/program/d4_deferred_shading.fsh",
+      "source_sha256": "212081e707c20c78e17cbfd3380b2f22eb696cc1aa14bdf006c07d59f53f67e0",
+      "before": "#include \"/include/misc/lod_mod_support.glsl\"",
+      "after": "#include \"/include/misc/lod_mod_support.glsl\"\n#include \"/include/shaderlod/lod.glsl\""
+    },
+    {
+      "path": "shaders/program/d4_deferred_shading.fsh",
+      "source_sha256": "212081e707c20c78e17cbfd3380b2f22eb696cc1aa14bdf006c07d59f53f67e0",
+      "before": "    vec3 position_world = position_scene + cameraPosition;",
+      "after": "    vec3 position_world = position_scene + cameraPosition;\n    // DH/other coarse geometry and the hand retain upstream shadow behavior.\n    int shaderlod_quality = (is_lod || is_hand) ? 0 : shaderlod_tier(\n        length(position_view), shaderlod_noise(gl_FragCoord.xy, float(frameCounter))\n    );"
+    },
+    {
+      "path": "shaders/program/d4_deferred_shading.fsh",
+      "source_sha256": "212081e707c20c78e17cbfd3380b2f22eb696cc1aa14bdf006c07d59f53f67e0",
+      "before": "                shadow_distance_fade,\n                sss_depth_near\n            );",
+      "after": "                shadow_distance_fade,\n                sss_depth_near,\n                shaderlod_quality\n            );"
+    },
+    {
+      "path": "shaders/program/d4_deferred_shading.fsh",
+      "source_sha256": "212081e707c20c78e17cbfd3380b2f22eb696cc1aa14bdf006c07d59f53f67e0",
+      "before": "        fragment_color = purkinje_shift(fragment_color, light_levels);",
+      "after": "        fragment_color = purkinje_shift(fragment_color, light_levels);\n        if (shaderlod_debug_enabled() && !is_lod && !is_hand) {\n            fragment_color = mix(fragment_color, shaderlod_debug_color(shaderlod_quality), 0.7);\n        }"
+    },
+    {
+      "path": "shaders/program/gbuffers_all_translucent.fsh",
+      "source_sha256": "01c04bc017069cf19c319a0a0875ca706554575dd01e291e17cad8565645b82f",
+      "before": "        shadow_distance_fade,\n        sss_depth\n    );",
+      "after": "        shadow_distance_fade,\n        sss_depth,\n        0 // ShaderLOD starts with opaque terrain; preserve translucent shadows.\n    );"
+    }
+  ]
+}
