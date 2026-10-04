@@ -100,3 +100,27 @@ Next: rerun semantic-guarded repeated matrix across minimal and optimized stacks
 then water, terrain lifecycle and optional-DH checks. No new shader integration
 until the evidence gate is met. Original preview PIDs were already stopped when
 this goal began; do not reuse stale process identifiers.
+
+## Live repeated-matrix checkpoint
+
+Source checkpoint: 3f594b2. Corrected matrix `dev/logs/sustained-v3-main` is
+running under unified exec session 11350. Coordinator owns it; do not launch
+another client or compile/change frozen production/shader code until it ends.
+Runner console: `dev/logs/sustained-v3-main-runner.log`. Manifest and per-run
+reports are inside its directory. There are 36 runs (3 blocks, 6 conditions,
+2 stacks), 35-second warmup and 20-second capture. The matrix preserves failures
+and performs paired analysis only after all repeats are complete.
+
+Early results are mixed and are NOT acceptance evidence: first minimal forest
+original/disabled/active were 121.1 / 118.7 / 93.6 FPS; optimized active was 121.7.
+First minimal cloud original/disabled/active were 57.4 / 59.4 / 81.2; optimized
+original/disabled/active were 58.8 / 52.7 / 62.8. Do not discard poor runs or
+promote best ones. Stable loaded shader options, actual camera/radii, versions
+and archive fingerprints are recorded; no pipeline fallback in accepted runs.
+
+A source-only [regression audit](../PHOTON_REGRESSION_AUDIT.md) proposes atmosphere,
+analytic-normal and distance-band isolation using preserved candidate archives.
+It establishes no culprit. Next continuation: wait for matrix completion,
+inspect paired distributions and screenshots, then run targeted isolation/water
+rather than adding more optimizations blindly. Photon performance gate and new
+shader support remain pending. Native goal stays active.
