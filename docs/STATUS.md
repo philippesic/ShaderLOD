@@ -2,8 +2,11 @@
 
 Updated: 2026-10-04.
 
-No active project goal. Completed: [Full-frame rendering proof](goals/full-frame-proof.md).
-The final comparison remains open for user inspection. Evidence and limitations
+Active goal: [Sustained performance and compatibility](goals/sustained-performance.md).
+The user authorized ongoing team development, Photon first, benchmarks with
+optional performance mods, and additional shaders after repeatable Photon gains.
+Previous completed goal: [Full-frame rendering proof](goals/full-frame-proof.md).
+The previous comparison remains open pending exclusive benchmarks. Evidence and limitations
 are in [FULL_FRAME_PROOF.md](FULL_FRAME_PROOF.md).
 
 ## Current result

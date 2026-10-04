@@ -1,0 +1,245 @@
+{
+  "schema": 1,
+  "checked_on": "2026-10-04",
+  "minecraft": "1.21.1",
+  "neoforge": "21.1.253",
+  "java": 21,
+  "runtime_lock": "dev/runtime.lock.json",
+  "destination": "dev/runtime/performance",
+  "validation": "Artifact integrity, NeoForge/MC metadata and bytecode inspection only; startup/rendering/benchmarks pending.",
+  "stacks": {
+    "minimal": [],
+    "optimized": [
+      "modernfix",
+      "ferritecore",
+      "immediatelyfast"
+    ],
+    "optimized-culling": [
+      "modernfix",
+      "ferritecore",
+      "immediatelyfast",
+      "entityculling"
+    ]
+  },
+  "artifacts": {
+    "modernfix": {
+      "filename": "modernfix-neoforge-5.27.24+mc1.21.1.jar",
+      "url": "https://cdn.modrinth.com/data/nmDcB62a/versions/5HLHxQ2F/modernfix-neoforge-5.27.24%2Bmc1.21.1.jar",
+      "size": 604333,
+      "hashes": {
+        "sha1": "1fe7f8b4176e86507cc8ed5460b6acdd3dac5529",
+        "sha512": "da13fa15b2c96a74a7d5f8ea94ea404c96237b97d52c9a77e7e34ac918d28c40760a68cf3897691b317d5119ab9b85035142c3624108b13dda3516c340b96131",
+        "sha256": "e6e9446890f0feb3aab3f6e73ae18cb17575c370f232179fef7baa30e61538fe"
+      },
+      "project_id": "nmDcB62a",
+      "project_url": "https://modrinth.com/mod/modernfix",
+      "source_url": "https://github.com/embeddedt/ModernFix",
+      "version_id": "5HLHxQ2F",
+      "version": "5.27.24+mc1.21.1",
+      "published": "2026-08-31T02:33:40.455998Z",
+      "loaders": [
+        "neoforge"
+      ],
+      "game_versions": [
+        "1.21.1"
+      ],
+      "license": {
+        "id": "LGPL-3.0-only",
+        "name": "GNU Lesser General Public License v3.0 only",
+        "url": null
+      },
+      "jar_mod_id": "modernfix",
+      "jar_version": "5.27.24+mc1.21.1",
+      "jar_dependencies": [
+        {
+          "modId": "neoforge",
+          "type": "required",
+          "versionRange": "[21.0.111-beta,)",
+          "ordering": "NONE",
+          "side": "BOTH"
+        },
+        {
+          "modId": "minecraft",
+          "type": "required",
+          "versionRange": "[1.21, 1.22)",
+          "ordering": "NONE",
+          "side": "BOTH"
+        },
+        {
+          "modId": "jei",
+          "type": "optional",
+          "versionRange": "[15.8.0.11,)",
+          "ordering": "NONE",
+          "side": "CLIENT"
+        }
+      ],
+      "embedded_libraries": [],
+      "dependencies": [],
+      "metadata_url": "https://api.modrinth.com/v2/version/5HLHxQ2F"
+    },
+    "ferritecore": {
+      "filename": "ferritecore-7.0.3-neoforge.jar",
+      "url": "https://cdn.modrinth.com/data/uXXizFIs/versions/x7kQWVju/ferritecore-7.0.3-neoforge.jar",
+      "size": 121559,
+      "hashes": {
+        "sha512": "19af89a2075bb10a63884fa853ebf84b02c79dc3242430ecdad056fd764fdcde367a7303276b329df01b0736e2ef264c5d80c7dc92c6aebd244f556a230bb417",
+        "sha1": "9563692efb708b6b568df27a01ec52f6311928ef",
+        "sha256": "d87ea28262715ebff45b8a82d493e6b468e7a4521bc021df5d88302196d030a8"
+      },
+      "project_id": "uXXizFIs",
+      "project_url": "https://modrinth.com/mod/ferrite-core",
+      "source_url": "https://github.com/malte0811/FerriteCore",
+      "version_id": "x7kQWVju",
+      "version": "7.0.3-neoforge",
+      "published": "2026-01-25T12:59:45.271417Z",
+      "loaders": [
+        "neoforge"
+      ],
+      "game_versions": [
+        "1.21.1"
+      ],
+      "license": {
+        "id": "MIT",
+        "name": "MIT License",
+        "url": null
+      },
+      "jar_mod_id": "ferritecore",
+      "jar_version": "7.0.3",
+      "jar_dependencies": [
+        {
+          "modId": "neoforge",
+          "type": "required",
+          "versionRange": "[21.1.218,)",
+          "ordering": "NONE",
+          "side": "BOTH"
+        },
+        {
+          "modId": "minecraft",
+          "type": "required",
+          "versionRange": "[1.21.1,1.22)",
+          "ordering": "NONE",
+          "side": "BOTH"
+        }
+      ],
+      "embedded_libraries": [],
+      "dependencies": [],
+      "metadata_url": "https://api.modrinth.com/v2/version/x7kQWVju"
+    },
+    "immediatelyfast": {
+      "filename": "ImmediatelyFast-NeoForge-1.6.14+1.21.1.jar",
+      "url": "https://cdn.modrinth.com/data/5ZwdcRci/versions/OUpXxw4n/ImmediatelyFast-NeoForge-1.6.14%2B1.21.1.jar",
+      "size": 365195,
+      "hashes": {
+        "sha1": "fee59af2f39c66d09c4c09f441c799e76af70f97",
+        "sha512": "7d1c2e6ce306f4bb9aa155f64ba87732dc2443d57fde249467a99e0ed90fec89a706252888b97f882efbc55d6044971519db704125f27ae53cd9ae40424f9b2c",
+        "sha256": "15bf9bd6d8e3ae8ad35c5a4d90680424b534d9762d698c0a466965afcab5dd78"
+      },
+      "project_id": "5ZwdcRci",
+      "project_url": "https://modrinth.com/mod/immediatelyfast",
+      "source_url": "https://github.com/RaphiMC/ImmediatelyFast",
+      "version_id": "OUpXxw4n",
+      "version": "1.6.14+1.21.1-neoforge",
+      "published": "2026-09-13T22:28:12.689713Z",
+      "loaders": [
+        "neoforge"
+      ],
+      "game_versions": [
+        "1.21",
+        "1.21.1"
+      ],
+      "license": {
+        "id": "LGPL-3.0-or-later",
+        "name": "GNU Lesser General Public License v3.0 or later",
+        "url": null
+      },
+      "jar_mod_id": "immediatelyfast",
+      "jar_version": "1.6.14+1.21.1",
+      "jar_dependencies": [
+        {
+          "modId": "minecraft",
+          "versionRange": "[1.21,1.21.1]",
+          "side": "CLIENT"
+        },
+        {
+          "modId": "neoforge",
+          "versionRange": "[21.0.0,)",
+          "side": "CLIENT"
+        }
+      ],
+      "embedded_libraries": [
+        {
+          "group": "net.lenni0451",
+          "artifact": "Reflect",
+          "version": "1.6.2",
+          "path": "META-INF/jars/Reflect-1.6.2.jar",
+          "sha256": "6351c4f4b717cb12fd0c2db8663fd82d831ad2bb9a426767021107c8f67b446f"
+        }
+      ],
+      "dependencies": [],
+      "metadata_url": "https://api.modrinth.com/v2/version/OUpXxw4n"
+    },
+    "entityculling": {
+      "filename": "entityculling-neoforge-1.11.2-mc1.21.1.jar",
+      "url": "https://cdn.modrinth.com/data/NNAgCjsB/versions/8w8FfUPs/entityculling-neoforge-1.11.2-mc1.21.1.jar",
+      "size": 1510018,
+      "hashes": {
+        "sha1": "2f723582d44b60b41d701a797846eaa45a3fef58",
+        "sha512": "dbb40066796ea54bfe902251ccbe743770e3fa9da555fa762da56b3f0427d4a24d3790a8c224519955185a8d1e17fbad462cd314c3acb998b9fc2c8fec257f7a",
+        "sha256": "3983b981da4a0583c7e58184a8631a23e56cc3b81f4cb53491ca600382879b82"
+      },
+      "project_id": "NNAgCjsB",
+      "project_url": "https://modrinth.com/mod/entityculling",
+      "source_url": "https://github.com/tr7zw/EntityCulling",
+      "version_id": "8w8FfUPs",
+      "version": "1.11.2",
+      "published": "2026-09-21T19:46:52.810258Z",
+      "loaders": [
+        "neoforge"
+      ],
+      "game_versions": [
+        "1.21.1"
+      ],
+      "license": {
+        "id": "LicenseRef-tr7zw-Protective-License",
+        "name": "",
+        "url": "https://github.com/tr7zw/EntityCulling/blob/1.18/LICENSE-EntityCulling"
+      },
+      "jar_mod_id": "entityculling",
+      "jar_version": "1.11.2",
+      "jar_dependencies": [
+        {
+          "modId": "minecraft",
+          "type": "required",
+          "versionRange": "[1.21.1]",
+          "ordering": "NONE",
+          "side": "BOTH"
+        },
+        {
+          "modId": "neoforge",
+          "type": "required",
+          "versionRange": "[20.2,)",
+          "ordering": "NONE",
+          "side": "BOTH"
+        }
+      ],
+      "embedded_libraries": [
+        {
+          "group": "dev.tr7zw",
+          "artifact": "TRansition",
+          "version": "1.0.25-1.21.1-neoforge-SNAPSHOT",
+          "path": "META-INF/jars/TRansition-1.0.25-1.21.1-neoforge-SNAPSHOT.jar",
+          "sha256": "c87bc7e6cfd2eee58d472fbf436a228eb3d037565dd4c6c6de0c143a6d662647"
+        },
+        {
+          "group": "dev.tr7zw",
+          "artifact": "TRender",
+          "version": "1.0.17-1.21.1-neoforge-SNAPSHOT",
+          "path": "META-INF/jars/TRender-1.0.17-1.21.1-neoforge-SNAPSHOT.jar",
+          "sha256": "506484fad73db4bb06a6d51df117062cbf6bace2aca60eee227c10f17b030492"
+        }
+      ],
+      "dependencies": [],
+      "metadata_url": "https://api.modrinth.com/v2/version/8w8FfUPs"
+    }
+  }
+}

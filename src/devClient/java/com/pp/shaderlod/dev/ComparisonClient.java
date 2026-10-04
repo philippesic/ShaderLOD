@@ -32,6 +32,8 @@ final class ComparisonClient {
     private final boolean enabled;
     private boolean opened, configured;
     private int ticks;
+    private int captureTick = -1;
+    private String captureName;
     private long controlModified = -1;
     private BenchmarkSession benchmark;
     private WorkloadSession workload;
@@ -65,7 +67,7 @@ final class ComparisonClient {
         if (!configured) {
             configured = true;
             if (enabled && !ModList.get().isLoaded("shaderlod")) throw new IllegalStateException("LOD client is missing ShaderLOD");
-            if (ModList.get().isLoaded("shaderlod")) {
+            if (ModList.get().isLoaded("shaderlod") && !Boolean.getBoolean("shaderlod.dev.measureWorkload")) {
                 ShaderLodConfig.ENABLED.set(enabled);
                 ShaderLodConfig.PRESET.set(LodPreset.PERFORMANCE);
                 ShaderLodConfig.DEBUG.set(false);
@@ -87,6 +89,11 @@ final class ComparisonClient {
         }
         ++ticks;
         if (ticks % 10 == 0) applyControl();
+        if (ticks == captureTick) {
+            Screenshot.grab(client.gameDirectory, captureName + ".png", client.getMainRenderTarget(),
+                    message -> LOGGER.info("ShaderLOD control capture: {}", message.getString()));
+            captureTick = -1;
+        }
         if (workload != null) workload.tick();
         else if (benchmark != null) benchmark.tick();
         else { GpuTimers.drainSamples(); CpuTimers.drainSamples(); }
@@ -130,6 +137,12 @@ final class ComparisonClient {
             String weather = control.has("weather") ? control.get("weather").getAsString() : "clear";
             if (!List.of("clear", "rain", "thunder").contains(weather)) throw new IllegalArgumentException("Invalid weather");
             if (!Double.isFinite(x + y + z) || !Float.isFinite(yaw + pitch)) throw new IllegalArgumentException("Invalid camera");
+            if (control.has("capture")) {
+                String name = control.get("capture").getAsString();
+                if (!name.matches("[a-zA-Z0-9_-]{1,64}")) throw new IllegalArgumentException("Invalid capture name");
+                captureName = name;
+                captureTick = ticks + 40;
+            }
             if (ModList.get().isLoaded("shaderlod")) {
                 if (control.has("preset")) ShaderLodConfig.PRESET.set(LodPreset.valueOf(control.get("preset").getAsString()));
                 if (control.has("debug")) ShaderLodConfig.DEBUG.set(control.get("debug").getAsBoolean());

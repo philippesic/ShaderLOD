@@ -1,6 +1,7 @@
 package com.pp.shaderlod;
 
 import com.mojang.brigadier.arguments.BoolArgumentType;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import net.irisshaders.iris.Iris;
 import net.irisshaders.iris.api.v0.IrisApi;
 import net.minecraft.client.Minecraft;
@@ -30,6 +31,38 @@ public final class ShaderLodCommands {
                 .executes(context -> status(context.getSource()))
                 .then(Commands.literal("status").executes(context -> status(context.getSource())))
                 .then(presetCommands)
+                .then(Commands.literal("terrain")
+                        .executes(context -> status(context.getSource()))
+                        .then(Commands.literal("enabled").then(Commands.argument("value", BoolArgumentType.bool()).executes(context -> {
+                            boolean value = BoolArgumentType.getBool(context, "value");
+                            ShaderLodConfig.TERRAIN_ENABLED.set(value);
+                            if (!value) GeometryLodController.revokeCurrentScene();
+                            ShaderLodConfig.SPEC.save();
+                            return status(context.getSource());
+                        })))
+                        .then(Commands.literal("cap").then(Commands.argument("chunks", IntegerArgumentType.integer(8, 32)).executes(context -> {
+                            ShaderLodConfig.TERRAIN_VANILLA_CHUNK_CAP.set(IntegerArgumentType.getInteger(context, "chunks"));
+                            GeometryLodController.revokeCurrentScene();
+                            ShaderLodConfig.TERRAIN_WARM_SOURCE_CONFIRMED.set(false);
+                            ShaderLodConfig.SPEC.save();
+                            return status(context.getSource());
+                        })))
+                        .then(Commands.literal("confirm").executes(context -> {
+                            if (!GeometryLodController.confirmCurrentScene()) {
+                                context.getSource().sendFailure(Component.literal("Enable the terrain policy in an active Iris/DH world before confirming inspected coverage."));
+                                return 0;
+                            }
+                            ShaderLodConfig.TERRAIN_WARM_SOURCE_CONFIRMED.set(true);
+                            ShaderLodConfig.SPEC.save();
+                            context.getSource().sendSuccess(() -> Component.literal("Confirmed this inspected DH scene. Warmup still applies; moving to another chunk or height section restores detailed terrain."), false);
+                            return 1;
+                        }))
+                        .then(Commands.literal("revoke").executes(context -> {
+                            GeometryLodController.revokeCurrentScene();
+                            ShaderLodConfig.TERRAIN_WARM_SOURCE_CONFIRMED.set(false);
+                            ShaderLodConfig.SPEC.save();
+                            return status(context.getSource());
+                        })))
                 .then(Commands.literal("enabled")
                         .then(Commands.argument("value", BoolArgumentType.bool()).executes(context -> {
                             ShaderLodConfig.ENABLED.set(BoolArgumentType.getBool(context, "value"));

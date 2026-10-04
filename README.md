@@ -5,8 +5,8 @@ Distance budgets now cover shadow filtering, screen-space shadows, GTAO/SSAO,
 volumetric fog, LPV fog, clouds, SSR, and parallax. Balanced, Performance, and
 Aggressive presets preserve near work and reduce distant sampling. Shadow and
 occlusion budgets are protected by default. Starting terrain boundaries are
-32/96 blocks; cloud bands default to 512/4096 blocks. The measured premium-cloud
-candidate uses 128/1024 blocks with a 64-block transition.
+32/96 blocks; cloud bands default to 128/1024 blocks with a 64-block transition.
+Water uses separate 96/256-block bands and keeps the original near-water path.
 
 Development targets **Minecraft 1.21.1**, chosen for the established NeoForge
 ecosystem. [Version selection](docs/VERSION_SELECTION.md) records the public
@@ -90,6 +90,12 @@ NeoForge values through the pinned Iris uniform bridge. The client config is
 after editing a config file. The ShaderLOD screen in Iris has fallback pack
 options; disable **Use mod config** to use those instead.
 
+NeoForge's Mods menu also exposes a configuration screen. For inspected warmed
+DH scenes, use `/shaderlod terrain enabled true`, `/shaderlod terrain cap 16`,
+then `/shaderlod terrain confirm`. `/shaderlod terrain revoke` restores the
+original effective radius. Moving to another chunk or height section revokes
+confirmation; this remains an experimental opt-in policy.
+
 Build and packaging checks:
 
 ```sh
@@ -97,7 +103,7 @@ Build and packaging checks:
 python3 -m unittest discover -s tests -v
 ```
 
-Install `glslangValidator` to run the 660 fragment-program compilation variants;
+Install `glslangValidator` to run the 792 fragment-program compilation variants;
 that check is skipped when the executable is absent. Iris/OpenGL runtime checks
 are separate. Results and limitations are recorded with the active goal;
 individual pass savings do not imply a proportional whole-frame improvement.
@@ -112,6 +118,9 @@ individual pass savings do not imply a proportional whole-frame improvement.
 - [Complete CPU/GPU investigation and proof](docs/FULL_FRAME_PROOF.md)
 - [Opt-in detailed terrain policy](docs/GEOMETRY_LOD.md)
 - [Controlled high/lower/adaptive workloads](docs/WORKLOADS.md)
+- [Repeated benchmark matrices](docs/REPEATED_BENCHMARKS.md)
+- [Optional performance-mod stacks](docs/PERFORMANCE_STACKS.md)
+- [Photon optimization mechanisms](docs/PHOTON_OPTIMIZATION.md)
 
 Agent roles and checkpoint hooks live in `.codex/`. The repository-local
 `$start-goal-team` skill lives in `.agents/skills/`; it records requested goals

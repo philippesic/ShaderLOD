@@ -138,6 +138,34 @@ int shaderlod_cloud_tier(float distance_blocks, float noise) {
         vec3(near_cloud, far_cloud, transition_cloud));
 }
 
+// Water has longer visible geometric detail than material parallax. These
+// shader options are effect-specific; the mod still supplies enable/preset.
+int shaderlod_water_tier(float distance_blocks, float noise) {
+    float near_water = max(SHADERLOD_WATER_NEAR, 1.0);
+    float far_water = max(SHADERLOD_WATER_FAR, near_water + 1.0);
+    float transition_water = clamp(SHADERLOD_WATER_TRANSITION, 0.0,
+        min(2.0 * near_water, far_water - near_water));
+    return shaderlod_tier_with_distances(distance_blocks, noise,
+        vec3(near_water, far_water, transition_water));
+}
+
+int shaderlod_water_quality_at(float distance_blocks, vec2 pixel, float frame) {
+    if (!shaderlod_enabled()) return 0;
+    return shaderlod_water_tier(distance_blocks, shaderlod_noise(pixel, frame));
+}
+
+// Structural work avoidance, independent of distance quality. Terrain uses
+// this atmosphere value only for border fog or blocky-cloud compositing.
+// The pinned Iris raw 3D LUT has max level/min/max LOD zero, so implicit LOD
+// cannot choose a different level when this call moves behind a pixel branch.
+bool shaderlod_needs_atmosphere(float depth) {
+#if defined BORDER_FOG || defined BLOCKY_CLOUDS
+    return true;
+#else
+    return depth == 1.0 || !shaderlod_enabled();
+#endif
+}
+
 // POM is already limited to a short range; its relative bands must be inside it.
 int shaderlod_material_tier(float distance_blocks, float pom_distance, float noise) {
     return shaderlod_tier_with_distances(distance_blocks, noise,

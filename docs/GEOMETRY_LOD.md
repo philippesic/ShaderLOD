@@ -19,9 +19,15 @@ warmupSeconds = 30
 The main ShaderLOD enable flag must also be true. `vanillaChunkCap` accepts
 8–32 chunks, and warmup accepts 5–120 seconds. Enable the policy only in a world
 whose DH replacement terrain you have inspected and warmed; then set
-`warmSourceConfirmed=true`. The acknowledgement binds to that loaded world /
-dimension instance. A true value carried to another world does not certify its
-cache; clear it and re-confirm after inspecting that scene.
+`warmSourceConfirmed=true`. The acknowledgement binds to the world/dimension instance, Iris pipeline,
+camera entity, current 16-block horizontal chunk and vertical section, requested
+radius, cap and DH distance. A persisted true waits through initial startup and
+warmup before first binding. After activation, crossing a horizontal chunk or
+vertical section boundary, changing the camera/world/pipeline/radius/cap/DH
+distance, or losing readiness revokes it. Returning to the old position does
+not re-enable the cap. Clear `warmSourceConfirmed`, inspect the new replacement
+ring, then set it true again. The 16-block cells limit acknowledged travel;
+they do not prove coverage within a cell.
 
 The main constructor registers the client event handler once:
 
@@ -31,7 +37,12 @@ NeoForge.EVENT_BUS.addListener(GeometryLodController::onClientTick);
 
 `GeometryLodController.status()` exposes active/requested/effective radius,
 configured cap, eligibility reason, API failure detail, and stable/warmup tick
-counts for a HUD or diagnostic command. No new shader uniform or sampler is
+counts for a HUD or diagnostic command. `confirmCurrentScene()` accepts an
+explicit inspected-scene action using cached live eligibility; it re-arms
+acknowledgement without bypassing warmup. The caller sets/saves
+`warmSourceConfirmed=true` on success. `revokeCurrentScene()` restores the
+original effective radius immediately; clearing/saving the flag makes revocation
+persistent. No new shader uniform or sampler is
 required. Geometry can use original Photon while ShaderLOD is loaded; that
 allows a geometry-only comparison with original shadow/AO quality.
 
@@ -62,14 +73,18 @@ At client tick boundaries (nominally 20Hz), the controller requires a loaded
 world, an active Iris shader pipeline with a DH terrain program and initialized
 DH compatibility instance, and public DH API world/config readiness with DH
 rendering enabled. Those checks use the exact pinned Iris seams and cached
-reflection handles for the optional public DH API. The hot getter performs no
+reflection handles for the optional public DH API. DH must use its normal
+`DEFAULT` rendering mode and its configured distance must reach the full
+requested vanilla radius. Debug triangles and shorter DH reach are ineligible.
+The hot getter performs no
 reflection, config reads, allocations, GL calls, or renderer reloads.
 
 A stable world/pipeline/readiness interval must reach the configured warmup.
 Policy/mod disable, DH rendering disable, Iris fallback/failure and unload
 recover the original effective radius by the next client tick. World/dimension
-identity changes also bypass the cap immediately in the getter, before the next
-tick. Null/uninitialized DH API, absent DH, and API linkage failures fail open
+identity and camera-cell changes also bypass the cap immediately in the getter,
+before the next tick. A getter-observed excursion latches revocation even if the
+camera returns between ticks. Null/uninitialized DH API, absent DH, and API linkage failures fail open
 with a diagnostic reason. The code never calls Iris `DHCompat.checkFrame()` or
 `hasRenderingEnabled()` from an Options getter, because those methods can cause
 pipeline reloads.
@@ -77,10 +92,13 @@ pipeline reloads.
 **Readiness is not a cache-coverage proof.** Initialized renderer resources and
 30 seconds elapsed cannot establish that every replacement chunk exists. The
 prototype therefore requires the explicit scene acknowledgement and is intended
-for inspected, warmed scenes. Disable it before exploring uncached areas; a cold
-cache does not become safe merely because DH is installed. Automatic coverage
-verification/recovery while traveling is future work and this feature should not
-be marketed as an automatic universal geometry LOD solution.
+for inspected, warmed scenes. Travel now restores full detailed radius
+conservatively, but movement within a cell, terrain edits, DH mesh-quality
+changes, independent render-cache clearing and third-person camera offsets are
+not automatic coverage proofs or fully detected invalidation events. Disable it
+before exploring uncached areas or changing DH mesh settings. Automatic coverage
+verification/recovery is future work. The exact public API and internal seams
+are audited in [DH_COVERAGE_AUDIT.md](DH_COVERAGE_AUDIT.md).
 
 ## Verification
 
@@ -90,9 +108,10 @@ Static checks:
 ./gradlew compileJava test --console=plain
 ```
 
-Five dependency-free policy tests cover all eligibility guards, exact warmup
+Ten dependency-free policy tests cover all eligibility guards, exact warmup
 boundary, server/manual limits, current-preference restoration, safe cap bounds,
-and acknowledgement isolation across worlds/dimensions. Build success does not
+initial startup eligibility, acknowledgement isolation and latched invalidation,
+negative-coordinate travel boundaries and insufficient DH reach. Build success does not
 establish mixin application, actual DH overlap, or performance.
 
 Required runtime checks: original vanilla24/DH128, simple original
@@ -101,4 +120,9 @@ Record CPU world submission and complete CPU/GPU/frame metrics after settling.
 Toggle policy/mod/DH/shaders off, change worlds/dimensions, edit the manual radius,
 and verify restoration. Inspect cold-cache behavior with confirmation false,
 near objects, distant tree silhouettes/shadows, the boundary and moving water.
-The coordinator records actual client evidence separately.
+Cross a chunk/vertical-section boundary, return without re-acknowledging, switch
+camera entities, reload shaders, reduce DH reach below the requested radius and
+select DH debug/disabled rendering modes. Verify uncapped restoration in each
+case and explicit false→true acknowledgement after a newly settled scene.
+The coordinator records actual client evidence separately; the added checks are
+currently unit/static-verified, not new runtime acceptance evidence.

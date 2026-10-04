@@ -11,7 +11,11 @@
 | 2026-10-03 | Pin stable Iris 1.8.12 + Sodium 0.6.13, DH 3.3.3, Photon v1.3b | Iris's declared Sodium dependency, artifact/API audit, and actual development runtime | Verified reduced Mac profile |
 | 2026-10-03 | Start with opaque vanilla PCF sample LOD and a versioned mod uniform bridge | Pinned Photon has explicit adaptive PCF loops; GLSL variants and live debug/enable controls pass | Implemented; performance unmeasured |
 | 2026-10-03 | Use a reduced Photon profile for the local Apple M3 Max smoke test | Full initial options exhausted texture units; disabling optional samplers lets Iris/Photon/DH render | Development profile only; standard/Ultra requires desktop GPU validation |
-| 2026-10-04 | Aggressive preview is not an acceptable default quality/performance tradeoff | User sees missing distant-tree shadows/depth for only roughly0.5ms saved; far AO bypass and very sparse screen-space shadows sacrifice salient structure | User assessment recorded; policy redesign pending |
+| 2026-10-04 | Aggressive preview is not an acceptable default quality/performance tradeoff | User sees missing distant-tree shadows/depth for only roughly0.5ms saved; far AO bypass and very sparse screen-space shadows sacrifice salient structure | Addressed by default lighting protection; broader proof in FULL_FRAME_PROOF.md |
+
+| 2026-10-04 | Sustain agent-team performance development; add shader targets only after meaningful Photon gains | Explicit user grants broad implementation freedom, retains current NeoForge/MC target, and asks for optional performance-mod benchmarks | Active goal: sustained-performance |
+| 2026-10-04 | Start with minimal Iris/Sodium versus ModernFix/FerriteCore/ImmediatelyFast; culling separate | Iris requires Sodium; additional optimizer gains must be separated from ShaderLOD gains | Pinned artifacts; runtime verification underway |
+| 2026-10-04 | Use repeated run-level comparisons and provisional 15% meaningful-gain gate | Coordinator engineering criterion under user authorization; prior single-run variation prevents broad claims | Pending evidence, adjustable transparently |
 
 Dependency artifacts are recorded in `dev/runtime.lock.json`. Verify this set
 in the development client before calling it supported. Photon upstream does

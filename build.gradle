@@ -18,11 +18,29 @@ configurations {
 
 // Bootstrap downloads are checksum-locked in dev/runtime.lock.json.
 def runtimeLock = new groovy.json.JsonSlurper().parse(file('dev/runtime.lock.json'))
+def performanceStack = project.findProperty('performanceStack')?.toString() ?: 'minimal'
+def optionalRuntimeFiles = []
+if (performanceStack != 'minimal') {
+    def optionalLockFile = file('dev/performance-mods.lock.json')
+    if (!optionalLockFile.exists()) throw new GradleException('Optional performance lock missing; use the minimal stack until setup is complete.')
+    def optionalLock = new groovy.json.JsonSlurper().parse(optionalLockFile)
+    def selected = optionalLock.stacks[performanceStack]
+    if (selected == null) throw new GradleException("Unknown performanceStack: ${performanceStack}")
+    selected.each { name ->
+        def artifact = optionalLock.artifacts[name]
+        def jarFile = file("dev/runtime/performance/${artifact.filename}")
+        if (!jarFile.exists()) throw new GradleException("Missing ${jarFile}; run python3 scripts/setup_performance_mods.py first.")
+        def actualHash = java.security.MessageDigest.getInstance('SHA-256').digest(jarFile.bytes).encodeHex().toString()
+        if (actualHash != artifact.hashes.sha256) throw new GradleException("Optional runtime checksum mismatch: ${jarFile}")
+        optionalRuntimeFiles.add(jarFile)
+    }
+}
 dependencies {
     devClientCompileOnly sourceSets.main.output
     compileOnly files("dev/runtime/${runtimeLock.artifacts.iris.filename}")
     localRuntime files("dev/runtime/${runtimeLock.artifacts.iris.filename}",
                        "dev/runtime/${runtimeLock.artifacts.sodium.filename}")
+    localRuntime files(optionalRuntimeFiles)
     testImplementation 'org.junit.jupiter:junit-jupiter:5.14.1'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
@@ -55,6 +73,10 @@ neoForge {
         }
         configureEach { logLevel = org.slf4j.event.Level.INFO }
         configureEach {
+            systemProperty 'shaderlod.dev.performanceStack', performanceStack
+            if (project.hasProperty('includeDh')) {
+                systemProperty 'shaderlod.dev.includeDh', project.property('includeDh').toString()
+            }
             if (project.hasProperty('runDirectory')) {
                 gameDirectory = project.file(project.property('runDirectory').toString())
             }
@@ -99,6 +121,23 @@ neoForge {
     mods {
         shaderlod { sourceSet(sourceSets.main) }
         shaderlod_dev { sourceSet(sourceSets.devClient) }
+    }
+}
+// Runtime directories own DH; never silently move a user's mod files to change a benchmark.
+['runClientLodOn', 'runClientLodOff'].each { taskName ->
+    def defaultDirectory = taskName == 'runClientLodOn' ? 'run-landscape/lod-on' : 'run-landscape/lod-off'
+    def profile = file(project.findProperty('runDirectory')?.toString() ?: defaultDirectory)
+    def dhFilename = runtimeLock.artifacts.distanthorizons.filename
+    def dhJar = new File(profile, "mods/${dhFilename}")
+    def expectedDh = project.findProperty('includeDh')?.toString() != 'false'
+    tasks.named(taskName).configure {
+        doFirst {
+            if (dhJar.exists() != expectedDh) throw new GradleException("DH presence disagrees with includeDh=${expectedDh} in ${profile}")
+            if (new File(profile, 'mods').exists()) {
+                def unmanaged = new File(profile, 'mods').listFiles().findAll { it.name.endsWith('.jar') && it.name != dhFilename }
+                if (!unmanaged.empty) throw new GradleException("Unmanaged profile mod jars would contaminate performanceStack=${performanceStack}: ${unmanaged*.name}")
+            }
+        }
     }
 }
 neoForge.addModdingDependenciesTo(sourceSets.devClient)
