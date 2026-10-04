@@ -3,14 +3,18 @@
 A NeoForge client mod and explicit Photon patch for distance-based shader quality.
 Distance budgets now cover shadow filtering, screen-space shadows, GTAO/SSAO,
 volumetric fog, LPV fog, clouds, SSR, and parallax. Balanced, Performance, and
-Aggressive presets preserve near work and reduce distant sampling. Starting
-terrain boundaries are 32/96 blocks; cloud bands use 512/4096 blocks.
+Aggressive presets preserve near work and reduce distant sampling. Shadow and
+occlusion budgets are protected by default. Starting terrain boundaries are
+32/96 blocks; cloud bands default to 512/4096 blocks. The measured premium-cloud
+candidate uses 128/1024 blocks with a 64-block transition.
 
 Development targets **Minecraft 1.21.1**, chosen for the established NeoForge
 ecosystem. [Version selection](docs/VERSION_SELECTION.md) records the public
 evidence and its limits. Iris is required; Distant Horizons is optional.
 DH terrain and water use their correct depth/projection in shared downstream
-quality decisions. DH geometry/generation detail is unchanged.
+quality decisions. An experimental, default-off policy can hand detailed terrain
+to DH sooner in an explicitly confirmed warmed scene. See the
+[terrain policy and limitations](docs/GEOMETRY_LOD.md).
 
 ## Start development
 
@@ -93,7 +97,7 @@ Build and packaging checks:
 python3 -m unittest discover -s tests -v
 ```
 
-Install `glslangValidator` to run the 495 fragment-program compilation variants;
+Install `glslangValidator` to run the 660 fragment-program compilation variants;
 that check is skipped when the executable is absent. Iris/OpenGL runtime checks
 are separate. Results and limitations are recorded with the active goal;
 individual pass savings do not imply a proportional whole-frame improvement.
@@ -105,6 +109,9 @@ individual pass savings do not imply a proportional whole-frame improvement.
 - [Photon patch and uniform contract](docs/PHOTON_INTEGRATION.md)
 - [Evaluation procedure](docs/EVALUATION.md)
 - [Agent workflow](AGENTS.md) and [team operations](docs/AGENT_OPERATIONS.md)
+- [Complete CPU/GPU investigation and proof](docs/FULL_FRAME_PROOF.md)
+- [Opt-in detailed terrain policy](docs/GEOMETRY_LOD.md)
+- [Controlled high/lower/adaptive workloads](docs/WORKLOADS.md)
 
 Agent roles and checkpoint hooks live in `.codex/`. The repository-local
 `$start-goal-team` skill lives in `.agents/skills/`; it records requested goals

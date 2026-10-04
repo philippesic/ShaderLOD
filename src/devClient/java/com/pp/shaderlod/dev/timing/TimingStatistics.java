@@ -23,15 +23,19 @@ public final class TimingStatistics {
     }
 
     public Values values() {
-        if (count == 0) return new Values(0, 0, Double.NaN, Double.NaN, Double.NaN);
+        if (count == 0) return new Values(0, 0, Double.NaN, Double.NaN, Double.NaN, 0, null);
         double[] sorted = Arrays.copyOf(milliseconds, count);
         Arrays.sort(sorted);
         double mean = Arrays.stream(sorted).average().orElseThrow();
         double median = count % 2 == 0 ? (sorted[count / 2 - 1] + sorted[count / 2]) / 2 : sorted[count / 2];
-        return new Values(count, total, mean, median, sorted[(int) Math.ceil(count * .95) - 1]);
+        int zero = 0;
+        while (zero < count && sorted[zero] == 0) zero++;
+        return new Values(count, total, mean, median, sorted[(int) Math.ceil(count * .95) - 1],
+                zero, zero == count ? null : sorted[zero]);
     }
 
     public void clear() { count = 0; next = 0; total = 0; }
 
-    public record Values(int samples, long totalSamples, double meanMs, double medianMs, double p95Ms) {}
+    public record Values(int samples, long totalSamples, double meanMs, double medianMs, double p95Ms,
+                         int zeroSamples, Double minPositiveMs) {}
 }

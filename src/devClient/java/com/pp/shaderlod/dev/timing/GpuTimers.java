@@ -23,16 +23,24 @@ public final class GpuTimers {
     private static final int QUERY_RING_SIZE = 12;
     private static final int HISTORY = 240;
     private static final boolean PASS_TIMING = Boolean.parseBoolean(System.getProperty("shaderlod.dev.gpuPassTiming", "true"));
+    private static final boolean ATTRIBUTION = Boolean.parseBoolean(System.getProperty("shaderlod.dev.gpuAttribution", "true"));
+    private static final int SAMPLE_INTERVAL = readSampleInterval();
     private static final int SAMPLE_QUEUE_LIMIT = 8192;
     private static final ArrayDeque<Sample> COMPLETED = new ArrayDeque<>();
     private static final Map<String, Scope> SCOPES = new LinkedHashMap<>();
     private static final ArrayDeque<Group> GROUPS = new ArrayDeque<>();
+    private static final ArrayDeque<Group> CATEGORY_GROUPS = new ArrayDeque<>();
     private static Backend backend = Backend.UNINITIALIZED;
     private static String status = ENABLED ? "awaiting world/render context" : "disabled";
     private static long frame;
     private static long epoch;
     private static boolean inWorld;
     private static boolean fullFrame;
+    private static boolean tickActive;
+    private static boolean sampledFrame = true;
+    private static long scheduledSampledFrames;
+    private static long lastPolledFrame = -1;
+    private static GpuSamplingPolicy.Category category = GpuSamplingPolicy.Category.FRAME;
     private static Slot frameSlot;
     private static Slot elapsedActive;
     private static int timestampBits;
@@ -40,22 +48,60 @@ public final class GpuTimers {
 
     private GpuTimers() {}
 
+    public static void beginTick(boolean world) {
+        inWorld = world;
+        frame++;
+        tickActive = true;
+        selectSamplingFrame();
+    }
+
+    public static void endTick() { tickActive = false; }
+    public static long frameId() { return frame; }
+    public static int sampleInterval() { return SAMPLE_INTERVAL; }
+    public static boolean isSampledFrame() { return ENABLED && inWorld && sampledFrame; }
+    public static String samplingPolicy() {
+        String cadence = "; sample interval=" + SAMPLE_INTERVAL + " render frames, poll only sampled frames";
+        if (!PASS_TIMING) return "frame only, every sampled frame" + cadence;
+        if (backend == Backend.TIMESTAMP) return "timestamp intervals, nested every sampled frame" + cadence;
+        return (ATTRIBUTION ? "elapsed rotates 7 sampled frames: FRAME,IRIS,TERRAIN,DH_DRAW,DH_TOTAL,BUFFER_DRAWS,RENDER_AND_BLIT"
+                : "elapsed alternates sampled FRAME,IRIS") + cadence;
+    }
+
+    private static void selectSamplingFrame() {
+        var decision = GpuSamplingPolicy.schedule(frame, SAMPLE_INTERVAL, PASS_TIMING, ATTRIBUTION);
+        sampledFrame = decision.permitsQueryWork();
+        category = decision.category();
+        if (ENABLED && inWorld && sampledFrame) scheduledSampledFrames++;
+    }
+
+    private static int readSampleInterval() {
+        String raw = System.getProperty("shaderlod.dev.gpuSampleInterval", "1");
+        try {
+            int requested = Integer.parseInt(raw);
+            int value = Math.max(1, Math.min(60, requested));
+            if (value != requested) LOGGER.warn("GPU sample interval {} outside 1–60; using {}", requested, value);
+            return value;
+        } catch (NumberFormatException exception) {
+            LOGGER.warn("Invalid GPU sample interval {}; using 1", raw);
+            return 1;
+        }
+    }
+
     public static void beginFrame(boolean world) {
         if (!ENABLED) return;
         inWorld = world;
-        frame++;
-        if (!world) return;
-        if (backend == Backend.UNINITIALIZED) initialize();
-        if (!supported()) return;
+        if (!tickActive) { frame++; selectSamplingFrame(); }
+        if (!world || !sampledFrame) return;
         try {
-            poll();
-            fullFrame = backend == Backend.TIMESTAMP || !PASS_TIMING || frame % 2 == 0;
+            prepare();
+            if (!supported()) return;
+            fullFrame = backend == Backend.TIMESTAMP || category == GpuSamplingPolicy.Category.FRAME;
             frameSlot = fullFrame ? begin(FRAME) : null;
         } catch (RuntimeException exception) { fail("query start/poll failed", exception); }
     }
 
     public static void endFrame() {
-        if (!ENABLED || !inWorld || !supported()) return;
+        if (!ENABLED || !inWorld || !sampledFrame || !supported()) return;
         try {
             end(frameSlot);
             frameSlot = null;
@@ -69,18 +115,18 @@ public final class GpuTimers {
 
     /** Pinned Iris renderAll debug groups: level 1 is a stage, level 2 a named pass. */
     public static void beginIrisGroup(String name) {
-        if (!ENABLED || !PASS_TIMING || !inWorld || !supported()) return;
+        if (!ENABLED || !PASS_TIMING || !inWorld || !sampledFrame || !supported()) return;
         boolean leaf = !GROUPS.isEmpty();
         String scope = leaf ? "iris/" + name : "iris-stage/" + name;
         Slot slot = null;
         try {
-            if (backend == Backend.TIMESTAMP || (!fullFrame && leaf)) slot = begin(scope);
+            if (backend == Backend.TIMESTAMP || (category == GpuSamplingPolicy.Category.IRIS && leaf)) slot = begin(scope);
         } catch (RuntimeException exception) { fail("Iris pass query start failed", exception); }
         if (supported()) GROUPS.push(new Group(scope, slot));
     }
 
     public static void endIrisGroup() {
-        if (!ENABLED || GROUPS.isEmpty()) return;
+        if (!ENABLED || !sampledFrame || GROUPS.isEmpty()) return;
         Group group = GROUPS.pop();
         if (!supported()) return;
         try { end(group.slot); }
@@ -88,18 +134,45 @@ public final class GpuTimers {
     }
 
     public static void beginStandalonePass(String name) {
-        if (!ENABLED || !PASS_TIMING || !inWorld || !supported()) return;
+        if (!ENABLED || !PASS_TIMING || !inWorld || !sampledFrame || !supported()) return;
         Slot slot = null;
-        try { if (backend == Backend.TIMESTAMP || !fullFrame) slot = begin("iris/" + name); }
+        try { if (backend == Backend.TIMESTAMP || category == GpuSamplingPolicy.Category.IRIS) slot = begin("iris/" + name); }
         catch (RuntimeException exception) { fail("standalone pass start failed", exception); }
         if (supported()) GROUPS.push(new Group("iris/" + name, slot));
     }
 
     public static void endStandalonePass() { endIrisGroup(); }
 
+    /** Category stack is separate from Iris group naming; skipped parents never hide leaf marks. */
+    public static void beginCategory(String name, GpuSamplingPolicy.Category target) {
+        if (!ENABLED || !inWorld || !sampledFrame) return;
+        Slot slot = null;
+        try {
+            prepare();
+            if (supported() && PASS_TIMING && (backend == Backend.TIMESTAMP || category == target)) slot = begin(name);
+        } catch (RuntimeException exception) { fail("attribution query start failed", exception); }
+        CATEGORY_GROUPS.push(new Group(name, slot));
+    }
+
+    public static void endCategory() {
+        if (!ENABLED || !sampledFrame || CATEGORY_GROUPS.isEmpty()) return;
+        Group group = CATEGORY_GROUPS.pop();
+        if (!supported()) return;
+        try { end(group.slot); }
+        catch (RuntimeException exception) { fail("attribution query end failed", exception); }
+    }
+
+    private static void prepare() {
+        if (!sampledFrame) return;
+        if (backend == Backend.UNINITIALIZED) initialize();
+        if (supported() && lastPolledFrame != frame) { poll(); lastPolledFrame = frame; }
+    }
+
     /** Call on the render thread between benchmark phases, before sampling the new phase. */
     public static void resetSamples() {
         epoch++;
+        scheduledSampledFrames = 0;
+        CpuTimers.resetSamples();
         COMPLETED.clear();
         SCOPES.values().forEach(scope -> { scope.history.clear(); scope.dropped = 0; scope.zeroResults = 0; });
     }
@@ -119,10 +192,12 @@ public final class GpuTimers {
             for (Slot slot : scope.slots) if (slot.pending) pending++;
             var values = scope.history.values();
             results.put(entry.getKey(), new ScopeStats(values.samples(), values.totalSamples(),
-                    values.meanMs(), values.medianMs(), values.p95Ms(), scope.dropped));
+                    values.meanMs(), values.medianMs(), values.p95Ms(), scope.dropped,
+                    values.zeroSamples(), values.minPositiveMs()));
         }
         return new Snapshot(status, backend.name(), timestampBits, elapsedBits, frame,
-                java.util.Collections.unmodifiableMap(results), pending);
+                java.util.Collections.unmodifiableMap(results), pending, samplingPolicy(),
+                sampledFrame ? category.name() : "UNSAMPLED", SAMPLE_INTERVAL, scheduledSampledFrames);
     }
 
     public static String summary() {
@@ -144,6 +219,7 @@ public final class GpuTimers {
         }
         SCOPES.clear();
         GROUPS.clear();
+        CATEGORY_GROUPS.clear();
         COMPLETED.clear();
         frameSlot = null;
         backend = Backend.UNSUPPORTED;
@@ -166,13 +242,14 @@ public final class GpuTimers {
             else if (elapsedBits > 0) backend = Backend.ELAPSED_ALTERNATING;
             else { fail("driver reports zero useful timer-query bits", null); return; }
             status = backend == Backend.TIMESTAMP ? "GPU timestamps" : PASS_TIMING
-                    ? "GPU elapsed (frame/pass alternate)" : "GPU elapsed (frame only)";
-            LOGGER.info("ShaderLOD GPU timers: backend={}, timestampBits={}, elapsedBits={}, GL={}, renderer={}",
-                    backend, timestampBits, elapsedBits, GL11.glGetString(GL11.GL_VERSION), GL11.glGetString(GL11.GL_RENDERER));
+                    ? "GPU elapsed (category rotation)" : "GPU elapsed (frame only)";
+            LOGGER.info("ShaderLOD GPU timers: backend={}, timestampBits={}, elapsedBits={}, GL={}, renderer={}, policy={}",
+                    backend, timestampBits, elapsedBits, GL11.glGetString(GL11.GL_VERSION), GL11.glGetString(GL11.GL_RENDERER), samplingPolicy());
         } catch (RuntimeException exception) { fail("capability probe failed", exception); }
     }
 
     private static Slot begin(String name) {
+        if (!sampledFrame) return null;
         Scope scope = SCOPES.computeIfAbsent(name, unused -> new Scope());
         Slot slot = null;
         for (Slot candidate : scope.slots) if (!candidate.pending && !candidate.active) { slot = candidate; break; }
@@ -204,6 +281,7 @@ public final class GpuTimers {
     }
 
     private static void poll() {
+        if (!sampledFrame) return;
         for (var entry : SCOPES.entrySet()) for (Slot slot : entry.getValue().slots) {
             Scope scope = entry.getValue();
             if (!slot.pending || frame - slot.frame < 2) continue;
@@ -243,6 +321,7 @@ public final class GpuTimers {
         }
         backend = Backend.UNSUPPORTED;
         GROUPS.clear();
+        CATEGORY_GROUPS.clear();
         LOGGER.warn("ShaderLOD GPU timing {}", status, exception);
     }
 
@@ -269,10 +348,12 @@ public final class GpuTimers {
         Slot(int start, int finish) { this.start = start; this.finish = finish; }
     }
 
-    public record ScopeStats(int samples, long totalSamples, double meanMs, double medianMs, double p95Ms, long droppedQueries) {}
+    public record ScopeStats(int samples, long totalSamples, double meanMs, double medianMs, double p95Ms,
+                             long droppedQueries, int zeroSamples, Double minPositiveMs) {}
     public record Sample(String scope, double milliseconds, long frameId, long epoch) {}
     public record Snapshot(String status, String backend, int timestampBits, int elapsedBits, long renderFrames,
-                           Map<String, ScopeStats> scopes, int pendingQueries) {
+                           Map<String, ScopeStats> scopes, int pendingQueries, String samplingPolicy, String samplingCategory,
+                           int sampleInterval, long scheduledSampledFrames) {
         public ScopeStats frame() { return scopes.get(FRAME); }
     }
 }

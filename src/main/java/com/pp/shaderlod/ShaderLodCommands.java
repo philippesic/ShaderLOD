@@ -73,6 +73,8 @@ public final class ShaderLodCommands {
                 + ", preset=" + ShaderLodConfig.PRESET.get()
                 + ", near/far=" + settings.near() + "/" + settings.far()
                 + ", transition=" + settings.transition()
-                + ", debug=" + settings.debug();
+                + ", debug=" + settings.debug()
+                + ", detailedChunks=" + GeometryLodController.status().effectiveChunks()
+                + ", terrainPolicy=" + GeometryLodController.status().reason();
     }
 }

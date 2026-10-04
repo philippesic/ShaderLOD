@@ -24,8 +24,13 @@ The builder writes `run/shaderpacks/Photon-ShaderLOD.zip`; select it in Iris.
 The **ShaderLOD** options screen exposes enabled, mod bridge, geometry distances,
 transition width, preset, separate cloud distances, and tier colors. Default
 geometry distances are 32/96 blocks, with eight-block transition bands. Cloud
-entry distances use independent 512/4096-block thresholds with a 256-block band.
-The fallback preset is Performance. `SHADERLOD_CACHED_SKY` is an opt-in global
+entry distances use independent 512/4096-block thresholds by default.
+`SHADERLOD_CLOUD_TRANSITION` defaults to a 256-block band and can be narrowed
+independently of the geometry transition.
+The fallback preset is Performance. `SHADERLOD_PRESERVE_LIGHTING` defaults on:
+shadow PCF, screen-space shadows, GTAO and SSAO keep original budgets in all
+presets. This protects tree depth/occlusion while cloud, fog, water and optional
+material/reflection reductions remain available. `SHADERLOD_CACHED_SKY` is an opt-in global
 lighting/reflection approximation and is disabled by default.
 
 The archive comes from the exact Photon ZIP in `dev/runtime.lock.json`, reviewed
@@ -52,6 +57,11 @@ common settings. Fractional caps round up and obey an effect-specific minimum.
 | Performance (1) | 50% | 25% | Reduced |
 | Aggressive (2) | 25% | 12.5% | Bypassed |
 
+The AO column and shadow/AO rows below describe the **legacy policy with
+`SHADERLOD_PRESERVE_LIGHTING=false`**. With the default flag on, original PCF,
+SSRT, GTAO and SSAO counts remain unchanged, including Aggressive far AO. This
+shader option is independent of the Java preset; no new uniform is required.
+
 Some effects have explicit discrete policies as well as these fractions:
 
 | Effect | Actual modified work | Performance example |
@@ -74,7 +84,7 @@ features actually enabled. Shadow-map generation, TAA, bloom, sky atmosphere,
 voxel updates, water caustic-map generation, and thin cloud layers remain upstream.
 We do not claim complete LOD of every Photon effect.
 
-GTAO retains the same radial and angular extent with fewer samples and normalizes
+When lighting preservation is disabled, GTAO retains the same radial and angular extent with fewer samples and normalizes
 by actual slice count. Aggressive far AO returns neutral occlusion and the
 surface normal before constructing or marching any horizon ray. Screen-space
 shadows and LPV preserve geometric ray extent by recalculating the initial step.
@@ -99,6 +109,19 @@ It retains primary and secondary ray extent and integration normalization. Sky
 atmosphere, sun/moon, aurora, and the cached lighting-color texels stay unchanged.
 Inspect reflected clouds and ambient lighting if enabling it; no gain is promised.
 Cloud shading's scattering iterations and density formulas remain upstream.
+
+A source-verified cloud-detailed experiment uses near128/far1024/transition64
+(the explicit Iris option ranges now include those values). With cloud altitude
+1200 atmosphere units, scale10, sea level64 and camera altitude95, the overhead
+shell entry is approximately89 world blocks. The64-block band around128 starts
+at96, preserving full overhead quality, and reaches fully medium at160. The old
+fixed256 band would start at0 and inadvertently reduce some overhead pixels.
+Far transition spans992–1056. Inputs clamp width to the threshold gap and twice
+the near distance, preventing overlap and negative starts; inverted thresholds
+are sanitized. These are experiment settings, not a revised default or measured
+performance claim. Entering the cloud volume gives entry distance0, so that
+whole ray retains full quality under this policy. Inspect cloud silhouettes and
+movement alongside timing.
 These coarser samples can lose small cloud details and introduce TAA noise.
 
 Water wave normals select quality from `distance(world_pos, cameraPosition)` in
@@ -176,7 +199,14 @@ explicit manifest targets. With `glslangValidator`, the suite compiles deferred
 shading, translucent shading, AO, clouds, cached sky, fog, terrain, DH terrain,
 DH water, water composition, and shadow caustic generation across all dimensions and option variants including optional cached-sky LOD, bridge fallback,
 disabled LOD, every preset, DH, SSAO/no AO, shadows toggles, and SSR/POM materials.
-495 fragment compilation variants passed locally (11 programs × 3 dimensions × 15 option variants).
+660 fragment compilation variants passed locally (11 programs × 3 dimensions × 20 option variants),
+including the default preserved-lighting path, all three legacy lighting presets,
+and legal close/inverted cloud option cases. Eight test methods also check that
+candidate values exist in Iris's declared ranges and execute the actual cloud
+tier helper bodies on CPU with equivalent scalar builtins/vec3 fields. Five
+boundary fixtures cover overhead preservation, transitions, width clamps,
+inverted thresholds, zero-width and disabled behavior. Those CPU math checks
+do not establish GPU driver execution or pixel coverage.
 Tests expand actual shader includes and join preprocessor continuations. This is
 GLSL syntax/type evidence, not Iris transformation or Apple GPU-driver evidence.
 
@@ -184,6 +214,17 @@ For runtime acceptance, keep common options and camera/scene identical, warm DH
 terrain and temporal histories, inspect near/mid/far geometry and cloud details,
 and use serial alternating LOD-on/off measurements with actual GPU queries.
 A two-client shared-GPU view is a visual comparison and cannot isolate speedup.
+
+## Historical lighting reductions
+
+The early PCF-only test and 2026-10-03 multi-effect GPU results used the legacy
+lighting policy, before `SHADERLOD_PRESERVE_LIGHTING` existed. Reproducing those
+budgets now requires explicitly disabling the preservation flag. The user
+rejected lost distant tree depth/shadows for the small forest-scene saving;
+preservation therefore defaults on. This flag preserves the four shadow/AO
+operations named above, not every possible illumination effect. Opt-in cached
+sky reduction remains a separate global lighting/reflection approximation and
+should be evaluated independently.
 
 ## Initial comparison audit (2026-10-03)
 

@@ -65,6 +65,16 @@ int shaderlod_preset() {
     return SHADERLOD_PRESET;
 }
 
+// Preserve low-frequency tree shadow/occlusion structure by default. This
+// compile-time switch applies only to PCF/SSRT/GTAO/SSAO, not other effect LOD.
+int shaderlod_lighting_tier(int tier) {
+#ifdef SHADERLOD_PRESERVE_LIGHTING
+    return 0;
+#else
+    return tier;
+#endif
+}
+
 // Budget is a cap, never increases upstream work. One path executes per pixel.
 int shaderlod_budget(int original, int tier, int minimum) {
     if (tier == 0) return original;
@@ -122,8 +132,10 @@ int shaderlod_cached_sky_tier() {
 int shaderlod_cloud_tier(float distance_blocks, float noise) {
     float near_cloud = max(SHADERLOD_CLOUD_NEAR, 1.0);
     float far_cloud = max(SHADERLOD_CLOUD_FAR, near_cloud + 1.0);
+    float transition_cloud = clamp(SHADERLOD_CLOUD_TRANSITION, 0.0,
+        min(2.0 * near_cloud, far_cloud - near_cloud));
     return shaderlod_tier_with_distances(distance_blocks, noise,
-        vec3(near_cloud, far_cloud, min(256.0, far_cloud - near_cloud)));
+        vec3(near_cloud, far_cloud, transition_cloud));
 }
 
 // POM is already limited to a short range; its relative bands must be inside it.

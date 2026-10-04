@@ -55,6 +55,30 @@ neoForge {
         }
         configureEach { logLevel = org.slf4j.event.Level.INFO }
         configureEach {
+            if (project.hasProperty('runDirectory')) {
+                gameDirectory = project.file(project.property('runDirectory').toString())
+            }
+            if (project.findProperty('measureWorkload') == 'true') {
+                systemProperty 'shaderlod.dev.measureWorkload', 'true'
+            }
+            if (project.findProperty('measureOnly') == 'true') {
+                systemProperty 'shaderlod.dev.measureOnly', 'true'
+            }
+            if (project.hasProperty('measurementSeconds')) {
+                systemProperty 'shaderlod.dev.measurementSeconds', project.property('measurementSeconds').toString()
+            }
+            if (project.hasProperty('gpuAttribution')) {
+                systemProperty 'shaderlod.dev.gpuAttribution', project.property('gpuAttribution').toString()
+            }
+            if (project.hasProperty('gpuTiming')) {
+                systemProperty 'shaderlod.dev.gpuTiming', project.property('gpuTiming').toString()
+            }
+            if (project.hasProperty('gpuSampleInterval')) {
+                systemProperty 'shaderlod.dev.gpuSampleInterval', project.property('gpuSampleInterval').toString()
+            }
+            if (project.hasProperty('cpuLayerTiming')) {
+                systemProperty 'shaderlod.dev.cpuLayerTiming', project.property('cpuLayerTiming').toString()
+            }
             if (project.findProperty('smokeTest') == 'true') {
                 systemProperty 'shaderlod.dev.smoke', 'true'
             }

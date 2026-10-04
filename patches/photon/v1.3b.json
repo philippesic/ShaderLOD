@@ -6,19 +6,19 @@
       "path": "shaders/settings.glsl",
       "source_sha256": "93401d268fe859cc1df81929ad41156757a98db80f80cf32af80d9cdca96c394",
       "before": "const int noiseTextureResolution = 512;",
-      "after": "// ShaderLOD options (mod bridge falls back to these when ShaderLOD is absent).\n  #define SHADERLOD_ENABLED\n  #define SHADERLOD_USE_MOD_CONFIG\n//#define SHADERLOD_CACHED_SKY\n  #define SHADERLOD_PRESET 1 // [0 1 2]\n  #define SHADERLOD_CLOUD_NEAR 512.0 // [256.0 512.0 1024.0]\n  #define SHADERLOD_CLOUD_FAR 4096.0 // [2048.0 4096.0 8192.0]\n  #define SHADERLOD_NEAR 32.0 // [16.0 24.0 32.0 48.0 64.0]\n  #define SHADERLOD_FAR 96.0 // [48.0 64.0 96.0 128.0 192.0 256.0]\n  #define SHADERLOD_TRANSITION 8.0 // [0.0 4.0 8.0 16.0 24.0 32.0]\n//#define SHADERLOD_DEBUG\n\nconst int noiseTextureResolution = 512;"
+      "after": "// ShaderLOD options (mod bridge falls back to these when ShaderLOD is absent).\n  #define SHADERLOD_ENABLED\n  #define SHADERLOD_USE_MOD_CONFIG\n  #define SHADERLOD_PRESERVE_LIGHTING\n//#define SHADERLOD_CACHED_SKY\n  #define SHADERLOD_PRESET 1 // [0 1 2]\n  #define SHADERLOD_CLOUD_NEAR 512.0 // [64.0 96.0 128.0 192.0 256.0 512.0 1024.0]\n  #define SHADERLOD_CLOUD_FAR 4096.0 // [256.0 512.0 1024.0 2048.0 4096.0 8192.0]\n  #define SHADERLOD_CLOUD_TRANSITION 256.0 // [0.0 32.0 64.0 128.0 256.0 512.0]\n  #define SHADERLOD_NEAR 32.0 // [16.0 24.0 32.0 48.0 64.0]\n  #define SHADERLOD_FAR 96.0 // [48.0 64.0 96.0 128.0 192.0 256.0]\n  #define SHADERLOD_TRANSITION 8.0 // [0.0 4.0 8.0 16.0 24.0 32.0]\n//#define SHADERLOD_DEBUG\n\nconst int noiseTextureResolution = 512;"
     },
     {
       "path": "shaders/shaders.properties",
       "source_sha256": "f8cc8df60f930612e8817e4176a34886c1a9de778c15427a5468ecbc4f71ee9a",
       "before": "screen              = INFO <profile> <empty> <empty> [world] [lighting] [sky] [fog] [materials] [water] [post] [misc]",
-      "after": "screen              = INFO <profile> <empty> <empty> [world] [lighting] [sky] [fog] [materials] [water] [post] [misc] [shaderlod]\nscreen.shaderlod = SHADERLOD_ENABLED SHADERLOD_USE_MOD_CONFIG SHADERLOD_NEAR SHADERLOD_FAR SHADERLOD_TRANSITION SHADERLOD_PRESET SHADERLOD_CLOUD_NEAR SHADERLOD_CLOUD_FAR SHADERLOD_CACHED_SKY SHADERLOD_DEBUG"
+      "after": "screen              = INFO <profile> <empty> <empty> [world] [lighting] [sky] [fog] [materials] [water] [post] [misc] [shaderlod]\nscreen.shaderlod = SHADERLOD_ENABLED SHADERLOD_USE_MOD_CONFIG SHADERLOD_NEAR SHADERLOD_FAR SHADERLOD_TRANSITION SHADERLOD_PRESET SHADERLOD_CLOUD_NEAR SHADERLOD_CLOUD_FAR SHADERLOD_CLOUD_TRANSITION SHADERLOD_CACHED_SKY SHADERLOD_PRESERVE_LIGHTING SHADERLOD_DEBUG"
     },
     {
       "path": "shaders/lang/en_US.lang",
       "source_sha256": "fa0dad5cf1048c70532d562eb3ac3f0c2739aa81e7bedc29fce049a6c45809f8",
       "before": "# Profiles",
-      "after": "# ShaderLOD\nscreen.shaderlod = ShaderLOD\noption.SHADERLOD_ENABLED = Distance LOD\noption.SHADERLOD_ENABLED.comment = Reduce shadow, AO, fog, cloud, SSR and POM work with distance, including DH terrain.\noption.SHADERLOD_USE_MOD_CONFIG = Use ShaderLOD mod config\noption.SHADERLOD_USE_MOD_CONFIG.comment = Use live mod values when bridge version 1 or 2 is available; otherwise use these options.\noption.SHADERLOD_NEAR = Near boundary (blocks)\noption.SHADERLOD_FAR = Far boundary (blocks)\noption.SHADERLOD_TRANSITION = Transition width (blocks)\noption.SHADERLOD_DEBUG = Show LOD zones\noption.SHADERLOD_DEBUG.comment = Tint opaque vanilla terrain green/full, amber/medium, red/far. Includes DH; excludes sky and hand.\n\noption.SHADERLOD_PRESET = LOD preset\nvalue.SHADERLOD_PRESET.0 = Balanced\nvalue.SHADERLOD_PRESET.1 = Performance\nvalue.SHADERLOD_PRESET.2 = Aggressive\noption.SHADERLOD_CLOUD_NEAR = Cloud near boundary (blocks)\noption.SHADERLOD_CLOUD_FAR = Cloud far boundary (blocks)\noption.SHADERLOD_PRESET.comment = Higher presets lower actual ray/sample budgets. Aggressive bypasses far AO.\n\noption.SHADERLOD_CACHED_SKY = Reduce cached sky-map work\noption.SHADERLOD_CACHED_SKY.comment = Global cloud-lighting/reflection approximation: Performance halves cached cloud budgets, Aggressive uses eighth budgets (effect minima apply); Balanced and disabled stay full.\n\n# Profiles"
+      "after": "# ShaderLOD\nscreen.shaderlod = ShaderLOD\noption.SHADERLOD_ENABLED = Distance LOD\noption.SHADERLOD_ENABLED.comment = Reduce shadow, AO, fog, cloud, SSR and POM work with distance, including DH terrain.\noption.SHADERLOD_USE_MOD_CONFIG = Use ShaderLOD mod config\noption.SHADERLOD_USE_MOD_CONFIG.comment = Use live mod values when bridge version 1 or 2 is available; otherwise use these options.\noption.SHADERLOD_NEAR = Near boundary (blocks)\noption.SHADERLOD_FAR = Far boundary (blocks)\noption.SHADERLOD_TRANSITION = Transition width (blocks)\noption.SHADERLOD_DEBUG = Show LOD zones\noption.SHADERLOD_DEBUG.comment = Tint opaque vanilla terrain green/full, amber/medium, red/far. Includes DH; excludes sky and hand.\n\noption.SHADERLOD_PRESET = LOD preset\nvalue.SHADERLOD_PRESET.0 = Balanced\nvalue.SHADERLOD_PRESET.1 = Performance\nvalue.SHADERLOD_PRESET.2 = Aggressive\noption.SHADERLOD_CLOUD_NEAR = Cloud near boundary (blocks)\noption.SHADERLOD_CLOUD_FAR = Cloud far boundary (blocks)\noption.SHADERLOD_CLOUD_TRANSITION = Cloud transition width (blocks)\noption.SHADERLOD_CLOUD_TRANSITION.comment = Entire transition band, clamped to avoid overlap or negative starts. Narrow bands retain full quality overhead when using short cloud thresholds.\noption.SHADERLOD_PRESET.comment = Higher presets lower actual ray/sample budgets. Aggressive bypasses far AO.\n\noption.SHADERLOD_CACHED_SKY = Reduce cached sky-map work\noption.SHADERLOD_CACHED_SKY.comment = Global cloud-lighting/reflection approximation: Performance halves cached cloud budgets, Aggressive uses eighth budgets (effect minima apply); Balanced and disabled stay full.\n\noption.SHADERLOD_PRESERVE_LIGHTING = Preserve shadows and occlusion\noption.SHADERLOD_PRESERVE_LIGHTING.comment = Keep original PCF, screen-space shadow, GTAO and SSAO budgets. Recommended: retain tree depth while reducing cloud/fog/water work.\n\n# Profiles"
     },
     {
       "path": "shaders/include/lighting/shadows/pcss.glsl",
@@ -30,7 +30,7 @@
       "path": "shaders/include/lighting/shadows/pcss.glsl",
       "source_sha256": "c12e98fa923306687bfa5ac2b00214d45b1614ebafb719e22839f3420750a76b",
       "before": "    step_count = min(step_count, SHADOW_PCF_STEPS_MAX);",
-      "after": "    step_count = min(step_count, SHADOW_PCF_STEPS_MAX);\n    // Keep Photon's near work; cap only the expensive PCF operation at distance.\n    if (shaderlod_quality == 1) step_count = min(step_count, shaderlod_preset() == 0 ? 4 : 2);\n    if (shaderlod_quality == 2) step_count = 1;\n    int initial_steps = min(4, step_count);"
+      "after": "    step_count = min(step_count, SHADOW_PCF_STEPS_MAX);\n    shaderlod_quality = shaderlod_lighting_tier(shaderlod_quality);\n    // Keep Photon's near work; cap only the expensive PCF operation at distance.\n    if (shaderlod_quality == 1) step_count = min(step_count, shaderlod_preset() == 0 ? 4 : 2);\n    if (shaderlod_quality == 2) step_count = 1;\n    int initial_steps = min(4, step_count);"
     },
     {
       "path": "shaders/include/lighting/shadows/pcss.glsl",
@@ -126,7 +126,7 @@
       "path": "shaders/include/lighting/ao/gtao.glsl",
       "source_sha256": "0889647aa827357ba9e5101431b4294299a078055f7f3537468a94fb6430b0d3",
       "before": "    float ao = 0.0;",
-      "after": "    int quality = shaderlod_quality_at(length(view_pos), gl_FragCoord.xy, float(frameCounter));\n    if (quality == 2 && shaderlod_preset() == 2) {\n        bent_normal = view_normal;\n        return vec2(1.0, 0.0); // Aggressive distant AO bypass; no depth-ray lookups.\n    }\n    int slice_count = shaderlod_budget(GTAO_SLICES, quality, 1);\n    int horizon_steps = shaderlod_budget(GTAO_HORIZON_STEPS, quality, 1);\n    float ao = 0.0;"
+      "after": "    int quality = shaderlod_lighting_tier(shaderlod_quality_at(length(view_pos), gl_FragCoord.xy, float(frameCounter)));\n    if (quality == 2 && shaderlod_preset() == 2) {\n        bent_normal = view_normal;\n        return vec2(1.0, 0.0); // Aggressive distant AO bypass; no depth-ray lookups.\n    }\n    int slice_count = shaderlod_budget(GTAO_SLICES, quality, 1);\n    int horizon_steps = shaderlod_budget(GTAO_HORIZON_STEPS, quality, 1);\n    float ao = 0.0;"
     },
     {
       "path": "shaders/include/lighting/ao/gtao.glsl",
@@ -312,7 +312,7 @@
       "path": "shaders/include/lighting/shadows/ssrt.glsl",
       "source_sha256": "ffb29cc8892ebcf9bfd697467a5adc8239030a3913fac8a8315a4ab39db674b8",
       "before": "    const uint step_count = uint(SHADOW_SSRT_STEPS);",
-      "after": "    uint step_count = uint(shaderlod_budget(SHADOW_SSRT_STEPS,\n        shaderlod_tier(length(ray_origin_view), dither), 2));"
+      "after": "    uint step_count = uint(shaderlod_budget(SHADOW_SSRT_STEPS,\n        shaderlod_lighting_tier(shaderlod_tier(length(ray_origin_view), dither)), 2));"
     },
     {
       "path": "shaders/include/lighting/shadows/ssrt.glsl",
@@ -480,7 +480,7 @@
       "path": "shaders/include/lighting/ao/ssao.glsl",
       "source_sha256": "e6107912799a850a49c2c62138d2f2daf542c3dcd3ca7b0e2de15cfc85e04a0c",
       "before": "    mat3 tbn_matrix = get_tbn_matrix(normal_view);",
-      "after": "    int quality = shaderlod_quality_at(length(position_view), gl_FragCoord.xy, float(frameCounter));\n    if (quality == 2 && shaderlod_preset() == 2) return 1.0;\n    int step_count = shaderlod_budget(SSAO_STEPS, quality, 2);\n    mat3 tbn_matrix = get_tbn_matrix(normal_view);"
+      "after": "    int quality = shaderlod_lighting_tier(shaderlod_quality_at(length(position_view), gl_FragCoord.xy, float(frameCounter)));\n    if (quality == 2 && shaderlod_preset() == 2) return 1.0;\n    int step_count = shaderlod_budget(SSAO_STEPS, quality, 2);\n    mat3 tbn_matrix = get_tbn_matrix(normal_view);"
     },
     {
       "path": "shaders/include/lighting/ao/ssao.glsl",

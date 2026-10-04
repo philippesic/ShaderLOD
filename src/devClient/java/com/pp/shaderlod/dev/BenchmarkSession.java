@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.mojang.logging.LogUtils;
 import com.pp.shaderlod.ShaderLodConfig;
 import com.pp.shaderlod.dev.timing.GpuTimers;
+import com.pp.shaderlod.dev.timing.CpuTimers;
 import net.minecraft.client.Minecraft;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -29,6 +30,7 @@ final class BenchmarkSession {
     }
     void tick() {
         var results = GpuTimers.drainSamples();
+        var cpuResults = CpuTimers.drainSamples();
         if (done) return;
         long now = System.nanoTime();
         if (phase < 0) {
@@ -39,11 +41,12 @@ final class BenchmarkSession {
         }
         if (!sampling && (now - phaseStarted) * 1e-9 >= switchWarmup) {
             GpuTimers.resetSamples(); sampling = true;
-            current = new Phase(phase % 2 == 1, new ArrayList<>());
+            current = new Phase(phase % 2 == 1, new ArrayList<>(), new ArrayList<>());
             return;
         }
         if (sampling) {
             current.samples().addAll(results);
+            current.cpuSamples().addAll(cpuResults);
             if ((now - phaseStarted) * 1e-9 >= switchWarmup + measurement) {
                 phases.add(current);
                 LogUtils.getLogger().info("ShaderLOD benchmark phase {} complete: enabled={}, samples={}", phase + 1, current.enabled(), current.samples().size());
@@ -69,6 +72,7 @@ final class BenchmarkSession {
             report.addProperty("method", "One client; same patched pack; OFF/ON/OFF/ON; 8s settling + 20s sampling per phase");
             report.addProperty("preset", ShaderLodConfig.PRESET.get().name());
             report.addProperty("backend", GpuTimers.snapshot().backend());
+            report.addProperty("sampling_policy", GpuTimers.samplingPolicy());
             report.addProperty("initial_warmup_seconds", initialWarmup);
             report.add("phases", gson.toJsonTree(phases));
             Path path = directory.resolve("benchmark.json");
@@ -76,5 +80,5 @@ final class BenchmarkSession {
             LogUtils.getLogger().info("ShaderLOD benchmark written: {} ({})", path, status);
         } catch (Exception exception) { LogUtils.getLogger().error("Cannot save GPU benchmark", exception); }
     }
-    private record Phase(boolean enabled, List<GpuTimers.Sample> samples) {}
+    private record Phase(boolean enabled, List<GpuTimers.Sample> samples, List<CpuTimers.Sample> cpuSamples) {}
 }

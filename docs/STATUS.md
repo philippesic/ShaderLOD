@@ -2,46 +2,61 @@
 
 Updated: 2026-10-04.
 
-Active goal: [Complete frame attribution and rendering proof](goals/full-frame-proof.md).
-Status: active; full CPU/GPU attribution and controlled workload tests in progress.
+No active project goal. Completed: [Full-frame rendering proof](goals/full-frame-proof.md).
+The final comparison remains open for user inspection. Evidence and limitations
+are in [FULL_FRAME_PROOF.md](FULL_FRAME_PROOF.md).
 
-Completed goal: [GPU timing and broader Photon/DH LOD](goals/gpu-lod-dh-comparison.md).
-Status: comparison implementation and validation complete; windows open for user visual inspection.
+## Current result
 
-Completed goal: [Set up the ShaderLOD development environment](goals/setup-environment.md).
+The ordinary forest has substantial terrain and native driver submission costs;
+default clouds already run at low resolution. Revised cloud distance bands
+reduced GPU render time by roughly 13–29% across premium-cloud workload runs,
+with considerable variation. A simple medium preset remained faster at different
+quality. The original shader-only approach did not address the dominant costs
+in the default scene.
 
-Scope: NeoForge client skeleton, required Iris, Photon integration foundation,
-optional DH present in the development runtime, and reusable local agent/docs
-infrastructure. First rendering proof precedes the larger Photon/DH MVP.
+A default-off terrain policy caps the effective detailed radius at 16 chunks
+while preserving the requested 24 and DH's 128-chunk reach. The repeated combined
+forest candidate improved from 124 to 143 FPS, with GPU render time falling from
+7.482 to 6.319 ms. This exposes an existing vanilla/DH detail tradeoff through a
+guarded policy; it is not a new mesh renderer or a universal speedup.
 
-Minecraft 1.21.1 / NeoForge 21.1.253 / Java 21 is the first target, following
-the user's request to prioritize the established ecosystem. Exact Iris, Sodium,
-DH, and Photon artifacts are locked in `dev/runtime.lock.json`.
+Final windows: left protected-lighting ShaderLOD plus the warmed terrain cap;
+right original Photon with ShaderLOD absent. Both display FPS, real GPU elapsed
+time, CPU wall/thread clocks, and requested/effective render radius. Concurrent
+windows share the GPU; serial captures provide the performance evidence.
+Disabling the terrain policy restored 24 detailed chunks and re-enabling it
+returned to 16 after warmup. Automatic coverage checks during travel remain
+unfinished, so the policy requires explicit warmed-scene confirmation.
 
-Verified: Java build and JUnit tests, six shaderpack tests including 48 GLSL
-compilations, Iris/Photon in-world rendering with DH present and absent, live
-LOD debug/enable controls, DH renderer initialization and visible terrain-buffer
-counts, and local agent profiles/hook/skill validation. See [setup evidence](SETUP.md).
+Shadow filtering, screen-space shadows, and AO retain original budgets by
+default. The cached-lighting approximation is disabled in the final candidate.
+The user's earlier observation of distant trees losing shadows is recorded as
+an unacceptable tradeoff for the small gain in the previous aggressive profile.
 
-The Apple M3 Max uses a reduced Photon profile; standard/Ultra desktop rendering
-remains unverified. Multi-effect LOD now covers shadows, AO, fog, clouds,
-SSR/POM when enabled, and water. DH uses correct reconstructed distances in
-shared shading. No remote host, publishing destination, or push is configured.
+## Environment and validation
 
-Real asynchronous GPU elapsed queries work on this host (timestampBits0,
-elapsedBits32). Final serial aggressive+cached-lighting test measured GPU render
-7.960→7.523ms (5.49% mean reduction), with variability and scope limits in
-[GPU_RESULTS.md](GPU_RESULTS.md). Six packaging tests and495GLSL compilations,
-Java checks, timing-statistics tests, original-Photon absent-mod baseline,
-and actual DH landscape rendering pass.
+Minecraft 1.21.1 / NeoForge 21.1.253 / Java 21 is the first target. Exact Iris,
+Sodium, DH, and Photon artifacts are locked in `dev/runtime.lock.json`. Iris is
+required; DH is optional for users and present in the development runtime.
+The Apple M3 Max uses a reduced Photon profile. Full desktop SSR, voxel lighting,
+POM and Ultra rendering remain unverified on suitable hardware.
 
-Final pair: vanilla24/DH128chunks, matching landscape/camera; left aggressive
-ShaderLOD with cached-lighting reduction, right original Photon without ShaderLOD.
-FPS/GPUms/pass timings visible. Both clients remain running for user inspection.
-User assessment on2026-10-04: distant trees visibly lose shadows/depth for a
-small gain. Aggressive quality is not accepted as a worthwhile default.
-Next: preserve occlusion/shadow structure, isolate individual visual costs,
-and profile untargeted world/DH rendering plus CPU submission before further cuts.
+Java build, geometry/restoration JUnit tests, timing/policy/CPU tests, and eight
+shaderpack tests including 660 GLSL compilations and helper-distance fixtures
+passed. Actual Iris/Photon rendering, the absent-mod original baseline, DH
+rendering, live policy restoration, and production jar exclusion of development
+profiling code were checked separately. GPU queries use asynchronous elapsed
+counters; timestamps are unavailable on this host. Scope limitations are in
+[GPU_TIMING.md](GPU_TIMING.md).
 
-The earlier PCF-only pillar preview showed nearly identical FPS. That audit
-remains in `PHOTON_INTEGRATION.md`; it motivated the expanded measured work.
+## Earlier completed goals
+
+- [Development environment](goals/setup-environment.md): NeoForge skeleton,
+  pinned runtime, agent roles, documentation, and basic explicit Photon LOD.
+- [GPU timing and broader Photon/DH LOD](goals/gpu-lod-dh-comparison.md): wider
+  effect budgets and comparison tooling. The aggressive cached-lighting capture
+  measured 7.960 to 7.523 ms, but its distant lighting loss was rejected.
+
+No remote host, publishing destination, or push is configured. Generated clients,
+worlds, binaries, screenshots, and raw reports remain outside Git.

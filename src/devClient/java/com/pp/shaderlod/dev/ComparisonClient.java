@@ -7,6 +7,7 @@ import com.mojang.logging.LogUtils;
 import com.pp.shaderlod.LodPreset;
 import com.pp.shaderlod.ShaderLodConfig;
 import com.pp.shaderlod.dev.timing.GpuTimers;
+import com.pp.shaderlod.dev.timing.CpuTimers;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Screenshot;
 import net.minecraft.client.gui.screens.TitleScreen;
@@ -33,7 +34,9 @@ final class ComparisonClient {
     private int ticks;
     private long controlModified = -1;
     private BenchmarkSession benchmark;
+    private WorkloadSession workload;
     private GpuTimers.Snapshot overlayTimings = GpuTimers.snapshot();
+    private CpuTimers.Snapshot overlayCpuTimings = CpuTimers.snapshot();
     private long nextOverlayUpdate;
     private int dhChunks = 128;
     private static final String WORLD = "ShaderLOD-Landscape";
@@ -79,11 +82,14 @@ final class ComparisonClient {
             tileWindow(client);
             if (!Files.exists(controlFile())) chooseLandscape();
             if (Boolean.getBoolean("shaderlod.dev.benchmark") && ModList.get().isLoaded("shaderlod")) benchmark = new BenchmarkSession(client.gameDirectory.toPath());
+            if (Boolean.getBoolean("shaderlod.dev.measureWorkload")) workload = new WorkloadSession(client.gameDirectory.toPath().toAbsolutePath().normalize());
             LOGGER.info("ShaderLOD landscape ready: side={}, modPresent={}, vanillaChunks={}, DH={}", enabled ? "LOD" : "baseline", ModList.get().isLoaded("shaderlod"), client.options.renderDistance().get(), ModList.get().isLoaded("distanthorizons"));
         }
         ++ticks;
         if (ticks % 10 == 0) applyControl();
-        if (benchmark != null) benchmark.tick(); else GpuTimers.drainSamples();
+        if (workload != null) workload.tick();
+        else if (benchmark != null) benchmark.tick();
+        else { GpuTimers.drainSamples(); CpuTimers.drainSamples(); }
         if (ticks == 600 || ticks == 1800) {
             Screenshot.grab(client.gameDirectory, "landscape-" + ticks + ".png", client.getMainRenderTarget(), message -> LOGGER.info("ShaderLOD landscape capture: {}", message.getString()));
             LOGGER.info("ShaderLOD landscape timing: FPS={}, {}", client.getFps(), GpuTimers.summary());
@@ -121,18 +127,24 @@ final class ComparisonClient {
             double x = control.get("x").getAsDouble(), y = control.get("y").getAsDouble(), z = control.get("z").getAsDouble();
             float yaw = control.get("yaw").getAsFloat(), pitch = control.get("pitch").getAsFloat();
             int time = control.get("time").getAsInt();
+            String weather = control.has("weather") ? control.get("weather").getAsString() : "clear";
+            if (!List.of("clear", "rain", "thunder").contains(weather)) throw new IllegalArgumentException("Invalid weather");
             if (!Double.isFinite(x + y + z) || !Float.isFinite(yaw + pitch)) throw new IllegalArgumentException("Invalid camera");
             if (ModList.get().isLoaded("shaderlod")) {
                 if (control.has("preset")) ShaderLodConfig.PRESET.set(LodPreset.valueOf(control.get("preset").getAsString()));
                 if (control.has("debug")) ShaderLodConfig.DEBUG.set(control.get("debug").getAsBoolean());
+                if (control.has("terrainEnabled")) ShaderLodConfig.TERRAIN_ENABLED.set(control.get("terrainEnabled").getAsBoolean());
+                if (control.has("terrainChunkCap")) ShaderLodConfig.TERRAIN_VANILLA_CHUNK_CAP.set(control.get("terrainChunkCap").getAsInt());
+                if (control.has("warmSourceConfirmed")) ShaderLodConfig.TERRAIN_WARM_SOURCE_CONFIRMED.set(control.get("warmSourceConfirmed").getAsBoolean());
                 if (control.has("enabled") && benchmark == null) ShaderLodConfig.ENABLED.set(control.get("enabled").getAsBoolean());
             }
             var server = Minecraft.getInstance().getSingleplayerServer();
             server.execute(() -> {
                 var source = server.createCommandSourceStack();
-                for (String command : List.of("time set " + time, "weather clear", "gamerule doDaylightCycle false", "gamerule doWeatherCycle false", "gamerule doMobSpawning false", "gamemode spectator @a", String.format(Locale.ROOT, "tp @a %.3f %.3f %.3f %.3f %.3f", x, y, z, yaw, pitch))) server.getCommands().performPrefixedCommand(source, command);
+                for (String command : List.of("time set " + time, "weather " + weather, "gamerule doDaylightCycle false", "gamerule doWeatherCycle false", "gamerule doMobSpawning false", "gamemode spectator @a", String.format(Locale.ROOT, "tp @a %.3f %.3f %.3f %.3f %.3f", x, y, z, yaw, pitch))) server.getCommands().performPrefixedCommand(source, command);
             });
             controlModified = modified;
+            GpuTimers.resetSamples();
             LOGGER.info("ShaderLOD landscape camera applied: {}", control);
         } catch (Exception exception) { LOGGER.warn("Landscape control rejected: {}", exception.toString()); }
     }
@@ -157,6 +169,7 @@ final class ComparisonClient {
         long now = System.nanoTime();
         if (now >= nextOverlayUpdate) {
             overlayTimings = GpuTimers.snapshot();
+            overlayCpuTimings = CpuTimers.snapshot();
             nextOverlayUpdate = now + 250_000_000L;
         }
         var timings = overlayTimings;
@@ -177,9 +190,12 @@ final class ComparisonClient {
                 lines.add(String.format(Locale.ROOT, "%s %.2f ms", label, stats.meanMs()));
             }
         }
-        lines.add(client.getWindow().getWidth() + " x " + client.getWindow().getHeight() + " | MC " + client.options.renderDistance().get() + "ch | DH " + dhChunks + "ch");
+        lines.add(client.getWindow().getWidth() + " x " + client.getWindow().getHeight() + " | MC " + client.options.renderDistance().get() + "/" + client.options.getEffectiveRenderDistance() + "ch | DH " + dhChunks + "ch");
         lines.add(timings.status() + " | shared GPU preview");
         if (benchmark != null) lines.add(benchmark.status());
+        if (workload != null) lines.add(workload.status());
+        var cpuFrame = overlayCpuTimings.scopes().get("run-tick");
+        if (cpuFrame != null && cpuFrame.samples() > 0) lines.add(String.format(Locale.ROOT, "CPU frame wall %.2f | thread %.2f ms", cpuFrame.meanWallMs(), cpuFrame.meanThreadMs() == null ? Double.NaN : cpuFrame.meanThreadMs()));
         var graphics = event.getGuiGraphics();
         int width = lines.stream().mapToInt(client.font::width).max().orElse(100);
         graphics.fill(5, 5, width + 13, 11 + lines.size() * 12, 0xC0000000);

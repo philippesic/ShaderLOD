@@ -68,6 +68,72 @@ class ShaderpackTests(unittest.TestCase):
             with self.subTest(anchor=anchor), self.assertRaisesRegex(ValueError, "exactly once"):
                 BUILDER.apply_patches(self.upstream, manifest)
 
+    def test_cloud_candidate_options_are_legal_iris_values(self):
+        source = self.files["shaders/settings.glsl"].decode()
+        for macro, required in (("SHADERLOD_CLOUD_NEAR", 128.0),
+                                ("SHADERLOD_CLOUD_FAR", 1024.0),
+                                ("SHADERLOD_CLOUD_TRANSITION", 64.0)):
+            option = re.search(rf"#define {macro} ([0-9.]+) // \[([^\]]+)\]", source)
+            self.assertIsNotNone(option, macro)
+            self.assertIn(required, [float(value) for value in option.group(2).split()], macro)
+        defaults = dict(re.findall(r"#define (SHADERLOD_CLOUD_\w+) ([0-9.]+)", source))
+        self.assertEqual("512.0", defaults["SHADERLOD_CLOUD_NEAR"])
+        self.assertEqual("4096.0", defaults["SHADERLOD_CLOUD_FAR"])
+        self.assertEqual("256.0", defaults["SHADERLOD_CLOUD_TRANSITION"])
+
+    @unittest.skipUnless(shutil.which("c++"), "C++ compiler unavailable for isolated shader math checks")
+    def test_actual_cloud_helper_distance_boundaries(self):
+        # Execute the actual GLSL helper bodies on CPU with equivalent scalar
+        # builtins/vec3 fields. This tests tier math; it is not GPU rendering.
+        helper = self.files["shaders/include/shaderlod/lod.glsl"].decode()
+        def function(name):
+            match = re.search(rf"(?:bool|int) {name}\([^)]*\) \{{", helper)
+            self.assertIsNotNone(match, name)
+            end = match.end()
+            depth = 1
+            while depth:
+                depth += (helper[end] == "{") - (helper[end] == "}")
+                end += 1
+            return helper[match.start():end]
+        functions = "\n".join(function(name) for name in (
+            "shaderlod_enabled", "shaderlod_tier_with_distances", "shaderlod_cloud_tier"))
+        wrappers = """
+#include <cmath>
+struct vec3 { float x,y,z; vec3(float a,float b,float c):x(a),y(b),z(c){} };
+float max(float a,float b){ return a>b?a:b; }
+float min(float a,float b){ return a<b?a:b; }
+float clamp(float x,float a,float b){ return min(max(x,a),b); }
+float smoothstep(float a,float b,float x){ float t=clamp((x-a)/(b-a),0.f,1.f); return t*t*(3.f-2.f*t); }
+"""
+        fixtures = (
+            (128, 1024, 64, True, ((89, 0, 0), (89, .99, 0), (96, .99, 0),
+                (128, .25, 1), (128, .75, 0), (160, .99, 1),
+                (992, .99, 1), (1024, .25, 2), (1024, .75, 1), (1056, .99, 2))),
+            # Oversized width clamps to twice near; boundaries start at zero.
+            (64, 256, 512, True, ((-1, .5, 0), (0, .5, 0), (64, .25, 1),
+                (64, .75, 0), (128, .99, 1), (320, .99, 2))),
+            # Inverted options are sanitized and have nonoverlapping bands.
+            (1024, 256, 512, True, ((1000, .5, 0), (1024, .25, 1),
+                (1024, .75, 0), (1025.5, .99, 2))),
+            (128, 1024, 0, True, ((127, .5, 0), (128, .5, 1), (1024, .5, 2))),
+            (128, 1024, 64, False, ((89, .5, 0), (200, .5, 0), (5000, .5, 0))),
+        )
+        for index, (near, far, band, enabled, samples) in enumerate(fixtures):
+            with self.subTest(near=near, far=far, band=band, enabled=enabled):
+                definitions = ("#define SHADERLOD_ENABLED\n" if enabled else "") + (
+                    f"#define SHADERLOD_CLOUD_NEAR {float(near)}\n"
+                    f"#define SHADERLOD_CLOUD_FAR {float(far)}\n"
+                    f"#define SHADERLOD_CLOUD_TRANSITION {float(band)}\n")
+                checks = "\n".join(f"if(shaderlod_cloud_tier({distance}, {noise}) != {expected}) return {i+1};"
+                                     for i, (distance, noise, expected) in enumerate(samples))
+                path = Path(self.directory.name) / f"cloud-helper-{index}.cpp"
+                executable = path.with_suffix("")
+                path.write_text(definitions + wrappers + functions + "\nint main(){\n" + checks + "\nreturn 0;}\n")
+                result = subprocess.run(["c++", "-std=c++17", str(path), "-o", str(executable)], capture_output=True, text=True)
+                self.assertEqual(0, result.returncode, result.stdout + result.stderr)
+                executed = subprocess.run([str(executable)], capture_output=True, text=True)
+                self.assertEqual(0, executed.returncode, f"Cloud boundary check {executed.returncode} failed")
+
     def flatten(self, name, options):
         source = self.files[name].decode()
         if name == "shaders/settings.glsl":
@@ -90,7 +156,12 @@ class ShaderpackTests(unittest.TestCase):
         variants = (
             ("default", {}, ""),
             ("dh", {}, "#define DISTANT_HORIZONS\n"),
+            ("cloud_close", {"SHADERLOD_CLOUD_NEAR": 128.0, "SHADERLOD_CLOUD_FAR": 1024.0, "SHADERLOD_CLOUD_TRANSITION": 64.0}, "#define DISTANT_HORIZONS\n"),
+            ("cloud_inverted", {"SHADERLOD_CLOUD_NEAR": 1024.0, "SHADERLOD_CLOUD_FAR": 256.0, "SHADERLOD_CLOUD_TRANSITION": 512.0}, "#define DISTANT_HORIZONS\n"),
             ("debug", {"SHADERLOD_DEBUG": True}, ""),
+            ("legacy_balanced", {"SHADERLOD_PRESERVE_LIGHTING": False, "SHADERLOD_PRESET": 0, "SHADERLOD_USE_MOD_CONFIG": False}, "#define DISTANT_HORIZONS\n"),
+            ("legacy_performance", {"SHADERLOD_PRESERVE_LIGHTING": False, "SHADERLOD_PRESET": 1, "SHADERLOD_USE_MOD_CONFIG": False}, "#define DISTANT_HORIZONS\n"),
+            ("legacy_aggressive", {"SHADERLOD_PRESERVE_LIGHTING": False, "SHADERLOD_PRESET": 2, "SHADERLOD_USE_MOD_CONFIG": False}, "#define DISTANT_HORIZONS\n"),
             ("standalone", {"SHADERLOD_USE_MOD_CONFIG": False}, ""),
             ("no_shadow", {"SHADOW": False}, ""),
             ("no_pcf", {"SHADOW_PCF": False}, ""),

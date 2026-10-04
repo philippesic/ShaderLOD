@@ -4,6 +4,8 @@ run/
 run-iris/
 run-compare/
 run-landscape/
+run-workloads/
+logs/
 dev/runtime/
 dev/upstream/
 dev/logs/

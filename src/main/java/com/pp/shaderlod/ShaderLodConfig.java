@@ -10,6 +10,10 @@ public final class ShaderLodConfig {
     public static final ModConfigSpec.DoubleValue TRANSITION;
     public static final ModConfigSpec.BooleanValue DEBUG;
     public static final ModConfigSpec.EnumValue<LodPreset> PRESET;
+    public static final ModConfigSpec.BooleanValue TERRAIN_ENABLED;
+    public static final ModConfigSpec.IntValue TERRAIN_VANILLA_CHUNK_CAP;
+    public static final ModConfigSpec.BooleanValue TERRAIN_WARM_SOURCE_CONFIRMED;
+    public static final ModConfigSpec.IntValue TERRAIN_WARMUP_SECONDS;
 
     static {
         var builder = new ModConfigSpec.Builder();
@@ -26,6 +30,16 @@ public final class ShaderLodConfig {
                 .defineInRange("transition", 8.0, 0.0, 512.0);
         DEBUG = builder.comment("Tint full/medium/low zones green/yellow/red.")
                 .define("debug", false);
+        builder.pop();
+        builder.push("terrain");
+        TERRAIN_ENABLED = builder.comment("Opt-in effective vanilla terrain radius cap when Iris/DH are ready. Preserves the saved render-distance option.")
+                .define("enabled", false);
+        TERRAIN_VANILLA_CHUNK_CAP = builder.comment("Detailed vanilla chunk radius while opted in; DH reach is unchanged.")
+                .defineInRange("vanillaChunkCap", 16, 8, 32);
+        TERRAIN_WARM_SOURCE_CONFIRMED = builder.comment("Explicitly confirm this world/camera area has warmed DH terrain covering the replacement ring. Renderer readiness cannot prove cache coverage.")
+                .define("warmSourceConfirmed", false);
+        TERRAIN_WARMUP_SECONDS = builder.comment("Minimum stable Iris/DH world/pipeline warmup before capping; mesh/upload settling is still the user's responsibility.")
+                .defineInRange("warmupSeconds", 30, 5, 120);
         builder.pop();
         SPEC = builder.build();
     }

@@ -23,6 +23,14 @@ public final class TimingStatisticsTest {
         boolean rejected = false;
         try { history.add(-1); } catch (IllegalArgumentException expected) { rejected = true; }
         if (!rejected) throw new AssertionError("negative query duration accepted");
+        history.clear();
+        history.add(0);
+        history.add(1_000);
+        if (history.values().zeroSamples() != 1) throw new AssertionError("zero query result hidden");
+        assertNear(.001, history.values().minPositiveMs(), "minimum positive query diagnostic");
+        history.clear();
+        history.add(0);
+        if (history.values().minPositiveMs() != null) throw new AssertionError("zero query treated as calibrated precision");
         System.out.println("GPU timing statistics checks passed");
     }
 
