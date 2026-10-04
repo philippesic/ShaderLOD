@@ -13,12 +13,13 @@ sourceSets.devClient.compileClasspath += sourceSets.main.compileClasspath
 
 configurations {
     runtimeClasspath.extendsFrom localRuntime
+    devClientRuntimeClasspath.extendsFrom localRuntime
 }
 
 // Bootstrap downloads are checksum-locked in dev/runtime.lock.json.
 def runtimeLock = new groovy.json.JsonSlurper().parse(file('dev/runtime.lock.json'))
 dependencies {
-    devClientImplementation sourceSets.main.output
+    devClientCompileOnly sourceSets.main.output
     compileOnly files("dev/runtime/${runtimeLock.artifacts.iris.filename}")
     localRuntime files("dev/runtime/${runtimeLock.artifacts.iris.filename}",
                        "dev/runtime/${runtimeLock.artifacts.sodium.filename}")
@@ -42,20 +43,32 @@ neoForge {
         }
         clientLodOn {
             client()
-            gameDirectory = project.file('run-compare/lod-on')
+            gameDirectory = project.file('run-landscape/lod-on')
             systemProperty 'shaderlod.dev.compare', 'on'
-            jvmArgument '-Xmx4G'
+            jvmArgument '-Xmx6G'
         }
         clientLodOff {
             client()
-            gameDirectory = project.file('run-compare/lod-off')
+            gameDirectory = project.file('run-landscape/lod-off')
             systemProperty 'shaderlod.dev.compare', 'off'
-            jvmArgument '-Xmx4G'
+            jvmArgument '-Xmx6G'
         }
         configureEach { logLevel = org.slf4j.event.Level.INFO }
         configureEach {
             if (project.findProperty('smokeTest') == 'true') {
                 systemProperty 'shaderlod.dev.smoke', 'true'
+            }
+            if (project.findProperty('gpuBenchmark') == 'true') {
+                systemProperty 'shaderlod.dev.benchmark', 'true'
+            }
+            if (project.findProperty('benchmarkOnly') == 'true') {
+                systemProperty 'shaderlod.dev.benchmarkOnly', 'true'
+            }
+            if (project.hasProperty('gpuPassTiming')) {
+                systemProperty 'shaderlod.dev.gpuPassTiming', project.property('gpuPassTiming').toString()
+            }
+            if (project.hasProperty('initialWarmup')) {
+                systemProperty 'shaderlod.dev.initialWarmup', project.property('initialWarmup').toString()
             }
         }
     }
@@ -65,6 +78,10 @@ neoForge {
     }
 }
 neoForge.addModdingDependenciesTo(sourceSets.devClient)
+neoForge.runs.named('clientLodOff') {
+    sourceSet = sourceSets.devClient
+    loadedMods = [neoForge.mods.shaderlod_dev]
+}
 
 def generateModMetadata = tasks.register('generateModMetadata', ProcessResources) {
     def properties = [mod_id: mod_id, mod_name: mod_name, mod_version: mod_version,

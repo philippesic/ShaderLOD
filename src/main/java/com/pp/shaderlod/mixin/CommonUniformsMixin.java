@@ -21,14 +21,15 @@ public abstract class CommonUniformsMixin {
     private static void shaderlod$register(UniformHolder uniforms, FrameUpdateNotifier notifier,
                                            PackDirectives directives, CallbackInfo ci) {
         var frequency = UniformUpdateFrequency.PER_FRAME;
-        uniforms.uniform1i(frequency, "shaderlodBridgeVersion", () -> 1);
+        uniforms.uniform1i(frequency, "shaderlodBridgeVersion", () -> 2);
+        uniforms.uniform1i(frequency, "shaderlodPreset", () -> ShaderLodConfig.PRESET.get().ordinal());
         uniforms.uniform1i(frequency, "shaderlodEnabled", () -> ShaderLodConfig.snapshot().enabled() ? 1 : 0);
         uniforms.uniform1f(frequency, "shaderlodNear", (java.util.function.DoubleSupplier) () -> ShaderLodConfig.snapshot().near());
         uniforms.uniform1f(frequency, "shaderlodFar", (java.util.function.DoubleSupplier) () -> ShaderLodConfig.snapshot().far());
         uniforms.uniform1f(frequency, "shaderlodTransition", (java.util.function.DoubleSupplier) () -> ShaderLodConfig.snapshot().transition());
         uniforms.uniform1i(frequency, "shaderlodDebug", () -> ShaderLodConfig.snapshot().debug() ? 1 : 0);
         if (!shaderlod$logged) {
-            ShaderLod.LOGGER.info("ShaderLOD Iris uniform bridge registered (protocol 1)");
+            ShaderLod.LOGGER.info("ShaderLOD Iris uniform bridge registered (protocol 2)");
             shaderlod$logged = true;
         }
     }

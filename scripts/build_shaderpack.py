@@ -68,8 +68,8 @@ def build(output: Path, base: Path | None = None, root: Path = ROOT) -> dict:
                 raise ValueError(f"Overlay cannot replace upstream; use a bounded patch: {relative}")
             files[relative] = path.read_bytes()
     metadata = {
-        "integration": "ShaderLOD Photon PCF experiment",
-        "bridge_version": 1,
+        "integration": "ShaderLOD Photon multi-effect distance LOD",
+        "bridge_version": 2,
         "base_version": photon["version"],
         "base_sha512": photon["hashes"]["sha512"],
         "patch_manifest_sha256": hashlib.sha256((root / "patches/photon/v1.3b.json").read_bytes()).hexdigest(),

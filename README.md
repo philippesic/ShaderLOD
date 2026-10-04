@@ -1,14 +1,16 @@
 # ShaderLOD
 
 A NeoForge client mod and explicit Photon patch for distance-based shader quality.
-The first experiment changes opaque vanilla shadow filtering: full Photon quality
-nearby, at most four PCF samples in the middle zone, and one sample far away.
-The starting boundaries are 32 and 96 blocks with eight-block dither transitions.
+Distance budgets now cover shadow filtering, screen-space shadows, GTAO/SSAO,
+volumetric fog, LPV fog, clouds, SSR, and parallax. Balanced, Performance, and
+Aggressive presets preserve near work and reduce distant sampling. Starting
+terrain boundaries are 32/96 blocks; cloud bands use 512/4096 blocks.
 
 Development targets **Minecraft 1.21.1**, chosen for the established NeoForge
 ecosystem. [Version selection](docs/VERSION_SELECTION.md) records the public
 evidence and its limits. Iris is required; Distant Horizons is optional.
-DH-specific quality reduction and the multi-effect MVP remain future work.
+DH terrain and water use their correct depth/projection in shared downstream
+quality decisions. DH geometry/generation detail is unchanged.
 
 ## Start development
 
@@ -46,9 +48,38 @@ PCF. This is a development smoke profile, not a validation of Photon Ultra or
 general Apple compatibility. Other hosts initialize Photon's normal defaults;
 `--profile standard` explicitly chooses those on a fresh game directory.
 
+## Landscape comparison and GPU timings
+
+After warming the source smoke world once, prepare independent cached profiles:
+
+```sh
+python3 scripts/setup_comparison.py
+./gradlew runClientLodOn
+# In a second terminal:
+./gradlew runClientLodOff
+```
+
+These open two floating windows with matched cameras, vanilla24 chunks and DH128
+chunks. Left runs ShaderLOD; right runs original Photon with ShaderLOD absent.
+Both include the development timer harness and display FPS plus real GPU render
+and pass milliseconds. Apple uses asynchronous elapsed queries; frame and pass
+samples alternate because those queries cannot nest. Timings from concurrent
+windows share the GPU; use the serial benchmark for performance evidence.
+
+```sh
+./gradlew runClientLodOn -PgpuBenchmark=true -PgpuPassTiming=false
+python3 scripts/summarize_benchmark.py run-landscape/lod-on/benchmark.json
+```
+
+The benchmark uses one client and the same patched pack, alternating OFF/ON
+twice after warmup. Close other game clients first. Raw samples are written to
+the ignored run directory. Edit `run-landscape/control.json` to move both cameras
+or choose a preset; the right-hand original Photon ignores LOD-only controls.
+See [comparison preparation](docs/COMPARISON.md) and [GPU scopes](docs/GPU_TIMING.md).
+
 ## LOD controls
 
-Use `/shaderlod status`, `/shaderlod enabled true|false`, and
+Use `/shaderlod status`, `/shaderlod preset balanced|performance|aggressive`, `/shaderlod enabled true|false`, and
 `/shaderlod debug true|false` in a world. The patched Photon pack reads live
 NeoForge values through the pinned Iris uniform bridge. The client config is
 `run/config/shaderlod-client.toml` (or `run-iris/config/…`). Reload or restart
@@ -62,9 +93,10 @@ Build and packaging checks:
 python3 -m unittest discover -s tests -v
 ```
 
-Install `glslangValidator` to run the 48 fragment-program compilation variants;
+Install `glslangValidator` to run the 495 fragment-program compilation variants;
 that check is skipped when the executable is absent. Iris/OpenGL runtime checks
-are separate. No GPU speedup has been measured yet.
+are separate. Results and limitations are recorded with the active goal;
+individual pass savings do not imply a proportional whole-frame improvement.
 
 ## Project guidance
 

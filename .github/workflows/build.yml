@@ -12,6 +12,10 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
       - run: python3 scripts/setup_runtime.py --download-only
       - run: ./gradlew build compileDevClientJava
+      - run: |
+          mkdir -p build/dev-timing-tests
+          javac -d build/dev-timing-tests src/devClient/java/com/pp/shaderlod/dev/timing/TimingStatistics.java src/devClientTest/java/com/pp/shaderlod/dev/timing/TimingStatisticsTest.java
+          java -cp build/dev-timing-tests com.pp.shaderlod.dev.timing.TimingStatisticsTest
       - run: sudo apt-get update && sudo apt-get install -y glslang-tools
       - run: python3 scripts/build_shaderpack.py
       - run: python3 -m unittest discover -s tests

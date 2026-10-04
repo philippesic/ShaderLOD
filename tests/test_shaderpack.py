@@ -75,7 +75,7 @@ class ShaderpackTests(unittest.TestCase):
                 pattern = rf"^[ \t]*(?://)?#define {macro}(?=[ \t]|$)[^\n]*"
                 match = re.search(pattern, source, flags=re.M)
                 self.assertIsNotNone(match, macro)
-                source = source[:match.start()] + (f"\n#define {macro}" if enabled else f"\n//#define {macro}") + source[match.end():]
+                source = source[:match.start()] + (f"\n#define {macro}" if enabled is True else f"\n//#define {macro}" if enabled is False else f"\n#define {macro} {enabled}") + source[match.end():]
         return re.sub(
             r'^\s*#include "([^\"]+)"\s*$',
             lambda match: self.flatten("shaders" + match.group(1) if match.group(1).startswith("/") else str(PurePosixPath(name).parent / match.group(1)), options),
@@ -96,13 +96,22 @@ class ShaderpackTests(unittest.TestCase):
             ("no_pcf", {"SHADOW_PCF": False}, ""),
             ("no_color", {"SHADOW_COLOR": False}, ""),
             ("no_vps", {"SHADOW_VPS": False}, ""),
+            ("lod_off", {"SHADERLOD_ENABLED": False, "SHADERLOD_USE_MOD_CONFIG": False, "SHADERLOD_CACHED_SKY": True}, ""),
+            ("balanced", {"SHADERLOD_PRESET": 0, "SHADERLOD_USE_MOD_CONFIG": False, "SHADERLOD_CACHED_SKY": True}, "#define DISTANT_HORIZONS\n"),
+            ("performance", {"SHADERLOD_PRESET": 1, "SHADERLOD_USE_MOD_CONFIG": False, "SHADERLOD_CACHED_SKY": True}, "#define DISTANT_HORIZONS\n"),
+            ("aggressive", {"SHADERLOD_PRESET": 2, "SHADERLOD_USE_MOD_CONFIG": False, "SHADERLOD_CACHED_SKY": True}, "#define DISTANT_HORIZONS\n"),
+            ("ssao", {"SHADER_AO": "SHADER_AO_SSAO"}, "#define DISTANT_HORIZONS\n"),
+            ("no_ao", {"SHADER_AO": "SHADER_AO_NONE"}, "#define DISTANT_HORIZONS\n"),
+            ("materials", {"POM": True, "NORMAL_MAPPING": True, "SPECULAR_MAPPING": True, "POM_SHADOW": True, "WATER_WAVES": True, "WATER_PARALLAX": True}, "#define DISTANT_HORIZONS\n"),
         )
         for world in ("world0", "world1", "world-1"):
-            for program in ("deferred4", "gbuffers_water"):
+            for program in ("deferred4", "gbuffers_water", "deferred3", "deferred1", "deferred", "composite", "gbuffers_terrain", "dh_terrain", "dh_water", "composite1", "shadow"):
                 for variant, options, extra in variants:
                     with self.subTest(world=world, program=program, variant=variant):
                         source = self.flatten(f"shaders/{world}/{program}.fsh", options)
                         defines = "#define MC_VERSION 12101\n#define MC_SHADOW_QUALITY 1.0\n#define MC_HAND_DEPTH 0.125\n#define IS_IRIS\n#define IRIS_FEATURE_SEPARATE_ENTITY_DRAWS\n" + extra
+                        if program.startswith("dh_") and "DISTANT_HORIZONS" not in defines:
+                            defines += "#define DISTANT_HORIZONS\n"
                         source = source.replace("#version 400 compatibility", "#version 400 compatibility\n" + defines, 1).replace("\\\n", "")
                         path = Path(self.directory.name) / f"{world}-{program}-{variant}.fsh"
                         path.write_text(source)

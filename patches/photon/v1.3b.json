@@ -6,19 +6,19 @@
       "path": "shaders/settings.glsl",
       "source_sha256": "93401d268fe859cc1df81929ad41156757a98db80f80cf32af80d9cdca96c394",
       "before": "const int noiseTextureResolution = 512;",
-      "after": "// ShaderLOD options (mod bridge falls back to these when ShaderLOD is absent).\n  #define SHADERLOD_ENABLED\n  #define SHADERLOD_USE_MOD_CONFIG\n  #define SHADERLOD_NEAR 32.0 // [16.0 24.0 32.0 48.0 64.0]\n  #define SHADERLOD_FAR 96.0 // [48.0 64.0 96.0 128.0 192.0 256.0]\n  #define SHADERLOD_TRANSITION 8.0 // [0.0 4.0 8.0 16.0 24.0 32.0]\n//#define SHADERLOD_DEBUG\n\nconst int noiseTextureResolution = 512;"
+      "after": "// ShaderLOD options (mod bridge falls back to these when ShaderLOD is absent).\n  #define SHADERLOD_ENABLED\n  #define SHADERLOD_USE_MOD_CONFIG\n//#define SHADERLOD_CACHED_SKY\n  #define SHADERLOD_PRESET 1 // [0 1 2]\n  #define SHADERLOD_CLOUD_NEAR 512.0 // [256.0 512.0 1024.0]\n  #define SHADERLOD_CLOUD_FAR 4096.0 // [2048.0 4096.0 8192.0]\n  #define SHADERLOD_NEAR 32.0 // [16.0 24.0 32.0 48.0 64.0]\n  #define SHADERLOD_FAR 96.0 // [48.0 64.0 96.0 128.0 192.0 256.0]\n  #define SHADERLOD_TRANSITION 8.0 // [0.0 4.0 8.0 16.0 24.0 32.0]\n//#define SHADERLOD_DEBUG\n\nconst int noiseTextureResolution = 512;"
     },
     {
       "path": "shaders/shaders.properties",
       "source_sha256": "f8cc8df60f930612e8817e4176a34886c1a9de778c15427a5468ecbc4f71ee9a",
       "before": "screen              = INFO <profile> <empty> <empty> [world] [lighting] [sky] [fog] [materials] [water] [post] [misc]",
-      "after": "screen              = INFO <profile> <empty> <empty> [world] [lighting] [sky] [fog] [materials] [water] [post] [misc] [shaderlod]\nscreen.shaderlod = SHADERLOD_ENABLED SHADERLOD_USE_MOD_CONFIG SHADERLOD_NEAR SHADERLOD_FAR SHADERLOD_TRANSITION SHADERLOD_DEBUG"
+      "after": "screen              = INFO <profile> <empty> <empty> [world] [lighting] [sky] [fog] [materials] [water] [post] [misc] [shaderlod]\nscreen.shaderlod = SHADERLOD_ENABLED SHADERLOD_USE_MOD_CONFIG SHADERLOD_NEAR SHADERLOD_FAR SHADERLOD_TRANSITION SHADERLOD_PRESET SHADERLOD_CLOUD_NEAR SHADERLOD_CLOUD_FAR SHADERLOD_CACHED_SKY SHADERLOD_DEBUG"
     },
     {
       "path": "shaders/lang/en_US.lang",
       "source_sha256": "fa0dad5cf1048c70532d562eb3ac3f0c2739aa81e7bedc29fce049a6c45809f8",
       "before": "# Profiles",
-      "after": "# ShaderLOD\nscreen.shaderlod = ShaderLOD\noption.SHADERLOD_ENABLED = Distance LOD\noption.SHADERLOD_ENABLED.comment = Reduce opaque vanilla terrain shadow filtering with distance.\noption.SHADERLOD_USE_MOD_CONFIG = Use ShaderLOD mod config\noption.SHADERLOD_USE_MOD_CONFIG.comment = Use live mod values when bridge version 1 is available; otherwise use these options.\noption.SHADERLOD_NEAR = Near boundary (blocks)\noption.SHADERLOD_FAR = Far boundary (blocks)\noption.SHADERLOD_TRANSITION = Transition width (blocks)\noption.SHADERLOD_DEBUG = Show LOD zones\noption.SHADERLOD_DEBUG.comment = Tint opaque vanilla terrain green/full, amber/medium, red/far. Excludes DH and hand.\n\n# Profiles"
+      "after": "# ShaderLOD\nscreen.shaderlod = ShaderLOD\noption.SHADERLOD_ENABLED = Distance LOD\noption.SHADERLOD_ENABLED.comment = Reduce shadow, AO, fog, cloud, SSR and POM work with distance, including DH terrain.\noption.SHADERLOD_USE_MOD_CONFIG = Use ShaderLOD mod config\noption.SHADERLOD_USE_MOD_CONFIG.comment = Use live mod values when bridge version 1 or 2 is available; otherwise use these options.\noption.SHADERLOD_NEAR = Near boundary (blocks)\noption.SHADERLOD_FAR = Far boundary (blocks)\noption.SHADERLOD_TRANSITION = Transition width (blocks)\noption.SHADERLOD_DEBUG = Show LOD zones\noption.SHADERLOD_DEBUG.comment = Tint opaque vanilla terrain green/full, amber/medium, red/far. Includes DH; excludes sky and hand.\n\noption.SHADERLOD_PRESET = LOD preset\nvalue.SHADERLOD_PRESET.0 = Balanced\nvalue.SHADERLOD_PRESET.1 = Performance\nvalue.SHADERLOD_PRESET.2 = Aggressive\noption.SHADERLOD_CLOUD_NEAR = Cloud near boundary (blocks)\noption.SHADERLOD_CLOUD_FAR = Cloud far boundary (blocks)\noption.SHADERLOD_PRESET.comment = Higher presets lower actual ray/sample budgets. Aggressive bypasses far AO.\n\noption.SHADERLOD_CACHED_SKY = Reduce cached sky-map work\noption.SHADERLOD_CACHED_SKY.comment = Global cloud-lighting/reflection approximation: Performance halves cached cloud budgets, Aggressive uses eighth budgets (effect minima apply); Balanced and disabled stay full.\n\n# Profiles"
     },
     {
       "path": "shaders/include/lighting/shadows/pcss.glsl",
@@ -30,7 +30,7 @@
       "path": "shaders/include/lighting/shadows/pcss.glsl",
       "source_sha256": "c12e98fa923306687bfa5ac2b00214d45b1614ebafb719e22839f3420750a76b",
       "before": "    step_count = min(step_count, SHADOW_PCF_STEPS_MAX);",
-      "after": "    step_count = min(step_count, SHADOW_PCF_STEPS_MAX);\n    // Keep Photon's near work; cap only the expensive PCF operation at distance.\n    if (shaderlod_quality == 1) step_count = min(step_count, 4);\n    if (shaderlod_quality == 2) step_count = 1;\n    int initial_steps = min(4, step_count);"
+      "after": "    step_count = min(step_count, SHADOW_PCF_STEPS_MAX);\n    // Keep Photon's near work; cap only the expensive PCF operation at distance.\n    if (shaderlod_quality == 1) step_count = min(step_count, shaderlod_preset() == 0 ? 4 : 2);\n    if (shaderlod_quality == 2) step_count = 1;\n    int initial_steps = min(4, step_count);"
     },
     {
       "path": "shaders/include/lighting/shadows/pcss.glsl",
@@ -72,7 +72,7 @@
       "path": "shaders/program/d4_deferred_shading.fsh",
       "source_sha256": "212081e707c20c78e17cbfd3380b2f22eb696cc1aa14bdf006c07d59f53f67e0",
       "before": "    vec3 position_world = position_scene + cameraPosition;",
-      "after": "    vec3 position_world = position_scene + cameraPosition;\n    // DH/other coarse geometry and the hand retain upstream shadow behavior.\n    int shaderlod_quality = (is_lod || is_hand) ? 0 : shaderlod_tier(\n        length(position_view), shaderlod_noise(gl_FragCoord.xy, float(frameCounter))\n    );"
+      "after": "    vec3 position_world = position_scene + cameraPosition;\n    // Combined depth is already reconstructed using the combined projection, including DH.\n    int shaderlod_quality = (depth == 1.0 || is_hand) ? 0 : shaderlod_quality_at(\n        length(position_view), gl_FragCoord.xy, float(frameCounter)\n    );"
     },
     {
       "path": "shaders/program/d4_deferred_shading.fsh",
@@ -84,13 +84,511 @@
       "path": "shaders/program/d4_deferred_shading.fsh",
       "source_sha256": "212081e707c20c78e17cbfd3380b2f22eb696cc1aa14bdf006c07d59f53f67e0",
       "before": "        fragment_color = purkinje_shift(fragment_color, light_levels);",
-      "after": "        fragment_color = purkinje_shift(fragment_color, light_levels);\n        if (shaderlod_debug_enabled() && !is_lod && !is_hand) {\n            fragment_color = mix(fragment_color, shaderlod_debug_color(shaderlod_quality), 0.7);\n        }"
+      "after": "        fragment_color = purkinje_shift(fragment_color, light_levels);\n        if (shaderlod_debug_enabled() && !is_hand) {\n            fragment_color = mix(fragment_color, shaderlod_debug_color(shaderlod_quality), 0.7);\n        }"
     },
     {
       "path": "shaders/program/gbuffers_all_translucent.fsh",
       "source_sha256": "01c04bc017069cf19c319a0a0875ca706554575dd01e291e17cad8565645b82f",
       "before": "        shadow_distance_fade,\n        sss_depth\n    );",
-      "after": "        shadow_distance_fade,\n        sss_depth,\n        0 // ShaderLOD starts with opaque terrain; preserve translucent shadows.\n    );"
+      "after": "        shadow_distance_fade,\n        sss_depth,\n        shaderlod_quality_at(length(position_view), gl_FragCoord.xy, float(frameCounter))\n    );"
+    },
+    {
+      "path": "shaders/include/lighting/shadows/pcss.glsl",
+      "source_sha256": "c12e98fa923306687bfa5ac2b00214d45b1614ebafb719e22839f3420750a76b",
+      "before": "#define INCLUDE_LIGHTING_SHADOWS",
+      "after": "#define INCLUDE_LIGHTING_SHADOWS\n#include \"/include/shaderlod/lod.glsl\""
+    },
+    {
+      "path": "shaders/include/lighting/ao/gtao.glsl",
+      "source_sha256": "0889647aa827357ba9e5101431b4294299a078055f7f3537468a94fb6430b0d3",
+      "before": "#define INCLUDE_LIGHTING_AO_GTAO",
+      "after": "#define INCLUDE_LIGHTING_AO_GTAO\n#include \"/include/shaderlod/lod.glsl\""
+    },
+    {
+      "path": "shaders/include/lighting/ao/gtao.glsl",
+      "source_sha256": "0889647aa827357ba9e5101431b4294299a078055f7f3537468a94fb6430b0d3",
+      "before": "    bool is_lod\n) {",
+      "after": "    bool is_lod,\n    int horizon_steps\n) {"
+    },
+    {
+      "path": "shaders/include/lighting/ao/gtao.glsl",
+      "source_sha256": "0889647aa827357ba9e5101431b4294299a078055f7f3537468a94fb6430b0d3",
+      "before": "rcp(float(GTAO_HORIZON_STEPS))",
+      "after": "rcp(float(horizon_steps))"
+    },
+    {
+      "path": "shaders/include/lighting/ao/gtao.glsl",
+      "source_sha256": "0889647aa827357ba9e5101431b4294299a078055f7f3537468a94fb6430b0d3",
+      "before": "i < GTAO_HORIZON_STEPS",
+      "after": "i < horizon_steps"
+    },
+    {
+      "path": "shaders/include/lighting/ao/gtao.glsl",
+      "source_sha256": "0889647aa827357ba9e5101431b4294299a078055f7f3537468a94fb6430b0d3",
+      "before": "    float ao = 0.0;",
+      "after": "    int quality = shaderlod_quality_at(length(view_pos), gl_FragCoord.xy, float(frameCounter));\n    if (quality == 2 && shaderlod_preset() == 2) {\n        bent_normal = view_normal;\n        return vec2(1.0, 0.0); // Aggressive distant AO bypass; no depth-ray lookups.\n    }\n    int slice_count = shaderlod_budget(GTAO_SLICES, quality, 1);\n    int horizon_steps = shaderlod_budget(GTAO_HORIZON_STEPS, quality, 1);\n    float ao = 0.0;"
+    },
+    {
+      "path": "shaders/include/lighting/ao/gtao.glsl",
+      "source_sha256": "0889647aa827357ba9e5101431b4294299a078055f7f3537468a94fb6430b0d3",
+      "before": "i < GTAO_SLICES",
+      "after": "i < slice_count"
+    },
+    {
+      "path": "shaders/include/lighting/ao/gtao.glsl",
+      "source_sha256": "0889647aa827357ba9e5101431b4294299a078055f7f3537468a94fb6430b0d3",
+      "before": "pi / float(GTAO_SLICES)",
+      "after": "pi / float(slice_count)"
+    },
+    {
+      "path": "shaders/include/lighting/ao/gtao.glsl",
+      "source_sha256": "0889647aa827357ba9e5101431b4294299a078055f7f3537468a94fb6430b0d3",
+      "before": "            -view_slice_dir,\n            viewer_dir,\n            screen_pos,\n            view_pos,\n            ao_radius,\n            dither.y,\n            is_lod",
+      "after": "            -view_slice_dir,\n            viewer_dir,\n            screen_pos,\n            view_pos,\n            ao_radius,\n            dither.y,\n            is_lod,\n            horizon_steps"
+    },
+    {
+      "path": "shaders/include/lighting/ao/gtao.glsl",
+      "source_sha256": "0889647aa827357ba9e5101431b4294299a078055f7f3537468a94fb6430b0d3",
+      "before": "            view_slice_dir,\n            viewer_dir,\n            screen_pos,\n            view_pos,\n            ao_radius,\n            dither.y,\n            is_lod",
+      "after": "            view_slice_dir,\n            viewer_dir,\n            screen_pos,\n            view_pos,\n            ao_radius,\n            dither.y,\n            is_lod,\n            horizon_steps"
+    },
+    {
+      "path": "shaders/include/lighting/ao/gtao.glsl",
+      "source_sha256": "0889647aa827357ba9e5101431b4294299a078055f7f3537468a94fb6430b0d3",
+      "before": "ao *= rcp(float(GTAO_SLICES));",
+      "after": "ao *= rcp(float(slice_count));"
+    },
+    {
+      "path": "shaders/include/lighting/ao/gtao.glsl",
+      "source_sha256": "0889647aa827357ba9e5101431b4294299a078055f7f3537468a94fb6430b0d3",
+      "before": "ambient_sss *= rcp(float(GTAO_SLICES));",
+      "after": "ambient_sss *= rcp(float(slice_count));"
+    },
+    {
+      "path": "shaders/include/fog/overworld/raymarched.glsl",
+      "source_sha256": "242cf128c4b18b6fd7ac080806de83fcd766676837e929f32fe4f7c613547ea5",
+      "before": "#define INCLUDE_FOG_AIR_FOG_VL",
+      "after": "#define INCLUDE_FOG_AIR_FOG_VL\n#include \"/include/shaderlod/lod.glsl\""
+    },
+    {
+      "path": "shaders/include/fog/overworld/raymarched.glsl",
+      "source_sha256": "242cf128c4b18b6fd7ac080806de83fcd766676837e929f32fe4f7c613547ea5",
+      "before": "    step_count = min(step_count, air_fog_max_step_count);",
+      "after": "    step_count = min(step_count, air_fog_max_step_count);\n    step_count = uint(shaderlod_budget(int(step_count), shaderlod_tier(ray_length, dither), 3));"
+    },
+    {
+      "path": "shaders/include/fog/water_fog_vl.glsl",
+      "source_sha256": "7d107cb94739266ac6d32c9a295d3bc35ef2bd0b4c3410006c34bc8e30ce14f2",
+      "before": "#define INCLUDE_FOG_WATER_FOG_VL",
+      "after": "#define INCLUDE_FOG_WATER_FOG_VL\n#include \"/include/shaderlod/lod.glsl\""
+    },
+    {
+      "path": "shaders/include/fog/water_fog_vl.glsl",
+      "source_sha256": "7d107cb94739266ac6d32c9a295d3bc35ef2bd0b4c3410006c34bc8e30ce14f2",
+      "before": "    step_count = min(step_count, max_step_count);",
+      "after": "    step_count = min(step_count, max_step_count);\n    step_count = uint(shaderlod_budget(int(step_count), shaderlod_tier(ray_length, dither), 3));"
+    },
+    {
+      "path": "shaders/include/fog/end_fog_vl.glsl",
+      "source_sha256": "be0819281f7a6dfd423d23cebb35ed0107a5e2b3d943a5dffa6408d6e7c371ad",
+      "before": "#define INCLUDE_FOG_END_FOG_VL",
+      "after": "#define INCLUDE_FOG_END_FOG_VL\n#include \"/include/shaderlod/lod.glsl\""
+    },
+    {
+      "path": "shaders/include/fog/end_fog_vl.glsl",
+      "source_sha256": "be0819281f7a6dfd423d23cebb35ed0107a5e2b3d943a5dffa6408d6e7c371ad",
+      "before": "    step_count = min(step_count, max_step_count);",
+      "after": "    step_count = min(step_count, max_step_count);\n    step_count = uint(shaderlod_budget(int(step_count), shaderlod_tier(ray_length, dither), 3));"
+    },
+    {
+      "path": "shaders/include/fog/lpv_fog.glsl",
+      "source_sha256": "47164588cf64d586b3de1b680642cbe80b704482199c7461175613e550654156",
+      "before": "#define INCLUDE_FOG_LPV_FOG",
+      "after": "#define INCLUDE_FOG_LPV_FOG\n#include \"/include/shaderlod/lod.glsl\""
+    },
+    {
+      "path": "shaders/include/fog/lpv_fog.glsl",
+      "source_sha256": "47164588cf64d586b3de1b680642cbe80b704482199c7461175613e550654156",
+      "before": "    const uint step_count = LPV_VL_STEPS;",
+      "after": "    uint step_count = uint(shaderlod_budget(LPV_VL_STEPS,\n        shaderlod_tier(distance(ray_end_world, ray_origin_world), dither), 3));"
+    },
+    {
+      "path": "shaders/include/fog/lpv_fog.glsl",
+      "source_sha256": "47164588cf64d586b3de1b680642cbe80b704482199c7461175613e550654156",
+      "before": "    const float initial_step_scale = step_ratio == 1.0",
+      "after": "    float initial_step_scale = step_ratio == 1.0"
+    },
+    {
+      "path": "shaders/include/sky/clouds/common.glsl",
+      "source_sha256": "4762892447e8251e0351ed413ca35f2aebd318e23b2933e5e9c5f872c1ff7f7f",
+      "before": "#define INCLUDE_SKY_CLOUDS_COMMON",
+      "after": "#define INCLUDE_SKY_CLOUDS_COMMON\n#include \"/include/shaderlod/lod.glsl\""
+    },
+    {
+      "path": "shaders/include/sky/clouds/cumulus.glsl",
+      "source_sha256": "1923542cd9ad862a6166a542dbdcb1597fd70316e4338b236deefc2ccb932ba5",
+      "before": "    const uint step_count\n) {",
+      "after": "    uint step_count\n) {"
+    },
+    {
+      "path": "shaders/include/sky/clouds/cumulus.glsl",
+      "source_sha256": "1923542cd9ad862a6166a542dbdcb1597fd70316e4338b236deefc2ccb932ba5",
+      "before": "    const uint lighting_steps = CLOUDS_CUMULUS_LIGHTING_STEPS;",
+      "after": "    uint lighting_steps = CLOUDS_CUMULUS_LIGHTING_STEPS;"
+    },
+    {
+      "path": "shaders/include/sky/clouds/cumulus.glsl",
+      "source_sha256": "1923542cd9ad862a6166a542dbdcb1597fd70316e4338b236deefc2ccb932ba5",
+      "before": "    const uint ambient_steps = CLOUDS_CUMULUS_AMBIENT_STEPS;",
+      "after": "    uint ambient_steps = CLOUDS_CUMULUS_AMBIENT_STEPS;"
+    },
+    {
+      "path": "shaders/include/sky/clouds/cumulus.glsl",
+      "source_sha256": "1923542cd9ad862a6166a542dbdcb1597fd70316e4338b236deefc2ccb932ba5",
+      "before": "    float step_length = ray_length * rcp(float(primary_steps));",
+      "after": "    // Cloud shells use scaled atmosphere coordinates; thresholds are world blocks.\n    // Use entry distance, not sky depth or endpoint, so overhead clouds stay detailed.\n#if !defined PROGRAM_DEFERRED0\n    int cloud_quality = shaderlod_cloud_tier(max(dists.x, 0.0) / CLOUDS_SCALE, dither);\n#else\n    // The cached map is sampled from a fixed sea-level atmosphere origin.\n    // Its opt-in quality is global, not measured from the rendered camera.\n    int cloud_quality = shaderlod_cached_sky_tier();\n#endif\n    primary_steps = uint(shaderlod_budget(int(primary_steps), cloud_quality, 4));\n    lighting_steps = uint(shaderlod_budget(int(lighting_steps), cloud_quality, 2));\n    ambient_steps = uint(shaderlod_budget(int(ambient_steps), cloud_quality, 1));\n    float step_length = ray_length * rcp(float(primary_steps));"
+    },
+    {
+      "path": "shaders/include/sky/clouds/altocumulus.glsl",
+      "source_sha256": "949546d185bbf17034ab04f9d6a4b14ddf3b9efe5d957df35feb4044974872c6",
+      "before": "    const uint step_count\n) {",
+      "after": "    uint step_count\n) {"
+    },
+    {
+      "path": "shaders/include/sky/clouds/altocumulus.glsl",
+      "source_sha256": "949546d185bbf17034ab04f9d6a4b14ddf3b9efe5d957df35feb4044974872c6",
+      "before": "    const uint lighting_steps = CLOUDS_ALTOCUMULUS_LIGHTING_STEPS;",
+      "after": "    uint lighting_steps = CLOUDS_ALTOCUMULUS_LIGHTING_STEPS;"
+    },
+    {
+      "path": "shaders/include/sky/clouds/altocumulus.glsl",
+      "source_sha256": "949546d185bbf17034ab04f9d6a4b14ddf3b9efe5d957df35feb4044974872c6",
+      "before": "    const uint ambient_steps = CLOUDS_ALTOCUMULUS_AMBIENT_STEPS;",
+      "after": "    uint ambient_steps = CLOUDS_ALTOCUMULUS_AMBIENT_STEPS;"
+    },
+    {
+      "path": "shaders/include/sky/clouds/altocumulus.glsl",
+      "source_sha256": "949546d185bbf17034ab04f9d6a4b14ddf3b9efe5d957df35feb4044974872c6",
+      "before": "    float step_length = ray_length * rcp(float(primary_steps));",
+      "after": "    // Cloud shells use scaled atmosphere coordinates; thresholds are world blocks.\n    // Use entry distance, not sky depth or endpoint, so overhead clouds stay detailed.\n#if !defined PROGRAM_DEFERRED0\n    int cloud_quality = shaderlod_cloud_tier(max(dists.x, 0.0) / CLOUDS_SCALE, dither);\n#else\n    // The cached map is sampled from a fixed sea-level atmosphere origin.\n    // Its opt-in quality is global, not measured from the rendered camera.\n    int cloud_quality = shaderlod_cached_sky_tier();\n#endif\n    primary_steps = uint(shaderlod_budget(int(primary_steps), cloud_quality, 4));\n    lighting_steps = uint(shaderlod_budget(int(lighting_steps), cloud_quality, 2));\n    ambient_steps = uint(shaderlod_budget(int(ambient_steps), cloud_quality, 1));\n    float step_length = ray_length * rcp(float(primary_steps));"
+    },
+    {
+      "path": "shaders/include/sky/clouds/cumulus_congestus.glsl",
+      "source_sha256": "601e09bb68f53226abcf3e9d74afdf67002d06d6247e6d8cb86f02ffbf92e5e1",
+      "before": "    const uint step_count\n) {",
+      "after": "    uint step_count\n) {"
+    },
+    {
+      "path": "shaders/include/sky/clouds/cumulus_congestus.glsl",
+      "source_sha256": "601e09bb68f53226abcf3e9d74afdf67002d06d6247e6d8cb86f02ffbf92e5e1",
+      "before": "    const uint primary_steps = CLOUDS_CUMULUS_CONGESTUS_PRIMARY_STEPS;",
+      "after": "    uint primary_steps = CLOUDS_CUMULUS_CONGESTUS_PRIMARY_STEPS;"
+    },
+    {
+      "path": "shaders/include/sky/clouds/cumulus_congestus.glsl",
+      "source_sha256": "601e09bb68f53226abcf3e9d74afdf67002d06d6247e6d8cb86f02ffbf92e5e1",
+      "before": "    const uint lighting_steps = CLOUDS_CUMULUS_CONGESTUS_LIGHTING_STEPS;",
+      "after": "    uint lighting_steps = CLOUDS_CUMULUS_CONGESTUS_LIGHTING_STEPS;"
+    },
+    {
+      "path": "shaders/include/sky/clouds/cumulus_congestus.glsl",
+      "source_sha256": "601e09bb68f53226abcf3e9d74afdf67002d06d6247e6d8cb86f02ffbf92e5e1",
+      "before": "    const uint ambient_steps = CLOUDS_CUMULUS_CONGESTUS_AMBIENT_STEPS;",
+      "after": "    uint ambient_steps = CLOUDS_CUMULUS_CONGESTUS_AMBIENT_STEPS;"
+    },
+    {
+      "path": "shaders/include/sky/clouds/cumulus_congestus.glsl",
+      "source_sha256": "601e09bb68f53226abcf3e9d74afdf67002d06d6247e6d8cb86f02ffbf92e5e1",
+      "before": "    float step_length = ray_length * rcp(float(primary_steps));",
+      "after": "    // Cloud shells use scaled atmosphere coordinates; thresholds are world blocks.\n    // Use entry distance, not sky depth or endpoint, so overhead clouds stay detailed.\n#if !defined PROGRAM_DEFERRED0\n    int cloud_quality = shaderlod_cloud_tier(max(dists.x, 0.0) / CLOUDS_SCALE, dither);\n#else\n    // The cached map is sampled from a fixed sea-level atmosphere origin.\n    // Its opt-in quality is global, not measured from the rendered camera.\n    int cloud_quality = shaderlod_cached_sky_tier();\n#endif\n    primary_steps = uint(shaderlod_budget(int(primary_steps), cloud_quality, 4));\n    lighting_steps = uint(shaderlod_budget(int(lighting_steps), cloud_quality, 2));\n    ambient_steps = uint(shaderlod_budget(int(ambient_steps), cloud_quality, 1));\n    float step_length = ray_length * rcp(float(primary_steps));"
+    },
+    {
+      "path": "shaders/include/lighting/shadows/ssrt.glsl",
+      "source_sha256": "ffb29cc8892ebcf9bfd697467a5adc8239030a3913fac8a8315a4ab39db674b8",
+      "before": "#define INCLUDE_LIGHTING_SHADOWS_SSRT_SHADOWS",
+      "after": "#define INCLUDE_LIGHTING_SHADOWS_SSRT_SHADOWS\n#include \"/include/shaderlod/lod.glsl\""
+    },
+    {
+      "path": "shaders/include/lighting/shadows/ssrt.glsl",
+      "source_sha256": "ffb29cc8892ebcf9bfd697467a5adc8239030a3913fac8a8315a4ab39db674b8",
+      "before": "    const uint step_count = uint(SHADOW_SSRT_STEPS);",
+      "after": "    uint step_count = uint(shaderlod_budget(SHADOW_SSRT_STEPS,\n        shaderlod_tier(length(ray_origin_view), dither), 2));"
+    },
+    {
+      "path": "shaders/include/lighting/shadows/ssrt.glsl",
+      "source_sha256": "ffb29cc8892ebcf9bfd697467a5adc8239030a3913fac8a8315a4ab39db674b8",
+      "before": "    const float initial_step_scale = step_ratio == 1.0",
+      "after": "    float initial_step_scale = step_ratio == 1.0"
+    },
+    {
+      "path": "shaders/include/lighting/specular_lighting.glsl",
+      "source_sha256": "01d260e65de1dc1766e62044d79adef61dbdee9b75a8d48bd15ff8bd778a15e0",
+      "before": "#define INCLUDE_LIGHTING_SPECULAR_LIGHTING",
+      "after": "#define INCLUDE_LIGHTING_SPECULAR_LIGHTING\n#include \"/include/shaderlod/lod.glsl\""
+    },
+    {
+      "path": "shaders/include/lighting/specular_lighting.glsl",
+      "source_sha256": "01d260e65de1dc1766e62044d79adef61dbdee9b75a8d48bd15ff8bd778a15e0",
+      "before": "    bool hit = raymarch_depth_buffer(\n        screen_pos,\n        view_pos,\n        view_dir,\n        dither,\n        intersection_step_count,\n        refinement_step_count,\n        hit_pos\n    );",
+      "after": "    int quality = shaderlod_tier(length(view_pos), dither);\n    vec3 hit_pos_default = vec3(0.0);\n    hit_pos = hit_pos_default;\n    bool hit = false;\n    // Keep sky fallback, skip only the costly environment trace at far quality.\n    if (quality != 2) {\n        hit = raymarch_depth_buffer(\n            screen_pos, view_pos, view_dir, dither,\n            uint(shaderlod_budget(int(intersection_step_count), quality, 2)),\n            quality == 0 ? refinement_step_count : min(refinement_step_count, 2u),\n            hit_pos\n        );\n    }"
+    },
+    {
+      "path": "shaders/include/lighting/specular_lighting.glsl",
+      "source_sha256": "01d260e65de1dc1766e62044d79adef61dbdee9b75a8d48bd15ff8bd778a15e0",
+      "before": "        for (int i = 0; i < SSR_RAY_COUNT; ++i) {",
+      "after": "        int ray_count = shaderlod_budget(SSR_RAY_COUNT,\n            shaderlod_tier(length(view_pos), dither), 1);\n        for (int i = 0; i < ray_count; ++i) {"
+    },
+    {
+      "path": "shaders/include/lighting/specular_lighting.glsl",
+      "source_sha256": "01d260e65de1dc1766e62044d79adef61dbdee9b75a8d48bd15ff8bd778a15e0",
+      "before": "reflection *= albedo_tint * rcp(float(SSR_RAY_COUNT));",
+      "after": "reflection *= albedo_tint * rcp(float(ray_count));"
+    },
+    {
+      "path": "shaders/include/surface/parallax.glsl",
+      "source_sha256": "5957b6101095bdb3abe7b5864915d5d636a9eb826602c018e3face47cdc81033",
+      "before": "#define INCLUDE_MISC_PARALLAX",
+      "after": "#define INCLUDE_MISC_PARALLAX\n#include \"/include/shaderlod/lod.glsl\""
+    },
+    {
+      "path": "shaders/include/surface/parallax.glsl",
+      "source_sha256": "5957b6101095bdb3abe7b5864915d5d636a9eb826602c018e3face47cdc81033",
+      "before": "    const float depth_step = rcp(float(POM_SAMPLES));",
+      "after": "    int quality = shaderlod_material_tier(view_distance, float(POM_DISTANCE), dither);\n    float depth_step = 1.0 / float(shaderlod_budget(POM_SAMPLES, quality, 4));"
+    },
+    {
+      "path": "shaders/include/surface/parallax.glsl",
+      "source_sha256": "5957b6101095bdb3abe7b5864915d5d636a9eb826602c018e3face47cdc81033",
+      "before": "    vec3 tangent_dir = light_dir * tbn;",
+      "after": "    int quality = shaderlod_material_tier(view_distance, float(POM_DISTANCE), dither);\n    if (quality == 2) return false;\n    int shadow_samples = shaderlod_budget(POM_SHADOW_SAMPLES, quality, 2);\n    vec3 tangent_dir = light_dir * tbn;"
+    },
+    {
+      "path": "shaders/include/surface/parallax.glsl",
+      "source_sha256": "5957b6101095bdb3abe7b5864915d5d636a9eb826602c018e3face47cdc81033",
+      "before": "rcp(float(POM_SHADOW_SAMPLES))",
+      "after": "rcp(float(shadow_samples))"
+    },
+    {
+      "path": "shaders/include/surface/parallax.glsl",
+      "source_sha256": "5957b6101095bdb3abe7b5864915d5d636a9eb826602c018e3face47cdc81033",
+      "before": "i < POM_SHADOW_SAMPLES",
+      "after": "i < shadow_samples"
+    },
+    {
+      "path": "shaders/program/gbuffers_all_solid.fsh",
+      "source_sha256": "9ff3f873baf0d651b15aad100af3275b1a745d11fe6aeb37aad6aa94b97285da",
+      "before": "view_distance < POM_DISTANCE; // Only calculate POM for close terrain",
+      "after": "view_distance < POM_DISTANCE; // Only calculate POM for close terrain\n    has_pom = has_pom && shaderlod_material_tier(view_distance, float(POM_DISTANCE), dither) != 2;"
+    },
+    {
+      "path": "shaders/program/c0_vl.fsh",
+      "source_sha256": "1a5335ee12e04e74b4f8b2ba62437f3ee27137cf9d2ccf7985f0fbf32bf48729",
+      "before": "vec3 view_back_pos = screen_to_view_space(vec3(uv, depth1), true);",
+      "after": "vec3 view_back_pos = screen_to_view_space(projection_matrix_inverse, vec3(uv, depth1), true);"
+    },
+    {
+      "path": "shaders/include/sky/clouds/cumulus.glsl",
+      "source_sha256": "1923542cd9ad862a6166a542dbdcb1597fd70316e4338b236deefc2ccb932ba5",
+      "before": "    uint step_count\n) {",
+      "after": "    uint step_count,\n    uint original_steps\n) {"
+    },
+    {
+      "path": "shaders/include/sky/clouds/cumulus.glsl",
+      "source_sha256": "1923542cd9ad862a6166a542dbdcb1597fd70316e4338b236deefc2ccb932ba5",
+      "before": "    vec3 ray_pos = ray_origin;",
+      "after": "    // Geometric step distribution sums to (2^N-1). Preserve the original\n    // secondary-ray extent when lowering N instead of shortening optical depth.\n    if (step_count != original_steps) {\n        step_length *= (float(step_count) / float(original_steps)) *\n            (exp2(float(original_steps)) - 1.0) / (exp2(float(step_count)) - 1.0);\n    }\n    vec3 ray_pos = ray_origin;"
+    },
+    {
+      "path": "shaders/include/sky/clouds/cumulus.glsl",
+      "source_sha256": "1923542cd9ad862a6166a542dbdcb1597fd70316e4338b236deefc2ccb932ba5",
+      "before": "            lighting_steps\n        );",
+      "after": "            lighting_steps,\n            CLOUDS_CUMULUS_LIGHTING_STEPS\n        );"
+    },
+    {
+      "path": "shaders/include/sky/clouds/cumulus.glsl",
+      "source_sha256": "1923542cd9ad862a6166a542dbdcb1597fd70316e4338b236deefc2ccb932ba5",
+      "before": "            ambient_steps\n        );",
+      "after": "            ambient_steps,\n            CLOUDS_CUMULUS_AMBIENT_STEPS\n        );"
+    },
+    {
+      "path": "shaders/include/sky/clouds/altocumulus.glsl",
+      "source_sha256": "949546d185bbf17034ab04f9d6a4b14ddf3b9efe5d957df35feb4044974872c6",
+      "before": "    uint step_count\n) {",
+      "after": "    uint step_count,\n    uint original_steps\n) {"
+    },
+    {
+      "path": "shaders/include/sky/clouds/altocumulus.glsl",
+      "source_sha256": "949546d185bbf17034ab04f9d6a4b14ddf3b9efe5d957df35feb4044974872c6",
+      "before": "    vec3 ray_pos = ray_origin;",
+      "after": "    // Geometric step distribution sums to (2^N-1). Preserve the original\n    // secondary-ray extent when lowering N instead of shortening optical depth.\n    if (step_count != original_steps) {\n        step_length *= (float(step_count) / float(original_steps)) *\n            (exp2(float(original_steps)) - 1.0) / (exp2(float(step_count)) - 1.0);\n    }\n    vec3 ray_pos = ray_origin;"
+    },
+    {
+      "path": "shaders/include/sky/clouds/altocumulus.glsl",
+      "source_sha256": "949546d185bbf17034ab04f9d6a4b14ddf3b9efe5d957df35feb4044974872c6",
+      "before": "            lighting_steps\n        );",
+      "after": "            lighting_steps,\n            CLOUDS_ALTOCUMULUS_LIGHTING_STEPS\n        );"
+    },
+    {
+      "path": "shaders/include/sky/clouds/altocumulus.glsl",
+      "source_sha256": "949546d185bbf17034ab04f9d6a4b14ddf3b9efe5d957df35feb4044974872c6",
+      "before": "            ambient_steps\n        );",
+      "after": "            ambient_steps,\n            CLOUDS_ALTOCUMULUS_AMBIENT_STEPS\n        );"
+    },
+    {
+      "path": "shaders/include/sky/clouds/cumulus_congestus.glsl",
+      "source_sha256": "601e09bb68f53226abcf3e9d74afdf67002d06d6247e6d8cb86f02ffbf92e5e1",
+      "before": "    uint step_count\n) {",
+      "after": "    uint step_count,\n    uint original_steps\n) {"
+    },
+    {
+      "path": "shaders/include/sky/clouds/cumulus_congestus.glsl",
+      "source_sha256": "601e09bb68f53226abcf3e9d74afdf67002d06d6247e6d8cb86f02ffbf92e5e1",
+      "before": "    vec3 ray_pos = ray_origin;",
+      "after": "    // Geometric step distribution sums to (2^N-1). Preserve the original\n    // secondary-ray extent when lowering N instead of shortening optical depth.\n    if (step_count != original_steps) {\n        step_length *= (float(step_count) / float(original_steps)) *\n            (exp2(float(original_steps)) - 1.0) / (exp2(float(step_count)) - 1.0);\n    }\n    vec3 ray_pos = ray_origin;"
+    },
+    {
+      "path": "shaders/include/sky/clouds/cumulus_congestus.glsl",
+      "source_sha256": "601e09bb68f53226abcf3e9d74afdf67002d06d6247e6d8cb86f02ffbf92e5e1",
+      "before": "            lighting_steps\n        );",
+      "after": "            lighting_steps,\n            CLOUDS_CUMULUS_CONGESTUS_LIGHTING_STEPS\n        );"
+    },
+    {
+      "path": "shaders/include/sky/clouds/cumulus_congestus.glsl",
+      "source_sha256": "601e09bb68f53226abcf3e9d74afdf67002d06d6247e6d8cb86f02ffbf92e5e1",
+      "before": "            ambient_steps\n        );",
+      "after": "            ambient_steps,\n            CLOUDS_CUMULUS_CONGESTUS_AMBIENT_STEPS\n        );"
+    },
+    {
+      "path": "shaders/include/lighting/ao/ssao.glsl",
+      "source_sha256": "e6107912799a850a49c2c62138d2f2daf542c3dcd3ca7b0e2de15cfc85e04a0c",
+      "before": "#define INCLUDE_LIGHTING_AO_SSAO",
+      "after": "#define INCLUDE_LIGHTING_AO_SSAO\n#include \"/include/shaderlod/lod.glsl\""
+    },
+    {
+      "path": "shaders/include/lighting/ao/ssao.glsl",
+      "source_sha256": "e6107912799a850a49c2c62138d2f2daf542c3dcd3ca7b0e2de15cfc85e04a0c",
+      "before": "get_ssao_sample_offset(int step_index, vec2 dither)",
+      "after": "get_ssao_sample_offset(int step_index, vec2 dither, int step_count)"
+    },
+    {
+      "path": "shaders/include/lighting/ao/ssao.glsl",
+      "source_sha256": "e6107912799a850a49c2c62138d2f2daf542c3dcd3ca7b0e2de15cfc85e04a0c",
+      "before": "float a = (float(step_index) + dither.x) * rcp(float(SSAO_STEPS));",
+      "after": "float a = (float(step_index) + dither.x) * rcp(float(step_count));"
+    },
+    {
+      "path": "shaders/include/lighting/ao/ssao.glsl",
+      "source_sha256": "e6107912799a850a49c2c62138d2f2daf542c3dcd3ca7b0e2de15cfc85e04a0c",
+      "before": "    mat3 tbn_matrix = get_tbn_matrix(normal_view);",
+      "after": "    int quality = shaderlod_quality_at(length(position_view), gl_FragCoord.xy, float(frameCounter));\n    if (quality == 2 && shaderlod_preset() == 2) return 1.0;\n    int step_count = shaderlod_budget(SSAO_STEPS, quality, 2);\n    mat3 tbn_matrix = get_tbn_matrix(normal_view);"
+    },
+    {
+      "path": "shaders/include/lighting/ao/ssao.glsl",
+      "source_sha256": "e6107912799a850a49c2c62138d2f2daf542c3dcd3ca7b0e2de15cfc85e04a0c",
+      "before": "i < SSAO_STEPS",
+      "after": "i < step_count"
+    },
+    {
+      "path": "shaders/include/lighting/ao/ssao.glsl",
+      "source_sha256": "e6107912799a850a49c2c62138d2f2daf542c3dcd3ca7b0e2de15cfc85e04a0c",
+      "before": "get_ssao_sample_offset(i, dither)",
+      "after": "get_ssao_sample_offset(i, dither, step_count)"
+    },
+    {
+      "path": "shaders/include/lighting/ao/ssao.glsl",
+      "source_sha256": "e6107912799a850a49c2c62138d2f2daf542c3dcd3ca7b0e2de15cfc85e04a0c",
+      "before": "ao * rcp(float(SSAO_STEPS))",
+      "after": "ao * rcp(float(step_count))"
+    },
+    {
+      "path": "shaders/include/surface/water_normal.glsl",
+      "source_sha256": "a6d2dc6bed11d723e5468e22f46b9d8c2fdb090a3e2e1b5131ff1759e89849d3",
+      "before": "#define INCLUDE_MISC_WATER_NORMAL",
+      "after": "#define INCLUDE_MISC_WATER_NORMAL\n#include \"/include/shaderlod/lod.glsl\""
+    },
+    {
+      "path": "shaders/include/surface/water_normal.glsl",
+      "source_sha256": "a6d2dc6bed11d723e5468e22f46b9d8c2fdb090a3e2e1b5131ff1759e89849d3",
+      "before": "float get_water_height(vec2 coord, vec2 wave_dir, mat2 wave_rot, float t) {",
+      "after": "float get_water_height(vec2 coord, vec2 wave_dir, mat2 wave_rot, float t, int wave_iterations) {"
+    },
+    {
+      "path": "shaders/include/surface/water_normal.glsl",
+      "source_sha256": "a6d2dc6bed11d723e5468e22f46b9d8c2fdb090a3e2e1b5131ff1759e89849d3",
+      "before": "const float amplitude_normalization_factor",
+      "after": "float amplitude_normalization_factor"
+    },
+    {
+      "path": "shaders/include/surface/water_normal.glsl",
+      "source_sha256": "a6d2dc6bed11d723e5468e22f46b9d8c2fdb090a3e2e1b5131ff1759e89849d3",
+      "before": "pow(persistence, float(WATER_WAVE_ITERATIONS))",
+      "after": "pow(persistence, float(wave_iterations))"
+    },
+    {
+      "path": "shaders/include/surface/water_normal.glsl",
+      "source_sha256": "a6d2dc6bed11d723e5468e22f46b9d8c2fdb090a3e2e1b5131ff1759e89849d3",
+      "before": "    for (uint i = 0u; i < WATER_WAVE_ITERATIONS; ++i) {\n        wave_noise",
+      "after": "    for (uint i = 0u; i < uint(wave_iterations); ++i) {\n        wave_noise"
+    },
+    {
+      "path": "shaders/include/surface/water_normal.glsl",
+      "source_sha256": "a6d2dc6bed11d723e5468e22f46b9d8c2fdb090a3e2e1b5131ff1759e89849d3",
+      "before": "    for (uint i = 0u; i < WATER_WAVE_ITERATIONS; ++i) {\n        height",
+      "after": "    for (uint i = 0u; i < uint(wave_iterations); ++i) {\n        height"
+    },
+    {
+      "path": "shaders/include/surface/water_normal.glsl",
+      "source_sha256": "a6d2dc6bed11d723e5468e22f46b9d8c2fdb090a3e2e1b5131ff1759e89849d3",
+      "before": "    const float h = 0.1;",
+      "after": "#if defined PROGRAM_SHADOW\n    // Keep caustic-map generation identical; this policy is surface shading.\n    int wave_iterations = WATER_WAVE_ITERATIONS;\n#else\n    int quality = shaderlod_quality_at(distance(world_pos, cameraPosition), gl_FragCoord.xy, float(frameCounter));\n    int wave_iterations = shaderlod_budget(WATER_WAVE_ITERATIONS, quality, 1);\n#endif\n    const float h = 0.1;"
+    },
+    {
+      "path": "shaders/include/surface/water_normal.glsl",
+      "source_sha256": "a6d2dc6bed11d723e5468e22f46b9d8c2fdb090a3e2e1b5131ff1759e89849d3",
+      "before": "    float wave0 = get_water_height(coord, wave_dir, wave_rot, t);",
+      "after": "    float wave0 = get_water_height(coord, wave_dir, wave_rot, t, wave_iterations);"
+    },
+    {
+      "path": "shaders/include/surface/water_normal.glsl",
+      "source_sha256": "a6d2dc6bed11d723e5468e22f46b9d8c2fdb090a3e2e1b5131ff1759e89849d3",
+      "before": "    float depth_value = get_water_height(coord, wave_dir, wave_rot, t);",
+      "after": "    float depth_value = get_water_height(coord, wave_dir, wave_rot, t, wave_iterations);"
+    },
+    {
+      "path": "shaders/include/surface/water_normal.glsl",
+      "source_sha256": "a6d2dc6bed11d723e5468e22f46b9d8c2fdb090a3e2e1b5131ff1759e89849d3",
+      "before": "        depth_value = get_water_height(coord, wave_dir, wave_rot, t);",
+      "after": "        depth_value = get_water_height(coord, wave_dir, wave_rot, t, wave_iterations);"
+    },
+    {
+      "path": "shaders/include/surface/water_normal.glsl",
+      "source_sha256": "a6d2dc6bed11d723e5468e22f46b9d8c2fdb090a3e2e1b5131ff1759e89849d3",
+      "before": "get_water_height(coord + vec2(h, 0.0), wave_dir, wave_rot, t)",
+      "after": "get_water_height(coord + vec2(h, 0.0), wave_dir, wave_rot, t, wave_iterations)"
+    },
+    {
+      "path": "shaders/include/surface/water_normal.glsl",
+      "source_sha256": "a6d2dc6bed11d723e5468e22f46b9d8c2fdb090a3e2e1b5131ff1759e89849d3",
+      "before": "get_water_height(coord + vec2(0.0, h), wave_dir, wave_rot, t)",
+      "after": "get_water_height(coord + vec2(0.0, h), wave_dir, wave_rot, t, wave_iterations)"
+    },
+    {
+      "path": "shaders/include/surface/water_normal.glsl",
+      "source_sha256": "a6d2dc6bed11d723e5468e22f46b9d8c2fdb090a3e2e1b5131ff1759e89849d3",
+      "before": "vec2 get_water_parallax_coord(\n    vec3 tangent_dir,",
+      "after": "vec2 get_water_parallax_coord(\n    vec3 world_pos,\n    vec3 tangent_dir,"
+    },
+    {
+      "path": "shaders/include/surface/water_normal.glsl",
+      "source_sha256": "a6d2dc6bed11d723e5468e22f46b9d8c2fdb090a3e2e1b5131ff1759e89849d3",
+      "before": "    const int step_count = 4;",
+      "after": "#if defined PROGRAM_SHADOW\n    const int quality = 0;\n#else\n    int quality = shaderlod_quality_at(distance(world_pos, cameraPosition), gl_FragCoord.xy, float(frameCounter));\n#endif\n    if (quality == 2) return coord;\n    int step_count = shaderlod_budget(4, quality, 1);\n    int wave_iterations = shaderlod_budget(WATER_WAVE_ITERATIONS, quality, 1);"
+    },
+    {
+      "path": "shaders/program/gbuffers_all_translucent.fsh",
+      "source_sha256": "01c04bc017069cf19c319a0a0875ca706554575dd01e291e17cad8565645b82f",
+      "before": "            coord = get_water_parallax_coord(\n                direction_tangent,",
+      "after": "            coord = get_water_parallax_coord(\n                world_pos,\n                direction_tangent,"
     }
   ]
 }

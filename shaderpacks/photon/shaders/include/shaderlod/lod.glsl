@@ -11,11 +11,12 @@ uniform float shaderlodNear;
 uniform float shaderlodFar;
 uniform float shaderlodTransition;
 uniform int shaderlodDebug;
+uniform int shaderlodPreset;
 #endif
 
 bool shaderlod_use_bridge() {
 #ifdef SHADERLOD_USE_MOD_CONFIG
-    return shaderlodBridgeVersion == 1;
+    return shaderlodBridgeVersion == 1 || shaderlodBridgeVersion == 2;
 #else
     return false;
 #endif
@@ -57,23 +58,78 @@ vec3 shaderlod_distances() {
     return values;
 }
 
+int shaderlod_preset() {
+#ifdef SHADERLOD_USE_MOD_CONFIG
+    if (shaderlodBridgeVersion == 2) return clamp(shaderlodPreset, 0, 2);
+#endif
+    return SHADERLOD_PRESET;
+}
+
+// Budget is a cap, never increases upstream work. One path executes per pixel.
+int shaderlod_budget(int original, int tier, int minimum) {
+    if (tier == 0) return original;
+    int preset = shaderlod_preset();
+    float scale = preset == 0 ? (tier == 1 ? 0.75 : 0.50) :
+                  preset == 1 ? (tier == 1 ? 0.50 : 0.25) :
+                                (tier == 1 ? 0.25 : 0.125);
+    return min(original, max(minimum, int(ceil(float(original) * scale))));
+}
+
 // Interleaved gradient noise; frame rotation lets Photon TAA resolve transitions.
 float shaderlod_noise(vec2 pixel, float frame) {
     pixel += mod(frame, 64.0) * vec2(2.17, 0.73);
     return fract(52.9829189 * fract(dot(pixel, vec2(0.06711056, 0.00583715))));
 }
 
-int shaderlod_tier(float distance_blocks, float noise) {
+int shaderlod_tier_with_distances(float distance_blocks, float noise, vec3 distances) {
     if (!shaderlod_enabled()) return 0;
-    vec3 distances = shaderlod_distances();
     if (distances.z <= 0.0) {
         return distance_blocks < distances.x ? 0 : (distance_blocks < distances.y ? 1 : 2);
     }
     float half_band = 0.5 * distances.z;
+    if (distance_blocks <= distances.x - half_band) return 0;
+    if (distance_blocks >= distances.y + half_band) return 2;
+    if (distance_blocks >= distances.x + half_band && distance_blocks <= distances.y - half_band) return 1;
     float medium = smoothstep(distances.x - half_band, distances.x + half_band, distance_blocks);
     float low = smoothstep(distances.y - half_band, distances.y + half_band, distance_blocks);
-    // Select one quality path per pixel, so transitions do not evaluate both paths.
     return noise < low ? 2 : (noise < medium ? 1 : 0);
+}
+
+int shaderlod_tier(float distance_blocks, float noise) {
+    if (!shaderlod_enabled()) return 0;
+    return shaderlod_tier_with_distances(distance_blocks, noise, shaderlod_distances());
+}
+
+int shaderlod_quality_at(float distance_blocks, vec2 pixel, float frame) {
+    if (!shaderlod_enabled()) return 0;
+    vec3 distances = shaderlod_distances();
+    float half_band = 0.5 * distances.z;
+    if (distance_blocks <= distances.x - half_band) return 0;
+    if (distance_blocks >= distances.y + half_band) return 2;
+    if (distance_blocks >= distances.x + half_band && distance_blocks <= distances.y - half_band) return 1;
+    return shaderlod_tier_with_distances(distance_blocks, shaderlod_noise(pixel, frame), distances);
+}
+
+// Cached cloud lighting is generated at a fixed sea-level origin. An explicit
+// global-quality option is honest here; it is not distance from the live camera.
+int shaderlod_cached_sky_tier() {
+#ifdef SHADERLOD_CACHED_SKY
+    if (shaderlod_enabled()) return shaderlod_preset();
+#endif
+    return 0;
+}
+
+int shaderlod_cloud_tier(float distance_blocks, float noise) {
+    float near_cloud = max(SHADERLOD_CLOUD_NEAR, 1.0);
+    float far_cloud = max(SHADERLOD_CLOUD_FAR, near_cloud + 1.0);
+    return shaderlod_tier_with_distances(distance_blocks, noise,
+        vec3(near_cloud, far_cloud, min(256.0, far_cloud - near_cloud)));
+}
+
+// POM is already limited to a short range; its relative bands must be inside it.
+int shaderlod_material_tier(float distance_blocks, float pom_distance, float noise) {
+    return shaderlod_tier_with_distances(distance_blocks, noise,
+        vec3(0.50 * pom_distance, 0.85 * pom_distance, 0.10 * pom_distance));
 }
 
 vec3 shaderlod_debug_color(int tier) {

@@ -9,6 +9,7 @@ import net.minecraft.network.chat.Component;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.client.event.RegisterClientCommandsEvent;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
+import java.util.Locale;
 
 /** Small in-game diagnostics and A/B controls for the first rendering proof. */
 public final class ShaderLodCommands {
@@ -17,9 +18,18 @@ public final class ShaderLodCommands {
     private ShaderLodCommands() {}
 
     public static void register(RegisterClientCommandsEvent event) {
+        var presetCommands = Commands.literal("preset");
+        for (var preset : LodPreset.values()) {
+            presetCommands.then(Commands.literal(preset.name().toLowerCase(Locale.ROOT)).executes(context -> {
+                ShaderLodConfig.PRESET.set(preset);
+                ShaderLodConfig.SPEC.save();
+                return status(context.getSource());
+            }));
+        }
         event.getDispatcher().register(Commands.literal("shaderlod")
                 .executes(context -> status(context.getSource()))
                 .then(Commands.literal("status").executes(context -> status(context.getSource())))
+                .then(presetCommands)
                 .then(Commands.literal("enabled")
                         .then(Commands.argument("value", BoolArgumentType.bool()).executes(context -> {
                             ShaderLodConfig.ENABLED.set(BoolArgumentType.getBool(context, "value"));
@@ -60,6 +70,7 @@ public final class ShaderLodCommands {
                 + ", fallback=" + Iris.isFallback()
                 + ", DH=" + ModList.get().isLoaded("distanthorizons")
                 + ", enabled=" + settings.enabled()
+                + ", preset=" + ShaderLodConfig.PRESET.get()
                 + ", near/far=" + settings.near() + "/" + settings.far()
                 + ", transition=" + settings.transition()
                 + ", debug=" + settings.debug();

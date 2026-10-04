@@ -9,12 +9,15 @@ public final class ShaderLodConfig {
     public static final ModConfigSpec.DoubleValue FAR;
     public static final ModConfigSpec.DoubleValue TRANSITION;
     public static final ModConfigSpec.BooleanValue DEBUG;
+    public static final ModConfigSpec.EnumValue<LodPreset> PRESET;
 
     static {
         var builder = new ModConfigSpec.Builder();
         builder.push("lod");
         ENABLED = builder.comment("Enable distance quality changes in the patched Photon pack.")
                 .define("enabled", true);
+        PRESET = builder.comment("Distance quality budgets: BALANCED, PERFORMANCE, or AGGRESSIVE.")
+                .defineEnum("preset", LodPreset.PERFORMANCE);
         NEAR = builder.comment("End of full quality zone, in blocks.")
                 .defineInRange("near", 32.0, 1.0, 4095.0);
         FAR = builder.comment("Start of low quality zone; must exceed near.")

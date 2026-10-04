@@ -1,6 +1,6 @@
 # GPU timing and broader Photon/DH LOD
 
-Created: 2026-10-03. Status: active.
+Created: 2026-10-03. Status: complete.
 
 ## Objective
 
@@ -41,8 +41,45 @@ claiming exhaustive coverage of every Photon pass.
 
 ## Current checkpoint
 
-Existing two-window preview uses identical patched pack with LOD on/off and
-currently only modifies PCF. It has no GPU instrumentation and no DH. Current
-working changes from that preview must be preserved. New work begins here.
-Next: inspect shader programs and GL timing support, implement owned partitions,
-build the landscape comparison, validate serial timings, then open final pair.
+Expanded patch implements actual loop/ray reductions in PCF, screen-space
+shadows, GTAO/SSAO, fog/LPV, clouds, SSR, and POM. Six packaging tests including
+405 GLSL compilations pass. Java build and timing-statistics checks pass.
+Bridge version 2 supplies preset0/1/2; enabled/disabled controls remain live.
+
+The actual Mac driver reports timestampBits=0, elapsedBits=32. Asynchronous
+GL_TIME_ELAPSED frame/pass-alternating queries work with positive world/frame
+and pass results. New landscape renders at vanilla24/DH128chunks, source cache
+generation disabled,2DHthreads. Shared camera selected x256.5,y95,z768.5,
+yaw135,pitch9,time7000. DH reports124/348 visible/total buffers.
+
+First single-client PERFORMANCE OFF/ON/OFF/ON pass-profile test completed:
+game-render pooled means9.213/9.010ms (about2.2% lower), clouds0.539/0.415ms,
+fog0.164/0.050ms, opaque lighting0.358/0.298ms. Frame/pass values are from
+alternate frames and must not be summed. Full-frame gain is modest; additional
+lower-overhead timing and preset validation remain. Raw data is in ignored
+run-landscape/lod-on/benchmark-pass-profile.json.
+
+Completed: original Photon baseline has `modPresent=false` and works with DH
+and the independent timer harness. Frame-only aggressive test initially gave
+1.35% mean improvement; profiling motivated cached-lighting and water reductions.
+Final implementation has22guardedupstreamtargets, sixpackagingtests including
+495GLSL compilations, Java build/test and timing-statistics checks passing.
+
+Final aggressive + cached-lighting serial test: OFF7.960ms/ON7.523ms mean GPU
+render interval (5.49% lower), medians7.996/7.671, p959.192/8.116. It used
+4,690/4,919samples; pairwise mean reductions2.83% and8.00%. This is one host
+and scene, not universal speedup or pureGPU utilization. Full methods/scopes,
+raw reports and quality limits are in `docs/GPU_RESULTS.md`.
+
+Final floating windows launched and validated: left patchedPhoton, ShaderLOD
+present, AGGRESSIVE preset; right originalPhoton, ShaderLOD absent. Both have
+DH, vanilla24/DH128chunks, samewarmedscene/camera/options, FPS/GPUrender/pass
+overlay. Initial pair snapshots showed left71FPS/12.48ms and right67FPS/13.65ms;
+shared-GPU snapshots are not a standalone benchmark. Both reported DH124/348
+visible/totalbuffers. Shader fallbackfalse, no pipeline errors.
+
+Live handoff: Java PID35268 left (tool session85804), PID35252 right (session88336).
+Logs `dev/logs/final-landscape-on-console.log` and `final-landscape-off-console.log`.
+Quit normally to save; verifyPID identity before targeted termination because
+these identities are stale after relaunch. All bounded workers are finished.
+No remote/publishing operations. User now owns visual fidelity assessment.

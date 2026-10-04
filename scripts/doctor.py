@@ -19,21 +19,21 @@ def main():
         result['stack'][name] = {'version': artifact['version'], 'checksum_valid': valid}
         if not valid:
             failures.append(name)
-    for directory in ['run', 'run-iris']:
+    for directory in ['run', 'run-iris', 'run-landscape/lod-on', 'run-landscape/lod-off']:
         log = ROOT / directory / 'logs/latest.log'
         lines = log.read_text(errors='replace').splitlines() if log.exists() else []
         patterns = [r'ShaderLOD', r'OpenGL (Vendor|Renderer|Version)', r'Creating pipeline',
                     r'Failed to create shader rendering pipeline', r'Renderer setup complete',
                     r'DH Iris events bound', r'Using shaderpack']
         evidence = [line for line in lines if any(re.search(pattern, line, re.I) for pattern in patterns)]
-        states = [line for line in lines if 'ShaderLOD runtime:' in line]
+        states = [line for line in lines if 'ShaderLOD runtime:' in line or 'landscape ready:' in line]
         counts = [list(map(int, match.groups())) for line in lines
                   if (match := re.search(r'VBO Render Count: \[(\d+)/(\d+)\]', line))]
         result['runs'][directory] = {
             'log_exists': log.exists(),
             'last_runtime_status': states[-1] if states else None,
             'dh_visible_total_buffer_counts': counts,
-            'screenshots': sorted(path.name for path in (ROOT / directory / 'screenshots').glob('shaderlod*.png')),
+            'screenshots': sorted(path.name for path in (ROOT / directory / 'screenshots').glob('*.png')),
             'evidence': evidence[-25:],
         }
     print(json.dumps(result, indent=2))
