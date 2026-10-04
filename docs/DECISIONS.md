@@ -11,9 +11,36 @@
 | 2026-10-03 | Pin stable Iris 1.8.12 + Sodium 0.6.13, DH 3.3.3, Photon v1.3b | Iris's declared Sodium dependency, artifact/API audit, and actual development runtime | Verified reduced Mac profile |
 | 2026-10-03 | Start with opaque vanilla PCF sample LOD and a versioned mod uniform bridge | Pinned Photon has explicit adaptive PCF loops; GLSL variants and live debug/enable controls pass | Implemented; performance unmeasured |
 | 2026-10-03 | Use a reduced Photon profile for the local Apple M3 Max smoke test | Full initial options exhausted texture units; disabling optional samplers lets Iris/Photon/DH render | Development profile only; standard/Ultra requires desktop GPU validation |
+| 2026-10-04 | Aggressive preview is not an acceptable default quality/performance tradeoff | User sees missing distant-tree shadows/depth for only roughly0.5ms saved; far AO bypass and very sparse screen-space shadows sacrifice salient structure | User assessment recorded; policy redesign pending |
 
 Dependency artifacts are recorded in `dev/runtime.lock.json`. Verify this set
 in the development client before calling it supported. Photon upstream does
 not support the local Apple GPU; the client attempt must establish and record
 the actual hardware result. The full MVP effect set and numerical
 performance acceptance gate remain open until the first measured proof.
+
+## Next experiment proposal (2026-10-04)
+
+User is testing the core idea and prioritizes a substantial performance benefit.
+Recommended sequence, not a newly approved goal or frozen numerical gate:
+
+1. Attribute missing CPU/GPU cost: vanilla terrain layers, DH terrain/water,
+   entities/translucency, frame submission, and existing shader passes. Identify
+   GPU effect work versus geometry/bandwidth versus CPU limitation before adding
+   more feature cuts. Existing GPU intervals include command-starvation gaps.
+2. Test one realistic expensive preset/scene with useful enabled effects and
+   identical settings for baseline/adaptive runs. Increasing both sides' settings
+   is legitimate for testing the intended use case; artificially inflating only
+   the baseline or choosing useless excess work is not evidence of value.
+3. Compare original high, original lower quality, and high+adaptive LOD. The
+   lower-quality control tests whether adaptive complexity adds value over a
+   simple preset change. Target effects with multi-millisecond cost rather than
+   collecting reductions in already-cheap effects. The Mac's reduced feature
+   set does not establish performance for full desktop Photon.
+4. A roughly15–20% GPU-render reduction is a suggested proof-of-concept target,
+   subject to user choice and actual baseline budget. If the effect share cannot
+   support that, report the ceiling. Extend into geometry/CPU work only after
+   profiling establishes its relevance; that changes the project's scope.
+
+Keep live comparison windows intact during analysis. No new experiment was
+launched or performance threshold accepted solely by this proposal.

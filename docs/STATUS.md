@@ -1,6 +1,9 @@
 # ShaderLOD status
 
-Updated: 2026-10-03.
+Updated: 2026-10-04.
+
+Active goal: [Complete frame attribution and rendering proof](goals/full-frame-proof.md).
+Status: active; full CPU/GPU attribution and controlled workload tests in progress.
 
 Completed goal: [GPU timing and broader Photon/DH LOD](goals/gpu-lod-dh-comparison.md).
 Status: comparison implementation and validation complete; windows open for user visual inspection.
@@ -35,7 +38,10 @@ and actual DH landscape rendering pass.
 Final pair: vanilla24/DH128chunks, matching landscape/camera; left aggressive
 ShaderLOD with cached-lighting reduction, right original Photon without ShaderLOD.
 FPS/GPUms/pass timings visible. Both clients remain running for user inspection.
-Next: user fidelity assessment, then broader scenes/hardware and movement checks.
+User assessment on2026-10-04: distant trees visibly lose shadows/depth for a
+small gain. Aggressive quality is not accepted as a worthwhile default.
+Next: preserve occlusion/shadow structure, isolate individual visual costs,
+and profile untargeted world/DH rendering plus CPU submission before further cuts.
 
 The earlier PCF-only pillar preview showed nearly identical FPS. That audit
 remains in `PHOTON_INTEGRATION.md`; it motivated the expanded measured work.

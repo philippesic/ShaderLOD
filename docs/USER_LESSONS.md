@@ -26,3 +26,15 @@ and actual baseline work before presenting a performance comparison. Label the
 right-hand client accurately: it retained ShaderLOD with LOD disabled after the
 user requested restoring the previous windows; the mod-absent baseline was not
 completed. Keep live windows available while investigating read-only.
+
+## Prioritize visual value over the number of effects modified
+
+On2026-10-04 the user observed missing shadows on distant trees and rejected
+the aggressive profile's roughly0.5ms saving as poor value. The agent had noticed
+flatter distant foliage in captures but emphasized implemented effects and timing
+results without clearly flagging that visual cost. Far AO was bypassed despite
+its whole pass costing only0.057ms in the earlier profile; screen-space shadows
+also became extremely sparse. Preserve important low-frequency lighting cues,
+use effect-specific importance criteria, and evaluate quality alongside time.
+Passing compilation/runtime checks and measuring a gain do not establish a
+worthwhile optimization or a shipping-quality preset.

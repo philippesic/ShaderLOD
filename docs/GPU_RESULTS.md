@@ -74,3 +74,23 @@ distance LOD. Aggressive LOD reduces distant AO, cloud detail, water detail,
 fog/ray quality, and other enabled effects. User inspection of fidelity is the
 next acceptance decision. No claim of full Photon Ultra or general Apple
 support, movement/TAA stability, or performance on other GPUs is made.
+
+## User quality assessment (2026-10-04)
+
+The user observed noticeably missing shadows/depth on distant trees and judged
+the roughly0.5ms saving a poor quality/performance tradeoff. The aggressive
+profile is not visually accepted and should not be treated as a viable default.
+Its far AO bypass removes occlusion entirely; its distant screen-space shadow
+budget falls from10 to2samples, which can miss occluders. Reduced cached lighting
+can also alter scene illumination globally. Exact attribution between these
+changes needs isolated visual toggles; the combined capture alone cannot prove
+which one caused each missing shadow.
+
+The earlier AO pass cost only0.057ms and its reduction saved about0.020ms.
+Losing important foliage depth for that budget is poorly targeted. Profile
+world/DH geometry, other render work, and CPU submission separately before
+claiming that renderer overhead or branch divergence explains the remaining
+frame cost. GPU timeline intervals include idle/command-starvation gaps and
+are not a busy-time counter. Preserve low-frequency occlusion and visible
+shadow structure while reconsidering effect-specific, screen-space quality
+policies rather than applying one distance/preset fraction to every effect.
