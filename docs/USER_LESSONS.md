@@ -15,3 +15,14 @@ before acceptance. Reuse build infrastructure independently of its version pins;
 check the audience criterion before selecting dependencies. Compatibility alone
 does not establish popularity. This was an agent assumption corrected by the
 user, not a user mistake.
+
+## Separate a visual preview from a performance sanity check
+
+The first side-by-side scene demonstrated controls and quality zones, but its
+sparse geometry, substantial sky, and Photon early-outs made it a weak PCF
+performance workload. When the user reported equal/slightly lower LOD FPS,
+the source audit found little medium-tier work to remove. Explain effect scope
+and actual baseline work before presenting a performance comparison. Label the
+right-hand client accurately: it retained ShaderLOD with LOD disabled after the
+user requested restoring the previous windows; the mod-absent baseline was not
+completed. Keep live windows available while investigating read-only.

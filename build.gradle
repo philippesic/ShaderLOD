@@ -40,6 +40,18 @@ neoForge {
             gameDirectory = project.file('run-iris')
             jvmArgument '-Xmx4G'
         }
+        clientLodOn {
+            client()
+            gameDirectory = project.file('run-compare/lod-on')
+            systemProperty 'shaderlod.dev.compare', 'on'
+            jvmArgument '-Xmx4G'
+        }
+        clientLodOff {
+            client()
+            gameDirectory = project.file('run-compare/lod-off')
+            systemProperty 'shaderlod.dev.compare', 'off'
+            jvmArgument '-Xmx4G'
+        }
         configureEach { logLevel = org.slf4j.event.Level.INFO }
         configureEach {
             if (project.findProperty('smokeTest') == 'true') {

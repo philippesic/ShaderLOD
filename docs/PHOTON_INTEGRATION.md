@@ -63,3 +63,43 @@ For the first rendering proof:
 3. Disable debug. Compare identical cameras with LOD enabled and disabled under the same Photon options, resolution, render distance, weather, time, and warmed-up world.
 4. Record GPU frame times and inspect shadow edges, colored shadows, SSS foliage, moving cameras, and TAA-disabled noise. Do not infer speedups from CPU frame rate alone.
 5. Only after a useful quality/performance result, add SSR/POM and a separate DH policy with its own visual and timing checks.
+
+## Initial comparison audit (2026-10-03)
+
+The floating preview clients use the identical patched pack with LOD enabled
+and disabled; ShaderLOD is loaded in both. This isolates the shader enable
+switch, but is not a mod-absent baseline. Both share the Mac GPU and the reduced
+option set. Recorded snapshots were ON 113/115 FPS and OFF 115/113 FPS; the
+user also observed approximately equal FPS, sometimes ON 2–3% lower. These
+observations do not establish a speedup or an isolated regression.
+
+The patch does change the actual `shadow_pcf` sampling loops. However, Photon
+already exits after its initial four lookups on uniformly lit or shadowed pixels:
+
+| Shadow-map PCF region | Full/disabled | Medium | Far |
+| --- | ---: | ---: | ---: |
+| Uniformly lit or shadowed | 4 | 4 | 1 |
+| Mixed edge, ordinary stone under current options | 7–11 | 4 | 1 |
+| Large SSS blur | Up to 12 | 4 | 1 |
+| Outside the shadow-map range | 0 | 0 | 0 |
+
+These are GLSL sampler lookups, not raw hardware texel comparisons. With
+variable penumbras disabled, ordinary full budgets follow
+`min(12, int(6 + max(1, 0.125 / D²)))`, where the in-map shadow distortion
+factor `D` is at least 0.15. The unchanged shadow distance is 128 blocks.
+Far LOD becomes fully active at 100 blocks after its transition, leaving roughly
+100–128 blocks of potential far savings; projection bounds can reduce that
+range. Beyond it, Photon skips PCF and its screen-space shadow path is unchanged.
+
+The sparse pillar fixture contains extensive sky, near floor, and uniformly
+lit stone. It was suitable for visualizing zones, not a strong performance
+kill test. Medium LOD often removes no lookups there. Clouds, GTAO, volumetric
+fog, shadow-map generation, and translucent shading keep their upstream work.
+Enabled LOD adds tier/noise calculations; their compiled cost and GPU branch
+behavior have not been measured, and could outweigh small savings.
+
+The next decisive check should visualize actual executed PCF lookup counts,
+including zero for bypasses, and force far quality on shadow-mapped terrain.
+Then time one client with alternating enabled/disabled states after warmup.
+A temporary 32-sample versus one-sample stress mode can test the upper bound,
+but must be reported as an artificial diagnostic rather than a normal-preset gain.
