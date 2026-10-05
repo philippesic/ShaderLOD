@@ -124,3 +124,34 @@ It establishes no culprit. Next continuation: wait for matrix completion,
 inspect paired distributions and screenshots, then run targeted isolation/water
 rather than adding more optimizations blindly. Photon performance gate and new
 shader support remain pending. Native goal stays active.
+
+## Continuation checkpoint: input audit and isolation tools
+
+The matrix session 11350 was revalidated live and progressed through its second
+block. First minimal forest slowdown did not repeat (block 2 active 120.6 FPS
+versus original 113.7). Keep all repeats; no source culprit is established.
+
+New tested preparation tool `scripts/prepare_isolations.py` creates fresh
+original/disabled/active roots for analytic versus structural packs, analytic
+normal on/off and current versus older water bands. Six fixture tests passed.
+No actual copies or clients were run during the exclusive matrix. See
+`docs/ISOLATION_WORKLOADS.md`; run preparation only after matrix termination.
+
+Source audit exposed an omitted temporal input: Iris smoothed wetness feeds
+Photon cloud humidity/wind. Initial clear-to-rain copies and later already-rainy
+saves may initialize differently despite recorded rain=1. Actual wetness was not
+captured, so it is a plausible mechanism rather than demonstrated cause. Treat
+this matrix as exploratory until a follow-up captures/settles relevant inputs.
+Do not invent precision by freezing frameTimeCounter alone: cloud geometry uses
+world_age based on world day/time, already frozen by the harness.
+
+`docs/APPLE_FEATURE_BUDGET.md` identifies a narrow future driver probe: same
+reduced profile, DH absent, environment and sky reflections enabled. Iris reserves
+two composite units, leaving 14 dynamic sampler slots here; source estimates
+suggest SSR can fit without DH but may exceed the budget with DH. This is not
+runtime support yet. Source also confirms DH water SSR executes in composite1,
+not dh_water's early-return Gbuffer path. Test rather than assume sampler counts.
+
+Next after the live matrix: retain/analyze all repeats, add wetness telemetry and
+settled-weather checks, inspect images, then run targeted water/atmosphere and
+DH-absent SSR probes. Production/shader sources remain frozen while matrix runs.

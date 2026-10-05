@@ -38,3 +38,21 @@ also became extremely sparse. Preserve important low-frequency lighting cues,
 use effect-specific importance criteria, and evaluate quality alongside time.
 Passing compilation/runtime checks and measuring a gain do not establish a
 worthwhile optimization or a shipping-quality preset.
+
+## Verify effective and temporal shader inputs
+
+During the sustained goal on 2026-10-04, the initial repeated runner compared
+option-file bytes. Iris normalized those files by removing defaults and adding
+comments, so the guard rejected a semantically unchanged baseline. The benchmark
+worker corrected verification to read loaded Iris option values and retain raw
+hashes as separate evidence. Preserve failed captures instead of silently
+relabeling them as performance results.
+
+Further source auditing by the shader worker found that fixed rain/day time do
+not fully specify Photon clouds: Iris smooths wetness and Photon uses it for
+weather humidity and wind. Fresh clear saves switched to rain can initialize
+differently from reused rainy saves. Actual wetness was not logged in the first
+36-run matrix, so the proposed explanation remains unverified in those captures.
+Record effective options and relevant temporal uniforms, inspect initialization,
+and verify steady inputs before claiming a matched cloud workload. Frame count
+alone and a fixed warmup duration do not prove that every shader input settled.
