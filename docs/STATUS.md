@@ -7,7 +7,8 @@ The user authorized ongoing team development, Photon first, benchmarks with
 optional performance mods, and additional shaders after repeatable Photon gains.
 Previous completed goal: [Full-frame rendering proof](goals/full-frame-proof.md).
 The preview clients are closed. The first 36-run serial matrix completed;
-wetness-aware controls and DH-absent SSR probes are now in progress. See the
+wetness telemetry and DH-absent SSR rendering are verified in the reduced
+profile. Water candidates regressed in pilots; per-effect isolation is next. See the
 goal checkpoint for current ownership, profile paths and logs.
 Earlier evidence and limitations are in [FULL_FRAME_PROOF.md](FULL_FRAME_PROOF.md).
 

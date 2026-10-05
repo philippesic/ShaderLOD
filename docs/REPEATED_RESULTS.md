@@ -94,7 +94,8 @@ Source audit found the earlier patch changed original constant water loops into
 per-pixel dynamic loops, including nested parallax work. The new specialization
 restores untouched original full functions and calls literal-count cheap
 kernels. Analytic remains available but defaults off. Static numerical checks
-and 1017 GLSL compilations passed; current runtime pilot is pending under
-`dev/logs/ssr-static-pilot/`. No performance improvement is inferred from those
+and 1017 GLSL compilations passed; its single runtime pilot under
+`dev/logs/ssr-static-pilot/` completed: original 143.79 FPS / 6.378 ms,
+patched disabled 139.33 / 6.597, active 123.18 / 7.435. It still regressed. No performance improvement is inferred from those
 static checks. Cloud source was unchanged so that factor remains a potential
 confounder of the combined active shoreline arm.

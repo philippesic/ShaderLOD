@@ -211,3 +211,26 @@ Sky-only pass split frees only one sampler and does not solve both DH+SSR
 blockers. Both designs remain unimplemented research, with costs/quality gates.
 Photon's own license text/attribution is retained under patches/photon; it is not
 the mod's MIT license. Source checkpoint pending commit below; goal remains active.
+
+## Static-water pilot result and current ownership
+
+Session5789 ended with exit0; ssr-static-pilot complete. Single-pair original/
+disabled/active were143.79 /139.33 /123.18FPS, GPU6.378 /6.597 /7.435ms, thread
+CPU6.446 /6.604 /6.575ms. The static-loop restoration did not establish a gain.
+It is not recommended on this evidence. All controlled wetness values remain
+zero and screenshots are retained; do not attribute this loss solely to loops
+or discard it. Source implementation committed as7d190c1.
+
+Root launched no further game after that terminal result. Shader worker now
+owns explicit compile-time effect-isolation switches for clouds, water, fog,
+SSR and materials in pinned shader/helper/tests. Off paths should preprocess
+back to original functions, not merely set a runtime loop count. No Java or
+benchmark tool edits are assigned. Root waits for worker freeze before building
+new runtime profiles; CPU static checks are permitted while no client is live.
+
+Next continuation must revalidate the worker, integrate tested switches, build
+a clean no-atmosphere archive, and run all-off/cloud-only/water-only/SSR-only
+controls on the inspected shoreline with fixedwetness0. This determines which
+active effect causes the measured overhead. Then optimize measured causes and
+repeat real-world quality/performance checks. Shadow/pass-split designs remain
+unimplemented; new shader support remains gated. No blocker requires user input.
