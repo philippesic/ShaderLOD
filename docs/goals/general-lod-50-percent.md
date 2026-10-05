@@ -576,6 +576,6 @@ handoff to ao_runtime: fresh parallel-reflection-qa-r1/coastalwater/adaptive,25w
 5capture, GPUfalse/CPUlayersfalse/cloudSamplerProbe=true/native2976x1672/minimalnoDH/
 wetness0/frozenproducer-v2classes/resources. Onlyreflectionfirst; no timings or
 additional launch untilfirstresult reviewed. Source/code/tests may continue in
-parallel because this is UNT IMED; no other client/reloads/GPU. Exactlive/stophandles
+parallel because this is untimed; no other client/reloads/GPU. Exactlive/stophandles
 tofollow in PARALLEL_LOD_RUNTIME_QUEUE.md. Probe reads sampled binding/state, not
 physical savedrefinements, settledreload orquality parity. Goal remainsactive.
