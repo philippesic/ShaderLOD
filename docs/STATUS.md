@@ -22,15 +22,14 @@ registers seven fields; per-effect mod transport is not implemented. Other-pack
 core diagnostics consume version/global enable/near/far, not all core fields.
 Pack options, mod configuration and actual shader consumption remain separate.
 
-Root owns a live five-effect Photon control using the existing private reduced
-far-SSR archive, native resolution and sample5 frame-only timing. This is a
-within-JVM diagnostic; ordinary mod-absent acceptance remains separate.
+The reduced far-SSR five-effect Photon control passed with GPU contrasts
++9.23%/+0.057%, no useful repeated gain. Root owns the first Complementary
+native 41-frame motion capture; structural and visual acceptance are pending.
 Photon forest/coastal attribution passed input and
 capture contracts. A matched-source coastal frame-only sample5 control retaining
 detailed CPU timers measured14.86ms versus23.85ms in the pass-timed run. This
 raises an instrumentation concern; one separate-JVM pair does not establish
-causation, an LOD gain or absolute effect budgets. Source-only
-workers own the attribution plan and new Complementary motion-preparation files.
+causation, an LOD gain or absolute effect budgets. All source workers are frozen; root owns the integrated preparation and runtime.
 Exact handles and stopping boundaries are in the active goal checkpoint.
 
 ## Current evidence

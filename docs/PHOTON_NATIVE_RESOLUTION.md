@@ -146,3 +146,29 @@ hardwarecausalclaim. Firsttwo balancedcoastal controlsremain separatelyretained.
 Allsource/artifact/window/pipeline checks passedwithinthissession. Raw
 `dev/logs/photon-native-coastal-effects-forward-r3-{benchmark,analysis}.json`
 and `.log`. None establish≥15% or originalabsentmod acceptance.
+
+
+## Reduced far-trace combined-effects, sample5
+
+Root used the existing private reduced far-SSR archive636a1648...9800f83,
+unchanged GLSL, with all five effect options true, protected lighting and cached
+sky/analytic/debug/terrain/CPU experiments off. Only live global enable changed
+in the existing effects control. Native2976x1672/minimal/noDH/wetness0,
+45warm10settle25capture/sample5/frame-only/CPUlayersoff. Exec83967 exited0;
+strict analyzer accepted all4 phases and explicit archive pin. Root independently
+confirmed compiled hashes match prelaunch and zero sampled window transitions.
+
+| Phase | Global | FPS | GPU mean ms | Thread ms |
+| --- | --- | --- | --- | --- |
+| 1 | OFF | 59.984 | 15.4231 | 7.0220 |
+| 2 | ON | 65.733 | 13.9989 | 6.9012 |
+| 3 | OFF | 61.086 | 15.1056 | 6.7289 |
+| 4 | ON | 61.289 | 15.0970 | 6.8197 |
+
+Adjacent GPU reductions9.23%/0.057%; no useful repeatable benefit established.
+Root phase2 capture has sun reflection and no broad straight bright water band;
+limited static resized view, not motion/transition/underwater quality acceptance.
+Original mod-absent gate remains separate. Counter cadence5 avoids the obvious
+16-stride alias risk but proves no physical effect work or sample execution.
+Raw dev/logs/photon-reduced-all-effects-n5-r1-{benchmark,analysis}.json/.log;
+profile run-workloads/photon-reduced-all-effects-n5-r1/coastalwater/adaptive.

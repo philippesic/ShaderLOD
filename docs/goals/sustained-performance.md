@@ -2153,3 +2153,26 @@ orordinaryoriginalmodabsent acceptance. Nextstrictanalyzer explicitreducedpin,
 phaseimages/band/glint/window/control/source/class/contracts; reverseif useful.
 Cameraqualitysourceworker new3files stillpendingfreeze thenfixtures/native41slots.
 No otherclient/heavybuild/encoder. Fullgoalactive/unshrunk/originalownership intact.
+
+
+## Combined effects terminal; Complementary original motion live
+
+exec83967 exit0, all4 effects phases strict accepted sourcepin/config/input/epoch/
+artifact/PNG/restore; rootprecompiledhashes match andsamplwindowstable. Session
+ a6a4f78d-ba88-42d4-9092-6aefb7671c15 OFF/ON/OFF/ON GPU15.4231/13.9989/
+15.1056/15.0970, FPS59.984/65.733/61.086/61.289, thread7.0220/6.9012/6.7289/
+6.8197. +9.23%/+0.057%GPUreductions no usefulrepeatedgain. Rootphase2glintPNG
+sunreflectionvisible/broadbandabsent; boundedstaticviewonly. Raw retained.
+
+Camera_quality3files frozen/ownershipreturned; root6currentfixtures passed and
+actualfreshprepare completed unchangedComplementary3nativearms/41slotrequest.
+World89c962...c7b46/request9886fda8...59c9a2289, firstwaypointmatchescontrol.
+RootsoleGPU LIVEexec83288 original HIGH cameraqualityonly2FPS/native2976x1672/
+minimal/noDH/mainabsent/GPUtimingfalse/wetness0, log
+ dev/logs/complementary-motion-original-r1.log. OwnedsequenceUUID
+0c35fb78-3727-4afa-b248-357e09e36347 in run-workloads/complementary-motion-quality-r1/
+coastalwater/high/camera-quality. Nextterminalandexplicitvalidator41contexts/
+hashes/slot/pose/options/loadedversions/drainchecks; retainfailureifany. Then
+native sky/Potato sequentially AFTERfirstacceptedterminal. No concurrentclient/
+compiler/encoder, allworkerscompleted/frozen, main/shared/designstillreserved.
+Fullgoalactive/ordinary15%/broaderconfig/quality/supportunfinished.
