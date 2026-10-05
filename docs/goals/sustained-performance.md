@@ -2024,3 +2024,28 @@ unchangedoriginal/nativequality controls fixedsafeSUNpose20s2FPS41slots,
 firstwaypointmatchescontrol87.38/3.735, NONE/fullblockguard/maxinflight1. Stopbefore
 runtime. RootsoleGPU/allpriorclientsstopped; no main/shared/design changes.
 Fullgoalactive ordinary15%/broadconfig/support/quality acceptance stillunmet.
+
+
+## Original native Photon attribution live
+
+Root cleaned STATUS into current evidence/ownership/limits; historical raw
+failures remain in goal log and dedicated reports. Root read-locked and copied
+originalforest+coastal controls into run-workloads/photon-native-attribution-r1/
+{forest,coastalwater}/high. Exactoriginalarchive120897...c1ead, physicalDHremoved;
+source/copiedworldidentity checked and parentcontrol/manifest preserved. Each
+attribution-provenance.json retains source, worldSHA, preinputs, requestUUID and
+compiledclass/resource fingerprints. No runtime-source/compiler mutations.
+Forest worldf752339d854ff2f0e0a7dc4e577dd6aedf2d0f69e39a9a7cae9dd0286c7be08b;
+coastal89c9629693e97f7e0c12d41a9ef2cd5a4fa82cd9585644b2dbf2b32bab8c7b46.
+
+Root soleGPU LIVEexec64539: runClientLodOff originalforest/minimal/noDH,
+45warm60capture/native2976x1672/24detailed/wetness0, gpuPassTiming=true,
+gpuAttribution=true/cpuLayerTiming=true/gpuSampleInterval5/-x compileDevClientJava.
+Log dev/logs/photon-native-attribution-forest-r1.log. Request02cc3c72-8082-4f8a-
+a680-98dd5b77c2f1. Next terminalvalidate existingreport/input/options/artifact/
+class/temporal/window/PNG contracts, scope counts/zero/drop behavior and source
+mapping; no sums of overlapping/differentcategory-frame intervals. Do notcompare
+diagnosticframecost to acceptanceframeonly orclaim guaranteedcloudphasecoverage.
+Then coastal sameflags afterforestattestedterminal. No otherclient/build/encoder.
+Workers remain sourceonly, cameraqualitynewfiles and attributionplandoc. Goalfull
+active/unshrunk, commonowner/design reserved, no externalmessages/push/publish.

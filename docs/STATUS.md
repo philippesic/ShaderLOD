@@ -3,146 +3,99 @@
 Updated: 2026-10-05.
 
 Active goal: [Sustained performance and compatibility](goals/sustained-performance.md).
-The full goal remains active: configurable explicit adapters, useful repeated
-Photon performance, optional-stack evaluation, primary-source research and
-additional-pack rendering, quality and integration evidence. The ordinary ≥15%
-gate and broader configuration/support acceptance remain unmet.
+The full goal remains active: broadly configurable explicit adapters, useful
+repeated Photon performance, optional-stack evaluation, primary-source research
+and additional-pack rendering, quality and integration evidence. The ordinary
+≥15% gate and broader configuration/support acceptance remain unmet.
 
-Latest checkpoints: `5be285e` (Complementary controls and SSR reverse), `2950127` (pinned SSR controls), `057ed06` (negative SSR cost), `f7f30d6` (far SSR cost controls), `409734a` (reduced far trace),
-`4dfcdfc` (bounded capture and full-trace diagnostic), `b9f4110` (SSR isolation).
+Latest checkpoints: `cbf8044` (native reflection tradeoffs), `424a62c`
+(Complementary original rendered), `5be285e` (Complementary controls and SSR
+reverse), `2950127` (pinned SSR cost control). Historical failures and raw reports
+remain retained; the latest operational checkpoint is at the end of the goal.
+
+## Ownership and current work
+
 Main Java/config/uniform transport, shared helpers and existing Photon patches
 remain based on `8da8943` and reserved for the original chat. This performance
-chat owns exploratory adapters and all clients/GPU measurements. Exact live
-handles, worker ownership and next actions are at the end of the active goal.
+chat owns exploratory adapters and all Minecraft/GPU clients. The core bridge
+registers seven fields; per-effect mod transport is not implemented. Other-pack
+core diagnostics consume version/global enable/near/far, not all core fields.
+Pack options, mod configuration and actual shader consumption remain separate.
 
-## Current evidence and limitations
+Root owns a live original-Photon native forest attribution run, with separate
+seven-category timing, sample interval5 and detailed CPU scopes. Its frame total
+is not an acceptance comparison with prior frame-only timings. Source-only
+workers own the attribution plan and new Complementary motion-preparation files.
+Exact handles and stopping boundaries are in the active goal checkpoint.
+
+## Current evidence
 
 - Photon native 2976×1672 same-JVM global controls showed roughly 6–11% lower
-  GPU intervals in forest/coastal sessions. Independent serial regressions remain
-  retained; these controls do not prove an ordinary ≥15% gain versus original.
+  GPU intervals in forest/coastal sessions. Independent serial regressions are
+  retained. This does not establish an ordinary ≥15% gain versus original.
   [Native results](PHOTON_NATIVE_RESOLUTION.md).
-- The native combined cap-16 pilot showed 5.18% lower GPU time versus original,
-  with visibly coarser distant mesh detail. A terrain-only same-JVM control
-  passed real ON16/OFF24 and re-arm checks, but GPU effects changed sign
-  (−30%/+10%), despite consistent CPU reductions. No stable benefit promoted.
+- The native cap-16 combined pilot showed 5.18% lower GPU time versus original
+  with visibly coarser distant detail. Terrain-only control passed real ON16/
+  OFF24 and acknowledgement restoration, but GPU contrasts changed sign
+  (−30%/+10%) despite consistent CPU reductions. No stable gain promoted.
   [Terrain control](NATIVE_INPROCESS_TERRAIN.md).
-- Nine original-Photon forest captures across minimal, optimized and culling
-  stacks established no consistent improvement. Exact versions/hashes and a
-  narrowly audited Iris/Sodium API Base metadata difference are recorded.
+- Nine original-Photon forest runs across minimal, optimized and culling stacks
+  established no consistent stack benefit. Exact artifacts and a narrowly
+  audited Iris/Sodium API Base metadata difference are recorded.
   [Stack results](STACK_FOREST_RESULTS.md).
-- Original/disabled/enabled native shoreline and targeted sun-glint triplets
-  each completed 603 verified 10 FPS PNG frames. The enabled glint view revealed
-  a bright distant-water band absent original/off. SSR-only reproduced it;
-  water-only did not at the tested pose. A default-off private original far-trace control removed the band in the
-  inspected pose; a reduced-trace quality/cost experiment is pending. This is a quality failure, not accepted appearance.
-  [Glint audit](PHOTON_GLINT_SOURCE_AUDIT.md).
-- Original native underwater capture observed WATER and no full-block camera
-  collision for 176 written frames, but missed 25 slots due backpressure. Its
-  incomplete record is preserved. An explicit bounded two-image option and safe lease tracking now compiled;
-  all three native retries completed201/201. Original/off peaks1 do notprove
-  throughput causation; enabled peak2 exercised the bounded path.
-  [Capture evidence](CAMERA_QUALITY_HARNESS.md).
-- MakeUp 9.5g rendered without DH; original DH rendering linked its programs and
-  submitted actual world draws alongside inspected distant land/water. Its core
-  consumer proved global enable and near/far in water pixels; normal rendering
-  established no useful gain. High-rate glint/underwater/adapted-DH checks remain.
-- Miniature 2.19 rendered original and experimental modes without DH. Diagnostic
-  pixels and normal GPU readback proved core2/global enable/near96/far160. The
-  distance-refinement pilot had flat GPU time; transition quality and actual
-  cheaper-path coverage remain incomplete. BSL 10.1.8 original HIGH rendered
-  without DH; its native parallax-off pilot was a quality-dependent 2.81% change.
-  [Pack integration evidence](PACK_COMPATIBILITY_MATRIX.md).
+- Native original/disabled/enabled shoreline, sun-glint and underwater triplets
+  each completed 603 verified PNG frames. SSR-only far skipping reproduced a
+  bright water band; water-only did not at that pose. Private full/reduced far
+  tracing removed the inspected band. Serial cost regressed; reduced same-JVM
+  forward GPU contrasts were +2.10%/−13.78% and reverse −0.64%/+0.73%, with no
+  stable benefit. Full motion/transition quality remains unaccepted.
+  [Glint audit](PHOTON_GLINT_SOURCE_AUDIT.md),
+  [SSR cost control](NATIVE_INPROCESS_SSR_COST.md).
+- Underwater retries completed 201/201 frames per arm with actual WATER,
+  no full-block camera collision, hashes and safe writer draining. Enabled
+  peak two pending images exercised the bounded option; original/off peaks
+  one cannot prove that option caused throughput improvement. Prior incomplete
+  captures remain retained. [Capture evidence](CAMERA_QUALITY_HARNESS.md).
+- MakeUp 9.5g rendered noDH; original DH linked programs and submitted actual
+  distant world draws. Core water cues proved global enable/near/far, but normal
+  rendering established no useful gain. Miniature 2.19 rendered original and
+  experimental paths, with core diagnostic pixels and normal GPU readback;
+  its refinement pilot was flat. BSL original HIGH rendered noDH; native
+  parallax-off changed GPU time 2.81% at different quality.
+- Complementary Reimagined r5.9.3 original HIGH rendered noDH with no fallback.
+  Full/sky/Potato native-water pilot GPU times were 13.77/12.31/12.30 ms. Sky
+  loses object reflections and Potato shifts them; neither is a ShaderLOD
+  adapter or quality-equivalent gain. New-biome/End expression warnings remain.
+  [Pack evidence](PACK_COMPATIBILITY_MATRIX.md),
+  [Complementary runtime](COMPLEMENTARY_RUNTIME_PLAN.md).
 
-Cloud consumer/extent-hoist/literal-secondary private probes did not establish
-incremental useful performance; all remain off. Downloads, source fixtures and
-sampler constraints are kept separate from actual rendering and quality proof.
-Lighting retains original shadow/AO budgets by default. Cached sky, analytic
-water and CPU frustum/cache/list experiments stay off. Terrain reduction requires
-explicit warmed-scene acknowledgment; automatic travel coverage is unfinished.
-No sunlight cadence or shadow-map refresh was changed.
+Cloud consumer/extent-hoist/literal-secondary private probes established no
+useful incremental gain and remain off. Shadow/AO budgets are protected by
+default. Cached sky, analytic water and CPU frustum/cache/list experiments remain
+off. Terrain reduction requires explicit warmed-scene acknowledgement; automatic
+travel coverage is incomplete. No sunlight or shadow-map cadence was changed.
 
-Previous completed goal: [Full-frame rendering proof](goals/full-frame-proof.md).
-Earlier repeated matrices and CPU/JFR evidence remain in
-[repeated results](REPEATED_RESULTS.md) and [CPU forensics](RENDER_CPU_FORENSICS.md).
-The first JFR captured a fast regime, not the unexplained slowdown.
+## Environment and validation limits
 
-## Previous completed proof
+Minecraft 1.21.1 / NeoForge 21.1.253 / Java 21 / Iris 1.8.12-local / Sodium
+0.6.13 / Photon v1.3b / optional DH 3.3.3 are pinned in
+`dev/runtime.lock.json`. Iris and Sodium are required; additional performance
+mods are optional. Apple M3 Max OpenGL 4.1 Metal 91.7 uses reduced Photon options.
+Full desktop Ultra/POM/voxel features and other hardware remain unverified.
+GPU queries use asynchronous elapsed counters; timestamps are unavailable.
+[Timing limits](GPU_TIMING.md), [evaluation rules](EVALUATION.md).
 
-The ordinary forest has substantial terrain and native driver submission costs;
-default clouds already run at low resolution. Revised cloud distance bands
-reduced GPU render time by roughly 13–29% across premium-cloud workload runs,
-with considerable variation. A simple medium preset remained faster at different
-quality. The original shader-only approach did not address the dominant costs
-in the default scene.
+Latest dev integration compiled successfully; production JAR excludes dev
+profiling classes/mixins. Thirty-eight in-process, 24 stack, seven Complementary
+preparation and 19 prior matrix fixtures passed. Static tests/builds do not
+establish runtime compilation, physical trace counts, quality or support.
 
-A default-off terrain policy caps the effective detailed radius at 16 chunks
-while preserving the requested 24 and DH's 128-chunk reach. The repeated combined
-forest candidate improved from 124 to 143 FPS, with GPU render time falling from
-7.482 to 6.319 ms. This exposes an existing vanilla/DH detail tradeoff through a
-guarded policy; it is not a new mesh renderer or a universal speedup.
+Previous completed goals: [full-frame proof](goals/full-frame-proof.md),
+[GPU/DH proof](goals/gpu-lod-dh-comparison.md),
+[setup](goals/setup-environment.md). Earlier premium-cloud and geometry gains
+remain qualified by their workloads and quality changes. Historical repeated
+results and JFR analysis are in [repeated results](REPEATED_RESULTS.md) and
+[CPU forensics](RENDER_CPU_FORENSICS.md); the first JFR observed the fast regime.
 
-Previous comparison: left protected-lighting ShaderLOD plus the warmed terrain cap;
-right original Photon with ShaderLOD absent. Both display FPS, real GPU elapsed
-time, CPU wall/thread clocks, and requested/effective render radius. Concurrent
-windows share the GPU; serial captures provide the performance evidence.
-Disabling the terrain policy restored 24 detailed chunks and re-enabling it
-returned to 16 after warmup. Automatic coverage checks during travel remain
-unfinished, so the policy requires explicit warmed-scene confirmation.
-
-Shadow filtering, screen-space shadows, and AO retain original budgets by
-default. The cached-lighting approximation is disabled in the final candidate.
-The user's earlier observation of distant trees losing shadows is recorded as
-an unacceptable tradeoff for the small gain in the previous aggressive profile.
-
-## Environment and validation
-
-Minecraft 1.21.1 / NeoForge 21.1.253 / Java 21 is the first target. Exact Iris,
-Sodium, DH, and Photon artifacts are locked in `dev/runtime.lock.json`. Iris is
-required; DH is optional for users and present in the development runtime.
-The Apple M3 Max uses a reduced Photon profile. Full desktop SSR, voxel lighting,
-POM and Ultra rendering remain unverified on suitable hardware.
-
-Java build, geometry/restoration JUnit tests, timing/policy/CPU tests, and eight
-shaderpack tests including 660 GLSL compilations and helper-distance fixtures
-passed. Actual Iris/Photon rendering, the absent-mod original baseline, DH
-rendering, live policy restoration, and production jar exclusion of development
-profiling code were checked separately. GPU queries use asynchronous elapsed
-counters; timestamps are unavailable on this host. Scope limitations are in
-[GPU_TIMING.md](GPU_TIMING.md).
-
-## Earlier completed goals
-
-- [Development environment](goals/setup-environment.md): NeoForge skeleton,
-  pinned runtime, agent roles, documentation, and basic explicit Photon LOD.
-- [GPU timing and broader Photon/DH LOD](goals/gpu-lod-dh-comparison.md): wider
-  effect budgets and comparison tooling. The aggressive cached-lighting capture
-  measured 7.960 to 7.523 ms, but its distant lighting loss was rejected.
-
-No remote host, publishing destination, or push is configured. Generated clients,
-worlds, binaries, screenshots, and raw reports remain outside Git.
-
-
-Reduced far tracing removed the broad band in the inspected glint pose while
-retaining visible sun reflection; its 41-frame quality capture passed. A four-arm
-original/skip/full/reduced native cost pilot is running. This bounded appearance
-check does not establish full transition/motion quality or useful GPU savings.
-
-
-The four-arm native SSR cost pilot completed: original15.04ms, skip15.09ms,
-reduced18.90ms andfull18.39ms GPU intervals. Reduced/full removed the inspected
-band but did not establish useful performance. The pinned same-JVM SSR-only
-control now compiles; 38 analyzer and 24 stack fixtures pass. The reduced
-archive OFF/ON/OFF/ON session passed strict checks but GPU contrasts changed sign
-(+2.1%/-13.8% time reduction). Reverse order passed and was flat (-0.64%/+0.73%). No stable benefit established. See
-[SSR control](NATIVE_INPROCESS_SSR_COST.md) and the active goal for the live handle.
-The common protocol owner’s last visible turn remains the handoff; its main
-Java/config/shared-helper ownership is preserved. No broader transport work is
-claimed from this chat’s pack diagnostics.
-
-
-Complementary original/native-water controls now have pinned preparation tooling;
-7 new and 19 prior matrix fixtures passed. Original HIGH rendered at native resolution/minimal/noDH with no fallback:
-64.24 FPS and 14.07 ms GPU in one smoke, no gain claim. Iris new-biome/End
-uniform warnings retained. The native three-arm pilot completed: full13.77ms, sky12.31ms, Potato12.30ms.
-Sky loses reflected trees and Potato shifts them; no adapter/quality-equivalent
-gain claimed. Motion preparation and Photon native attribution review are active.
+No remote host, push, publishing destination or external messaging is authorized.
+Generated clients, worlds, binaries, captures and raw reports stay outside Git.
