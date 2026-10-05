@@ -56,9 +56,15 @@ def check_pair(baseline, candidate, baseline_report, candidate_report, manifest)
     b = {key: value for key, value in candidate_report['effective_shader_options'].items() if not key.startswith('SHADERLOD_')}
     differences = {key: [a.get(key), b.get(key)] for key in sorted(a.keys() | b.keys()) if a.get(key) != b.get(key)}
     # Adaptive/disabled must hold original upstream quality constant. Explicit controls may differ.
-    if differences and candidate['case'].endswith(('adaptive', 'patched-off', 'final')):
+    protected_candidate = candidate['case'].endswith(('adaptive', 'patched-off', 'final', 'alloff', '-only'))
+    protected_original_against_isolation = candidate['case'].endswith('-high') and baseline['case'].endswith(('alloff', '-only'))
+    if differences and (protected_candidate or protected_original_against_isolation):
         raise ValueError('Adaptive/disabled changed upstream quality settings: ' + repr(differences))
     if differences: changes['upstream_shader_options'] = differences
+    flags_a = {key: value for key, value in baseline_report['effective_shader_options'].items() if key.startswith('SHADERLOD_')}
+    flags_b = {key: value for key, value in candidate_report['effective_shader_options'].items() if key.startswith('SHADERLOD_')}
+    flag_changes = {key: [flags_a.get(key), flags_b.get(key)] for key in sorted(flags_a.keys() | flags_b.keys()) if flags_a.get(key) != flags_b.get(key)}
+    if flag_changes: changes['shaderlod_pack_options'] = flag_changes
     for field in ('effective_chunks', 'terrain_active'):
         a, b = baseline_report['input_state_end'].get(field), candidate_report['input_state_end'].get(field)
         if a != b: changes[field] = [a, b]

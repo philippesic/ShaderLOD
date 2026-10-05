@@ -1,6 +1,8 @@
 #ifndef SHADERLOD_WATER_STATIC_INCLUDED
 #define SHADERLOD_WATER_STATIC_INCLUDED
 
+#ifdef SHADERLOD_WATER
+
 // Integer ceil ratios exactly match shaderlod_budget for supported N=1..8.
 #define SHADERLOD_WATER_MB ((3 * WATER_WAVE_ITERATIONS + 3) / 4)
 #define SHADERLOD_WATER_MP ((WATER_WAVE_ITERATIONS + 1) / 2)
@@ -117,55 +119,6 @@ int shaderlod_water_octaves(int tier) {
 #undef SHADERLOD_WATER_NORMAL_FN
 #endif
 
-vec3 get_water_normal_lod(
-    vec3 world_pos, vec3 flat_normal, vec2 coord, vec2 flow_dir,
-    float skylight, bool flowing_water
-) {
-#if defined PROGRAM_SHADOW
-    return get_water_normal(world_pos, flat_normal, coord, flow_dir, skylight, flowing_water);
-#else
-    int quality = shaderlod_water_quality_at(distance(world_pos, cameraPosition),
-        gl_FragCoord.xy, float(frameCounter));
-    // Preserve the untouched original function, including constant loops.
-    if (quality == 0) return get_water_normal(world_pos, flat_normal, coord,
-        flow_dir, skylight, flowing_water);
-    int count = shaderlod_water_octaves(quality);
-#if SHADERLOD_WATER_REACHABLE(1) && (1 < WATER_WAVE_ITERATIONS || defined SHADERLOD_WATER_ANALYTIC)
-    if (count == 1) return shaderlod_water_normal_1(world_pos, flat_normal,
-        coord, flow_dir, skylight, flowing_water);
-#endif
-#if SHADERLOD_WATER_REACHABLE(2) && (2 < WATER_WAVE_ITERATIONS || defined SHADERLOD_WATER_ANALYTIC)
-    if (count == 2) return shaderlod_water_normal_2(world_pos, flat_normal,
-        coord, flow_dir, skylight, flowing_water);
-#endif
-#if SHADERLOD_WATER_REACHABLE(3) && (3 < WATER_WAVE_ITERATIONS || defined SHADERLOD_WATER_ANALYTIC)
-    if (count == 3) return shaderlod_water_normal_3(world_pos, flat_normal,
-        coord, flow_dir, skylight, flowing_water);
-#endif
-#if SHADERLOD_WATER_REACHABLE(4) && (4 < WATER_WAVE_ITERATIONS || defined SHADERLOD_WATER_ANALYTIC)
-    if (count == 4) return shaderlod_water_normal_4(world_pos, flat_normal,
-        coord, flow_dir, skylight, flowing_water);
-#endif
-#if SHADERLOD_WATER_REACHABLE(5) && (5 < WATER_WAVE_ITERATIONS || defined SHADERLOD_WATER_ANALYTIC)
-    if (count == 5) return shaderlod_water_normal_5(world_pos, flat_normal,
-        coord, flow_dir, skylight, flowing_water);
-#endif
-#if SHADERLOD_WATER_REACHABLE(6) && (6 < WATER_WAVE_ITERATIONS || defined SHADERLOD_WATER_ANALYTIC)
-    if (count == 6) return shaderlod_water_normal_6(world_pos, flat_normal,
-        coord, flow_dir, skylight, flowing_water);
-#endif
-#if SHADERLOD_WATER_REACHABLE(7) && (7 < WATER_WAVE_ITERATIONS || defined SHADERLOD_WATER_ANALYTIC)
-    if (count == 7) return shaderlod_water_normal_7(world_pos, flat_normal,
-        coord, flow_dir, skylight, flowing_water);
-#endif
-#if SHADERLOD_WATER_REACHABLE(8) && (8 < WATER_WAVE_ITERATIONS || defined SHADERLOD_WATER_ANALYTIC)
-    if (count == 8) return shaderlod_water_normal_8(world_pos, flat_normal,
-        coord, flow_dir, skylight, flowing_water);
-#endif
-    return get_water_normal(world_pos, flat_normal, coord, flow_dir, skylight, flowing_water);
-#endif
-}
-
 // Parallax requires only three medium kernels, one per uniform preset.
 // Each kernel calls either original full height or a literal cheap-height case.
 #if SHADERLOD_WATER_MB == WATER_WAVE_ITERATIONS
@@ -246,10 +199,61 @@ vec3 get_water_normal_lod(
 #undef SHADERLOD_WATER_PARALLAX_HEIGHT_FN
 #undef SHADERLOD_WATER_PARALLAX_STEPS
 
+#endif // SHADERLOD_WATER kernels
+
+vec3 get_water_normal_lod(
+    vec3 world_pos, vec3 flat_normal, vec2 coord, vec2 flow_dir,
+    float skylight, bool flowing_water
+) {
+#if defined PROGRAM_SHADOW || !defined SHADERLOD_WATER
+    return get_water_normal(world_pos, flat_normal, coord, flow_dir, skylight, flowing_water);
+#else
+    int quality = shaderlod_water_quality_at(distance(world_pos, cameraPosition),
+        gl_FragCoord.xy, float(frameCounter));
+    // Preserve the untouched original function, including constant loops.
+    if (quality == 0) return get_water_normal(world_pos, flat_normal, coord,
+        flow_dir, skylight, flowing_water);
+    int count = shaderlod_water_octaves(quality);
+#if SHADERLOD_WATER_REACHABLE(1) && (1 < WATER_WAVE_ITERATIONS || defined SHADERLOD_WATER_ANALYTIC)
+    if (count == 1) return shaderlod_water_normal_1(world_pos, flat_normal,
+        coord, flow_dir, skylight, flowing_water);
+#endif
+#if SHADERLOD_WATER_REACHABLE(2) && (2 < WATER_WAVE_ITERATIONS || defined SHADERLOD_WATER_ANALYTIC)
+    if (count == 2) return shaderlod_water_normal_2(world_pos, flat_normal,
+        coord, flow_dir, skylight, flowing_water);
+#endif
+#if SHADERLOD_WATER_REACHABLE(3) && (3 < WATER_WAVE_ITERATIONS || defined SHADERLOD_WATER_ANALYTIC)
+    if (count == 3) return shaderlod_water_normal_3(world_pos, flat_normal,
+        coord, flow_dir, skylight, flowing_water);
+#endif
+#if SHADERLOD_WATER_REACHABLE(4) && (4 < WATER_WAVE_ITERATIONS || defined SHADERLOD_WATER_ANALYTIC)
+    if (count == 4) return shaderlod_water_normal_4(world_pos, flat_normal,
+        coord, flow_dir, skylight, flowing_water);
+#endif
+#if SHADERLOD_WATER_REACHABLE(5) && (5 < WATER_WAVE_ITERATIONS || defined SHADERLOD_WATER_ANALYTIC)
+    if (count == 5) return shaderlod_water_normal_5(world_pos, flat_normal,
+        coord, flow_dir, skylight, flowing_water);
+#endif
+#if SHADERLOD_WATER_REACHABLE(6) && (6 < WATER_WAVE_ITERATIONS || defined SHADERLOD_WATER_ANALYTIC)
+    if (count == 6) return shaderlod_water_normal_6(world_pos, flat_normal,
+        coord, flow_dir, skylight, flowing_water);
+#endif
+#if SHADERLOD_WATER_REACHABLE(7) && (7 < WATER_WAVE_ITERATIONS || defined SHADERLOD_WATER_ANALYTIC)
+    if (count == 7) return shaderlod_water_normal_7(world_pos, flat_normal,
+        coord, flow_dir, skylight, flowing_water);
+#endif
+#if SHADERLOD_WATER_REACHABLE(8) && (8 < WATER_WAVE_ITERATIONS || defined SHADERLOD_WATER_ANALYTIC)
+    if (count == 8) return shaderlod_water_normal_8(world_pos, flat_normal,
+        coord, flow_dir, skylight, flowing_water);
+#endif
+    return get_water_normal(world_pos, flat_normal, coord, flow_dir, skylight, flowing_water);
+#endif
+}
+
 vec2 get_water_parallax_coord_lod(
     vec3 world_pos, vec3 tangent_dir, vec2 coord, vec2 flow_dir, bool flowing_water
 ) {
-#if defined PROGRAM_SHADOW
+#if defined PROGRAM_SHADOW || !defined SHADERLOD_WATER
     return get_water_parallax_coord(tangent_dir, coord, flow_dir, flowing_water);
 #else
     int quality = shaderlod_water_quality_at(distance(world_pos, cameraPosition),

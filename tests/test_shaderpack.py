@@ -124,6 +124,7 @@ float smoothstep(float a,float b,float x){ float t=clamp((x-a)/(b-a),0.f,1.f); r
         for index, (near, far, band, enabled, samples) in enumerate(fixtures):
             with self.subTest(near=near, far=far, band=band, enabled=enabled):
                 definitions = ("#define SHADERLOD_ENABLED\n" if enabled else "") + (
+                    "#define SHADERLOD_CLOUDS\n"
                     f"#define SHADERLOD_CLOUD_NEAR {float(near)}\n"
                     f"#define SHADERLOD_CLOUD_FAR {float(far)}\n"
                     f"#define SHADERLOD_CLOUD_TRANSITION {float(band)}\n")
@@ -179,6 +180,7 @@ float smoothstep(float a,float b,float x){ float t=clamp((x-a)/(b-a),0.f,1.f); r
         for index, (near, far, band, enabled, samples) in enumerate(fixtures):
             with self.subTest(near=near, far=far, band=band, enabled=enabled):
                 definitions = ("#define SHADERLOD_ENABLED\n" if enabled else "") + (
+                    "#define SHADERLOD_WATER\n"
                     f"#define SHADERLOD_WATER_NEAR {float(near)}\n"
                     f"#define SHADERLOD_WATER_FAR {float(far)}\n"
                     f"#define SHADERLOD_WATER_TRANSITION {float(band)}\n")
@@ -302,6 +304,7 @@ for(float clock:{.4,17.3,60.1}){frameTimeCounter=clock;
 for(bool constant:{false,true}){constant_noise=constant;
 for(vec2 coord:coords)for(vec2 dir:dirs){
 """
+        checks += "#ifdef SHADERLOD_WATER\n"
         for count in range(1, 9):
             checks += f"""
 #if SHADERLOD_WATER_REACHABLE({count}) && ({count} < WATER_WAVE_ITERATIONS || defined SHADERLOD_WATER_ANALYTIC)
@@ -317,12 +320,15 @@ if(constant){{
 #endif
 """
         checks += r"""
+#endif
 for(bool flowing:{false,true})for(int preset:{0,1,2})for(int tier:{0,1,2}){
  test_tier=tier;test_preset=preset;
  int expected_count=tier==0?WATER_WAVE_ITERATIONS:int(std::ceil(WATER_WAVE_ITERATIONS*(preset==0?(tier==1?.75:.5):preset==1?(tier==1?.5:.25):(tier==1?.25:.125))));
+ #ifdef SHADERLOD_WATER
  if(shaderlod_water_octaves(tier)!=expected_count)return 3;
+ #endif
  vec3 actual_normal=get_water_normal_lod(world,flat,coord,dir,.7,flowing);
-#ifdef PROGRAM_SHADOW
+#if defined PROGRAM_SHADOW || !defined SHADERLOD_WATER
  expected_count=WATER_WAVE_ITERATIONS;
 #endif
  vec3 expected_normal=get_water_normal(world,flat,coord,dir,.7,flowing);
@@ -335,7 +341,7 @@ for(bool flowing:{false,true})for(int preset:{0,1,2})for(int tier:{0,1,2}){
  }
  if(!close(actual_normal,expected_normal))return 4;
 #else
-#ifdef PROGRAM_SHADOW
+#if defined PROGRAM_SHADOW || !defined SHADERLOD_WATER
  if(!close(actual_normal,expected_normal))return 5;
 #else
  if(tier!=0){switch(expected_count){
@@ -355,7 +361,7 @@ case {count}:expected_normal=shaderlod_water_normal_{count}(world,flat,coord,dir
  vec2 actual_coord=get_water_parallax_coord_lod(world,tangent,coord,dir,flowing);
  int expected_steps=tier==0?4:(preset==0?3:preset==1?2:1);
  vec2 expected_coord=coord;
-#ifndef PROGRAM_SHADOW
+#if !defined PROGRAM_SHADOW && defined SHADERLOD_WATER
  if(tier!=2){
 #else
  expected_steps=4;
@@ -367,28 +373,116 @@ case {count}:expected_normal=shaderlod_water_normal_{count}(world,flat,coord,dir
             for steps in (1, 2, 3, 4):
                 checks += f"case {count*10+steps}:expected_coord=reference_parallax_{count}_{steps}(tangent,coord,dir,flowing);break;\n"
         checks += " }\n }\n if(!close(actual_coord,expected_coord))return 6;\n }\n }\n }\n }\n }\n return 0;\n}\n"
-        variants = [(count, variation, analytic, False) for count in range(1, 9)
+        variants = [(count, variation, analytic, False, True) for count in range(1, 9)
                     for variation in (False, True) for analytic in (False, True)]
-        variants += [(3, True, analytic, True) for analytic in (False, True)]
-        for count, variation, analytic, shadow in variants:
-            with self.subTest(octaves=count, height_variation=variation, analytic=analytic, shadow=shadow):
+        variants += [(3, True, analytic, True, True) for analytic in (False, True)]
+        variants += [(3, True, analytic, False, False) for analytic in (False, True)]
+        for count, variation, analytic, shadow, effect in variants:
+            with self.subTest(octaves=count, height_variation=variation, analytic=analytic, shadow=shadow, effect=effect):
                 definitions = f"#define WATER_WAVE_ITERATIONS {count}\n"
                 if variation: definitions += "#define WATER_WAVES_HEIGHT_VARIATION\n"
                 if analytic: definitions += "#define SHADERLOD_WATER_ANALYTIC\n"
                 if shadow: definitions += "#define PROGRAM_SHADOW\n"
+                if effect: definitions += "#define SHADERLOD_WATER\n"
                 path = Path(self.directory.name) / f"water-static-{count}-{variation}-{analytic}-{shadow}.cpp"
                 executable = path.with_suffix("")
                 path.write_text(adapters + definitions + adapt(actual) + adapt(references) + checks)
                 preprocessed = subprocess.run(["c++", "-std=c++17", "-E", "-P", str(path)], capture_output=True, text=True)
                 self.assertEqual(0, preprocessed.returncode, preprocessed.stderr)
                 reachable = {int(__import__('math').ceil(count * scale)) for scale in (.75, .5, .25, .125)}
-                expected_kernels = reachable if analytic else reachable - {count}
+                expected_kernels = (reachable if analytic else reachable - {count}) if effect else set()
                 actual_kernels = {int(n) for n in re.findall(r"double shaderlod_water_height_(\d+)\(", preprocessed.stdout)}
                 self.assertEqual(expected_kernels, actual_kernels)
                 compiled = subprocess.run(["c++", "-std=c++17", str(path), "-o", str(executable)], capture_output=True, text=True)
                 self.assertEqual(0, compiled.returncode, compiled.stdout + compiled.stderr)
                 result = subprocess.run([str(executable)], capture_output=True, text=True)
                 self.assertEqual(0, result.returncode, f"Actual static water math fixture failed: {result.returncode}")
+
+    def test_off_effect_source_branches_are_pinned_original(self):
+        paths = {
+            "SHADERLOD_CLOUDS": ("sky/clouds/cumulus.glsl", "sky/clouds/altocumulus.glsl", "sky/clouds/cumulus_congestus.glsl"),
+            "SHADERLOD_FOG": ("fog/overworld/raymarched.glsl", "fog/water_fog_vl.glsl", "fog/end_fog_vl.glsl", "fog/lpv_fog.glsl"),
+            "SHADERLOD_SSR": ("lighting/specular_lighting.glsl",),
+            "SHADERLOD_MATERIALS": ("surface/parallax.glsl",),
+        }
+        for flag, names in paths.items():
+            for name in names:
+                path = "shaders/include/" + name
+                source = self.files[path].decode()
+                original = self.upstream[path].decode()
+                self.assertTrue(source.endswith("\n#else\n" + original + "\n#endif // " + flag + "\n"), path)
+        settings = self.files["shaders/settings.glsl"].decode()
+        for effect in ("CLOUDS", "WATER", "FOG", "SSR", "MATERIALS"):
+            self.assertRegex(settings, rf"(?m)^  #define SHADERLOD_{effect}$")
+        fog = self.files["shaders/include/fog/overworld/raymarched.glsl"].decode().split("\n#else\n" + self.upstream["shaders/include/fog/overworld/raymarched.glsl"].decode())[0]
+        self.assertIn("shaderlod_fog_tier", fog)
+        self.assertNotIn("shaderlod_tier(", fog)
+        ssr = self.files["shaders/include/lighting/specular_lighting.glsl"].decode().split("\n#else\n" + self.upstream["shaders/include/lighting/specular_lighting.glsl"].decode())[0]
+        self.assertIn("shaderlod_ssr_tier", ssr)
+        self.assertNotIn("shaderlod_tier(", ssr)
+
+    @unittest.skipUnless(shutil.which("c++"), "C++ compiler unavailable for effect getter math")
+    def test_actual_effect_getters_respect_flags_and_bridge_disable(self):
+        helper = self.files["shaders/include/shaderlod/lod.glsl"].decode()
+        functions = []
+        for name in ("shaderlod_use_bridge", "shaderlod_enabled", "shaderlod_distances", "shaderlod_preset",
+                     "shaderlod_tier_with_distances", "shaderlod_tier", "shaderlod_fog_tier", "shaderlod_ssr_tier",
+                     "shaderlod_cached_sky_tier", "shaderlod_cloud_tier", "shaderlod_water_tier", "shaderlod_material_tier"):
+            match = re.search(rf"(?:bool|int|vec3) {name}\([^)]*\) \{{", helper)
+            self.assertIsNotNone(match, name)
+            end, depth = match.end(), 1
+            while depth:
+                depth += (helper[end] == "{") - (helper[end] == "}")
+                end += 1
+            functions.append(helper[match.start():end])
+        adapters = r"""
+#include <cmath>
+#include <algorithm>
+using std::max; using std::min;
+#define float double
+struct vec3 {float x,y,z;vec3(float a,float b,float c):x(a),y(b),z(c){}};
+float clamp(float a,float b,float c){return min(max(a,b),c);}
+int clamp(int a,int b,int c){return min(max(a,b),c);}
+float smoothstep(float a,float b,float c){float t=clamp((c-a)/(b-a),0.,1.);return t*t*(3.-2.*t);}
+#define SHADERLOD_USE_MOD_CONFIG
+#define SHADERLOD_ENABLED
+#define SHADERLOD_CACHED_SKY
+#define SHADERLOD_PRESET 1
+#define SHADERLOD_NEAR 32.0
+#define SHADERLOD_FAR 96.0
+#define SHADERLOD_TRANSITION 8.0
+#define SHADERLOD_CLOUD_NEAR 128.0
+#define SHADERLOD_CLOUD_FAR 1024.0
+#define SHADERLOD_CLOUD_TRANSITION 64.0
+#define SHADERLOD_WATER_NEAR 96.0
+#define SHADERLOD_WATER_FAR 256.0
+#define SHADERLOD_WATER_TRANSITION 32.0
+int shaderlodBridgeVersion=2,shaderlodEnabled=1,shaderlodPreset=1;
+float shaderlodNear=32.,shaderlodFar=96.,shaderlodTransition=8.;
+"""
+        effects = ("CLOUDS", "WATER", "FOG", "SSR", "MATERIALS")
+        variants = ((), effects, *((effect,) for effect in effects))
+        for variant in variants:
+            checks = "int main(){\n"
+            for enabled in (1, 0):
+                checks += f"shaderlodEnabled={enabled};\n"
+                for effect, call in (("CLOUDS", "shaderlod_cloud_tier(2000.,.5)"),
+                                     ("WATER", "shaderlod_water_tier(2000.,.5)"),
+                                     ("FOG", "shaderlod_fog_tier(2000.,.5)"),
+                                     ("SSR", "shaderlod_ssr_tier(2000.,.5)"),
+                                     ("MATERIALS", "shaderlod_material_tier(2000.,1000.,.5)")):
+                    expected = 2 if enabled and effect in variant else 0
+                    checks += f"if({call}!={expected})return 1;\n"
+                expected = 1 if enabled and "CLOUDS" in variant else 0
+                checks += f"if(shaderlod_cached_sky_tier()!={expected})return 2;\n"
+            checks += "return 0;}\n"
+            definitions = "".join(f"#define SHADERLOD_{effect}\n" for effect in variant)
+            path = Path(self.directory.name) / ("effect-getters-" + "-".join(variant) + ".cpp")
+            executable = path.with_suffix("")
+            path.write_text(adapters + definitions + "\n".join(functions) + checks)
+            result = subprocess.run(["c++", "-std=c++17", str(path), "-o", str(executable)], capture_output=True, text=True)
+            self.assertEqual(0, result.returncode, result.stdout + result.stderr)
+            self.assertEqual(0, subprocess.run([str(executable)]).returncode, variant)
 
     @unittest.skipUnless(shutil.which("c++"), "C++ compiler unavailable for isolated bridge checks")
     def test_actual_bridge_disable_and_dynamic_budgets(self):
@@ -415,6 +509,7 @@ int clamp(int x,int a,int b){return min(max(x,a),b);}
 float smoothstep(float a,float b,float x){float t=clamp((x-a)/(b-a),0.f,1.f);return t*t*(3.f-2.f*t);}
 #define SHADERLOD_USE_MOD_CONFIG
 #define SHADERLOD_ENABLED
+#define SHADERLOD_WATER
 #define SHADERLOD_PRESET 1
 #define SHADERLOD_WATER_NEAR 96.0
 #define SHADERLOD_WATER_FAR 256.0
@@ -508,6 +603,11 @@ int main(){
             ("no_ao", {"SHADER_AO": "SHADER_AO_NONE"}, "#define DISTANT_HORIZONS\n"),
             ("materials", {"POM": True, "NORMAL_MAPPING": True, "SPECULAR_MAPPING": True, "POM_SHADOW": True, "WATER_WAVES": True, "WATER_PARALLAX": True}, "#define DISTANT_HORIZONS\n"),
         )
+        effect_flags = {f"SHADERLOD_{effect}": False for effect in ("CLOUDS", "WATER", "FOG", "SSR", "MATERIALS")}
+        variants += (("effects_all_off", effect_flags, "#define DISTANT_HORIZONS\n"),)
+        for effect in ("CLOUDS", "WATER", "FOG", "SSR", "MATERIALS"):
+            variants += (("effect_" + effect.lower(), {**effect_flags, f"SHADERLOD_{effect}": True}, "#define DISTANT_HORIZONS\n"),)
+        variants += (("effects_off_lpv", {**effect_flags, "COLORED_LIGHTS": True, "LPV_VL": True}, "#define DISTANT_HORIZONS\n"),)
         for world in ("world0", "world1", "world-1"):
             for program in ("deferred4", "gbuffers_water", "deferred3", "deferred1", "deferred", "composite", "gbuffers_terrain", "dh_terrain", "dh_water", "composite1", "shadow"):
                 for variant, options, extra in variants:

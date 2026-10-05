@@ -8,14 +8,15 @@ optional performance mods, and additional shaders after repeatable Photon gains.
 Previous completed goal: [Full-frame rendering proof](goals/full-frame-proof.md).
 The preview clients are closed. The first 36-run serial matrix completed;
 wetness telemetry and DH-absent SSR rendering are verified in the reduced
-profile. Water candidates regressed in pilots; per-effect isolation is next. See the
+profile. Water candidates regressed in pilots; the nine-arm effect sweep is running. See the
 goal checkpoint for current ownership, profile paths and logs.
 Earlier evidence and limitations are in [FULL_FRAME_PROOF.md](FULL_FRAME_PROOF.md).
 
 Current source: Photon analytic-water and atmosphere candidates, usable cloud
 bands, conservative scene-bound terrain safeguards, configuration UI/commands,
 and repeated effective-option verification. Java build, 10 geometry tests and
-20 Python tests (including 792 GLSL compilations) passed. Candidate rendering is
+15 shaderpack tests (including 1,248 GLSL compilations), benchmark/policy
+checks and compileDevClientJava passed. Candidate rendering is
 verified in accepted captures. Exploratory paired median GPU reductions are
 5.83%/1.72% in forest and 25.91%/23.43% in premium clouds (minimal/optimized).
 Wetness was unmeasured in that matrix, so these are not acceptance claims.

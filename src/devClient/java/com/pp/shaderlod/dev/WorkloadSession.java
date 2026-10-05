@@ -7,6 +7,7 @@ import com.mojang.logging.LogUtils;
 import com.pp.shaderlod.dev.timing.GpuTimers;
 import com.pp.shaderlod.dev.timing.CpuTimers;
 import com.pp.shaderlod.dev.timing.ShaderInputTracker;
+import com.pp.shaderlod.dev.timing.ShadowInputObserver;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Screenshot;
 import net.neoforged.fml.ModList;
@@ -41,6 +42,11 @@ final class WorkloadSession {
             request = Files.exists(path) ? JsonParser.parseString(Files.readString(path)).getAsJsonObject() : new JsonObject();
         } catch (Exception failure) { throw new IllegalStateException("Invalid workload request", failure); }
         temporalInitial = temporalInputs();
+        if (ShadowInputObserver.enabled()) {
+            var options = new java.util.TreeMap<String, String>();
+            effectiveOptions().entrySet().forEach(entry -> options.put(entry.getKey(), entry.getValue().getAsString()));
+            ShadowInputObserver.configurePhotonFeatures(options);
+        }
     }
     String status() { return done ? "Workload capture finished" : measuring ? "Workload measuring CPU/GPU" : "Workload warming"; }
     void tick() {
@@ -56,6 +62,7 @@ final class WorkloadSession {
             capturedAt = java.time.Instant.now().toString();
             temporalStart = temporalInputs();
             ShaderInputTracker.beginMeasurement();
+            ShadowInputObserver.beginMeasurement();
             measuring = true; measurementStarted = now;
             startFrames = (int) GpuTimers.snapshot().renderFrames();
             LogUtils.getLogger().info("ShaderLOD workload measurement started: {}", directory);
@@ -87,6 +94,7 @@ final class WorkloadSession {
             report.add("shader_temporal_inputs_initial", temporalInitial);
             report.add("shader_temporal_inputs_start", temporalStart);
             report.add("shader_temporal_inputs_end", temporalInputs());
+            report.add("shadow_observation", gson.toJsonTree(ShadowInputObserver.snapshot()));
             report.addProperty("shader_temporal_note", "Wetness is observed at normal Iris supplier evaluation; clocks/day/weather are CPU source getters. Dynamic wetness and frame phase can advance. No smoother reevaluation, GPU readback, or clock freeze.");
             report.add("effective_shader_options", inputStart.get("effective_shader_options").deepCopy());
             report.addProperty("effective_shader_options_sha256", inputStart.get("effective_shader_options_sha256").getAsString());
@@ -94,7 +102,7 @@ final class WorkloadSession {
             for (var mod : ModList.get().getMods()) mods.addProperty(mod.getModId(), mod.getVersion().toString());
             report.add("loaded_mods", mods);
             var runtimeProperties = new JsonObject();
-            for (String property : List.of("shaderlod.dev.performanceStack", "shaderlod.dev.includeDh", "shaderlod.dev.gpuSampleInterval", "shaderlod.dev.gpuTiming", "shaderlod.dev.cpuLayerTiming", "shaderlod.dev.fixedWetness")) {
+            for (String property : List.of("shaderlod.dev.performanceStack", "shaderlod.dev.includeDh", "shaderlod.dev.gpuSampleInterval", "shaderlod.dev.gpuTiming", "shaderlod.dev.cpuLayerTiming", "shaderlod.dev.fixedWetness", "shaderlod.dev.shadowObserve")) {
                 runtimeProperties.addProperty(property, System.getProperty(property, "unspecified"));
             }
             report.add("runtime_properties", runtimeProperties);

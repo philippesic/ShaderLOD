@@ -18,6 +18,8 @@
     "CompositeRendererTimingMixin",
     "FinalPassTimingMixin",
     "ShadowRendererTimingMixin",
+    "ShadowInputObserverMixin",
+    "ShadowMatrixObserverMixin",
     "MinecraftTimingCleanupMixin"
   ],
   "injectors": { "defaultRequire": 1 }

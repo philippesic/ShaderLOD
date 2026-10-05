@@ -36,6 +36,9 @@ CASES = {
     'water-adaptive': ('coastalwater/adaptive', 'runClientLodOn'),
     'water-patched-off': ('coastalwater/patched-off', 'runClientLodOn'),
 }
+for _prefix, _scene in (('forest', 'forest'), ('cloud', 'cloudstorm'), ('water', 'coastalwater')):
+    for _mode in ('alloff', 'cloud-only', 'water-only', 'ssr-only', 'fog-only', 'materials-only'):
+        CASES[_prefix + '-' + _mode] = (_scene + '/' + _mode, 'runClientLodOn')
 FATAL_LOG = re.compile(r'(fallback=true|Failed to create shader rendering pipeline|Shader compilation failed|Shader compilation error|Cannot save workload measurement|Landscape control rejected|Exception in thread|BUILD FAILED)', re.I)
 
 
@@ -199,7 +202,7 @@ def validate_report(report, request, expected_inputs, started_ns, report_path=No
                 raise ValueError('Camera differs from prepared control: ' + key)
     enabled = state.get('lod_settings', {}).get('enabled')
     if request['case'].endswith('patched-off') and enabled is not False: raise ValueError('Patched disabled control has live LOD enabled')
-    if request['case'].endswith(('adaptive', 'final', 'combined', 'geometry')) and enabled is not True: raise ValueError('Adaptive control has live LOD disabled')
+    if request['case'].endswith(('adaptive', 'final', 'combined', 'geometry', 'alloff', '-only')) and enabled is not True: raise ValueError('Adaptive/effect control has live LOD disabled')
     if not state.get('shaders_in_use') or state.get('fallback'): raise ValueError('Iris pipeline unavailable/fallback')
     if state.get('framebuffer_width', 0) < 1 or state.get('framebuffer_height', 0) < 1: raise ValueError('Invalid framebuffer')
     if report.get('elapsed_seconds', 0) < request['measurement_seconds'] * .95 or report.get('render_frames', 0) < 30:

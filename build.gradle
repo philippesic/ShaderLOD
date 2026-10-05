@@ -92,6 +92,9 @@ neoForge {
             if (project.hasProperty('fixedWetness')) {
                 systemProperty 'shaderlod.dev.fixedWetness', project.property('fixedWetness').toString()
             }
+            if (project.hasProperty('shadowObserve')) {
+                systemProperty 'shaderlod.dev.shadowObserve', project.property('shadowObserve').toString()
+            }
             if (project.hasProperty('gpuAttribution')) {
                 systemProperty 'shaderlod.dev.gpuAttribution', project.property('gpuAttribution').toString()
             }

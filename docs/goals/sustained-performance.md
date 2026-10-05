@@ -234,3 +234,43 @@ controls on the inspected shoreline with fixedwetness0. This determines which
 active effect causes the measured overhead. Then optimize measured causes and
 repeat real-world quality/performance checks. Shadow/pass-split designs remain
 unimplemented; new shader support remains gated. No blocker requires user input.
+
+## Effect isolation integrated and live
+
+Previous turn classified as progress: actual SSR driver rendering, wetness
+telemetry, corrected guards, retained negative pilots and constant-loop shader
+implementation changed authoritative state and experiment selection. This turn
+integrated explicit effect controls and the read-only shadow observer.
+
+Clean effect archive SHA256 ab1b6d859829fe3e0925b69cdd3759369c44bc876cc97de77d9878ed27b8658d,
+build/photon-effects-no-atmosphere.zip. Main with atmosphere guard SHA256
+44fe27e24b51c3fbffd37fb2ba844f9a2420b507f1c9d424fa6d2174c143a16d.
+Five pack compile-time effect switches select original full include code when
+off; water-off emits no cheap kernels. They are not live mod config fields.
+15 shaderpack tests and1248GLSLcompilations passed; no gain inferred.
+
+Effect tooling tests: four preparation tests,14proof tests,7isolation tests.
+Root prepared nine independent hashed copies at
+run-workloads/effects-ssr-shoreline/coastalwater, fixedwetness0/noDH/minimal,
+matching observed SSR-enabled upstream settings and camera. Source maps,
+license/hash guards, world locks and failure preservation remain enabled.
+
+Shadow observer only reads existing expressions/matrix supplier returns; never
+skips/clears/changes rendering. configurePhotonFeatures/beginMeasurement/snapshot
+wired intoWorkloadSession; two mixins registered. Standalone policy and dev
+compilation passed. ExactReusableFrames stays0 under unknown metadata; observation
+is not permission to reuse maps. Root mapped -PshadowObserve=true, defaultfalse.
+First original effect capture ran with hooks registered but observationfalse;
+actual enabled observer capture/overhead still pending separately.
+
+LIVE session43582, tag effects-shoreline-r1, console
+ dev/logs/effects-shoreline-r1-runner.log. Nine balanced serial controls:
+original/high, global-disabled, active alloff, five singles and allactive.
+35swarm/15scapture, realclock, fixedwetness0; observationfalse. First original
+completed139.84FPS; no conclusion fromit. ROOT owns onlyclient/GPU. Freeze all
+used code/archive/configinputs untilsessionterminal; no other launch/heavyCPUtest.
+
+After completion: analyzeallcomparisons and rerunagainstwater-alloff; inspect
+images/cloud speckle, choose targetedcandidates and repeated checks. Run a
+separate observerdiagnostic afterexclusive sweep. Photon ordinary gate and new
+shader target remain pending, with no user-dependent blocker.

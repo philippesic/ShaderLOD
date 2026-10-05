@@ -120,38 +120,72 @@ int shaderlod_quality_at(float distance_blocks, vec2 pixel, float frame) {
     return shaderlod_tier_with_distances(distance_blocks, shaderlod_noise(pixel, frame), distances);
 }
 
+// Dedicated getters keep effect ownership explicit; generic tier helpers
+// remain used by lighting/debug and cannot be globally repurposed.
+int shaderlod_fog_tier(float distance_blocks, float noise) {
+#ifdef SHADERLOD_FOG
+    return shaderlod_tier(distance_blocks, noise);
+#else
+    return 0;
+#endif
+}
+
+int shaderlod_ssr_tier(float distance_blocks, float noise) {
+#ifdef SHADERLOD_SSR
+    return shaderlod_tier(distance_blocks, noise);
+#else
+    return 0;
+#endif
+}
+
 // Cached cloud lighting is generated at a fixed sea-level origin. An explicit
 // global-quality option is honest here; it is not distance from the live camera.
 int shaderlod_cached_sky_tier() {
+#ifndef SHADERLOD_CLOUDS
+    return 0;
+#else
 #ifdef SHADERLOD_CACHED_SKY
     if (shaderlod_enabled()) return shaderlod_preset();
 #endif
     return 0;
+#endif
 }
 
 int shaderlod_cloud_tier(float distance_blocks, float noise) {
+#ifndef SHADERLOD_CLOUDS
+    return 0;
+#else
     float near_cloud = max(SHADERLOD_CLOUD_NEAR, 1.0);
     float far_cloud = max(SHADERLOD_CLOUD_FAR, near_cloud + 1.0);
     float transition_cloud = clamp(SHADERLOD_CLOUD_TRANSITION, 0.0,
         min(2.0 * near_cloud, far_cloud - near_cloud));
     return shaderlod_tier_with_distances(distance_blocks, noise,
         vec3(near_cloud, far_cloud, transition_cloud));
+#endif
 }
 
 // Water has longer visible geometric detail than material parallax. These
 // shader options are effect-specific; the mod still supplies enable/preset.
 int shaderlod_water_tier(float distance_blocks, float noise) {
+#ifndef SHADERLOD_WATER
+    return 0;
+#else
     float near_water = max(SHADERLOD_WATER_NEAR, 1.0);
     float far_water = max(SHADERLOD_WATER_FAR, near_water + 1.0);
     float transition_water = clamp(SHADERLOD_WATER_TRANSITION, 0.0,
         min(2.0 * near_water, far_water - near_water));
     return shaderlod_tier_with_distances(distance_blocks, noise,
         vec3(near_water, far_water, transition_water));
+#endif
 }
 
 int shaderlod_water_quality_at(float distance_blocks, vec2 pixel, float frame) {
+#ifndef SHADERLOD_WATER
+    return 0;
+#else
     if (!shaderlod_enabled()) return 0;
     return shaderlod_water_tier(distance_blocks, shaderlod_noise(pixel, frame));
+#endif
 }
 
 // Structural work avoidance, independent of distance quality. Terrain uses
@@ -168,8 +202,12 @@ bool shaderlod_needs_atmosphere(float depth) {
 
 // POM is already limited to a short range; its relative bands must be inside it.
 int shaderlod_material_tier(float distance_blocks, float pom_distance, float noise) {
+#ifndef SHADERLOD_MATERIALS
+    return 0;
+#else
     return shaderlod_tier_with_distances(distance_blocks, noise,
         vec3(0.50 * pom_distance, 0.85 * pom_distance, 0.10 * pom_distance));
+#endif
 }
 
 vec3 shaderlod_debug_color(int tier) {
