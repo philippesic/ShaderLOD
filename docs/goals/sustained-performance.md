@@ -1344,3 +1344,615 @@ mustreallybeactive/effective16 atbothboundariesandwarmstable, notsilently24.
 Nextinspectactualrender/options/source/policy/PNG andboundedpilot, thenbalanced
 repeatsifuseful. Separateshader/geometry/combined comparisons; neveraddpercentages
 orlabelcapgain novelshader/meshoptimization. Fullgoalremainsactive.
+
+
+Checkpoint4ba3875 savesverifiedfastPNG/native603framequality, durable6roundtrip
+fixture, Miniatureprivateprobe andnativecap16source/geometryguards/WALrepair.
+Originalowner SHADOW_VISIBILITY_CACHE_DESIGN.md excluded, no remote push.
+LIVEexec5636 authoritative four-armnativeforest/minimal/DH pilot; baseline001
+completed59.909FPS, patched-off002currentlynext; noanalysis ofpartialpilot.
+RootsoleGPU. Nextresume poll5636/log/manifest andverifyliveclientbeforework,
+theninspectall4acceptedsource/options/policy/nativewindow/PNGs andactualGPU
+means. Do notstartanotherclient/heavytests/compiler/encoderwhilelive. Ifgeometry
+rejects dueinactive/effective24/warmcondition, preservefailure andfixevidence,
+notbypass. Nextbalancedrepeat onlyifqualified,useful; Miniaturemode1/full4
+explicit thenmode2/refinement driverqualitystillpending. Fullnativegoalactive,
+ordinary15%/independent-originalcontrols/quality/configsupport unfinished.
+Allworkerscurrentlyfrozen/completed; no handoff/newchat/messageauthorization.
+
+
+5636 terminalexit0/all4accepted. Original/off/geometry/adaptive nativeforest
+GPU15.2692/16.7714/14.4778/15.0119ms; FPS59.909/54.841/62.968/61.675,
+thread9.122/8.796/7.406/8.975. Geometryrealactive16 atbothboundaries, policy
+stable2105/warm600; initialcanonicalsavehashes equal. CombinedGPU5.18%vs
+original, geometryGPU3.56%vsadaptive, weakframegain/clearCPUdrop. Singlepilot
+below15%, no sourcecause/quality/defaultpromotion. RootgeometryPNGinspection
+pending. Workerowns explicitdevterrainonly same-JVM mode+strictanalyzer5files,
+includingrecordedmanualguard re-arm afterON (sameinspectedsceneonly), notauto
+travelcoverage orconfig-onlytoggle. No mainpolicychanges.
+
+RootpreparingfreshMiniatureprivate refinement controls; nextoriginal/mode0/
+mode1full4explicit actualdriver. Frozencompileddevharness usedduringworker
+sourceedits via --skip-build --freeze-dev-classes; fingerprintguards remain.
+NoMinecraftclientcurrentlylive; actualprep handle followsoutput. Fullgoalactive.
+
+
+Rootoriginal/geometrynativePNGinspectioncompleted: nearscene/shadows preserved
+atcoarseinspection; distantleftplateau/tree detail visiblycoarser underexisting
+cap16/DHreplacement. Explicitgeometryqualitytradeoff, notequivalent image or
+protectedfarappearanceproof. No defaultpromotion forweak~5%combinedGPU pilot.
+
+9904 Miniaturepreparationterminalexit0. LIVEexec54815 original/minimal/noDH/
+1488×836 vs privateMODE0off/MODE1full4explicit samplingcontrol,35s warmup20s
+capture/GPU1/16. ExactqualifiedZIPdf2a3d2…; config96/160/coreglobaltrue forprobe
+arms; originalnativecounts10/1.6/4 andsameoptions/worldcopy. Log
+`dev/logs/miniature-refinement-full-control-r1-runner.log`, profiles
+`run-workloads/miniature-refinement-probe/coastalwater`. Frozencompileddev
+classes via --skip-build --freeze-dev-classes whileterrain worker edits dev
+sources. RootsoleGPU; no fullcompiler/client/encoderuntilterminal. Nextdriver/
+fallthrough/options/PNGsamplingcontrol beforeMODE2LOD. Fullgoalactive.
+
+
+## Miniature full-four driver terminal; distance pilot launched
+
+54815 terminalexit0/all3accepted original/MODE0/MODE1, fallbackfalse. Actual
+Iris330translation/explicitLOD shaderpath compiled/rendered; rootnormalwater/
+reflection/terrainPNG inspected, exactpixel/motionparity unverified. GPU4.4219/
+4.5044/4.7083ms, FPS182.675/179.555/175.585. Full4explicitnegativecontrol4.53%
+slowerGPUvsoff, no shadergain/sourcecause/defaultsupportclaim.
+
+Root launchingfull4explicit/MODE2LOD matchedserialpilot35s warmup20s capture/
+GPU1/16/minimal/noDH/1488×836/exactqualifiedZIP and96→160corebands. Log
+`dev/logs/miniature-refinement-lod-pilot-r1-runner.log`; frozencompileddevclasses
+preserved via --skip-build --freeze-dev-classes whileterrainworker edits5files.
+Actualhandle followslaunchresult, rootsoleGPU. Nextinspectall2 actualmode/
+coreeligibility/options/PNGs andGPU thenmovingtransitions/disable/absent tests
+aswarranted. Native15%/broaderconfiguration andquality remainunfinished.
+
+
+35046 terminalexit0/all2accepted. MiniatureMODE1/MODE2 GPU4.5430/4.5432ms,
+FPS178.234/179.938, thread5.3356/5.2722; GPUflat, nosavings claim. ActualMODE2
+compiled/rendered fallbackfalse, rootnearwater/reflections/terrainPNG inspected,
+normalcoreGPUvalues/cheapbranchcoverage/transitionquality stillunverified.
+Reportsource exactqualifiedZIP unchanged, modeoptions/config/source validated.
+
+Samplerworker2filesfrozenadds exact4normalcore GPUuniformvalue readbacks,
+active/types/location guarded, no supplierreevaluation/writes/GLstate change.
+Rootcompilemustwaitterrainworker5devfilesfreeze. No gamecurrentlylive. Next
+compile/preserveruntimeartifacts/devexclusion, freshMiniatureMODE2/noGPUtime
+sampler/corediagnostic, then source-frozen terraincontrol longsettle/rearm.
+Targetedwaterquality planner owns onlynewdoc; confirmedcurrent north-looking
+shoreline cannotprove sun-glint coverage. Fullgoal/gates remainactive.
+
+
+Checkpoint0c2ac16 savesnative4-arm results/geometryquality distinction,
+MiniatureactualMODE1/2driver controls/flatGPU pilot andexplicitpackmatrix.
+Frozen-devrunnerflag dry-run guard/Pythoncompile passed; no main/shared code
+ororiginalownerdesign staged, no push. AllGPUclients54815/35046/5636 terminal,
+noMinecraftcurrentlylive; rootsoleGPU.
+
+Activeworkers: stack_analysisowns BenchmarkSession/WorkloadInputs/analyzer/
+fixture/newterrain-doc explicitsame-JVM terraincontrol5files, no compiler/client;
+camera_qualityowns onlyTARGETED_WATER_QUALITY_PLAN.md, nogame; sampler2files
+normalcore GPUreadback frozen/rootowned. Rootnext waitterrainfreeze, review
+strictguards/re-arm/restore andlightweighttests, compiledev/build/jarexclusion,
+thenfreshMODE2Miniature/noGPUtime coreuniform diagnostic. Afterwards longsettle
+terrain-only control onalreadyinspected fixedscene. Targetedsunglint/underwater
+profiles needactualfluid/geometry verification, notnorthshorelineassumption.
+Fullordinary15%/broadconfig/performance/quality/supportgoal intact andactive.
+
+
+## Terrain/control/core/survey integration compiled
+
+Terrain5files frozen29inprocess+24stack fixtures; root29fixtures rerunpassed.
+Manualfixed-scene re-arm explicitlyrecorded andguarded, globaltrue onlyexisting
+terrainflagselected; actualON16/OFF24bothboundarypolicies required. Survey2new
+files frozen withcache-specificloaded checks/boundedguardedreads; rootforwarded
+waterSceneSurvey andterminalreportproperty. Rootdev/fullbuildpassed firstattempt,
+productionjar contains0dev entries. Main/shared/sourcepolicy untouched.
+
+RootlaunchesfreshcopiedMiniatureMODE2normalcore/samplerdiagnostic (sourceworld
+fingerprint matched/source unchanged),20s warmup5s capture/minimal/noDH/1488×836/
+GPUtimingfalse/cloudSamplerProbe true/fixedwetness0. Log
+`dev/logs/miniature-normal-core-diagnostic-r1.log`; profile
+`run-workloads/miniature-normal-core-diagnostic/coastalwater/refinement-lod`.
+Actualhandle followslaunchoutput. RootsoleGPU; nextactualcore2/enabled/nearfar
+values withtype/location/programscope, thenlongterrainonly nativecontrol.
+Do notinferfragmentcheapbranch/hits fromuniformvalues alone. Targetedwater
+quality surveyneedsfreshoriginalscene andloadedonlyread observations next.
+Fullgoalactive; no15%/broaderconfig/qualitycompletion ordefaultchange.
+
+
+## Normal Miniature GPU core verified; terrain-only control live
+
+21144 diagnosticterminalexit0/GPUqueries0. FreshMODE2normalrendererprogram16
+activecore GPUreadbacks version2/enabled1/near96/far160 withcorrectscalar
+int/floattypes/locations. Report33e724cc8dd4c4087888789768dd4ce2dc2703aa571c673a9b15e2c0cef4d01a
+preservedalongsideactual1488×836/minimal/noDH/world/options/classmetadata.
+Normalshadertransportverified, notfragmentbudget/hitcoverage orspeedup;
+flat4.5430/4.5432mspilot retained.
+
+Freshterraincloneworldhash826e16de47307dafe77ee8afabdbe4f75d4f1efbf4559b56becd8a17ad620db7
+matchedstoppedgeometrysource. Rootnowlaunching4phaseOFF/ON/OFF/ON native
+terrain-only control: sameB15/globaltrue/all5effects/protectedlighting/DH128/
+requested24, explicit existingcap16/manualsceneconfirmationre-arm onceperON.
+75s initialwarmup75s settle30s capture/GPU1/16/fixedwetness0/2976×1672/minimal.
+Log `dev/logs/native-terrain-inprocess-forward-r1.log`; profile
+`run-workloads/native-terrain-inprocess-r1/forest/geometry`.
+Actualhandle followslaunchresult. RootsoleGPU; no heavybuild/tests/encoder/
+secondclientwhilelive. Nextactualidentity/re-arm/16ON24OFF/warm/screenshot/
+artifact strictanalysis; failurespreserved, no bypass. Rootsurveyclasscompiled
+butsurveypropertyoffduringtiming. Targetedglint/underwaterplan source-only;
+loadedclientcellsurveyafterterrainterminal. Fullgoal/gatesactive.
+
+
+Checkpoint7f5d5be saves13files compiledterrain/core/survey integration,29fixture
+strictanalyzer controls, targetedwaterplan andactualnormalcore GPUreadback.
+Originalowner SHADOW_VISIBILITY_CACHE_DESIGN.md excluded/no push. LIVEexec89036
+verifiedcurrenthandle, terrainonlyOFF/ON/OFF/ON firstOFFsettling, globalshader
+stilltrue/detailedrequested24/DH128, native2976×1672/minimal/75s initial75s
+settle30s capture/GPU1/16. RootsoleGPU, no otherclient/heavybuild/tests/encoder.
+Log `dev/logs/native-terrain-inprocess-forward-r1.log`; rootnextpollsamehandle,
+retainactualfailure/benchmarkJSON/PNG, strict source/scene/rearm/policyboundary/
+window/artifactanalysis. No inferred continuouscoverage/defaultchange.
+Afterterminal loaded-onlyoriginalcoastal WaterSceneSurvey/noGPUtiming, choose
+surveyed glint/underwater routes, sourcefrozenquality+restoration tests. All
+workersfrozen/completed, fullgoalactive with15%/broadconfig/qualitygates unmet.
+
+
+## Terrain control terminal; loaded-only water survey launched
+
+89036 terminalexit0/strictaccepted all4 realON16/OFF24/policy/re-arm/world/
+pack/window/artifact/restore checks. GPU15.2141/19.8161/16.1152/14.4899ms,
+thread8.3002/6.8212/8.2620/6.9585: CPUdrops17.82/15.78%, GPU−30.25/+10.09%.
+RetainfirstONregression, no stable15%/sourcecause/auto-coverage/defaultpromotion.
+AllbenchmarkJSON/PNGs/capturemetadata retained andanalyzed.
+
+RootfreshoriginalPhoton/noDH coastalcell survey launched25s warmup5s diagnostic/
+GPUtimingfalse/waterSceneSurveytrue. Freshcopyworldmatchedsource, sourceunchanged;
+profile `run-workloads/water-scene-survey-r1/coastalwater/high`, log
+`dev/logs/water-scene-survey-r1.log`. Frozencompiledclasses (`-xcompileDevClientJava`)
+whilecamera worker owns3sourcefiles forperframefluid/fullcollision guard, no
+compiler/clientbyworker. Actualhandle followslaunch. RootsoleGPU; nextactual
+loadedwatercolumns/collision/surface/cameraFogType observations, selectsurveyed
+westglint/underwater origin beforetargetedquality. Fullgoal/gates remainactive.
+
+
+## Loaded coastal survey terminal; original glint capture launched
+
+3103 surveyexit0/GPUqueries0, originalPhoton/noDH/minimal. All615cells observed
+loaded/direct615; camera69.62/240.5/680.5air/FogNONE/firstperson/no collision.
+x500,z640/660/680 water60..62(surface62.8889), air63..70; x300two columns had
+lowerwater only, sosurveyedx500initialanchor chosen. Sampledpointsnotcontinuous
+corridor/glintproof. Rawactualsurvey/workload/log retained.
+
+Camera3filesfreeze integrated/rootdev/fullbuildpassed; freshcamera context
+FogType/fullcollision/loaded guards andoptionalexpectedNONE/WATER failbefore
+PNG, legacyrequestsrecord-only. ExistingPixelencoder/singleflight/hashguards
+unchanged. NewexplicitPhotonwaterqualitypreparer pinsoriginal/B15/noDH, copies
+onecanonicalsave into3arms andrecordsnewcontrol/request/worldhashes. Sixcopied
+worlds acrossglint/underwater rootsallcanonicalf8f3b866…a365, sourceunchanged.
+
+Rootlaunch originalglintprobe atx500.5/y68/z660.5 time12500, yaw78→87.380→96→
+87.380→78, pitch2.2→3.735→5→3.735→2.2; native2976×1672/10FPS201slots/
+30s warm20s motion/minimal/noDH/expectedFluidNONE/rejectFullBlock true/
+GPUtimingfalse. Profile `run-workloads/photon-targeted-glint-r1/coastalwater/high`,
+requestparentcamera-request.json, log `dev/logs/photon-targeted-glint-original-r1.log`.
+Actualhandle followslaunchresult; rootsoleGPU. Next201hash/context/actualsun-
+glint visibility verification beforematchedoff/on; failedNoGlint scene not
+acceptedastargetedquality. Underwaterrootpreparedy60 butunexecuted, expects
+actualWATER; allnativegoal15%/config/qualitygates remainactive.
+
+
+31621 glintfirstattempt terminalexit0 butqualityfailed0PNGs: clientdaytime7000
+snapshottedbefore12500 preparedtimepacket synchronization. Failed575eb8ba…
+retained. Rootcamera acquisition nowwaits clientdimension/daytime equals
+frozenserverbeforeinitialinput snapshot; allstrictcapturing guardsunchanged.
+Rootdev/fullbuildpassed. Sameimmutable x500/time12500/request/native10FPS
+originalretrylaunched, separate `dev/logs/photon-targeted-glint-original-r2.log`,
+samepreparedprofile/newUUID; actualhandle followsoutput. RootsoleGPU; next
+actual201NONE/no-fullcollision/hashchecks andvisiblesun-glint beforecandidate.
+No qualityclaim fromfailedattempt/build. TerrainmixedGPU resultretained.
+Fullgoalactive, maindesignuntouched, no remoteactions/defaultchanges.
+
+
+## Original targeted sun glint complete; disabled launched
+
+95096 retryterminalexit0/complete201/201/0skips/allhashes checked; perframe
+camera_context recordsactualNONE/no-fullcollision/loadedcamera guards. New
+startupbarrier andcapture fluidcontracts exercised. Rootframe50 actualsun/
+waterglintvisible onnativeoriginal atx500.5/time12500/source-derivedwestern
+angle. Boundedoriginalglintcoverage established, notfulltemporal/candidate
+quality. Failed575eb8ba…zero-frameattempt retained; successfuld66ac242…UUID
+andmanifest/log/PNGs immutable. Preparedwaterprofile/scriptall3equalworldpins.
+
+Rootlaunchsameoriginalglint request onB15globaldisabled/patch-off, native/
+10FPS/minimal/noDH/GPUtimingfalse/expectedNONE/no-fullblock, log
+`dev/logs/photon-targeted-glint-disabled-r1.log`. Actualhandlefollowslaunch.
+RootsoleGPU; next201contexts/hashes, thenadaptiveglobalenabled andactualglint
+comparison. Underwateroriginalfirstnext withexpectedWATER. Fullgoalactive;
+15%/configsupport/motionfar/thirdperson uncompleted, no defaultpromotion.
+
+
+Checkpoint5e6d042 saves8files real615cellsurvey, boundedsun-glint original,
+perframefluid/collisioncontracts/startupsyncbarrier, mixedterrainresults,
+andpinnedqualityprofilepreparer. Rootall201successfulglintframecontexts explicitly
+assertedNONE/nonfullcollision andallhashesverified. Failedinitialzero-frame
+sequencepreserved. No maindesign/source/policy/default changes, no push.
+LIVEexec28500 verifiedcurrenthandle: disabled/B15westglintnative10FPScapture,
+log `dev/logs/photon-targeted-glint-disabled-r1.log`, rootsoleGPU. No other
+client/heavybuild/encoder. Nextpollexacthandle, validateall201actualcontexts/
+hashes, thenadaptiveenabledsameimmutable request andcomparison. Afterwards
+originalunderwater sourcex500/y60 route withstrictWATER/non-full-collision
+beforematchedarms; no untested continuouscorridor orthirdperson claim. All
+workerscurrentlycomplete/frozen. Full15%/broadconfig/quality/supportgoal active.
+
+
+28500 disabledglintterminalexit0/complete201/201/0skips; all201actualNONE/
+nonfullcollision contexts andon-diskSHAchecks passed, UUID592394d3-9edc-435e-
+a78e-10ee28f5b2f3. Rootframe50disabledglintPNG inspected; fullsequence still
+separatefromnativepixel/temporalparity claim. Sourceclass/pack/config/pose
+metadata retained. LIVEexec77297 adaptiveglobalenabled samex500/time12500/
+westwardsweep/native10FPS/201slots/expectedNONE/noncollision/minimal/noDH/
+GPUtimingfalse, log `dev/logs/photon-targeted-glint-enabled-r1.log`. RootsoleGPU;
+next validate201contexts/hashes/actualglint thenunderwateroriginalfirst.
+Fullgoalactive; nochanges main/shared/defaults/15%acceptance.
+
+
+## Glint triplet complete with visible candidate band; underwater original live
+
+77297 enabledglint terminalexit0/201/201/0skips, allactualNONE/noncollision/
+on-diskhash checks passed. UUID7d5a0e26-d02c-4c76-9f47-51d3ef8db4a9.
+Rootframe50enabledinspectionfinds broadbrightwaterband absentoriginal/off;
+qualitativecandidatequalityproblem, notpassoridentifiedcause. Glintitself
+stillvisible. Rootsourceauditor owns onlyPHOTON_GLINT_SOURCE_AUDIT.md for
+exactB15/water/SSR/fog/cloud optiongates andminimalhypotheses, no shaderchange
+beforeactualisolation. Allrawtriplet603frames/context/class/source unchanged.
+
+LIVEexec43689 underwateroriginal/noDH/minimal/native10FPS x500.5/y60/z660.5→
+640.5/yaw180/pitch−10/time7000, expectedcameraWATER/no-fullcollision,
+30s warm20s motion/GPUtimingfalse. Log
+`dev/logs/photon-targeted-underwater-original-r1.log`; rootsoleGPU. Next201
+contexts/hashes/actualunderwater image thenmatchedarms. Source-script optional
+samepackalloff/water/SSR/fog/cloud qualityisolations added; actualprep/waterband
+isolationaftercurrentcaptureterminal, no compiler/heavycopies whilelive.
+Fullgoalactive; no15%/broadconfig/glint-quality/defaultpromotion.
+
+
+43689 underwateroriginal terminalexit0/incomplete176written/25writerbackpressure.
+All176capturedWATER/no-fullcollision/hashes verified; rootframe100actual
+underwater sceneinspected. Native2976×1672/10FPS incompleteevidence retained,
+no fulltemporalacceptance; explicitstandard1488×83610FPS labelledretry next.
+Newimmutable requestcamera-request-standard-r2.json prepared, oldunchanged.
+
+5193 glintisolationspreparation terminalexit0/freshcanonical8-arm rootsource;
+original/off/adaptive plusalloff/water-only/SSR-only/fog-only/cloud-only options
+pinned B15/noDH/globalenabled, no lightingbudget changes. Rootsourceauditdoc
+frozen identifiespotentialfarSSR skip/fallback≥100 andwaterband80..112 overlap,
+no causeproof. Rootlaunchalloffglintnative10FPS/samecontrol/GPUtimingfalse,
+log `dev/logs/photon-glint-alloff-r1.log`, actualhandle followslaunchresult;
+rootsoleGPU. Next201contracts/hashes/PNG thenSSR-only/water-only isolate band.
+Fullgoalactive; no15%/default/supportpromotion, allfailedcapturerawretained.
+
+
+34617 alloffterminalexit0/incomplete200/201/onebackpressure, allwrittenNONE/
+noncollision/hashchecks passed; rootframe50bandabsent, narrowingmoduleswithout
+fullquality/cause claim. Rawbd82c2b5… preserved. Newexplicitnative2FPS41-slot
+samepath isolationrequestcamera-request-2fps-r2.json (old10FPSimmutable), for
+actualSSR-only/water-only appearance identification nottemporalacceptance.
+LIVEexec7364 SSR-only/genericallothersoff, B15/globaltrue/native/noDH/minimal/
+30s warm20s sweep/GPUtimingfalse/frozencompileddevclasses (`-xcompileDevClientJava`),
+log `dev/logs/photon-glint-ssr-only-2fps-r2.log`. RootsoleGPU.
+
+Camera worker ownsCameraQualitySession/doc pluspureCaptureWriteTracker/helper
+fixture4files for OPTIONALmaxInFlightImages1..2/default1/capacity1singlewriter/
+strictboundedmemory/count/peak/slotcallback/drain/hash/errors. No compiler/client
+byworker. Rootnativeunderwater10FPSfailure176/201 retained; standardresolution
+retryisadditional only, notsubstitute. Newmax2native retryafterfreeze/compile
+requiredifthroughputhypothesisworks. NextSSR/waterbandisolate beforeanyprivate
+shaderpatch; normalstaging/15%/broadconfig/qualitygoal remainsactive.
+
+
+## Glint band isolated to SSR in bounded view
+
+7364 SSR-only and30204water-only terminal/complete41/41/0skips each atnative
+2FPS, all82contexts/hashes verified. Rootframe10SSR-onlybandpresent, water-
+onlybandabsent. Alloffbandabsent; SSR sufficesatthispose, no universalwater/
+fog/cloud qualityclearance or10FPSacceptance. Sourceauditor correctednaming:
+B15specmember gatestrace viaquality!=2, notdo_ssr variable. Privateprobeworker
+owns4newfiles only, defaultoff localtier2→0 remap restoringoriginalintersection/
+refinement/tracepath whilepreservingcaller/feature/near-mid/disable gates;
+roughraycountLOD stillpresent, downstreamfog/sky contextdocumented. Rootno
+shaderpatchselectedforrelease/default; goalrequiresactualcontrol/qualityproof.
+NoMinecraftcurrentlylive, rootsoleGPU. Camera4fileboundedmax2/helperfixture
+sourceworkactive, nocompiler/clientbyworker. Nextallworkerfreeze, rootcompile/
+fixture/devexclusion, nativeunderwater10FPSmax2 retry; privateSSRguard source
+review/build+actualsameglintguardoff/on afterwards. Fullgoalactive/unshrunk.
+
+
+Checkpointb9f4110 savesactualSSR-only/water-only bandisolation andboundedprivate
+controlhypothesis;3bdc625 savedoriginal/off/onregression+scriptcontrols. No main/
+sharedshader/policy/design staged, no remoteactions. Allclients7364/30204/34617/
+43689terminal; noGPUclientlive. Activeworkerscamera_quality owns4files capture-
+tracker/max2/doc/purefixture; photon_cloud_guard owns4newprivateSSRfarcontrol
+files; bothsourceonly/no compiler/client. Rootnextverifytheirfreeze+API/fixtures,
+compiledev/build/exclusion, rootnativeunderwater201slotmax2 retry withimmutable
+newlabel andretained176/201failure. ThenprivateSSRguardoff/on actualglint to
+proveoriginalfartrace restoresartifactbeforeanypracticaloptimization decision.
+Fullgoalactive: ordinary15%/broadconfig/quality/support stillunachieved.
+
+
+## Private far SSR quality control assembled; disabled launched
+
+Root11sourcefixture tests passed. PrivateB15 guarddisabledZIP SHA03d6115056fc4
+c2009839d1c572555d64e698089c27cc16ec4724a6f4ac1474c; enabled41ecbee8b72039654
+fb0d25b16a841e3a2f4500025ec918687f94c0b8cba1555. Onlyspecmembertier2→0 and
+independentsettings declaration; sourceoffexactB15, roughraycountstillLOD,
+originalcaller/texture/projection/hit/shadow/BRDF untouched. Morefartrace work
+forcausality, nooptimizationclaim. Source/hash/license/metadata controlsretained.
+FreshSSR-onlyprivate off/on profiles matchedstoppedsourceworld/options/config;
+sourceunchanged/private-experiment.json recordsactualnewZIP/options/copyhashes.
+
+Rootlaunchdisabledguardnative2FPS41-slot glintsweep/noDH/minimal/globaltrue/
+GPUtimingfalse/expectedNONE/no-fullcollision, sameimmutableinputasSSR-only.
+Log `dev/logs/photon-ssr-far-guard-disabled-quality-r1.log`, profiles
+`run-workloads/photon-ssr-far-guard-quality-r1/coastalwater/{disabled,enabled}`.
+Actualhandle followslaunchoutput. RootsoleGPU; frozencompileddevclasseswhile
+cameracapture4filesworker finishes source. Nextactualprivateoffbandreproduction
+thenenabledoriginalfartrace image/actualcompile. Do not inferqualityfix or
+budgetcoverage withoutactualpixels. Nativeunderwatermax2 retryawaitsfreeze/
+compile/purefixture; fullgoalactive, main/shared/defaults untouched.
+
+
+48076 privateguarddisabled terminalexit0/41/41/0skips, allNONE/noncollision/
+hashchecks passed; actualprivateoff render accepted, bandPNGinspectionpending.
+Camera4filesfrozen boundedmax1/default ormax2 explicit; rootdev/fullbuildpassed,
+productionjarexcludesall devclasses, pureCaptureWriteTracker fixturepassed
+pending/slot/rejection/singlewriter/drain/thread invariants. No oldrawmutations.
+
+Rootfreshimmutablecamera-request-native-inflight2-r3.json/newlabel, native
+2976×1672/10FPS201slots/WATER/non-fullcollision, samex500.5/y60/z660.5→640.5/
+30s warm20s motion/minimal/noDH/GPUtimingfalse. Originalunderwaterretrylaunched,
+log `dev/logs/photon-targeted-underwater-original-native-inflight2-r3.log`.
+Actualhandle followslaunchoutput; rootsoleGPU. Nextvalidateactualleases/peak≤2/
+queue≤1/drain/201contexts/hash consistency, retainifstillbackpressure. Then
+privateSSRguardenabledglint toassessbandrestoration; moreworknotoptimization.
+Fullgoalactive, main/shared/defaultpolicy/ownerdesign untouched.
+
+
+## Native underwater capture201/201; privateSSRguard enabled launched
+
+7545 nativeunderwatermax2 retryterminalexit0/complete201/201/0skips. All201
+actualWATER/nonfullcollision/PNGhash/slotidentity checks passed. Finaltracker
+pending0/accepted201/settled201/rejected0, peakpending/images≤2/writing1/queue≤1.
+Original176/201failureunchanged; no shader/perfspeedup orfullqualityclaim.
+Raw2743e7ff…/manifest/log retained. Remainingmatchedunderwateroff/on native.
+
+Privateguardoffactualframe10bandreproduces. RootlaunchguardenabledSSR-only
+native2FPS41-slot sameglint/nonecontract/noDH/minimal/GPUtimingfalse, log
+`dev/logs/photon-ssr-far-guard-enabled-quality-r1.log`. Actualhandle follows
+launchoutput; rootsoleGPU. Compilerclassharnesschangedbetweenoff/ON because
+captureboundfixintegrated; privateShadercode/count/control comparison remains
+exact, no nativepixel/hardware causalparityclaim. Preparedparentmanifest
+updatedafterOFFterminaltoactualinitialsource/copyhash d9dbd58e…/privatearms
+(notoldinheritedcanonical), withrawOFFmanifest untouched. Next41contexts/hashes/
+imagebandcheck, thenmatchedwatercapture andpotentialpracticalSSR qualityguard.
+Fullgoalactive; originalshared/main/defaults/design untouched.
+
+
+Actualsuccessfulunderwatertrackerpeakpending/images was1 despiteconfigured
+max2. Recordexplicitly: no evidence two-simultaneousimages causedsuccess;
+fixturecoversbound2 paths, runtimeprovesonlyobservedpeak1/drain/201slots.
+No causalwriter/rendering speedup inferred. Rawfailednative176/201 andnew201/
+201 remainboth retained. CurrentprivateSSR guard30338 soleGPU running.
+
+
+30338 guardON terminal41/41/0skips/allNONE/noncollision/hashes, actualprivate
+compiled/rendered. Rootmatchedframe10tier2→0trace restoredremovesbrightband,
+offreproduces. SupportsfarSSRskip causeforthisboundedview; notfullmoving/pixel
+parity orspeedup. Fournewfar2→1 reduced-trace probe files delegatedshaderworker,
+existingdiagnostic/sharedhelper untouched/defaultoff; quality/coststillunverified.
+
+Rootnowlaunchmatchedunderwaterdisabled/B15/native10FPS/max2/201WATER/no-full-
+collision slots,samex500y60z660→640/minimal/noDH/GPUtimingfalse. Log
+`dev/logs/photon-targeted-underwater-disabled-native-inflight2-r3.log`;
+actualhandle followslaunchoutput. RootsoleGPU; nextactual201/drain/peak/context/
+hashchecks thenenabled. Sourceoperatornewprivate4filesonly, nobuild/clientbyworker.
+Fullgoalactive/unshrunk; originalunderwater176failureand201retry bothretained.
+
+
+81132 underwaterradius-disabled terminalexit0/201/201/0skips allWATER/nonfull-
+collision/hashes/slotidentity verified; finallease0/settled201/bounds≤2, actual
+peakpending1 again. No evidence max2usedsimultaneously causedsuccess. Raw
+5bdb5470…/manifest/log retained. LIVEexec80918 enabled/B15matchedunderwater
+native2976×1672/10FPS201WATERslots/max2/minimal/noDH/GPUtimingfalse/samepath,
+log `dev/logs/photon-targeted-underwater-enabled-native-inflight2-r3.log`.
+RootsoleGPU; next201/hash/lease/contextchecks andactualunderwater appearance.
+
+Checkpointcommitaftertooloutput savesboundedtracker/capture API+31fixture/
+actualnative retry andprivateSSR tier2→0 source11fixtures/qualityband removal.
+Rootno originalownerdesign staged, no shared/main/policy/defaults orremoteactions.
+NewreducedfarTier2→1 probe4filesworkeractive/source-only, codepreservesexisting
+geometry/jitter CODE notidenticalhit/sample positions; rootactualrender/cost
+stillpending. Fullnativegoal15%/broadconfig/quality/support remainsactive.
+
+
+Checkpoint4dfcdfc actual8files commit. LIVE80918 verifiedcurrenthandle
+matchedenabledunderwater; rootsoleGPU. Nextpollsamehandle/log, no otherclient/
+heavybuild/encoder; validate201actualWATER/noncollision/slots/drain/peaks/hashes
+thencomparetargetedunderwater baseline/off/on. ReducedSSRfarprobe new4files
+sourceworkeractive; rootreview/build afterfreeze, realglinttracequality before
+cost/repeatedperformance. Statusconsolidatedtoactualcurrentevidence, no
+uniformtransport/speculatedquality or15%completionclaim. Fullgoalactive.
+
+
+AUTHORITATIVE lifecyclecorrection: write_stdin80918 returnedexit0 (terminal),
+notrunning. Enablednativeunderwater201/201/0skips, allactualWATER/nonfull-
+collision/slotidentity/hash checks passed; finallease0/settled201/bound≤2/queue≤1,
+peakrecordedfromactualmanifest. Allnativeunderwatertriplet603 complete frames,
+visualcomparisonstillpending. NoMinecraftclientlive now, rootsoleGPU. Previous
+LIVEline superseded bythisactualhandle result; neverstartclientbasedonold
+checkpointwithoutrevalidating. Nextimagecomparison thenreducedSSRprobe freeze/
+source/runtimequality/cost. Goalactive, no fullquality/default/15%promotion.
+
+
+Underwateroriginal/off/on now201/201/0skips each, all603WATER/noncollision/
+hash/slotidentity/drainchecks passed. Enabledactualpeakpending2 exercisedtwo
+leases (original/offpeaks1). Rootenabledframe100underwaterSnell/sky/water
+inspectedwithoutgrossgeometryfailure; fulltemporal/pixelparity/multiscene
+quality stillunproven. Allnativeoldfailuresretained, no fastershaderclaim.
+
+ReducedSSRfar4filesfrozen; root12staticfixtures passed/built disabledSHA
+73275ceb7a3f740bac6a1cc317a69719295b1141de222bcbe566dc9081a1ae98/enabled
+636a164832f5d4915548e288491a83e33f14a591f72987c77b7d8931e9800f83.
+Exactlocalfar2→1, existingPERFORMANCE8/4/2 budgets, near/mid/roughraycount/
+caller/projection/texture codeunchanged, samplepositions/hits/tolerance not
+claimedidentical. FreshSSR-onlyoff/on source/copy/options prepared/pinned.
+Rootlaunchreducedenablednative2FPS41glintslots/noDH/minimal/globaltrue/
+NONE/noncollision/GPUtimingfalse, log
+`dev/logs/photon-ssr-far-reduced-enabled-quality-r1.log`; profiles
+`run-workloads/photon-ssr-far-reduced-quality-r1/coastalwater`.
+Actualhandlefollowslaunchoutput, rootsoleGPU. Nextactual41contracts/hashes/
+band/glint/trace quality beforeGPUperformance controls ordefaultdecision.
+Fullgoalactive; main/shared/defaults/design stillreserved/unmodified.
+
+
+Checkpoint409734a saves4newreducedSSRsource/provenance/test/doc files;12root
+fixtures andactualbuilddone, runtimequalitypending. 4dfcdfc savedcapturetracker/
+fullSSRtracequalitycontrol. Allworkerscurrentlyfrozen/completed; no maindesign/
+sharedhelper/defaults staged, no remoteactions. LIVEexec3811 verifiedcurrent
+private reducedSSRenabledglintnative2FPS41slots/noDH/minimal/globaltrue/
+NONE/noncollision/GPUtimingfalse, log
+`dev/logs/photon-ssr-far-reduced-enabled-quality-r1.log`. RootsoleGPU; nextpoll
+samehandle andvalidate41contexts/hashes/traceglint/band removal. Ifquality
+survives, serialGPU controls original/B15skip/fulltrace/reduced atidentical
+resolution/sourceflags andbalanced repeats; costnotinferredfromsample counts.
+No heavybuild/tests/encoder/secondclientwhilelive. Allunderwater603native
+validframes+boundedlease runtimeproof retained, fullerimage/motion parity
+stillpending. Fullordinary15%/broadconfig/quality/supportgoal remainsactive.
+
+
+## Reduced SSR quality rendered; cost pilot live
+
+3811 terminalexit0/41/41/0skips actualreducedguardnativeglint; allNONE/nonfull-
+collision/hashchecks passed. Rootframe10broadbandgone/sunreflectionvisible,
+boundedqualityoutcome supportsreducedfartrace experiment, notfulltransition/
+motion/pixel parity orspeedup. Rawa52402d4…retained.
+
+Rootnewpinnedfour-armSSRcostpreparer actual95325terminal, allcopiedcanonical
+saves equal f8f3b866…a365, SourceArchiveoptions/control pins explicit. Controls
+originalmodabsent, B15farSkip, fullTrace guard, reducedTrace guard, onlySSR
+moduleactive patchedarms, globalenabled andgeneric32/96, protectlighting/
+cachedskyfalse/analyticfalse unchanged. Fixedglintmidposex500.5/y68/z660.5/
+87.380yaw/3.735pitch/time12500. Rootpilotlaunches4serialnative2976×1672/
+minimal/noDH/45s warm25s capture/GPU1/16/fixedwetness0; log
+`dev/logs/photon-ssr-cost-pilot-r1-runner.log`, profiles
+`run-workloads/photon-ssr-cost-controls-r1/coastalwater`.
+Actualhandle followslaunchoutput. RootsoleGPU, no otherclient/heavybuild/test/
+encoderwhiletimed. Nextall4actualartifact/options/window/lighting/maps/PNG and
+GPU/CPU frames, matchedrepeats ifuseful; qualitybadskip mustnotpromoteforcost.
+Fullgoalactive/ordinary15%/broaderconfig/quality acceptance unfinished.
+
+
+Checkpointf7f30d6 savesfour-armcostpreparer/cases andactualreducedquality result;
+RootPythoncompile/scopeddiffcheck passed. LIVEexec71320 verifiedcurrenthandle:
+original00160.686FPS andskip00261.172FPS completed; reduced003 currentlynext,
+full004 stillpending. Do notinterpretpartialpilot asGPU/quality/performance
+acceptance. RootsoleGPU, no heavycompiler/tests/encoder/secondclient. Nextpoll
+samehandle/log/manifest, strict all4source/options/core/window/artifact/PNG and
+GPU/CPU comparison; retainfailed/anomalousarms. Qualitybadskip remainsbad even
+iffast. Balancedrepeat onlyafterusefulqualifiedcostsignal. Allsourceworkers
+complete/frozen; main/shared/defaults/ownerdesign unchanged. Fullordinary15%/
+broadconfig/quality/supportgoal active/unshrunk; no remoteactions.
+
+
+## SSR cost pilot terminal and negative
+
+71320 exit0/complete/all4accepted. Original/skip/reduced/full GPU15.0436/
+15.0882/18.9037/18.3937ms; FPS60.686/61.172/49.497/50.883, threads7.5632/
+7.5656/7.6709/7.5777. Reduced/full~25.66/22.27%slowerGPUthanoriginal, reduced
+notfasterthanfull; qualitybadskipnotpromoted. No source/JVM/driver/hit/thermal
+causeasserted. Allrawsamples/versions/options/classes/window/controls/PNGs
+preserved. Ordinary15%gate stillunmet.
+
+No gamecurrentlylive. Workerstack_analysisowns5dev/analyzer/test/newdoc files
+explicitssr_cost mode, acceptsONLYexactB15/privatefull-enabled/privatereduced-
+enabled pins andSSR-only/fixedconfig/world/pipeline/nativewindow; oldmodes
+remainstrict. Rootreviews/freezes/compiles then actualwithinarchive ON policy/
+OFF originaltracebudget controls, notcrossarchivecausality. No main/helpers/
+shader/defaults changed. Fullgoalactive/unshrunk; allfailed/negative evidence
+retained. Nextmeaningfulwork aftersourcefreeze; shaderqualitycompromise remains
+experimental andnotacceptedperformancesupport.
+
+
+LatestnegativeSSRcost evidencecommitted afteractualfullmatrixcomplete. No
+Minecraftclientlive; rootsoleGPU. Sourceworker ssr_cost5files active, rootno
+compiler untilfreeze. Lastreadonlyoriginalchat inspection confirmed "Plan
+Photon shader LOD MVP" latestturnwasfreshhandoff; statusnotLoaded, ownership
+remainsreserved. No message sent orassumedcommontransport workdone. Existing
+CommonUniforms actuallyregistersonly7corefields(version/enabled/preset/near/
+far/transition/debug), no per-effectfieldtransport; effects remainpackoptions
+whereunconsumed. This is stillgapagainstbroadergoal, notcompletion ornewblocked
+claimwhileindependentwork progresses. Next strictsourcepin/codefreeze/build/
+same-JVM source-policycontrols, thenfurtherpack/configquality. Fullgoalactive.
+
+
+Checkpoint057ed06 actualnegativecosttable committed. Currentrootruntimeprobe
+allterminal/noMinecraftclient, sourceworkerstack_analysis activelyowns5files
+pinnedssr_costmodality (nomain/sharedshader edits). Rootnextconfirmfreeze,
+reviewallstrictguards/prereqs/pins/testcoverage, rootPythonfixtures/build/devjar
+exclusion thenfreshwithinarcSSR-only global ON/OFFnativecontrols. Allarchive
+fingerprints/sourcequalityfailures/negativeperformance preserved; no goal
+completion/shrinking orblockedstate whileconcrete independentprogress possible.
+Fullgoal active; broadercoreconsumer features mayuseexisting7fields but no
+per-effecttransport existsyet, originalchatownershipreserved untilconcrete
+handoff. No remotehost/message/push/publication authorization inferred.
+
+
+## Pinned SSR control integrated; reduced session live
+
+Root verified prior game jobs terminal and worker freezes. The five-file
+ssr_cost integration passed 38 in-process and 24 stack fixtures. Gradle build
+and compileDevClientJava succeeded; production JAR contains zero dev classes
+or dev mixin entries. Exact three archive/member/metadata/source-policy guards
+remain distinct from physical trace work or linked uniform observations.
+
+Fresh stopped reduced profile clone:
+run-workloads/photon-ssr-inprocess-reduced-r1/coastalwater/ssr-reduced.
+Source/copied world SHA256:
+9d6a03387745991f560253fa1908bddce45259bb8af2f21c501697d33e3e3f9e.
+Root owns LIVE exec37106: runClientLodOn, minimal/noDH, ssr_cost,
+OFF/ON/OFF/ON, 45s initial warmup/10s settle/25s capture, native2976x1672,
+GPU1/16/wetness0/fixed sun-glint pose. Reduced archive SHA256:
+636a164832f5d4915548e288491a83e33f14a591f72987c77b7d8931e9800f83.
+Log dev/logs/photon-ssr-inprocess-reduced-r1.log. Stop only this owned job via
+its exec handle if needed. No other client/build/encoder during timing.
+Next strict analyzer and phase images; retain all failed/negative evidence.
+
+stack_analysis completed/frozen. pack_research completed Complementary source
+plan and now owns ONLY scripts/prepare_pack_experiment.py,
+scripts/run_proof_matrix.py, NEW tests/test_complementary_profiles.py and
+its docs/COMPLEMENTARY_RUNTIME_PLAN.md for original/native options preparation.
+No compiler/client/derivative work. Root sole GPU. Main/config/helpers still
+reserved; one optional human ownership question pending, silence grants nothing.
+Full goal active, ordinary >=15% and broader support/configuration gates unmet.
+
+
+## SSR reduced forward terminal; reverse live
+
+exec37106 exited0, all4 phases strict accepted. Session c1716926-bb04-4a2d-89df-
+02b3bf34c8c5 OFF/ON/OFF/ON GPU15.4489/15.1246/15.2039/17.2996ms,
+FPS59.963/61.205/60.815/53.997, thread6.9566/6.7892/6.7278/6.7025.
+Adjacent GPU reduction +2.10%/-13.78%, OFF drift1.59% reduction and ON drift
+14.38% increase. Mixed/no stable improvement, no cause claimed. All4 PNG hashes,
+actual source/member metadata/options/window/config/scene/epoch/restore checks
+passed. Phase2 sunreflection visible/broad bright band absent, limited pose view.
+Raw dev/logs/photon-ssr-inprocess-reduced-r1-{benchmark,analysis}.json/.log.
+
+Root sole GPU now LIVEexec93853 reverse ON/OFF/ON/OFF, same flags/timings and
+archive, fresh profile run-workloads/photon-ssr-inprocess-reduced-reverse-r2/
+coastalwater/ssr-reduced copied same stoppedsource world9d6a0338...e3e3f9e.
+Log dev/logs/photon-ssr-inprocess-reduced-reverse-r2.log. No heavybuild/tests/
+encoder/otherclient. Next poll/analyze separately, retain mixed/negative results,
+then review Complementary preparation worker freeze before original runtime.
+Full goal remains active; original main/config/shared design ownership preserved.

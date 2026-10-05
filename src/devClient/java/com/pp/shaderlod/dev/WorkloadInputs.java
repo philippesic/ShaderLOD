@@ -15,6 +15,8 @@ import java.util.List;
 /** Shared boundary evidence; no additional uniform/smoother evaluation or GL readback. */
 public final class WorkloadInputs {
     public static final String TERRAIN_PHOTON_SHA256 = "b15d3c50f192e0e3de8e912afba2cc531e7d0520e3cbe573a7e35b993528e16c";
+    public static final String SSR_FULL_SHA256 = "41ecbee8b72039654fb0d25b16a841e3a2f4500025ec918687f94c0b8cba1555";
+    public static final String SSR_REDUCED_SHA256 = "636a164832f5d4915548e288491a83e33f14a591f72987c77b7d8931e9800f83";
     private final Path directory;
     public WorkloadInputs(Path directory) { this.directory = directory; }
 
@@ -27,6 +29,7 @@ public final class WorkloadInputs {
 
     public static JsonObject withoutFeature(JsonObject state, String feature) {
         if (feature.equals("global") || feature.equals("effects")) return withoutEnabled(state);
+        if (feature.equals("ssr_cost")) return withoutEnabled(state);
         if (feature.equals("terrain")) {
             JsonObject copy = semanticState(state, feature);
             copy.remove("effective_chunks");
@@ -117,6 +120,106 @@ public final class WorkloadInputs {
                 new WindowStateTracker.Pacing(client.options.pauseOnLostFocus, window.isFullscreen(),
                         client.options.framerateLimit().get(), client.options.enableVsync().get()))));
         return state;
+    }
+
+    public JsonObject ssrCostInputState() throws Exception {
+        var state = benchmarkInputState();
+        state.addProperty("ssr_cost_dh_present", ModList.get().isLoaded("distanthorizons"));
+        var client = Minecraft.getInstance(); var window = client.getWindow();
+        state.addProperty("ssr_cost_camera_type", client.options.getCameraType().name());
+        state.addProperty("ssr_cost_fov", client.options.fov().get());
+        state.add("ssr_cost_window_state", new GsonBuilder().create().toJsonTree(WindowStateTracker.readWindow(
+                window.getWindow(), window.getScreenWidth(), window.getScreenHeight(), window.getWidth(), window.getHeight(),
+                new WindowStateTracker.Pacing(client.options.pauseOnLostFocus, window.isFullscreen(),
+                        client.options.framerateLimit().get(), client.options.enableVsync().get()))));
+        return state;
+    }
+
+    /** Three explicit frozen interventions; exact member/metadata verification, read-only. */
+    public JsonObject qualifySsrCostArchive() throws Exception {
+        Path path = directory.resolve("shaderpacks").resolve(Iris.getCurrentPackName());
+        String pin = hash(path);
+        var members = new JsonObject();
+        members.addProperty("LICENSE", "514402d18eedb0afe374344ca9f0fe87b7399779518184b8fc64e31674555fc5");
+        members.addProperty("shaderlod-build.json", "5653a52f590ce10cd75fbaff24f1ed053e49564ade7b4c79bb2747f69feed084");
+        members.addProperty("shaders/include/shaderlod/lod.glsl", "2ac35e39e408d953e2d40769db4302aeff2fadd8e5884c47cfc757fa7d294b7f");
+        members.addProperty("shaders/program/d4_deferred_shading.fsh", "d195159465a86f88b918c504f25cc56f5c987e27774906108e02993d24bbe000");
+        String policy, metadataPath = null, probeSwitch = null, manifestPin = null;
+        if (pin.equals(TERRAIN_PHOTON_SHA256)) {
+            policy = "skip";
+            members.addProperty("shaders/settings.glsl", "d1f571e5d96ecffdf7ebcfcf28a13d34dc5bfd5c3606702e06832f95f88aa3cd");
+            members.addProperty("shaders/include/lighting/specular_lighting.glsl", "6a4a8c53675f7287cf28168913f3e3e2b7ce9bd9d2fb5755548a27927ee4d92d");
+        } else if (pin.equals(SSR_FULL_SHA256)) {
+            policy = "full"; metadataPath = "shaderlod-ssr-far-full-trace-probe.json"; probeSwitch = "PHOTON_SSR_FAR_FULL_TRACE_PROBE";
+            manifestPin = "f801ab5eaa05268997ed9b705ed04839e1807e0f4250ea3a80d1f553c647442d";
+            members.addProperty("shaders/settings.glsl", "33e39309f4e9a31990ce722c32cd56bbd981880f6447756f87bbbebebad69602");
+            members.addProperty("shaders/include/lighting/specular_lighting.glsl", "d57fce9683b3675f60edb08dd7f52168833852c7b57e15196387d337e8938df8");
+            members.addProperty(metadataPath, "30f3a1ffddbc8391a4f50536b8cd25b9e6982c826ac6156e90e5142da34c1c8b");
+        } else if (pin.equals(SSR_REDUCED_SHA256)) {
+            policy = "reduced"; metadataPath = "shaderlod-ssr-far-reduced-probe.json"; probeSwitch = "PHOTON_SSR_FAR_REDUCED_TRACE_PROBE";
+            manifestPin = "86ebfa2c42b28571867caddc634df1667efb3d6abbc89c103a87a2f462c686fa";
+            members.addProperty("shaders/settings.glsl", "a61e7f1c13a78fd3c6eb9ce72d9aec079b707b14c1ae2c3fb6251aa072de7299");
+            members.addProperty("shaders/include/lighting/specular_lighting.glsl", "6db453ffc732600265d642d3fd4b7ff9a2c34fda66ec64010ec9f9e24afa471a");
+            members.addProperty(metadataPath, "a05b241f23ccf5d40680061cf0d10ca73b6c8ae075fcdd721dedccd6ab286d60");
+        } else throw new IllegalStateException("Unknown SSR cost source intervention; exact B15/full-enabled/reduced-enabled only");
+        var result = new JsonObject();
+        try (var archive = new java.util.zip.ZipFile(path.toFile())) {
+            var observed = new JsonObject();
+            for (var member : members.entrySet()) {
+                var entry = archive.getEntry(member.getKey());
+                if (entry == null) throw new IllegalStateException("SSR cost pinned member missing: " + member.getKey());
+                String actual = java.util.HexFormat.of().formatHex(java.security.MessageDigest.getInstance("SHA-256").digest(archive.getInputStream(entry).readAllBytes()));
+                if (!actual.equals(member.getValue().getAsString())) throw new IllegalStateException("SSR cost member mismatch: " + member.getKey());
+                observed.addProperty(member.getKey(), actual);
+            }
+            var baseline = com.google.gson.JsonParser.parseString(new String(archive.getInputStream(archive.getEntry("shaderlod-build.json")).readAllBytes(), java.nio.charset.StandardCharsets.UTF_8)).getAsJsonObject();
+            if (baseline.get("bridge_version").getAsInt() != 2 || !baseline.get("base_version").getAsString().equals("v1.3b")) throw new IllegalStateException("SSR cost baseline metadata mismatch");
+            if (metadataPath != null) {
+                var metadata = com.google.gson.JsonParser.parseString(new String(archive.getInputStream(archive.getEntry(metadataPath)).readAllBytes(), java.nio.charset.StandardCharsets.UTF_8)).getAsJsonObject();
+                if (!metadata.get("arm").getAsString().equals("enabled") || !metadata.get("switch_enabled").getAsBoolean()
+                        || !metadata.get("switch").getAsString().equals(probeSwitch) || !metadata.get("base_sha256").getAsString().equals(TERRAIN_PHOTON_SHA256)
+                        || !metadata.get("manifest_sha256").getAsString().equals(manifestPin)) throw new IllegalStateException("SSR cost private metadata/gate mismatch");
+                result.add("probe_metadata", metadata);
+            }
+            result.add("member_sha256", observed);
+        }
+        result.addProperty("archive_sha256", pin);
+        result.addProperty("policy", policy);
+        result.addProperty("qualified", true);
+        return result;
+    }
+
+    public static void validateSsrCost(JsonObject state, boolean enabled) {
+        validateEffects(state, enabled); // Preserves every existing no-terrain/CPU/config guard.
+        requireBoolean(state, "ssr_cost_dh_present", false);
+        requireInteger(state, "requested_chunks", 24);
+        requireInteger(state, "effective_chunks", 24);
+        requireInteger(state, "framebuffer_width", 2976);
+        requireInteger(state, "framebuffer_height", 1672);
+        if (!state.get("ssr_cost_camera_type").getAsString().equals("FIRST_PERSON")) throw new IllegalStateException("SSR cost requires fixed first-person view");
+        for (String name : List.of("SHADERLOD_CLOUDS", "SHADERLOD_WATER", "SHADERLOD_FOG", "SHADERLOD_MATERIALS")) requireOption(state.getAsJsonObject("effective_shader_options"), name, "false");
+        for (String name : List.of("SHADERLOD_SSR", "ENVIRONMENT_REFLECTIONS", "SKY_REFLECTIONS")) requireOption(state.getAsJsonObject("effective_shader_options"), name, "true");
+        String pin = state.get("actual_shader_sha256").getAsString();
+        var options = state.getAsJsonObject("effective_shader_options");
+        for (String name : List.of("PHOTON_SSR_FAR_FULL_TRACE_PROBE", "PHOTON_SSR_FAR_REDUCED_TRACE_PROBE")) {
+            boolean selected = pin.equals(SSR_FULL_SHA256) && name.equals("PHOTON_SSR_FAR_FULL_TRACE_PROBE")
+                    || pin.equals(SSR_REDUCED_SHA256) && name.equals("PHOTON_SSR_FAR_REDUCED_TRACE_PROBE");
+            if (selected) requireOption(options, name, "true");
+            else if (options.has(name)) throw new IllegalStateException("Unexpected SSR cost private option: " + name);
+        }
+        if (!List.of(TERRAIN_PHOTON_SHA256, SSR_FULL_SHA256, SSR_REDUCED_SHA256).contains(pin)) throw new IllegalStateException("Unknown SSR cost archive");
+        requirePose(state, "x", 500.5); requirePose(state, "y", 68.0); requirePose(state, "z", 660.5);
+        requirePose(state, "yaw", 87.38); requirePose(state, "pitch", 3.735);
+        requirePose(state, "rain", 0); requirePose(state, "thunder", 0);
+        if (state.get("day_time").getAsLong() != 12500 || !state.get("dimension").getAsString().equals("minecraft:overworld")) throw new IllegalStateException("SSR cost sun/time/dimension changed");
+        var window = state.getAsJsonObject("ssr_cost_window_state");
+        if (!window.get("availability").getAsString().equals("available") || !window.get("visible").getAsString().equals("true") || !window.get("iconified").getAsString().equals("false")) throw new IllegalStateException("SSR cost window unavailable/hidden");
+        requireBoolean(window.getAsJsonObject("pacing"), "vsync", false);
+    }
+
+    private static void requirePose(JsonObject state, String field, double expected) {
+        double actual = state.get(field).getAsDouble();
+        if (!Double.isFinite(actual) || Math.abs(actual - expected) > .002) throw new IllegalStateException("SSR cost fixed pose/weather differs: " + field);
     }
 
     private static JsonObject terrainDhState() throws ReflectiveOperationException {

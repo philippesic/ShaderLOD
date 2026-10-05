@@ -9,7 +9,7 @@ import unittest
 import uuid
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'scripts'))
-from analyze_inprocess_control import analyze_report, compare_sessions, canonical, OFF_OPTIONS, FALSE_FLAGS, METHOD, EFFECTS_METHOD, EFFECT_OPTIONS, COHERENCE_METHOD, ORIGINAL_PHOTON_SHA256, TERRAIN_METHOD, TERRAIN_PHOTON_SHA256, semantic_state
+from analyze_inprocess_control import analyze_report, compare_sessions, canonical, OFF_OPTIONS, FALSE_FLAGS, METHOD, EFFECTS_METHOD, EFFECT_OPTIONS, COHERENCE_METHOD, ORIGINAL_PHOTON_SHA256, TERRAIN_METHOD, TERRAIN_PHOTON_SHA256, semantic_state, SSR_COST_METHOD, SSR_COST_ARCHIVES, ssr_cost_members, validate_ssr_cost_qualification
 
 PIN = '1' * 64
 
@@ -147,7 +147,155 @@ def terrain_fixture(reverse=False):
     return report
 
 
+def ssr_qualification(pin):
+    record = SSR_COST_ARCHIVES[pin]
+    result = {'qualified': True, 'archive_sha256': pin, 'policy': record['policy'], 'member_sha256': ssr_cost_members(pin)}
+    if 'metadata' in record:
+        root = Path(__file__).resolve().parents[1]
+        manifest_name = 'ssr-far-guard-probe.json' if record['policy'] == 'full' else 'ssr-far-reduced-probe.json'
+        manifest = json.loads((root / 'patches/photon-experiments' / manifest_name).read_text())
+        result['probe_metadata'] = {'experiment': manifest['experiment'], 'arm': 'enabled', 'baseline': manifest['baseline'],
+            'base_sha256': TERRAIN_PHOTON_SHA256, 'base_version': 'v1.3b', 'manifest_sha256': record['manifest_sha256'],
+            'baseline_metadata_sha256': manifest['baseline_metadata_sha256'], 'license_sha256': manifest['license_sha256'],
+            'switch': record['switch'], 'switch_enabled': True,
+            'member_sha256': {name: result['member_sha256'][name] for name in ('shaders/settings.glsl', 'shaders/include/lighting/specular_lighting.glsl')},
+            'modified_baseline_files': ['shaders/include/lighting/specular_lighting.glsl', 'shaders/settings.glsl'],
+            'policy': manifest['policy'], 'runtime_compilation': 'unverified',
+            'performance_intent': 'More far tracing for quality/causality; no optimization claim' if record['policy'] == 'full' else 'Reduced far tracing vs full-trace control; actual quality and GPU benefit unverified'}
+    return result
+
+
+def ssr_cost_fixture(pin=TERRAIN_PHOTON_SHA256, reverse=False):
+    report = effects_fixture(('SHADERLOD_SSR',), reverse)
+    report.update(benchmark_feature='ssr_cost', method=SSR_COST_METHOD, selected_flag='lod.enabled',
+                  ssr_cost_archive_qualification=ssr_qualification(pin))
+    report['instrumentation_properties']['benchmarkFeature'] = 'ssr_cost'
+    report['loaded_mods'].update(minecraft='1.21.1', neoforge='21.1.253',
+                               iris='1.8.12-snapshot+mc1.21.1-local', sodium='0.6.13+mc1.21.1')
+    report['workload-manifest.json']['source_world_sha256'] = '7' * 64
+    window_template = terrain_fixture()['phases'][0]['windowState']
+    for phase in report['phases']:
+        phase['windowState'] = copy.deepcopy(window_template)
+        for boundary in ('inputStart', 'inputEnd'):
+            state = phase[boundary]
+            state.update(actual_shader_sha256=pin, framebuffer_width=2976, framebuffer_height=1672,
+                         ssr_cost_dh_present=False, ssr_cost_camera_type='FIRST_PERSON', ssr_cost_fov=70,
+                         x=500.5, y=68.0, z=660.5, yaw=87.38, pitch=3.735, day_time=12500,
+                         control_sha256='6' * 64)
+            state['ssr_cost_window_state'] = copy.deepcopy(window_template['capture']['start']['state'])
+            options = state['effective_shader_options']
+            options.update(ENVIRONMENT_REFLECTIONS='true', SKY_REFLECTIONS='true')
+            if 'switch' in SSR_COST_ARCHIVES[pin]: options[SSR_COST_ARCHIVES[pin]['switch']] = 'true'
+            state['effective_shader_options_sha256'] = hashlib.sha256(canonical(options).encode()).hexdigest()
+    report['stable_input_reference'] = semantic_state(report['phases'][0]['inputStart'], True, 'ssr_cost')
+    return report
+
+
 class InprocessTests(unittest.TestCase):
+    def test_ssr_cost_three_exact_qualified_policies_in_both_orders(self):
+        for pin in SSR_COST_ARCHIVES:
+            for reverse in (False, True):
+                result = analyze_report(ssr_cost_fixture(pin, reverse))
+                self.assertEqual(result['method'], SSR_COST_METHOD)
+                self.assertEqual(result['shader_sha256'], pin)
+                self.assertEqual(result['ssr_cost_archive_qualification']['policy'], SSR_COST_ARCHIVES[pin]['policy'])
+                self.assertEqual(len(result['adjacent_pairs']), 2)
+                self.assertIsNone(result['phases'][0]['uniform_observation'])
+                self.assertIn('correlated', result['uncertainty'])
+
+    def test_ssr_cost_qualification_requires_exact_member_metadata_and_enabled_gate(self):
+        for pin in SSR_COST_ARCHIVES:
+            self.assertEqual(validate_ssr_cost_qualification(ssr_qualification(pin)), pin)
+        for mutate in (lambda q: q.update(archive_sha256='0' * 64), lambda q: q.update(qualified=False),
+                       lambda q: q['member_sha256'].update({'shaders/include/shaderlod/lod.glsl': '0' * 64}),
+                       lambda q: q['member_sha256'].pop('LICENSE'), lambda q: q.update(policy='skip'),
+                       lambda q: q.pop('probe_metadata'), lambda q: q['probe_metadata'].update(switch_enabled=False),
+                       lambda q: q['probe_metadata'].update(arm='disabled'),
+                       lambda q: q['probe_metadata'].update(manifest_sha256='0' * 64)):
+            pin = next(pin for pin, data in SSR_COST_ARCHIVES.items() if data['policy'] == 'full')
+            qualified = ssr_qualification(pin); mutate(qualified)
+            with self.assertRaises(ValueError): validate_ssr_cost_qualification(qualified)
+
+    def test_ssr_cost_explicit_mode_source_pin_noatmosphere_and_restore_required(self):
+        for mutate in (lambda r: r.pop('ssr_cost_archive_qualification'), lambda r: r.update(method=EFFECTS_METHOD),
+                       lambda r: r['instrumentation_properties'].update(benchmarkFeature='effects'),
+                       lambda r: r.update(atmosphere_guard_absent=False), lambda r: r.update(restored_initial_enabled=False),
+                       lambda r: r.update(selected_flag='terrain.enabled'), lambda r: r['loaded_mods'].update(distanthorizons='3.3.3')):
+            report = ssr_cost_fixture(); mutate(report)
+            with self.assertRaises(ValueError): analyze_report(report)
+        with self.assertRaises(ValueError): analyze_report(ssr_cost_fixture(), expected_shader_sha256=PIN)
+
+    def test_ssr_cost_ssr_only_private_gate_and_reflection_controls_preserved(self):
+        pins = list(SSR_COST_ARCHIVES)
+        for name, value in (('SHADERLOD_CLOUDS', 'true'), ('SHADERLOD_SSR', 'false'), ('SHADERLOD_PRESERVE_LIGHTING', 'false'),
+                            ('SHADERLOD_USE_MOD_CONFIG', 'false'), ('SHADERLOD_CACHED_SKY', 'true'), ('SHADERLOD_WATER_ANALYTIC', 'true'),
+                            ('ENVIRONMENT_REFLECTIONS', 'false'), ('SKY_REFLECTIONS', 'false'), ('PHOTON_SSR_FAR_FULL_TRACE_PROBE', 'true')):
+            report = ssr_cost_fixture(pins[0]); state = report['phases'][0]['inputEnd']
+            state['effective_shader_options'][name] = value
+            state['effective_shader_options_sha256'] = hashlib.sha256(canonical(state['effective_shader_options']).encode()).hexdigest()
+            with self.assertRaises(ValueError): analyze_report(report)
+        for pin in pins[1:]:
+            report = ssr_cost_fixture(pin); state = report['phases'][0]['inputEnd']
+            state['effective_shader_options'][SSR_COST_ARCHIVES[pin]['switch']] = 'false'
+            state['effective_shader_options_sha256'] = hashlib.sha256(canonical(state['effective_shader_options']).encode()).hexdigest()
+            with self.assertRaises(ValueError): analyze_report(report)
+
+    def test_ssr_cost_fixed_sun_pose_native_dh_and_config_identity(self):
+        for name, value in (('x', 501), ('yaw', 90), ('pitch', 4), ('day_time', 7000), ('rain', 1),
+                            ('ssr_cost_dh_present', True), ('framebuffer_width', 1488), ('effective_chunks', 16),
+                            ('ssr_cost_camera_type', 'THIRD_PERSON_BACK'), ('terrain_active', True), ('shadow_culling_active', True)):
+            report = ssr_cost_fixture(); report['phases'][0]['inputEnd'][name] = value
+            with self.assertRaises(ValueError): analyze_report(report)
+        report = ssr_cost_fixture(); report['phases'][0]['inputEnd']['loaded_semantic_config']['lod']['far'] = 160
+        with self.assertRaises(ValueError): analyze_report(report)
+
+    def test_ssr_cost_unknown_window_and_changed_pacing_rejected(self):
+        for mutate in (lambda p: p.pop('windowState'), lambda p: p['windowState']['capture'].update(transition_counts={'focused': 2}),
+                       lambda p: p['windowState']['capture']['focused'].update(unknown_observations=1),
+                       lambda p: p['inputEnd']['ssr_cost_window_state'].update(availability='unavailable'),
+                       lambda p: p['inputEnd']['ssr_cost_window_state']['pacing'].update(vsync=True)):
+            report = ssr_cost_fixture(); mutate(report['phases'][0])
+            with self.assertRaises(ValueError): analyze_report(report)
+
+    def test_ssr_cost_screenshots_and_hash_verification_still_required(self):
+        report = ssr_cost_fixture()
+        with tempfile.TemporaryDirectory() as directory:
+            profile = Path(directory); (profile / 'config').mkdir(); (profile / 'screenshots').mkdir()
+            iris = profile / 'config/iris.properties'; iris.write_text('enableShaders=true\nshaderPack=B15.zip\n')
+            fingerprint = hashlib.sha256(iris.read_bytes()).hexdigest()
+            report['stable_input_reference']['config/iris.properties_sha256'] = fingerprint
+            for phase in report['phases']:
+                for key in ('inputStart', 'inputEnd'): phase[key]['config/iris.properties_sha256'] = fingerprint
+                data = b'\x89PNG\r\n\x1a\n' + phase['image'].encode()
+                (profile / 'screenshots' / phase['image']).write_bytes(data)
+                phase['imageSha256'] = hashlib.sha256(data).hexdigest()
+            self.assertTrue(analyze_report(report, profile=profile)['phases'][0]['image_verified'])
+            (profile / 'screenshots' / report['phases'][0]['image']).write_bytes(b'bad')
+            with self.assertRaises(ValueError): analyze_report(report, profile=profile)
+
+    def test_ssr_cost_same_archive_session_compare_and_no_cross_archive_causality(self):
+        a = analyze_report(ssr_cost_fixture()); b = analyze_report(ssr_cost_fixture(reverse=True))
+        self.assertFalse(compare_sessions([a, b])['archive_source_delta'])
+        different = analyze_report(ssr_cost_fixture(next(pin for pin, r in SSR_COST_ARCHIVES.items() if r['policy'] == 'full')))
+        with self.assertRaisesRegex(ValueError, 'no cross-archive'): compare_sessions([a, different])
+        b['loaded_artifacts_sha256']['iris.jar'] = '8' * 64
+        with self.assertRaises(ValueError): compare_sessions([a, b])
+
+    def test_ssr_cost_source_routes_are_explicit_and_old_modes_stay_strict(self):
+        root = Path(__file__).resolve().parents[1]
+        session = (root / 'src/devClient/java/com/pp/shaderlod/dev/BenchmarkSession.java').read_text()
+        inputs = (root / 'src/devClient/java/com/pp/shaderlod/dev/WorkloadInputs.java').read_text()
+        self.assertIn('case "ssr_cost" -> "' + SSR_COST_METHOD + '"', session)
+        self.assertIn('inputs.qualifySsrCostArchive()', session)
+        self.assertIn('WorkloadInputs.validateSsrCost(state, expectedEnabled)', session)
+        reference_setup = session.split('if (stableReference == null) {', 1)[1].split('} else checkIdentity(state);', 1)[0]
+        self.assertIn('if (feature.equals("ssr_cost")) cameraReference = Minecraft.getInstance().getCameraEntity();', reference_setup)
+        for pin in SSR_COST_ARCHIVES: self.assertIn(pin, inputs)
+        for record in SSR_COST_ARCHIVES.values():
+            self.assertIn(record['specular'], inputs); self.assertIn(record['settings'], inputs)
+        report = ssr_cost_fixture(); report.update(benchmark_feature='global', method=METHOD)
+        with self.assertRaises(ValueError): analyze_report(report)
+
     def test_terrain_forward_reverse_only_selected_radius_policy_changes(self):
         for reverse in (False, True):
             result = analyze_report(terrain_fixture(reverse))

@@ -18,6 +18,7 @@ METHOD = 'One JVM/world/pipeline; all five modules off; only live global bridge 
 EFFECTS_METHOD = 'One JVM/world/pipeline; fixed five-module effect options; only live global bridge enabled changes'
 COHERENCE_METHOD = 'One JVM/world/pipeline; original Photon; only shadow frustum coherence changes'
 TERRAIN_METHOD = 'One JVM/world/pipeline; fixed B15/global enabled; only terrain policy enabled changes plus recorded fixed-scene manual re-arm'
+SSR_COST_METHOD = 'One JVM/world/pipeline; qualified fixed SSR-only B15/private trace policy; only live global bridge enabled changes'
 TERRAIN_PHOTON_SHA256 = 'b15d3c50f192e0e3de8e912afba2cc531e7d0520e3cbe573a7e35b993528e16c'
 ORIGINAL_PHOTON_SHA256 = '120897768eaa8cb1f14a3e98f88dff009ae3204ee3b96904a4fe8586edfc1ead'
 OFF_OPTIONS = ('SHADERLOD_CLOUDS', 'SHADERLOD_WATER', 'SHADERLOD_FOG', 'SHADERLOD_SSR', 'SHADERLOD_MATERIALS',
@@ -28,6 +29,54 @@ FALSE_FLAGS = ('terrain_active', 'terrain_configured', 'terrain_confirmation', '
 CONFIG_FIELDS = {'lod': {'enabled', 'preset', 'near', 'far', 'transition', 'debug'},
                  'terrain': {'enabled', 'vanillaChunkCap', 'warmSourceConfirmed', 'warmupSeconds'},
                  'rendering': {'optimizeShadowCulling', 'separateShadowVisibilityLists'}}
+SSR_COST_COMMON_MEMBERS = {
+    'LICENSE': '514402d18eedb0afe374344ca9f0fe87b7399779518184b8fc64e31674555fc5',
+    'shaderlod-build.json': '5653a52f590ce10cd75fbaff24f1ed053e49564ade7b4c79bb2747f69feed084',
+    'shaders/include/shaderlod/lod.glsl': '2ac35e39e408d953e2d40769db4302aeff2fadd8e5884c47cfc757fa7d294b7f',
+    'shaders/program/d4_deferred_shading.fsh': 'd195159465a86f88b918c504f25cc56f5c987e27774906108e02993d24bbe000'}
+SSR_COST_ARCHIVES = {
+    TERRAIN_PHOTON_SHA256: {'policy': 'skip', 'settings': 'd1f571e5d96ecffdf7ebcfcf28a13d34dc5bfd5c3606702e06832f95f88aa3cd',
+        'specular': '6a4a8c53675f7287cf28168913f3e3e2b7ce9bd9d2fb5755548a27927ee4d92d'},
+    '41ecbee8b72039654fb0d25b16a841e3a2f4500025ec918687f94c0b8cba1555': {'policy': 'full',
+        'settings': '33e39309f4e9a31990ce722c32cd56bbd981880f6447756f87bbbebebad69602',
+        'specular': 'd57fce9683b3675f60edb08dd7f52168833852c7b57e15196387d337e8938df8',
+        'switch': 'PHOTON_SSR_FAR_FULL_TRACE_PROBE', 'metadata': 'shaderlod-ssr-far-full-trace-probe.json',
+        'metadata_sha256': '30f3a1ffddbc8391a4f50536b8cd25b9e6982c826ac6156e90e5142da34c1c8b',
+        'manifest_sha256': 'f801ab5eaa05268997ed9b705ed04839e1807e0f4250ea3a80d1f553c647442d'},
+    '636a164832f5d4915548e288491a83e33f14a591f72987c77b7d8931e9800f83': {'policy': 'reduced',
+        'settings': 'a61e7f1c13a78fd3c6eb9ce72d9aec079b707b14c1ae2c3fb6251aa072de7299',
+        'specular': '6db453ffc732600265d642d3fd4b7ff9a2c34fda66ec64010ec9f9e24afa471a',
+        'switch': 'PHOTON_SSR_FAR_REDUCED_TRACE_PROBE', 'metadata': 'shaderlod-ssr-far-reduced-probe.json',
+        'metadata_sha256': 'a05b241f23ccf5d40680061cf0d10ca73b6c8ae075fcdd721dedccd6ab286d60',
+        'manifest_sha256': '86ebfa2c42b28571867caddc634df1667efb3d6abbc89c103a87a2f462c686fa'}}
+
+
+def ssr_cost_members(pin):
+    if pin not in SSR_COST_ARCHIVES: raise ValueError('Unknown SSR cost source intervention')
+    record = SSR_COST_ARCHIVES[pin]
+    members = SSR_COST_COMMON_MEMBERS | {'shaders/settings.glsl': record['settings'],
+                                       'shaders/include/lighting/specular_lighting.glsl': record['specular']}
+    if 'metadata' in record: members[record['metadata']] = record['metadata_sha256']
+    return members
+
+
+def validate_ssr_cost_qualification(qualification):
+    if not isinstance(qualification, dict) or qualification.get('qualified') is not True: raise ValueError('SSR cost source qualification missing')
+    pin = qualification.get('archive_sha256')
+    members = ssr_cost_members(pin)
+    record = SSR_COST_ARCHIVES[pin]
+    if qualification.get('policy') != record['policy'] or qualification.get('member_sha256') != members:
+        raise ValueError('SSR cost exact member/policy qualification mismatch')
+    metadata = qualification.get('probe_metadata')
+    if 'metadata' in record:
+        if not isinstance(metadata, dict): raise ValueError('SSR cost private metadata missing')
+        encoded = (json.dumps(metadata, indent=2, sort_keys=True) + '\n').encode()
+        if hashlib.sha256(encoded).hexdigest() != record['metadata_sha256']: raise ValueError('SSR cost parsed private metadata fingerprint mismatch')
+        if metadata.get('arm') != 'enabled' or metadata.get('switch_enabled') is not True or metadata.get('switch') != record['switch'] or metadata.get('base_sha256') != TERRAIN_PHOTON_SHA256 or metadata.get('manifest_sha256') != record['manifest_sha256']:
+            raise ValueError('SSR cost private gate/provenance mismatch')
+    elif metadata is not None:
+        raise ValueError('SSR cost B15 cannot carry private probe metadata')
+    return pin
 
 
 def canonical(value):
@@ -66,10 +115,10 @@ def semantic_state(state, strip_enabled=False, feature='global'):
     result = copy.deepcopy(state)
     semantic = result.get('loaded_semantic_config', {})
     for section, fields in CONFIG_FIELDS.items():
-        required = fields - {'enabled'} if section == 'lod' and strip_enabled and feature in ('global', 'effects') else fields
+        required = fields - {'enabled'} if section == 'lod' and strip_enabled and feature in ('global', 'effects', 'ssr_cost') else fields
         if section == 'terrain' and strip_enabled and feature == 'terrain': required = required - {'enabled'}
         if section == 'rendering' and feature == 'coherence' and not strip_enabled: required = required | {'shadowFrustumCoherence'}
-        if section == 'rendering' and feature in ('effects', 'terrain'): required = required | {'shadowFrustumCoherence'}
+        if section == 'rendering' and feature in ('effects', 'terrain', 'ssr_cost'): required = required | {'shadowFrustumCoherence'}
         if not required <= semantic.get(section, {}).keys(): raise ValueError('Incomplete loaded semantic config: ' + section)
     result.pop('config/shaderlod-client.toml_sha256', None)
     if feature == 'terrain':
@@ -77,7 +126,7 @@ def semantic_state(state, strip_enabled=False, feature='global'):
         if not isinstance(policy, dict): raise ValueError('Actual terrain boundary policy missing')
         policy.pop('stableTicks', None)  # Real eligibility ticks advance during a stable ON capture.
     if strip_enabled:
-        if feature in ('global', 'effects'):
+        if feature in ('global', 'effects', 'ssr_cost'):
             result.get('lod_settings', {}).pop('enabled', None)
             semantic['lod'].pop('enabled', None)
         elif feature == 'terrain':
@@ -96,7 +145,7 @@ def validate_state(state, enabled, shader_hash, feature='global'):
     if state.get('mod_present') is not True or state.get('shaders_in_use') is not True or state.get('fallback') is not False:
         raise ValueError('Main mod or live Iris pipeline missing')
     if state.get('hide_gui') is not True: raise ValueError('Expected fixed hidden HUD')
-    global_enabled = enabled if feature in ('global', 'effects') else True
+    global_enabled = enabled if feature in ('global', 'effects', 'ssr_cost') else True
     if state.get('lod_settings', {}).get('enabled') is not global_enabled or state['loaded_semantic_config']['lod'].get('enabled') is not global_enabled:
         raise ValueError('Wrong live global flag in phase')
     if state['lod_settings'].get('debug') is not False: raise ValueError('Unexpected debug')
@@ -113,8 +162,8 @@ def validate_state(state, enabled, shader_hash, feature='global'):
     if state.get('actual_shader_sha256') != shader_hash: raise ValueError('Actual shader archive differs from pin')
     options = state.get('effective_shader_options', {})
     if not options: raise ValueError('Full effective options missing')
-    if feature in ('global', 'effects', 'terrain'):
-        if feature in ('effects', 'terrain'):
+    if feature in ('global', 'effects', 'terrain', 'ssr_cost'):
+        if feature in ('effects', 'terrain', 'ssr_cost'):
             if not isinstance(options, dict) or any(not isinstance(key, str) or not isinstance(value, str) for key, value in options.items()):
                 raise ValueError('Full string-valued effective option map required')
             for name in EFFECT_OPTIONS:
@@ -127,9 +176,10 @@ def validate_state(state, enabled, shader_hash, feature='global'):
             if name in state and state[name] is not False: raise ValueError('Coherence active in global control')
         if 'shadowFrustumCoherence' in semantic['rendering'] and semantic['rendering']['shadowFrustumCoherence'] is not False:
             raise ValueError('Coherence config enabled in global control')
-        if feature in ('effects', 'terrain'):
+        if feature in ('effects', 'terrain', 'ssr_cost'):
             for name in ('shadow_coherence_configured', 'shadow_coherence_active'):
                 if state.get(name) is not False: raise ValueError('Coherence must stay off in effects control')
+        if feature == 'ssr_cost': validate_ssr_cost_state(state, shader_hash)
         if feature == 'terrain':
             validate_terrain_prerequisites(state)
             for field in ('terrain_configured', 'terrain_active'):
@@ -237,6 +287,10 @@ def validate_terrain_phase(report, phase, reference):
         raise ValueError('Terrain OFF phase must not manually re-arm')
     if phase['enabled'] and phase['inputEnd']['geometry_policy']['stableTicks'] < phase['inputStart']['geometry_policy']['stableTicks']:
         raise ValueError('Terrain eligibility counter reset during capture')
+    validate_fixed_window(phase, 'terrain_window_state')
+
+
+def validate_fixed_window(phase, state_field):
     window = phase.get('windowState', {})
     if window.get('schema') != 1: raise ValueError('Terrain window observation schema missing')
     capture = window.get('capture', {})
@@ -244,14 +298,49 @@ def validate_terrain_phase(report, phase, reference):
     if count < 1 or integer(capture.get('available_observations'), 'available window observations') != count or integer(capture.get('unavailable_observations'), 'unavailable window observations') != 0 or integer(capture.get('dropped_transitions'), 'dropped transitions') != 0 or capture.get('transition_counts') != {} or capture.get('transitions') != []:
         raise ValueError('Terrain capture window/pacing transition or missing observations')
     for name in ('start', 'end'):
-        if capture.get(name, {}).get('state') != phase['inputStart']['terrain_window_state']:
+        if capture.get(name, {}).get('state') != phase['inputStart'][state_field]:
             raise ValueError('Terrain window tracker/boundary identity differs')
-    state = phase['inputStart']['terrain_window_state']
+    state = phase['inputStart'][state_field]
     for flag in ('focused', 'iconified', 'visible'):
         counts = capture.get(flag, {})
         expected_true = count if state[flag] == 'true' else 0
         if integer(counts.get('true_observations'), flag + ' true') != expected_true or integer(counts.get('false_observations'), flag + ' false') != count - expected_true or integer(counts.get('unknown_observations'), flag + ' unknown') != 0:
             raise ValueError('Terrain window flag changed/unknown between boundaries')
+
+
+def validate_ssr_cost_state(state, pin):
+    if pin not in SSR_COST_ARCHIVES: raise ValueError('Unknown SSR cost archive')
+    if state.get('ssr_cost_dh_present') is not False: raise ValueError('SSR cost requires actual DH absence')
+    for name in ('requested_chunks', 'effective_chunks'):
+        if integer(state.get(name), name) != 24: raise ValueError('SSR cost radius must remain24')
+    for name, target in (('framebuffer_width', 2976), ('framebuffer_height', 1672)):
+        if integer(state.get(name), name) != target: raise ValueError('SSR cost native framebuffer mismatch')
+    if state.get('ssr_cost_camera_type') != 'FIRST_PERSON' or integer(state.get('ssr_cost_fov'), 'SSR cost FOV') < 1:
+        raise ValueError('SSR cost fixed first-person/FOV evidence missing')
+    for name, target in (('x', 500.5), ('y', 68), ('z', 660.5), ('yaw', 87.38), ('pitch', 3.735), ('rain', 0), ('thunder', 0)):
+        if abs(finite(state.get(name), name) - target) > .002: raise ValueError('SSR cost fixed sun-glint pose/weather mismatch')
+    if integer(state.get('day_time'), 'day_time') != 12500 or state.get('dimension') != 'minecraft:overworld':
+        raise ValueError('SSR cost fixed sun/time/dimension mismatch')
+    options = state['effective_shader_options']
+    for name in EFFECT_OPTIONS:
+        if options.get(name) != ('true' if name == 'SHADERLOD_SSR' else 'false'): raise ValueError('SSR cost requires only SSR active')
+    for name in ('ENVIRONMENT_REFLECTIONS', 'SKY_REFLECTIONS'):
+        if options.get(name) != 'true': raise ValueError('SSR cost actual reflections disabled')
+    selected = SSR_COST_ARCHIVES[pin].get('switch')
+    for name in ('PHOTON_SSR_FAR_FULL_TRACE_PROBE', 'PHOTON_SSR_FAR_REDUCED_TRACE_PROBE'):
+        if name == selected:
+            if options.get(name) != 'true': raise ValueError('SSR cost selected private gate disabled/missing')
+        elif name in options:
+            raise ValueError('SSR cost unexpected private gate')
+    window = state.get('ssr_cost_window_state', {})
+    if window.get('availability') != 'available' or window.get('visible') != 'true' or window.get('iconified') != 'false' or window.get('focused') not in ('true', 'false'):
+        raise ValueError('SSR cost window unknown/hidden')
+    for name in ('framebuffer_width', 'framebuffer_height'):
+        if integer(window.get(name), name) != state[name]: raise ValueError('SSR cost window/buffer evidence mismatch')
+    pacing = window.get('pacing', {})
+    if pacing.get('vsync') is not False or not isinstance(pacing.get('pause_on_lost_focus'), bool) or not isinstance(pacing.get('fullscreen'), bool) or integer(pacing.get('configured_framerate_limit'), 'frame limit') < 1:
+        raise ValueError('SSR cost pacing unknown/changed')
+    if pacing['pause_on_lost_focus'] and window['focused'] != 'true': raise ValueError('SSR cost unfocused with focus pause')
 
 
 def validate_samples(samples, epoch, first_frame, last_frame, fields):
@@ -303,8 +392,8 @@ def time_reduction(off, on):
 def analyze_report(report, expected_shader_sha256=None, profile=None):
     if report.get('schema') != 3 or report.get('status') != 'complete': raise ValueError('Require a complete schema-3 control')
     feature = report.get('benchmark_feature', 'global')
-    if feature not in ('global', 'coherence', 'effects', 'terrain'): raise ValueError('Unknown benchmark feature')
-    methods = {'global': METHOD, 'coherence': COHERENCE_METHOD, 'effects': EFFECTS_METHOD, 'terrain': TERRAIN_METHOD}
+    if feature not in ('global', 'coherence', 'effects', 'terrain', 'ssr_cost'): raise ValueError('Unknown benchmark feature')
+    methods = {'global': METHOD, 'coherence': COHERENCE_METHOD, 'effects': EFFECTS_METHOD, 'terrain': TERRAIN_METHOD, 'ssr_cost': SSR_COST_METHOD}
     if report.get('method') != methods[feature]: raise ValueError('Unrecognized pipeline/world guard method')
     if feature == 'effects':
         if report.get('selected_flag') != 'lod.enabled': raise ValueError('Wrong selected effects flag')
@@ -330,9 +419,18 @@ def analyze_report(report, expected_shader_sha256=None, profile=None):
         if report.get('terrain_scene_identifier') != report.get('session_id') + ':inspected-fixed-scene': raise ValueError('Terrain inspected scene identifier mismatch')
         for name in ('shadowCoherenceOracle', 'visibilityLists', 'shadowObserve'):
             if report.get('instrumentation_properties', {}).get(name, 'unspecified') not in ('false', 'unspecified'): raise ValueError('Terrain diagnostic observer enabled')
+    if feature == 'ssr_cost':
+        if report.get('selected_flag') != 'lod.enabled' or report.get('instrumentation_properties', {}).get('benchmarkFeature') != 'ssr_cost' or report.get('atmosphere_guard_absent') is not True:
+            raise ValueError('Explicit SSR cost method/flag/no-atmosphere evidence missing')
+        validate_ssr_cost_qualification(report.get('ssr_cost_archive_qualification'))
+        for name in ('shadowCoherenceOracle', 'visibilityLists', 'shadowObserve'):
+            if report.get('instrumentation_properties', {}).get(name, 'unspecified') not in ('false', 'unspecified'): raise ValueError('SSR cost diagnostic observer enabled')
     if report.get('starting_order') not in ('OFF/ON/OFF/ON', 'ON/OFF/ON/OFF'): raise ValueError('Invalid four-phase order')
     if not isinstance(report.get('gpu_requested'), bool) or not isinstance(report.get('cpu_requested'), bool): raise ValueError('Timing policy missing')
     pin = ORIGINAL_PHOTON_SHA256 if feature == 'coherence' else TERRAIN_PHOTON_SHA256 if feature == 'terrain' else expected_shader_sha256 or report.get('workload-manifest.json', {}).get('adaptive_pack_sha256')
+    if feature == 'ssr_cost':
+        pin = validate_ssr_cost_qualification(report['ssr_cost_archive_qualification'])
+        if expected_shader_sha256 is not None and expected_shader_sha256 != pin: raise ValueError('Explicit SSR cost pin differs from qualified archive')
     if feature == 'coherence' and expected_shader_sha256 is not None and expected_shader_sha256 != pin: raise ValueError('Explicit pin conflicts with required original Photon')
     if feature == 'terrain' and expected_shader_sha256 is not None and expected_shader_sha256 != pin: raise ValueError('Explicit pin conflicts with required terrain B15')
     pin = require_sha(pin)
@@ -346,12 +444,17 @@ def analyze_report(report, expected_shader_sha256=None, profile=None):
         initial = report.get('terrain_initial_observation', {})
         validate_state(initial, report['initial_feature_enabled'], pin, feature)
         if canonical(semantic_state(initial, True, feature)) != canonical(reference): raise ValueError('Initial terrain scene/reference mismatch')
+    if feature == 'ssr_cost':
+        require_sha(reference.get('control_sha256'))
+        require_sha(report.get('workload-manifest.json', {}).get('source_world_sha256'))
     if report['gpu_requested'] and report.get('backend') not in ('TIMESTAMP', 'ELAPSED_ALTERNATING'):
         raise ValueError('Requested GPU timing backend unsupported')
     if not report.get('loaded_mods') or not report.get('loaded_artifacts_sha256'): raise ValueError('Runtime versions/artifact identities missing')
-    if feature == 'terrain':
-        pinned_mods = {'minecraft': '1.21.1', 'neoforge': '21.1.253', 'distanthorizons': '3.3.3',
+    if feature in ('terrain', 'ssr_cost'):
+        pinned_mods = {'minecraft': '1.21.1', 'neoforge': '21.1.253',
                        'iris': '1.8.12-snapshot+mc1.21.1-local', 'sodium': '0.6.13+mc1.21.1'}
+        if feature == 'terrain': pinned_mods['distanthorizons'] = '3.3.3'
+        elif 'distanthorizons' in report['loaded_mods']: raise ValueError('SSR cost loaded DH despite absent requirement')
         if any(report['loaded_mods'].get(name) != version for name, version in pinned_mods.items()) or not report['loaded_mods'].get('shaderlod'):
             raise ValueError('Terrain loaded runtime differs from pinned mod set')
     phases = report.get('phases', [])
@@ -388,6 +491,7 @@ def analyze_report(report, expected_shader_sha256=None, profile=None):
         if canonical(semantic_state(phase['inputStart'], feature=feature)) != canonical(semantic_state(phase['inputEnd'], feature=feature)):
             raise ValueError('In-phase semantic mutation')
         if feature == 'terrain': validate_terrain_phase(report, phase, reference)
+        if feature == 'ssr_cost': validate_fixed_window(phase, 'ssr_cost_window_state')
         validate_temporal(phase)
         gpu, cpu = phase.get('gpu', []), phase.get('cpu', [])
         if not isinstance(gpu, list) or not isinstance(cpu, list): raise ValueError('Timing arrays missing')
@@ -442,6 +546,8 @@ def analyze_report(report, expected_shader_sha256=None, profile=None):
             'method': methods[feature],
             'selected_flag': 'rendering.shadowFrustumCoherence' if feature == 'coherence' else 'terrain.enabled' if feature == 'terrain' else 'lod.enabled',
             'effect_attribution': 'Existing detailed-radius/DH replacement tradeoff; fixed shader/global enable; not a shader-only or novel-mesh gain' if feature == 'terrain' else 'Selected live flag; fixed observed inputs',
+            'ssr_cost_archive_qualification': copy.deepcopy(report.get('ssr_cost_archive_qualification')),
+            'ssr_cost_limits': 'Within one fixed archive/pipeline/world only. OFF intends original B15 trace budgets; ON applies that archive policy. No cross-archive cause, shader busy-time, physical trace-call count or actual uniform observation is inferred.' if feature == 'ssr_cost' else None,
             'shader_sha256': pin, 'phases': output, 'adjacent_pairs': pairs,
             'same_state_drift': drift, 'stable_input_reference': reference, 'loaded_mods': report['loaded_mods'],
             'loaded_artifacts_sha256': report['loaded_artifacts_sha256'], 'instrumentation': report.get('instrumentation_properties'),
@@ -456,6 +562,8 @@ def compare_sessions(summaries):
     first = summaries[0]
     if first.get('benchmark_feature') == 'terrain' and any(summary.get('shader_sha256') != TERRAIN_PHOTON_SHA256 for summary in summaries):
         raise ValueError('Terrain session comparison requires the same exact B15 archive')
+    if first.get('benchmark_feature') == 'ssr_cost' and any(summary.get('shader_sha256') != first['shader_sha256'] for summary in summaries):
+        raise ValueError('SSR cost sessions compare within one exact archive only; no cross-archive causality')
     identity = copy.deepcopy(first['stable_input_reference'])
     identity.pop('actual_shader_sha256', None)
     iris_verified = all(summary.get('verified_iris_configuration') is not None for summary in summaries)

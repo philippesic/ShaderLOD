@@ -59,6 +59,7 @@ public final class BenchmarkSession {
                 || switchWarmup < ShaderLodConfig.TERRAIN_WARMUP_SECONDS.get() + 30 || measurement < 30
                 || Boolean.getBoolean("shaderlod.dev.shadowCoherenceOracle") || Boolean.getBoolean("shaderlod.dev.visibilityLists")
                 || Boolean.getBoolean("shaderlod.dev.shadowObserve"))) throw new IllegalStateException("Terrain timing requires inspected cap16/manual acknowledgement, global enabled, >=60s settle/>=30s capture and diagnostic observers disabled");
+        if (feature.equals("ssr_cost") && (Boolean.getBoolean("shaderlod.dev.shadowCoherenceOracle") || Boolean.getBoolean("shaderlod.dev.visibilityLists") || Boolean.getBoolean("shaderlod.dev.shadowObserve"))) throw new IllegalStateException("SSR cost control requires diagnostic observers disabled");
         temporalInitial = inputs.temporalInputs();
         Minecraft.getInstance().options.hideGui = true; // one fixed configured HUD policy for all phases
         header.addProperty("schema", 3);
@@ -69,6 +70,7 @@ public final class BenchmarkSession {
             case "coherence" -> "One JVM/world/pipeline; original Photon; only shadow frustum coherence changes";
             case "effects" -> "One JVM/world/pipeline; fixed five-module effect options; only live global bridge enabled changes";
             case "terrain" -> "One JVM/world/pipeline; fixed B15/global enabled; only terrain policy enabled changes plus recorded fixed-scene manual re-arm";
+            case "ssr_cost" -> "One JVM/world/pipeline; qualified fixed SSR-only B15/private trace policy; only live global bridge enabled changes";
             default -> "One JVM/world/pipeline; all five modules off; only live global bridge enabled changes";
         });
         header.addProperty("starting_order", startEnabled ? "ON/OFF/ON/OFF" : "OFF/ON/OFF/ON");
@@ -132,6 +134,7 @@ public final class BenchmarkSession {
         try {
             if (worldReference != null && (Minecraft.getInstance().level != worldReference || Iris.getPipelineManager().getPipelineNullable() != pipelineReference)) throw new IllegalStateException("World/pipeline changed between boundaries");
             if (feature.equals("terrain") && cameraReference != null) checkTerrainSceneIdentity();
+            if (feature.equals("ssr_cost") && cameraReference != null) checkSsrCostSceneIdentity();
             if (phase < 0) {
                 if ((now - started) * 1e-9 < initialWarmup) return;
                 if (feature.equals("global") || feature.equals("effects")) {
@@ -151,6 +154,11 @@ public final class BenchmarkSession {
                     header.add("terrain_initial_observation", initial);
                     addArtifactIdentity();
                 }
+                if (feature.equals("ssr_cost")) {
+                    inputs.validateNoAtmosphereGuard();
+                    header.addProperty("atmosphere_guard_absent", true);
+                    header.add("ssr_cost_archive_qualification", inputs.qualifySsrCostArchive());
+                }
                 startPhase(now);
                 return;
             }
@@ -169,6 +177,7 @@ public final class BenchmarkSession {
                     stableReference = WorkloadInputs.withoutFeature(state, feature);
                     worldReference = Minecraft.getInstance().level;
                     pipelineReference = Iris.getPipelineManager().getPipelineNullable();
+                    if (feature.equals("ssr_cost")) cameraReference = Minecraft.getInstance().getCameraEntity();
                     header.add("stable_input_reference", stableReference);
                     addArtifactIdentity();
                 } else checkIdentity(state);
@@ -224,7 +233,7 @@ public final class BenchmarkSession {
         current.shadow = new GsonBuilder().create().toJsonTree(ShadowInputObserver.snapshot()).getAsJsonObject();
         current.timingSnapshot = new GsonBuilder().create().toJsonTree(GpuTimers.snapshot()).getAsJsonObject();
         current.windowState = new GsonBuilder().create().toJsonTree(current.window.snapshot()).getAsJsonObject();
-        if (feature.equals("terrain")) validateTerrainWindow(current.windowState);
+        if (feature.equals("terrain") || feature.equals("ssr_cost")) validateTerrainWindow(current.windowState);
         if (current.renderFrames < 30 || gpuRequested && current.gpu.stream().noneMatch(sample -> sample.scope().equals(GpuTimers.FRAME))) throw new IllegalStateException("Insufficient render/timing observations");
         if (cpuRequested && current.cpu.stream().noneMatch(sample -> sample.scope().equals("run-tick"))) throw new IllegalStateException("Requested CPU timing observations missing");
         current.gpuEpoch = current.gpu.isEmpty() ? null : current.gpu.get(0).epoch();
@@ -256,6 +265,7 @@ public final class BenchmarkSession {
         if (feature.equals("coherence")) WorkloadInputs.validateCoherence(state, expectedEnabled);
         else if (feature.equals("effects")) WorkloadInputs.validateEffects(state, expectedEnabled);
         else if (feature.equals("terrain")) WorkloadInputs.validateTerrain(state, expectedEnabled);
+        else if (feature.equals("ssr_cost")) WorkloadInputs.validateSsrCost(state, expectedEnabled);
         else {
             WorkloadInputs.validateAlloff(state);
             if (state.getAsJsonObject("lod_settings").get("enabled").getAsBoolean() != expectedEnabled) throw new IllegalStateException("Wrong live global flag");
@@ -263,7 +273,7 @@ public final class BenchmarkSession {
     }
 
     private JsonObject benchmarkState() throws Exception {
-        return feature.equals("terrain") ? inputs.terrainInputState() : inputs.benchmarkInputState();
+        return feature.equals("terrain") ? inputs.terrainInputState() : feature.equals("ssr_cost") ? inputs.ssrCostInputState() : inputs.benchmarkInputState();
     }
 
     private void checkTerrainSceneIdentity() {
@@ -274,6 +284,17 @@ public final class BenchmarkSession {
                 || camera.getXRot() != stableReference.get("pitch").getAsFloat() || !ShaderLodConfig.ENABLED.get()
                 || !ShaderLodConfig.TERRAIN_WARM_SOURCE_CONFIRMED.get() || !client.options.getCameraType().name().equals("FIRST_PERSON")
                 || client.options.fov().get() != stableReference.get("terrain_fov").getAsInt()) throw new IllegalStateException("Inspected terrain scene identity/global/manual acknowledgement changed");
+    }
+
+    private void checkSsrCostSceneIdentity() {
+        var client = Minecraft.getInstance(); var camera = client.getCameraEntity();
+        if (camera == null || camera != cameraReference || client.options.renderDistance().get() != 24
+                || camera.getX() != stableReference.get("x").getAsDouble() || camera.getY() != stableReference.get("y").getAsDouble()
+                || camera.getZ() != stableReference.get("z").getAsDouble() || camera.getYRot() != stableReference.get("yaw").getAsFloat()
+                || camera.getXRot() != stableReference.get("pitch").getAsFloat() || !client.options.getCameraType().name().equals("FIRST_PERSON")
+                || client.options.fov().get() != stableReference.get("ssr_cost_fov").getAsInt() || client.level.getDayTime() != 12500) {
+            throw new IllegalStateException("SSR cost fixed camera/sun/radius identity changed");
+        }
     }
 
     private void maybeRearmTerrain(long now) throws Exception {
@@ -407,7 +428,7 @@ public final class BenchmarkSession {
             report.addProperty("sampling_policy", GpuTimers.samplingPolicy());
             report.add("phases", new GsonBuilder().create().toJsonTree(phases));
             if (current != null && !phases.contains(current)) report.add("partial_phase", new GsonBuilder().create().toJsonTree(current));
-            report.addProperty("restored_initial_enabled", done);
+            report.addProperty("restored_initial_enabled", done && (!feature.equals("ssr_cost") || ShaderLodConfig.ENABLED.get() == initialEnabled));
             report.addProperty("restored_initial_feature", done && (!feature.equals("terrain") || ShaderLodConfig.TERRAIN_ENABLED.get() == initialFeatureEnabled));
             Path temporary = directory.resolve("benchmark.json.tmp"), target = directory.resolve("benchmark.json");
             Files.writeString(temporary, new GsonBuilder().setPrettyPrinting().create().toJson(report));
@@ -423,7 +444,7 @@ public final class BenchmarkSession {
 
     private static String benchmarkFeature() {
         String value = System.getProperty("shaderlod.dev.benchmarkFeature", "global");
-        if (!value.equals("global") && !value.equals("coherence") && !value.equals("effects") && !value.equals("terrain")) throw new IllegalArgumentException("Unknown benchmark feature: " + value);
+        if (!value.equals("global") && !value.equals("coherence") && !value.equals("effects") && !value.equals("terrain") && !value.equals("ssr_cost")) throw new IllegalArgumentException("Unknown benchmark feature: " + value);
         return value;
     }
 
