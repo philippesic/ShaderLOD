@@ -130,3 +130,29 @@ allocation per new frustum and containment/hash overhead can outweigh avoided
 plane math. A source operation reduction or passing property fixture is not
 proof of a useful frame gain. No shadow list/temporal traversal reuse is enabled
 by this independent experiment.
+
+
+## Integrated runtime oracle
+
+Integratedbbb70d5,33JUnitpassed (24previous+9coherence), devcompiled. Session38529
+endedexit0 with coherenceactive=true, originalPhotonselected andfallback=false.
+Profilefrustum-coherence-probe/coastalwater/enabled, minimal/noDH, fixedwetness0,
+35swarmup/10scapture, GPUqueriesoff, diagnostic oracletrue. Rawreport
+`dev/logs/frustum-coherence-oracle-measurement.json`; console correspondingoraclelog.
+
+5,157,390actual BASE testAab results matched reevaluated original box/plane
+classifier with0mismatches/0unavailable. Reversed had0queries, so its transformed
+injection is loaded but runtime semantics are not demonstrated by this scene.
+Actual helperrequests5157390: cachedaccept236775, newaccept38745, fallback4881870.
+Only275520/5157390 (5.34%) avoided the full child test. Last observed plane count8,
+FMAtrue and distance128; 1435contextresets/2870invalidations. The original return
+values were never replaced by the oracle. Diagnostic overhead invalidates its
+FPS/CPU values as performance evidence.
+
+This is actual correctness/coverage evidence for the static scene, not a speedup.
+The low acceptance fraction may not pay for lookup overhead. Next: capture one
+bounded real same-frustum/frame query sequence, replay exact helper variants with
+smaller cells/extents and cache sizes, and then repeat real oracle/performance
+checks. Defaults remainoff; no traversal skipping or caster loss is intended.
+Camera/sun motion, reloads, other stacks, reversed path and memory/default-off
+cost remain separate pending checks.

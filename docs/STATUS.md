@@ -13,7 +13,7 @@ capture and exact shadow-culling repeats have finished. Their results remain
 mixed; the ordinary-scene performance gate is unmet. Second shader support has
 not started. See [REPEATED_RESULTS.md](REPEATED_RESULTS.md).
 
-Current committed source: `38a657d` / `bdc8222`. Explicit compile-time effect controls retain
+Current committed source: `bbb70d5`. Explicit compile-time effect controls retain
 original code when off. Water analytic normals and the exact shadow-frustum
 fast path default off after negative or inconsistent measurements. Shadows/AO
 retain original budgets. Terrain radius policy remains opt-in and requires
@@ -27,14 +27,14 @@ or explain the 145 to 75 FPS baseline variation. See
 successfully after repairing an inherited Mixin lookup, but repeated minimal
 stack CPU times regressed; its default remains off.
 
-Cloud modes rendered without ordinary gain. A new exact protected-lighting tier
-candidate passed 1,512 GLSL compilations; real performance remains unverified.
-The default-off shadow-list ownership prototype rendered in enabled/disabled/
-mod-absent controls, preserving observed shadow snapshots across main rebuilds.
-It skips no traversal. Same-JVM bridge controls are ready for runtime diagnosis.
-An isolated worker is testing a separate spatial-coherence optimization. Root
-owns every client/GPU launch; no worker may launch a game. Current process
-ownership and pending checks are recorded in the active goal checkpoint.
+Cloud modes and protected-lighting source simplification rendered, but the new
+same-JVM controls establish no meaningful gain. The default-off ownership
+prototype preserves observed shadow-list fingerprints while skipping no work.
+A separate frame-local coherence cache matched the original classifier in
+5.16 million real queries, but avoided the full test on only 5.3% of them.
+The team is preparing bounded real-query replay to tune that coverage before
+performance trials. No root game is live; root owns all client/GPU launches.
+Current source/task ownership and pending checks are in the active checkpoint.
 
 ## Previous completed proof
 

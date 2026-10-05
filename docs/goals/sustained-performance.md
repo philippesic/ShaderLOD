@@ -428,3 +428,32 @@ query-free checks, then compare new lighting-tier candidate. Do not claim absolu
 FPSgain versus old visible-HUD captures. After correctness review integrate
 coherence into separate runtimecontrol and testactualvisibility againstoriginal
 before performance. No ordinary Photon gate or second shader yet. Nativegoalactive.
+
+
+## In-process controls and spatial-coherence oracle complete
+
+Mainbbb70d5 integrates frame-local coherence/defaultoff + diagnosticoracle and
+analyzer. All33JUnit,41smallPythonfixtures, build/devcompile passed. SameJVMold36243
+andnew6158 controls terminalcomplete; allphaseimages/UUIDs andsemanticIRissettings
+validated. OldOFF/ON meanFPS virtuallyequal151.76; newallphases~154. No reproducible
+large enablepenalty or meaningfulordinarygain. Bothonecorrelatedsession perarchive,
+hiddenHUD; earlierbadcross-JVMregime remainsunexplained. See IN_PROCESS_RESULTS.md.
+
+Coherenceoracle38529 terminalexit0,5.157Mbasequeries/0mismatches, active true and
+originalPhoton/fallbackfalse. Actualcacheaccept5.34% only; timingsnotvalid withoracle
+on. Reversed0queries unverified. DetailsinSHADOW_FRUSTUM_COHERENCE.md. No rootgame
+live atthischeckpoint; no performanceacceptance or secondshader yet.
+
+CURRENTTEAM: coverage_policy owns gatedfirst-frame/frustum raw-float querytrace
+andexplicitcold contextcapture in helper/diagnostics/devOracle, APIsunchanged.
+performance_stack owns scripts/replay_frustum_coherence.py, tests/test_frustum_replay.py,
+FRUSTUM_REPLAY.md; explicitsource-anchor variants grids64/32/16 +extentgrid+32,
+slots64/256/512, exactoutputchecks andseparateinstrumentedcounts/optionalnanotiming
+processes. No games/builds/heavyreplay untilrootCPUwindow. Rootownsclients/source
+integration. Shader/benchmark workersfrozen; analysis/fixturechecks complete.
+
+NEXT: revalidateworkerfreeze, compile trace and rootcapture10s again GPUoff; verify
+sameowner/context/generation/complete trace, preserveexactsourcehelperhash, run
+CPUreplay againstactualreferenceoutputs andselectcandidate. Thenrealoracle with
+movingcamera/sun andruntimeperformancecontrols (oracleOFF) underbothstacks. Never
+advertise offlineop/nanocounts asGPU/FPSgain. Keepfulloriginalgoalactive/unshrunk.
