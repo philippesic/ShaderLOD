@@ -95,6 +95,10 @@ neoForge {
             if (project.hasProperty('shadowObserve')) {
                 systemProperty 'shaderlod.dev.shadowObserve', project.property('shadowObserve').toString()
             }
+            if (project.hasProperty('jfrRecording')) {
+                def recording = project.file(project.property('jfrRecording').toString()).absolutePath
+                jvmArgument "-XX:StartFlightRecording=name=shaderlod-render,settings=profile,dumponexit=true,maxsize=256m,filename=${recording}"
+            }
             if (project.hasProperty('gpuAttribution')) {
                 systemProperty 'shaderlod.dev.gpuAttribution', project.property('gpuAttribution').toString()
             }

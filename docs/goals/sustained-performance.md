@@ -274,3 +274,36 @@ After completion: analyzeallcomparisons and rerunagainstwater-alloff; inspect
 images/cloud speckle, choose targetedcandidates and repeated checks. Run a
 separate observerdiagnostic afterexclusive sweep. Photon ordinary gate and new
 shader target remain pending, with no user-dependent blocker.
+
+## End-of-turn authoritative checkpoint
+
+Effect9sweep43582, sourceforensics84385, sparse6sweep75927, originalCPU diagnostic
+3757/86174 and culling12matrix5164 all terminal. No owned Minecraft client is
+running at this checkpoint. Raw reports/images/source/JFR are ignored under
+ dev/logs. See REPEATED_RESULTS.md, EFFECT_SOURCE_FORENSICS.md and
+ RENDER_CPU_FORENSICS.md. Original itself varied145→75FPS; no causal claim from
+query/compiled-source changes. The startupJFR7.1MB record is complete; its
+40-second window is a good144FPS baseline, not a captured slow regime.
+
+JFR tooling tests8passed. Source-only hotpath audit identified redundant negative
+vertex math in boolean shadow frustum. Production helper/controller/base and
+reversedmixins implemented, config/tick cache wired. EightJUnittests(50ksets×two
+FMApolicies +edges) pass. Firstsmoke failed inherited@Shadowlookup; repaired
+throughbasehelpers, newsmoke91889failed/62894success recordsretained. Success
+rootcontrolleractive=true, originalarchive selected, fallback=false. Paired
+12matrixcompleted; minimalCPUregressed1.7–3.4%, optimizedgainvariable. Rendering
+optimizeShadowCulling defaultfalse now; no actualaccepted15%ordinarywin.
+
+Source integration includes default-off shadowinputobserver (runtime enabled
+capture stillpending), dev wetnessexports and exacteffecttoggles. Currentcode
+awaitsfinalcommit below. Root must not alter scope or mark goal complete: Photon
+meaningful repeatableordinarygains and secondpopularshader remainunmet.
+
+NEXT ACTION: checkpoint committedwork, then source-grounded cloudonly candidate
+from CLOUD_TRANSITION_DESIGN afterreview (independenttiernoise orcontinuousbudget
+control), measuredwith original/alloff/cloudonly in default shore+premium storm,
+fixedwetness, balanced repeats andNoQuery crosscheck. Separate enabledobserver
+runtime, geometrytravel/reload checks, and entitycullingstack remainpending.
+No genuine user-dependent blocker; nativegoal staysactive. Verify authoritative
+process handles before restarting any interrupted work; terminaljobsabove do not
+needrestarting merelytoobserveunchanged state.

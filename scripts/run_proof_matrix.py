@@ -35,6 +35,7 @@ CASES = {
     'water-high': ('coastalwater/high', 'runClientLodOff'),
     'water-adaptive': ('coastalwater/adaptive', 'runClientLodOn'),
     'water-patched-off': ('coastalwater/patched-off', 'runClientLodOn'),
+    'water-culling': ('coastalwater/culling', 'runClientLodOn'),
 }
 for _prefix, _scene in (('forest', 'forest'), ('cloud', 'cloudstorm'), ('water', 'coastalwater')):
     for _mode in ('alloff', 'cloud-only', 'water-only', 'ssr-only', 'fog-only', 'materials-only'):

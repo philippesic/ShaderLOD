@@ -22,6 +22,7 @@ public final class ShaderLod {
         NeoForge.EVENT_BUS.addListener(ShaderLodCommands::register);
         NeoForge.EVENT_BUS.addListener(ShaderLodCommands::reportRuntime);
         NeoForge.EVENT_BUS.addListener(GeometryLodController::onClientTick);
+        NeoForge.EVENT_BUS.addListener(ShadowCullingRuntime::onClientTick);
         LOGGER.info("ShaderLOD loaded; Iris required, Distant Horizons present={}",
                 ModList.get().isLoaded("distanthorizons"));
     }

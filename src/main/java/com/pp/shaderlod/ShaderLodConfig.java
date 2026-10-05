@@ -14,6 +14,7 @@ public final class ShaderLodConfig {
     public static final ModConfigSpec.IntValue TERRAIN_VANILLA_CHUNK_CAP;
     public static final ModConfigSpec.BooleanValue TERRAIN_WARM_SOURCE_CONFIRMED;
     public static final ModConfigSpec.IntValue TERRAIN_WARMUP_SECONDS;
+    public static final ModConfigSpec.BooleanValue OPTIMIZE_SHADOW_CULLING;
 
     static {
         var builder = new ModConfigSpec.Builder();
@@ -40,6 +41,10 @@ public final class ShaderLodConfig {
                 .define("warmSourceConfirmed", false);
         TERRAIN_WARMUP_SECONDS = builder.comment("Minimum stable Iris/DH world/pipeline warmup before capping; mesh/upload settling is still the user's responsibility.")
                 .defineInRange("warmupSeconds", 30, 5, 120);
+        builder.pop();
+        builder.push("rendering");
+        OPTIMIZE_SHADOW_CULLING = builder.comment("Use the equivalent positive-vertex-only boolean shadow visibility test on the pinned Iris/Photon runtime. Does not remove casters or change shadow quality.")
+                .define("optimizeShadowCulling", false);
         builder.pop();
         SPEC = builder.build();
     }

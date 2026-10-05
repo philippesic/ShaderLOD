@@ -99,3 +99,49 @@ and 1017 GLSL compilations passed; its single runtime pilot under
 patched disabled 139.33 / 6.597, active 123.18 / 7.435. It still regressed. No performance improvement is inferred from those
 static checks. Cloud source was unchanged so that factor remains a potential
 confounder of the combined active shoreline arm.
+
+## Effect sweep, source forensics and measurement variability
+
+The nine-arm `effects-shoreline-r1` sweep completed with same upstream SSR
+settings, fixed wetness zero and effect-source controls. FPS: original139.84,
+global-disabled140.63, alloff77.35, materials-only82.11, clouds-only117.15,
+fog-only130.87, water-only134.72, SSR-only135.32, combined130.39. These remain
+single diagnostic controls; inactive POM cannot demonstrate material savings.
+
+Actual Iris-translated source dumps were preserved under
+`dev/logs/effect-source-forensics/source-dumps/`. The audit confirms intended
+original effect branches, const water loops, direct water wrappers and no flag
+substitution anomaly. Original/global-disabled/alloff CPU-only diagnostic at
+15s warmup/10s capture gave139.75/141.99/140.05FPS. The old77FPS loss did not
+repeat, but this differing protocol does not establish query causation.
+
+Sparse 16-frame-query repeat (`effects-sparse-r2`,35s warm/20s capture) retained
+large variation too: original145.35 then74.56FPS, alloff144.53 then89.74,
+combined114.86 then117.23. Thus neither a code-shape story nor query cadence
+alone explains the slow regime. AC power, no reported low/high-power override
+and ample memory were observed later; one host snapshot cannot prove every
+run's conditions. These are not reliable acceptance evidence.
+
+## CPU recording and exact culling candidate
+
+A completed no-query original recording captured144.12FPS, runTick wall6.933 /
+thread6.411ms. It is a good regime only. JFR shows visibility/culling among Java
+samples and native multi-draw/copies/mipmaps; command fill and GC are minor.
+Sample streams do not establish exact per-function time or driver busy versus
+wait. No bad-regime recording was obtained yet. See RENDER_CPU_FORENSICS.md.
+
+The exact boolean shadow-frustum specialization removes unused negative-vertex
+calculations while retaining acceptance semantics, box-culler ordering, FMA
+fallback and floating-point edge behavior. Eight tests include50k randomized
+sets under both FMA policies. First runtime attempt failed inherited shadow
+resolution in the reversed mixin; repair uses base-injected helpers. The failed
+smoke is retained. Fresh smoke rendered original Photon with fast-path active,
+no fallback,143.47FPS. This is compatibility evidence, not a speedup proof.
+
+Three paired repeats per stack (`culling-stacks-r3`) used original shader source
+in both arms, with the main mod absent or present and only its culling fast path
+active. Minimal frame reductions:-0.61%,-15.86%,-2.35%; thread CPU:-2.16%,-1.72%,
+-3.44%. Optimized frame reductions:20.04%,7.02%,0.03%; threadCPU:16.33%,0.74%,-1.11%.
+The optimized baseline spread prevents a robust general gain claim. This
+candidate now defaults off; mathematically equivalent does not mean faster.
+Both benchmark controls and shader quality checks remain necessary.

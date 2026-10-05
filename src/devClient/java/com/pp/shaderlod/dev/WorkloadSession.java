@@ -127,6 +127,8 @@ final class WorkloadSession {
             report.addProperty("profile", directory.getFileName().toString());
             report.addProperty("modPresent", ModList.get().isLoaded("shaderlod"));
             report.addProperty("dhPresent", ModList.get().isLoaded("distanthorizons"));
+            report.addProperty("shadow_culling_active", ModList.get().isLoaded("shaderlod")
+                    && com.pp.shaderlod.ShadowCullingController.isActive());
             report.addProperty("elapsed_seconds", seconds);
             report.addProperty("warmup_seconds", warmup);
             report.addProperty("render_frames", GpuTimers.snapshot().renderFrames() - startFrames);
