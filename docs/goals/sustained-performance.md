@@ -369,3 +369,28 @@ Nextcontinuation: poll actualsession45404 for terminal/newoutput, inspect fresh
 manifest/reports/windowobservations/images, retainnegativecomparisons, then
 choose repeats/raincloudscene. If a realguard/compilefailure appears, preserve
 it and repair causally before retry. No Photon gate pass; native goal active.
+
+
+## Cloud driver pilot complete
+
+Session45404 terminalexit0/all7accepted; no root clientlive. Full result and
+actual window-state evidence appended to REPEATED_RESULTS.md. Original145.23FPS,
+smooth143.70; alloff114.74 and protectedindependent116.55. Both slow arms remained
+focused/visible with unchanged sampled pacing/sizes. These are single runs,
+not gain or cause proof. New modes compiled/rendered successfully; no ordinary
+performancegatepass. Root did not enable new modes by default.
+
+Workerperformance_stack has an authorized CPU/build window in isolated visibility
+worktree only, after root GPUcapture ended. No games permitted. Prototype separates
+inner membership lists and preserves sprite activation; it never skips traversal.
+Root reviewed static getter/storage/sprite-generation diff; compile/tests and
+actual runtime generation parity still pending. Workerbenchmark_repeat owns only
+IN_PROCESS_CONTROL_DESIGN.md for a same-JVM/alloff globalbridge control; no Java
+changes assigned yet. Main source frozen/clean except this documentation.
+
+Nextcontinuation: collect workercompile/test and design, integrate reviewed
+prerequisite only into a separate diagnostic profile, then verify enabled/disabled
+sprite/list ownership and camera/world/reload without claiming speedup. Implement
+bounded in-process controls with current fingerprints/window/wetness and CPU-only
+variant before another broad cloud matrix. Preserve bad alloff evidence and seek
+actual native wait/source effect cause. Nativegoal active; no userblocker.

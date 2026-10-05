@@ -6,7 +6,8 @@ Active goal: [Sustained performance and compatibility](goals/sustained-performan
 The user authorized ongoing team development, Photon first, benchmarks with
 optional performance mods, and additional shaders after repeatable Photon gains.
 Previous completed goal: [Full-frame rendering proof](goals/full-frame-proof.md).
-Root owns a live seven-arm shoreline cloud pilot (session45404). The first 36-run matrix, water pilots,
+The seven-arm shoreline cloud pilot completed (session45404, exit0/all7accepted).
+No root client is live. The first 36-run matrix, water pilots,
 nine-arm effect sweep, compiled-source controls, sparse-query repeats, JFR
 capture and exact shadow-culling repeats have finished. Their results remain
 mixed; the ordinary-scene performance gate is unmet. Second shader support has
@@ -27,7 +28,7 @@ successfully after repairing an inherited Mixin lookup, but repeated minimal
 stack CPU times regressed; its default remains off.
 
 Cloud candidates, seven matched controls, report-only window telemetry and strict
-culling/cloud guards passed static checks. Root is testing the real driver. A
+culling/cloud guards passed static checks. All new cloud modes rendered; the pilot established no ordinary gain. A
 worker is developing a no-skip list-ownership prerequisite in an isolated worktree. Root owns all client/GPU launches;
 no worker may launch a game. Static checks establish source correctness only.
 The active goal checkpoint records detailed ownership and the next experiments.

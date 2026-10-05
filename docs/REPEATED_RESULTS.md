@@ -145,3 +145,44 @@ active. Minimal frame reductions:-0.61%,-15.86%,-2.35%; thread CPU:-2.16%,-1.72%
 The optimized baseline spread prevents a robust general gain claim. This
 candidate now defaults off; mathematically equivalent does not mean faster.
 Both benchmark controls and shader quality checks remain necessary.
+
+
+## Cloud transition pilot at ordinary cloud resolution
+
+Source edffbef, matrix `dev/logs/cloud-shore-default-r1` (session45404) ended
+exit0 with all7captures accepted. Same SSR shoreline, minimal stack/noDH,
+fixedwetness0, 35swarmup/15scapture, sparse GPU interval16, cloudupscale4. Clean
+archive SHA256 8fbaa117d87b4f729ea64ecce4d86390cdc56d03cd3b5a02ec2be9ffe2213235.
+Other four effects off, protected lighting, cached sky/analytic water off; no
+upstream sample-count increase. Real driver rendered new modes1/2 without
+fallback. Every capture recorded focused=true/visible=true/iconified=false,
+no observed transitions, logical744×418/framebuffer1488×836, vsyncfalse,
+configuredlimit260 and pauseOnLostFocusfalse. Sampling can miss between-tick
+changes; this does not measure GPU clocks or exclude native scheduling stalls.
+
+| Arm | FPS | GPU render mean ms | CPU frame wall/thread mean ms |
+| --- | ---: | ---: | ---: |
+| Original, mod absent | 145.23 | 6.418 | 6.876 / 6.388 |
+| Patched globally disabled | 142.00 | 6.446 | 7.034 / 6.535 |
+| Smooth budgets, overhead protected | 143.70 | 6.384 | 6.949 / 6.422 |
+| All five effects off, bridge enabled | 114.74 | 8.229 | 8.703 / 6.436 |
+| Separate tier noise, overhead protected | 116.55 | 7.684 | 8.567 / 6.584 |
+| Current stochastic mode | 133.46 | 6.830 | 7.482 / 6.171 |
+| Separate tier noise, unprotected | 142.20 | 6.353 | 7.023 / 6.003 |
+
+One run per arm is exploratory. No meaningful ordinary gain is established.
+Smooth mode's GPU difference is only~0.5%, with slightly lowerFPS; unprotected
+noise's GPUdifference~1% also does not establish gain. Alloff's slowdown has
+nearly unchanged threadCPU but much higher wall/GPUintervals; focus loss is not
+observed. This is evidence for another controlled diagnosis, not proof that
+queries, shader branches, overhead geometry or thermal state caused the loss.
+Do not recommend new modes or interpret protected/unprotected differences
+causally without repeats/in-process controls.
+
+Root inspected the smooth screenshot: near shore/tree shadows remain present
+and no gross overhead-cloud loss is evident in this static view. Motion,
+shimmer, cloud crossings and selected/executed GPU sample counters remain
+unverified. All screenshots/reports/failures are retained. Next: source-equivalent
+alloff in-process bridge toggles with the same program/JVM and captured state,
+plus correctness prerequisites for exact CPU visibility reuse. New modes remain
+experimental, default mode0; Photon ordinary gate and second shader stay pending.
