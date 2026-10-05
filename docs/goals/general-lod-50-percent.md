@@ -619,3 +619,51 @@ wetness0/frozenclasses. Verify actualeffectsversion2/VolumetricsMode2/bands/rati
 via typedreadback, notsavedconfiguration inference; originaldispatch/overheadguard
 maystillselectfull integration. Source counts/linkedvalues do not prove physical
 iterations. Operator soleGPU; no secondlaunch/timing untilrootreviews nextresult.
+
+### Volume driver milestone and next parallel wave
+
+Volume launcher56444/watcher93401 exited0; Java99874 stopped naturally, all
+owned processes absent, frozen main/dev/resource trees unchanged. Exact QA audit
+is `dev/logs/parallel-volume-qa-r1/volume-qa-audit.json`; GPU stream empty.
+Selected pack compiled/rendered without fallback and actual scalar readback
+establishes effectsVersion2, VolumetricsMode2, bands512/1536/128 and ratios.85/.75
+at valid locations. Core2/enable1/32/96/8 also read. Actual customtex1/2 allocate
+64³ R8 with LINEAR/base-max0/LOD0 sampling; customtex0 is a distinct lookup.
+Native cloud still/crops show no obvious gross failure. Guards may retain full
+integration; no physical iteration saving, motion parity or speedup accepted.
+Operator formally returned GPU before the next handoff.
+
+Root integrated lighting worker commitdb016f9's exact13newfiles and assembled
+default-off ZIP713e729701acba72a5c22e62e23bfc7b7782eaa82e70502e185631a7e15e710e.
+Main eight source/math/actual-Iris/parser/assembly tests pass,0failure/skips.
+Manifestd41c94e023d08fcf22798e29248d19ee294148f27008615742af78bcb6419cf4.
+This is actual half-viewport prepass/full-resolution resolve code; buffer2 format,
+attachment/flip/sampler limits and rendered quality remain driver acceptance.
+Coastal ENVIRONMENT_REFLECTIONS=true selects the original graph; the held forest
+profile has false and must qualify all other unsupported options independently.
+
+Parallel bounded assignments: lighting owner prepares NEW explicit forest profile
+preparer/fixtures and its implementation report; quality owner writes independent
+LIGHTING_RATE_REVIEW; procedural owner develops NEW common normal-error-budget
+helper/math fixtures/report without changing frozen water pins; reflection owner
+writes cost review, leaving its pins unchanged. Benchmark owner finishes NEW
+fullscreen batch preparation/fixtures and narrow additive runner forwarding.
+No parallel edits to owned files; no unsupported pack/framework expansion.
+
+Producer detail corrected during independent review: OPAQUE_LIGHTING is currently
+not designated salientLighting, so preserveSalientLighting=true does not cap its
+ADAPTIVE ratios. INHERIT mode0 allows the explicitly selected private adapter's
+1/.25 policy. Prepared tests will retain protection=true and explicitly request
+ADAPTIVE32/96/8/1/.25; disabling protection is not required. AO/shadow designated
+salient effects remain protected. Requested configuration and actual transport
+remain separate evidence.
+
+Root hands sole client/GPU to ao_runtime for ONE fresh untimed procedural-r2
+`parallel-procedural-qa-r1/adaptive` coastal smoke: exacteb9fa7db...0719 ZIP,
+privategate=true,core2/global1/32/96/8,25warm5capture,GPUfalse/CPUlayersfalse,
+newobserver,native2976x1672,minimalnoDH,wetness0/frozenclasses. Check original
+3-octave/parallax profile, shader compile/noFallback, actual linked controls and
+samplers, then native water/glint/near/far stills. Exact handles go in runtime
+queue. Stop at terminal audit and formal GPU return; no secondlaunch or timing.
+Source work continues during this untimed diagnostic. Repeated quiet fullscreen
+and quality/compatibility acceptance remain outstanding;50%goal staysactive.

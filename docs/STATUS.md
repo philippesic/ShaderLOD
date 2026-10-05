@@ -11,8 +11,11 @@ time) against matched original Photon, with repeated GPU/total-frame and quality
 evidence. This target is unachieved. The previous 15% gate is superseded; historical
 evidence and unresolved checks below remain retained.
 
-Latest checkpoint: `0a4d7a9` (independent parallel shader/quality implementations
-and integrated protocol2/interface commands;60Java tests). Prior `67ef5ba` preserves
+Latest committed checkpoint: `7a0fa7a` (reflection driver verification and runtime
+queue). Current milestone below adds volumetric V2 driver readback and the
+integrated, source-tested distant-lighting prototype. `0a4d7a9` preserves independent
+parallel shader/quality implementations and protocol2/interface commands;60Java
+tests. Prior `67ef5ba` preserves
 corrected density runtime/core binding and the team direction. Earlier
 checkpoints: `270f992` (123 motion frames), `fc86429` (camera rotation
 validator), `a3dd9cd` (motion controls), `8249ce3` (attribution sample spread). Historical failures and raw reports
@@ -24,24 +27,28 @@ Root primarily orchestrates independent parallel implementation tracks, per the
 user's reiterated direction. `effect_api` implemented protocol2/43effect fields,
 OpaqueLighting controls/commands/coherent reload snapshots in an isolated worktree;
 root integrated it and main test/build/dev compilation passes all60tests. Core2
-stays unchanged; defaults INHERIT/unity/protected lighting. Actual extension
-linkage/config reload in the client remains unverified.
+stays unchanged; defaults INHERIT/unity with protection for designated salient
+effects. Actual Volumetrics extension linkage is demonstrated by typed driver
+readback; config reload and other consumers remain unverified.
 
 `reflection_lod` implemented bounded footprint refinement (9tests),
 `procedural_lod` implemented displaced-footprint water/parallax (13tests),
 `volumetric_lod` implemented normalized primary integration (12tests), and
 `lod_quality` implemented reusable edge/near/plane guards (9tests). All are
 source-tested/default-off; driver/quality/performance acceptance pending.
-`lod_opportunities` builds the 2x2 irradiance prepass/resolve in its isolated
-lighting-rate worktree. `ao_runtime` prepares a shared source-qualified untimed
-driver/quality queue; no launch before rootreview. Source development stays
-parallel; one GPU operator and dedicated quiet benchmark windows. Root currently
-has transferred soleGPU to `ao_runtime`: reflection untimed QA completed with
-actual in-world compile/noFallback and five core values read in fullscreen/raster
-draws. No obvious bright water band in the inspected still; motion/parity and
-performance unverified. All firstQA processes stopped. Next authorized volume
-untimed QA checks actual effect2 controls; exact ownership/paths/pins/live handles
-are in the active goal and PARALLEL_LOD_RUNTIME_QUEUE.md.
+The 2x2 irradiance prepass/resolve is integrated from the lighting-rate worktree;
+eight source/parser/math/assembly fixtures pass. Driver checks remain pending.
+`lod_opportunities` now prepares its explicitly qualified forest controls;
+`lod_quality` independently reviews pass and transport correctness.
+`procedural_lod` develops a reusable normal-error bound; `reflection_lod` audits
+refinement guard cost; `performance_audit` implements matched fullscreen batches.
+`ao_runtime` has sole GPU ownership for one untimed procedural-r2 coastal smoke.
+Reflection and volumetric packs compiled/rendered without fallback. Volume actual
+readback proves effect2/mode2/bands512/1536/128/ratios.85/.75. Their inspected stills
+show no gross failures, but motion/parity/physical work and performance remain
+unverified. All preceding QA clients stopped. Source development stays parallel;
+GPU checks remain serial. Exact ownership and handles are in the active goal and
+PARALLEL_LOD_RUNTIME_QUEUE.md.
 
 Retained first-wave experiments:
 AO pilot runner exec89240 exited0, all three normal WorkloadSession contracts
