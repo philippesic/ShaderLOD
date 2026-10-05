@@ -579,3 +579,17 @@ additional launch untilfirstresult reviewed. Source/code/tests may continue in
 parallel because this is untimed; no other client/reloads/GPU. Exactlive/stophandles
 tofollow in PARALLEL_LOD_RUNTIME_QUEUE.md. Probe reads sampled binding/state, not
 physical savedrefinements, settledreload orquality parity. Goal remainsactive.
+
+### Reflection QA live handles
+
+Actualpreparation exec79834 exited0; canonical source/copies89c962... and exact
+private d11de4... archive qualify. Watcher exec54250/PID95954 ARMED beforelauncher.
+Launcher exec47437/PID96022, Java96042, UUID
+`08fed9f1-43df-4a6b-ada7-0d6160bc5cfb`. Profile/log roots parallel-reflection-qa-r1,
+onlyadaptive. MAINclasshash17286dd585d5c1b34f2f0332a869a3bb6920a52d021c84d6bf3ae48732eef9f3,
+DEVclasshasha5e7d5f8d30bd4d4b275c933b3d155522ce09cfca07f7d786928465685f8330f,
+current observer/raster resources frozen. Operator owns exactstop handles and
+validation in PARALLEL_LOD_RUNTIME_QUEUE.md.25warm5capture, GPUfalse/minimalnoDH/
+native2/wetness0; no FPS/GPU inference. OtherCPU/sourcework maycontinue, no other
+client/reloads/GPU. Root next awaits actualterminal driver/field/sampler/visual
+contracts before further queue launches; timedperformance/50% proof stillunmet.

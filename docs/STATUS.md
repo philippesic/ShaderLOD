@@ -36,7 +36,9 @@ source-tested/default-off; driver/quality/performance acceptance pending.
 lighting-rate worktree. `ao_runtime` prepares a shared source-qualified untimed
 driver/quality queue; no launch before rootreview. Source development stays
 parallel; one GPU operator and dedicated quiet benchmark windows. Root currently
-owns GPU, with no live client. Exact ownership/paths/pins are in the active goal.
+has transferred soleGPU to `ao_runtime`: first reflection untimed QA launcher
+exec47437/PID96022, client96042, watcher54250/PID95954. Exact ownership/paths/pins
+and stop handles are in the active goal and PARALLEL_LOD_RUNTIME_QUEUE.md.
 
 Retained first-wave experiments:
 AO pilot runner exec89240 exited0, all three normal WorkloadSession contracts
