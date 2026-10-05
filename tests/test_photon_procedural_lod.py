@@ -268,6 +268,120 @@ class PinnedSourceTests(unittest.TestCase):
         with self.assertRaises(ValueError):probe.patch_members(self.files,m,'enabled')
         with self.assertRaises(ValueError):probe.build(ROOT/'bad.zip')
 
+    def test_actual_iris_jcpp_and_glsl_parser_all_affected_entrypoints(self):
+        """Iris's option lexer cannot catch selection syntax; parse full graphs.
+
+        Use the held coastal options, Iris Jcpp, and the pinned EnhancedParser.
+        Broken r2 must reproduce the runtime syntax error. This is a syntax
+        check, not TransformPatcher execution, GL compilation, or rendering.
+        """
+        pin=MANIFEST['glsl_parser_regression']
+        iris=ROOT/MANIFEST['iris_option_discovery']['jar_path']
+        self.assertEqual(MANIFEST['iris_option_discovery']['jar_sha256'],probe.sha256(iris.read_bytes()))
+        cache=Path.home()/'.gradle/caches/modules-2/files-2.1'
+        dependencies=[]
+        for pattern in ('com.google.guava/guava/32.1.2-jre/*/guava-32.1.2-jre.jar',
+                        'it.unimi.dsi/fastutil/8.5.12/*/fastutil-8.5.12.jar',
+                        'org.slf4j/slf4j-api/2.0.9/*/slf4j-api-2.0.9.jar',
+                        'org.antlr/antlr4-runtime/4.13.1/*/antlr4-runtime-4.13.1.jar'):
+            matches=list(cache.glob(pattern));self.assertEqual(1,len(matches),pattern)
+            dependencies.append(matches[0])
+        self.assertEqual(pin['antlr_sha256'],probe.sha256(dependencies[-1].read_bytes()))
+        paths=sorted(n for n,data in self.files.items() if
+                     n.endswith('.fsh') and b'gbuffers_all_translucent.fsh' in data)
+        self.assertEqual(24,len(paths))
+        self.assertEqual({'world0','world-1','world1'},{n.split('/')[1] for n in paths})
+        patched=probe.patch_members(self.files,MANIFEST,'disabled')
+        helper='shaders/include/shaderlod/procedural_water.glsl'
+        fixed=b'any(isinf(dy))) {';broken=b'any(isinf(dy)) {'
+        self.assertEqual(1,patched[helper].count(fixed))
+        regression=patched|{helper:patched[helper].replace(fixed,broken)}
+        def expand(files,name,stack=()):
+            self.assertNotIn(name,stack,'Cyclic literal include')
+            self.assertIn(name,files)
+            def include(match):
+                target=match.group(1)
+                path='shaders/'+target.lstrip('/') if target.startswith('/') else posixpath.normpath(posixpath.join(posixpath.dirname(name),target))
+                return expand(files,path,stack+(name,))
+            return re.sub(r'^\s*#include\s+"([^"]+)"[^\n]*',include,files[name].decode(),flags=re.M)
+        java=r'''
+import java.nio.file.*; import java.util.*;
+import net.irisshaders.iris.shaderpack.option.*;
+import net.irisshaders.iris.shaderpack.option.values.MutableOptionValues;
+import net.irisshaders.iris.shaderpack.include.AbsolutePackPath;
+import net.irisshaders.iris.shaderpack.preprocessor.JcppProcessor;
+import net.irisshaders.iris.helpers.StringPair;
+import io.github.douira.glsl_transformer.parser.EnhancedParser;
+import org.antlr.v4.runtime.misc.ParseCancellationException;
+class ProceduralGlslProof {
+ static String prepare(Path file,boolean enabled,boolean parallax) throws Exception {
+  var annotated=new OptionAnnotatedSource(Files.readString(file));
+  var options=annotated.getOptionSet(AbsolutePackPath.fromAbsolutePath("/source.fsh"),annotated.getBooleanDefineReferences().keySet());
+  if(annotated.getStringOptions().values().stream().noneMatch(v->v.getName().equals("WATER_WAVE_ITERATIONS")&&v.getDefaultValue().equals("3")))
+   throw new AssertionError("held coastal three-octave default changed");
+  if(annotated.getBooleanOptions().values().stream().noneMatch(v->v.getName().equals("WATER_PARALLAX")&&v.getDefaultValue()))
+   throw new AssertionError("held coastal parallax default changed");
+  var nativeOptions=new HashMap<String,String>();
+  for(String name:List.of("BORDER_FOG","CLOUD_SHADOWS","SHADOW_COLOR","SHADOW_VPS","SH_SKYLIGHT"))nativeOptions.put(name,"false");
+  nativeOptions.put("SHADERLOD_PROCEDURAL_FOOTPRINT",Boolean.toString(enabled));
+  nativeOptions.put("WATER_PARALLAX",Boolean.toString(parallax));
+  String selected=annotated.apply(new MutableOptionValues(options,nativeOptions));
+  return JcppProcessor.glslPreprocessSource(selected,List.of(
+   new StringPair("MC_VERSION","12101"),new StringPair("MC_GL_VERSION","410"),
+   new StringPair("MC_GLSL_VERSION","410"),new StringPair("IS_IRIS","1")));
+ }
+ static void parse(String source) {
+  var parser=new EnhancedParser();parser.setThrowParseErrors(true);parser.parse(source);
+ }
+ public static void main(String[] args) throws Exception {
+  Path folder=Path.of(args[0]);int passes=0,failures=0;
+  for(String row:Files.readAllLines(folder.resolve("cases.list"))) {
+   String[] fields=row.split("\\t");Path source=folder.resolve(fields[0]);
+   boolean gate=Boolean.parseBoolean(fields[1]),parallax=Boolean.parseBoolean(fields[2]);
+   String prepared=prepare(source,gate,parallax);
+   boolean regression=fields[3].equals("broken");
+   if(regression) {
+    try {parse(prepared);throw new AssertionError("broken r2 helper parsed: "+fields[0]);}
+    catch(ParseCancellationException e) {
+     if(!e.getMessage().contains("missing RPAREN at '{'"))throw new AssertionError("unexpected regression error "+fields[0]+": "+e.getMessage(),e);
+     failures++;System.out.println("reproduced "+fields[0]+": "+e.getMessage());
+    }
+   } else {
+    try {parse(prepared);}catch(Throwable e){throw new AssertionError("failed "+row,e);}
+    passes++;
+   }
+  }
+  if(passes!=75||failures!=3)throw new AssertionError("unexpected counts "+passes+"/"+failures);
+  System.out.println("75 complete affected entrypoint/profile parses passed; 3 broken-r2 water regressions reproduced");
+ }
+}
+'''
+        with tempfile.TemporaryDirectory(prefix='shaderlod-procedural-glsl-') as tmp:
+            folder=Path(tmp);embedded=[]
+            with zipfile.ZipFile(iris) as z:
+                for name in ('glsl-transformer-2.0.1.jar','jcpp-1.4.14.jar'):
+                    data=z.read('META-INF/jarjar/'+name)
+                    if name=='glsl-transformer-2.0.1.jar':
+                        self.assertEqual(pin['transformer_sha256'],probe.sha256(data))
+                        with zipfile.ZipFile(io.BytesIO(data)) as transformer:
+                            self.assertEqual(pin['class_sha256'],probe.sha256(transformer.read(pin['class_path'])))
+                    path=folder/name;path.write_bytes(data);embedded.append(path)
+            rows=[]
+            for index,name in enumerate(paths):
+                for arm,files,gate in (('original',self.files,False),('off',patched,False),('on',patched,True)):
+                    filename=f'{index}-{arm}.fsh';(folder/filename).write_text(expand(files,name))
+                    rows.append('\t'.join((filename,str(gate).lower(),'true','good')))
+                if name.endswith('/gbuffers_water.fsh'):
+                    rows.append('\t'.join((f'{index}-on.fsh','true','false','good')))
+                    filename=f'{index}-broken.fsh';(folder/filename).write_text(expand(regression,name))
+                    rows.append('\t'.join((filename,'true','true','broken')))
+            (folder/'cases.list').write_text('\n'.join(rows))
+            source=folder/'ProceduralGlslProof.java';source.write_text(java)
+            run=subprocess.run(['java','-Xmx1G','--class-path',os.pathsep.join(map(str,[iris,*dependencies,*embedded])),str(source),str(folder)],capture_output=True,text=True,timeout=120)
+            self.assertEqual(0,run.returncode,run.stdout+run.stderr)
+            self.assertIn('75 complete affected entrypoint/profile parses passed; 3 broken-r2 water regressions reproduced',run.stdout)
+            print(run.stdout.strip())
+
     def test_actual_iris_discovers_only_private_option_and_applies_overrides(self):
         # Compare complete recursively included water graphs, including helpers.
         # Iris discovers options before conditional GLSL branches are evaluated.

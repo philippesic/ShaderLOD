@@ -5,6 +5,7 @@ import math
 import os
 import shutil
 import subprocess
+import struct
 from pathlib import Path
 import random
 import sys
@@ -49,7 +50,7 @@ def refine(pos, step, count, depth_at, tolerance, cache):
         final = depth
         updates += 1
         remaining = count - i - 1
-        if tolerance > 0 and remaining and key is not None:
+        if tolerance > 0 and 2 <= remaining <= 7 and key is not None:
             span = [abs(s)*(1-2**(-remaining)) for s in step]
             lower = [pos[j]-span[j] for j in range(2)]
             upper = [pos[j]+span[j] for j in range(2)]
@@ -60,16 +61,75 @@ def refine(pos, step, count, depth_at, tolerance, cache):
             uniform=(lo>depth+z_margin and hi<depth+.04-z_margin) or hi<depth-z_margin or lo>depth+.04+z_margin
             if same and uniform and max(span[:2]) <= tolerance and span[2] <= .02*.0625:
                 extent=1-2**(-remaining)
-                endpoints=[[p+sign*s*extent for p,s in zip(pos,step)] for sign in (-1,1)]
-                def world(p):
-                    w=10.0+(0.001-10.0)*p[2]
-                    return [-(2*p[0]/128-1)/w,-(2*p[1]/128-1)/w,-1/w],w
-                center,cw=world(pos); left,lw=world(endpoints[0]);right,rw=world(endpoints[1])
-                safe=abs(cw)>1e-6 and abs(lw)>1e-6 and abs(rw)>1e-6 and lw*rw>0
-                if safe and sum(max(abs(left[j]-center[j]), abs(right[j]-center[j]))**2 for j in range(3))<=.049**2:
+                # Convert pixel coordinates to original shader normalized UV.
+                p=(pos[0]/128,pos[1]/128,pos[2])
+                st=(step[0]/128,step[1]/128,step[2])
+                diagonal=(-1.,-1.,0.,-9.999)
+                offset=(0.,0.,-1.,10.)
+                if view_guard(p,st,extent,diagonal,offset):
                     skipped = remaining
                     break
     return pos, final, fetches, updates, skipped
+
+
+def f32(value):
+    try: return struct.unpack('f', struct.pack('f', value))[0]
+    except OverflowError: return math.copysign(math.inf, value)
+
+
+def view_guard(pos, step, extent, diagonal, offset):
+    """Float32 expression mirror of new division-free conservative bound."""
+    p, st, d, b = [tuple(map(f32,x)) for x in (pos,step,diagonal,offset)]
+    if not all(math.isfinite(x) for x in (*p,*st,*d,*b)): return False
+    if max(map(abs,(*d,*b)))>1e6 or max(map(abs,(*p,*st)))>4: return False
+    extent=f32(extent)
+    def mul(a,b): return f32(f32(a)*f32(b))
+    def add(a,b): return f32(f32(a)+f32(b))
+    def sub(a,b): return f32(f32(a)-f32(b))
+    ndc=tuple(sub(mul(2,x),1) for x in p)
+    delta=tuple(mul(mul(2,x),extent) for x in st)
+    h=tuple(add(mul(d[j],ndc[min(j,2)]),b[j]) for j in range(4))
+    dh=tuple(mul(d[j],delta[min(j,2)]) for j in range(4))
+    error=[]
+    for j in range(4):
+        k=min(j,2)
+        magnitude=add(add(mul(2,abs(p[k])),mul(2,abs(st[k]))),1)
+        terms=add(add(add(mul(abs(d[j]),magnitude),mul(2,abs(b[j]))),abs(h[j])),abs(dh[j]))
+        error.append(add(mul(1e-6,terms),1e-30))
+    aw=abs(h[3]);mw=sub(sub(aw,abs(dh[3])),error[3])
+    if not (aw>1e-6 and mw>1e-6): return False
+    denominator=mul(mul(aw,mw),.99999)
+    upper=[]
+    for j in range(3):
+        n=abs(sub(mul(dh[j],h[3]),mul(h[j],dh[3])))
+        n=add(n,mul(1e-6,add(abs(mul(dh[j],h[3])),abs(mul(h[j],dh[3])))))
+        n=add(add(n,mul(error[j],aw)),mul(abs(h[j]),error[3]))
+        division_error=mul(1e-6,add(mul(abs(h[j]),mw),mul(add(add(abs(h[j]),abs(dh[j])),error[j]),aw)))
+        upper.append(mul(add(n,division_error),1.00001))
+    if not upper[2]<=mul(.049,denominator): return False
+    ns=add(add(mul(upper[0],upper[0]),mul(upper[1],upper[1])),mul(upper[2],upper[2]))
+    ds=mul(denominator,denominator)
+    return math.isfinite(ns) and math.isfinite(ds) and ds>0 and ns<=mul(mul(.002401,ds),.99999)
+
+
+def original_project(pos, diagonal, offset, fused=False):
+    """Actual pinned project shape, float32 NDC/homogeneous/view divisions."""
+    p,d,b=[tuple(map(f32,x)) for x in (pos,diagonal,offset)]
+    ndc=tuple(f32(2*x-1) for x in p)
+    h=tuple(f32(d[j]*ndc[min(j,2)]+b[j]) if fused else
+            f32(f32(d[j]*ndc[min(j,2)])+b[j]) for j in range(4))
+    if h[3]==0: return (math.inf,)*3
+    return tuple(f32(x/h[3]) for x in h[:3])
+
+
+def original_future_positions(pos,step,remaining):
+    """Every original remaining float32 +- update, not analytic endpoint only."""
+    points={tuple(map(f32,pos))};st=list(map(f32,step))
+    for _ in range(remaining):
+        st=[f32(x*.5) for x in st]
+        points={tuple(f32(p[j]+sign*st[j]) for j in range(3))
+                for p in points for sign in (-1,1)}
+    return points
 
 
 class ReflectionLodTests(unittest.TestCase):
@@ -101,7 +161,7 @@ class ReflectionLodTests(unittest.TestCase):
                      'return hand_depth < final_depth && final_depth < 1.0;',
                      'ray_pos -= ray_step;', 'ray_pos += ray_step;',
                      'refinement_tolerance_pixels', 'remaining_span.z <= depth_tolerance * 0.0625', 'uniformly_inside_hit || uniformly_outside_hit',
-                     'lower_h.w * upper_h.w > 0.0', 'dot(max_view_error, max_view_error) <= 0.002401'):
+                     'min_w > 1e-6', 'numerator_squared <= 0.002401 * denominator_squared * 0.99999'):
             self.assertIn(term, source)
         self.assertNotIn('dFdx', source)
         self.assertNotIn('dFdy', source)
@@ -174,6 +234,66 @@ class ReflectionLodTests(unittest.TestCase):
                 self.assertEqual(set(self.files)|{probe.METADATA,M['added_members'][0]['path']},set(z.namelist()))
             outputs.append(first)
         self.assertNotEqual(*outputs)
+
+    def test_project_source_pinned_and_cheap_gate_order(self):
+        evidence=M['projection_source']
+        self.assertEqual(evidence['sha256'],probe.sha256(self.files[evidence['path']]))
+        self.assertEqual(1,self.files[evidence['path']].decode().count(evidence['helper']))
+        source=HELPER.read_text()
+        self.assertLess(source.index('if (policy_valid)'),source.index('length(view_pos)'))
+        loop=source[source.index('int remaining_steps'):source.index('// No intersection')]
+        self.assertLess(loop.index('max(span_pixels.x, span_pixels.y)'),loop.index('vec2 lower_pixels'))
+        self.assertIn('remaining_steps >= 2 && remaining_steps <= 7',loop)
+        self.assertNotIn('exp2(',source)
+        self.assertNotIn('/ center_h.w',source)
+        self.assertIn('numerator_z <= 0.049 * denominator',source)
+        self.assertLess(source.index('numerator_z <= 0.049 * denominator'),source.index('vec2 ndc_xy'))
+        for remaining in range(2,8):
+            actual=f32(1-f32(float(1<<(7-remaining))/128))
+            self.assertEqual(1-2**(-remaining),actual)
+
+    def test_float32_guard_invariants_poles_nonfinite_extremes_and_cancellation(self):
+        normal=((-1.,-1.,0.,-9.999),(0.,0.,-1.,10.))
+        self.assertTrue(view_guard((.5,.5,.5),(.001,.001,.00001),.75,*normal))
+        for invalid in (math.nan,math.inf,-math.inf,1e30,-1e30):
+            self.assertFalse(view_guard((.5,.5,invalid),(.001,.001,0),.75,*normal))
+            self.assertFalse(view_guard((.5,.5,.5),(.001,invalid,0),.75,*normal))
+            self.assertFalse(view_guard((.5,.5,.5),(.001,.001,0),.75,(invalid,1,0,1),(0,0,1,0)))
+        # Pole crossing and large cancellation between homogeneous W terms.
+        self.assertFalse(view_guard((.5,.5,.5),(.001,.001,.001),.75,(1,1,0,1),(0,0,1,0)))
+        self.assertFalse(view_guard((.5,.5,.999999),(.00001,0,0),.75,(1,1,1,-1e6),(0,0,-1,1e6)))
+        self.assertFalse(view_guard((.5,.5,.5),(.001,0,0),.75,(1,1,0,1e-12),(0,0,1,1e-12)))
+        # Large offset/displacement and either W sign must not accept Inf<=Inf.
+        for sign in (-1,1):
+            self.assertFalse(view_guard((.5,.5,.5),(.1,.1,0),.75,(1e6,1e6,1e6,sign*1e6),(1e6,1e6,1e6,sign*1e6)))
+
+    def test_accepted_float32_guard_bounds_actual_original_updates_and_projections(self):
+        rng=random.Random(319);accepted=0;far_accepted=0
+        matrices=[((-1.,-1.,0.,-9.999),(0.,0.,-1.,10.)),
+                  ((1.1,1.8,0.,-4.9995),(0.,0.,-1.,5.0005)),
+                  ((-1.1,-1.8,0.,4.9995),(0.,0.,1.,-5.0005)),
+                  ((.7,1.2,-.2,-2.),(.03,-.08,-1.,2.5))]
+        for _ in range(1400):
+            d,b=rng.choice(matrices)
+            remaining=rng.randrange(2,8);extent=1-2**(-remaining)
+            z=rng.choice((rng.uniform(.1,.8),rng.uniform(.98,.9999)))
+            p=tuple(map(f32,(rng.random(),rng.random(),z)))
+            st=tuple(map(f32,(rng.uniform(-.00015,.00015),rng.uniform(-.00015,.00015),rng.uniform(-1e-7,1e-7))))
+            if not view_guard(p,st,extent,d,b): continue
+            accepted+=1
+            if z>.98: far_accepted+=1
+            points=original_future_positions(p,st,remaining)
+            # Also original analytic endpoints under float32 math, both signs.
+            points |= {tuple(f32(p[j]+sign*f32(st[j]*f32(extent))) for j in range(3)) for sign in (-1,1)}
+            for fused in (False,True):
+                center=original_project(p,d,b,fused)
+                for point in points:
+                    actual=original_project(point,d,b,fused)
+                    error=math.sqrt(sum((x-y)**2 for x,y in zip(actual,center)))
+                    self.assertTrue(math.isfinite(error))
+                    self.assertLessEqual(error,.05,(p,st,remaining,d,b,point,fused))
+        self.assertGreater(accepted,500)
+        self.assertGreater(far_accepted,40) # exercises nonlinear depth, not only near plane
 
     def test_actual_pinned_iris_lexer_discovers_nested_guard_and_applies_boolean_override(self):
         evidence = M["iris_option_discovery"]

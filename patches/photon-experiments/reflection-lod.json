@@ -40,7 +40,7 @@
     {
       "path": "shaders/include/shaderlod/reflection_depth_cache.glsl",
       "source_path": "shaderpacks/photon-reflection-lod/shaders/include/shaderlod/reflection_depth_cache.glsl",
-      "sha256": "b5dd57b6f6155ada9489416ad94c5b4be00286615b9fce71ecf09400968ca44a"
+      "sha256": "50d5de6999f19157efe43430cf8c7942985e0ca3dad42d0f4ae36fbc1cc7dc4d"
     }
   ],
   "derived_source": {
@@ -65,5 +65,25 @@
   },
   "refinement_error_pixels": 0.25,
   "refinement_depth_tolerance_fraction": 0.0625,
-  "refinement_view_error_blocks": 0.05
+  "refinement_view_error_blocks": 0.05,
+  "cost_revision": 2,
+  "early_stop_remaining_steps": {
+    "min": 2,
+    "max": 7
+  },
+  "float32_guard": {
+    "homogeneous_error_factor": 1e-06,
+    "numerator_inflation": 1.00001,
+    "denominator_deflation": 0.99999,
+    "finite_matrix_limit": 1000000.0,
+    "finite_ray_limit": 4.0,
+    "pole_margin": 1e-06,
+    "world_error_blocks": 0.049,
+    "extent": "exact power-of-two fractions for remaining2..7; all other remaining counts original continuation"
+  },
+  "projection_source": {
+    "path": "shaders/include/global.glsl",
+    "sha256": "6235933d0045282ba9d7822d55a40aaff6b76ac862c550e33f9b8a4229d63c3d",
+    "helper": "vec4 project(mat4 m, vec3 pos) {\n    return vec4(m[0].x, m[1].y, m[2].zw) * pos.xyzz + m[3];\n}"
+  }
 }

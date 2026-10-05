@@ -1,10 +1,12 @@
 """Assemblable source, scalar-policy and actual pinned Iris preprocessing fixtures."""
 import copy
+import io
 import json
 import math
 import os
 from pathlib import Path
 import subprocess
+import struct
 import sys
 import tempfile
 import unittest
@@ -27,6 +29,48 @@ def rate(distance, near=32., far=96., width=8., medium=1., low=.25, mode=2, core
     if width == 0: return float(distance >= threshold)
     x = max(0., min(1., (distance - (threshold-width/2)) / width))
     return x*x*(3-2*x)
+
+
+def f32(value):
+    return struct.unpack('f', struct.pack('f', value))[0]
+
+
+def ao_base(pixel):
+    # Strict maps-off/TAAU-off profile: taau_render_scale=1. Match source float32
+    # arithmetic and ivec2 truncation toward zero, rather than Python floor().
+    return tuple(int(f32(f32(f32(value + .5) * .5) - .5)) for value in pixel)
+
+
+def ao_union(origin, view_size, ambient_size, depth_size):
+    """Independent coordinate oracle for all four original reconstruction tap sets."""
+    if (any(size <= 0 for size in ambient_size) or ambient_size != depth_size or
+        any(not math.isfinite(size) or size < 2 for size in view_size) or
+        any(p < 0 or p+1 >= int(size) for p, size in zip(origin, view_size))):
+        return None
+    taps = set()
+    for x, y in ((0, 0), (1, 0), (0, 1), (1, 1)):
+        base = ao_base((origin[0]+x, origin[1]+y))
+        taps.update((base[0]+dx, base[1]+dy) for dx, dy in ((0, 0), (1, 0), (0, 1), (1, 1)))
+    if any(p < 0 or p >= size for tap in taps for p, size in zip(tap, ambient_size)):
+        return None
+    if any(max(tap[k] for tap in taps)-min(tap[k] for tap in taps) > 2 for k in range(2)):
+        return None
+    return taps
+
+
+def ao_union_eligible(origin, view_size, ambient_size, depth_size, values):
+    taps = ao_union(origin, view_size, ambient_size, depth_size)
+    if taps is None:
+        return False
+    ao = []
+    for tap in taps:
+        ambient, depth = values[tap]
+        ambient = tuple(map(f32, ambient)); depth = f32(depth)
+        if (any(not math.isfinite(v) for v in ambient) or not math.isfinite(depth) or
+            not 0 <= ambient[0] <= 1 or not 0 <= depth <= 1):
+            return False
+        ao.append(ambient[0])
+    return f32(max(ao)-min(ao)) <= f32(.10)
 
 
 class LightingRateTests(unittest.TestCase):
@@ -77,6 +121,70 @@ class LightingRateTests(unittest.TestCase):
         self.assertEqual(3,self.patched['shaders/include/lighting/shadows/pcss.glsl'].decode().count('textureLod(shadowtex1,'))
         self.assertIn('return vec4(fragment_color, clamp01(shadows.x * ao))',prepass)
         self.assertIn('shaderlod_surface_tile_eligible',prepass)
+        original=self.files['shaders/program/d4_deferred_shading.fsh'].decode()
+        math_start=original.index('        // Upscale ambient occlusion')
+        math_end=original.index('        // Calculate lighting dot products', math_start)
+        self.assertIn(original[math_start:math_end],prepass)
+
+    def test_ao_union_outer_variation_thresholds_dimensions_and_invalid_data(self):
+        prepass=self.overlay['shaders/program/shaderlod_lighting_prepass.fsh'].decode()
+        self.assertIn('bool shaderlod_rate_ao_union_eligible(ivec2 origin)',prepass)
+        self.assertIn('ivec2 base = ivec2((vec2(pixel) + 0.5) * (0.5 / taau_render_scale) - 0.5)',prepass)
+        self.assertIn('textureSize(colortex6, 0)',prepass)
+        self.assertIn('textureSize(colortex14, 0)',prepass)
+        self.assertIn('any(greaterThanEqual(maximum_tap, ambient_size))',prepass)
+        self.assertIn('maximum_ao - minimum_ao <= 0.10',prepass)
+        representative=prepass.split('vec4 shaderlod_evaluate_representative(',1)[1]
+        self.assertLess(representative.index('shaderlod_rate_ao_union_eligible(texel)'), representative.index('texelFetch(colortex6,'))
+        self.assertNotIn('float ao_span',prepass)
+        origin=(32, 32); view=(100, 100); size=(50, 50)
+        taps=ao_union(origin,view,size,size)
+        self.assertEqual({(x,y) for x in (15,16,17) for y in (15,16,17)},taps)
+        values={p:((1.,0.,.5,.5),.5) for p in taps}
+        self.assertTrue(ao_union_eligible(origin,view,size,size,values))
+        rep_taps={(15,15),(15,16),(16,15),(16,16)}
+        for outside in ((17,16),(16,17),(17,17)):
+            changed=values | {outside:((.2,0.,.5,.5),.5)}
+            # Former representative-only check accepted, while the actual full
+            # tile union rejects previously unobserved contact-AO variation.
+            self.assertEqual(0,max(changed[p][0][0] for p in rep_taps)-min(changed[p][0][0] for p in rep_taps))
+            self.assertFalse(ao_union_eligible(origin,view,size,size,changed))
+        # Independent equal-depth interpolation counterexample: right member
+        # originally sees .8 AO when its extra outer column contains .2.
+        self.assertAlmostEqual(.8,.75*1.+.25*.2)
+        zero={p:((0.,0.,.5,.5),.5) for p in taps}
+        for spread, expected in ((0.,True),(.099,True),(f32(.10),True),(.100001,False)):
+            changed=zero | {(17,17):((spread,0.,.5,.5),.5)}
+            self.assertEqual(expected,ao_union_eligible(origin,view,size,size,changed))
+        for bad in (math.nan,math.inf,-math.inf):
+            for channel in range(4):
+                ambient=list(values[(17,17)][0]); ambient[channel]=bad
+                self.assertFalse(ao_union_eligible(origin,view,size,size,values | {(17,17):(ambient,.5)}))
+            self.assertFalse(ao_union_eligible(origin,view,size,size,values | {(17,17):((1.,0.,.5,.5),bad)}))
+        for depth in (-.01,1.01):
+            self.assertFalse(ao_union_eligible(origin,view,size,size,values | {(17,17):((1.,0.,.5,.5),depth)}))
+        for outside_ao in (-.01,1.01):
+            self.assertFalse(ao_union_eligible(origin,view,size,size,values | {(17,17):((outside_ao,0.,.5,.5),.5)}))
+        for invalid_view in ((math.nan,100),(100,math.inf),(-1,100),(100,1)):
+            self.assertIsNone(ao_union(origin,invalid_view,size,size))
+        for bad_size in ((0,50),(50,0),(-1,50)):
+            self.assertIsNone(ao_union(origin,view,bad_size,bad_size))
+        self.assertIsNone(ao_union(origin,view,size,(49,50)))
+        self.assertEqual({(0,0),(0,1),(1,0),(1,1)},ao_union((0,0),(8,8),(4,4),(4,4)))
+        self.assertIsNone(ao_union((6,6),(8,8),(4,4),(4,4))) # Last AO neighborhood exceeds valid texture edge.
+        self.assertIsNone(ao_union((6,4),(7,7),(3,3),(3,3))) # Incomplete final odd-width tile.
+        self.assertIsNone(ao_union((4,6),(7,7),(3,3),(3,3))) # Incomplete final odd-height tile.
+        for view in ((8,8),(9,7),(2976,1672)):
+            size=tuple(v//2 for v in view)
+            origins=[(0,0),(2,2),(view[0]-2,view[1]-2)]
+            for origin in origins:
+                union=ao_union(origin,view,size,size)
+                if union is not None:
+                    # Every original member footprint is covered; no clamp or
+                    # dropped outer tap is used to manufacture eligibility.
+                    for dx,dy in ((0,0),(1,0),(0,1),(1,1)):
+                        base=ao_base((origin[0]+dx,origin[1]+dy))
+                        self.assertTrue({(base[0]+x,base[1]+y) for x,y in ((0,0),(1,0),(0,1),(1,1))}.issubset(union))
 
     def test_discrete_rates_bands_and_invalid_packets(self):
         self.assertEqual(0,rate(92));self.assertEqual(.5,rate(96));self.assertEqual(1,rate(100))
@@ -191,5 +299,160 @@ class RateIrisProof {
             result=subprocess.run(['java','--class-path',os.pathsep.join(map(str,(iris,*jars,*extra))),str(folder/'RateIrisProof.java'),probe.SWITCH,str(folder)],capture_output=True,text=True,timeout=30)
             self.assertEqual(0,result.returncode,result.stdout+result.stderr)
             self.assertIn('actual Iris lexer, Jcpp, directive format and ShaderProperties accepted',result.stdout)
+
+    def test_complete_translation_units_with_actual_iris_jcpp_and_pinned_glsl_parser(self):
+        """Grammar proof across actual included programs, separate from option proof.
+
+        Full forest options are selected by actual Iris OptionAnnotatedSource,
+        then Iris Jcpp and pinned EnhancedParser parse all FSH/VSH entrypoints.
+        This does not type-check GLSL, run Iris transformations, link a program or
+        validate a GL driver. A deliberately broken active helper must fail.
+        """
+        iris=ROOT/'dev/runtime/iris-neoforge-1.8.12+mc1.21.1.jar'
+        self.assertEqual('3e3f94d2d5cdcb8145c4385d521974aa2d8669b2cc212351f70cf06488182e83',probe.sha256(iris.read_bytes()))
+        forest_report=ROOT/'run-workloads/native-terrain-b15-r2/forest/high/workload-measurement.json'
+        self.assertEqual('6f7662a31427f0d0863d926909c67a57b0dfba3c7ee2539c857f699c7ce3da5e',probe.sha256(forest_report.read_bytes()))
+        native=json.loads(forest_report.read_text())['effective_shader_options']
+        self.assertEqual('4efc7af7742bc445adf2b3b1454aa448a557e1d4b024103dd5b9f5758ed68745',
+                         probe.sha256(json.dumps(native,sort_keys=True,separators=(',',':')).encode()))
+        excluded=('NORMAL_MAPPING','SPECULAR_MAPPING','SHADOW_COLOR','SHADOW_VPS','COLORED_LIGHTS',
+                  'CLOUD_SHADOWS','SH_SKYLIGHT','TAAU','BLOCKY_CLOUDS','ENVIRONMENT_REFLECTIONS')
+        self.assertTrue(all(native[name]=='false' for name in excluded))
+        cache=Path.home()/'.gradle/caches/modules-2/files-2.1';dependencies=[]
+        for pattern in ('com.google.guava/guava/32.1.2-jre/*/guava-32.1.2-jre.jar',
+                        'it.unimi.dsi/fastutil/8.5.12/*/fastutil-8.5.12.jar',
+                        'org.slf4j/slf4j-api/2.0.9/*/slf4j-api-2.0.9.jar',
+                        'org.antlr/antlr4-runtime/4.13.1/*/antlr4-runtime-4.13.1.jar'):
+            matches=list(cache.glob(pattern));self.assertEqual(1,len(matches),pattern);dependencies.append(matches[0])
+        self.assertEqual('54665d2838cc66458343468efc539e454fc95b46a8a04b13c6ac43fc9be63505',probe.sha256(dependencies[-1].read_bytes()))
+        modified=probe.patch_members(self.files,M,'disabled') | self.overlay
+        java=r'''
+import java.nio.file.*; import java.util.*; import java.util.regex.*;
+import net.irisshaders.iris.shaderpack.option.*;
+import net.irisshaders.iris.shaderpack.option.values.MutableOptionValues;
+import net.irisshaders.iris.shaderpack.include.AbsolutePackPath;
+import net.irisshaders.iris.shaderpack.preprocessor.JcppProcessor;
+import net.irisshaders.iris.helpers.StringPair;
+import io.github.douira.glsl_transformer.parser.EnhancedParser;
+import org.antlr.v4.runtime.misc.ParseCancellationException;
+class LightingRateGrammarProof {
+ static final Pattern INCLUDE=Pattern.compile("(?m)^\\s*#include\\s+\"([^\"]+)\"[^\\n]*");
+ static final class Graph {
+  final Map<String,OptionAnnotatedSource> nodes=new HashMap<>();
+  final Set<String> references=new HashSet<>();
+  Graph(Path folder) throws Exception {
+   try(var paths=Files.walk(folder)) {
+    for(Path file:paths.filter(Files::isRegularFile).toList()) {
+     String name=folder.relativize(file).toString().replace('\\','/');
+     var annotated=new OptionAnnotatedSource(Files.readString(file));nodes.put(name,annotated);
+     references.addAll(annotated.getBooleanDefineReferences().keySet());
+    }
+   }
+  }
+ }
+ static String expand(Graph graph,String name,Map<String,String> selectedOptions,Set<String> stack) {
+  if(!stack.add(name))throw new AssertionError("cyclic literal include "+name);
+  var annotated=graph.nodes.get(name);if(annotated==null)throw new AssertionError("missing include "+name);
+  var options=annotated.getOptionSet(AbsolutePackPath.fromAbsolutePath("/"+name.substring("shaders/".length())),graph.references);
+  // Actual Iris edits each source file before includes expand. Editing a flattened
+  // TU updates only one duplicate definition when settings is included twice.
+  String selected=annotated.apply(new MutableOptionValues(options,selectedOptions));
+  var matcher=INCLUDE.matcher(selected);var expanded=new StringBuffer();
+  while(matcher.find()) {
+   String target=matcher.group(1);
+   String path=target.startsWith("/")?"shaders"+target:Path.of(name).getParent().resolve(target).normalize().toString().replace('\\','/');
+   matcher.appendReplacement(expanded,Matcher.quoteReplacement(expand(graph,path,selectedOptions,stack)));
+  }
+  matcher.appendTail(expanded);stack.remove(name);return expanded.toString();
+ }
+ static String prepare(Graph graph,String name,Properties nativeOptions,boolean gate) {
+  var selectedOptions=new HashMap<String,String>();
+  for(String key:nativeOptions.stringPropertyNames())selectedOptions.put(key,nativeOptions.getProperty(key));
+  selectedOptions.put("SHADERLOD_LIGHTING_RATE_PROBE",Boolean.toString(gate));
+  String selected=expand(graph,name,selectedOptions,new HashSet<>());
+  return JcppProcessor.glslPreprocessSource(selected,List.of(
+   new StringPair("MC_VERSION","12101"),new StringPair("MC_GL_VERSION","410"),
+   new StringPair("MC_GLSL_VERSION","410"),new StringPair("MC_HAND_DEPTH","0.125"),
+   new StringPair("MC_SHADOW_QUALITY","1.0"),new StringPair("IS_IRIS","1")));
+ }
+ static void parse(String source) {
+  var parser=new EnhancedParser();parser.setThrowParseErrors(true);parser.parse(source);
+ }
+ public static void main(String[] args) throws Exception {
+  Path folder=Path.of(args[0]);var nativeOptions=new Properties();
+  nativeOptions.load(Files.newBufferedReader(folder.resolve("forest.properties")));
+  var graphs=new HashMap<String,Graph>();
+  for(String name:List.of("original","modified","broken"))graphs.put(name,new Graph(folder.resolve(name)));
+  int passed=0,negative=0;
+  for(String row:Files.readAllLines(folder.resolve("cases.list"))) {
+   String[] fields=row.split("\\t");String source=prepare(graphs.get(fields[0]),fields[1],nativeOptions,Boolean.parseBoolean(fields[2]));
+   boolean broken=fields[3].equals("broken");String expected=fields[4];
+   if(!source.contains("void main("))throw new AssertionError("incomplete TU: "+row);
+   if(source.contains("#include"))throw new AssertionError("unexpanded include: "+row);
+   boolean hasCache=source.contains("layout(location = 0) out vec4 shaderlodLightingCache");
+   boolean hasUnion=source.contains("bool shaderlod_rate_ao_union_eligible(");
+   boolean hasResolve=source.contains("vec4 shaderlodRateCache");
+   if(hasCache!=expected.startsWith("cache"))throw new AssertionError("wrong prepass/original selection: "+row);
+   if(hasUnion!=expected.equals("cache-world0"))throw new AssertionError("wrong world-scoped union selection: "+row);
+   if(hasResolve!=expected.equals("resolve-world0"))throw new AssertionError("wrong cache resolve/original selection: "+row);
+   if(broken) {
+    try {parse(source);throw new AssertionError("broken delimiter was accepted");}
+    catch(ParseCancellationException exception) {
+     negative++;System.out.println("deliberately broken active prepass rejected: "+exception.getMessage());
+    }
+   } else {
+    try {parse(source);}catch(Throwable failure){throw new AssertionError("complete TU failed: "+row,failure);}
+    passed++;
+   }
+  }
+  if(passed!=31 || negative!=1)throw new AssertionError("wrong grammar case counts "+passed+"/"+negative);
+  System.out.println("31 complete deferred4/5 fragment/vertex grammar parses passed across three worlds; broken active helper rejected");
+ }
+}
+'''
+        with tempfile.TemporaryDirectory(prefix='shaderlod-lighting-grammar-') as temporary:
+            folder=Path(temporary);embedded=[]
+            with zipfile.ZipFile(iris) as archive:
+                for name in ('glsl-transformer-2.0.1.jar','jcpp-1.4.14.jar'):
+                    data=archive.read('META-INF/jarjar/'+name)
+                    if name=='glsl-transformer-2.0.1.jar':
+                        self.assertEqual('b8ca5e61b41ae18ddd5d4d5d6785cb9acd8fd7ac0c5c0b0689b872b039c11b9f',probe.sha256(data))
+                        with zipfile.ZipFile(io.BytesIO(data)) as parser_archive:
+                            member='io/github/douira/glsl_transformer/parser/EnhancedParser.class'
+                            self.assertEqual('11133ca7cbfbc89777b15f06a31323b26c1ab6448b1822f4086e9503f3527814',probe.sha256(parser_archive.read(member)))
+                    path=folder/name;path.write_bytes(data);embedded.append(path)
+            (folder/'forest.properties').write_text('\n'.join(f'{key}={value}' for key,value in sorted(native.items())))
+            helper='shaders/program/shaderlod_lighting_prepass.fsh'
+            before=b'if (!shaderlod_rate_ao_union_eligible(texel)) return'
+            self.assertEqual(1,modified[helper].count(before))
+            corrupted=modified | {helper:modified[helper].replace(before,b'if (!shaderlod_rate_ao_union_eligible(texel) return')}
+            for graph,files in (('original',self.files),('modified',modified),('broken',corrupted)):
+                for name,data in files.items():
+                    if name.endswith(('.fsh','.vsh','.glsl','.csh')):
+                        path=folder/graph/name;path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(data)
+            rows=[]
+            for world in ('world0','world1','world-1'):
+                for stage in ('fsh','vsh'):
+                    original=f'shaders/{world}/deferred4.{stage}'
+                    rows.append('\t'.join(('original',original,'false','good','original')))
+                    for program in ('deferred4','deferred5'):
+                        name=f'shaders/{world}/{program}.{stage}'
+                        for gate in (False,True):
+                            expected=('cache-'+world) if gate and program=='deferred4' and stage=='fsh' else \
+                                'resolve-world0' if gate and program=='deferred5' and stage=='fsh' and world=='world0' else 'original'
+                            rows.append('\t'.join(('modified',name,str(gate).lower(),'good',expected)))
+            name='shaders/world0/deferred4.fsh'
+            rows.append('\t'.join(('broken',name,'true','broken','cache-world0')))
+            # The same invalid helper must be dormant under option OFF; full
+            # source expansion alone cannot prove which branch actually parses.
+            rows.append('\t'.join(('broken',name,'false','good','original')))
+            self.assertEqual(32,len(rows))
+            (folder/'cases.list').write_text('\n'.join(rows))
+            source=folder/'LightingRateGrammarProof.java';source.write_text(java)
+            result=subprocess.run(['java','-Xmx1G','--class-path',os.pathsep.join(map(str,[iris,*dependencies,*embedded])),
+                                   str(source),str(folder)],capture_output=True,text=True,timeout=120)
+            self.assertEqual(0,result.returncode,result.stdout+result.stderr)
+            self.assertIn('31 complete deferred4/5 fragment/vertex grammar parses passed across three worlds; broken active helper rejected',result.stdout)
+            print(result.stdout.strip())
 
 if __name__=='__main__':unittest.main()

@@ -76,7 +76,7 @@ vec3 shaderlod_procedural_normal(
 ) {
     float dist = distance(world_pos, cameraPosition); // Minecraft blocks.
     if (!footprint_valid || footprint_confidence <= 0.0 || shaderlodBridgeVersion != 2 || shaderlodEnabled != 1 || dist <= 32.0 ||
-        any(isnan(dx)) || any(isnan(dy)) || any(isinf(dx)) || any(isinf(dy)) {
+        any(isnan(dx)) || any(isnan(dy)) || any(isinf(dx)) || any(isinf(dy))) {
         return get_water_normal(world_pos, flat_normal, coord, flow_dir,
             skylight, flowing_water);
     }

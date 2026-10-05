@@ -153,7 +153,7 @@
     "shaders/world1/deferred5.fsh": "41246aedab1a3020c82bfb347b0a6efbeaca2a8c2b2efa199fca0c8f331c4cd0",
     "shaders/world0/deferred5.vsh": "70e1a7a4657765cff24e50aa92be4ae481ea4994e961416cf7fe434ac0660187",
     "shaders/world0/deferred5.fsh": "7e2ad5e02559b740b661f7d5fdd92fe32e54f40ed84ab0f7dad0e626236e5b95",
-    "shaders/program/shaderlod_lighting_prepass.fsh": "457f060c9cd14cf796ac3af6b26e316bc2e1e00263b91d504a2df8fedc36f5d2",
+    "shaders/program/shaderlod_lighting_prepass.fsh": "f4fb70f0deeafc3ffbfa5459dc57f632edc78bdd04f8b5c88c3391c384ac927b",
     "shaders/world-1/deferred5.vsh": "c076400a410a980af1f505ec6f9bf863518141014a302b55c919215773113097",
     "shaders/world-1/deferred5.fsh": "91a5c585d8756d1ad085e1faf6d5419e929f1e00336da436a5bf77323b6c8c56"
   },

@@ -701,3 +701,54 @@ reflection owner implements cheap necessary gates/reused extent/homogeneous
 displacement bound with finite/pole/float32 fixtures, preserving MAIN freeze.
 Review in REFLECTION_LOD_COST_REVIEW.md. No gain inferred from source operation
 counts. Benchmark preparation continues with explicit driver rejection noted.
+
+### Integrated source repairs; driver retry and combined refresh
+
+Previous goal turn was progress: commits24f4d3d/525bda2 integrated actual distant
+lighting code and recorded driver evidence/rejections; bounded workers implemented
+independent fixes. Continuation revalidated all agents and processes; no previous
+Minecraft client survived. Operator formally returned GPU after rejected r2.
+
+Root reviewed/applied procedural repair6eb12b1975e3b9ef8d7c61cdf009df868a4f5144
+from attached procedural-parser-repair worktree. Exactly one missing ')' changed
+the shader, no arithmetic.14fixtures pass,75 complete affected actual Iris Jcpp/
+EnhancedParser graphs pass; reinserting broken delimiter reproduces failure at
+column77 in all3water dimensions. Actual main disabled assembly hash
+267f6358e87b8dd51e4e5a6fcf26f999344f8e1abf79fb36c5bd99fa0d7bd9ea;
+manifestb529fdb01aabef5670128e04a25224bfd4368c2a63641214023c352099d100e2.
+This supersedes r2 source pins, not its retained failed runtime evidence.
+
+Root reviewed/applied reflection guard revision8c2739385e39ca4c201cc98cd9eeb45c7dc9c194
+from attached reflection-guard-cost worktree. Early uniform/necessary footprint/z
+gates, exact extent and finite homogeneous error envelope replace late endpoint
+divisions. Original coarse cache/coverage/weights preserved.12fixtures pass,
+including1400 float32 matrix/position trials, FMA/non-FMA and finite/pole/extreme
+cases. Actual main disabled assembly485590fa1a70ce43e4fe271a8a19f869d0cbf69767f1bda435b5deed9e41aa35;
+manifest0c0905612ddacf358b92c2d112bb17f2d107de224551d418a6a67c8529ccf4ec.
+Additional safety ALU/failed eligibility can outweigh removed divisions; no net
+GPU/quality acceptance for r2. Prior reflection driver result applies only to r1.
+
+Lighting AOunion fix source freeze683cee198706d7289ef3994212edace9fd200ffeebff458e1c317a306751b3d4,
+disabledfca1a3115ad7cb5341807d7a06cb6939228da4603200fa831b5bdefd6eed206a.
+Nine fixtures pass; full member AO union/dimensions/finite/edge guards and literal
+representative math tested. Classifier adds at most9AO+9depth reads per selected
+tile, included in future measured cost. Quality owner adds full translation-unit
+grammar checks in owned fixture/report before runtime; profile owner prepares
+separate forest controls with these new pins and retained lighting protection.
+
+feature_integration owns combined refresh for both new water/reflection pins,
+complete affected grammar coverage and all-off/isolated source parity. Benchmark
+owner's old-pin tests correctly reject changed manifest; it waits for replacement
+freeze before final preparation. No all-six performance run authorized. Source
+eligibility remains separate from fresh standalone and combined driver acceptance.
+
+Root authorizes sole GPU to ao_runtime AFTER its explicit family-pin update,
+qualification fixtures and fresh stopped-world preparation: ONE untimed
+parallel-procedural-qa-r3/adaptive coastal retry,25warm5capture/GPUfalse/CPUlayersfalse/
+cloudSamplerProbe=true/native2976x1672/minimalnoDH/wetness0/frozenclasses. Actual
+consumed core version/enable only; configured bands are inactive here. Record
+exact handles before launch, compile/noFallback/typed bindings/samplers/native
+still audit, then stop and return GPU. No second launch/timing; other source work
+continues. Next prospective run is an original forest true-fullscreen qualification
+to discover dimensions/focus/pacing once benchmark code is frozen and retry returns.
+50% throughput, repeated GPU/frame, motion quality and compatibility remain unmet.

@@ -81,7 +81,7 @@
     },
     {
       "path": "shaders/include/shaderlod/procedural_water.glsl",
-      "sha256": "f8ba0beff94d4578c6a23fbedcbc8e8006a91d98f4b6f5eed13628388457b436"
+      "sha256": "eeac0a12ad90546f6b134454aa4f95af750f05118b3204b103617c238c140687"
     }
   ],
   "iris_option_discovery": {
@@ -100,5 +100,16 @@
     "class_path": "net/irisshaders/iris/targets/backed/NativeImageBackedCustomTexture.class",
     "class_sha256": "ea6ff36d1cf8564badb81eca65b44307575d7564dfae8631ee828b4df276b66b",
     "contract": "Pinned custom PNG mcmeta blur true clamp false; bytecode shouldBlur branch sets min/mag9729 LINEAR. No mip upload; actual binding readback pending."
+  },
+  "glsl_parser_regression": {
+    "transformer_version": "2.0.1",
+    "transformer_embedded_path": "META-INF/jarjar/glsl-transformer-2.0.1.jar",
+    "transformer_sha256": "b8ca5e61b41ae18ddd5d4d5d6785cb9acd8fd7ac0c5c0b0689b872b039c11b9f",
+    "class_path": "io/github/douira/glsl_transformer/parser/EnhancedParser.class",
+    "class_sha256": "11133ca7cbfbc89777b15f06a31323b26c1ab6448b1822f4086e9503f3527814",
+    "antlr_version": "4.13.1",
+    "antlr_sha256": "54665d2838cc66458343468efc539e454fc95b46a8a04b13c6ac43fc9be63505",
+    "fix": "Close original fallback selection condition after any(isinf(dy)); one delimiter only, no arithmetic or dispatch change.",
+    "coverage": "All24 world0/world-1/world1 translucent fragment wrappers, original and private off/on with the held coastal reduced option overrides; three water wrappers also parallax-off; broken helper must reproduce missing RPAREN at brace. Actual Iris Jcpp preprocessor and pinned EnhancedParser, without driver/TransformPatcher execution."
   }
 }

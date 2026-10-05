@@ -11,9 +11,10 @@ time) against matched original Photon, with repeated GPU/total-frame and quality
 evidence. This target is unachieved. The previous 15% gate is superseded; historical
 evidence and unresolved checks below remain retained.
 
-Latest committed checkpoint: `7a0fa7a` (reflection driver verification and runtime
-queue). Current milestone below adds volumetric V2 driver readback and the
-integrated, source-tested distant-lighting prototype. `0a4d7a9` preserves independent
+Latest committed checkpoint: `525bda2` (volumetric V2 readback, procedural driver
+rejection and independent repairs), following lighting integration `24f4d3d`.
+Current milestone below integrates corrected water syntax and cheaper reflection
+guards; their new revisions need fresh driver checks. `0a4d7a9` preserves independent
 parallel shader/quality implementations and protocol2/interface commands;60Java
 tests. Prior `67ef5ba` preserves
 corrected density runtime/core binding and the team direction. Earlier
@@ -40,12 +41,16 @@ The 2x2 irradiance prepass/resolve is integrated from the lighting-rate worktree
 eight source/parser/math/assembly fixtures pass. Driver checks remain pending.
 `lod_opportunities` now prepares its explicitly qualified forest controls;
 `lod_quality` independently reviews pass and transport correctness.
-`procedural_lod` develops a reusable normal-error bound; `reflection_lod` audits
-refinement guard cost; `performance_audit` implements matched fullscreen batches.
+`procedural_lod` develops a reusable normal-error bound; reflection cost revision
+r2 is integrated, with its conservative numerical checks passed. `feature_integration`
+updates the combined pack and complete parser coverage; `performance_audit`
+implements matched fullscreen batches and waits for new combined source pins.
 Procedural-r2's first coastal smoke failed Iris TransformPatcher parsing and
 fell back; no water driver/quality/performance acceptance. An isolated
-`procedural_parser_repair` worker repairs source and adds actual parser coverage.
-`ao_runtime` is finishing the failure audit, with all owned clients stopped.
+`procedural_parser_repair` fixed one missing parenthesis; root integrated r3.
+Fourteen tests pass, including75 complete actual-Iris/GLSL parser graphs and
+three broken-source regressions. `ao_runtime` owns updated explicit profile pins
+and one authorized untimed r3 retry; all previous clients stopped.
 Reflection and volumetric packs compiled/rendered without fallback. Volume actual
 readback proves effect2/mode2/bands512/1536/128/ratios.85/.75. Their inspected stills
 show no gross failures, but motion/parity/physical work and performance remain

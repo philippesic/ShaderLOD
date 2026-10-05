@@ -189,8 +189,50 @@ vec2 shaderlodLightingPixel;
 #include "/include/shaderlod/lighting_rate_policy.glsl"
 #endif // SHADERLOD_LIGHTING_RATE_SCOPE
 #if defined SHADERLOD_LIGHTING_RATE_PROBE && !defined NORMAL_MAPPING && !defined SPECULAR_MAPPING && !defined SHADOW_COLOR && !defined SHADOW_VPS && !defined COLORED_LIGHTS && !defined CLOUD_SHADOWS && !defined SH_SKYLIGHT && !defined DISTANT_HORIZONS && !defined VOXY && !defined TAAU && !defined BLOCKY_CLOUDS && !defined ENVIRONMENT_REFLECTIONS && defined WORLD_OVERWORLD && defined PROGRAM_DEFERRED4
+// Inspect the complete union of the four ORIGINAL AO reconstruction footprints.
+// The representative's 2x2 taps alone miss the next row/column (usually 3x3 union).
+// This extra bounded classification cost is part of the private prototype, not a saving claim.
+bool shaderlod_rate_ao_union_eligible(ivec2 origin) {
+    ivec2 ambient_size = textureSize(colortex6, 0);
+    ivec2 depth_size = textureSize(colortex14, 0);
+    if (any(lessThanEqual(ambient_size, ivec2(0))) || any(notEqual(ambient_size, depth_size)) ||
+        any(isnan(view_res)) || any(isinf(view_res)) || any(lessThan(view_res, vec2(2.0))) ||
+        any(lessThan(origin, ivec2(0))) || any(greaterThanEqual(origin + ivec2(1), ivec2(view_res))))
+        return false;
+    ivec2 first_base = ivec2((vec2(origin) + 0.5) * (0.5 / taau_render_scale) - 0.5);
+    ivec2 minimum_tap = first_base;
+    ivec2 maximum_tap = first_base + ivec2(1);
+    for (int member = 1; member < 4; ++member) {
+        ivec2 pixel = origin + ivec2(member & 1, member >> 1);
+        // Match upstream ivec2 truncation toward zero, including first-row/column edges.
+        ivec2 base = ivec2((vec2(pixel) + 0.5) * (0.5 / taau_render_scale) - 0.5);
+        minimum_tap = min(minimum_tap, base);
+        maximum_tap = max(maximum_tap, base + ivec2(1));
+    }
+    if (any(lessThan(minimum_tap, ivec2(0))) || any(greaterThanEqual(maximum_tap, ambient_size)) ||
+        any(greaterThan(maximum_tap - minimum_tap, ivec2(2)))) return false;
+    float minimum_ao = 1.0;
+    float maximum_ao = 0.0;
+    for (int y = 0; y < 3; ++y) {
+        for (int x = 0; x < 3; ++x) {
+            ivec2 tap = minimum_tap + ivec2(x, y);
+            if (any(greaterThan(tap, maximum_tap))) continue;
+            vec4 ambient = texelFetch(colortex6, tap, 0);
+            float ambient_depth = texelFetch(colortex14, tap, 0).x;
+            if (any(isnan(ambient)) || any(isinf(ambient)) ||
+                isnan(ambient_depth) || isinf(ambient_depth) ||
+                ambient.x < 0.0 || ambient.x > 1.0 || ambient_depth < 0.0 || ambient_depth > 1.0)
+                return false;
+            minimum_ao = min(minimum_ao, ambient.x);
+            maximum_ao = max(maximum_ao, ambient.x);
+        }
+    }
+    return maximum_ao - minimum_ao <= 0.10;
+}
+
 vec4 shaderlod_evaluate_representative(ivec2 texel, vec4 gbuffer_data_0, float depth,
     vec3 position_view, vec3 position_scene, vec3 position_world, vec3 direction_world) {
+    if (!shaderlod_rate_ao_union_eligible(texel)) return vec4(0.0, 0.0, 0.0, -1.0);
     vec2 uv = (vec2(texel) + 0.5) * view_pixel_size;
     bool is_hand = false;
     bool is_lod = false;
@@ -298,9 +340,6 @@ vec4 shaderlod_evaluate_representative(ivec2 texel, vec4 gbuffer_data_0, float d
         if (!shaderlod_rate_material(material_mask, material)) return vec4(0.0, 0.0, 0.0, -1.0);
         // Canonical white factorization is legal only for the approved zero-SSS/emission nonmetal material.
         material.albedo = vec3(1.0);
-        float ao_span = max(max(ambient_00.x, ambient_10.x), max(ambient_01.x, ambient_11.x)) -
-            min(min(ambient_00.x, ambient_10.x), min(ambient_01.x, ambient_11.x));
-        if (ao_span > 0.10) return vec4(0.0, 0.0, 0.0, -1.0);
 
         // Upscale ambient occlusion
 
