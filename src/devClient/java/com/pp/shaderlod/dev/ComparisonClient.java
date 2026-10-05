@@ -163,14 +163,21 @@ final class ComparisonClient {
     }
     private void tileWindow(Minecraft client) {
         var window = client.getWindow();
-        window.setTitle(enabled ? "ShaderLOD landscape — LOD ON (left)" : "Photon landscape — BASELINE (right)");
+        boolean serialMeasurement = Boolean.getBoolean("shaderlod.dev.measureOnly");
+        window.setTitle(serialMeasurement ? (enabled ? "ShaderLOD serial measurement" : "Photon serial baseline")
+                : enabled ? "ShaderLOD landscape — LOD ON (left)" : "Photon landscape — BASELINE (right)");
         try (var stack = MemoryStack.stackPush()) {
             var x = stack.mallocInt(1); var y = stack.mallocInt(1); var w = stack.mallocInt(1); var h = stack.mallocInt(1);
             GLFW.glfwGetMonitorWorkarea(GLFW.glfwGetPrimaryMonitor(), x, y, w, h);
             int width = (w.get(0) - 24) / 2, height = Math.min(h.get(0) - 80, width * 9 / 16);
             window.setWindowed(width, height);
             GLFW.glfwSetWindowSize(window.getWindow(), width, height);
-            GLFW.glfwSetWindowPos(window.getWindow(), x.get(0) + 8 + (enabled ? 0 : width + 8), y.get(0) + (h.get(0) - height) / 2);
+            int horizontal = serialMeasurement ? x.get(0) + (w.get(0) - width) / 2
+                    : x.get(0) + 8 + (enabled ? 0 : width + 8);
+            int vertical = y.get(0) + (h.get(0) - height) / 2;
+            GLFW.glfwSetWindowPos(window.getWindow(), horizontal, vertical);
+            LOGGER.info("ShaderLOD window layout: serial={}, x={}, y={}, width={}, height={}",
+                    serialMeasurement, horizontal, vertical, width, height);
         }
     }
     private void draw(RenderGuiEvent.Post event) {

@@ -55,6 +55,7 @@ class EffectTests(unittest.TestCase):
         inputs = {'shader_pack': 'pack.zip', 'shader_sha256': 'pack', 'control_sha256': 'control',
                   'requested_shader_options': options, 'shader_option_defaults': options}
         report = {'status': 'complete', 'request': {'run_id': 'fresh'}, 'modPresent': True, 'dhPresent': False,
+                  'shadow_culling_active': False,
                   'actual_shader_sha256': 'pack', 'control_sha256': 'control', 'effective_shader_options': copy.deepcopy(options),
                   'effective_shader_options_sha256': canonical_options_hash(options), 'input_state_start': state,
                   'input_state_end': copy.deepcopy(state), 'elapsed_seconds': 15, 'render_frames': 100,

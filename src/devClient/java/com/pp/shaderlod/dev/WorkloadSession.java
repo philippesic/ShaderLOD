@@ -8,6 +8,7 @@ import com.pp.shaderlod.dev.timing.GpuTimers;
 import com.pp.shaderlod.dev.timing.CpuTimers;
 import com.pp.shaderlod.dev.timing.ShaderInputTracker;
 import com.pp.shaderlod.dev.timing.ShadowInputObserver;
+import com.pp.shaderlod.dev.timing.WindowStateTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Screenshot;
 import net.neoforged.fml.ModList;
@@ -23,6 +24,7 @@ final class WorkloadSession {
     private final Path directory;
     private final List<GpuTimers.Sample> gpu = new ArrayList<>();
     private final List<CpuTimers.Sample> cpu = new ArrayList<>();
+    private final WindowStateTracker windowState = new WindowStateTracker();
     private final double warmup = Double.parseDouble(System.getProperty("shaderlod.dev.initialWarmup", "60"));
     private final double duration = Double.parseDouble(System.getProperty("shaderlod.dev.measurementSeconds", "30"));
     private final long started = System.nanoTime();
@@ -54,8 +56,19 @@ final class WorkloadSession {
         var cpuSamples = CpuTimers.drainSamples();
         if (done) return;
         long now = System.nanoTime();
+        var client = Minecraft.getInstance();
+        var window = client.getWindow();
+        var observedWindow = WindowStateTracker.readWindow(window.getWindow(), window.getScreenWidth(), window.getScreenHeight(),
+                window.getWidth(), window.getHeight(), new WindowStateTracker.Pacing(client.options.pauseOnLostFocus,
+                        window.isFullscreen(), client.options.framerateLimit().get(), client.options.enableVsync().get()));
+        double elapsedWorkloadSeconds = (now - started) * 1e-9;
+        long frameId = GpuTimers.frameId();
         if (!measuring) {
-            if ((now - started) * 1e-9 < warmup) return;
+            if (elapsedWorkloadSeconds < warmup) {
+                windowState.observeWarmup(observedWindow, elapsedWorkloadSeconds, frameId);
+                return;
+            }
+            windowState.observeCapture(observedWindow, elapsedWorkloadSeconds, frameId);
             GpuTimers.resetSamples();
             try { inputStart = inputState(); }
             catch (Exception failure) { throw new IllegalStateException("Cannot fingerprint measurement inputs", failure); }
@@ -68,11 +81,11 @@ final class WorkloadSession {
             LogUtils.getLogger().info("ShaderLOD workload measurement started: {}", directory);
             return;
         }
+        windowState.observeCapture(observedWindow, elapsedWorkloadSeconds, frameId);
         gpu.addAll(gpuSamples); cpu.addAll(cpuSamples);
         if ((now - measurementStarted) * 1e-9 >= duration) {
             done = true;
             write((now - measurementStarted) * 1e-9);
-            var client = Minecraft.getInstance();
             Screenshot.grab(client.gameDirectory, "workload-final.png", client.getMainRenderTarget(), message -> {
                 LogUtils.getLogger().info("Workload screenshot: {}", message.getString());
                 if (Boolean.getBoolean("shaderlod.dev.measureOnly")) client.execute(client::stop);
@@ -95,6 +108,7 @@ final class WorkloadSession {
             report.add("shader_temporal_inputs_start", temporalStart);
             report.add("shader_temporal_inputs_end", temporalInputs());
             report.add("shadow_observation", gson.toJsonTree(ShadowInputObserver.snapshot()));
+            report.add("window_state", gson.toJsonTree(windowState.snapshot()));
             report.addProperty("shader_temporal_note", "Wetness is observed at normal Iris supplier evaluation; clocks/day/weather are CPU source getters. Dynamic wetness and frame phase can advance. No smoother reevaluation, GPU readback, or clock freeze.");
             report.add("effective_shader_options", inputStart.get("effective_shader_options").deepCopy());
             report.addProperty("effective_shader_options_sha256", inputStart.get("effective_shader_options_sha256").getAsString());

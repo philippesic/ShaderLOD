@@ -164,6 +164,102 @@ int shaderlod_cloud_tier(float distance_blocks, float noise) {
 #endif
 }
 
+// These experimental cloud candidates alter budget selection only. Density,
+// primary jitter, secondary extent and temporal reprojection stay upstream.
+int shaderlod_cloud_mode() { return clamp(SHADERLOD_CLOUD_MODE, 0, 2); }
+
+float shaderlod_cloud_overhead_distance(vec3 viewer, float inner_radius,
+    float outer_radius, bool has_overhead_layer) {
+#if !defined SHADERLOD_CLOUD_OVERHEAD
+    return 0.0;
+#else
+    if (shaderlod_cloud_mode() == 0) return 0.0;
+    if (any(isnan(viewer)) || any(isinf(viewer)) || isnan(inner_radius) ||
+        isnan(outer_radius) || isinf(inner_radius) || isinf(outer_radius) ||
+        inner_radius <= 0.0 || outer_radius < inner_radius || CLOUDS_SCALE <= 0.0)
+        return -1.0;
+    float radius_squared = dot(viewer, viewer);
+    if (radius_squared > outer_radius * outer_radius || viewer.y <= 0.0)
+        return -1.0; // Above shell or invalid planet frame: conservatively full.
+    if (radius_squared >= inner_radius * inner_radius) return 0.0;
+    if (!has_overhead_layer) return 0.0; // Congestus is clipped to a distant ring.
+    float discriminant = inner_radius * inner_radius - dot(viewer.xz, viewer.xz);
+    if (discriminant < 0.0) return -1.0;
+    return max(sqrt(discriminant) - viewer.y, 0.0) / CLOUDS_SCALE;
+#endif
+}
+
+vec3 shaderlod_cloud_effective_distances(float overhead_distance) {
+    float near_cloud = max(SHADERLOD_CLOUD_NEAR, 1.0);
+    float far_cloud = max(SHADERLOD_CLOUD_FAR, near_cloud + 1.0);
+    float width = clamp(SHADERLOD_CLOUD_TRANSITION, 0.0,
+        min(2.0 * near_cloud, far_cloud - near_cloud));
+#ifdef SHADERLOD_CLOUD_OVERHEAD
+    if (shaderlod_cloud_mode() != 0) {
+        // One atmosphere-coordinate unit guards the large-radius subtraction.
+        float shift = max(0.0, overhead_distance + 0.5 * width +
+            1.0 / max(CLOUDS_SCALE, 1.0) - near_cloud);
+        near_cloud += shift;
+        far_cloud += shift;
+    }
+#endif
+    return vec3(near_cloud, far_cloud, width);
+}
+
+float shaderlod_cloud_selection_noise(vec2 pixel, float cycle, float march_noise) {
+    if (shaderlod_cloud_mode() == 0) return march_noise;
+    // Separate analytic field; no extra texture read and no primary-seed input.
+    // Decorrelation is a tested diagnostic, not a proof of statistical independence.
+    return shaderlod_noise(pixel + vec2(31.17, 91.43), cycle + 19.0);
+}
+
+int shaderlod_cloud_smooth_count(int original, int minimum, float medium_weight,
+    float low_weight) {
+    int medium = shaderlod_budget(original, 1, minimum);
+    int low = shaderlod_budget(original, 2, minimum);
+    float target = mix(mix(float(original), float(medium), medium_weight),
+        float(low), low_weight);
+    return min(original, max(minimum, int(ceil(target))));
+}
+
+ivec3 shaderlod_cloud_ray_budgets(ivec3 original, ivec3 minimum,
+    float distance_blocks, float overhead_distance, vec2 pixel, float cycle,
+    float march_noise) {
+#ifndef SHADERLOD_CLOUDS
+    return original;
+#else
+    if (!shaderlod_enabled()) return original;
+    int mode = shaderlod_cloud_mode();
+    if (mode == 0) {
+        int tier = shaderlod_cloud_tier(distance_blocks, march_noise);
+        return ivec3(shaderlod_budget(original.x, tier, minimum.x),
+            shaderlod_budget(original.y, tier, minimum.y),
+            shaderlod_budget(original.z, tier, minimum.z));
+    }
+    if (isnan(distance_blocks) || isinf(distance_blocks) || distance_blocks < 0.0 ||
+        isnan(overhead_distance) || isinf(overhead_distance) || overhead_distance < 0.0)
+        return original;
+    vec3 distances = shaderlod_cloud_effective_distances(overhead_distance);
+    float half_band = 0.5 * distances.z;
+    if ((distances.z > 0.0 && distance_blocks <= distances.x - half_band) ||
+        (distances.z == 0.0 && distance_blocks < distances.x)) return original;
+    if (mode == 1) {
+        float noise = shaderlod_cloud_selection_noise(pixel, cycle, march_noise);
+        int tier = shaderlod_tier_with_distances(distance_blocks, noise, distances);
+        return ivec3(shaderlod_budget(original.x, tier, minimum.x),
+            shaderlod_budget(original.y, tier, minimum.y),
+            shaderlod_budget(original.z, tier, minimum.z));
+    }
+    float medium_weight = distances.z == 0.0 ? float(distance_blocks >= distances.x) :
+        smoothstep(distances.x - half_band, distances.x + half_band, distance_blocks);
+    float low_weight = distances.z == 0.0 ? float(distance_blocks >= distances.y) :
+        smoothstep(distances.y - half_band, distances.y + half_band, distance_blocks);
+    return ivec3(shaderlod_cloud_smooth_count(original.x, minimum.x, medium_weight, low_weight),
+        shaderlod_cloud_smooth_count(original.y, minimum.y, medium_weight, low_weight),
+        shaderlod_cloud_smooth_count(original.z, minimum.z, medium_weight, low_weight));
+#endif
+}
+
 // Water has longer visible geometric detail than material parallax. These
 // shader options are effect-specific; the mod still supplies enable/preset.
 int shaderlod_water_tier(float distance_blocks, float noise) {

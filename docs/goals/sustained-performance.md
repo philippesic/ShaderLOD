@@ -307,3 +307,42 @@ runtime, geometrytravel/reload checks, and entitycullingstack remainpending.
 No genuine user-dependent blocker; nativegoal staysactive. Verify authoritative
 process handles before restarting any interrupted work; terminaljobsabove do not
 needrestarting merelytoobserveunchanged state.
+
+
+## Cloud candidates and benchmark-state checkpoint
+
+The cloud-only candidate preserves original mode 0 and adds experimental mode 1
+(separate tier noise) and mode 2 (smooth bounded integer budgets), with actual
+layer/viewer overhead protection for new modes. Source checks and 1,446 GLSL
+compilations passed; no driver or performance claim follows from them. Clean
+archive SHA256 8fbaa117d87b4f729ea64ecce4d86390cdc56d03cd3b5a02ec2be9ffe2213235,
+`build/photon-cloud-transition-no-atmosphere.zip`. The main source retains the
+older atmosphere experiment; the clean archive explicitly excludes it.
+
+Seven fresh matched shoreline profiles prepared under
+`run-workloads/cloud-shore-default/coastalwater`, from stopped measured original
+SSR shoreline, cloud upscale 4, DH absent. Cloud-current, independent,
+independent-unprotected and smooth arms keep the other four effect flags off,
+lighting protected, cached sky/analytic water off. Original and all-off/global-off
+controls retain common upstream settings and counts. Source presets unchanged.
+Real driver compilation, normal-motion quality and performance remain pending.
+
+New report-only window telemetry reads focus/iconified/visible once per existing
+workload tick and records sizes, pacing, counts and transitions. Serial-only
+window placement is now identical for all arms; normal comparison previews still
+tile left/right. No focus or pacing is changed. Strict benchmark guards require
+actual culling activity/config and exact cloud mode/effect/protection recipes.
+34 preparation/guard fixtures and Java build/compileDevClientJava passed; the
+window accumulator standalone fixture passed. Shader worker, profile worker and
+telemetry/guard workers are frozen. Root owns all clients/GPU.
+
+Visibility audit found coupled forced shadow dirtying and mutable per-region
+membership arrays despite separate outer lists. Upstream already caches when
+clean. No traversal skip was added. Separate shadow-owned inner membership lists
+are only a prerequisite; dirty epochs, tasks, section stamps and animation
+consumers must be modeled before exact reuse. See VISIBILITY_REUSE_AUDIT.md.
+
+Next: root serial seven-arm shoreline driver pilot with fixed wetness 0, followed
+by normal-resolution rainy controls and balanced repeats of promising candidates.
+Record actual window telemetry and keep every negative result. No ordinary gate
+pass or second shader support yet; native goal remains active.

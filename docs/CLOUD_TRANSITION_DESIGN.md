@@ -217,3 +217,52 @@ Speckle, blocks or shimmer are failure evidence even if sample counts decrease.
 If cloud-only does not account for the problem, stop this redesign and address
 the measured contributor. No shader changes or new performance claim were made
 by this design task.
+
+## Implemented candidate checkpoint (separate from the proposal)
+
+The coordinator subsequently authorized implementation while no game was live.
+`SHADERLOD_CLOUD_MODE` is a compile-time selector 0/1/2, default 0. Mode 0 retains
+the previous cloud budget block in an explicit preprocessor branch; new modes
+are experimental. `SHADERLOD_CLOUD_OVERHEAD` defaults true but is ignored by
+mode 0. The existing cloud effect flag and global live enable still bypass LOD;
+cache-map quality remains the independent cached-sky option.
+
+Implemented mode 1 uses the existing analytic hash with a different spatial/cycle
+field, independent of the primary texture dither argument. Its cycle matches
+frameCounter divided by cloud checkerboard area, so tier choice does not rotate
+inside one upscaling cycle just because the frame counter increments. The
+primary dither itself is unchanged. No spatial-tile-sharing variant was added;
+decorrelation is tested, statistical independence/coherence is not guaranteed.
+
+Implemented mode 2 computes smooth medium/far weights and conservative integer
+ceilings once per ray for primary/lighting/ambient counts, before the loops.
+Zero-width bands use hard comparisons. Selected counts are capped by original
+counts, and each effect minimum is capped by original when the upstream setting
+is already smaller. The existing ray stride, jitter, secondary extent
+compensation, density/scattering and temporal reprojection stay unchanged.
+
+With overhead protection enabled in a new mode, the helper uses the actual
+viewer and inner/outer radii. Below-shell world-up entry follows the analytic
+sphere intersection formula above. Inside returns 0; above-shell/invalid geometry
+returns a negative sentinel and budgets fail full. Congestus has no overhead
+layer because of its distant ring, so a valid below/inside reference returns 0
+without forcing the ring to near quality. A one-atmosphere-coordinate-unit guard
+protects large-radius subtraction; near/far shift together and preserve width.
+Protection off deliberately skips that camera-floor geometry and retains
+absolute distance bands; invalid ray/reference values still fail full in new
+budget selection. Mode 0 keeps its existing handling rather than silently
+changing baseline behavior.
+
+The implementation computes overhead geometry before the ray, not once in the
+vertex stage. That arithmetic cost is a deviation from the proposed preferred
+per-draw optimization and must be measured. No new varying, sampler or uniform
+was introduced. Actual source fixtures cover below/inside/above/invalid shell
+cases, changed layer altitude/thickness, all presets, bounded/monotone smooth
+counts, full near/overhead counts, zero-width bands, global disable/cloud-off
+and tier-vs-march seed separation. Additional source checks verify original
+cloud density/scattering and exact d2 history source remain unchanged.
+
+Driver-independent matrix: 1446 fragment compilations passed in the broad suite;
+final numerical/source-preservation fixtures also passed. Driver rendering,
+cloud shimmer and GPU benefit remain unverified. Root and profile workers own
+repeated original/all-off/current/independent/smooth real-render controls.

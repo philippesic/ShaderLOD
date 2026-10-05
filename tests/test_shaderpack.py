@@ -398,6 +398,148 @@ case {count}:expected_normal=shaderlod_water_normal_{count}(world,flat,coord,dir
                 result = subprocess.run([str(executable)], capture_output=True, text=True)
                 self.assertEqual(0, result.returncode, f"Actual static water math fixture failed: {result.returncode}")
 
+    @unittest.skipUnless(shutil.which("c++"), "C++ compiler unavailable for cloud candidate math")
+    def test_actual_cloud_candidates_bounds_geometry_and_noise(self):
+        helper = self.files["shaders/include/shaderlod/lod.glsl"].decode()
+        names = ("shaderlod_use_bridge", "shaderlod_enabled", "shaderlod_preset", "shaderlod_budget", "shaderlod_noise",
+                 "shaderlod_tier_with_distances", "shaderlod_cloud_tier", "shaderlod_cloud_mode",
+                 "shaderlod_cloud_overhead_distance", "shaderlod_cloud_effective_distances",
+                 "shaderlod_cloud_selection_noise", "shaderlod_cloud_smooth_count", "shaderlod_cloud_ray_budgets")
+        functions = []
+        for name in names:
+            match = re.search(rf"(?:bool|int|float|vec3|ivec3) {name}\([^)]*\) \{{", helper)
+            self.assertIsNotNone(match, name)
+            end, depth = match.end(), 1
+            while depth:
+                depth += (helper[end] == "{") - (helper[end] == "}")
+                end += 1
+            functions.append(helper[match.start():end].replace("viewer.xz", "vec2(viewer.x,viewer.z)"))
+        adapters = r"""
+#include <cmath>
+#include <algorithm>
+#include <limits>
+using std::min;using std::max;using std::ceil;using std::sqrt;
+#define float double
+struct vec2 {float x,y;vec2(float a,float b):x(a),y(b){}vec2 operator+(vec2 b)const{return vec2(x+b.x,y+b.y);}vec2& operator+=(vec2 b){x+=b.x;y+=b.y;return *this;}};
+vec2 operator*(float a,vec2 b){return vec2(a*b.x,a*b.y);}
+struct vec3 {float x,y,z;vec3(float a,float b,float c):x(a),y(b),z(c){}};
+struct ivec3 {int x,y,z;ivec3(int a,int b,int c):x(a),y(b),z(c){}};
+struct bvec3 {bool x,y,z;};bool any(bvec3 a){return a.x||a.y||a.z;}
+bool isnan(float v){return std::isnan(v);}bool isinf(float v){return std::isinf(v);}
+bvec3 isnan(vec3 v){return {isnan(v.x),isnan(v.y),isnan(v.z)};}bvec3 isinf(vec3 v){return {isinf(v.x),isinf(v.y),isinf(v.z)};}
+float dot(vec2 a,vec2 b){return a.x*b.x+a.y*b.y;}float dot(vec3 a,vec3 b){return a.x*b.x+a.y*b.y+a.z*b.z;}
+float mod(float a,float b){return a-b*std::floor(a/b);}float fract(float a){return a-std::floor(a);}
+float clamp(float a,float b,float c){return min(max(a,b),c);}int clamp(int a,int b,int c){return min(max(a,b),c);}
+float smoothstep(float a,float b,float c){float t=clamp((c-a)/(b-a),0.,1.);return t*t*(3.-2.*t);}
+float mix(float a,float b,float c){return a*(1.-c)+b*c;}
+bool same(ivec3 a,ivec3 b){return a.x==b.x&&a.y==b.y&&a.z==b.z;}
+#define SHADERLOD_USE_MOD_CONFIG
+#define SHADERLOD_ENABLED
+#define SHADERLOD_PRESET 1
+#define CLOUDS_SCALE 10.0
+#define SHADERLOD_CLOUD_NEAR 128.0
+#define SHADERLOD_CLOUD_FAR 1024.0
+#define SHADERLOD_CLOUD_TRANSITION 64.0
+int shaderlodBridgeVersion=2,shaderlodEnabled=1,shaderlodPreset=1;
+"""
+        checks = r"""
+int main(){
+const float P=6371000.,inner=P+1200.,outer=P+2400.;
+float reference=shaderlod_cloud_overhead_distance(vec3(0.,P+50.,0.),inner,outer,true);
+#if defined SHADERLOD_CLOUD_OVERHEAD && SHADERLOD_CLOUD_MODE != 0
+if(std::abs(reference-115.)>1e-8)return 1;
+if(shaderlod_cloud_overhead_distance(vec3(0.,inner+5.,0.),inner,outer,true)!=0.)return 2;
+if(shaderlod_cloud_overhead_distance(vec3(0.,outer+5.,0.),inner,outer,true)>=0.)return 3;
+if(shaderlod_cloud_overhead_distance(vec3(0.,P+50.,0.),inner,outer,false)!=0.)return 4;
+if(shaderlod_cloud_overhead_distance(vec3(0.,P+50.,0.),-1.,outer,true)>=0.)return 5;
+// Actual changed layer altitude/scale/thickness: no fixed120-world-block assumption.
+if(std::abs(shaderlod_cloud_overhead_distance(vec3(0.,P+50.,0.),P+400.,P+480.,true)-35.)>1e-8)return 6;
+#endif
+const vec2 pixel(33.2,70.3);const ivec3 minimum(4,2,1);
+const ivec3 originals[]={ivec3(40,6,2),ivec3(21,1,1),ivec3(3,1,0)};
+for(int preset:{0,1,2}){shaderlodPreset=preset;
+for(ivec3 original:originals){
+ivec3 previous=original;
+for(int sample=0;sample<=24000;++sample){
+float distance=sample*.1;
+ivec3 budget=shaderlod_cloud_ray_budgets(original,minimum,distance,115.,pixel,7.,.25);
+#ifndef SHADERLOD_CLOUDS
+if(!same(budget,original))return 7;
+#else
+if(budget.x>original.x||budget.y>original.y||budget.z>original.z||
+ budget.x<min(minimum.x,original.x)||budget.y<min(minimum.y,original.y)||budget.z<min(minimum.z,original.z))return 8;
+#if SHADERLOD_CLOUD_MODE == 0
+int tier=shaderlod_cloud_tier(distance,.25);
+ivec3 expected(shaderlod_budget(original.x,tier,minimum.x),shaderlod_budget(original.y,tier,minimum.y),shaderlod_budget(original.z,tier,minimum.z));
+if(!same(budget,expected))return 9;
+#elif SHADERLOD_CLOUD_MODE == 1
+if(!same(budget,shaderlod_cloud_ray_budgets(original,minimum,distance,115.,pixel,7.,.9)))return 10;
+#else
+if(budget.x>previous.x||budget.y>previous.y||budget.z>previous.z)return 11;
+// Dense distance increments cannot skip integer levels at positive-width transitions.
+if(SHADERLOD_CLOUD_TRANSITION>0. && (previous.x-budget.x>1||previous.y-budget.y>1||previous.z-budget.z>1))return 12;
+#endif
+#endif
+previous=budget;
+}
+vec3 bands=shaderlod_cloud_effective_distances(115.);
+if(bands.y-bands.x<bands.z)return 13;
+if(!same(shaderlod_cloud_ray_budgets(original,minimum,bands.x-.5*bands.z-(bands.z==0.?1e-6:0.),115.,pixel,7.,.25),original))return 14;
+#if defined SHADERLOD_CLOUD_OVERHEAD && SHADERLOD_CLOUD_MODE != 0
+if(!same(shaderlod_cloud_ray_budgets(original,minimum,115.,115.,pixel,7.,.25),original))return 15;
+#endif
+#if SHADERLOD_CLOUD_MODE != 0
+if(!same(shaderlod_cloud_ray_budgets(original,minimum,2000.,-1.,pixel,7.,.25),original))return 16;
+if(!same(shaderlod_cloud_ray_budgets(original,minimum,std::numeric_limits<float>::quiet_NaN(),115.,pixel,7.,.25),original))return 17;
+#endif
+shaderlodEnabled=0;
+if(!same(shaderlod_cloud_ray_budgets(original,minimum,2000.,115.,pixel,7.,.25),original))return 18;
+shaderlodEnabled=1;
+}
+}
+float noise=shaderlod_cloud_selection_noise(pixel,7.,.25);
+if(noise<0.||noise>=1.)return 19;
+#if SHADERLOD_CLOUD_MODE == 0
+if(noise!=.25)return 20;
+#else
+if(noise==.25||noise!=shaderlod_cloud_selection_noise(pixel,7.,.9))return 21;
+#endif
+return 0;
+}
+"""
+        variants = [(mode, overhead, cloud, False) for mode in (0, 1, 2)
+                    for overhead in (False, True) for cloud in (False, True)]
+        variants += [(mode, True, True, True) for mode in (1, 2)]
+        for mode, overhead, cloud, zero_width in variants:
+                    with self.subTest(mode=mode, overhead=overhead, cloud=cloud, zero_width=zero_width):
+                        defs = f"#define SHADERLOD_CLOUD_MODE {mode}\n"
+                        if zero_width: defs += "#undef SHADERLOD_CLOUD_TRANSITION\n#define SHADERLOD_CLOUD_TRANSITION 0.0\n"
+                        if overhead: defs += "#define SHADERLOD_CLOUD_OVERHEAD\n"
+                        if cloud: defs += "#define SHADERLOD_CLOUDS\n"
+                        path = Path(self.directory.name) / f"cloud-candidate-{mode}-{overhead}-{cloud}-{zero_width}.cpp"
+                        executable = path.with_suffix("")
+                        path.write_text(adapters + defs + "\n".join(functions) + checks)
+                        compiled = subprocess.run(["c++", "-std=c++17", str(path), "-o", str(executable)], capture_output=True, text=True)
+                        self.assertEqual(0, compiled.returncode, compiled.stdout + compiled.stderr)
+                        result = subprocess.run([str(executable)], capture_output=True, text=True)
+                        self.assertEqual(0, result.returncode, f"Cloud candidate fixture failed: {result.returncode}")
+
+    def test_cloud_density_extent_and_history_source_preserved(self):
+        for layer in ("cumulus", "altocumulus", "cumulus_congestus"):
+            path = f"shaders/include/sky/clouds/{layer}.glsl"
+            source, original = self.files[path].decode(), self.upstream[path].decode()
+            for suffix in ("density", "scattering"):
+                name = f"clouds_{layer}_{suffix}"
+                self.assertEqual(self.water_function(original, name), self.water_function(source, name))
+            self.assertIn("float step_length = ray_length * rcp(float(primary_steps));", source)
+            self.assertIn("ray_dir * (dists.x + step_length * dither)", source)
+            self.assertIn("#if SHADERLOD_CLOUD_MODE == 0\n#if !defined PROGRAM_DEFERRED0\n    int cloud_quality = shaderlod_cloud_tier", source)
+        path = "shaders/program/d2_clouds_upscaling.fsh"
+        self.assertEqual(self.upstream[path], self.files[path])
+        settings = self.files["shaders/settings.glsl"].decode()
+        self.assertRegex(settings, r"#define SHADERLOD_CLOUD_MODE 0 // \[0 1 2\]")
+        self.assertRegex(settings, r"(?m)^  #define SHADERLOD_CLOUD_OVERHEAD$")
+
     def test_off_effect_source_branches_are_pinned_original(self):
         paths = {
             "SHADERLOD_CLOUDS": ("sky/clouds/cumulus.glsl", "sky/clouds/altocumulus.glsl", "sky/clouds/cumulus_congestus.glsl"),
@@ -608,6 +750,10 @@ int main(){
         for effect in ("CLOUDS", "WATER", "FOG", "SSR", "MATERIALS"):
             variants += (("effect_" + effect.lower(), {**effect_flags, f"SHADERLOD_{effect}": True}, "#define DISTANT_HORIZONS\n"),)
         variants += (("effects_off_lpv", {**effect_flags, "COLORED_LIGHTS": True, "LPV_VL": True}, "#define DISTANT_HORIZONS\n"),)
+        for mode in (0, 1, 2):
+            for overhead in (False, True):
+                variants += ((f"cloud_mode_{mode}_overhead_{overhead}",
+                    {"SHADERLOD_CLOUD_MODE": mode, "SHADERLOD_CLOUD_OVERHEAD": overhead}, "#define DISTANT_HORIZONS\n"),)
         for world in ("world0", "world1", "world-1"):
             for program in ("deferred4", "gbuffers_water", "deferred3", "deferred1", "deferred", "composite", "gbuffers_terrain", "dh_terrain", "dh_water", "composite1", "shadow"):
                 for variant, options, extra in variants:

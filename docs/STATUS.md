@@ -6,21 +6,31 @@ Active goal: [Sustained performance and compatibility](goals/sustained-performan
 The user authorized ongoing team development, Photon first, benchmarks with
 optional performance mods, and additional shaders after repeatable Photon gains.
 Previous completed goal: [Full-frame rendering proof](goals/full-frame-proof.md).
-The preview clients are closed. The first 36-run serial matrix completed;
-wetness telemetry and DH-absent SSR rendering are verified in the reduced
-profile. Water candidates regressed in pilots; the nine-arm effect sweep is running. See the
-goal checkpoint for current ownership, profile paths and logs.
-Earlier evidence and limitations are in [FULL_FRAME_PROOF.md](FULL_FRAME_PROOF.md).
+All benchmark clients are closed. The first 36-run matrix, water pilots,
+nine-arm effect sweep, compiled-source controls, sparse-query repeats, JFR
+capture and exact shadow-culling repeats have finished. Their results remain
+mixed; the ordinary-scene performance gate is unmet. Second shader support has
+not started. See [REPEATED_RESULTS.md](REPEATED_RESULTS.md).
 
-Current source: Photon analytic-water and atmosphere candidates, usable cloud
-bands, conservative scene-bound terrain safeguards, configuration UI/commands,
-and repeated effective-option verification. Java build, 10 geometry tests and
-15 shaderpack tests (including 1,248 GLSL compilations), benchmark/policy
-checks and compileDevClientJava passed. Candidate rendering is
-verified in accepted captures. Exploratory paired median GPU reductions are
-5.83%/1.72% in forest and 25.91%/23.43% in premium clouds (minimal/optimized).
-Wetness was unmeasured in that matrix, so these are not acceptance claims.
-See [REPEATED_RESULTS.md](REPEATED_RESULTS.md). Photon's new gate and second shader support remain pending.
+Current committed source: `9f5a64d`. Explicit compile-time effect controls retain
+original code when off. Water analytic normals and the exact shadow-frustum
+fast path default off after negative or inconsistent measurements. Shadows/AO
+retain original budgets. Terrain radius policy remains opt-in and requires
+explicit warmed-scene acknowledgement. Mod enable/preset use the verified Iris
+uniform bridge; effect switches and cloud/water bands are shader options.
+
+The completed original-Photon JFR diagnostic found substantial visibility
+traversal and native GL submission work in a fast 144 FPS run. It did not capture
+or explain the 145 to 75 FPS baseline variation. See
+[RENDER_CPU_FORENSICS.md](RENDER_CPU_FORENSICS.md). Exact shadow culling rendered
+successfully after repairing an inherited Mixin lookup, but repeated minimal
+stack CPU times regressed; its default remains off.
+
+Current bounded team work: validate cloud transition candidates, prepare matched
+cloud-only controls, add report-only window-state telemetry and strict culling
+guards, and audit visibility traversal reuse. Root owns all client/GPU launches;
+no worker may launch a game. Static checks establish source correctness only.
+The active goal checkpoint records detailed ownership and the next experiments.
 
 ## Previous completed proof
 

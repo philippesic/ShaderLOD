@@ -12,7 +12,7 @@ import unittest
 
 SCRIPTS = Path(__file__).resolve().parents[1] / 'scripts'
 sys.path.insert(0, str(SCRIPTS))
-from run_proof_matrix import balanced_plan, validate_report, profile_inputs, FATAL_LOG, canonical_options_hash, read_option_properties, declared_defaults, normalize_requested_options, wetness_value, validate_temporal_inputs, preserve_screenshot, archive_defaults, camera_difference
+from run_proof_matrix import balanced_plan, validate_report, profile_inputs, FATAL_LOG, canonical_options_hash, read_option_properties, declared_defaults, normalize_requested_options, wetness_value, validate_temporal_inputs, preserve_screenshot, archive_defaults, camera_difference, CASES, CLOUD_CASE_OPTIONS
 from analyze_proof_matrix import paired_effects, check_pair, run_metrics, analyze
 from summarize_workload import stream
 
@@ -49,7 +49,7 @@ class MatrixTests(unittest.TestCase):
         report = {'status': 'complete', 'request': {'run_id': 'fresh'}, 'modPresent': True, 'dhPresent': True,
                   'actual_shader_sha256': 'pack', 'actual_shader_options_sha256': 'options', 'effective_shader_options': {'QUALITY': 'high'}, 'effective_shader_options_sha256': canonical_options_hash({'QUALITY': 'high'}), 'control_sha256': 'control',
                   'input_state_start': state, 'input_state_end': state.copy(), 'elapsed_seconds': 30, 'render_frames': 100,
-                  'loaded_mods': {'iris': '1'}, 'cpu_samples': [1], 'gpu_samples': [{'scope': 'game-render'}]}
+                  'shadow_culling_active': False, 'loaded_mods': {'iris': '1'}, 'cpu_samples': [1], 'gpu_samples': [{'scope': 'game-render'}]}
         return report, request, inputs
 
     def test_fresh_report_and_each_contamination_guard(self):
@@ -174,6 +174,50 @@ public class TrackerCheck {
             classpath = os.pathsep.join((str(path), str(iris)))
             subprocess.run(['java', '-cp', classpath, 'TrackerCheck'], check=True, capture_output=True)
             subprocess.run(['java', '-Dshaderlod.dev.fixedWetness=1', '-cp', classpath, 'TrackerCheck', '1'], check=True, capture_output=True)
+
+    def test_culling_arm_requires_present_enabled_configured_actual_active(self):
+        report, request, inputs = self.fixture()
+        request['case'] = 'water-culling'
+        inputs['shadow_culling_configured'] = True
+        report['shadow_culling_active'] = True
+        for boundary in ('input_state_start', 'input_state_end'): report[boundary]['lod_settings'] = {'enabled': True}
+        validate_report(report, request, inputs, 0)
+        for mutation in (lambda r: r.update(shadow_culling_active=False), lambda r: r.pop('shadow_culling_active'),
+                         lambda r: r.update(shadow_culling_active=1), lambda r: r.update(modPresent=False)):
+            altered = copy.deepcopy(report); mutation(altered)
+            with self.assertRaises(ValueError): validate_report(altered, request, inputs, 0)
+        for boundary in ('input_state_start', 'input_state_end'): report[boundary]['lod_settings']['enabled'] = False
+        with self.assertRaises(ValueError): validate_report(report, request, inputs, 0)
+        for boundary in ('input_state_start', 'input_state_end'): report[boundary]['lod_settings']['enabled'] = True
+        inputs['shadow_culling_configured'] = False
+        with self.assertRaises(ValueError): validate_report(report, request, inputs, 0)
+
+    def test_ordinary_arm_culling_false_unless_explicitly_configured(self):
+        report, request, inputs = self.fixture()
+        validate_report(report, request, inputs, 0)
+        report['shadow_culling_active'] = True
+        with self.assertRaises(ValueError): validate_report(report, request, inputs, 0)
+        inputs['shadow_culling_configured'] = True
+        for boundary in ('input_state_start', 'input_state_end'): report[boundary]['lod_settings'] = {'enabled': True}
+        validate_report(report, request, inputs, 0)
+        report.pop('shadow_culling_active')
+        with self.assertRaises(ValueError): validate_report(report, request, inputs, 0)
+
+    def test_cloud_arm_names_pin_effect_and_mode_options(self):
+        for case, options in CLOUD_CASE_OPTIONS.items():
+            report, request, inputs = self.fixture()
+            request['case'] = case
+            inputs['requested_shader_options'] = options
+            report['effective_shader_options'] = copy.deepcopy(options)
+            report['effective_shader_options_sha256'] = canonical_options_hash(options)
+            for boundary in ('input_state_start', 'input_state_end'): report[boundary]['lod_settings'] = {'enabled': True}
+            validate_report(report, request, inputs, 0)
+            report['effective_shader_options']['SHADERLOD_CLOUD_MODE'] = '99'
+            report['effective_shader_options_sha256'] = canonical_options_hash(report['effective_shader_options'])
+            # Even a misprepared requested map cannot make a mislabeled mode valid.
+            inputs['requested_shader_options'] = copy.deepcopy(report['effective_shader_options'])
+            with self.assertRaises(ValueError): validate_report(report, request, inputs, 0)
+            self.assertEqual(CASES[case][1], 'runClientLodOn')
 
     def test_missing_profile_guard(self):
         with tempfile.TemporaryDirectory() as directory:

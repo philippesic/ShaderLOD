@@ -157,3 +157,56 @@ the main manifest is 6d80df2a9537df2eb66285c412a62e4397eb70ac18e92869b29532b9947
 Both archives embed shaderlod-build.json with exact per-overlay hashes. The
 isolation cloud-march files and d4 source were checked byte-identical to the
 preserved 7ca water-only archive. It does not add another algorithmic change.
+
+## Experimental cloud-transition selectors
+
+The subsequent cloud-only candidate adds `SHADERLOD_CLOUD_MODE=0/1/2` (default 0)
+and boolean `SHADERLOD_CLOUD_OVERHEAD` (default true, ignored in mode 0).
+Mode 0 preserves the existing stochastic budget block. Mode 1 uses separate
+checkerboard-cycle tier noise while keeping march dither; mode 2 smoothly
+interpolates bounded integer counts. Overhead protection derives actual
+per-layer camera/shell geometry, shifts near/far together and fails full for
+above/invalid protected geometry. The distant congestus ring does not become
+an artificial overhead near region. These are pack options, not live mod fields.
+
+Only cloud selection and its option declarations changed in this task; water,
+fog, SSR, density/scattering and d2 temporal history code were not modified.
+The new modes may restore quality and more work overhead. They do not guarantee
+better lane coherence or meaningful performance. Previous single-capture losses
+and unchanged-baseline variance did not identify a cause.
+
+Use the clean cloud archive and explicit controls with other effect flags false:
+
+| Arm | CLOUD_MODE | CLOUD_OVERHEAD |
+| --- | ---: | --- |
+| Current cloud policy | 0 | false (ignored) |
+| Separate tier noise | 1 | true |
+| Smooth integer budgets | 2 | true |
+| Separate noise without camera floor | 1 | false |
+
+All these arms use CLOUDS=true, WATER/FOG/SSR/MATERIALS=false, global enabled=true,
+lighting protected=true, cached sky=false, analytic water=false and terrain cap
+off. Preserve original upstream counts/resolution and measured wetness/world
+age in every pair. Modes 1/2 with protectionfalse can isolate sampling from the
+camera-floor quality correction. Original absent-mod, patched-disabled and
+all-off remain separate controls. See
+[CLOUD_TRANSITION_DESIGN.md](CLOUD_TRANSITION_DESIGN.md) for geometric and temporal
+limits. Real clocks and moving-camera quality checks remain required.
+
+The broad 16-test suite passed in 125.613 seconds, including 1446 GLSL fragment
+compilations. Final added zero-width and density/history preservation checks
+passed in a separate 2-test run in 4.787 seconds. No performance result follows
+from these checks. Logs: dev/logs/photon-cloud-transition-tests.log and
+photon-cloud-candidate-math-tests.log (ignored).
+
+| Artifact | SHA256 |
+| --- | --- |
+| `build/photon-cloud-transition-no-atmosphere.zip` (recommended probe) | `8fbaa117d87b4f729ea64ecce4d86390cdc56d03cd3b5a02ec2be9ffe2213235` |
+| `build/photon-cloud-transition-candidate.zip` (main, existing atmosphere guard) | `a918fb460e8f36623314150ddd9f74fbffd4c64d1d3205e4d927fa8d1db29968` |
+
+Clean source root: build/cloud-transition-no-atmosphere-source; manifest hash
+`32e322da3e28ae437c77233a726a97cbbb35355999f04b3da00cb72a7929a9f3`.
+Main manifest hash `f003582f28abcaddaf1f1d771e5792ae9d34a1c314ec2941a0c7a49b59f25147`.
+Both embed exact shaderlod-build.json overlay/source metadata, also retained in
+ignored build/photon-cloud-transition-candidates.json. New modes remain
+experimental with mode 0 default until runtime evidence supports a change.

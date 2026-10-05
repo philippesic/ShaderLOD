@@ -13,6 +13,7 @@ import re
 import signal
 import subprocess
 import time
+import tomllib
 import uuid
 import zipfile
 
@@ -40,6 +41,17 @@ CASES = {
 for _prefix, _scene in (('forest', 'forest'), ('cloud', 'cloudstorm'), ('water', 'coastalwater')):
     for _mode in ('alloff', 'cloud-only', 'water-only', 'ssr-only', 'fog-only', 'materials-only'):
         CASES[_prefix + '-' + _mode] = (_scene + '/' + _mode, 'runClientLodOn')
+CLOUD_CASE_OPTIONS = {}
+for _prefix, _scene in (('cloud', 'cloudstorm'), ('water-cloud', 'coastalwater')):
+    for _name, _mode, _overhead in (('current', '0', 'false'), ('independent', '1', 'true'),
+                                     ('smooth', '2', 'true'), ('independent-unprotected', '1', 'false')):
+        _case = _prefix + '-' + _name
+        CASES[_case] = (_scene + '/cloud-' + _name, 'runClientLodOn')
+        CLOUD_CASE_OPTIONS[_case] = {'SHADERLOD_CLOUDS': 'true', 'SHADERLOD_WATER': 'false',
+                                    'SHADERLOD_FOG': 'false', 'SHADERLOD_SSR': 'false', 'SHADERLOD_MATERIALS': 'false',
+                                    'SHADERLOD_CLOUD_MODE': _mode, 'SHADERLOD_CLOUD_OVERHEAD': _overhead,
+                                    'SHADERLOD_PRESERVE_LIGHTING': 'true', 'SHADERLOD_CACHED_SKY': 'false',
+                                    'SHADERLOD_WATER_ANALYTIC': 'false'}
 FATAL_LOG = re.compile(r'(fallback=true|Failed to create shader rendering pipeline|Shader compilation failed|Shader compilation error|Cannot save workload measurement|Landscape control rejected|Exception in thread|BUILD FAILED)', re.I)
 
 
@@ -166,11 +178,15 @@ def profile_inputs(profile):
     with zipfile.ZipFile(profile / 'shaderpacks' / pack) as archive:
         defaults = archive_defaults(archive)
     semantic = normalize_requested_options(defaults, requested)
+    rendering = tomllib.loads((profile / 'config/shaderlod-client.toml').read_text()).get('rendering', {})
+    shadow_culling = rendering.get('optimizeShadowCulling', False)
+    if not isinstance(shadow_culling, bool): raise ValueError('Shadow culling config must be boolean')
     return {'files': {str(p.resolve()): sha256(p) for p in files}, 'shader_pack': pack,
             'shader_sha256': sha256(profile / 'shaderpacks' / pack),
             'shader_options_sha256': sha256(profile / 'shaderpacks' / (pack + '.txt')),
             'requested_shader_options': requested, 'shader_option_defaults': defaults,
             'semantic_shader_options_sha256': canonical_options_hash(semantic),
+            'shadow_culling_configured': shadow_culling,
             'control_sha256': sha256(profile.parent / 'control.json'),
             'control': json.loads((profile.parent / 'control.json').read_text()),
             'source_world_sha256': manifest['source_world_sha256']}
@@ -203,7 +219,19 @@ def validate_report(report, request, expected_inputs, started_ns, report_path=No
                 raise ValueError('Camera differs from prepared control: ' + key)
     enabled = state.get('lod_settings', {}).get('enabled')
     if request['case'].endswith('patched-off') and enabled is not False: raise ValueError('Patched disabled control has live LOD enabled')
-    if request['case'].endswith(('adaptive', 'final', 'combined', 'geometry', 'alloff', '-only')) and enabled is not True: raise ValueError('Adaptive/effect control has live LOD disabled')
+    if request['case'].endswith(('adaptive', 'final', 'combined', 'geometry', 'alloff', '-only', '-culling')) or request['case'] in CLOUD_CASE_OPTIONS:
+        if enabled is not True: raise ValueError('Adaptive/effect/culling control has live LOD disabled')
+    if request['case'] in CLOUD_CASE_OPTIONS:
+        for name, value in CLOUD_CASE_OPTIONS[request['case']].items():
+            if effective.get(name) != value: raise ValueError('Cloud isolation arm options do not match its label: ' + name)
+    culling_case = request['case'].endswith('-culling')
+    configured_culling = expected_inputs.get('shadow_culling_configured', False)
+    if not isinstance(configured_culling, bool): raise ValueError('Expected shadow culling config must be boolean')
+    if culling_case and (report.get('modPresent') is not True or enabled is not True or configured_culling is not True):
+        raise ValueError('Culling arm requires mod present, global enabled and explicit culling config')
+    expected_culling_active = culling_case or (configured_culling and report.get('modPresent') is True and enabled is True)
+    if report.get('shadow_culling_active') is not expected_culling_active:
+        raise ValueError('Actual shadow culling activity differs from requested arm/configuration')
     if not state.get('shaders_in_use') or state.get('fallback'): raise ValueError('Iris pipeline unavailable/fallback')
     if state.get('framebuffer_width', 0) < 1 or state.get('framebuffer_height', 0) < 1: raise ValueError('Invalid framebuffer')
     if report.get('elapsed_seconds', 0) < request['measurement_seconds'] * .95 or report.get('render_frames', 0) < 30:
@@ -341,7 +369,7 @@ def main():
                 profile = Path(row['profile'])
                 # Minecraft rewrites options.txt on shutdown; hash stable shader/camera inputs separately.
                 current = profile_inputs(profile)
-                for key in ('shader_sha256', 'semantic_shader_options_sha256', 'control_sha256', 'source_world_sha256'):
+                for key in ('shader_sha256', 'semantic_shader_options_sha256', 'control_sha256', 'source_world_sha256', 'shadow_culling_configured'):
                     if current[key] != inputs[row['case']][key]: raise ValueError('Profile changed since matrix start: ' + key)
                 token = f"{index + 1:03d}-b{row['block']}-{row['case']}-{row['stack']}"
                 request = dict(run_id=str(uuid.uuid4()), case=row['case'], stack=row['stack'], task=row['task'],
