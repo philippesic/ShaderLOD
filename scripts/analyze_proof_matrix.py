@@ -6,10 +6,31 @@ import itertools
 import json
 from pathlib import Path
 import statistics
+from analyze_inprocess_control import ORIGINAL_PHOTON_SHA256, SSR_COST_ARCHIVES, validate_ssr_cost_qualification
 
 
 METRICS = ('frame_ms', 'gpu_mean_ms', 'gpu_median_ms', 'gpu_p95_ms', 'cpu_wall_ms', 'cpu_thread_ms', 'cpu_wall_p95_ms')
 MATCH_FIELDS = ('framebuffer_width', 'framebuffer_height', 'requested_chunks', 'dimension', 'day_time', 'rain', 'thunder', 'x', 'y', 'z', 'yaw', 'pitch')
+REDUCED_SSR_SHA256 = next(pin for pin, value in SSR_COST_ARCHIVES.items() if value['policy'] == 'reduced')
+REDUCED_SSR_GATE = 'PHOTON_SSR_FAR_REDUCED_TRACE_PROBE'
+
+
+def qualified_reduced_ssr_change(baseline, candidate, baseline_report, candidate_report, manifest):
+    """One exact source intervention, never a generic private-option exemption."""
+    expected = (ORIGINAL_PHOTON_SHA256, REDUCED_SSR_SHA256)
+    for run, report, pin in zip((baseline, candidate), (baseline_report, candidate_report), expected):
+        if report.get('actual_shader_sha256') != pin or manifest['source_inputs'][run['case']].get('shader_sha256') != pin:
+            raise ValueError('Reduced SSR comparison archive does not match exact intervention')
+        preparation = report.get('workload-manifest.json', {})
+        if preparation.get('experiment_family') != 'reduced-ssr-all-five-effects':
+            raise ValueError('Reduced SSR comparison lacks explicit prepared family')
+        if validate_ssr_cost_qualification(preparation.get('reduced_source_qualification')) != REDUCED_SSR_SHA256:
+            raise ValueError('Reduced SSR source qualification differs')
+    if baseline_report['effective_shader_options'].get(REDUCED_SSR_GATE) is not None or candidate_report['effective_shader_options'].get(REDUCED_SSR_GATE) != 'true':
+        raise ValueError('Reduced SSR private gate absent/disabled/mixed')
+    return {'original_archive_sha256': expected[0], 'candidate_archive_sha256': expected[1],
+            'option': REDUCED_SSR_GATE, 'values': [None, 'true'],
+            'limits': 'Qualified private source intervention, not upstream quality equivalence or accepted output/performance.'}
 
 
 def run_metrics(summary):
@@ -55,6 +76,9 @@ def check_pair(baseline, candidate, baseline_report, candidate_report, manifest)
     a = {key: value for key, value in baseline_report['effective_shader_options'].items() if not key.startswith('SHADERLOD_')}
     b = {key: value for key, value in candidate_report['effective_shader_options'].items() if not key.startswith('SHADERLOD_')}
     differences = {key: [a.get(key), b.get(key)] for key in sorted(a.keys() | b.keys()) if a.get(key) != b.get(key)}
+    if REDUCED_SSR_GATE in differences:
+        changes['qualified_source_intervention'] = qualified_reduced_ssr_change(baseline, candidate, baseline_report, candidate_report, manifest)
+        differences.pop(REDUCED_SSR_GATE)
     # Adaptive/disabled must hold original upstream quality constant. Explicit controls may differ.
     protected_candidate = candidate['case'].endswith(('adaptive', 'patched-off', 'final', 'alloff', '-only'))
     protected_original_against_isolation = candidate['case'].endswith('-high') and baseline['case'].endswith(('alloff', '-only'))

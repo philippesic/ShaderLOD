@@ -25,8 +25,11 @@ The reduced far-SSR five-effect Photon control passed with GPU contrasts
 +9.23%/+0.057%, no useful repeated gain. Complementary full/sky/Potato
 sequences each passed41-frame structural checks; matched views show reflection
 loss/displacement. The reverse Photon control passed with8.85%/16.13% GPU
-contrasts, but the forward result was9.23%/flat. The opt-in Photon diagnostic read back all seven linked core fields. Root owns
-a live six-arm forest/coastal pilot from equal original/off/active copies.
+contrasts, but the forward result was9.23%/flat. The opt-in Photon diagnostic read back all seven linked core fields. The six-arm
+pilot completed: active GPU regressed6.76%forest/0.82%coast versus original.
+All captures passed; a narrow private-gate analysis repair retains the failed
+raw manifest and derived qualified analysis. Root owns a Miniature MODE2
+driver/readback smoke test.
 Miniature’s separate seven-field private archive is built but driver/rendering
 acceptance is pending. Balanced
 mod-absent baselines and a second workload are being prepared. Full quality

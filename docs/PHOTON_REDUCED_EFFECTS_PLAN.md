@@ -144,3 +144,33 @@ Exec48805 is running six serial cases, minimal/noDH/native2976x1672,45warm25capt
 GPU sample5/frame-only, CPU layers off, fixed wetness0. Compiled classes remain
 frozen; pilot repeat1 is no acceptance repeat. Actual terminal contracts/images/
 costs remain pending before the three-block run or promotion.
+
+
+## Six-arm pilot terminal and negative
+
+Exec48805 exited1 only at final aggregation; all six individual clients completed
+and passed runner input/artifact/config/source/window/PNG checks. Root revalidated
+them and retained the original failed matrix. The aggregator had treated the
+private PHOTON_SSR_FAR_REDUCED_TRACE_PROBE switch as upstream quality. A narrow
+repair accepts only the exact original/reduced archives plus full prepared-family
+member/metadata qualification and enabled private gate. Other native/private
+quality changes still reject. Four regression fixtures and19 prior matrix tests
+passed. Recovery analysis uses matrix-manifest-qualified.json, with the original
+manifest hash/status/reason preserved; raw failed manifest remains unchanged.
+
+| Scene/arm | FPS | GPU mean / median ms | Thread ms |
+| --- | --- | --- | --- |
+| Forest original | 72.114 | 12.5230 / 12.3980 | 7.4453 |
+| Forest disabled | 71.836 | 12.6092 / 12.4225 | 7.2791 |
+| Forest active | 68.077 | 13.3693 / 13.2130 | 7.2799 |
+| Coast original | 57.773 | 16.0884 / 15.9570 | 7.4650 |
+| Coast disabled | 56.391 | 16.4463 / 16.3712 | 7.4088 |
+| Coast active | 57.061 | 16.2199 / 16.1934 | 7.4051 |
+
+Active mean GPU regressed6.76%forest/0.82%coast versus original (median6.57%/
+1.48% regressions). Single serial pilot only; no useful original-baseline gain
+or cause established. Earlier positive same-JVM phases remain retained and
+cannot override this result. Do not launch three repeats merely to select a
+better outcome; revisit only when a concrete new signal/control warrants them.
+Source intervention annotations do not assert equivalent quality. Miniature
+configuration/driver evidence remains useful independent work.

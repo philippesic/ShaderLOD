@@ -174,3 +174,16 @@ corrected the validator's angle clock and added partial-clock/player-angle check
 and a regression fixture. Seven tests and the original actual sequence pass;
 the tolerance and raw captures were not changed. This was an agent assumption,
 not a user error. Position and rotation clocks must be checked independently.
+
+
+## Private source gates need end-to-end comparison coverage
+
+The new Photon reduced-effects preparer and root fixtures preserved upstream
+options and qualified the private archive, but did not exercise the final matrix
+analysis. All six actual captures passed individual checks; aggregation rejected
+the added private SSR gate as an upstream option difference. Root retained the
+failed raw manifest, revalidated every capture, and added an exact-pin/member/
+metadata/family/gate exception that annotates a source intervention. Other quality
+mismatches still reject; four new fixtures and19 prior tests passed. Recovery
+analysis is a separate derived manifest with original hash/status retained.
+This was an agent integration gap, not a user error or a reason to erase failure.

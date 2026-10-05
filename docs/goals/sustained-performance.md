@@ -2382,3 +2382,33 @@ Nextstrictall6actualartifact/options/configflags/scene/window/class/PNG/contract
 retainfailed/negativearms; then untouchedtimingclones andbalancedrepeatsifuseful.
 No Miniatureclient/compiler/tests/encoder whiletimedpilotlive. Allworkersfrozen/
 completed, main/shared/originaldesign stillreserved. Fullgoalactive/unshrunk.
+
+
+## Pilot captures qualified despite aggregate guard failure; Miniature smoke live
+
+Exec48805 exited1 at aggregation: six client rows complete/accepted. Private SSR
+gate falsely categorized as upstream quality. Root narrow analyzer repair checks
+exact original/reduced pins, complete saved member/private metadata qualification,
+prepared family and enabled gate; annotates source intervention, rejects other
+quality mismatches. Four new +19 prior tests passed. Root revalidated all six
+source/options/config/artifact/class/window/PNG/UUID/temporal contracts. Rawfailed
+manifest retained; matrix-manifest-qualified.json derives statuscomplete with
+original hash/status/reason; matrix-analysis-qualified.json retains negative costs.
+Forest activeGPU13.3693 vsoriginal12.5230 (-6.76% reduction), coast16.2199vs16.0884
+(-0.82%), one serial pilot no useful gain. No repeated acceptance or cause claim.
+Confirmed preparer/root aggregate-test gap recorded USER_LESSONS.
+
+RootsoleGPU LIVEexec88931 Miniature MODE2 fixed-four transition-quality smoke,
+frozen e0e6a037...f3bc7552 archive. Fresh profile
+run-workloads/miniature-seven-core-quality-smoke-r1/coastalwater/profile copied
+original NORMAL source under lock, world9e08651b...e8231809 checked. Mainpresent/
+minimal/noDH/native2976x1672, corePERFORMANCE/near96/far160/W8/debug0,
+nativeSSR10/1.6/4/reflections10/block5, MODE2/DEBUGALLOW0. 25warm5capture/GPUfalse/
+CPUlayersfalse/cloudSamplerProbe=true/frozenclasses/wetness0. Requestb8808552...
+4670, preinputs/classes/world provenance saved. Log
+ dev/logs/miniature-seven-core-quality-smoke-r1.log. Next actual compiler/link/
+noFallback/render/seven-field values/native maps/sampler/PNG contracts; no depth-
+savings/quality/count/GPU claim from MODE2. No otherclient/build/encoder.
+New camera_quality worker owns ONLY new Miniature variant preparation script/
+test/runtimeplan, source-only. Existing main/shared/source/old design untouched.
+Full objective remains active; ordinary15%/second-workload/quality gates unmet.
