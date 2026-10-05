@@ -540,6 +540,121 @@ return 0;
         self.assertRegex(settings, r"#define SHADERLOD_CLOUD_MODE 0 // \[0 1 2\]")
         self.assertRegex(settings, r"(?m)^  #define SHADERLOD_CLOUD_OVERHEAD$")
 
+    def test_lighting_tier_consumers_and_protected_call_sites(self):
+        d4 = self.files["shaders/program/d4_deferred_shading.fsh"].decode()
+        self.assertEqual(4, len(re.findall(r"\bshaderlod_quality\b", d4)))
+        self.assertIn("int shaderlod_quality = 0;\n#ifndef SHADERLOD_PRESERVE_LIGHTING", d4)
+        self.assertIn("int shaderlod_debug_quality = shaderlod_quality;", d4)
+        debug = d4[d4.index("if (shaderlod_debug_enabled() && !is_hand)"):]
+        self.assertIn("#ifdef SHADERLOD_PRESERVE_LIGHTING\n            int shaderlod_debug_quality = shaderlod_quality_at", debug)
+        translucent = self.files["shaders/program/gbuffers_all_translucent.fsh"].decode()
+        self.assertIn("sss_depth,\n#ifdef SHADERLOD_PRESERVE_LIGHTING\n        0\n#else", translucent)
+        helper = self.files["shaders/include/shaderlod/lod.glsl"].decode()
+        self.assertIn("int shaderlod_lighting_tier(int tier) {\n#ifdef SHADERLOD_PRESERVE_LIGHTING\n    return 0;", helper)
+
+    @unittest.skipUnless(shutil.which("c++"), "C++ compiler unavailable for actual lighting/debug fixtures")
+    def test_actual_lighting_debug_control_flow_math_and_call_counts(self):
+        helper = self.files["shaders/include/shaderlod/lod.glsl"].decode()
+        functions = []
+        for name in ("shaderlod_use_bridge", "shaderlod_enabled", "shaderlod_debug_enabled", "shaderlod_distances",
+                     "shaderlod_noise", "shaderlod_tier_with_distances", "shaderlod_quality_at", "shaderlod_lighting_tier", "shaderlod_debug_color"):
+            match = re.search(rf"(?:bool|int|float|vec3) {name}\([^)]*\) \{{", helper)
+            self.assertIsNotNone(match, name)
+            end, depth = match.end(), 1
+            while depth:
+                depth += (helper[end] == "{") - (helper[end] == "}")
+                end += 1
+            body = helper[match.start():end]
+            if name == "shaderlod_quality_at":
+                # Count entries without altering original tier/noise mathematics.
+                body = body.replace("{", "{\n++quality_calls;", 1)
+            functions.append(body)
+        intro = next(patch["after"] for patch in self.manifest["patches"]
+                     if patch["path"] == "shaders/program/d4_deferred_shading.fsh" and patch["before"] == "    vec3 position_world = position_scene + cameraPosition;")
+        intro = intro[intro.index("    int shaderlod_quality"):]
+        debug = next(patch["after"] for patch in self.manifest["patches"]
+                     if patch["path"] == "shaders/program/d4_deferred_shading.fsh" and patch["before"] == "        fragment_color = purkinje_shift(fragment_color, light_levels);")
+        argument = next(patch["after"] for patch in self.manifest["patches"]
+                     if patch["path"] == "shaders/program/gbuffers_all_translucent.fsh" and patch["before"] == "        shadow_distance_fade,\n        sss_depth\n    );")
+        argument = argument[argument.index("#ifdef SHADERLOD_PRESERVE_LIGHTING"):argument.index("#endif")+len("#endif")]
+        adapters = r"""
+#include <cmath>
+#include <algorithm>
+using std::max;using std::min;
+#define float double
+struct vec2 {float x,y;vec2(float a,float b):x(a),y(b){}vec2& operator+=(vec2 b){x+=b.x;y+=b.y;return *this;}};
+vec2 operator*(float a,vec2 b){return vec2(a*b.x,a*b.y);}
+struct vec3 {float x,y,z;vec3(float a,float b,float c):x(a),y(b),z(c){}vec3 operator*(float v)const{return vec3(x*v,y*v,z*v);}vec3 operator+(vec3 b)const{return vec3(x+b.x,y+b.y,z+b.z);}};
+float length(vec3 v){return sqrt(v.x*v.x+v.y*v.y+v.z*v.z);}
+float dot(vec2 a,vec2 b){return a.x*b.x+a.y*b.y;}
+float mod(float a,float b){return a-b*std::floor(a/b);}float fract(float a){return a-std::floor(a);}
+float clamp(float a,float b,float c){return min(max(a,b),c);}
+float smoothstep(float a,float b,float c){float t=clamp((c-a)/(b-a),0.,1.);return t*t*(3.-2.*t);}
+vec3 mix(vec3 a,vec3 b,float v){return a*(1.-v)+b*v;}
+vec3 purkinje_shift(vec3 c,vec2){return c;} // Same unmodified caller input in both arms.
+struct Frag{vec2 xy;};Frag gl_FragCoord{vec2(10.,20.)};
+int frameCounter=42,quality_calls=0;
+#define SHADERLOD_USE_MOD_CONFIG
+#define SHADERLOD_ENABLED
+#define SHADERLOD_NEAR 32.0
+#define SHADERLOD_FAR 96.0
+#define SHADERLOD_TRANSITION 8.0
+int shaderlodBridgeVersion=2,shaderlodEnabled=1,shaderlodDebug=0;
+float shaderlodNear=32.,shaderlodFar=96.,shaderlodTransition=8.;
+struct Output{int lighting,calls;vec3 color;};
+"""
+        reference = r"""
+Output reference(bool sky,bool hand,bool debug_on,float distance,bool enabled){
+ shaderlodEnabled=enabled;shaderlodDebug=debug_on;quality_calls=0;
+ vec3 position_view(distance,0.,0.);float depth=sky?1.:.5;bool is_hand=hand;
+ int shaderlod_quality=(depth==1.||is_hand)?0:shaderlod_quality_at(length(position_view),gl_FragCoord.xy,float(frameCounter));
+ vec3 fragment_color(.2,.3,.4);vec2 light_levels(.5,.7);
+ if(!sky){fragment_color=purkinje_shift(fragment_color,light_levels);
+  if(shaderlod_debug_enabled()&&!is_hand)fragment_color=mix(fragment_color,shaderlod_debug_color(shaderlod_quality),.7);
+ }
+ return {shaderlod_lighting_tier(shaderlod_quality),quality_calls,fragment_color};
+}
+"""
+        candidate = """Output candidate(bool sky,bool hand,bool debug_on,float distance,bool enabled){
+shaderlodEnabled=enabled;shaderlodDebug=debug_on;quality_calls=0;
+vec3 position_view(distance,0.,0.);float depth=sky?1.:.5;bool is_hand=hand;
+vec3 fragment_color(.2,.3,.4);vec2 light_levels(.5,.7);
+""" + intro + "\nif(!sky){\n" + debug + "\n}\nreturn {shaderlod_quality,quality_calls,fragment_color};\n}\n"
+        translucent = "int translucent(){vec3 position_view(200.,0.,0.);return\n" + argument + "\n;}\n"
+        checks = r"""
+int main(){
+for(bool sky:{false,true})for(bool hand:{false,true})for(bool debug:{false,true})for(bool enabled:{false,true})for(float distance:{8.,32.,64.,96.,200.}){
+ Output old=reference(sky,hand,debug,distance,enabled),now=candidate(sky,hand,debug,distance,enabled);
+ if(old.lighting!=now.lighting)return 1;
+ if(std::abs(old.color.x-now.color.x)>1e-12||std::abs(old.color.y-now.color.y)>1e-12||std::abs(old.color.z-now.color.z)>1e-12)return 2;
+#ifdef SHADERLOD_PRESERVE_LIGHTING
+ int expected=(!sky&&!hand&&debug)?1:0;
+#else
+ int expected=(!sky&&!hand)?1:0;
+#endif
+ if(now.calls!=expected)return 3;
+}
+shaderlodEnabled=1;quality_calls=0;
+int result=translucent();
+#ifdef SHADERLOD_PRESERVE_LIGHTING
+if(result!=0||quality_calls!=0)return 4;
+#else
+if(result!=2||quality_calls!=1)return 5;
+#endif
+return 0;
+}
+"""
+        for protected in (False, True):
+            with self.subTest(protected=protected):
+                definitions = "#define SHADERLOD_PRESERVE_LIGHTING\n" if protected else ""
+                path = Path(self.directory.name) / f"lighting-tier-{protected}.cpp"
+                executable = path.with_suffix("")
+                path.write_text(adapters + definitions + "\n".join(functions) + reference + candidate + translucent + checks)
+                compiled = subprocess.run(["c++", "-std=c++17", str(path), "-o", str(executable)], capture_output=True, text=True)
+                self.assertEqual(0, compiled.returncode, compiled.stdout + compiled.stderr)
+                result = subprocess.run([str(executable)], capture_output=True, text=True)
+                self.assertEqual(0, result.returncode, f"Actual lighting/debug fixture failed: {result.returncode}")
+
     def test_off_effect_source_branches_are_pinned_original(self):
         paths = {
             "SHADERLOD_CLOUDS": ("sky/clouds/cumulus.glsl", "sky/clouds/altocumulus.glsl", "sky/clouds/cumulus_congestus.glsl"),
@@ -754,6 +869,10 @@ int main(){
             for overhead in (False, True):
                 variants += ((f"cloud_mode_{mode}_overhead_{overhead}",
                     {"SHADERLOD_CLOUD_MODE": mode, "SHADERLOD_CLOUD_OVERHEAD": overhead}, "#define DISTANT_HORIZONS\n"),)
+        variants += (
+            ("protected_debug_dh", {"SHADERLOD_DEBUG": True, "SHADERLOD_PRESERVE_LIGHTING": True}, "#define DISTANT_HORIZONS\n"),
+            ("legacy_debug_dh", {"SHADERLOD_DEBUG": True, "SHADERLOD_PRESERVE_LIGHTING": False}, "#define DISTANT_HORIZONS\n"),
+        )
         for world in ("world0", "world1", "world-1"):
             for program in ("deferred4", "gbuffers_water", "deferred3", "deferred1", "deferred", "composite", "gbuffers_terrain", "dh_terrain", "dh_water", "composite1", "shadow"):
                 for variant, options, extra in variants:
