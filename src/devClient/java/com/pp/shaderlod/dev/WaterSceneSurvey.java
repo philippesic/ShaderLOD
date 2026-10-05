@@ -26,9 +26,38 @@ public final class WaterSceneSurvey {
     private static final int[] ZS = {640, 660, 680};
     private static final int MIN_Y = 40, MAX_Y = 80;
     private static final int READ_LIMIT = 4096;
+    private static final int CAMERA_READ_LIMIT = 64;
     private static JsonObject terminalSnapshot;
 
     private WaterSceneSurvey() {}
+
+    /** Fresh camera-only observation; independent of terminal opt-in/cache and the 615-cell scan. */
+    public static JsonObject observeCameraSnapshot(Minecraft client) {
+        JsonObject result = new JsonObject();
+        result.addProperty("schema", 1);
+        result.addProperty("captured_utc", Instant.now().toString());
+        result.addProperty("scope", "Rendered camera context only; loaded client cells and guarded fog lookups; no ray visibility, glint, continuous depth or general inside-block proof");
+        result.addProperty("direct_block_state_read_limit", CAMERA_READ_LIMIT);
+        result.addProperty("camera_fog_internal_block_fluid_read_upper_bound", 17);
+        result.addProperty("total_world_state_read_upper_bound", CAMERA_READ_LIMIT + 17);
+        result.addProperty("bound_basis", "Pinned 1.21.1 camera/vanilla fluid height; mod replacements unverified");
+        if (client == null || client.level == null) {
+            result.add("camera", unknown("owned client world unavailable"));
+            result.addProperty("actual_direct_block_state_reads", 0);
+            result.addProperty("actual_unique_cached_positions", 0);
+            result.addProperty("direct_read_budget_exhausted", false);
+            return result;
+        }
+        ReadView view = new ReadView(client.level, CAMERA_READ_LIMIT);
+        result.addProperty("dimension", client.level.dimension().location().toString());
+        try { result.add("camera", camera(client, view)); }
+        catch (RuntimeException exception) { result.add("camera", unknown(exception.toString())); }
+        result.addProperty("actual_direct_block_state_reads", view.reads);
+        result.addProperty("actual_unique_cached_positions", view.states.size());
+        result.addProperty("direct_read_budget_exhausted", view.reads >= CAMERA_READ_LIMIT);
+        result.addProperty("read_count_scope", "Fresh guarded ReadView misses; actual Camera.getFluidInCamera internal duplicate reads have separate pinned-source bound");
+        return result;
+    }
 
     /** First call freezes the snapshot for this JVM; call after measurement with the owned world still open. */
     public static JsonObject captureTerminalSnapshot(Minecraft client) {
@@ -81,6 +110,12 @@ public final class WaterSceneSurvey {
         var camera = client.gameRenderer.getMainCamera();
         JsonObject result = new JsonObject();
         Vec3 position = camera.getPosition();
+        if (!finite(position) || !Float.isFinite(camera.getYRot()) || !Float.isFinite(camera.getXRot())) {
+            result.add("position", unknown("non-finite camera position or orientation"));
+            result.add("fog_type", unknown("camera geometry is non-finite"));
+            result.add("full_collision_block", unknown("camera geometry is non-finite"));
+            return result;
+        }
         result.add("position", coordinates(position));
         result.addProperty("yaw_degrees", camera.getYRot());
         result.addProperty("pitch_degrees", camera.getXRot());
@@ -92,14 +127,24 @@ public final class WaterSceneSurvey {
         result.add("position_cell", cell(view, eye));
         if (!camera.isInitialized() || camera.getEntity() == null || camera.getEntity().level() != view.level) {
             result.add("fog_type", unknown("camera not initialized or current camera-entity level not the surveyed client level"));
+            result.add("full_collision_block", unknown("camera not initialized or current camera-entity level not the surveyed client level"));
             return result;
         }
+        try { result.addProperty("full_collision_block", view.getBlockState(eye).isCollisionShapeFullBlock(view, eye)); }
+        catch (RuntimeException exception) { result.add("full_collision_block", unknown(exception.toString())); }
+        result.addProperty("full_collision_scope", "Actual camera cell full collision shape only; partial-shape containment and near-plane/ray collisions are not tested");
         var near = camera.getNearPlane();
         Set<BlockPos> required = new LinkedHashSet<>();
         required.add(eye);
         for (Vec3 offset : new Vec3[]{near.getPointOnPlane(0.0F, 0.0F), near.getTopLeft(), near.getTopRight(), near.getBottomLeft(), near.getBottomRight()}) {
+            if (!finite(offset) || !finite(position.add(offset))) {
+                result.addProperty("near_plane_positions_finite", false);
+                result.add("fog_type", unknown("non-finite near-plane positions"));
+                return result;
+            }
             required.add(BlockPos.containing(position.add(offset)));
         }
+        result.addProperty("near_plane_positions_finite", true);
         for (BlockPos pos : Set.copyOf(required)) required.add(pos.above());
         JsonArray guards = new JsonArray();
         boolean known = true;
@@ -114,10 +159,16 @@ public final class WaterSceneSurvey {
         result.addProperty("fog_required_unique_positions", required.size());
         if (!known) result.add("fog_type", unknown("not all eye/near-plane/above positions are loaded and within the read budget"));
         else {
-            result.addProperty("fog_type", camera.getFluidInCamera().name());
-            result.addProperty("fog_type_source", "Actual Camera.getFluidInCamera after all pinned-source lookup positions were guarded/preloaded");
+            try {
+                result.addProperty("fog_type", camera.getFluidInCamera().name());
+                result.addProperty("fog_type_source", "Actual Camera.getFluidInCamera after all pinned-source lookup positions were guarded/preloaded");
+            } catch (RuntimeException exception) { result.add("fog_type", unknown(exception.toString())); }
         }
         return result;
+    }
+
+    private static boolean finite(Vec3 position) {
+        return Double.isFinite(position.x) && Double.isFinite(position.y) && Double.isFinite(position.z);
     }
 
     private static JsonObject column(ReadView view, int x, int z) {
@@ -200,9 +251,11 @@ public final class WaterSceneSurvey {
     private static final class ReadView implements BlockGetter {
         private final ClientLevel level;
         private final Map<BlockPos, BlockState> states = new LinkedHashMap<>();
+        private final int readLimit;
         private int reads;
 
-        private ReadView(ClientLevel level) { this.level = level; }
+        private ReadView(ClientLevel level) { this(level, READ_LIMIT); }
+        private ReadView(ClientLevel level, int readLimit) { this.level = level; this.readLimit = readLimit; }
 
         private JsonObject guard(BlockPos pos) {
             JsonObject result = new JsonObject();
@@ -222,7 +275,7 @@ public final class WaterSceneSurvey {
             }
             BlockState existing = states.get(pos);
             if (existing != null) return existing;
-            if (reads >= READ_LIMIT) throw new IllegalStateException("unknown: direct state read budget exhausted at " + pos);
+            if (reads >= readLimit) throw new IllegalStateException("unknown: direct state read budget exhausted at " + pos);
             reads++;
             BlockState state = level.getBlockState(pos);
             states.put(pos.immutable(), state);

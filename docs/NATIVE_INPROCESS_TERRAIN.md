@@ -129,3 +129,21 @@ once-only fixed-scene re-arm, long/post-rearm settling, original-flag restoratio
 exact options/config/DH/window/session identity and static Java route checks.
 All24 stack analyzer fixtures also passed after the shared semantic helper edits.
 Java compilation and actual terrain four-phase rendering remain coordinator work.
+
+
+## Actual four-phase control: mixed GPU effect retained
+
+Root89036 exit0/statuscomplete andstrictanalysisaccepted actualB15/globaltrue/
+fixedoptions/world/pipeline/pose/window/artifacts/manualre-arm/state restoration.
+Native2976×1672/minimal/DH128,75s initial75s settle30s captures/GPU1/16/
+fixedwetness0. BothON actual16/active/warm600 withrecordedsuccessfulone-call
+re-arm; bothOFF actual24/inactive. Realpolicies exportedatbothboundaries.
+
+OFF/ON/OFF/ON GPU15.2141/19.8161/16.1152/14.4899ms, FPS60.129/46.366/56.812/
+62.369, thread8.3002/6.8212/8.2620/6.9585ms. AdjacentGPUtime reductions−30.25%/
++10.09%; frame−29.68/+8.91%; thread+17.82/+15.78%. CPUdrop isconsistent,
+GPU/wholeframeeffect changes sign. FirstONregressionretained; no source/driver/
+upload/thermalcause asserted and no ordinary15% or stablecombinedgain claim.
+Raw `dev/logs/native-terrain-inprocess-forward-r1-{benchmark,analysis}.json`
+and `.log` retainpolicy/re-arm/time/inputs/PNG hashes. Longsettling andpassed
+inputchecks do notprove allhardware/streaming conditions. No defaultchange.

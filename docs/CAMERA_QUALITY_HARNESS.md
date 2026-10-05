@@ -2,12 +2,12 @@
 
 `src/devClient/java/com/pp/shaderlod/dev/CameraQualitySession.java` is the integrated
 development capture utility. It compiled and completed bounded runtime smokes
-recorded below; broader quality acceptance remains pending. The new isolated
-`FastPngWriter.java` repair has standalone lossless checks but awaits the root
-owner's integrated compilation and native 10 FPS retry. This repair changes only
-the capture session, its new dev-only PNG writer and this document. Common
-protocol code, shader sources, build configuration and client processes are
-untouched by this worker.
+recorded below, including the fast lossless writer's 603 native frames; broader
+quality acceptance remains pending. The new camera-only observation/contract
+addition is source-only until root compiles and checks it after the live timing
+run. This addition changes only the capture session, `WaterSceneSurvey` and this
+document. The PNG writer, common protocol code, shader sources, build settings,
+client processes and old raw captures are untouched by this worker.
 
 The harness addresses the missing moving-camera quality check for original,
 derivative-off and derivative-on packs. It records quality evidence only.
@@ -131,6 +131,66 @@ zlib's fast compression. Both preserve exactly the same 8-bit RGBA values.
 No frame-rate substitution or global STB compression setting is used. New
 requests/labels and loaded capture bytecode distinguish this writer from the
 retained legacy `NativeImage.writeToFile` attempts.
+
+Two optional immutable request fields now define camera-context contracts:
+
+```json
+{"expectedCameraFluid":"WATER","rejectFullBlockCamera":true}
+```
+
+Add these fields to a full waypoint request after surveying the proposed route.
+`expectedCameraFluid` accepts exactly the strings `NONE`, `WATER` or `LAVA`.
+Omitting it means record-only; null, booleans, numbers, other names and different
+letter case are rejected. `rejectFullBlockCamera` accepts only a JSON boolean,
+default false. The root manifest's `camera_contract` records the selected fluid
+(null for omitted), rejection flag and limited scope. Existing requests remain
+record-only unless these new fields are explicitly supplied.
+
+Each prospective PNG frame now includes `camera_context` from the fresh public
+`WaterSceneSurvey.observeCameraSnapshot(Minecraft)` API. This camera-only API
+does not depend on `shaderlod.dev.waterSceneSurvey`, use the cached terminal
+snapshot, or perform the 615-cell column scan. It creates a fresh guarded
+`ReadView` bounded to **64 direct block-state reads**, retaining the existing
+dual loaded checks (`ClientLevel.hasChunkAt` and actual client chunk-cache
+`hasChunk`), dimension build-range guard and refusal of block-entity context.
+The full terminal survey retains its original 4096 direct-read limit.
+
+The snapshot records rendered position/orientation and camera mode, camera-cell
+block/fluid/height, loaded guards, collision-empty and full-block collision
+status, initialized/entity-level checks, finite near-plane conditions, every
+required eye/near-plane/above-cell guard, and actual `Camera.getFluidInCamera`
+FogType after its pinned lookup positions pass. Unknowns retain reasons rather
+than invented air/water. Diagnostics record actual direct reads, unique cached
+positions and budget exhaustion; vanilla camera-internal duplicate lookups have
+the separate existing upper bound of 17, hence a camera snapshot bound of
+64+17 world-state reads. These bounds are based on pinned vanilla implementations,
+with replacements by other mods unverified. The observer class SHA-256 is also
+recorded at session creation; complete dev artifact fingerprints remain required.
+
+With an expected fluid, missing/unknown/non-string FogType or a mismatch fails
+the session **before** `Screenshot.takeScreenshot`. With full-block rejection,
+only an observed Boolean `full_collision_block=true` rejects the frame; an
+unknown or partial collision shape is not treated as a known full block. The
+rejected slot retains its context, source-frame metadata, failure and status
+`camera_contract_rejected`, but creates no PNG. Final session status is failed.
+Other slots still follow the existing single-image writer, backpressure,
+callback, on-disk hash and disk/memory bounds. No third-person guard was relaxed.
+
+These fields do not prove shader-delivered `isEyeInWater`, ray visibility,
+glint coverage, near-plane collision clearance, point containment in partial
+shapes or continuous water depth between sampled frames. Finite/loaded geometry
+is a prerequisite for the safe observation, not a quality acceptance result.
+
+Source checks passed for the fresh wrapper's lack of column scan/terminal-cache
+dependency, separate 64/4096 limits, both loaded guards before state reads,
+context retention and contract rejection before PNG readback, strict optional
+type/default guards and unchanged first-person requirement. JSON documentation
+and scoped whitespace checks passed. The pinned cached `BlockBehaviour` source
+declares public `isCollisionShapeFullBlock(BlockGetter,BlockPos)`; this was source
+inspection only. No Java parser, build, client, GPU or encoder was executed during
+the live root timing run. Root still needs integrated compilation, dev exclusion
+and actual NONE/WATER observations, plus missing/unknown/mismatch/full-block
+rejections with no PNG, before this instrumentation is runtime accepted.
 
 The session waits at most 120 seconds for the prepared local singleplayer
 spectator and matching first waypoint. It reads server state on the server
@@ -406,3 +466,12 @@ Originalfirst/mid/endand enabledmidPNGinspected: normalcolors/orientation,
 nearshadows andwaterreflection preserved withoutgrossscene failure. Fullmotion
 review/glint/underwater/third-person acceptance remain separate. 10FPS sampling
 cannotobserveevery renderedframe; no fulltemporalquality or pixelparityclaim.
+
+
+Firstnewtime12500glint attempt31621 failedbeforecapture (0PNGs): initialclient
+fingerprintdaytime7000 changedafter preparedserver/timepacket12500 arrived.
+Failedsession575eb8ba-32db-4710-aa60-e2d84b2158f1 retained. Rootadds waiting-
+phase barrier: clientdimension/daytime mustmatchfrozenserver observation before
+owner/initialfingerprint. Existing120s waitbound andallpostacquisition time/
+weather/config/pack guards remainstrict. Rootdev/fullbuildpassed; retryuses
+sameimmutable request/freshUUID andseparater2log, no oldcaptureoverwrites.

@@ -129,6 +129,12 @@ public final class CameraQualitySession {
         report.addProperty("native_pixel_integer_byte_order", java.nio.ByteOrder.nativeOrder().toString());
         report.addProperty("png_pixel_conversion", "Native RGBA byte layout; getPixelRGBA int -> canonical 0xAABBGGRR -> R,G,B,A bytes; no scaling, gamma or alpha conversion");
         report.add("config", GSON.toJsonTree(config));
+        var cameraContract = new JsonObject();
+        if (config.expectedCameraFluid() == null) cameraContract.add("expected_camera_fluid", com.google.gson.JsonNull.INSTANCE);
+        else cameraContract.addProperty("expected_camera_fluid", config.expectedCameraFluid());
+        cameraContract.addProperty("reject_full_block_camera", config.rejectFullBlockCamera());
+        cameraContract.addProperty("scope", "Optional actual camera FogType match and known full collision cell rejection only; no ray visibility, glint or partial-shape containment proof");
+        report.add("camera_contract", cameraContract);
         report.add("frames", frames);
         var mods = new JsonObject();
         for (var mod : ModList.get().getMods()) mods.addProperty(mod.getModId(), mod.getVersion().toString());
@@ -139,6 +145,9 @@ public final class CameraQualitySession {
         }
         try (var stream = FastPngWriter.class.getResourceAsStream("FastPngWriter.class")) {
             if (stream != null) report.addProperty("png_writer_class_sha256", hash(stream.readAllBytes()));
+        }
+        try (var stream = WaterSceneSurvey.class.getResourceAsStream("WaterSceneSurvey.class")) {
+            if (stream != null) report.addProperty("camera_observer_class_sha256", hash(stream.readAllBytes()));
         }
         report.addProperty("java_version", System.getProperty("java.version"));
         report.addProperty("os_name", System.getProperty("os.name"));
@@ -170,10 +179,19 @@ public final class CameraQualitySession {
                 World observed = worldCheck.join();
                 worldCheck = null;
                 if (!observed.daylightFrozen() || !observed.weatherFrozen() || !observed.spectator()) return;
+                JsonObject preparedInputs = inputs.benchmarkInputState();
+                // Prepared controls arrive through separate server/player/time packets.
+                // Do not freeze the fingerprint until the client reflects the frozen server scene.
+                if (!preparedInputs.get("dimension").getAsString().equals(observed.dimension())
+                        || preparedInputs.get("day_time").getAsLong() != observed.dayTime()) {
+                    report.addProperty("waiting_for_client_scene_sync", true);
+                    return;
+                }
+                report.addProperty("waiting_for_client_scene_sync", false);
                 owner = client.player.getUUID();
                 originalPose = Pose.of(client);
                 initialWorld = observed;
-                initialInputs = inputs.benchmarkInputState();
+                initialInputs = preparedInputs;
                 requirePipeline(initialInputs);
                 worldReference = client.level;
                 pipelineReference = Iris.getPipelineManager().getPipelineNullable();
@@ -300,6 +318,14 @@ public final class CameraQualitySession {
         addPngEncoding(frame);
         frame.addProperty("status", "write_pending");
         frames.add(frame);
+        JsonObject cameraContext = WaterSceneSurvey.observeCameraSnapshot(client);
+        frame.add("camera_context", cameraContext);
+        try { requireCameraContract(cameraContext); }
+        catch (IllegalStateException exception) {
+            frame.addProperty("status", "camera_contract_rejected");
+            frame.addProperty("failure", exception.toString());
+            throw exception;
+        }
         // OpenGL readback occurs exactly here, after the frame's GUI pass.
         final com.mojang.blaze3d.platform.NativeImage image;
         try { image = Screenshot.takeScreenshot(target); }
@@ -377,6 +403,28 @@ public final class CameraQualitySession {
         target.addProperty("png_compression_level", config.pngCompressionLevel());
         target.addProperty("png_bit_depth", 8);
         target.addProperty("png_colour_type", 6);
+    }
+
+    private void requireCameraContract(JsonObject snapshot) {
+        var cameraElement = snapshot.get("camera");
+        JsonObject camera = cameraElement != null && cameraElement.isJsonObject()
+                ? cameraElement.getAsJsonObject() : new JsonObject();
+        if (config.expectedCameraFluid() != null) {
+            var fog = camera.get("fog_type");
+            if (fog == null || !fog.isJsonPrimitive() || !fog.getAsJsonPrimitive().isString()) {
+                throw new IllegalStateException("Expected camera fluid " + config.expectedCameraFluid() + " but guarded FogType is missing/unknown");
+            }
+            if (!config.expectedCameraFluid().equals(fog.getAsString())) {
+                throw new IllegalStateException("Expected camera fluid " + config.expectedCameraFluid() + " but observed " + fog.getAsString());
+            }
+        }
+        if (config.rejectFullBlockCamera()) {
+            var collision = camera.get("full_collision_block");
+            if (collision != null && collision.isJsonPrimitive() && collision.getAsJsonPrimitive().isBoolean()
+                    && collision.getAsBoolean()) {
+                throw new IllegalStateException("Actual camera is in an observed full-collision block cell");
+            }
+        }
     }
 
     private void requireOwner(Minecraft client) throws Exception {
@@ -541,7 +589,8 @@ public final class CameraQualitySession {
         Pose lerp(Pose other, double t) { return new Pose(x + (other.x - x) * t, y + (other.y - y) * t, z + (other.z - z) * t, yaw + (other.yaw - yaw) * t, pitch + (other.pitch - pitch) * t); }
     }
     private record Waypoint(double seconds, Pose pose) {}
-    private record Config(String label, double warmupSeconds, int fps, int pngCompressionLevel, List<Waypoint> waypoints) {
+    private record Config(String label, double warmupSeconds, int fps, int pngCompressionLevel,
+                          String expectedCameraFluid, boolean rejectFullBlockCamera, List<Waypoint> waypoints) {
         static Config parse(String text) {
             JsonObject value = JsonParser.parseString(text).getAsJsonObject();
             if (number(value, "schema", 1, 1) != 1) throw new IllegalArgumentException("schema must be 1");
@@ -553,6 +602,19 @@ public final class CameraQualitySession {
             if (rate != Math.floor(rate)) throw new IllegalArgumentException("fps must be an integer");
             double compression = value.has("pngCompressionLevel") ? number(value, "pngCompressionLevel", 0, 1) : 0;
             if (compression != Math.floor(compression)) throw new IllegalArgumentException("pngCompressionLevel must be an integer 0 or 1");
+            String expectedCameraFluid = null;
+            if (value.has("expectedCameraFluid")) {
+                var expected = value.get("expectedCameraFluid");
+                if (!expected.isJsonPrimitive() || !expected.getAsJsonPrimitive().isString()) throw new IllegalArgumentException("expectedCameraFluid must be a string NONE, WATER or LAVA");
+                expectedCameraFluid = expected.getAsString();
+                if (!List.of("NONE", "WATER", "LAVA").contains(expectedCameraFluid)) throw new IllegalArgumentException("expectedCameraFluid must be NONE, WATER or LAVA");
+            }
+            boolean rejectFullBlockCamera = false;
+            if (value.has("rejectFullBlockCamera")) {
+                var reject = value.get("rejectFullBlockCamera");
+                if (!reject.isJsonPrimitive() || !reject.getAsJsonPrimitive().isBoolean()) throw new IllegalArgumentException("rejectFullBlockCamera must be a JSON boolean");
+                rejectFullBlockCamera = reject.getAsBoolean();
+            }
             JsonArray points = value.getAsJsonArray("waypoints");
             if (points.size() < 2 || points.size() > 32) throw new IllegalArgumentException("Need 2-32 waypoints");
             List<Waypoint> result = new ArrayList<>();
@@ -580,7 +642,7 @@ public final class CameraQualitySession {
             if (result.getLast().seconds() < 20 || totalDistance > 512) throw new IllegalArgumentException("Sequence must last 20-30 seconds and travel <= 512 blocks");
             double slots = result.getLast().seconds() * rate;
             if (Math.abs(slots - Math.rint(slots)) > 1e-6) throw new IllegalArgumentException("Duration must end on a capture slot");
-            return new Config(label, warmup, (int)rate, (int)compression, List.copyOf(result));
+            return new Config(label, warmup, (int)rate, (int)compression, expectedCameraFluid, rejectFullBlockCamera, List.copyOf(result));
         }
         double duration() { return waypoints.getLast().seconds(); }
         int slotCount() { return (int)Math.round(duration() * fps) + 1; }

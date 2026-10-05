@@ -116,3 +116,20 @@ GPU/driver, logs and process handle. The source author has run no full compiler,
 client, GPU check or world mutation. Root must compile after all workers freeze,
 reserve the sole client/GPU slot, inspect the report and then prepare any new
 camera profiles from verified loaded geometry. No new mixin is needed.
+
+
+## Actual loaded-cell survey
+
+Root3103 exit0/originalPhoton/minimal/noDH/1488×836,25s warmup5s diagnostic,
+GPUqueries0. Actualguardedcamera69.62y at240.5/680.5 wasair/NONE/firstperson,
+no collision. All615fixedcandidatecells loaded andobserved,615unique/direct
+reads. Atx500,z640/660/680, y60/61/62 werewater withemptycollision and
+observedsurface62.8889; y63..70air. Columnsx400 likewise showedhighwater,
+butx300,z660/680 hadlowerwater-cells only48.8889/56.8889. No continuous
+corridor/visibility proof followsfromsampledcolumns.
+
+Raw `dev/logs/water-scene-survey-r1-workload.json`/`.log` preservecontrols,
+world/config/source/classes,615states andcamera guards. Rootselects x500.5
+forinitialwestglint andunderwater probes; perframefluid/fullcollisioncontracts
+mustverify actualcamera throughoutpath. Existingnorthshoreline didnotprove
+sun-glintcoverage, so originaltargeted view mustshowitbeforecandidateassessment.

@@ -294,3 +294,23 @@ This document passes only static request/math review. All requests are 20 second
 512-block/32-block-per-second/90-degree-per-second bounds. No world depth,
 sun-glint appearance, underwater rendering, third-person distance units, shader
 compilation, support or performance gate is accepted from this plan.
+
+
+## First actual Photon glint coverage
+
+Rootloaded-only615cellsurvey foundx500 sampledcolumns640/660/680 water60..62,
+surface62.8889 andair63..70; selectedx500.5/y68/z660.5 originaltime12500
+westwardsweep afterx300columns showedlower/nonuniform watersurface. Newroot
+perframecontracts expectedNONE/no-fullcollision compiled. Initialattemptfailed
+beforePNG dueclienttimepacket sync, retained. Rootacquisitionbarrier fixed;
+retry95096 exit0/complete201/201/0skips/allPNGhashes verified, native2976×1672/
+10FPS/minimal/noDH. Actualcamera Eye69.62 observedNONE/fullcollisionfalse.
+
+Rootframe50atnearideal87.380/3.735 inspected: lowwesternsun anditsbrightwater
+reflection visible, originalwatersurface/glint coverageestablished inthis
+boundedview. Source/actualpose/time12500/loadedwater observations support
+identification; this is no fullglint-temporal or candidatequality acceptance.
+Sequence d66ac242-6f0e-4292-af0f-973c37d2a131, rawlog/manifest
+`dev/logs/photon-targeted-glint-original-r2` withsourcePNGs underprofile.
+Matchedglobaloff/on on sameimmutable request stillneeded. Underwater route
+prepared butnotexecuted; thirdpersonremainsunsupportedbycurrentharness.

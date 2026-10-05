@@ -149,3 +149,14 @@ The planner/fixture owner had tested synthetic metadata but notthisactual WAL
 side effect. Repairmetadata inspection on an isolated database+WAL snapshot,
 preserve real sourcefiles andstrict worldhash guards; do notignore mismatch or
 assume mode=ro prevents filesystem side effects. Failedpreparationr1 retained.
+
+
+## Prepared time needs client/server synchronization before quality acquisition
+
+Root's firstnewglint scene12500 failedbeforePNG because qualityacquisition
+sawthe newpose andfrozenserver butsnapshotted theclient's olddaytime7000.
+Separate control/player/time packets canarriveondifferentticks; earlier7000
+scenes hidthisassumption. Rootretained575eb8ba…zero-framefailure and addedan
+acquisition barrier requiringclient dimension/daytime equalobserved frozen
+server scene beforeinitialfingerprint. Afteracquisition alltime/config guards
+staystrict; no toleratedcapture change or worldclock override added.
