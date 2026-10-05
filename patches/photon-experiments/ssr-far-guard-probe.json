@@ -1,0 +1,47 @@
+{
+  "schema": 1,
+  "experiment": "photon-ssr-far-full-trace-diagnostic",
+  "base_version": "v1.3b",
+  "baseline": "B15 protected-lighting/no-atmosphere",
+  "base_sha256": "b15d3c50f192e0e3de8e912afba2cc531e7d0520e3cbe573a7e35b993528e16c",
+  "license_sha256": "514402d18eedb0afe374344ca9f0fe87b7399779518184b8fc64e31674555fc5",
+  "baseline_metadata_sha256": "5653a52f590ce10cd75fbaff24f1ed053e49564ade7b4c79bb2747f69feed084",
+  "switch": "PHOTON_SSR_FAR_FULL_TRACE_PROBE",
+  "option_declaration": "// ShaderLOD private far SSR full-trace diagnostic; default off.\n//#define PHOTON_SSR_FAR_FULL_TRACE_PROBE\n",
+  "members": [
+    {
+      "path": "shaders/include/lighting/specular_lighting.glsl",
+      "source_sha256": "6a4a8c53675f7287cf28168913f3e3e2b7ce9bd9d2fb5755548a27927ee4d92d",
+      "patched_sha256": "d57fce9683b3675f60edb08dd7f52168833852c7b57e15196387d337e8938df8",
+      "replacements": [
+        {
+          "before": "    int quality = shaderlod_ssr_tier(length(view_pos), dither);\n",
+          "after": "    int quality = shaderlod_ssr_tier(length(view_pos), dither);\n#ifdef PHOTON_SSR_FAR_FULL_TRACE_PROBE\n    // Quality/causality control: restore upstream per-ray budgets at far tier.\n    // Keep environment/material eligibility and the existing trace/fallback path.\n    if (quality == 2) quality = 0;\n#endif // PHOTON_SSR_FAR_FULL_TRACE_PROBE\n"
+        }
+      ]
+    },
+    {
+      "path": "shaders/settings.glsl",
+      "source_sha256": "d1f571e5d96ecffdf7ebcfcf28a13d34dc5bfd5c3606702e06832f95f88aa3cd",
+      "patched_sha256": "acfe98c49ed20ddf7118ff9c2faf1b65d1f2222c56187b6cec7cc905eb08aed7",
+      "enabled_sha256": "33e39309f4e9a31990ce722c32cd56bbd981880f6447756f87bbbebebad69602",
+      "replacements": [
+        {
+          "before": "#define SETTINGS_INCLUDED\n",
+          "after": "#define SETTINGS_INCLUDED\n// ShaderLOD private far SSR full-trace diagnostic; default off.\n//#define PHOTON_SSR_FAR_FULL_TRACE_PROBE\n"
+        }
+      ]
+    }
+  ],
+  "policy": {
+    "eligible_trace_tier": 2,
+    "diagnostic_local_tier": 0,
+    "caller_eligibility": "unchanged; no do_ssr variable in exact B15",
+    "environment_guard": "ENVIRONMENT_REFLECTIONS unchanged",
+    "intersection_budget": "unchanged upstream caller argument via shaderlod_budget tier0",
+    "refinement_budget": "unchanged upstream caller argument via quality==0 selector",
+    "rough_ray_count": "B15 LOD unchanged",
+    "purpose": "Quality/causality control intentionally restores expensive far tracing; not an optimization",
+    "sampling_scope": "No new texture call/form or enclosing sampling branch. Existing hit-dependent implicit fog and non-Overworld sky sampling remain; no universal derivative or pixel parity claim."
+  }
+}

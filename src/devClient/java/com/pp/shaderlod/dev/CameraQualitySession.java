@@ -28,13 +28,15 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Explicit opt-in, development-only camera/capture experiment.
  * No performance result is produced here.
- * All state changes run on the client thread except one image write at a time.
+ * Session/frame changes stay on the client thread; one writer also updates
+ * synchronized image-lease stages. At most two images/callbacks are pending.
  */
 public final class CameraQualitySession {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
@@ -49,7 +51,8 @@ public final class CameraQualitySession {
     private final JsonObject report = new JsonObject();
     private final JsonArray frames = new JsonArray();
     private final long created = System.nanoTime();
-    private final ExecutorService writer;
+    private final ThreadPoolExecutor writer;
+    private final CaptureWriteTracker writes;
     private final boolean closeOwnedClient = Boolean.getBoolean("shaderlod.dev.cameraQualityOnly");
     private UUID owner;
     private Pose originalPose;
@@ -60,7 +63,7 @@ public final class CameraQualitySession {
     private long warmedAt, motionStarted, drainingAt, lastWorldCheck, lastFingerprint;
     private int warmedTicks, motionTick, nextSlot, renderedFrames, completedWrites, skippedFrames;
     private long completedBytes;
-    private boolean moving, draining, writeInFlight, finalized;
+    private boolean moving, draining, drainTimeoutReported, finalized;
     private String failure;
 
     /** Call once when constructing the dev client, never once per tick. */
@@ -107,11 +110,21 @@ public final class CameraQualitySession {
         this.sourceHash = sourceHash;
         this.config = config;
         inputs = new WorkloadInputs(game);
-        writer = Executors.newSingleThreadExecutor(task -> {
+        writes = new CaptureWriteTracker(config.maximumInFlightImages());
+        var queue = new ArrayBlockingQueue<Runnable>(1) {
+            @Override public boolean offer(Runnable task) {
+                boolean accepted = super.offer(task);
+                // Capacity is exactly one, so every successful offer proves a peak of one,
+                // even if the worker dequeues before a later client-thread sample.
+                if (accepted) writes.observeExecutorQueue(1);
+                return accepted;
+            }
+        };
+        writer = new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS, queue, task -> {
             Thread thread = new Thread(task, "ShaderLOD-camera-quality-write");
             thread.setDaemon(true);
             return thread;
-        });
+        }, new ThreadPoolExecutor.AbortPolicy());
         report.addProperty("schema", 1);
         report.addProperty("label", config.label());
         report.addProperty("created_at_utc", Instant.now().toString());
@@ -126,6 +139,11 @@ public final class CameraQualitySession {
         report.addProperty("maximum_png_bytes", MAX_PNG_BYTES);
         report.addProperty("maximum_sequence_png_bytes", MAX_SEQUENCE_BYTES);
         report.addProperty("maximum_framebuffer_pixels", MAX_PIXELS);
+        report.addProperty("maximum_in_flight_images", config.maximumInFlightImages());
+        report.addProperty("maximum_native_image_slot_bytes", config.maximumInFlightImages() * MAX_PIXELS * 4);
+        report.addProperty("writer_threads", 1);
+        report.addProperty("writer_executor_queue_capacity", 1);
+        report.addProperty("image_lease_policy", "Pending callbacks retain capacity; tracked image slots include reserved readback and waiting/active writer images; NativeImage closes before its callback; one fixed encoder-buffer set");
         report.addProperty("native_pixel_integer_byte_order", java.nio.ByteOrder.nativeOrder().toString());
         report.addProperty("png_pixel_conversion", "Native RGBA byte layout; getPixelRGBA int -> canonical 0xAABBGGRR -> R,G,B,A bytes; no scaling, gamma or alpha conversion");
         report.add("config", GSON.toJsonTree(config));
@@ -149,6 +167,9 @@ public final class CameraQualitySession {
         try (var stream = WaterSceneSurvey.class.getResourceAsStream("WaterSceneSurvey.class")) {
             if (stream != null) report.addProperty("camera_observer_class_sha256", hash(stream.readAllBytes()));
         }
+        try (var stream = CaptureWriteTracker.class.getResourceAsStream("CaptureWriteTracker.class")) {
+            if (stream != null) report.addProperty("capture_write_tracker_class_sha256", hash(stream.readAllBytes()));
+        }
         report.addProperty("java_version", System.getProperty("java.version"));
         report.addProperty("os_name", System.getProperty("os.name"));
         report.addProperty("os_version", System.getProperty("os.version"));
@@ -162,10 +183,14 @@ public final class CameraQualitySession {
         try {
             long now = System.nanoTime();
             if (draining) {
-                if (!writeInFlight) finish(client);
-                else if (seconds(now, drainingAt) > 30) {
-                    failure = "Screenshot writer callback did not complete within 30 seconds";
-                    finish(client);
+                if (writes.drained()) finish(client);
+                else if (!drainTimeoutReported && seconds(now, drainingAt) > 30) {
+                    drainTimeoutReported = true;
+                    if (failure == null) failure = "Screenshot writer callbacks did not all complete within 30 seconds";
+                    report.addProperty("failure", failure);
+                    report.addProperty("drain_timeout_reported", true);
+                    // Do not finalize/close a client while a queued or active image is still owned.
+                    writeManifest("failed_waiting_for_png_callbacks");
                 }
                 return;
             }
@@ -256,7 +281,7 @@ public final class CameraQualitySession {
             while (nextSlot < due) skipped(nextSlot++, "missed_render_slot");
             if (nextSlot <= due && nextSlot < config.slotCount()) {
                 int slot = nextSlot++;
-                if (writeInFlight) skipped(slot, "writer_backpressure");
+                if (!writes.hasCapacity()) skipped(slot, "writer_backpressure");
                 else capture(client, slot, pathSeconds, partial);
             }
             if (motionTick > config.duration() * 20 && nextSlot >= config.slotCount()) {
@@ -275,7 +300,8 @@ public final class CameraQualitySession {
     private void capture(Minecraft client, int slot, double pathSeconds, float partial) throws Exception {
         var target = client.getMainRenderTarget();
         if (target.width < 1 || target.height < 1 || (long)target.width * target.height > MAX_PIXELS) throw new IllegalStateException("Framebuffer exceeds 4096*2160 pixel memory bound");
-        if (completedBytes > MAX_SEQUENCE_BYTES - MAX_PNG_BYTES) throw new IllegalStateException("Sequence has insufficient disk budget for another bounded PNG");
+        long reservedPngBytes = (writes.pendingCount() + 1L) * MAX_PNG_BYTES;
+        if (completedBytes > MAX_SEQUENCE_BYTES - reservedPngBytes) throw new IllegalStateException("Sequence has insufficient disk budget for all pending bounded PNGs");
         var camera = client.gameRenderer.getMainCamera();
         var position = camera.getPosition();
         if (!Double.isFinite(position.x) || !Double.isFinite(position.y) || !Double.isFinite(position.z)
@@ -315,6 +341,8 @@ public final class CameraQualitySession {
         frame.addProperty("rain", client.level.getRainLevel(partial));
         frame.addProperty("thunder", client.level.getThunderLevel(partial));
         frame.addProperty("file", filename);
+        frame.addProperty("maximum_in_flight_images", config.maximumInFlightImages());
+        frame.add("write_state_before_readback", GSON.toJsonTree(writes.snapshot()));
         addPngEncoding(frame);
         frame.addProperty("status", "write_pending");
         frames.add(frame);
@@ -327,27 +355,36 @@ public final class CameraQualitySession {
             throw exception;
         }
         // OpenGL readback occurs exactly here, after the frame's GUI pass.
+        writes.reserve(slot);
+        frame.addProperty("image_write_slot_id", slot);
+        long readbackStarted = System.nanoTime();
         final com.mojang.blaze3d.platform.NativeImage image;
         try { image = Screenshot.takeScreenshot(target); }
         catch (Exception exception) {
+            writes.rejectedBeforeWrite(slot);
             frame.addProperty("status", "readback_failed");
             frame.addProperty("failure", exception.toString());
             throw exception;
         }
+        frame.addProperty("readback_wall_seconds", seconds(System.nanoTime(), readbackStarted));
         frame.addProperty("native_image_format", image.format().name());
         if (image.format() != com.mojang.blaze3d.platform.NativeImage.Format.RGBA) {
             image.close();
+            writes.rejectedBeforeWrite(slot);
             frame.addProperty("status", "unsupported_native_image_format");
             throw new IllegalStateException("Pinned screenshot RGBA format required by lossless PNG writer");
         }
-        writeInFlight = true;
         long bytesBeforeWrite = completedBytes;
+        long queuedAt = System.nanoTime();
+        writes.queued(slot);
         try {
             writer.execute(() -> {
                 String digest = null, error = null;
                 long bytes = 0;
                 long startedWrite = System.nanoTime();
                 try (image) {
+                    writes.beginWrite(slot);
+                    writes.observeExecutorQueue(writer.getQueue().size());
                     Path path = output.resolve(filename);
                     long encodedBytes = FastPngWriter.write(path, image.getWidth(), image.getHeight(), (x, y) -> {
                         int nativePixel = image.getPixelRGBA(x, y);
@@ -356,14 +393,28 @@ public final class CameraQualitySession {
                     bytes = Files.size(path);
                     if (bytes != encodedBytes || bytes > MAX_PNG_BYTES || bytesBeforeWrite + bytes > MAX_SEQUENCE_BYTES) throw new IllegalStateException("PNG size mismatch or 64 MiB/12 GiB disk bound exceeded");
                     digest = WorkloadInputs.hash(path);
-                } catch (Exception exception) { error = exception.toString(); }
+                } catch (Throwable exception) { error = exception.toString(); }
+                // Image is closed by the resource block on both encoding success and error.
+                writes.imageReleased(slot);
+                long writeFinished = System.nanoTime();
                 String completedHash = digest, completedError = error;
                 long writtenBytes = bytes;
                 double writeSeconds = seconds(System.nanoTime(), startedWrite);
                 client.execute(() -> {
-                    writeInFlight = false;
-                    if (finalized) return; // Final manifest explicitly retains writer timeout.
+                    long callbackAt = System.nanoTime();
+                    try { writes.callback(slot); }
+                    catch (IllegalStateException exception) {
+                        frame.addProperty("callback_protocol_failure", exception.toString());
+                        fail(client, exception);
+                        return;
+                    }
+                    if (finalized) return; // Defensive: normal finalization requires every callback first.
+                    frame.addProperty("callback_slot_id", slot);
                     frame.addProperty("callback_completed_at_utc", Instant.now().toString());
+                    frame.addProperty("writer_queue_wait_seconds", seconds(startedWrite, queuedAt));
+                    frame.addProperty("writer_callback_delay_seconds", seconds(callbackAt, writeFinished));
+                    frame.addProperty("image_lease_wall_seconds", seconds(callbackAt, readbackStarted));
+                    frame.add("write_state_after_callback", GSON.toJsonTree(writes.snapshot()));
                     frame.addProperty("write_wall_seconds", writeSeconds);
                     frame.addProperty("bytes", writtenBytes);
                     frame.addProperty("status", completedError == null ? "written" : "write_failed");
@@ -376,22 +427,29 @@ public final class CameraQualitySession {
                         completedBytes += writtenBytes;
                         report.addProperty("png_callback_successes", completedWrites);
                         report.addProperty("skipped_capture_slots", skippedFrames);
-                        writeManifest(draining ? "waiting_for_png_callback" : "capturing");
+                        writeManifest(draining ? (drainTimeoutReported ? "failed_waiting_for_png_callbacks" : "waiting_for_png_callback") : "capturing");
                     }
                 });
             });
         } catch (RuntimeException exception) {
             image.close();
-            writeInFlight = false;
+            writes.rejectedBeforeWrite(slot);
             frame.addProperty("status", "writer_rejected");
             throw exception;
         }
+        // Submission succeeded: only the worker may now close this image.
+        // Keep later metadata failures outside the submission-rejection cleanup.
+        writes.observeExecutorQueue(writer.getQueue().size());
+        frame.add("write_state_after_submission", GSON.toJsonTree(writes.snapshot()));
+        frame.addProperty("writer_executor_queue_size_after_submission", writer.getQueue().size());
     }
 
     private void skipped(int slot, String reason) {
         JsonObject frame = new JsonObject();
         frame.addProperty("slot", slot);
         frame.addProperty("scheduled_path_seconds", slot / (double)config.fps());
+        frame.addProperty("maximum_in_flight_images", config.maximumInFlightImages());
+        frame.add("write_state_at_skip", GSON.toJsonTree(writes.snapshot()));
         addPngEncoding(frame);
         frame.addProperty("status", reason);
         frames.add(frame);
@@ -486,7 +544,7 @@ public final class CameraQualitySession {
         if (failure == null) failure = exception.toString();
         LogUtils.getLogger().error("Camera quality session failed: {}", output, exception);
         if (!draining) beginDrain();
-        if (!writeInFlight) finish(client);
+        if (writes.drained()) finish(client);
     }
 
     private void beginDrain() {
@@ -497,6 +555,7 @@ public final class CameraQualitySession {
 
     private void finish(Minecraft client) {
         if (finalized) return;
+        if (!writes.drained()) throw new IllegalStateException("Cannot finalize or close a client with unsettled image leases");
         finalized = true;
         writer.shutdown();
         report.addProperty("rendered_frames_observed", renderedFrames);
@@ -504,7 +563,7 @@ public final class CameraQualitySession {
         report.addProperty("png_callback_successes", completedWrites);
         report.addProperty("png_bytes_successfully_written", completedBytes);
         report.addProperty("skipped_capture_slots", skippedFrames);
-        report.addProperty("writer_pending_at_finalization", writeInFlight);
+        report.addProperty("writer_pending_at_finalization", !writes.drained());
         boolean unchanged = sourceHash.equals(safeHash(source));
         report.addProperty("request_unchanged_at_end", unchanged);
         if (!unchanged && failure == null) failure = "Request source changed before finalization";
@@ -529,6 +588,9 @@ public final class CameraQualitySession {
     }
 
     private void writeManifest(String status) {
+        writes.observeExecutorQueue(writer.getQueue().size());
+        report.add("capture_write_tracker", GSON.toJsonTree(writes.snapshot()));
+        report.addProperty("writer_executor_queue_size", writer.getQueue().size());
         report.addProperty("status", status);
         report.addProperty("written_at_utc", Instant.now().toString());
         try {
@@ -589,7 +651,7 @@ public final class CameraQualitySession {
         Pose lerp(Pose other, double t) { return new Pose(x + (other.x - x) * t, y + (other.y - y) * t, z + (other.z - z) * t, yaw + (other.yaw - yaw) * t, pitch + (other.pitch - pitch) * t); }
     }
     private record Waypoint(double seconds, Pose pose) {}
-    private record Config(String label, double warmupSeconds, int fps, int pngCompressionLevel,
+    private record Config(String label, double warmupSeconds, int fps, int pngCompressionLevel, int maximumInFlightImages,
                           String expectedCameraFluid, boolean rejectFullBlockCamera, List<Waypoint> waypoints) {
         static Config parse(String text) {
             JsonObject value = JsonParser.parseString(text).getAsJsonObject();
@@ -602,6 +664,8 @@ public final class CameraQualitySession {
             if (rate != Math.floor(rate)) throw new IllegalArgumentException("fps must be an integer");
             double compression = value.has("pngCompressionLevel") ? number(value, "pngCompressionLevel", 0, 1) : 0;
             if (compression != Math.floor(compression)) throw new IllegalArgumentException("pngCompressionLevel must be an integer 0 or 1");
+            double inFlight = value.has("maximumInFlightImages") ? number(value, "maximumInFlightImages", 1, 2) : 1;
+            if (inFlight != Math.floor(inFlight)) throw new IllegalArgumentException("maximumInFlightImages must be an integer 1 or 2");
             String expectedCameraFluid = null;
             if (value.has("expectedCameraFluid")) {
                 var expected = value.get("expectedCameraFluid");
@@ -642,7 +706,7 @@ public final class CameraQualitySession {
             if (result.getLast().seconds() < 20 || totalDistance > 512) throw new IllegalArgumentException("Sequence must last 20-30 seconds and travel <= 512 blocks");
             double slots = result.getLast().seconds() * rate;
             if (Math.abs(slots - Math.rint(slots)) > 1e-6) throw new IllegalArgumentException("Duration must end on a capture slot");
-            return new Config(label, warmup, (int)rate, (int)compression, expectedCameraFluid, rejectFullBlockCamera, List.copyOf(result));
+            return new Config(label, warmup, (int)rate, (int)compression, (int)inFlight, expectedCameraFluid, rejectFullBlockCamera, List.copyOf(result));
         }
         double duration() { return waypoints.getLast().seconds(); }
         int slotCount() { return (int)Math.round(duration() * fps) + 1; }

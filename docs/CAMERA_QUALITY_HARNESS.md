@@ -3,10 +3,11 @@
 `src/devClient/java/com/pp/shaderlod/dev/CameraQualitySession.java` is the integrated
 development capture utility. It compiled and completed bounded runtime smokes
 recorded below, including the fast lossless writer's 603 native frames; broader
-quality acceptance remains pending. The new camera-only observation/contract
-addition is source-only until root compiles and checks it after the live timing
-run. This addition changes only the capture session, `WaterSceneSurvey` and this
-document. The PNG writer, common protocol code, shader sources, build settings,
+quality acceptance remains pending. Loaded-only camera contracts have since
+rendered in the targeted checks. The new optional two-image backpressure change
+is source-only until root compiles and retries native capture. This change owns
+only the capture session, new pure `CaptureWriteTracker`/fixture and this
+document. The observer, PNG writer, common protocol, shaders, build settings,
 client processes and old raw captures are untouched by this worker.
 
 The harness addresses the missing moving-camera quality check for original,
@@ -173,7 +174,7 @@ only an observed Boolean `full_collision_block=true` rejects the frame; an
 unknown or partial collision shape is not treated as a known full block. The
 rejected slot retains its context, source-frame metadata, failure and status
 `camera_contract_rejected`, but creates no PNG. Final session status is failed.
-Other slots still follow the existing single-image writer, backpressure,
+Other slots still follow the single writer's bounded image leases, backpressure,
 callback, on-disk hash and disk/memory bounds. No third-person guard was relaxed.
 
 These fields do not prove shader-delivered `isEyeInWater`, ray visibility,
@@ -233,7 +234,9 @@ temporary file followed by replacement.
 The 24-second example requests 241 slots, including start and end; the maximum
 is 301. OpenGL readback is on the render thread immediately after the frame's
 GUI pass. PNG writing/hashing uses one daemon writer with **one in-flight
-image**, no queue of native images. The framebuffer is bounded to 4096×2160
+image by default**, or two only when explicitly requested. Its executor queue
+has a fixed capacity of one; image/callback leases enforce the separate 1–2
+producer bound. The framebuffer is bounded to 4096×2160
 pixels by area (about 34 MiB of RGBA source pixels). The fast writer streams one
 `width*4+1` byte scanline plus a 256 KiB compressed chunk and 64 KiB file buffer;
 it does not copy the full image into another array. Each PNG is limited to
@@ -249,11 +252,15 @@ If a render misses a scheduled slot or the writer is still busy, that slot is
 retained as `missed_render_slot` or `writer_backpressure`. The harness never
 duplicates a later screenshot to fill missing motion. PNG write completion
 returns to the client thread and records hash, size, UTC completion and write
-wall time. The final manifest waits for that callback, with a 30-second timeout;
+wall time. The final manifest waits for every pending slot's own callback. At
+30 seconds of draining, an unresolved callback records a timeout failure;
 the manifest is also checkpointed after every successful write callback.
-An unresolved writer remains explicit in the failed report. A timeout can leave
-the daemon writer finishing an owned file, but cannot be called completed
-capture evidence.
+An unresolved writer remains explicit as `failed_waiting_for_png_callbacks`.
+The session continues draining instead of finalizing/closing while a queued or
+active image could still be owned. Root must inspect a genuine stuck writer;
+timeout is not completed capture evidence. Normal finalization and owned-client
+shutdown require zero pending leases, including images already closed whose
+client callbacks are delayed.
 
 Each captured checkpoint records actual rendered mainCamera position/yaw/pitch,
 local player pose, motion tick/delta, planned/observed path seconds, actual
@@ -363,7 +370,7 @@ not establish high-rate shimmer/glint/underwater/transition quality or speedup.
 
 ## Native 10FPS attempt retained as incomplete
 
-Root47878 terminalexit0, actualnative2976×1672 Photonoriginal/noDH/minimal,
+Root47878 terminalexit0, actualnative 2976×1672 Photonoriginal/noDH/minimal,
 30s warmup20s verifiedopenwaterpath. Session38bb5653-804e-443b-a3d1-34b0bf8427e6
 requested201 slots, wrote22 andskipped179 duewriter_backpressure. FirstPNG
 write0.727s/12.07MB; actual20.062s motion401ticks and1165renderframes. Source/
@@ -444,7 +451,7 @@ or high-rate quality acceptance is claimed by this source repair.
 ## Root actual native fast-writer retry
 
 Rootdev/fullbuild passed andproductionjarcontains0deventries includingencoder
-nestedclasses. Retry69835 exit0/statuscomplete: native2976×1672 originalPhoton/
+nestedclasses. Retry69835 exit0/statuscomplete: native 2976×1672 originalPhoton/
 minimal/noDH, same201slots/10FPS/openwaterpath withnewr2label andexplicitlevel0.
 All201callbacks succeeded,0skips; everyon-diskSHAverified. Total4002856509bytes,
 medianwrite0.031689s/max0.049359s versusoriginalr1firstwrite0.727s. This is
@@ -467,11 +474,128 @@ nearshadows andwaterreflection preserved withoutgrossscene failure. Fullmotion
 review/glint/underwater/third-person acceptance remain separate. 10FPS sampling
 cannotobserveevery renderedframe; no fulltemporalquality or pixelparityclaim.
 
+## Explicit two-image native capture retry
+
+The native underwater original attempt `43689` is retained as
+`incomplete_capture`: 176/201 PNGs, 25 writer-backpressure slots, 794 rendered
+frames over about 20 seconds, median PNG write 30.54 ms/max 68.50 ms at 2976×1672.
+These observations do not identify a cause. Readback, writer time, callback
+delivery and render cadence may overlap differently than a single median
+suggests. A lower-resolution clip may add bounded quality evidence but cannot
+replace this native acceptance requirement or erase its failure.
+
+The optional immutable request field `maximumInFlightImages` now accepts integer
+**1 or 2**, default **1**. Null, strings, booleans, fractions and values outside
+that range are rejected. The default retains the old conservative scheduling
+rule: even a closed image keeps its slot occupied until its own client callback
+settles. Explicit 2 permits one additional pending image/callback without
+changing requested FPS, framebuffer, camera path, shader inputs, fluid contract,
+encoder, or the 12 GiB PNG cap.
+
+`CaptureWriteTracker` is pure synchronized lifecycle bookkeeping, independent
+of Minecraft/GL. At most two monotonically identified slot leases exist. Each
+advances through reserved readback, waiting writer, active write and awaiting
+callback. The source image closes in the worker resource block before callback
+delivery; only that slot's callback releases its pending capacity. Readback and
+submission failures close any returned image and reject their own unsubmitted
+lease. Submission succeeds before later metadata collection, so a metadata
+failure cannot close an image already owned by the worker.
+
+The executor has exactly one daemon thread and a physical queue of capacity 1.
+No unbounded producer queue is used. A successful queue offer records its peak
+even if the worker dequeues before the next client sample. Tracker snapshots
+record pending/reserved-image/active/waiting/callback counts and peaks, slot IDs
+and stages, accepted/rejected/settled counts and physical queue peak. Waiting
+writer stage counts can include the first task starting its thread as well as
+the queue; they are not substituted for physical queue size. Native pixel slots
+are bounded by 2×4096×2160×4 = **70,778,880 bytes** (about 67.5 MiB), plus the
+existing readback scratch row and one fixed encoder-buffer set. Reservation
+counts conservatively cover readback; images closed before callback no longer
+count as image slots, but still count as pending leases.
+
+The manifest records the selected limit, maximum image-slot bytes, one-thread/
+capacity-one policy, tracker class SHA-256 and current tracker/queue state.
+Frames retain slot identity/hash/error plus state before readback, after
+submission, after callback and at skipped slots. Added wall-clock diagnostics
+separate `readback_wall_seconds`, `writer_queue_wait_seconds`,
+`write_wall_seconds`, `writer_callback_delay_seconds` and
+`image_lease_wall_seconds`. These are quality-harness diagnostics, not GPU
+timings or a causal proof. Conservative 64 MiB disk reservation per pending slot
+prevents two concurrent leases from overcommitting the fixed sequence cap.
+
+Every failure drains all already submitted slots. A 30-second drain timeout
+retains failed-waiting status and pending IDs instead of prematurely finalizing
+or stopping the owned client. No new readback occurs while draining. Final
+manifest and owned shutdown require every lease to settle, including closed
+images awaiting callbacks. A genuine stuck I/O/callback requires root attention;
+the harness does not free an image while a worker might still read it.
+
+Source-only `tests/java/com/pp/shaderlod/dev/CaptureWriteTrackerFixture.java`
+covers bounds, default 1 delayed callback capacity, rejected readback/submission,
+duplicate/unknown slot callbacks, single encoder, reversed callback order,
+failed writer startup, drain and cross-thread bookkeeping. This worker has not
+compiled or run it during root's live quality job. Root can run only this pure
+fixture with JDK 21 after release, using a fresh ignored output directory:
+
+```sh
+png_tracker_check_dir=$(mktemp -d "$PWD/build/capture-write-check-XXXXXX")
+/Library/Java/JavaVirtualMachines/jdk-21.jdk/Contents/Home/bin/javac --release 21 -d "$png_tracker_check_dir" src/devClient/java/com/pp/shaderlod/dev/CaptureWriteTracker.java tests/java/com/pp/shaderlod/dev/CaptureWriteTrackerFixture.java
+/Library/Java/JavaVirtualMachines/jdk-21.jdk/Contents/Home/bin/java -cp "$png_tracker_check_dir" com.pp.shaderlod.dev.CaptureWriteTrackerFixture
+```
+
+Root then owns dev compilation/production exclusion and a fresh native original
+retry. Preserve the original request, captures and control. Create a new request
+label/path with exactly this candidate content; time 7000/clear weather and the
+initial control must remain 500.5/60/660.5, yaw 180 / pitch −10:
+
+```json
+{
+  "schema":1,"label":"photon-underwater-quality-native-inflight2-r3",
+  "warmupSeconds":30,"fps":10,"pngCompressionLevel":0,
+  "maximumInFlightImages":2,
+  "expectedCameraFluid":"WATER","rejectFullBlockCamera":true,
+  "waypoints":[
+    {"seconds":0,"x":500.5,"y":60.0,"z":660.5,"yaw":180.0,"pitch":-10.0},
+    {"seconds":20,"x":500.5,"y":60.0,"z":640.5,"yaw":180.0,"pitch":-10.0}
+  ]
+}
+```
+
+Use the unchanged native 2976×1672 original Photon/minimal/noDH profile,
+GPU timing false, camera-only owned shutdown, 30-second warmup and 20-second
+10 FPS motion. Require 201/201 callbacks/on-disk hashes, zero skipped slots,
+pending 0 at finalization, peak pending/image slots≤2, active encoder≤1, physical
+queue≤1, and all captured WATER/no-full-block contexts before matched arms.
+Any remaining native gap is retained and remains incomplete evidence. No
+throughput, shimmer, shader performance or complete native quality acceptance
+is established by this source change.
+
 
 Firstnewtime12500glint attempt31621 failedbeforecapture (0PNGs): initialclient
-fingerprintdaytime7000 changedafter preparedserver/timepacket12500 arrived.
+fingerprintdaytime 7000 changedafter preparedserver/timepacket12500 arrived.
 Failedsession575eb8ba-32db-4710-aa60-e2d84b2158f1 retained. Rootadds waiting-
 phase barrier: clientdimension/daytime mustmatchfrozenserver observation before
 owner/initialfingerprint. Existing120s waitbound andallpostacquisition time/
 weather/config/pack guards remainstrict. Rootdev/fullbuildpassed; retryuses
 sameimmutable request/freshUUID andseparater2log, no oldcaptureoverwrites.
+
+
+## Actual bounded native underwater retry
+
+Rootbuild/devcompilepassed; productionjar has0dev entries. Puretrackerfixture
+passed31 lifecycle/identity/rejection/drain/thread checks. Retry7545 terminal/
+complete201/201/0skips atunchangednative2976×1672/10FPS/path/fluidcontract,
+explicitmaximumInFlightImages2/newlabel. UUID2743e7ff-75f8-4cad-9649-2d44c5eaafaf.
+All201actualWATER/nonfullcollision/on-diskPNGhashes/callbackslotidentities
+verified. Finaltrackerpending0/accepted201/settled201/rejected0, peakpending/
+image slots≤2, writers1/queue≤1; original176/201 failure retained. This verifies
+boundedcapturethroughput onthisscenario, notshaderspeedup orunderwatervisual
+quality. Rawmanifest/log `dev/logs/photon-targeted-underwater-original-native-inflight2-r3`;
+sourceNativePNGs retainedunderprofile. Matcheddisabled/enabledwater stillneeded.
+
+
+Importantactualcounterlimit: thissuccessfulretry's observedpeakpending/image
+slots was **1**, whileconfiguredmaximum was2. Thusit doesnotestablish that
+usingtwoleases causedthethroughput success. Rootretains cross-run variance
+andnewinstrumentation as possibleconditions withoutassigningacause. Bound2
+lifecycle is coveredbythepurefixture, not exercisedbythisruntime's peak.
