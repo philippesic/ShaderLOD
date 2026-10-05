@@ -202,3 +202,41 @@ df2a3d2b50bebdba2e7eae1066bd33c03cc6f3234f6c7143ce660b431b0010e6,
 metadataretained `dev/logs/miniature-refinement-build-metadata-r1.json`.
 Defaultmode0; actualmode1/2Irisdriver andpixel/quality/performance unverified.
 No existingcuearchive or rawsamplerreport wasrewritten.
+
+
+## Actual full-four explicit-sampling driver control
+
+Root54815 exit0/threeaccepted: original, privateMODE0off, MODE1full4explicit.
+Qualifiedstandard1488×836/minimal/noDH shoreline,35s warmup20s capture/GPU1/16;
+nativeSSR10/stride1.6/binary4 andreflectioncontrols fixed, probeglobalenabled/
+96→160bands. Frozencompiledharness classguards passed; terrainworker source
+edits notcompiled. Allfallbackfalse. Mode1actualIris translated/linked and
+rendered normalterrain/water/tree reflections, rootfinalPNG inspectedwithout
+grossfailure. This establishes syntax/rendering, notexactpixel/gradientparity
+or movingedge/glint acceptance.
+
+Original182.675FPS/GPU4.4219ms; off179.555/4.5044; full4explicit175.585/4.7083.
+Singlepilotfull4explicit4.53%slowerGPUvsoff/6.48%vsoriginal; source/layout/
+compiler/JVMvariance unresolved, retainednegativecontrol. No gain/default/
+supportpromotion. Raw `dev/logs/miniature-refinement-full-control-r1` retains
+allactualoptions/config/artifacts/inputs/samples/PNGs. Nextmatchedfull4versus
+MODE2reducedrefinements atsamebands; no inference of savedGPUoperations from
+sourcecount alone.
+
+
+## Actual distance-mode pilot
+
+Root35046 exit0/bothaccepted, samefrozencompiledharness/minimal/noDH/1488×836/
+35s warmup20s capture/GPU1/16, full4explicit MODE1 vs4/3/2 MODE2 withglobaltrue/
+96→160corebands andnative10/1.6/4. Bothfallbackfalse, normalrenderingrootPNG
+inspected: nearbank/trees/waterreflection intact withoutgrossfailure. Exact
+count-path coverage, farthin reflections/transitionmotion andGPUuniformreadback
+remainadditional checks; loadedoptions/config do notaloneprovecheapbranch use.
+
+MODE1GPU4.5430ms/FPS178.234/thread5.3356; MODE2GPU4.5432/FPS179.938/thread5.2722.
+GPUdifferenceflat (~−0.004%time reduction), despite~0.95%frame difference.
+Singlepilot no demonstratedavoidedGPUwork/gain; defaultoff retained. Raw
+`dev/logs/miniature-refinement-lod-pilot-r1` preserves exactactualsource/options/
+config/artifacts/samples/PNGs. Nextfreshdiagnosticreads linkednormalcoreuniforms
+withoutGPUtiming; movingbudgetquality remainsseparate. Do notpromote this
+prototype to supported/performance adapter based oncompile+configuration.

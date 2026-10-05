@@ -372,3 +372,36 @@ python3 scripts/prepare_native_terrain_profiles.py \
 Root still owns actual preparation and all rendering, DH coverage, quality and
 timing acceptance. The repair changes no runner validation, shader, Java,
 terrain policy, cap, default or automatic-travel claim.
+
+
+## First actual native pilot
+
+Root5636 terminalexit0/allfouraccepted: original/high,patched-off,geometry,
+adaptive inthatorder, native2976×1672/minimal/DH3.3.3,75s warmup30s capture/
+GPU1/16/fixedwetness0. Exactfourinitialworldfingerprints equal. Geometrystart/
+end requested24/effective16/terrainactive true; endpolicyactive/cap16/stable2105/
+warm600/reasonDHterraincapactive. No silent24 fallback accepted.
+
+| Arm | FPS | GPU mean ms | Thread mean ms | Effective detail chunks |
+| --- | ---: | ---: | ---: | ---: |
+| Original |59.909|15.2692|9.1220|24|
+| Patched global off |54.841|16.7714|8.7958|24|
+| All active + existing cap16 |62.968|14.4778|7.4063|16|
+| All active shader only |61.675|15.0119|8.9746|24|
+
+Combinedversusoriginal GPU5.18%/frame4.86%; geometryversusadaptiveGPU3.56%/
+frame2.05%, thread17.48%. Shader-onlyversusoriginalGPU1.69%/frame2.86%.
+Singlepilot/serial order/JVMvariance; earlierB15globaloffregime regression
+retained. Native totalbenefitbelow15%, despiteCPUdrop. No rendering-quality/
+travel/defaultpromotion or noveltopology claim. Raw
+`dev/logs/native-terrain-b15-pilot-r1` retains allactualinput/hash/policy/samples.
+RootmustinspectgeometryPNG versusoriginal before qualitystatement. Next
+same-JVM terrainonly control ratherthan broad16JVM matrix onweakpilot.
+
+
+Root subsequently inspected original andgeometryfinalPNGs. Foreground terrain,
+near tree shadows andshoreline remain recognizable; distant leftplateau/tree
+silhouettes visiblycoarsen withcap16/DHreplacement. This is explicitmesh/detail
+qualitytradeoff, not imageequivalence. Original lightingbudgets remainselected,
+butmeshreplacement changesfarappearance. No userdefault/qualityacceptance from
+thisfixedposepilot; warmedmanualack anddefaultoff retained.

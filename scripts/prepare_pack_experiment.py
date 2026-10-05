@@ -42,6 +42,10 @@ def prepare(source, output, family, bridge_cue=True, with_dh=False):
             controls = options | {'SHADERLOD_MINIATURE_CORE_PROBE': '1',
                                   'SHADERLOD_MINIATURE_CORE_CUE': '1' if bridge_cue else '0'}
             arms = {name: (probe, controls) for name in ('bridge-absent', 'bridge-disabled', 'bridge-enabled', 'bridge-bands')}
+        if family == 'miniature-refinement':
+            probe = ROOT / 'build/Miniature-ShaderLOD-RefinementProbe-2.19.zip'
+            arms.update({name: (probe, options | {'SHADERLOD_MINIATURE_REFINE_MODE': str(mode)})
+                         for name, mode in (('refinement-off', 0), ('refinement-full', 1), ('refinement-lod', 2))})
         include_dh = False
     elif family.startswith('makeup-'):
         candidates = json.loads((ROOT / 'dev/shader-candidates.lock.json').read_text())
@@ -127,8 +131,8 @@ def prepare(source, output, family, bridge_cue=True, with_dh=False):
             (profile / 'config/iris.properties').write_text(''.join(f'{k}={v}\n' for k,v in iris.items()))
             if not include_dh: (profile / 'mods' / runtime['artifacts']['distanthorizons']['filename']).unlink(missing_ok=True)
             elif with_dh: shutil.copy2(ROOT / 'dev/runtime' / runtime['artifacts']['distanthorizons']['filename'], profile / 'mods' / runtime['artifacts']['distanthorizons']['filename'])
-            if family in ('makeup-core-bridge', 'miniature-core-bridge'):
-                enabled = arm in ('bridge-enabled', 'bridge-bands')
+            if family in ('makeup-core-bridge', 'miniature-core-bridge', 'miniature-refinement'):
+                enabled = arm in ('bridge-enabled', 'bridge-bands', 'refinement-off', 'refinement-full', 'refinement-lod')
                 near, far = (8.0, 16.0) if arm == 'bridge-bands' else (96.0, 160.0)
                 (profile / 'config/shaderlod-client.toml').write_text(
                     f'[lod]\nenabled={str(enabled).lower()}\npreset="PERFORMANCE"\nnear={near}\nfar={far}\ntransition=8.0\ndebug=false\n'
@@ -147,7 +151,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--source', required=True, type=Path)
     parser.add_argument('--output', required=True, type=Path)
-    parser.add_argument('--family', required=True, choices=('bsl', 'miniature', 'miniature-core-bridge', 'makeup-water', 'makeup-probes', 'makeup-core-bridge', 'photon-cloud-consumer', 'photon-cloud-secondary', 'photon-cloud-literal'))
+    parser.add_argument('--family', required=True, choices=('bsl', 'miniature', 'miniature-core-bridge', 'miniature-refinement', 'makeup-water', 'makeup-probes', 'makeup-core-bridge', 'photon-cloud-consumer', 'photon-cloud-secondary', 'photon-cloud-literal'))
     parser.add_argument('--no-bridge-cue', action='store_true', help='Prepare normal core-bridge rendering, with diagnostic color compiled out')
     parser.add_argument('--with-dh', action='store_true', help='Pinned MakeUp compatibility experiment; never a support claim')
     args = parser.parse_args()

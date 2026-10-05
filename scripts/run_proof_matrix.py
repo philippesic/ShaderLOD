@@ -29,6 +29,9 @@ CASES = {
     'miniature-bridge-disabled': ('coastalwater/bridge-disabled', 'runClientLodOn'),
     'miniature-bridge-enabled': ('coastalwater/bridge-enabled', 'runClientLodOn'),
     'miniature-bridge-bands': ('coastalwater/bridge-bands', 'runClientLodOn'),
+    'miniature-refinement-off': ('coastalwater/refinement-off', 'runClientLodOn'),
+    'miniature-refinement-full': ('coastalwater/refinement-full', 'runClientLodOn'),
+    'miniature-refinement-lod': ('coastalwater/refinement-lod', 'runClientLodOn'),
     'makeup-high': ('coastalwater/high', 'runClientLodOff'),
     'makeup-off': ('coastalwater/adapter-off', 'runClientLodOff'),
     'makeup-on': ('coastalwater/adapter-on', 'runClientLodOff'),
@@ -443,8 +446,10 @@ def main():
     p.add_argument('--fixed-wetness', type=wetness_value, help='Dev-only artificial shader weather control; real rain/smoother clocks remain unchanged')
     p.add_argument('--timeout', type=float, default=300)
     p.add_argument('--skip-build', action='store_true')
+    p.add_argument('--freeze-dev-classes', action='store_true', help='Use the already compiled dev harness; requires --skip-build and retains class hash guards')
     p.add_argument('--dry-run', action='store_true', help='Print ordering/commands without files, build or client launch')
     args = p.parse_args()
+    if args.freeze_dev_classes and not args.skip_build: p.error('--freeze-dev-classes requires --skip-build')
     if not 1 <= args.repeats <= 100 or args.warmup < 5 or args.duration < 5: p.error('Invalid repeats/warmup/duration')
     plan = balanced_plan(args.cases, args.stacks, args.repeats)
     profiles_root = args.profiles_root.resolve()
@@ -458,6 +463,7 @@ def main():
                           '-PgpuSampleInterval=' + str(args.sample_interval),
                           '-PbenchmarkWindowScale=' + str(args.window_scale)]
         if args.no_gpu_queries: row['command'].append('-PgpuTiming=false')
+        if args.freeze_dev_classes: row['command'].extend(['-x', 'compileDevClientJava'])
         if args.fixed_wetness is not None: row['command'].append('-PfixedWetness=' + str(args.fixed_wetness))
     if args.dry_run:
         print(json.dumps({'plan': plan, 'minimum_capture_seconds': len(plan) * (args.warmup + args.duration)}, indent=2)); return
@@ -477,6 +483,7 @@ def main():
                     'profiles_root': str(profiles_root), 'include_dh': args.dh == 'present',
                     'gpu_queries': not args.no_gpu_queries, 'sample_interval': args.sample_interval,
                     'window_scale': args.window_scale,
+                    'frozen_dev_classes': args.freeze_dev_classes,
                     'fixed_wetness': args.fixed_wetness,
                     'source_inputs': inputs, 'runs': plan, 'cases': args.cases, 'stacks': args.stacks,
                     'git_head': subprocess.run(['git', 'rev-parse', 'HEAD'], cwd=ROOT, capture_output=True, text=True, check=True).stdout.strip(),
