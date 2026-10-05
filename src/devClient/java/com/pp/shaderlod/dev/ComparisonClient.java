@@ -13,6 +13,7 @@ import net.minecraft.client.Screenshot;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.neoforged.fml.ModList;
+import net.irisshaders.iris.Iris;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.RenderGuiEvent;
 import net.neoforged.neoforge.common.NeoForge;
@@ -166,12 +167,17 @@ final class ComparisonClient {
         var window = client.getWindow();
         boolean serialMeasurement = Boolean.getBoolean("shaderlod.dev.measureOnly")
                 || Boolean.getBoolean("shaderlod.dev.benchmarkOnly");
-        window.setTitle(serialMeasurement ? (enabled ? "ShaderLOD serial measurement" : "Photon serial baseline")
-                : enabled ? "ShaderLOD landscape — LOD ON (left)" : "Photon landscape — BASELINE (right)");
+        window.setTitle(serialMeasurement ? (enabled ? "ShaderLOD serial measurement" : "Shader serial baseline")
+                : enabled ? "ShaderLOD landscape — LOD ON (left)" : "Shader landscape — BASELINE (right)");
         try (var stack = MemoryStack.stackPush()) {
             var x = stack.mallocInt(1); var y = stack.mallocInt(1); var w = stack.mallocInt(1); var h = stack.mallocInt(1);
             GLFW.glfwGetMonitorWorkarea(GLFW.glfwGetPrimaryMonitor(), x, y, w, h);
             int width = (w.get(0) - 24) / 2, height = Math.min(h.get(0) - 80, width * 9 / 16);
+            int windowScale = Integer.getInteger("shaderlod.dev.benchmarkWindowScale", 1);
+            if (windowScale < 1 || windowScale > 2) throw new IllegalArgumentException("Benchmark window scale must be 1 or 2");
+            width *= windowScale;
+            height *= windowScale;
+            if (width > w.get(0) || height > h.get(0)) throw new IllegalArgumentException("Benchmark window exceeds monitor work area");
             window.setWindowed(width, height);
             GLFW.glfwSetWindowSize(window.getWindow(), width, height);
             int horizontal = serialMeasurement ? x.get(0) + (w.get(0) - width) / 2
@@ -187,7 +193,8 @@ final class ComparisonClient {
         if (client.level == null || client.options.hideGui) return;
         boolean mod = ModList.get().isLoaded("shaderlod");
         var lines = new ArrayList<String>();
-        lines.add((mod ? "LOD " + (ShaderLodConfig.snapshot().enabled() ? "ON " : "OFF ") + ShaderLodConfig.PRESET.get() : "PHOTON BASELINE (no ShaderLOD)") + " | " + client.getFps() + " FPS");
+        lines.add((mod ? "LOD " + (ShaderLodConfig.snapshot().enabled() ? "ON " : "OFF ") + ShaderLodConfig.PRESET.get() : "SHADER BASELINE (no ShaderLOD)") + " | " + client.getFps() + " FPS");
+        lines.add("Pack: " + Iris.getCurrentPackName());
         long now = System.nanoTime();
         if (now >= nextOverlayUpdate) {
             overlayTimings = GpuTimers.snapshot();
@@ -202,19 +209,13 @@ final class ComparisonClient {
         for (String scope : List.of("iris/shadow-map", "iris/deferred1", "iris/deferred3", "iris/deferred4", "iris/composite")) {
             var stats = timings.scopes().get(scope);
             if (stats != null && stats.samples() > 0) {
-                String label = switch (scope) {
-                    case "iris/deferred1" -> "Clouds";
-                    case "iris/deferred3" -> "AO";
-                    case "iris/deferred4" -> "Opaque lighting";
-                    case "iris/composite" -> "Fog";
-                    default -> "Shadow map";
-                };
-                lines.add(String.format(Locale.ROOT, "%s %.2f ms", label, stats.meanMs()));
+                lines.add(String.format(Locale.ROOT, "%s %.2f ms", scope, stats.meanMs()));
             }
         }
         String distantReach = ModList.get().isLoaded("distanthorizons") ? "DH " + dhChunks + "ch" : "DH absent";
         lines.add(client.getWindow().getWidth() + " x " + client.getWindow().getHeight() + " | MC " + client.options.renderDistance().get() + "/" + client.options.getEffectiveRenderDistance() + "ch | " + distantReach);
-        lines.add(timings.status() + " | shared GPU preview");
+        boolean serial = Boolean.getBoolean("shaderlod.dev.measureOnly") || Boolean.getBoolean("shaderlod.dev.benchmarkOnly");
+        lines.add(timings.status() + (serial ? " | serial measurement" : " | shared GPU preview"));
         if (benchmark != null) lines.add(benchmark.status());
         if (workload != null) lines.add(workload.status());
         var cpuFrame = overlayCpuTimings.scopes().get("run-tick");

@@ -47,8 +47,11 @@ do not establish that connection. Pin and verify adapters independently.
 Renderer-specific CPU experiments remain secondary, optional components. They
 must not become the product's main abstraction or change sunlight cadence to
 manufacture results. No sunlight updates or shadow-map refreshes have been changed;
-source cadence investigation only informs possible visibility reuse. Keep Photon
-performance proof first and preserve the user's existing expansion gate.
+source cadence investigation only informs possible visibility reuse. Photon stays
+the reference implementation. The latest fresh-chat authorization allows other
+pack research and exploratory testing now; accepted support and performance
+still require each pack's own compilation, rendering, repeated timing and quality
+evidence.
 
 ## Initial risks
 

@@ -66,3 +66,20 @@ did not start execution. Checking process/output state exposed the idle handoff;
 followup_task started the authorized replay. Use followup_task for new execution
 by completed workers, and send_message for steering an already-running worker.
 This was a coordinator error, not a missing user authorization or user mistake.
+
+
+## 2026-10-05: evidence-file assumptions corrected
+
+Fresh performance root initially required every shaderoption file to persist.
+Iris deleted the original MakeUp all-default file after a successful smoke, so
+the next pilot failed before launching. Root corrected missing-default
+normalization against the retained preparationcontrols and actual loaded Iris
+options, preserved the failed log and corrected the prematurely planned live
+checkpoint to the real session45311. This was an agent/harness assumption, not
+a shader failure or user mistake.
+
+Stackanalysis worker caught different raw API Base hashes despite same version.
+Packresearch traced them to Iris/Sodium nested copies and proved identical
+classes/resources except a NeoForge minimum bound satisfied by pinned21.1.253.
+Root retained strict rejection and required a separate exact-hash/runtime
+qualified mode. Same-version strings alone are insufficient artifact evidence.

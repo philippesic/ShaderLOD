@@ -106,3 +106,13 @@ downloads alone. Prioritize reusable shader LOD and real frame improvements;
 keep renderer experiments bounded. Record negative results and moving-camera
 quality, not only best FPS. The protocol chat will implement common effect
 configuration and transport; avoid simultaneous file edits or shader reloads.
+
+
+## Takeover receipt: 2026-10-05
+
+Fresh chat `01a10adc-41ba-76a1-a5eb-1f27c6be8fef` created its native unbudgeted
+goal and continues the existing sustained-performance project checkpoint. It
+accepts sole GPU/client ownership. No Minecraft client was running on receipt.
+First work is primary-source research and optional culling-stack validation,
+followed by explicit pinned other-pack experiments. Existing protocol files
+remain owned by the original chat.

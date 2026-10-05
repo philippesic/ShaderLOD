@@ -1,17 +1,18 @@
 # ShaderLOD status
 
-Updated: 2026-10-04.
+Updated: 2026-10-05.
 
 Active goal: [Sustained performance and compatibility](goals/sustained-performance.md).
 The user authorized ongoing team development, Photon first, benchmarks with
-optional performance mods, and additional shaders after repeatable Photon gains.
+optional performance mods, and immediate research/experimental testing of additional
+shaders. Support and performance promotion still require repeated evidence.
 Previous completed goal: [Full-frame rendering proof](goals/full-frame-proof.md).
 The seven-arm shoreline cloud pilot completed (session45404, exit0/all7accepted).
 No root client is live. The first 36-run matrix, water pilots,
 nine-arm effect sweep, compiled-source controls, sparse-query repeats, JFR
 capture and exact shadow-culling repeats have finished. Their results remain
-mixed; the ordinary-scene performance gate is unmet. Second shader support has
-not started. See [REPEATED_RESULTS.md](REPEATED_RESULTS.md).
+mixed; the ordinary-scene performance gate is unmet. MakeUp9.5g original rendered on the pinned runtime without DH; its experimental
+water adapter and wider support remain unverified. Exploratory research is authorized. See [REPEATED_RESULTS.md](REPEATED_RESULTS.md).
 
 Current committed source: `bbb70d5`. Explicit compile-time effect controls retain
 original code when off. Water analytic normals and the exact shadow-frustum
@@ -33,7 +34,9 @@ prototype preserves observed shadow-list fingerprints while skipping no work.
 A separate frame-local coherence cache matched the original classifier in
 5.16 million real queries, but avoided the full test on only 5.3% of them.
 The team is preparing bounded real-query replay to tune that coverage before
-performance trials. No root game is live; root owns all client/GPU launches.
+performance trials. No game is live at takeover. The fresh performance chat
+`01a10adc-41ba-76a1-a5eb-1f27c6be8fef` owns all client/GPU launches;
+the original chat owns common protocol/configuration and existing Photon patches.
 Current source/task ownership and pending checks are in the active checkpoint.
 
 ## Previous completed proof
@@ -90,3 +93,15 @@ counters; timestamps are unavailable on this host. Scope limitations are in
 
 No remote host, publishing destination, or push is configured. Generated clients,
 worlds, binaries, screenshots, and raw reports remain outside Git.
+
+
+## Fresh performance evidence: 2026-10-05
+
+Nine original-Photon minimal/optimized/culling forest captures completed. Exact
+loaded optional jars and embedded libraries validated; a separate qualified
+comparison retains the audited Iris/Sodium API Base metadata difference. Stack
+effects changed sign; no meaningful benefit established. See STACK_FOREST_RESULTS.md.
+Original MakeUp9.5g then compiled/rendered the noDH shoreline with visible
+reflections. Default-off water SSR adapter and isolated Photon cloud-consumer
+experiment have source fixtures only so far. Sole GPU owner is the fresh chat;
+current process/next steps are in the active goal's final checkpoint.

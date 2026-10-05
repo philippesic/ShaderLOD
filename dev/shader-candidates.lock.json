@@ -1,0 +1,274 @@
+{
+  "schema_version": 1,
+  "inspected_on": "2026-10-05",
+  "purpose": "Exploratory candidates only; no support or performance claim",
+  "runtime_lock": "dev/runtime.lock.json",
+  "runtime_constraints": {
+    "minecraft": "1.21.1",
+    "neoforge": "21.1.253",
+    "iris": "1.8.12",
+    "sodium": "0.6.13",
+    "distant_horizons_optional": "3.3.3",
+    "host": "Apple M3 Max / OpenGL 4.1"
+  },
+  "candidates": [
+    {
+      "rank": 1,
+      "modrinth_project": "makeup-ultra-fast-shaders",
+      "project_id": "izsIPI7a",
+      "primary_page": "https://modrinth.com/shader/makeup-ultra-fast-shaders",
+      "metadata_license": {
+        "id": "LGPL-3.0-or-later",
+        "name": "GNU Lesser General Public License v3.0 or later",
+        "url": null
+      },
+      "release": {
+        "version_id": "pgb0JjoN",
+        "version": "9.5g",
+        "published": "2026-10-04T05:28:42.138680Z",
+        "url": "https://cdn.modrinth.com/data/izsIPI7a/versions/pgb0JjoN/MakeUp-UltraFast-9.5g.zip",
+        "filename": "MakeUp-UltraFast-9.5g.zip",
+        "size": 405096,
+        "sha256": "0036da17e0c7158e1c669593e6322d53fce3f5a42fb5124b935e9e21a5719db8",
+        "sha512": "90a2f75eb073eaae5fe65f2ea5f8d656c122760c07ff75306728df4b162c42f88be531f026d174e035fea153f0ac5e227e8885d8b199335d3beadb6a58f79239",
+        "advertises_minecraft_1_21_1": true,
+        "advertised_loaders": [
+          "iris",
+          "optifine"
+        ],
+        "extracted_local_path": "dev/upstream/other-pack-research/makeup-ultra-fast"
+      },
+      "validation": {
+        "download_hash_verified": true,
+        "static_source_inspected": true,
+        "glsl_compiled": false,
+        "iris_rendered": false,
+        "dh_3_3_3_rendered": false,
+        "performance_measured": false
+      },
+      "source": {
+        "repository": "https://github.com/javiergcim/MakeUpUltraFast",
+        "revision": "ad2d9327ad485429e4eaf2b3f98cd738ada609de",
+        "archive_url": "https://codeload.github.com/javiergcim/MakeUpUltraFast/zip/ad2d9327ad485429e4eaf2b3f98cd738ada609de",
+        "archive_sha256": "4673a6fdccca85b8289367a3e4eb4d110991e43151ef48dccba6fa22d56ec8f4",
+        "extracted_local_path": "dev/upstream/other-pack-research/makeup-source/MakeUpUltraFast-ad2d9327ad485429e4eaf2b3f98cd738ada609de",
+        "release_shader_files_byte_identical": true
+      },
+      "entry_point_sha256": {
+        "LICENSE": "e3a994d82e644b03a792a930f574002658412f62407f5fee083f2555c5f23118",
+        "shaders/lib/water.glsl": "c20a450723aa1a604ddfc724d7c70e138b071c1bfe6d7b3282ea2e3ab7f0740f",
+        "shaders/lib/water_dh.glsl": "3b31003b00bb6a55c79e42b0f36209ed27a86ef8b9b5c2f094e512c80fe2af53",
+        "shaders/lib/config.glsl": "1290769f3932378760770a4b13e21563988e67b8457de73e3e9677583136f9f2",
+        "shaders/common/water_blocks_fragment.glsl": "4e550dc0dbfcca04e2f79b506ee33e2900793082782f8ca1e2652f2495a2c70a",
+        "shaders/src/position_vertex_water.glsl": "5fab44f4f246f8b5b15b906bb5d0c6bc009199feb2126bdf7bf4e2217bfb9329"
+      }
+    },
+    {
+      "rank": 2,
+      "modrinth_project": "miniature-shader",
+      "project_id": "UaS8ROxa",
+      "primary_page": "https://modrinth.com/shader/miniature-shader",
+      "metadata_license": {
+        "id": "MIT",
+        "name": "MIT License",
+        "url": null
+      },
+      "release": {
+        "version_id": "LWmZ94RG",
+        "version": "2.19",
+        "published": "2026-07-29T02:24:45.127760Z",
+        "url": "https://cdn.modrinth.com/data/UaS8ROxa/versions/LWmZ94RG/miniature-shader-2.19.zip",
+        "filename": "miniature-shader-2.19.zip",
+        "size": 43913,
+        "sha256": "5f224e907657f3ffd95d37e37c27e555deef64fa56da1e13374f2c295241d7f0",
+        "sha512": "bc2d9f3d135e8608f4735e5372b893e17cdc630b7536ec1e0b9a4d2734167d1a2102e60de60731d21d8a9741cec1a82530d03bf634b7e7cf9a0f107077c0e7fa",
+        "advertises_minecraft_1_21_1": true,
+        "advertised_loaders": [
+          "iris",
+          "optifine"
+        ],
+        "extracted_local_path": "dev/upstream/other-pack-research/miniature-release"
+      },
+      "validation": {
+        "download_hash_verified": true,
+        "static_source_inspected": true,
+        "glsl_compiled": false,
+        "iris_rendered": false,
+        "dh_3_3_3_rendered": false,
+        "performance_measured": false
+      },
+      "source": {
+        "repository": "https://github.com/mateuskreuch/minecraft-miniature-shader",
+        "revision": "bdb6e0020b4318d4e845902cbcc3e3552b0e9274",
+        "archive_url": "https://codeload.github.com/mateuskreuch/minecraft-miniature-shader/zip/bdb6e0020b4318d4e845902cbcc3e3552b0e9274",
+        "archive_sha256": "d6c23031f95beae534ff066790629fa8c866771a1a3b7e56f7b64e8812da3b87",
+        "extracted_local_path": "dev/upstream/other-pack-research/miniature/minecraft-miniature-shader-bdb6e0020b4318d4e845902cbcc3e3552b0e9274",
+        "release_shader_files_byte_identical": false
+      }
+    },
+    {
+      "rank": 3,
+      "modrinth_project": "super-duper-vanilla",
+      "project_id": "LMIZZNxZ",
+      "primary_page": "https://modrinth.com/shader/super-duper-vanilla",
+      "metadata_license": {
+        "id": "LicenseRef-FlameRender-TM-Studios-License",
+        "name": "",
+        "url": "https://github.com/Eldeston/Super-Duper-Vanilla/blob/master/LICENSE"
+      },
+      "release": {
+        "version_id": "KB0sOLSc",
+        "version": "1.3.8",
+        "published": "2025-07-08T20:37:25.552588Z",
+        "url": "https://cdn.modrinth.com/data/LMIZZNxZ/versions/KB0sOLSc/superDuperVanilla.zip",
+        "filename": "superDuperVanilla.zip",
+        "size": 2851664,
+        "sha256": "c1cd481ac7ec81b6cb82f162b235509568f6f1ab9e416ccfedaee15e79e1a795",
+        "sha512": "231b47716d5dab68fd1409c65750589c234d4d63312b3f8634342477686ae6db88edb9ecc3c5662fca245e71b16f16e2933e50751d13d5b06e7d3e26f8d9ebaf",
+        "advertises_minecraft_1_21_1": true,
+        "advertised_loaders": [
+          "iris",
+          "optifine"
+        ],
+        "extracted_local_path": "dev/upstream/other-pack-research/sdv-release"
+      },
+      "validation": {
+        "download_hash_verified": true,
+        "static_source_inspected": true,
+        "glsl_compiled": false,
+        "iris_rendered": false,
+        "dh_3_3_3_rendered": false,
+        "performance_measured": false
+      },
+      "source": {
+        "repository": "https://github.com/Eldeston/Super-Duper-Vanilla",
+        "revision": "1ca20aa4dc47fa750888e523a9325ba558478583",
+        "archive_url": "https://codeload.github.com/Eldeston/Super-Duper-Vanilla/zip/1ca20aa4dc47fa750888e523a9325ba558478583",
+        "archive_sha256": "6e65838ffb07960169c4cbaa0a2268bd1a7e6ffe67a5e6b5a6517e601194e6ff",
+        "extracted_local_path": "dev/upstream/other-pack-research/super-duper-vanilla/Super-Duper-Vanilla-1ca20aa4dc47fa750888e523a9325ba558478583",
+        "release_shader_files_byte_identical": false
+      }
+    },
+    {
+      "rank": 4,
+      "modrinth_project": "complementary-reimagined",
+      "project_id": "HVnmMxH1",
+      "primary_page": "https://modrinth.com/shader/complementary-reimagined",
+      "metadata_license": {
+        "id": "LicenseRef-Custom",
+        "name": "",
+        "url": "https://github.com/ComplementaryDevelopment/ComplementaryReimagined/blob/main/License.txt"
+      },
+      "release": {
+        "version_id": "Bqen1mJX",
+        "version": "r5.9.3",
+        "published": "2026-09-15T06:35:41.918796Z",
+        "url": "https://cdn.modrinth.com/data/HVnmMxH1/versions/Bqen1mJX/ComplementaryReimagined_r5.9.3.zip",
+        "filename": "ComplementaryReimagined_r5.9.3.zip",
+        "size": 553397,
+        "sha256": "fed6c879e732cf7fc7bc6570ebb1def43235aa7e96f62859fbdbdbfa0b484b38",
+        "sha512": "45304b1d7862afdb2177b7e6226fc9c6737911d17a4ad46cc9c519ca4deb935f05072cd337cd8b19a15bb8062b57b54eceec7bdee4cd572d94858e2946d37d85",
+        "advertises_minecraft_1_21_1": true,
+        "advertised_loaders": [
+          "iris",
+          "optifine"
+        ],
+        "extracted_local_path": "dev/upstream/other-pack-research/complementary-release"
+      },
+      "validation": {
+        "download_hash_verified": true,
+        "static_source_inspected": true,
+        "glsl_compiled": false,
+        "iris_rendered": false,
+        "dh_3_3_3_rendered": false,
+        "performance_measured": false
+      },
+      "source": {
+        "repository": "https://github.com/ComplementaryDevelopment/ComplementaryReimagined",
+        "revision": "c09950df0650b27dac260c1b0f69afc11387aa6f",
+        "archive_url": "https://codeload.github.com/ComplementaryDevelopment/ComplementaryReimagined/zip/c09950df0650b27dac260c1b0f69afc11387aa6f",
+        "archive_sha256": "6fb45f3b8c8eb2888675a8ac6287ac605af673756fb67c52b765c0e9e6046695",
+        "extracted_local_path": "dev/upstream/other-pack-research/complementary/ComplementaryReimagined-c09950df0650b27dac260c1b0f69afc11387aa6f",
+        "release_shader_files_byte_identical": false
+      }
+    },
+    {
+      "rank": 5,
+      "modrinth_project": "bsl-shaders",
+      "project_id": "Q1vvjJYV",
+      "primary_page": "https://modrinth.com/shader/bsl-shaders",
+      "metadata_license": {
+        "id": "LicenseRef-All-Rights-Reserved",
+        "name": "",
+        "url": null
+      },
+      "release": {
+        "version_id": "Y68yiql9",
+        "version": "10.1.8",
+        "published": "2026-09-21T12:25:21.321877Z",
+        "url": "https://cdn.modrinth.com/data/Q1vvjJYV/versions/Y68yiql9/BSL_v10.1.8.zip",
+        "filename": "BSL_v10.1.8.zip",
+        "size": 1134153,
+        "sha256": "36b0a50ff7918bf10e9422c401d93779f9d0088a26acea975b435243f96930b5",
+        "sha512": "94a3c25d6820868db624e11347873e6b572e7cd571967d9ac6f4690ca5d37ca302a7645d85eec800e0654541e3825fba14d37b5a25d3996aaf038178552be26f",
+        "advertises_minecraft_1_21_1": true,
+        "advertised_loaders": [
+          "iris",
+          "optifine"
+        ],
+        "extracted_local_path": "dev/upstream/other-pack-research/bsl"
+      },
+      "validation": {
+        "download_hash_verified": true,
+        "static_source_inspected": true,
+        "glsl_compiled": false,
+        "iris_rendered": false,
+        "dh_3_3_3_rendered": false,
+        "performance_measured": false
+      }
+    },
+    {
+      "rank": 6,
+      "modrinth_project": "bliss-shader",
+      "project_id": "ZvMtQlho",
+      "primary_page": "https://modrinth.com/shader/bliss-shader",
+      "metadata_license": {
+        "id": "LicenseRef-All-Rights-Reserved",
+        "name": "",
+        "url": "https://github.com/X0nk/Bliss-Shader/blob/main/LICENSE.md"
+      },
+      "release": {
+        "version_id": "kC2Y8q1P",
+        "version": "2.1.2",
+        "published": "2025-11-23T03:14:46.231498Z",
+        "url": "https://cdn.modrinth.com/data/ZvMtQlho/versions/kC2Y8q1P/Bliss_v2.1.2_%28Chocapic13_Shaders_edit%29.zip",
+        "filename": "Bliss_v2.1.2_(Chocapic13_Shaders_edit).zip",
+        "size": 1791406,
+        "sha256": "f41db92acc585fe9ffe0cc124d6ecaea27cef9ded91129ebc2a8e60226947b2c",
+        "sha512": "dafc60be4980ec40f40edc0f2625cb0976f3c9ce5ed86383146a120480826bb1de70ef5e38b7f1437294ed4d38c6ef3c82ebef0ae4e00b8cee165788c9c18280",
+        "advertises_minecraft_1_21_1": true,
+        "advertised_loaders": [
+          "iris",
+          "optifine"
+        ],
+        "extracted_local_path": "dev/upstream/other-pack-research/bliss-release"
+      },
+      "validation": {
+        "download_hash_verified": true,
+        "static_source_inspected": true,
+        "glsl_compiled": false,
+        "iris_rendered": false,
+        "dh_3_3_3_rendered": false,
+        "performance_measured": false
+      },
+      "source": {
+        "repository": "https://github.com/X0nk/Bliss-Shader",
+        "revision": "81e403ed308141039a09d792a36f8eb328898a60",
+        "archive_url": "https://codeload.github.com/X0nk/Bliss-Shader/zip/81e403ed308141039a09d792a36f8eb328898a60",
+        "archive_sha256": "bba09ad3417bed166073e3faa94154b7a72fdf641a73824ce36455cbb4366c5f",
+        "extracted_local_path": "dev/upstream/other-pack-research/bliss/Bliss-Shader-81e403ed308141039a09d792a36f8eb328898a60",
+        "release_shader_files_byte_identical": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "schema": 1,
+  "pack": "MakeUp Ultra Fast",
+  "base_version": "9.5g",
+  "source_revision": "ad2d9327ad485429e4eaf2b3f98cd738ada609de",
+  "archive_hashes": {
+    "sha256": "0036da17e0c7158e1c669593e6322d53fce3f5a42fb5124b935e9e21a5719db8",
+    "sha512": "90a2f75eb073eaae5fe65f2ea5f8d656c122760c07ff75306728df4b162c42f88be531f026d174e035fea153f0ac5e227e8885d8b199335d3beadb6a58f79239"
+  },
+  "license": "LGPL-3.0-or-later metadata; upstream LGPL v3 notice retained",
+  "experimental": true,
+  "common_protocol_connected": false,
+  "source_sha256": {
+    "LICENSE": "e3a994d82e644b03a792a930f574002658412f62407f5fee083f2555c5f23118",
+    "shaders/common/final_fragment.glsl": "0771ff894cefbb704421a8002477df23dc16737015115a2f31b4cb411b25f919",
+    "shaders/common/water_blocks_fragment.glsl": "4e550dc0dbfcca04e2f79b506ee33e2900793082782f8ca1e2652f2495a2c70a",
+    "shaders/lang/en_US.lang": "459bfb7ef33a5142ca72450c827faa38c7d934c608ae2b902ee82699d0c98b94",
+    "shaders/lib/config.glsl": "1290769f3932378760770a4b13e21563988e67b8457de73e3e9677583136f9f2",
+    "shaders/lib/water.glsl": "c20a450723aa1a604ddfc724d7c70e138b071c1bfe6d7b3282ea2e3ab7f0740f",
+    "shaders/shaders.properties": "4788ee3bc2ee467a4dfc8aa3c6afe3190b00e5151462d9edb909ffae7b609261",
+    "shaders/src/position_vertex_water.glsl": "5fab44f4f246f8b5b15b906bb5d0c6bc009199feb2126bdf7bf4e2217bfb9329"
+  },
+  "patches": [
+    {
+      "path": "shaders/lib/water.glsl",
+      "before": "vec4 reflection_calc(vec3 fragpos, vec3 normal, vec3 reflected, inout float infinite, float dither) {\n    #if SSR_TYPE == 0  // Flipped image\n        #if defined DISTANT_HORIZONS || defined VOXY\n            vec3 pos = camera_to_screen(fragpos + reflected * 768.0);\n        #else\n            vec3 pos = camera_to_screen(fragpos + reflected * 76.0);\n        #endif\n    #else  // Raymarch\n        vec3 pos = fastRaymarch(reflected, fragpos, infinite, dither);\n    #endif\n\n    float border =\n        clamp((1.0 - (max(0.0, abs(pos.y - 0.5)) * 2.0)) * 50.0, 0.0, 1.0);\n\n    border = clamp(border - pow(pos.y, 10.0), 0.0, 1.0);\n\n    pos.x = abs(pos.x);\n    if (pos.x > 1.0) {\n        pos.x = 1.0 - (pos.x - 1.0);\n    }\n\n    return vec4(texture2D(gaux1, pos.xy).rgb, border);\n}\n",
+      "after": "#if SHADERLOD_MAKEUP_WATER_SSR == 1 && REFLECTION == 1 && SSR_TYPE == 1\n#include \"/lib/shaderlod/water_ssr.glsl\"\n// Modified 2026-10-05: vanilla water only; distant SSR fades to native fallback.\nvec4 reflection_calc(vec3 fragpos, vec3 normal, vec3 reflected, inout float infinite, float dither) {\n    float ssrWeight = shaderlodWaterSSRWeight(fragpos);\n    // Skip before ANY trace/depth/scene fetch. Native sky/cloud color remains\n    // in water_shader; infinite=1 retains the native offscreen sun glint path.\n    if (ssrWeight <= 0.0) {\n        infinite = 1.0;\n        return vec4(0.0);\n    }\n\n    vec3 pos = shaderlodWaterRaymarch(reflected, fragpos, infinite, dither);\n    float border =\n        clamp((1.0 - (max(0.0, abs(pos.y - 0.5)) * 2.0)) * 50.0, 0.0, 1.0);\n    border = clamp(border - pow(pos.y, 10.0), 0.0, 1.0);\n    pos.x = abs(pos.x);\n    if (pos.x > 1.0) {\n        pos.x = 1.0 - (pos.x - 1.0);\n    }\n    // Pinned gaux1 is unmipmapped. Explicit base-level sample makes the new\n    // nonuniform distance branch independent of implicit texture derivatives.\n    return vec4(texture2DLod(gaux1, pos.xy, 0.0).rgb, border * ssrWeight);\n}\n#else\nvec4 reflection_calc(vec3 fragpos, vec3 normal, vec3 reflected, inout float infinite, float dither) {\n    #if SSR_TYPE == 0  // Flipped image\n        #if defined DISTANT_HORIZONS || defined VOXY\n            vec3 pos = camera_to_screen(fragpos + reflected * 768.0);\n        #else\n            vec3 pos = camera_to_screen(fragpos + reflected * 76.0);\n        #endif\n    #else  // Raymarch\n        vec3 pos = fastRaymarch(reflected, fragpos, infinite, dither);\n    #endif\n\n    float border =\n        clamp((1.0 - (max(0.0, abs(pos.y - 0.5)) * 2.0)) * 50.0, 0.0, 1.0);\n\n    border = clamp(border - pow(pos.y, 10.0), 0.0, 1.0);\n\n    pos.x = abs(pos.x);\n    if (pos.x > 1.0) {\n        pos.x = 1.0 - (pos.x - 1.0);\n    }\n\n    return vec4(texture2D(gaux1, pos.xy).rgb, border);\n}\n\n#endif\n"
+    },
+    {
+      "path": "shaders/lib/config.glsl",
+      "before": "// Options\n",
+      "after": "// Options\n// ShaderLOD experimental shader OPTIONS only; no Java/common protocol bridge.\n// Modified 2026-10-05. 0 keeps the complete original SSR function/code.\n#define SHADERLOD_MAKEUP_WATER_SSR 0 // [0 1] Experimental vanilla water SSR fade/skip.\n#define SHADERLOD_MAKEUP_SSR_START 96.0 // [32.0 64.0 96.0 128.0 192.0] Full SSR through this camera distance in blocks.\n#define SHADERLOD_MAKEUP_SSR_END 160.0 // [64.0 96.0 128.0 160.0 192.0 256.0 384.0] Sky/cloud fallback after this distance in blocks.\n\n"
+    },
+    {
+      "path": "shaders/shaders.properties",
+      "before": "screen.WATER_SCREEN = WATER_ABSORPTION WATER_TEXTURE VANILLA_WATER WATER_COLOR_SOURCE WATER_TURBULENCE",
+      "after": "screen.WATER_SCREEN = WATER_ABSORPTION WATER_TEXTURE VANILLA_WATER WATER_COLOR_SOURCE WATER_TURBULENCE [SHADERLOD_MAKEUP_SCREEN]\nscreen.SHADERLOD_MAKEUP_SCREEN = SHADERLOD_MAKEUP_WATER_SSR SHADERLOD_MAKEUP_SSR_START SHADERLOD_MAKEUP_SSR_END"
+    },
+    {
+      "path": "shaders/shaders.properties",
+      "before": "sliders = SHADOW_DISTANCE_SLIDER",
+      "after": "sliders = SHADERLOD_MAKEUP_SSR_START SHADERLOD_MAKEUP_SSR_END SHADOW_DISTANCE_SLIDER"
+    },
+    {
+      "path": "shaders/lang/en_US.lang",
+      "before": "#Profiles\n",
+      "after": "#Profiles\n# ShaderLOD experimental derivative; added 2026-10-05.\nscreen.SHADERLOD_MAKEUP_SCREEN=ShaderLOD water SSR (experimental)\noption.SHADERLOD_MAKEUP_WATER_SSR=Distance SSR fade/skip\noption.SHADERLOD_MAKEUP_WATER_SSR.comment=Experimental water-only SSR fade to native sky/cloud reflection. Off restores original code. No mod config connection.\noption.SHADERLOD_MAKEUP_SSR_START=SSR fade start (blocks)\noption.SHADERLOD_MAKEUP_SSR_START.comment=Camera-relative radial distance. Full original trace through this distance.\noption.SHADERLOD_MAKEUP_SSR_END=SSR fade end (blocks)\noption.SHADERLOD_MAKEUP_SSR_END.comment=Beyond this distance, water loses on-screen SSR and skips its trace. Sky/cloud fallback remains. Invalid end clamps above start.\n"
+    }
+  ]
+}

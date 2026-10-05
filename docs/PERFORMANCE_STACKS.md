@@ -161,3 +161,17 @@ review a selected release's own license before deciding.
 [Complementary license](https://github.com/ComplementaryDevelopment/ComplementaryReimagined/blob/main/License.txt).
 Bliss's published source license is restrictive despite source visibility.
 [Bliss license](https://github.com/X0nk/Bliss-Shader/blob/Stable/LICENSE.md).
+
+
+## 2026-10-05 continuation
+
+Latest authorization permits other-pack research/experimental testing before
+Photon's ordinary-scene performance gate. Current exact releases/licenses are
+in OTHER_SHADER_RESEARCH.md and dev/shader-candidates.lock.json. Original
+MakeUp9.5g and the default-off adapter rendered withoutDH; active pilot regressed
+and no support/gain is promoted. See MAKEUP_RUNTIME_RESULTS.md.
+
+The minimal/optimized/optimized-culling original-Photon forest matrix completed
+with actual loaded parent/embedded hashes and retained failures/qualification.
+No consistent stack gain was established; entity-rich/UI/shadow quality checks
+remain narrower outstanding work. See STACK_FOREST_RESULTS.md.

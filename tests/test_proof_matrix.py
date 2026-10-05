@@ -12,12 +12,31 @@ import unittest
 
 SCRIPTS = Path(__file__).resolve().parents[1] / 'scripts'
 sys.path.insert(0, str(SCRIPTS))
-from run_proof_matrix import balanced_plan, validate_report, profile_inputs, FATAL_LOG, canonical_options_hash, read_option_properties, declared_defaults, normalize_requested_options, wetness_value, validate_temporal_inputs, preserve_screenshot, archive_defaults, camera_difference, CASES, CLOUD_CASE_OPTIONS
+from run_proof_matrix import balanced_plan, validate_report, validate_optional_stack, profile_inputs, FATAL_LOG, canonical_options_hash, read_option_properties, declared_defaults, normalize_requested_options, wetness_value, validate_temporal_inputs, preserve_screenshot, archive_defaults, camera_difference, CASES, CLOUD_CASE_OPTIONS
 from analyze_proof_matrix import paired_effects, check_pair, run_metrics, analyze
 from summarize_workload import stream
 
 
 class MatrixTests(unittest.TestCase):
+    def test_requested_optimizer_must_load_exact_pinned_bytes(self):
+        lock = {'stacks': {'minimal': [], 'optimized-culling': ['entityculling']},
+                'artifacts': {'entityculling': {'jar_mod_id': 'entityculling',
+                    'jar_version': '1.11.2', 'hashes': {'sha256': 'pinned'}}}}
+        report = {'runtime_properties': {'shaderlod.dev.performanceStack': 'optimized-culling'},
+                  'loaded_mods': {'entityculling': '1.11.2'},
+                  'loaded_mod_artifacts': {'entityculling': {'sha256': 'pinned'}}}
+        validate_optional_stack(report, 'optimized-culling', lock)
+        for mutation in (lambda r: r['loaded_mods'].clear(),
+                         lambda r: r['loaded_mods'].update(entityculling='different'),
+                         lambda r: r['loaded_mod_artifacts']['entityculling'].update(sha256='different'),
+                         lambda r: r['runtime_properties'].update({'shaderlod.dev.performanceStack': 'minimal'})):
+            altered = copy.deepcopy(report); mutation(altered)
+            with self.assertRaises(ValueError): validate_optional_stack(altered, 'optimized-culling', lock)
+        report['runtime_properties']['shaderlod.dev.performanceStack'] = 'minimal'
+        with self.assertRaises(ValueError): validate_optional_stack(report, 'minimal', lock)
+        report['loaded_mods'].clear()
+        validate_optional_stack(report, 'minimal', lock)
+
     def test_complete_even_design_balances_positions(self):
         plan = balanced_plan(['high', 'adaptive'], ['minimal', 'optimized'], 4)
         for block in range(1, 5):
@@ -137,6 +156,20 @@ class MatrixTests(unittest.TestCase):
                 defaults = archive_defaults(archive)
             self.assertEqual(defaults['FRAGMENT_SHADER'], 'true')
             self.assertNotIn('AMBIGUOUS', defaults)
+
+    def test_makeup_option_layout_and_unknown_pack_rejection(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'pack.zip'
+            with zipfile.ZipFile(path, 'w') as archive:
+                archive.writestr('shaders/lib/config.glsl', '#define REFLECTION_SLIDER 2 // [0 1 2]\n')
+                archive.writestr('shaders/lib/helper.glsl', '#define SHADERLOD_MAKEUP_WATER_SSR 0 // [0 1]\n')
+            with zipfile.ZipFile(path) as archive:
+                defaults = archive_defaults(archive)
+            self.assertEqual(normalize_requested_options(defaults, {'SHADERLOD_MAKEUP_WATER_SSR': '1'})['REFLECTION_SLIDER'], '2')
+            with zipfile.ZipFile(path, 'w') as archive:
+                archive.writestr('shaders/unknown.glsl', '#define REFLECTION_SLIDER 2\n')
+            with zipfile.ZipFile(path) as archive:
+                with self.assertRaises(ValueError): archive_defaults(archive)
 
     def test_java_wetness_supplier_preservation_and_clamp(self):
         root = SCRIPTS.parent

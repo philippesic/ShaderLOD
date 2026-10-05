@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "experiment": "photon-cloud-consumer-guard",
+  "base_version": "v1.3b",
+  "base_sha256": "120897768eaa8cb1f14a3e98f88dff009ae3204ee3b96904a4fe8586edfc1ead",
+  "member": "shaders/program/c1_blend_layers.fsh",
+  "source_sha256": "9a22e67280a57927c9dc8ca7ef194abb64b636de6a736651aa5b743035052cad",
+  "license_sha256": "514402d18eedb0afe374344ca9f0fe87b7399779518184b8fc64e31674555fc5",
+  "switch": "PHOTON_CLOUD_CONSUMER_GUARD",
+  "option_declaration": "// ShaderLOD standalone cloud-consumer experiment; default off.\n//#define PHOTON_CLOUD_CONSUMER_GUARD\n",
+  "member_sha256_by_arm": {
+    "original": "9a22e67280a57927c9dc8ca7ef194abb64b636de6a736651aa5b743035052cad",
+    "disabled": "f920ae650454162eaf951ebd0bcb70e7474e630f37d4712bfbf05f31b3b2d857",
+    "enabled": "04ce05a2d053a6f8049dd2f08a2a0f761e67044ea59a45bfa3c0ce2373ce591d"
+  },
+  "replacements": [
+    {
+      "before": "#include \"/include/global.glsl\"\n",
+      "after": "#include \"/include/global.glsl\"\n// ShaderLOD standalone cloud-consumer experiment; default off.\n//#define PHOTON_CLOUD_CONSUMER_GUARD\n"
+    },
+    {
+      "before": "#if defined WORLD_OVERWORLD\n    float clouds_apparent_distance;\n    vec4 clouds_and_aurora =\n        read_clouds_and_aurora(refracted_uv, clouds_apparent_distance);\n\n    if (is_translucent || is_translucent_lod) {\n        if (clouds_apparent_distance < view_distance) {\n            fragment_color =\n                fragment_color * clouds_and_aurora.w + clouds_and_aurora.xyz;\n        }\n    }\n#endif\n",
+      "after": "#ifdef PHOTON_CLOUD_CONSUMER_GUARD\n#if defined WORLD_OVERWORLD\n    // Keep gather and implicit-LOD lightning sampling outside pixel-varying flow.\n    float clouds_apparent_distance =\n        min_of(textureGather(colortex12, refracted_uv * taau_render_scale, 0));\n    float clouds_ambient_scattering = 0.0;\n    if (LIGHTNING_FLASH_UNIFORM > 0.01) {\n        clouds_ambient_scattering =\n            texture(colortex12, refracted_uv * taau_render_scale).z;\n    }\n\n    if (is_translucent || is_translucent_lod) {\n        if (clouds_apparent_distance < view_distance) {\n            // Only this consumer needs age/filter math and explicit-LOD color.\n            float pixel_age = texelFetch(\n                colortex12,\n                ivec2(refracted_uv * view_res * taau_render_scale),\n                0\n            ).y;\n            float ld = 2.0 * dampen(max0(1.0 - 0.1 * pixel_age));\n            vec4 clouds_and_aurora =\n                textureLod(colortex11, refracted_uv * taau_render_scale, ld);\n            if (LIGHTNING_FLASH_UNIFORM > 0.01) {\n                clouds_and_aurora.xyz +=\n                    LIGHTNING_FLASH_UNIFORM * lightning_flash_intensity *\n                    clouds_ambient_scattering;\n            }\n            clouds_and_aurora.xyz *= clamp01(1.0 - blindness - darknessFactor);\n            fragment_color =\n                fragment_color * clouds_and_aurora.w + clouds_and_aurora.xyz;\n        }\n    }\n#endif\n#else\n#if defined WORLD_OVERWORLD\n    float clouds_apparent_distance;\n    vec4 clouds_and_aurora =\n        read_clouds_and_aurora(refracted_uv, clouds_apparent_distance);\n\n    if (is_translucent || is_translucent_lod) {\n        if (clouds_apparent_distance < view_distance) {\n            fragment_color =\n                fragment_color * clouds_and_aurora.w + clouds_and_aurora.xyz;\n        }\n    }\n#endif\n#endif // PHOTON_CLOUD_CONSUMER_GUARD\n"
+    }
+  ]
+}

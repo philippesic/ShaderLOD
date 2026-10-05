@@ -1,0 +1,103 @@
+{
+  "schema": 1,
+  "checked_on": "2026-10-05",
+  "purpose": "Opt-in equivalence of these exact embedded API Base artifacts on the exact pinned runtime; preserves raw hashes and all other comparison guards",
+  "equivalences": [
+    {
+      "id": "forgified-fabric-api-base-0.4.42-iris-sodium-neoforge-21.1.253",
+      "mod_id": "fabric_api_base",
+      "mod_version": "0.4.42+d1308ded19",
+      "raw_sha256": [
+        "620fa28434a74dfa9e94af33a3e3bf70a939e9a4b0fcae1fbc01ba2c24f32531",
+        "1aa448a0eff484c7b9f5a6aedbc5050a8d17999f31949dfebb20a7b977f80a07"
+      ],
+      "required_loaded_mods": {
+        "minecraft": "1.21.1",
+        "neoforge": "21.1.253",
+        "iris": "1.8.12-snapshot+mc1.21.1-local",
+        "sodium": "0.6.13+mc1.21.1"
+      },
+      "required_loaded_mod_artifacts_sha256": {
+        "minecraft": "a3f878f97a229b543a2c872c4a3c03b19ebd3efbd11af2caed9c258c08aebf55",
+        "neoforge": "a3f878f97a229b543a2c872c4a3c03b19ebd3efbd11af2caed9c258c08aebf55",
+        "iris": "3e3f94d2d5cdcb8145c4385d521974aa2d8669b2cc212351f70cf06488182e83",
+        "sodium": "7acd7af2ef75ec883a6872c17494ead65e38025151eb08a1d60e36d34377f403"
+      },
+      "variants": [
+        {
+          "sha256": "620fa28434a74dfa9e94af33a3e3bf70a939e9a4b0fcae1fbc01ba2c24f32531",
+          "size": 34807,
+          "parent_mod_id": "iris",
+          "parent_filename": "iris-neoforge-1.8.12+mc1.21.1.jar",
+          "parent_sha256": "3e3f94d2d5cdcb8145c4385d521974aa2d8669b2cc212351f70cf06488182e83",
+          "embedded_path": "META-INF/jarjar/fabric-api-base-0.4.42+d1308ded19.jar",
+          "jarjar_identifier": {
+            "group": "org.sinytra.forgified-fabric-api",
+            "artifact": "fabric-api-base"
+          },
+          "jarjar_artifact_version": "0.4.42+d1308ded19",
+          "jarjar_version_range": "[0.4.42+d1308ded19,)",
+          "required_neoforge_range": "[21.1.169,)",
+          "metadata_sha256": "5f6be55b97d223bc9a95792026a8fecad1215710a9c8e94247ad3fe7e1d9bc9e"
+        },
+        {
+          "sha256": "1aa448a0eff484c7b9f5a6aedbc5050a8d17999f31949dfebb20a7b977f80a07",
+          "size": 34806,
+          "parent_mod_id": "sodium",
+          "parent_filename": "sodium-neoforge-0.6.13+mc1.21.1.jar",
+          "parent_sha256": "7acd7af2ef75ec883a6872c17494ead65e38025151eb08a1d60e36d34377f403",
+          "embedded_path": "META-INF/jarjar/fabric-api-base-0.4.42+d1308ded19.jar",
+          "jarjar_identifier": {
+            "group": "org.sinytra.forgified-fabric-api",
+            "artifact": "fabric-api-base"
+          },
+          "jarjar_artifact_version": "0.4.42+d1308ded19",
+          "jarjar_version_range": "[0.4.42+d1308ded19,)",
+          "required_neoforge_range": "[21.1.115,)",
+          "metadata_sha256": "249046698cf78d7d6ccdd3d5c8c1e837a728fcfc822d0fedfca2e82abaf36d4b"
+        }
+      ],
+      "proof": {
+        "kind": "byte-identical extracted classes and resources except one satisfied dependency lower bound",
+        "evidence_document": "docs/CULLING_EMBEDDED_PROVENANCE.md",
+        "fingerprint_algorithm": "SHA256 of UTF-8 concatenation sorted by exact ZIP entry filename: filename + U+0000 + lowercase SHA256(uncompressed payload) + LF; excludes directory entries",
+        "classes": {
+          "file_count": 17,
+          "sha256": "34704804f9e2834e3114d6029792a5353bd1a09ea9fa814883bb912ca9ace10a"
+        },
+        "resources_except_changed_metadata": {
+          "file_count": 2,
+          "sha256": "4afce8cc02b58dc62b4faa2e6a5c8e75ec2bc9c76e348dea42491b0175ea2385"
+        },
+        "all_files_except_changed_metadata": {
+          "file_count": 19,
+          "sha256": "f075c9f89451356a91e59ff0c5a534c8358f3f7885747ad6c79a490cb5aceffa"
+        },
+        "changed_payload_paths": [
+          "META-INF/neoforge.mods.toml"
+        ],
+        "sole_payload_difference": {
+          "dependency_mod_id": "neoforge",
+          "field": "versionRange",
+          "values": [
+            "[21.1.169,)",
+            "[21.1.115,)"
+          ],
+          "required_runtime_version": "21.1.253",
+          "both_ranges_satisfied": true
+        },
+        "zip_container_differences": [
+          "entry timestamps",
+          "entry order",
+          "changed metadata CRC and compressed size",
+          "resulting header offsets"
+        ],
+        "same_entry_names": true,
+        "duplicate_entry_names": false,
+        "no_additional_payload_changes": true,
+        "runtime_transformed_class_bytes_inspected": false,
+        "resolver_selection_deterministic": false
+      }
+    }
+  ]
+}

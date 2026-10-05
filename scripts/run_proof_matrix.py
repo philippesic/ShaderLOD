@@ -21,6 +21,15 @@ from summarize_workload import summarize
 
 ROOT = Path(__file__).resolve().parents[1]
 CASES = {
+    'makeup-high': ('coastalwater/high', 'runClientLodOff'),
+    'makeup-off': ('coastalwater/adapter-off', 'runClientLodOff'),
+    'makeup-on': ('coastalwater/adapter-on', 'runClientLodOff'),
+    'makeup-lower': ('coastalwater/lower', 'runClientLodOff'),
+    'makeup-duplicate-implicit': ('coastalwater/duplicate-implicit', 'runClientLodOff'),
+    'makeup-duplicate-explicit': ('coastalwater/duplicate-explicit', 'runClientLodOff'),
+    'makeup-classifier-full': ('coastalwater/classifier-full', 'runClientLodOff'),
+    'forest-cloudguard-off': ('forest/cloudguard-off', 'runClientLodOff'),
+    'forest-cloudguard-on': ('forest/cloudguard-on', 'runClientLodOff'),
     'cloud-high': ('cloudstorm/high', 'runClientLodOff'),
     'cloud-lower': ('cloudstorm/lower', 'runClientLodOff'),
     'cloud-adaptive': ('cloudstorm/adaptive', 'runClientLodOn'),
@@ -66,6 +75,21 @@ def sha256(path):
     return digest.hexdigest()
 
 
+def development_fingerprints():
+    """Freeze compiled local inputs separately from loaded external jar hashes."""
+    result = {}
+    for name in ('build/classes/java/devClient', 'build/resources/devClient',
+                 'build/classes/java/main', 'build/resources/main'):
+        directory = ROOT / name
+        if directory.is_dir():
+            files = {path.relative_to(directory).as_posix(): sha256(path)
+                     for path in sorted(directory.rglob('*')) if path.is_file()}
+            result[name] = {'files': files, 'sha256': canonical_options_hash(files)}
+    if 'build/classes/java/devClient' not in result:
+        raise ValueError('Compiled development harness missing')
+    return result
+
+
 def canonical_options_hash(options):
     return hashlib.sha256(json.dumps(options, sort_keys=True, separators=(',', ':'), ensure_ascii=False).encode()).hexdigest()
 
@@ -93,7 +117,12 @@ def declared_defaults(settings):
 
 
 def archive_defaults(archive):
-    defaults = declared_defaults(archive.read('shaders/settings.glsl').decode())
+    # Explicit layouts for pinned Photon and MakeUp experiments. This inspects
+    # declared controls; it does not rewrite or establish support for a pack.
+    settings = next((name for name in ('shaders/settings.glsl', 'shaders/lib/config.glsl')
+                     if name in archive.namelist()), None)
+    if settings is None: raise ValueError('Unsupported experiment option layout')
+    defaults = declared_defaults(archive.read(settings).decode())
     outside = {}
     for name in sorted(archive.namelist()):
         if name.endswith(('.glsl', '.fsh', '.vsh', '.gsh', '.csh')):
@@ -169,21 +198,29 @@ def profile_inputs(profile):
              profile / 'config/shaderlod-client.toml', profile / 'options.txt',
              profile.parent / 'control.json', profile.parent / 'workload-manifest.json']
     files += [p for p in (profile / 'config/DistantHorizons.toml', profile / 'config/sodium-options.json') if p.exists()]
+    options_path = profile / 'shaderpacks' / (pack + '.txt')
     for path in files:
+        if path == options_path and not path.exists(): continue  # Iris deletes an all-default option file.
         if not path.is_file(): raise ValueError('Missing benchmark input: ' + str(path))
     manifest = json.loads((profile.parent / 'workload-manifest.json').read_text())
     if manifest.get('configuration_only') or not manifest.get('source_world_sha256'):
         raise ValueError('Prepared profile lacks a verified source save')
-    requested = read_option_properties((profile / 'shaderpacks' / (pack + '.txt')).read_text())
+    stored = read_option_properties(options_path.read_text()) if options_path.exists() else {}
     with zipfile.ZipFile(profile / 'shaderpacks' / pack) as archive:
         defaults = archive_defaults(archive)
-    semantic = normalize_requested_options(defaults, requested)
+    semantic = normalize_requested_options(defaults, stored)
+    # Experimental preparation retains intended controls even when Iris removes
+    # their default-valued lines/file. Check normalization against that record.
+    prepared = manifest.get('experiment_arms', {}).get(profile.name, {}).get('requested_options')
+    if prepared is not None and semantic != normalize_requested_options(defaults, prepared):
+        raise ValueError('Stored options differ from prepared experiment controls')
+    requested = prepared if prepared is not None else stored
     rendering = tomllib.loads((profile / 'config/shaderlod-client.toml').read_text()).get('rendering', {})
     shadow_culling = rendering.get('optimizeShadowCulling', False)
     if not isinstance(shadow_culling, bool): raise ValueError('Shadow culling config must be boolean')
-    return {'files': {str(p.resolve()): sha256(p) for p in files}, 'shader_pack': pack,
+    return {'files': {str(p.resolve()): sha256(p) if p.exists() else 'missing-default-options-file' for p in files}, 'shader_pack': pack,
             'shader_sha256': sha256(profile / 'shaderpacks' / pack),
-            'shader_options_sha256': sha256(profile / 'shaderpacks' / (pack + '.txt')),
+            'shader_options_sha256': sha256(options_path) if options_path.exists() else None,
             'requested_shader_options': requested, 'shader_option_defaults': defaults,
             'semantic_shader_options_sha256': canonical_options_hash(semantic),
             'shadow_culling_configured': shadow_culling,
@@ -240,6 +277,26 @@ def validate_report(report, request, expected_inputs, started_ns, report_path=No
     if request['gpu_queries'] and not any(s.get('scope') == 'game-render' for s in report.get('gpu_samples', [])):
         raise ValueError('Missing GPU frame timing stream')
     if not report.get('loaded_mods'): raise ValueError('Loaded mod inventory missing')
+
+
+def validate_optional_stack(report, stack, lock):
+    """Prove requested optimizers actually loaded from the pinned artifacts."""
+    if stack not in lock['stacks']: raise ValueError('Unknown optional stack: ' + stack)
+    if report.get('runtime_properties', {}).get('shaderlod.dev.performanceStack') != stack:
+        raise ValueError('Runtime stack differs from requested stack')
+    selected = set(lock['stacks'][stack])
+    loaded = report.get('loaded_mods', {})
+    artifacts = report.get('loaded_mod_artifacts', {})
+    for name, artifact in lock['artifacts'].items():
+        mod_id = artifact['jar_mod_id']
+        if name not in selected:
+            if mod_id in loaded: raise ValueError('Unexpected optional optimizer: ' + mod_id)
+            continue
+        if loaded.get(mod_id) != artifact['jar_version']:
+            raise ValueError('Missing or mismatched loaded optimizer: ' + mod_id)
+        actual = artifacts.get(mod_id, {})
+        if actual.get('sha256') != artifact['hashes']['sha256']:
+            raise ValueError('Loaded optimizer artifact differs from lock: ' + mod_id)
 
 
 def wait_command(command, logfile, timeout):
@@ -315,12 +372,14 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('cases', nargs='+', choices=CASES)
     p.add_argument('--profiles-root', type=Path, default=ROOT / 'run-workloads')
-    p.add_argument('--stacks', nargs='+', choices=('minimal', 'optimized'), default=['minimal'])
+    optional_lock = json.loads((ROOT / 'dev/performance-mods.lock.json').read_text())
+    p.add_argument('--stacks', nargs='+', choices=tuple(optional_lock['stacks']), default=['minimal'])
     p.add_argument('--repeats', type=int, default=3)
     p.add_argument('--dh', choices=('present', 'absent'), default='present')
     p.add_argument('--no-gpu-queries', action='store_true')
     p.add_argument('--tag', default=None)
     p.add_argument('--sample-interval', type=int, default=1, choices=range(1,61))
+    p.add_argument('--window-scale', type=int, default=1, choices=(1,2), help='Scale comparison window; actual framebuffer/window dimensions remain recorded')
     p.add_argument('--warmup', type=float, default=45)
     p.add_argument('--duration', type=float, default=30)
     p.add_argument('--fixed-wetness', type=wetness_value, help='Dev-only artificial shader weather control; real rain/smoother clocks remain unchanged')
@@ -338,7 +397,8 @@ def main():
                           '-PperformanceStack=' + row['stack'], '-PincludeDh=' + str(args.dh == 'present').lower(),
                           '-PmeasureWorkload=true', '-PmeasureOnly=true', '-PgpuPassTiming=false', '-PcpuLayerTiming=false',
                           '-PinitialWarmup=' + str(args.warmup), '-PmeasurementSeconds=' + str(args.duration),
-                          '-PgpuSampleInterval=' + str(args.sample_interval)]
+                          '-PgpuSampleInterval=' + str(args.sample_interval),
+                          '-PbenchmarkWindowScale=' + str(args.window_scale)]
         if args.no_gpu_queries: row['command'].append('-PgpuTiming=false')
         if args.fixed_wetness is not None: row['command'].append('-PfixedWetness=' + str(args.fixed_wetness))
     if args.dry_run:
@@ -358,14 +418,22 @@ def main():
                     'design': 'Williams order; partial cycles are interleaved, not perfectly position-balanced',
                     'profiles_root': str(profiles_root), 'include_dh': args.dh == 'present',
                     'gpu_queries': not args.no_gpu_queries, 'sample_interval': args.sample_interval,
+                    'window_scale': args.window_scale,
                     'fixed_wetness': args.fixed_wetness,
-                    'source_inputs': inputs, 'runs': plan, 'git_head': subprocess.run(['git', 'rev-parse', 'HEAD'], cwd=ROOT, capture_output=True, text=True, check=True).stdout.strip(),
-                    'runtime_lock_sha256': sha256(ROOT / 'dev/runtime.lock.json')}
+                    'source_inputs': inputs, 'runs': plan, 'cases': args.cases, 'stacks': args.stacks,
+                    'git_head': subprocess.run(['git', 'rev-parse', 'HEAD'], cwd=ROOT, capture_output=True, text=True, check=True).stdout.strip(),
+                    'runtime_lock_sha256': sha256(ROOT / 'dev/runtime.lock.json'),
+                    'performance_mods_lock_sha256': sha256(ROOT / 'dev/performance-mods.lock.json'),
+                    'performance_mods_lock': optional_lock}
         write_json(output / 'matrix-manifest.json', manifest)
         try:
             if not args.skip_build: subprocess.run(['./gradlew', 'build', 'compileDevClientJava'], cwd=ROOT, check=True)
+            manifest['development_runtime_inputs'] = development_fingerprints()
+            write_json(output / 'matrix-manifest.json', manifest)
             for index, row in enumerate(plan):
                 require_exclusive_runtime()
+                if development_fingerprints() != manifest['development_runtime_inputs']:
+                    raise ValueError('Compiled local runtime changed since matrix start')
                 profile = Path(row['profile'])
                 # Minecraft rewrites options.txt on shutdown; hash stable shader/camera inputs separately.
                 current = profile_inputs(profile)
@@ -386,12 +454,15 @@ def main():
                 print(f"Starting {token} ({index + 1}/{len(plan)})", flush=True)
                 wait_command(row['command'], output / row['console'], args.timeout)
                 require_exclusive_runtime()
+                if development_fingerprints() != manifest['development_runtime_inputs']:
+                    raise ValueError('Compiled local runtime changed during run')
                 if not report.exists(): raise ValueError('Fresh workload report missing: ' + row['case'])
                 data = json.loads(report.read_text())
                 # Preserve invalid fresh reports too; exclusion is explicit in the manifest.
                 (output / row['measurement']).write_bytes(report.read_bytes())
                 row.update(preserve_screenshot(profile, output, token, started_ns))
                 validate_report(data, request, inputs[row['case']], started_ns, report)
+                validate_optional_stack(data, row['stack'], optional_lock)
                 row['temporal_observations'] = validate_temporal_inputs(data, request)
                 reference = inputs[row['case']].get('effective_shader_options_sha256')
                 if reference is not None and reference != data['effective_shader_options_sha256']: raise ValueError('Effective shader options differ between repeated launches')

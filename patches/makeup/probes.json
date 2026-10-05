@@ -1,0 +1,64 @@
+{
+  "schema": 1,
+  "kind": "makeup-source-isolation",
+  "base_sha256": "6c3f423173ddf12f2ab3f10f6e18f6bc07f304aa70201b5bebe5902587c59671",
+  "source_sha256": {
+    "shaders/lib/water.glsl": "5c528242be4f9ea1fdf1b58e387b4345989993abfbbf0637117ef58c98a8f8f5",
+    "shaders/lib/shaderlod/water_ssr.glsl": "a5c79a6ed1092ac068b8adc37914ea8e188c09dd84e46ea4ceebf99ae6d76f5c"
+  },
+  "probes": {
+    "duplicate-implicit": {
+      "behavior": "Full original SSR quality; copied water trace and original implicit fetch syntax; no distance branch",
+      "requires_options": {
+        "SHADERLOD_MAKEUP_WATER_SSR": "1",
+        "REFLECTION_SLIDER": "2"
+      },
+      "patches": [
+        {
+          "path": "shaders/lib/water.glsl",
+          "before": "// Modified 2026-10-05: vanilla water only; distant SSR fades to native fallback.\nvec4 reflection_calc(vec3 fragpos, vec3 normal, vec3 reflected, inout float infinite, float dither) {\n    float ssrWeight = shaderlodWaterSSRWeight(fragpos);\n    // Skip before ANY trace/depth/scene fetch. Native sky/cloud color remains\n    // in water_shader; infinite=1 retains the native offscreen sun glint path.\n    if (ssrWeight <= 0.0) {\n        infinite = 1.0;\n        return vec4(0.0);\n    }\n\n    vec3 pos = shaderlodWaterRaymarch(reflected, fragpos, infinite, dither);\n    float border =\n        clamp((1.0 - (max(0.0, abs(pos.y - 0.5)) * 2.0)) * 50.0, 0.0, 1.0);\n    border = clamp(border - pow(pos.y, 10.0), 0.0, 1.0);\n    pos.x = abs(pos.x);\n    if (pos.x > 1.0) {\n        pos.x = 1.0 - (pos.x - 1.0);\n    }\n    // Pinned gaux1 is unmipmapped. Explicit base-level sample makes the new\n    // nonuniform distance branch independent of implicit texture derivatives.\n    return vec4(texture2DLod(gaux1, pos.xy, 0.0).rgb, border * ssrWeight);\n}",
+          "after": "// ShaderLOD source diagnostic duplicate-implicit; modified 2026-10-05.\nvec4 reflection_calc(vec3 fragpos, vec3 normal, vec3 reflected, inout float infinite, float dither) {\n    #if SSR_TYPE == 0  // Flipped image\n        #if defined DISTANT_HORIZONS || defined VOXY\n            vec3 pos = camera_to_screen(fragpos + reflected * 768.0);\n        #else\n            vec3 pos = camera_to_screen(fragpos + reflected * 76.0);\n        #endif\n    #else  // Raymarch\n        vec3 pos = shaderlodWaterRaymarch(reflected, fragpos, infinite, dither);\n    #endif\n\n    float border =\n        clamp((1.0 - (max(0.0, abs(pos.y - 0.5)) * 2.0)) * 50.0, 0.0, 1.0);\n\n    border = clamp(border - pow(pos.y, 10.0), 0.0, 1.0);\n\n    pos.x = abs(pos.x);\n    if (pos.x > 1.0) {\n        pos.x = 1.0 - (pos.x - 1.0);\n    }\n\n    return vec4(texture2D(gaux1, pos.xy).rgb, border);\n}\n"
+        },
+        {
+          "path": "shaders/lib/shaderlod/water_ssr.glsl",
+          "before": "texture2DLod(depthtex1, screenMarchPos.xy, 0.0)",
+          "after": "texture2D(depthtex1, screenMarchPos.xy)"
+        },
+        {
+          "path": "shaders/lib/shaderlod/water_ssr.glsl",
+          "before": " * explicit LOD 0 depth fetch avoids implicit derivatives across distance skip.",
+          "after": " * Diagnostic original implicit depth fetch; no distance skip is active."
+        }
+      ]
+    },
+    "duplicate-explicit": {
+      "behavior": "Full original SSR quality intent; copied trace plus explicit LOD0 fetch syntax; no distance branch",
+      "requires_options": {
+        "SHADERLOD_MAKEUP_WATER_SSR": "1",
+        "REFLECTION_SLIDER": "2"
+      },
+      "patches": [
+        {
+          "path": "shaders/lib/water.glsl",
+          "before": "// Modified 2026-10-05: vanilla water only; distant SSR fades to native fallback.\nvec4 reflection_calc(vec3 fragpos, vec3 normal, vec3 reflected, inout float infinite, float dither) {\n    float ssrWeight = shaderlodWaterSSRWeight(fragpos);\n    // Skip before ANY trace/depth/scene fetch. Native sky/cloud color remains\n    // in water_shader; infinite=1 retains the native offscreen sun glint path.\n    if (ssrWeight <= 0.0) {\n        infinite = 1.0;\n        return vec4(0.0);\n    }\n\n    vec3 pos = shaderlodWaterRaymarch(reflected, fragpos, infinite, dither);\n    float border =\n        clamp((1.0 - (max(0.0, abs(pos.y - 0.5)) * 2.0)) * 50.0, 0.0, 1.0);\n    border = clamp(border - pow(pos.y, 10.0), 0.0, 1.0);\n    pos.x = abs(pos.x);\n    if (pos.x > 1.0) {\n        pos.x = 1.0 - (pos.x - 1.0);\n    }\n    // Pinned gaux1 is unmipmapped. Explicit base-level sample makes the new\n    // nonuniform distance branch independent of implicit texture derivatives.\n    return vec4(texture2DLod(gaux1, pos.xy, 0.0).rgb, border * ssrWeight);\n}",
+          "after": "// ShaderLOD source diagnostic duplicate-explicit; modified 2026-10-05.\nvec4 reflection_calc(vec3 fragpos, vec3 normal, vec3 reflected, inout float infinite, float dither) {\n    #if SSR_TYPE == 0  // Flipped image\n        #if defined DISTANT_HORIZONS || defined VOXY\n            vec3 pos = camera_to_screen(fragpos + reflected * 768.0);\n        #else\n            vec3 pos = camera_to_screen(fragpos + reflected * 76.0);\n        #endif\n    #else  // Raymarch\n        vec3 pos = shaderlodWaterRaymarch(reflected, fragpos, infinite, dither);\n    #endif\n\n    float border =\n        clamp((1.0 - (max(0.0, abs(pos.y - 0.5)) * 2.0)) * 50.0, 0.0, 1.0);\n\n    border = clamp(border - pow(pos.y, 10.0), 0.0, 1.0);\n\n    pos.x = abs(pos.x);\n    if (pos.x > 1.0) {\n        pos.x = 1.0 - (pos.x - 1.0);\n    }\n\n    return vec4(texture2DLod(gaux1, pos.xy, 0.0).rgb, border);\n}\n"
+        }
+      ]
+    },
+    "classifier-full": {
+      "behavior": "Full original SSR quality intent; explicit LOD0 plus equal full-trace classifier arms; classifier may be optimized away",
+      "requires_options": {
+        "SHADERLOD_MAKEUP_WATER_SSR": "1",
+        "REFLECTION_SLIDER": "2"
+      },
+      "patches": [
+        {
+          "path": "shaders/lib/water.glsl",
+          "before": "// Modified 2026-10-05: vanilla water only; distant SSR fades to native fallback.\nvec4 reflection_calc(vec3 fragpos, vec3 normal, vec3 reflected, inout float infinite, float dither) {\n    float ssrWeight = shaderlodWaterSSRWeight(fragpos);\n    // Skip before ANY trace/depth/scene fetch. Native sky/cloud color remains\n    // in water_shader; infinite=1 retains the native offscreen sun glint path.\n    if (ssrWeight <= 0.0) {\n        infinite = 1.0;\n        return vec4(0.0);\n    }\n\n    vec3 pos = shaderlodWaterRaymarch(reflected, fragpos, infinite, dither);\n    float border =\n        clamp((1.0 - (max(0.0, abs(pos.y - 0.5)) * 2.0)) * 50.0, 0.0, 1.0);\n    border = clamp(border - pow(pos.y, 10.0), 0.0, 1.0);\n    pos.x = abs(pos.x);\n    if (pos.x > 1.0) {\n        pos.x = 1.0 - (pos.x - 1.0);\n    }\n    // Pinned gaux1 is unmipmapped. Explicit base-level sample makes the new\n    // nonuniform distance branch independent of implicit texture derivatives.\n    return vec4(texture2DLod(gaux1, pos.xy, 0.0).rgb, border * ssrWeight);\n}",
+          "after": "// ShaderLOD source diagnostic classifier-full; modified 2026-10-05.\nvec4 reflection_calc(vec3 fragpos, vec3 normal, vec3 reflected, inout float infinite, float dither) {\n    #if SSR_TYPE == 0  // Flipped image\n        #if defined DISTANT_HORIZONS || defined VOXY\n            vec3 pos = camera_to_screen(fragpos + reflected * 768.0);\n        #else\n            vec3 pos = camera_to_screen(fragpos + reflected * 76.0);\n        #endif\n    #else  // Raymarch\n        float ssrWeight = shaderlodWaterSSRWeight(fragpos);\n        vec3 pos;\n        // Diagnostic: both arms do the complete identical trace; full weight.\n        // A compiler may merge them and eliminate the classifier entirely.\n        if (ssrWeight <= 0.0) {\n            pos = shaderlodWaterRaymarch(reflected, fragpos, infinite, dither);\n        } else {\n            pos = shaderlodWaterRaymarch(reflected, fragpos, infinite, dither);\n        }\n    #endif\n\n    float border =\n        clamp((1.0 - (max(0.0, abs(pos.y - 0.5)) * 2.0)) * 50.0, 0.0, 1.0);\n\n    border = clamp(border - pow(pos.y, 10.0), 0.0, 1.0);\n\n    pos.x = abs(pos.x);\n    if (pos.x > 1.0) {\n        pos.x = 1.0 - (pos.x - 1.0);\n    }\n\n    return vec4(texture2DLod(gaux1, pos.xy, 0.0).rgb, border);\n}\n"
+        }
+      ]
+    }
+  },
+  "license_notice": "Derivative of MakeUp Ultra Fast by Javier Garduño; original LGPL/GPL licenses and source/attribution retained. Diagnostic modifications 2026-10-05."
+}

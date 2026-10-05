@@ -7,7 +7,8 @@ Created: 2026-10-04. Status: active.
 The user authorized sustained agent-team development with broad implementation
 freedom, keeping Photon first, NeoForge and the current Minecraft target. Improve
 performance and the mod, benchmark with/without performance mods, and expand to
-other popular shader packs only after meaningful Photon gains are established.
+other popular shader packs. The fresh-chat authorization permits research and
+exploratory testing now; accepted support and performance still require evidence.
 The user will check in periodically; routine implementation choices do not
 require approval. No remote publication or external messages are implied.
 
@@ -37,8 +38,8 @@ Do not claim Mac-only results establish full desktop shader compatibility.
    workload without material regression. Record uncertainty, CPU/GPU limits and
    visual costs. Existing manual radius changes alone do not establish a novel
    shader benefit. Refine this engineering gate from evidence, transparently.
-5. Only after gate 4, choose and pin another popular, licensable shader based on
-   current evidence. Add explicit integration with its own disabled/original,
+5. Research, pin and experimentally test other popular, licensable shaders now
+   under the latest user authorization. Add explicit integration with its own disabled/original,
    active, runtime, transition and performance checks. No generic rewriting.
 
 ## Team and runtime ownership
@@ -482,3 +483,187 @@ ON146.89/152.07; no consistentgain. Analysis acceptedactualimages/pins under
 Nexttechnicalwork prioritizesactualkey/producercorrectness onlyasboundedsecondary
 research plusreusableconfiguration/adapterdesign without claimingunsupportedpack
 support or droppingtheperformancegate. No userblocker; nativegoalactive.
+
+
+## Fresh performance-chat takeover: 2026-10-05
+
+Native goal active in chat `01a10adc-41ba-76a1-a5eb-1f27c6be8fef`, with no token
+budget. It executes this existing shared project goal; previous unfinished work
+has not been marked complete. Handoff baseline `1000977`; pre-existing unstaged
+SHADOW_VISIBILITY_CACHE_DESIGN.md belongs to its original owner.
+
+Original chat owns main Java configuration/uniform transport, shared shader
+helpers, existing Photon protocol patches and related tests. Fresh chat owns
+performance/web research, optional stack benchmarks, exploratory pack adapters,
+and all Minecraft/GPU launches. No client is live at takeover. Protocol-owned
+files require a concrete handoff before edits; bounded workers may inspect them
+read-only. No publishing, remote push, remote host or external messaging.
+
+First bounded work: primary-source optimization research, pinned/licensed shader
+shortlist, then the pending EntityCulling stack runtime validation and matched
+minimal/optimized/culling controls. Research and exploratory pack tests can begin
+before the ordinary Photon gain gate; they do not establish accepted support.
+CPU acceptance caches remain off. Preserve exact locks, failures, effective
+options, screenshots and separate CPU/GPU/quality evidence.
+
+
+### Live stack-only matrix
+
+Fresh GPU owner launched exec session `34175`, console
+`dev/logs/takeover-stack-forest-r1-runner.log`, manifest directory
+`dev/logs/takeover-stack-forest-r1`. Nine original-Photon forest runs, three blocks
+across minimal/optimized/optimized-culling, DH present, 24 detailed chunks + DH128,
+45-second warmup/25-second capture, GPU query 1/16, fixed shader wetness 0.
+Profile root `run-workloads/stack-takeover`; original mod-absent task
+`runClientLodOff`. These estimate optional stack effects only, not ShaderLOD gain.
+Exact optional artifact versions/hashes are now validated from actual loaded
+reports; all four optimizer jars verified against existing lock before launch.
+18 runner tests passed. No result is accepted until terminal completion and
+matched input/window analysis. Do not launch another game or heavy CPU tests.
+
+Workers: optimization_research owns PERFORMANCE_METHOD_RESEARCH.md; pack_research
+owns OTHER_SHADER_RESEARCH.md and candidate lock only; stack_analysis owns new
+stack analyzer/test/method document. Existing Photon source and main Java remain
+protocol-owned. Root owns runner/tests and GPU. Source-only research may continue
+during the matrix. Next: collect terminal reports and visual checks, then choose
+an explicit additional-pack experiment from pinned/licensed upstream evidence.
+
+
+### Independent shader experiment ownership
+
+Research delivered PERFORMANCE_METHOD_RESEARCH.md with primary sources and
+five bounded hypotheses. Root assigned photon_cloud_guard only new
+`patches/photon-experiments/cloud-consumer-guard.json`, standalone experiment
+builder/tests/documentation. It operates on immutable original Photon bytes,
+not protocol-owned existing patches/helpers. The hypothesis skips unconsumed
+composite1 cloud-color work; it is a structural optimization, not itself LOD.
+
+makeup_adapter owns only new `patches/makeup/`, `shaderpacks/makeup/`, a separate
+builder/tests and MAKEUP_ADAPTER_EXPERIMENT.md. MakeUp9.5g is the provisional
+first LGPL explicit adapter; pinned/licensed baseline research is finishing.
+The first experiment reduces distant vanilla-water SSR work while preserving
+near/original and offscreen fallback paths. Shader options are experimental; no
+connection to Java/common effect protocol is claimed. No shader driver compile
+or render of either new experiment has happened. Both workers may run only
+lightweight source fixtures during the exclusive stack matrix.
+
+
+### Stack provenance qualification in progress
+
+First strict stack comparison identified different `fabric_api_base` raw hashes
+selected from Iris/Sodium nested jars despite identical version. This is retained
+as a strict rejection, not discarded. Source inspection found all17 classes and
+all resources identical except the NeoForge lower dependency bound
+([21.1.169,) versus [21.1.115,)); both accept pinned21.1.253. A separate exact-hash
+equivalence registry/report is being prepared, with an explicit opt-in qualified
+analyzer mode. This is not same-version or arbitrary nested-jar equivalence.
+Final report must retain raw identities and state this qualification.
+
+
+## Stack completion and first other-pack rendering
+
+Stack exec34175 terminal exit0/all9 complete. STACK_FOREST_RESULTS.md records
+qualified block comparisons: optimized frame reductions+3.18/−10.48/+0.83%;
+optimized-culling vsminimal−15.02/−1.57/+0.91%. No consistent gain or default
+change. Strict API Base hash rejection retained; qualified exact-hash exception
+proved classes/resources equal apart from a satisfied loader lower bound.
+Current source/tests:19 runner,24 stack,10 Photon guard,7 MakeUp fixtures pass.
+Production/common Java and existing Photon patch/helper files untouched.
+
+Unmodified MakeUp9.5g smoke exec88400 terminal exit0/complete: selected original
+archive hash0036da17e0c7158e1c669593e6322d53fce3f5a42fb5124b935e9e21a5719db8,
+Iris in-world rendering/fallbackfalse, native medium + reflection slider2 / AA2,
+noDH, inspected shoreline240.5/68/680.5 yaw−180 pitch3. Root inspected PNG with
+visible bank/water reflections; original single capture150.85FPS is smoke
+evidence only, not a speedup or general support. Rawdev/logs/makeup-original-smoke-r1.
+
+Dev overlay now uses actual pack name, pack-neutral baseline labels/program
+names, and serial/shared measurement distinction. This changed dev bytecode
+after stack matrix. Future runner stores compiled local class/resource hashes
+after build and rejects any changes before/after each launch. No pooling old
+and new dev bytes from version strings.
+
+LIVE exec45311: MakeUp original/off/on/native lower
+pilot, four serial launches at run-workloads/makeup-takeover, minimal/noDH,35s
+warmup15s capture, GPU1/16, dynamic shader wetness (clear weather). Directory
+dev/logs/makeup-adapter-pilot-r2; root owns soleGPU. No heavy tests or other
+client until terminal. Original/off/on quality and actual shader-option/driver
+checks precede repeated performance acceptance. Photon guard archives are built
+and three forest profiles prepared, but neither derivative rendered yet.
+
+
+Pilotr1 did not launch: Iris deleted original MakeUp's all-default option file
+after smoke, and the old preparer assumed every option file persisted. Retained
+runnerlogr1. Runner now treats missing file as original source defaults and
+validates it against the experiment preparation's intended controls; actual
+loaded Iris options remain authoritative. Correctedr2 launched in45311. No
+shader failure or performance result was caused by this input guard.
+
+
+### MakeUp pilot terminal; Photon guard live
+
+MakeUp pilot45311 exit0/allfourcomplete. Original/off/lower/on150.63/152.04/
+150.85/119.85FPS; GPU6.183/6.325/6.157/7.749ms. Real active rendering succeeded
+but this singleblock regressed, causeunproven. MAKEUP_RUNTIME_RESULTS.md retains
+negative evidence, source/options-only control distinction and quality limits.
+Defaultoff; no support/performance promotion. Makeupworker now owns only new
+regressionprobe doc and optional separate builder/probe manifest/tests; existing
+adapter files frozen. No compilers/clients byworker.
+
+LIVE exec70093 Photon cloud-consumer forest matrix:original/disabled/enabled
+threeblocks (9 serial runs), minimal/DHpresent,35swarm20scapture, GPU1/16,
+fixedwetness0. Profile rootrun-workloads/photon-cloud-consumer-takeover; raw
+dev/logs/photon-cloud-consumer-forest-r1 and adjacent runnerlog. Compiledlocal
+inputs frozen. Root owns allGPU; no heavy builds/clients untilterminal. This
+is exact consumer dispatch, not a distanceLOD gain byitself. Afterterminal,
+inspect images and qualified repeats before any cleanup/default change.
+
+
+## Photon guard complete; full-quality MakeUp probes live
+
+Photon guard70093 terminalexit0/all9complete. Enabled/off medianframe+0.37%,
+GPUmean+1.89%; enabled/original+0.68%frame,−0.13%GPU. No meaningfulordinary
+gain or defaultpromotion. PHOTON_CLOUD_CONSUMER_RESULTS.md records bothbaselines
+and quality/coverage limitations. Near/far surface lighting/source budgets
+unchanged; fixedforest PNGs show no grossloss, not fullmotion/cloud-frontproof.
+
+New dev benchmarkWindowScale property is owned only byfreshGPUchat: narrow
+build.gradle run-systemproperty mapping, ComparisonClient window sizing and
+WorkloadSession propertyexport. Scale2 doubles the former comparisonwindow's
+logical dimensions when it fits the real monitor workarea; actual framebuffer
+size remains authoritative. It creates a separate native-size resolution
+experiment, without adding effects or reducing baseline quality. Mainconfig,
+uniformtransport and existing Photon patches/helpers untouched.
+
+LIVE exec85787 MakeUp full-reflection probes, five serialarmsonce: original,
+derivativeoff, duplicateimplicit, duplicateexplicitLOD0, classifier-full.
+Minimal/noDH,35swarm20scapture,GPU1/16, scale1, clear/dynamicwetness. Rootowns
+soleGPU; rawdev/logs/makeup-full-reflection-probes-r1 and adjacent runnerlog.
+Each diagnostic retains complete original reflectionwork/quality; compiler
+may remove equal classifierbranches. No causalclaim before driver/repeatchecks.
+Built hashes and rawsources in corresponding manifests/reports. Existing
+adapter/helper source frozen; new probes use distinctarchives. Next after
+terminal: inspect pairedsource/quality/results, repeated/reloadcontrols, and
+native-size Photon original/disabled/active pilot at held quality/radii.
+
+
+### Full-reflection terminal; native-window Photon pilot live
+
+MakeUpprobes85787 exit0/all5complete. Original/off/classifier-full/duplicate-
+implicit/duplicate-explicit151.78/154.02/154.00/148.05/124.48FPS. Directexplicit
+regressed; equivalentclassifier-shapedexplicit didnot. Retainall; causeunproven.
+MAKEUP_RUNTIME_RESULTS.md updates actualdriver evidence.
+
+LIVE exec92027 Photon original/disabled/active native-window pilot, three serial
+launchesonce, minimal/DHpresent,40swarm20scapture,GPU1/16,fixedwetness0, requested
+windowScale2. Actualdimensions/windowpacing authoritative. Profile root
+run-workloads/stack-takeover, rawdev/logs/photon-native-window-pilot-r1. Same
+original/upstreamquality and protected lighting/radius24/DH128 as scale1;
+active archiveB15. No quality inflation or cross-resolution gain comparison.
+
+Cameraquality worker owns source outsideGradle at
+experiments/camera-quality/CameraQualitySession.java and CAMERA_QUALITY_HARNESS.md.
+It mustnot launch/compile or touch currentsource sets. Root integrates onlyafter
+review and currentGPUterminal; smooth owned-player travel and PNGsequence are
+unmeasured quality evidence, never speedup samples. Mainprotocol stilloriginal
+chat owned; freshroot build.gradle change only benchmarkwindow propertymapping.
