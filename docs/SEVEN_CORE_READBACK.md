@@ -31,10 +31,26 @@ scene. Numeric program IDs can be reused. Getter stalls make this an opt-in
 non-performance session; GPU timing remains off.
 
 Root ran Gradle build/compileDevClientJava successfully after the small dev
-extension. Production JAR contains no dev classes/mixins. Runtime corroboration
-is pending under root session76970, existing Photon reduced archive, native
+extension. Production JAR contains no dev classes/mixins. Root session76970 completed exit0, existing Photon reduced archive, native
 2976x1672/minimal/noDH,25s warmup/5s capture, cloudSamplerProbe=true/GPUfalse.
 Raw provenance/request/compiled hashes are in
 run-workloads/photon-seven-core-readback-r1/coastalwater/probe-provenance.json.
 The ordinary performance goal and new Miniature field consumption remain
 separate acceptance work.
+
+
+Root validated actual workload UUID/archive/options/control/artifacts/native
+window/temporal/class/screenshot contracts. The schema2 report contains22first-
+draw program records. Numeric program21 exposed all seven fields with matching
+active scalar types, nonnegative locations and values: version2/enabled1/preset1/
+near32/far96/transition8/debug0. Program20/22 exposed six fields, others fewer;
+inactive entries remain unknown. No GL query/capture failure was observed in the
+runtime log. Shutdown OpenAL warnings are separate from GL state.
+
+This is a Photon normal-output readback, not a Miniature new-consumer result.
+Numeric program21 is not by itself a source-stage identity or later live-reload
+proof. No physical branch/trace-count or GPU benefit inferred. Report/provenance/
+validated workload/final PNG are preserved at
+ dev/logs/photon-seven-core-readback-r1. All owned runtime jobs are terminal.
+
+Readback report SHA256: 3640bae4bc260d8775024062c8aad51253fb5a30e06dc9d0a0d5c33fa030f4cb

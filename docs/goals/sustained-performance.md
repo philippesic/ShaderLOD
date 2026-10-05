@@ -2338,3 +2338,20 @@ Firstdraw-only readback does not guarantee settled reload/physical work.
 Both source workers remain in their separate NEW file partitions. No other
 client/build/encoder; main/shared/old shader/design ownership preserved. Full
 objective active and not completed or blocked.
+
+
+## Seven-core diagnostic terminal and qualified
+
+Exec76970 exited0; actual requestdb76b25a...397d and workload input/source/
+config/native/artifact/temporal/classes/PNG contracts accepted. GPU samples0,
+no performance claim. Schema2 report22firstdraw programs; program21 exposesall7
+matching active scalar types/nonnegative locations with version2/enable1/
+presetPERFORMANCE1/near32/far96/transition8/debug0. Programs20/22 show6fields;
+others fewer/inactive remainunknown. No GL query/capture failure seen; shutdown
+OpenALwarnings separate. ReportSHA recordedSEVEN_CORE_READBACK.md and rawreport/
+provenance/workload/finalPNG in dev/logs/photon-seven-core-readback-r1.
+NumericID alone doesnot identifyshaderstage/physicalbudget/latersettledreload;
+newMiniature actualconsumption stillpending. All runtime jobs nowterminal.
+Two workers continue their separate NEW source partitions; rootnextreviewfreeze,
+fixture acceptance and actualbaselineprepare/privateassembly/drivercompile.
+Fullgoalactive/unshrunk/commonownerreserved/allhistoricalfailuresretained.
