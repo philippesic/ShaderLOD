@@ -121,6 +121,7 @@ final class WorkloadSession {
             report.add("shadow_coherence_oracle", gson.toJsonTree(ShadowCoherenceOracle.snapshot()));
             report.add("window_state", gson.toJsonTree(windowState.snapshot()));
             if (DhRenderEvidence.enabled()) report.add("dh_draw_evidence", DhRenderEvidence.captureTerminalSnapshot());
+            if (Boolean.getBoolean("shaderlod.dev.waterSceneSurvey")) report.add("water_scene_survey", WaterSceneSurvey.captureTerminalSnapshot(client));
             report.addProperty("shader_temporal_note", "Wetness is observed at normal Iris supplier evaluation; clocks/day/weather are CPU source getters. Dynamic wetness and frame phase can advance. No smoother reevaluation, GPU readback, or clock freeze.");
             report.add("effective_shader_options", inputStart.get("effective_shader_options").deepCopy());
             report.addProperty("effective_shader_options_sha256", inputStart.get("effective_shader_options_sha256").getAsString());
@@ -128,7 +129,7 @@ final class WorkloadSession {
             for (var mod : ModList.get().getMods()) mods.addProperty(mod.getModId(), mod.getVersion().toString());
             report.add("loaded_mods", mods);
             var runtimeProperties = new JsonObject();
-            for (String property : List.of("shaderlod.dev.performanceStack", "shaderlod.dev.includeDh", "shaderlod.dev.gpuSampleInterval", "shaderlod.dev.gpuTiming", "shaderlod.dev.cpuLayerTiming", "shaderlod.dev.fixedWetness", "shaderlod.dev.shadowObserve", "shaderlod.dev.visibilityLists", "shaderlod.dev.shadowCoherenceOracle", "shaderlod.dev.benchmarkWindowScale", "shaderlod.dev.cloudSamplerProbe", "shaderlod.dev.dhDrawEvidence")) {
+            for (String property : List.of("shaderlod.dev.performanceStack", "shaderlod.dev.includeDh", "shaderlod.dev.gpuSampleInterval", "shaderlod.dev.gpuTiming", "shaderlod.dev.cpuLayerTiming", "shaderlod.dev.fixedWetness", "shaderlod.dev.shadowObserve", "shaderlod.dev.visibilityLists", "shaderlod.dev.shadowCoherenceOracle", "shaderlod.dev.benchmarkWindowScale", "shaderlod.dev.cloudSamplerProbe", "shaderlod.dev.dhDrawEvidence", "shaderlod.dev.waterSceneSurvey")) {
                 runtimeProperties.addProperty(property, System.getProperty(property, "unspecified"));
             }
             report.add("runtime_properties", runtimeProperties);

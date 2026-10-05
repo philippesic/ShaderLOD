@@ -240,3 +240,16 @@ Singlepilot no demonstratedavoidedGPUwork/gain; defaultoff retained. Raw
 config/artifacts/samples/PNGs. Nextfreshdiagnosticreads linkednormalcoreuniforms
 withoutGPUtiming; movingbudgetquality remainsseparate. Do notpromote this
 prototype to supported/performance adapter based oncompile+configuration.
+
+
+Normalcore diagnostic21144 subsequentlyexit0, exactsameMODE2/privateZIP/
+1488×836/minimal/noDH/96→160 config,20s warmup5s capture/GPUtimingfalse (0samples).
+Linkedprogram16 actualGLscalarvalues: shaderlodBridgeVersion2/int/location2,
+shaderlodEnabled1/int/location29, shaderlodNear96/float/location16,
+shaderlodFar160/float/location7. Active/type/size/locationmatched; valuesqueried
+withoutglGetErrorconsumption. Thisproves registeredcoretransport reacheda
+normalrenderingprogram, withno diagnosticwatercue. NumericIDstagename and
+fragmentbudget/hitcoverage/physicaloperations remainunverified; GPUflatpilot
+unchanged. RawreportSHA25633e724cc8dd4c4087888789768dd4ce2dc2703aa571c673a9b15e2c0cef4d01a,
+`dev/logs/miniature-normal-core-diagnostic-r1.json`/companionworkload/log.
+No skippedcount/speedup/supportpromotion inferredfromvalues alone.

@@ -37,6 +37,7 @@ public final class CloudSamplerStateProbe {
     private static final int PROGRAM_LIMIT = 64;
     private static final int UNIFORM_LIMIT = 4096;
     private static final String[] WATCHED = {"colortex8", "noisetex", "colortex6", "colortex7"};
+    private static final String[] CORE_UNIFORMS = {"shaderlodBridgeVersion", "shaderlodEnabled", "shaderlodNear", "shaderlodFar"};
     private static final Set<Integer> SEEN = new HashSet<>();
     private static final JsonArray PROGRAMS = new JsonArray();
     private static JsonObject report;
@@ -88,6 +89,7 @@ public final class CloudSamplerStateProbe {
         result.addProperty("program_limit", PROGRAM_LIMIT);
         result.addProperty("uniform_scan_limit", UNIFORM_LIMIT);
         result.addProperty("sampler_selection", "Watched aliases plus all active scalar sampler2D/sampler3D uniforms in the bounded linked-uniform scan; other sampler types/arrays outside watched aliases are inventory only");
+        result.addProperty("core_uniform_selection", "Exact bridge version/enable scalar int and near/far scalar float linked-program readbacks; no source/supplier reevaluation");
         result.addProperty("scope", "First draw per numeric GL program ID in this JVM; full-screen draws only; not a program-name or cloud-stage proof");
         result.addProperty("query_status", "Driver values queried without consuming glGetError; inspect runtime GL logs for errors");
         result.addProperty("interpretation", "Missing/inactive/unsupported state is unknown; sampler state alone does not prove divergent implicit derivatives safe");
@@ -96,10 +98,12 @@ public final class CloudSamplerStateProbe {
     }
 
     private static void capture(int program, JsonObject entry, GLCapabilities capabilities) {
+        entry.add("core_uniforms", coreUniforms(program, Map.of(), "not inspected; see capture_failure if present"));
         int linked = GL20.glGetProgrami(program, GL20.GL_LINK_STATUS);
         entry.addProperty("linked", linked != GL11.GL_FALSE);
         if (linked == GL11.GL_FALSE) {
             entry.add("samplers", unknown("current program not linked"));
+            entry.add("core_uniforms", coreUniforms(program, Map.of(), "current program not linked"));
             return;
         }
         int count = GL20.glGetProgrami(program, GL20.GL_ACTIVE_UNIFORMS);
@@ -124,6 +128,9 @@ public final class CloudSamplerStateProbe {
             linkedUniforms.add(uniform.name(), identity);
         }
         entry.add("linked_uniforms", linkedUniforms);
+        entry.add("core_uniforms", coreUniforms(program, uniforms, count > UNIFORM_LIMIT
+                ? "not found in truncated active-uniform scan"
+                : "inactive, optimized out, or undeclared; linked introspection cannot distinguish"));
         JsonObject samplers = new JsonObject();
         entry.add("samplers", samplers);
         int previousActiveTexture = GL11.glGetInteger(GL13.GL_ACTIVE_TEXTURE);
@@ -155,6 +162,57 @@ public final class CloudSamplerStateProbe {
             GL13.glActiveTexture(previousActiveTexture);
         }
         entry.addProperty("active_texture_after", GL11.glGetInteger(GL13.GL_ACTIVE_TEXTURE));
+    }
+
+    private static JsonObject coreUniforms(int program, Map<String, Uniform> uniforms, String missingReason) {
+        JsonObject result = new JsonObject();
+        for (int index = 0; index < CORE_UNIFORMS.length; index++) {
+            String name = CORE_UNIFORMS[index];
+            int expectedType = index < 2 ? GL11.GL_INT : GL11.GL_FLOAT;
+            Uniform uniform = uniforms.get(name);
+            JsonObject value = new JsonObject();
+            result.add(name, value);
+            value.addProperty("expected_type", expectedType);
+            value.addProperty("expected_type_name", expectedType == GL11.GL_INT ? "int" : "float");
+            value.addProperty("found_in_linked_inventory", uniform != null);
+            if (uniform == null) {
+                value.addProperty("status", "unknown");
+                value.addProperty("reason", missingReason);
+                continue;
+            }
+            value.addProperty("active_uniform_name", uniform.name());
+            value.addProperty("active_uniform_type", uniform.type());
+            value.addProperty("active_uniform_size", uniform.size());
+            if (uniform.type() != expectedType || uniform.size() != 1) {
+                value.addProperty("status", "unknown");
+                value.addProperty("reason", "active linked uniform is not the expected scalar type; location/value not queried");
+                continue;
+            }
+            try {
+                int location = GL20.glGetUniformLocation(program, name);
+                value.addProperty("uniform_location", location);
+                if (location < 0) {
+                    value.addProperty("status", "unknown");
+                    value.addProperty("reason", "active linked uniform has no queryable location; value not queried");
+                } else if (expectedType == GL11.GL_INT) {
+                    value.addProperty("value", GL20.glGetUniformi(program, location));
+                    value.addProperty("status", "queried_without_gl_error_consumption");
+                } else {
+                    float actual = GL20.glGetUniformf(program, location);
+                    if (Float.isFinite(actual)) {
+                        value.addProperty("value", actual);
+                        value.addProperty("status", "queried_without_gl_error_consumption");
+                    } else {
+                        value.addProperty("status", "unknown");
+                        value.addProperty("reason", "non-finite float returned by uniform getter");
+                    }
+                }
+            } catch (RuntimeException exception) {
+                value.addProperty("status", "unknown");
+                value.addProperty("reason", exception.toString());
+            }
+        }
+        return result;
     }
 
     private static JsonObject sampler(int program, Uniform uniform, GLCapabilities capabilities) {

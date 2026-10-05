@@ -3,6 +3,7 @@
 from __future__ import annotations
 import argparse
 import copy
+from datetime import datetime
 import hashlib
 import json
 import math
@@ -16,6 +17,8 @@ from run_proof_matrix import read_option_properties
 METHOD = 'One JVM/world/pipeline; all five modules off; only live global bridge enabled changes'
 EFFECTS_METHOD = 'One JVM/world/pipeline; fixed five-module effect options; only live global bridge enabled changes'
 COHERENCE_METHOD = 'One JVM/world/pipeline; original Photon; only shadow frustum coherence changes'
+TERRAIN_METHOD = 'One JVM/world/pipeline; fixed B15/global enabled; only terrain policy enabled changes plus recorded fixed-scene manual re-arm'
+TERRAIN_PHOTON_SHA256 = 'b15d3c50f192e0e3de8e912afba2cc531e7d0520e3cbe573a7e35b993528e16c'
 ORIGINAL_PHOTON_SHA256 = '120897768eaa8cb1f14a3e98f88dff009ae3204ee3b96904a4fe8586edfc1ead'
 OFF_OPTIONS = ('SHADERLOD_CLOUDS', 'SHADERLOD_WATER', 'SHADERLOD_FOG', 'SHADERLOD_SSR', 'SHADERLOD_MATERIALS',
                'SHADERLOD_CACHED_SKY', 'SHADERLOD_WATER_ANALYTIC', 'SHADERLOD_DEBUG')
@@ -64,14 +67,23 @@ def semantic_state(state, strip_enabled=False, feature='global'):
     semantic = result.get('loaded_semantic_config', {})
     for section, fields in CONFIG_FIELDS.items():
         required = fields - {'enabled'} if section == 'lod' and strip_enabled and feature in ('global', 'effects') else fields
+        if section == 'terrain' and strip_enabled and feature == 'terrain': required = required - {'enabled'}
         if section == 'rendering' and feature == 'coherence' and not strip_enabled: required = required | {'shadowFrustumCoherence'}
-        if section == 'rendering' and feature == 'effects': required = required | {'shadowFrustumCoherence'}
+        if section == 'rendering' and feature in ('effects', 'terrain'): required = required | {'shadowFrustumCoherence'}
         if not required <= semantic.get(section, {}).keys(): raise ValueError('Incomplete loaded semantic config: ' + section)
     result.pop('config/shaderlod-client.toml_sha256', None)
+    if feature == 'terrain':
+        policy = result.get('geometry_policy')
+        if not isinstance(policy, dict): raise ValueError('Actual terrain boundary policy missing')
+        policy.pop('stableTicks', None)  # Real eligibility ticks advance during a stable ON capture.
     if strip_enabled:
         if feature in ('global', 'effects'):
             result.get('lod_settings', {}).pop('enabled', None)
             semantic['lod'].pop('enabled', None)
+        elif feature == 'terrain':
+            for field in ('effective_chunks', 'terrain_configured', 'terrain_active'): result.pop(field, None)
+            semantic['terrain'].pop('enabled', None)
+            for field in ('active', 'effectiveChunks', 'reason'): result['geometry_policy'].pop(field, None)
         else:
             result.pop('shadow_coherence_configured', None)
             result.pop('shadow_coherence_active', None)
@@ -89,17 +101,20 @@ def validate_state(state, enabled, shader_hash, feature='global'):
         raise ValueError('Wrong live global flag in phase')
     if state['lod_settings'].get('debug') is not False: raise ValueError('Unexpected debug')
     semantic = state['loaded_semantic_config']
-    for section, fields in (('terrain', ('enabled', 'warmSourceConfirmed')), ('rendering', ('optimizeShadowCulling', 'separateShadowVisibilityLists'))):
+    sections = (('rendering', ('optimizeShadowCulling', 'separateShadowVisibilityLists')),)
+    if feature != 'terrain': sections += (('terrain', ('enabled', 'warmSourceConfirmed')),)
+    for section, fields in sections:
         if any(semantic[section][field] is not False for field in fields): raise ValueError('Semantic feature config not disabled')
     if semantic['lod']['debug'] is not False: raise ValueError('Semantic debug not disabled')
     for field in ('near', 'far', 'transition'): finite(semantic['lod'][field], 'semantic ' + field)
     for field in FALSE_FLAGS:
+        if feature == 'terrain' and field.startswith('terrain_'): continue
         if state.get(field) is not False: raise ValueError('Unexpected feature activity/config: ' + field)
     if state.get('actual_shader_sha256') != shader_hash: raise ValueError('Actual shader archive differs from pin')
     options = state.get('effective_shader_options', {})
     if not options: raise ValueError('Full effective options missing')
-    if feature in ('global', 'effects'):
-        if feature == 'effects':
+    if feature in ('global', 'effects', 'terrain'):
+        if feature in ('effects', 'terrain'):
             if not isinstance(options, dict) or any(not isinstance(key, str) or not isinstance(value, str) for key, value in options.items()):
                 raise ValueError('Full string-valued effective option map required')
             for name in EFFECT_OPTIONS:
@@ -112,9 +127,23 @@ def validate_state(state, enabled, shader_hash, feature='global'):
             if name in state and state[name] is not False: raise ValueError('Coherence active in global control')
         if 'shadowFrustumCoherence' in semantic['rendering'] and semantic['rendering']['shadowFrustumCoherence'] is not False:
             raise ValueError('Coherence config enabled in global control')
-        if feature == 'effects':
+        if feature in ('effects', 'terrain'):
             for name in ('shadow_coherence_configured', 'shadow_coherence_active'):
                 if state.get(name) is not False: raise ValueError('Coherence must stay off in effects control')
+        if feature == 'terrain':
+            validate_terrain_prerequisites(state)
+            for field in ('terrain_configured', 'terrain_active'):
+                if state.get(field) is not enabled: raise ValueError('Terrain activity/config differs from selected phase')
+            if semantic['terrain'].get('enabled') is not enabled: raise ValueError('Wrong selected terrain semantic flag')
+            radius = 16 if enabled else 24
+            if integer(state.get('effective_chunks'), 'effective_chunks') != radius: raise ValueError('Terrain phase must be effective16 ON /24 OFF')
+            policy = state['geometry_policy']
+            if policy.get('active') is not enabled or integer(policy.get('effectiveChunks'), 'policy effectiveChunks') != radius:
+                raise ValueError('Actual terrain policy does not match phase')
+            if policy.get('reason') != ('DH terrain cap active' if enabled else 'terrain policy disabled'):
+                raise ValueError('Terrain eligibility reason differs')
+            ticks = integer(policy.get('stableTicks'), 'stableTicks')
+            if (ticks < 600 if enabled else ticks != 0): raise ValueError('Terrain policy warming/not settled')
     else:
         if shader_hash != ORIGINAL_PHOTON_SHA256: raise ValueError('Coherence requires exact original Photon')
         for name in ('shadow_coherence_configured', 'shadow_coherence_active'):
@@ -126,6 +155,103 @@ def validate_state(state, enabled, shader_hash, feature='global'):
         finite(state.get(field), field)
     for field in ('framebuffer_width', 'framebuffer_height', 'requested_chunks', 'effective_chunks', 'gui_scale'):
         if integer(state.get(field), field) < 1: raise ValueError('Nonpositive input: ' + field)
+
+
+def validate_terrain_prerequisites(state):
+    if state.get('actual_shader_sha256') != TERRAIN_PHOTON_SHA256: raise ValueError('Terrain control requires exact B15 archive')
+    if state.get('dh_present') is not True or state.get('terrain_confirmation') is not True: raise ValueError('Terrain requires DH and explicit manual acknowledgement')
+    if state.get('mod_present') is not True or state.get('shaders_in_use') is not True or state.get('fallback') is not False or state.get('hide_gui') is not True:
+        raise ValueError('Terrain mod/pipeline/hidden HUD evidence missing')
+    semantic = state.get('loaded_semantic_config', {})
+    if state.get('lod_settings', {}).get('enabled') is not True or semantic.get('lod', {}).get('enabled') is not True:
+        raise ValueError('Global enable must remain true in terrain control')
+    terrain = semantic.get('terrain', {})
+    if terrain.get('warmSourceConfirmed') is not True or integer(terrain.get('vanillaChunkCap'), 'cap config') != 16 or integer(terrain.get('warmupSeconds'), 'policy warmup') != 30:
+        raise ValueError('Terrain requires fixed cap16/manual acknowledgement/30s policy warmup')
+    if integer(state.get('requested_chunks'), 'requested_chunks') != 24: raise ValueError('Terrain requested radius must remain24')
+    if state.get('terrain_camera_type') != 'FIRST_PERSON' or integer(state.get('terrain_fov'), 'terrain FOV') < 1:
+        raise ValueError('Terrain fixed first-person camera/FOV evidence missing')
+    options = state.get('effective_shader_options', {})
+    for name in EFFECT_OPTIONS:
+        if options.get(name) != 'true': raise ValueError('Terrain requires all five fixed effects active')
+    for name in ('SHADERLOD_USE_MOD_CONFIG', 'SHADERLOD_PRESERVE_LIGHTING'):
+        if options.get(name) != 'true': raise ValueError('Terrain bridge/lighting protection changed')
+    for name in OFF_OPTIONS[5:]:
+        if options.get(name) != 'false': raise ValueError('Terrain debug/cache/analytic option changed')
+    for name in FALSE_FLAGS[3:] + ('shadow_coherence_configured', 'shadow_coherence_active'):
+        if state.get(name) is not False: raise ValueError('Terrain CPU experiment active/missing')
+    if semantic.get('rendering', {}).get('shadowFrustumCoherence') is not False: raise ValueError('Terrain coherence config changed')
+    dh = state.get('terrain_dh_state', {})
+    if dh.get('world_loaded') is not True or dh.get('rendering_enabled') is not True or dh.get('rendering_mode') != 'DEFAULT' or integer(dh.get('chunks'), 'DH reach') != 128:
+        raise ValueError('Actual DH128 normal-world readiness missing')
+    policy = state.get('geometry_policy')
+    if not isinstance(policy, dict): raise ValueError('Actual boundary terrain policy missing')
+    for name, expected in (('cap', 16), ('requestedChunks', 24), ('warmupTicks', 600)):
+        if integer(policy.get(name), 'policy ' + name) != expected: raise ValueError('Terrain policy pin differs: ' + name)
+    ticks = integer(policy.get('stableTicks'), 'observed policy stableTicks')
+    if not isinstance(policy.get('active'), bool) or state.get('terrain_active') is not policy['active']:
+        raise ValueError('Actual terrain policy/boundary activity inconsistent')
+    radius = 16 if policy['active'] else 24
+    if integer(policy.get('effectiveChunks'), 'observed policy effectiveChunks') != radius or integer(state.get('effective_chunks'), 'observed effective radius') != radius or (policy['active'] and ticks < 600):
+        raise ValueError('Actual terrain policy/radius/warmup inconsistent')
+    if policy.get('detail') != '': raise ValueError('Terrain policy API/readiness failure')
+    window = state.get('terrain_window_state', {})
+    if window.get('availability') != 'available' or window.get('visible') != 'true' or window.get('iconified') != 'false' or window.get('focused') not in ('true', 'false'):
+        raise ValueError('Actual terrain window evidence unavailable/hidden')
+    for name, expected in (('framebuffer_width', 2976), ('framebuffer_height', 1672)):
+        if integer(state.get(name), name) != expected or integer(window.get(name), name) != expected:
+            raise ValueError('Terrain native framebuffer differs')
+    pacing = window.get('pacing', {})
+    if pacing.get('vsync') is not False or not isinstance(pacing.get('fullscreen'), bool) or not isinstance(pacing.get('pause_on_lost_focus'), bool) or integer(pacing.get('configured_framerate_limit'), 'frame limit') < 1:
+        raise ValueError('Terrain pacing evidence missing/changed')
+    if pacing['pause_on_lost_focus'] and window['focused'] != 'true': raise ValueError('Terrain unfocused with focus pause')
+    for name in ('window_width', 'window_height'):
+        if integer(window.get(name), name) < 1: raise ValueError('Terrain logical window dimensions missing')
+
+
+def validate_terrain_phase(report, phase, reference):
+    settle = finite(phase.get('settleElapsedSeconds'), 'actual terrain settle')
+    minimum = reference['loaded_semantic_config']['terrain']['warmupSeconds'] + 30
+    if settle < report['settle_seconds'] or settle < minimum: raise ValueError('Terrain phase settling too short')
+    rearm = phase.get('terrainRearm')
+    if phase['enabled']:
+        if not isinstance(rearm, dict) or integer(rearm.get('attempts'), 'terrain re-arm attempts') != 1 or rearm.get('succeeded') is not True:
+            raise ValueError('Terrain ON missing/succeeded once-only manual re-arm evidence')
+        if rearm.get('scene_identifier') != report['terrain_scene_identifier'] or rearm.get('api') != 'GeometryLodController.confirmCurrentScene':
+            raise ValueError('Terrain manual re-arm scene/API identity mismatch')
+        delay = finite(rearm.get('elapsed_settle_seconds'), 'terrain re-arm delay')
+        if delay < 0 or settle - delay < minimum: raise ValueError('Terrain insufficient post-rearm settling')
+        try:
+            at_utc = datetime.fromisoformat(rearm['at_utc'].replace('Z', '+00:00'))
+            if at_utc.tzinfo is None: raise ValueError()
+        except (KeyError, ValueError, TypeError, AttributeError):
+            raise ValueError('Terrain manual re-arm timestamp missing/invalid') from None
+        observed = rearm.get('observed_input', {})
+        validate_terrain_prerequisites(observed)
+        if observed.get('terrain_configured') is not True or observed['loaded_semantic_config']['terrain'].get('enabled') is not True:
+            raise ValueError('Terrain ON not configured before manual re-arm')
+        if observed['geometry_policy'].get('reason') not in ('warming DH scene', 'DH replacement coverage unconfirmed', 'DH terrain cap active'):
+            raise ValueError('Terrain re-arm occurred before eligible fixed scene')
+        if canonical(semantic_state(observed, True, 'terrain')) != canonical(reference): raise ValueError('Terrain re-arm scene inputs changed')
+    elif rearm is not None:
+        raise ValueError('Terrain OFF phase must not manually re-arm')
+    if phase['enabled'] and phase['inputEnd']['geometry_policy']['stableTicks'] < phase['inputStart']['geometry_policy']['stableTicks']:
+        raise ValueError('Terrain eligibility counter reset during capture')
+    window = phase.get('windowState', {})
+    if window.get('schema') != 1: raise ValueError('Terrain window observation schema missing')
+    capture = window.get('capture', {})
+    count = integer(capture.get('observations'), 'terrain window observations')
+    if count < 1 or integer(capture.get('available_observations'), 'available window observations') != count or integer(capture.get('unavailable_observations'), 'unavailable window observations') != 0 or integer(capture.get('dropped_transitions'), 'dropped transitions') != 0 or capture.get('transition_counts') != {} or capture.get('transitions') != []:
+        raise ValueError('Terrain capture window/pacing transition or missing observations')
+    for name in ('start', 'end'):
+        if capture.get(name, {}).get('state') != phase['inputStart']['terrain_window_state']:
+            raise ValueError('Terrain window tracker/boundary identity differs')
+    state = phase['inputStart']['terrain_window_state']
+    for flag in ('focused', 'iconified', 'visible'):
+        counts = capture.get(flag, {})
+        expected_true = count if state[flag] == 'true' else 0
+        if integer(counts.get('true_observations'), flag + ' true') != expected_true or integer(counts.get('false_observations'), flag + ' false') != count - expected_true or integer(counts.get('unknown_observations'), flag + ' unknown') != 0:
+            raise ValueError('Terrain window flag changed/unknown between boundaries')
 
 
 def validate_samples(samples, epoch, first_frame, last_frame, fields):
@@ -177,8 +303,8 @@ def time_reduction(off, on):
 def analyze_report(report, expected_shader_sha256=None, profile=None):
     if report.get('schema') != 3 or report.get('status') != 'complete': raise ValueError('Require a complete schema-3 control')
     feature = report.get('benchmark_feature', 'global')
-    if feature not in ('global', 'coherence', 'effects'): raise ValueError('Unknown benchmark feature')
-    methods = {'global': METHOD, 'coherence': COHERENCE_METHOD, 'effects': EFFECTS_METHOD}
+    if feature not in ('global', 'coherence', 'effects', 'terrain'): raise ValueError('Unknown benchmark feature')
+    methods = {'global': METHOD, 'coherence': COHERENCE_METHOD, 'effects': EFFECTS_METHOD, 'terrain': TERRAIN_METHOD}
     if report.get('method') != methods[feature]: raise ValueError('Unrecognized pipeline/world guard method')
     if feature == 'effects':
         if report.get('selected_flag') != 'lod.enabled': raise ValueError('Wrong selected effects flag')
@@ -193,18 +319,41 @@ def analyze_report(report, expected_shader_sha256=None, profile=None):
         if policy.get('shadow_coherence_oracle') is not False or policy.get('visibility_phase_observer') is not False: raise ValueError('Oracle/phase observer timing interference')
         for name in ('shadowCoherenceOracle', 'visibilityLists'):
             if report.get('instrumentation_properties', {}).get(name, 'unspecified') not in ('false', 'unspecified'): raise ValueError('Diagnostic observer property enabled')
+    if feature == 'terrain':
+        if report.get('selected_flag') != 'terrain.enabled' or report.get('instrumentation_properties', {}).get('benchmarkFeature') != 'terrain':
+            raise ValueError('Explicit terrain feature/selected flag mismatch')
+        if report.get('restored_initial_feature') is not True or report.get('initial_enabled') is not True or not isinstance(report.get('initial_feature_enabled'), bool):
+            raise ValueError('Terrain original flag/global restoration evidence missing')
+        if report.get('atmosphere_guard_absent') is not True: raise ValueError('Terrain requires absent atmosphere guard')
+        if finite(report.get('settle_seconds'), 'terrain settle seconds') < 60 or finite(report.get('measurement_seconds'), 'terrain measurement seconds') < 30:
+            raise ValueError('Terrain requires >=60s settle and >=30s measurement')
+        if report.get('terrain_scene_identifier') != report.get('session_id') + ':inspected-fixed-scene': raise ValueError('Terrain inspected scene identifier mismatch')
+        for name in ('shadowCoherenceOracle', 'visibilityLists', 'shadowObserve'):
+            if report.get('instrumentation_properties', {}).get(name, 'unspecified') not in ('false', 'unspecified'): raise ValueError('Terrain diagnostic observer enabled')
     if report.get('starting_order') not in ('OFF/ON/OFF/ON', 'ON/OFF/ON/OFF'): raise ValueError('Invalid four-phase order')
     if not isinstance(report.get('gpu_requested'), bool) or not isinstance(report.get('cpu_requested'), bool): raise ValueError('Timing policy missing')
-    pin = ORIGINAL_PHOTON_SHA256 if feature == 'coherence' else expected_shader_sha256 or report.get('workload-manifest.json', {}).get('adaptive_pack_sha256')
+    pin = ORIGINAL_PHOTON_SHA256 if feature == 'coherence' else TERRAIN_PHOTON_SHA256 if feature == 'terrain' else expected_shader_sha256 or report.get('workload-manifest.json', {}).get('adaptive_pack_sha256')
     if feature == 'coherence' and expected_shader_sha256 is not None and expected_shader_sha256 != pin: raise ValueError('Explicit pin conflicts with required original Photon')
+    if feature == 'terrain' and expected_shader_sha256 is not None and expected_shader_sha256 != pin: raise ValueError('Explicit pin conflicts with required terrain B15')
     pin = require_sha(pin)
     reference = report.get('stable_input_reference')
     if not isinstance(reference, dict): raise ValueError('Stable semantic input reference missing')
     reference = semantic_state(reference, True, feature)
     if reference.get('actual_shader_sha256') != pin: raise ValueError('Pinned archive/reference mismatch')
+    if feature == 'terrain':
+        require_sha(reference.get('control_sha256'))
+        require_sha(report.get('workload-manifest.json', {}).get('source_world_sha256'))
+        initial = report.get('terrain_initial_observation', {})
+        validate_state(initial, report['initial_feature_enabled'], pin, feature)
+        if canonical(semantic_state(initial, True, feature)) != canonical(reference): raise ValueError('Initial terrain scene/reference mismatch')
     if report['gpu_requested'] and report.get('backend') not in ('TIMESTAMP', 'ELAPSED_ALTERNATING'):
         raise ValueError('Requested GPU timing backend unsupported')
     if not report.get('loaded_mods') or not report.get('loaded_artifacts_sha256'): raise ValueError('Runtime versions/artifact identities missing')
+    if feature == 'terrain':
+        pinned_mods = {'minecraft': '1.21.1', 'neoforge': '21.1.253', 'distanthorizons': '3.3.3',
+                       'iris': '1.8.12-snapshot+mc1.21.1-local', 'sodium': '0.6.13+mc1.21.1'}
+        if any(report['loaded_mods'].get(name) != version for name, version in pinned_mods.items()) or not report['loaded_mods'].get('shaderlod'):
+            raise ValueError('Terrain loaded runtime differs from pinned mod set')
     phases = report.get('phases', [])
     if len(phases) != 4: raise ValueError('Require exactly four phases')
     ids, images, gpu_epochs, cpu_epochs = set(), set(), set(), set()
@@ -238,6 +387,7 @@ def analyze_report(report, expected_shader_sha256=None, profile=None):
             if canonical(semantic_state(state, True, feature)) != canonical(reference): raise ValueError('Stable inputs changed beyond selected feature')
         if canonical(semantic_state(phase['inputStart'], feature=feature)) != canonical(semantic_state(phase['inputEnd'], feature=feature)):
             raise ValueError('In-phase semantic mutation')
+        if feature == 'terrain': validate_terrain_phase(report, phase, reference)
         validate_temporal(phase)
         gpu, cpu = phase.get('gpu', []), phase.get('cpu', [])
         if not isinstance(gpu, list) or not isinstance(cpu, list): raise ValueError('Timing arrays missing')
@@ -271,6 +421,9 @@ def analyze_report(report, expected_shader_sha256=None, profile=None):
                        'gpu_p95_ms': metric(gpu_stats, 'game-render', 'p95_ms'), 'gpu_p99_ms': metric(gpu_stats, 'game-render', 'p99_ms'),
                        'cpu_wall_mean_ms': metric(cpu_wall, 'run-tick'), 'cpu_thread_mean_ms': metric(cpu_thread, 'run-tick'),
                        'image': image, 'image_sha256': image_hash, 'image_verified': profile is not None,
+                       'terrain_policy_start': copy.deepcopy(phase['inputStart'].get('geometry_policy')),
+                       'terrain_policy_end': copy.deepcopy(phase['inputEnd'].get('geometry_policy')),
+                       'terrain_rearm': copy.deepcopy(phase.get('terrainRearm')), 'settle_elapsed_seconds': phase.get('settleElapsedSeconds'),
                        'window_state': copy.deepcopy(phase.get('windowState')), 'temporal_start': copy.deepcopy(phase.get('temporalStart')),
                        'temporal_end': copy.deepcopy(phase.get('temporalEnd')), 'uniform_observation': copy.deepcopy(phase.get('uniform_observation'))})
     pairs = []
@@ -287,7 +440,8 @@ def analyze_report(report, expected_shader_sha256=None, profile=None):
                                            'later_vs_earlier_percent_time_reduction': {key: time_reduction(same[0][key], same[1][key]) for key in keys}}
     return {'schema': 1, 'session_id': report['session_id'], 'benchmark_feature': feature,
             'method': methods[feature],
-            'selected_flag': 'rendering.shadowFrustumCoherence' if feature == 'coherence' else 'lod.enabled',
+            'selected_flag': 'rendering.shadowFrustumCoherence' if feature == 'coherence' else 'terrain.enabled' if feature == 'terrain' else 'lod.enabled',
+            'effect_attribution': 'Existing detailed-radius/DH replacement tradeoff; fixed shader/global enable; not a shader-only or novel-mesh gain' if feature == 'terrain' else 'Selected live flag; fixed observed inputs',
             'shader_sha256': pin, 'phases': output, 'adjacent_pairs': pairs,
             'same_state_drift': drift, 'stable_input_reference': reference, 'loaded_mods': report['loaded_mods'],
             'loaded_artifacts_sha256': report['loaded_artifacts_sha256'], 'instrumentation': report.get('instrumentation_properties'),
@@ -300,6 +454,8 @@ def analyze_report(report, expected_shader_sha256=None, profile=None):
 
 def compare_sessions(summaries):
     first = summaries[0]
+    if first.get('benchmark_feature') == 'terrain' and any(summary.get('shader_sha256') != TERRAIN_PHOTON_SHA256 for summary in summaries):
+        raise ValueError('Terrain session comparison requires the same exact B15 archive')
     identity = copy.deepcopy(first['stable_input_reference'])
     identity.pop('actual_shader_sha256', None)
     iris_verified = all(summary.get('verified_iris_configuration') is not None for summary in summaries)

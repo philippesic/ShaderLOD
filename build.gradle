@@ -129,6 +129,9 @@ neoForge {
             if (project.hasProperty('dhDrawEvidence')) {
                 systemProperty 'shaderlod.dev.dhDrawEvidence', project.property('dhDrawEvidence').toString()
             }
+            if (project.hasProperty('waterSceneSurvey')) {
+                systemProperty 'shaderlod.dev.waterSceneSurvey', project.property('waterSceneSurvey').toString()
+            }
             if (project.hasProperty('cpuLayerTiming')) {
                 systemProperty 'shaderlod.dev.cpuLayerTiming', project.property('cpuLayerTiming').toString()
             }

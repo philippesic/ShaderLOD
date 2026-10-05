@@ -3,6 +3,7 @@ package com.pp.shaderlod.dev;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.pp.shaderlod.dev.timing.ShaderInputTracker;
+import com.pp.shaderlod.dev.timing.WindowStateTracker;
 import net.minecraft.client.Minecraft;
 import net.neoforged.fml.ModList;
 import net.irisshaders.iris.Iris;
@@ -13,6 +14,7 @@ import java.util.List;
 
 /** Shared boundary evidence; no additional uniform/smoother evaluation or GL readback. */
 public final class WorkloadInputs {
+    public static final String TERRAIN_PHOTON_SHA256 = "b15d3c50f192e0e3de8e912afba2cc531e7d0520e3cbe573a7e35b993528e16c";
     private final Path directory;
     public WorkloadInputs(Path directory) { this.directory = directory; }
 
@@ -25,6 +27,16 @@ public final class WorkloadInputs {
 
     public static JsonObject withoutFeature(JsonObject state, String feature) {
         if (feature.equals("global") || feature.equals("effects")) return withoutEnabled(state);
+        if (feature.equals("terrain")) {
+            JsonObject copy = semanticState(state, feature);
+            copy.remove("effective_chunks");
+            copy.remove("terrain_configured");
+            copy.remove("terrain_active");
+            copy.getAsJsonObject("loaded_semantic_config").getAsJsonObject("terrain").remove("enabled");
+            var policy = copy.getAsJsonObject("geometry_policy");
+            for (String name : List.of("active", "effectiveChunks", "reason")) policy.remove(name);
+            return copy;
+        }
         if (!feature.equals("coherence")) throw new IllegalArgumentException("Unknown benchmark feature");
         JsonObject copy = semanticState(state);
         copy.remove("shadow_coherence_configured");
@@ -39,6 +51,12 @@ public final class WorkloadInputs {
         // this raw-byte identity in the specialized phased control only.
         if (!copy.has("loaded_semantic_config")) throw new IllegalStateException("Complete semantic config unavailable");
         copy.remove("config/shaderlod-client.toml_sha256");
+        return copy;
+    }
+
+    public static JsonObject semanticState(JsonObject state, String feature) {
+        JsonObject copy = semanticState(state);
+        if (feature.equals("terrain")) copy.getAsJsonObject("geometry_policy").remove("stableTicks");
         return copy;
     }
 
@@ -83,6 +101,115 @@ public final class WorkloadInputs {
         Path archive = directory.resolve("shaderpacks").resolve(Iris.getCurrentPackName());
         state.addProperty("actual_shader_sha256", hash(archive));
         return state;
+    }
+
+    /** Real boundary observations only; existing benchmark modes keep their old schema. */
+    public JsonObject terrainInputState() throws Exception {
+        var state = benchmarkInputState();
+        state.add("geometry_policy", new GsonBuilder().create().toJsonTree(com.pp.shaderlod.GeometryLodController.status()));
+        state.addProperty("dh_present", ModList.get().isLoaded("distanthorizons"));
+        state.add("terrain_dh_state", terrainDhState());
+        var client = Minecraft.getInstance(); var window = client.getWindow();
+        state.addProperty("terrain_camera_type", client.options.getCameraType().name());
+        state.addProperty("terrain_fov", client.options.fov().get());
+        state.add("terrain_window_state", new GsonBuilder().create().toJsonTree(WindowStateTracker.readWindow(
+                window.getWindow(), window.getScreenWidth(), window.getScreenHeight(), window.getWidth(), window.getHeight(),
+                new WindowStateTracker.Pacing(client.options.pauseOnLostFocus, window.isFullscreen(),
+                        client.options.framerateLimit().get(), client.options.enableVsync().get()))));
+        return state;
+    }
+
+    private static JsonObject terrainDhState() throws ReflectiveOperationException {
+        // Public pinned DH API, outside frame hooks. OFF still records actual DH reach.
+        Class<?> delayed = Class.forName("com.seibel.distanthorizons.api.DhApi$Delayed");
+        Object configs = delayed.getField("configs").get(null);
+        Object world = delayed.getField("worldProxy").get(null);
+        if (configs == null || world == null) throw new IllegalStateException("Terrain control DH API unavailable");
+        Object graphics = Class.forName("com.seibel.distanthorizons.api.interfaces.config.IDhApiConfig")
+                .getMethod("graphics").invoke(configs);
+        Class<?> graphicsApi = Class.forName("com.seibel.distanthorizons.api.interfaces.config.client.IDhApiGraphicsConfig");
+        var getValue = Class.forName("com.seibel.distanthorizons.api.interfaces.config.IDhApiConfigValue").getMethod("getValue");
+        Object mode = getValue.invoke(graphicsApi.getMethod("renderingMode").invoke(graphics));
+        Object reach = getValue.invoke(graphicsApi.getMethod("chunkRenderDistance").invoke(graphics));
+        Object enabled = getValue.invoke(graphicsApi.getMethod("renderingEnabled").invoke(graphics));
+        Object loaded = Class.forName("com.seibel.distanthorizons.api.interfaces.world.IDhApiWorldProxy")
+                .getMethod("worldLoaded").invoke(world);
+        if (!(reach instanceof Integer) || !(enabled instanceof Boolean) || !(loaded instanceof Boolean) || !(mode instanceof Enum<?>)) {
+            throw new IllegalStateException("Terrain control DH API values unrecognized");
+        }
+        var result = new JsonObject();
+        result.addProperty("world_loaded", (Boolean) loaded);
+        result.addProperty("rendering_enabled", (Boolean) enabled);
+        result.addProperty("rendering_mode", ((Enum<?>) mode).name());
+        result.addProperty("chunks", (Integer) reach);
+        return result;
+    }
+
+    public static void validateTerrainPrerequisites(JsonObject state) {
+        requireBoolean(state, "mod_present", true);
+        requireBoolean(state, "dh_present", true);
+        requireBoolean(state, "shaders_in_use", true);
+        requireBoolean(state, "fallback", false);
+        requireBoolean(state, "hide_gui", true);
+        requireBoolean(state.getAsJsonObject("lod_settings"), "enabled", true);
+        requireBoolean(state.getAsJsonObject("lod_settings"), "debug", false);
+        requireBoolean(state, "terrain_confirmation", true);
+        requireInteger(state, "requested_chunks", 24);
+        requireInteger(state, "framebuffer_width", 2976);
+        requireInteger(state, "framebuffer_height", 1672);
+        if (!state.get("terrain_camera_type").getAsString().equals("FIRST_PERSON")) throw new IllegalStateException("Terrain control requires fixed first-person camera");
+        if (!state.get("actual_shader_sha256").getAsString().equals(TERRAIN_PHOTON_SHA256)) throw new IllegalStateException("Terrain control requires exact B15 archive");
+        for (String name : List.of("shadow_culling_configured", "shadow_culling_active", "shadow_lists_configured", "shadow_lists_active", "shadow_coherence_configured", "shadow_coherence_active")) requireBoolean(state, name, false);
+        var semantic = state.getAsJsonObject("loaded_semantic_config");
+        requireBoolean(semantic.getAsJsonObject("lod"), "enabled", true);
+        requireBoolean(semantic.getAsJsonObject("lod"), "debug", false);
+        var terrain = semantic.getAsJsonObject("terrain");
+        requireBoolean(terrain, "warmSourceConfirmed", true);
+        requireInteger(terrain, "vanillaChunkCap", 16);
+        requireInteger(terrain, "warmupSeconds", 30);
+        for (String name : List.of("optimizeShadowCulling", "separateShadowVisibilityLists", "shadowFrustumCoherence")) requireBoolean(semantic.getAsJsonObject("rendering"), name, false);
+        var options = state.getAsJsonObject("effective_shader_options");
+        for (String name : List.of("SHADERLOD_CLOUDS", "SHADERLOD_WATER", "SHADERLOD_FOG", "SHADERLOD_SSR", "SHADERLOD_MATERIALS", "SHADERLOD_USE_MOD_CONFIG", "SHADERLOD_PRESERVE_LIGHTING")) requireOption(options, name, "true");
+        for (String name : List.of("SHADERLOD_CACHED_SKY", "SHADERLOD_WATER_ANALYTIC", "SHADERLOD_DEBUG")) requireOption(options, name, "false");
+        var dh = state.getAsJsonObject("terrain_dh_state");
+        requireBoolean(dh, "world_loaded", true);
+        requireBoolean(dh, "rendering_enabled", true);
+        requireInteger(dh, "chunks", 128);
+        if (!dh.get("rendering_mode").getAsString().equals("DEFAULT")) throw new IllegalStateException("Terrain control requires normal DH rendering");
+        var policy = state.getAsJsonObject("geometry_policy");
+        requireInteger(policy, "cap", 16);
+        requireInteger(policy, "requestedChunks", 24);
+        requireInteger(policy, "warmupTicks", 600);
+        var window = state.getAsJsonObject("terrain_window_state");
+        if (!window.get("availability").getAsString().equals("available") || !window.get("visible").getAsString().equals("true") || !window.get("iconified").getAsString().equals("false")) throw new IllegalStateException("Terrain control window unavailable/hidden");
+        requireInteger(window, "framebuffer_width", 2976);
+        requireInteger(window, "framebuffer_height", 1672);
+        var pacing = window.getAsJsonObject("pacing");
+        requireBoolean(pacing, "vsync", false);
+        if (pacing.get("pause_on_lost_focus").getAsBoolean() && !window.get("focused").getAsString().equals("true")) throw new IllegalStateException("Unfocused paused terrain control");
+    }
+
+    public static void validateTerrain(JsonObject state, boolean enabled) {
+        validateTerrainPrerequisites(state);
+        requireBoolean(state, "terrain_configured", enabled);
+        requireBoolean(state, "terrain_active", enabled);
+        requireBoolean(state.getAsJsonObject("loaded_semantic_config").getAsJsonObject("terrain"), "enabled", enabled);
+        requireInteger(state, "effective_chunks", enabled ? 16 : 24);
+        var policy = state.getAsJsonObject("geometry_policy");
+        requireBoolean(policy, "active", enabled);
+        requireInteger(policy, "effectiveChunks", enabled ? 16 : 24);
+        String reason = enabled ? "DH terrain cap active" : "terrain policy disabled";
+        if (!policy.get("reason").getAsString().equals(reason)) throw new IllegalStateException("Terrain policy reason differs");
+        if (!policy.get("detail").getAsString().isEmpty()) throw new IllegalStateException("Terrain policy API failure detail");
+        int ticks = policy.get("stableTicks").getAsInt();
+        if (enabled ? ticks < 600 : ticks != 0) throw new IllegalStateException("Terrain policy has not settled");
+    }
+
+    private static void requireInteger(JsonObject object, String name, int expected) {
+        if (object == null || !object.has(name) || !object.get(name).isJsonPrimitive()
+                || !object.get(name).getAsJsonPrimitive().isNumber() || object.get(name).getAsDouble() != expected) {
+            throw new IllegalStateException("Required terrain-control integer: " + name + "=" + expected);
+        }
     }
 
     public static void validateAlloff(JsonObject state) {

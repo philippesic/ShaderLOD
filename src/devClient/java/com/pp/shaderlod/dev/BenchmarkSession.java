@@ -34,13 +34,15 @@ public final class BenchmarkSession {
     private final boolean gpuRequested = Boolean.parseBoolean(System.getProperty("shaderlod.dev.gpuTiming", "true"));
     private final boolean cpuRequested = Boolean.parseBoolean(System.getProperty("shaderlod.dev.cpuTiming", "true"));
     private final boolean initialEnabled = ShaderLodConfig.ENABLED.get();
-    private final boolean initialFeatureEnabled = feature.equals("coherence") ? ShaderLodConfig.SHADOW_FRUSTUM_COHERENCE.get() : initialEnabled;
+    private final boolean initialFeatureEnabled = feature.equals("coherence") ? ShaderLodConfig.SHADOW_FRUSTUM_COHERENCE.get()
+            : feature.equals("terrain") ? ShaderLodConfig.TERRAIN_ENABLED.get() : initialEnabled;
     private final boolean initialHideGui = Minecraft.getInstance().options.hideGui;
     private final long started = System.nanoTime();
     private final JsonObject temporalInitial;
     private final JsonObject header = new JsonObject();
     private JsonObject stableReference;
-    private Object worldReference, pipelineReference;
+    private Object worldReference, pipelineReference, cameraReference;
+    private final String terrainSceneIdentifier = sessionId + ":inspected-fixed-scene";
     private long phaseStarted, measurementStarted;
     private int phase = -1;
     private boolean sampling, done, awaitingImage;
@@ -52,6 +54,11 @@ public final class BenchmarkSession {
         this.inputs = new WorkloadInputs(this.directory);
         if (Boolean.getBoolean("shaderlod.dev.measureWorkload")) throw new IllegalStateException("Benchmark and workload capture are mutually exclusive");
         if (feature.equals("coherence") && (!initialEnabled || Boolean.getBoolean("shaderlod.dev.shadowCoherenceOracle") || Boolean.getBoolean("shaderlod.dev.visibilityLists"))) throw new IllegalStateException("Coherence timing requires global enabled and oracle/phase observer disabled");
+        if (feature.equals("terrain") && (!initialEnabled || !ShaderLodConfig.TERRAIN_WARM_SOURCE_CONFIRMED.get()
+                || ShaderLodConfig.TERRAIN_VANILLA_CHUNK_CAP.get() != 16 || ShaderLodConfig.TERRAIN_WARMUP_SECONDS.get() != 30
+                || switchWarmup < ShaderLodConfig.TERRAIN_WARMUP_SECONDS.get() + 30 || measurement < 30
+                || Boolean.getBoolean("shaderlod.dev.shadowCoherenceOracle") || Boolean.getBoolean("shaderlod.dev.visibilityLists")
+                || Boolean.getBoolean("shaderlod.dev.shadowObserve"))) throw new IllegalStateException("Terrain timing requires inspected cap16/manual acknowledgement, global enabled, >=60s settle/>=30s capture and diagnostic observers disabled");
         temporalInitial = inputs.temporalInputs();
         Minecraft.getInstance().options.hideGui = true; // one fixed configured HUD policy for all phases
         header.addProperty("schema", 3);
@@ -61,6 +68,7 @@ public final class BenchmarkSession {
         header.addProperty("method", switch (feature) {
             case "coherence" -> "One JVM/world/pipeline; original Photon; only shadow frustum coherence changes";
             case "effects" -> "One JVM/world/pipeline; fixed five-module effect options; only live global bridge enabled changes";
+            case "terrain" -> "One JVM/world/pipeline; fixed B15/global enabled; only terrain policy enabled changes plus recorded fixed-scene manual re-arm";
             default -> "One JVM/world/pipeline; all five modules off; only live global bridge enabled changes";
         });
         header.addProperty("starting_order", startEnabled ? "ON/OFF/ON/OFF" : "OFF/ON/OFF/ON");
@@ -72,7 +80,12 @@ public final class BenchmarkSession {
         header.addProperty("configured_hide_gui", true);
         header.addProperty("initial_enabled", initialEnabled);
         header.addProperty("initial_feature_enabled", initialFeatureEnabled);
-        header.addProperty("selected_flag", feature.equals("coherence") ? "rendering.shadowFrustumCoherence" : "lod.enabled");
+        header.addProperty("selected_flag", feature.equals("coherence") ? "rendering.shadowFrustumCoherence" : feature.equals("terrain") ? "terrain.enabled" : "lod.enabled");
+        if (feature.equals("terrain")) {
+            header.addProperty("terrain_scene_identifier", terrainSceneIdentifier);
+            header.addProperty("terrain_scene_identity_note", "Opaque session label for checked world/pipeline/camera reference equality and fixed pose/control; raw object IDs and automatic coverage are not exported");
+            header.addProperty("terrain_rearm_policy", "One existing confirmCurrentScene call per eligible ON settling phase in the unchanged manually inspected scene; no new-scene/travel coverage claim");
+        }
         header.addProperty("uniform_observation_note", "Config values are intended bridge inputs; no GPU readback or proof of active linked uniforms. PhaseMarker allows a bounded dev observer to label original supplier evaluations.");
         header.addProperty("limits", "Correlated phases, not independent JVM repeats. GPU timeline is not busy utilization; CPU includes driver work. Clocks/noise keep advancing. No causal attribution to an individual uniform call.");
         header.add("shader_temporal_inputs_initial", temporalInitial);
@@ -118,11 +131,25 @@ public final class BenchmarkSession {
         long now = System.nanoTime();
         try {
             if (worldReference != null && (Minecraft.getInstance().level != worldReference || Iris.getPipelineManager().getPipelineNullable() != pipelineReference)) throw new IllegalStateException("World/pipeline changed between boundaries");
+            if (feature.equals("terrain") && cameraReference != null) checkTerrainSceneIdentity();
             if (phase < 0) {
                 if ((now - started) * 1e-9 < initialWarmup) return;
                 if (feature.equals("global") || feature.equals("effects")) {
                     inputs.validateNoAtmosphereGuard();
                     if (feature.equals("effects")) header.addProperty("atmosphere_guard_absent", true);
+                }
+                if (feature.equals("terrain")) {
+                    inputs.validateNoAtmosphereGuard();
+                    header.addProperty("atmosphere_guard_absent", true);
+                    JsonObject initial = inputs.terrainInputState();
+                    WorkloadInputs.validateTerrain(initial, initialFeatureEnabled);
+                    stableReference = WorkloadInputs.withoutFeature(initial, feature);
+                    worldReference = Minecraft.getInstance().level;
+                    pipelineReference = Iris.getPipelineManager().getPipelineNullable();
+                    cameraReference = Minecraft.getInstance().getCameraEntity();
+                    header.add("stable_input_reference", stableReference);
+                    header.add("terrain_initial_observation", initial);
+                    addArtifactIdentity();
                 }
                 startPhase(now);
                 return;
@@ -130,8 +157,13 @@ public final class BenchmarkSession {
             var observedWindow = window();
             if (!sampling) {
                 current.window.observeWarmup(observedWindow, (now - phaseStarted) * 1e-9, GpuTimers.frameId());
+                if (feature.equals("terrain")) maybeRearmTerrain(now);
                 if ((now - phaseStarted) * 1e-9 < switchWarmup) return;
-                JsonObject state = inputs.benchmarkInputState();
+                if (feature.equals("terrain")) {
+                    if (current.enabled && (current.terrainRearm == null || (now - current.terrainRearmNanos) * 1e-9 < ShaderLodConfig.TERRAIN_WARMUP_SECONDS.get() + 30)) throw new IllegalStateException("Terrain ON missing eligible manual re-arm or insufficient post-rearm settling");
+                    current.settleElapsedSeconds = (now - phaseStarted) * 1e-9;
+                }
+                JsonObject state = benchmarkState();
                 validate(state, current.enabled);
                 if (stableReference == null) {
                     stableReference = WorkloadInputs.withoutFeature(state, feature);
@@ -167,6 +199,7 @@ public final class BenchmarkSession {
         phase++;
         boolean enabled = (phase % 2 == 0) == startEnabled;
         if (feature.equals("coherence")) ShaderLodConfig.SHADOW_FRUSTUM_COHERENCE.set(enabled);
+        else if (feature.equals("terrain")) ShaderLodConfig.TERRAIN_ENABLED.set(enabled);
         else ShaderLodConfig.ENABLED.set(enabled);
         current = new Phase(phase + 1, enabled);
         phaseStarted = now;
@@ -180,15 +213,18 @@ public final class BenchmarkSession {
         current.elapsedSeconds = (now - measurementStarted) * 1e-9;
         current.endFrame = GpuTimers.frameId();
         current.renderFrames = current.endFrame - current.startFrame;
-        current.inputEnd = inputs.benchmarkInputState();
+        current.inputEnd = benchmarkState();
         validate(current.inputEnd, current.enabled);
         checkIdentity(current.inputEnd);
-        if (!WorkloadInputs.semanticState(current.inputStart).equals(WorkloadInputs.semanticState(current.inputEnd))) throw new IllegalStateException("Phase inputs changed during capture");
+        if (!WorkloadInputs.semanticState(current.inputStart, feature).equals(WorkloadInputs.semanticState(current.inputEnd, feature))) throw new IllegalStateException("Phase inputs changed during capture");
+        if (feature.equals("terrain") && current.enabled && current.inputEnd.getAsJsonObject("geometry_policy").get("stableTicks").getAsInt()
+                < current.inputStart.getAsJsonObject("geometry_policy").get("stableTicks").getAsInt()) throw new IllegalStateException("Terrain eligibility reset during capture");
         current.temporalEnd = inputs.temporalInputs();
         WorkloadInputs.validateWetness(current.temporalEnd, true);
         current.shadow = new GsonBuilder().create().toJsonTree(ShadowInputObserver.snapshot()).getAsJsonObject();
         current.timingSnapshot = new GsonBuilder().create().toJsonTree(GpuTimers.snapshot()).getAsJsonObject();
         current.windowState = new GsonBuilder().create().toJsonTree(current.window.snapshot()).getAsJsonObject();
+        if (feature.equals("terrain")) validateTerrainWindow(current.windowState);
         if (current.renderFrames < 30 || gpuRequested && current.gpu.stream().noneMatch(sample -> sample.scope().equals(GpuTimers.FRAME))) throw new IllegalStateException("Insufficient render/timing observations");
         if (cpuRequested && current.cpu.stream().noneMatch(sample -> sample.scope().equals("run-tick"))) throw new IllegalStateException("Requested CPU timing observations missing");
         current.gpuEpoch = current.gpu.isEmpty() ? null : current.gpu.get(0).epoch();
@@ -219,9 +255,57 @@ public final class BenchmarkSession {
     private void validate(JsonObject state, boolean expectedEnabled) {
         if (feature.equals("coherence")) WorkloadInputs.validateCoherence(state, expectedEnabled);
         else if (feature.equals("effects")) WorkloadInputs.validateEffects(state, expectedEnabled);
+        else if (feature.equals("terrain")) WorkloadInputs.validateTerrain(state, expectedEnabled);
         else {
             WorkloadInputs.validateAlloff(state);
             if (state.getAsJsonObject("lod_settings").get("enabled").getAsBoolean() != expectedEnabled) throw new IllegalStateException("Wrong live global flag");
+        }
+    }
+
+    private JsonObject benchmarkState() throws Exception {
+        return feature.equals("terrain") ? inputs.terrainInputState() : inputs.benchmarkInputState();
+    }
+
+    private void checkTerrainSceneIdentity() {
+        var client = Minecraft.getInstance(); var camera = client.getCameraEntity();
+        if (camera != cameraReference || camera == null || client.options.renderDistance().get() != 24
+                || camera.getX() != stableReference.get("x").getAsDouble() || camera.getY() != stableReference.get("y").getAsDouble()
+                || camera.getZ() != stableReference.get("z").getAsDouble() || camera.getYRot() != stableReference.get("yaw").getAsFloat()
+                || camera.getXRot() != stableReference.get("pitch").getAsFloat() || !ShaderLodConfig.ENABLED.get()
+                || !ShaderLodConfig.TERRAIN_WARM_SOURCE_CONFIRMED.get() || !client.options.getCameraType().name().equals("FIRST_PERSON")
+                || client.options.fov().get() != stableReference.get("terrain_fov").getAsInt()) throw new IllegalStateException("Inspected terrain scene identity/global/manual acknowledgement changed");
+    }
+
+    private void maybeRearmTerrain(long now) throws Exception {
+        if (!current.enabled || current.terrainRearm != null) return;
+        var policy = com.pp.shaderlod.GeometryLodController.status();
+        if (!List.of("warming DH scene", "DH replacement coverage unconfirmed", "DH terrain cap active").contains(policy.reason())) return;
+        checkTerrainSceneIdentity();
+        JsonObject observed = inputs.terrainInputState();
+        WorkloadInputs.validateTerrainPrerequisites(observed);
+        checkIdentity(observed);
+        if (!observed.get("terrain_configured").getAsBoolean()) throw new IllegalStateException("Terrain ON flag not applied before re-arm");
+        boolean confirmed = com.pp.shaderlod.GeometryLodController.confirmCurrentScene();
+        current.terrainRearmNanos = System.nanoTime();
+        current.terrainRearm = new JsonObject();
+        current.terrainRearm.addProperty("attempts", 1);
+        current.terrainRearm.addProperty("succeeded", confirmed);
+        current.terrainRearm.addProperty("elapsed_settle_seconds", (current.terrainRearmNanos - phaseStarted) * 1e-9);
+        current.terrainRearm.addProperty("at_utc", java.time.Instant.now().toString());
+        current.terrainRearm.addProperty("scene_identifier", terrainSceneIdentifier);
+        current.terrainRearm.addProperty("api", "GeometryLodController.confirmCurrentScene");
+        current.terrainRearm.add("observed_input", observed);
+        if (!confirmed) throw new IllegalStateException("Eligible fixed-scene manual terrain re-arm failed; no retry");
+    }
+
+    private static void validateTerrainWindow(JsonObject snapshot) {
+        var capture = snapshot.getAsJsonObject("capture");
+        long observations = capture.get("observations").getAsLong();
+        if (observations < 1 || capture.get("available_observations").getAsLong() != observations
+                || capture.get("unavailable_observations").getAsLong() != 0 || capture.get("dropped_transitions").getAsLong() != 0
+                || capture.getAsJsonObject("transition_counts").size() != 0 || capture.getAsJsonArray("transitions").size() != 0
+                || !capture.getAsJsonObject("start").get("state").equals(capture.getAsJsonObject("end").get("state"))) {
+            throw new IllegalStateException("Terrain capture window/pacing changed or unavailable");
         }
     }
 
@@ -307,6 +391,7 @@ public final class BenchmarkSession {
             ShaderLodConfig.SHADOW_FRUSTUM_COHERENCE.set(initialFeatureEnabled);
             com.pp.shaderlod.ShadowFrustumCoherenceController.configure(false); // fail open until normal eligibility tick restores an initially enabled feature
         }
+        if (feature.equals("terrain")) ShaderLodConfig.TERRAIN_ENABLED.set(initialFeatureEnabled);
         ShaderLodConfig.ENABLED.set(initialEnabled);
         Minecraft.getInstance().options.hideGui = initialHideGui;
         marker = null;
@@ -323,7 +408,7 @@ public final class BenchmarkSession {
             report.add("phases", new GsonBuilder().create().toJsonTree(phases));
             if (current != null && !phases.contains(current)) report.add("partial_phase", new GsonBuilder().create().toJsonTree(current));
             report.addProperty("restored_initial_enabled", done);
-            report.addProperty("restored_initial_feature", done);
+            report.addProperty("restored_initial_feature", done && (!feature.equals("terrain") || ShaderLodConfig.TERRAIN_ENABLED.get() == initialFeatureEnabled));
             Path temporary = directory.resolve("benchmark.json.tmp"), target = directory.resolve("benchmark.json");
             Files.writeString(temporary, new GsonBuilder().setPrettyPrinting().create().toJson(report));
             Files.move(temporary, target, StandardCopyOption.REPLACE_EXISTING);
@@ -338,7 +423,7 @@ public final class BenchmarkSession {
 
     private static String benchmarkFeature() {
         String value = System.getProperty("shaderlod.dev.benchmarkFeature", "global");
-        if (!value.equals("global") && !value.equals("coherence") && !value.equals("effects")) throw new IllegalArgumentException("Unknown benchmark feature: " + value);
+        if (!value.equals("global") && !value.equals("coherence") && !value.equals("effects") && !value.equals("terrain")) throw new IllegalArgumentException("Unknown benchmark feature: " + value);
         return value;
     }
 
@@ -359,7 +444,9 @@ public final class BenchmarkSession {
         long startFrame, endFrame, renderFrames;
         Long gpuEpoch, cpuEpoch;
         double elapsedSeconds;
-        JsonObject inputStart, inputEnd, temporalStart, temporalEnd, shadow, timingSnapshot, windowState;
+        Double settleElapsedSeconds;
+        transient long terrainRearmNanos;
+        JsonObject inputStart, inputEnd, temporalStart, temporalEnd, shadow, timingSnapshot, windowState, terrainRearm;
         Phase(int index, boolean enabled) { this.index = index; this.enabled = enabled; }
     }
 }

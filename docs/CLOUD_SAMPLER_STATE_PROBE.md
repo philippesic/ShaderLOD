@@ -145,6 +145,46 @@ scalar sampler inspection to more linked uniforms and can therefore perform
 more diagnostic getters. Use a fresh reserved profile/JVM with GPU timing
 disabled and retain its report separately.
 
+## Linked core-uniform readbacks for normal programs
+
+Each newly observed full-screen program now also includes `core_uniforms` with
+four exact names: `shaderlodBridgeVersion` and `shaderlodEnabled` require active
+scalar `GL_INT`; `shaderlodNear` and `shaderlodFar` require active scalar
+`GL_FLOAT`. Selection reuses the bounded linked-uniform inventory. A matching
+active scalar is queried with `GL20.glGetUniformLocation(int, CharSequence)`;
+only a nonnegative location reaches `GL20.glGetUniformi(int, int)` or
+`GL20.glGetUniformf(int, int)`. These API descriptors were inspected from the
+local LWJGL 3.3.3 jar: `(ILjava/lang/CharSequence;)I`, `(II)I`, and `(II)F`.
+The result records expected type, observed linked type/size, location when
+queried, value when available, and explicit status/reason.
+
+Missing inventory entries, unlinked programs, a truncated scan, unexpected
+types/arrays, negative locations, Java getter failures and non-finite floats
+leave the value unknown. `found_in_linked_inventory=false` does not distinguish
+an inactive declaration, a declaration optimized out or a name never declared;
+the reason states that ambiguity instead of assigning a false zero. A successful
+getter is marked `queried_without_gl_error_consumption`; runtime GL logs still
+need review. The probe does not write uniforms, reevaluate Iris suppliers, use
+source/previous diagnostic cues as a value substitute, or change the bound
+program/texture state.
+
+These are first-draw linked-program readbacks, not continuous observations of
+configuration changes. Numeric program IDs still have unknown stage names.
+A near/far value or an enabled/version integer proves only the reported linked
+value at that draw; it does not prove every branch or effect consumed it, a
+normal rendering path reduced work, full pixel parity, or a performance gain.
+Geometry/gbuffers paths remain outside the full-screen hook.
+
+This source extension is frozen for the root owner's compilation and fresh
+normal-program diagnostic runs. Use the already registered
+`shaderlod.dev.cloudSamplerProbe=true` opt-in in a newly reserved profile/JVM,
+with GPU timing disabled, after other clients are terminal. Preserve the exact
+pack/options/core config, scene, resolution, versions, GPU/driver, report and
+logs together; copy the report to a new evidence filename. Existing r2/r3 and
+Miniature reports are historical captures and must remain byte-for-byte intact.
+No client, shader change or full compiler/build was run by this extension's
+author. Existing sampler JSON/flags, bounds and active-unit restoration remain.
+
 
 ## Root actual runtime evidence
 

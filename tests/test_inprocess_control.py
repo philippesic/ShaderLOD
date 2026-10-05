@@ -9,7 +9,7 @@ import unittest
 import uuid
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'scripts'))
-from analyze_inprocess_control import analyze_report, compare_sessions, canonical, OFF_OPTIONS, FALSE_FLAGS, METHOD, EFFECTS_METHOD, EFFECT_OPTIONS, COHERENCE_METHOD, ORIGINAL_PHOTON_SHA256, semantic_state
+from analyze_inprocess_control import analyze_report, compare_sessions, canonical, OFF_OPTIONS, FALSE_FLAGS, METHOD, EFFECTS_METHOD, EFFECT_OPTIONS, COHERENCE_METHOD, ORIGINAL_PHOTON_SHA256, TERRAIN_METHOD, TERRAIN_PHOTON_SHA256, semantic_state
 
 PIN = '1' * 64
 
@@ -97,7 +97,172 @@ def effects_fixture(enabled_options=EFFECT_OPTIONS, reverse=False, gpu=True, cpu
     return report
 
 
+def terrain_fixture(reverse=False):
+    report = effects_fixture(reverse=reverse)
+    report.update(benchmark_feature='terrain', method=TERRAIN_METHOD, selected_flag='terrain.enabled',
+                  initial_enabled=True, initial_feature_enabled=True, restored_initial_feature=True,
+                  settle_seconds=75, measurement_seconds=30)
+    report['instrumentation_properties']['benchmarkFeature'] = 'terrain'
+    report['terrain_scene_identifier'] = report['session_id'] + ':inspected-fixed-scene'
+    report['workload-manifest.json'].update(adaptive_pack_sha256=TERRAIN_PHOTON_SHA256, source_world_sha256='7' * 64)
+    report['loaded_mods'].update(minecraft='1.21.1', neoforge='21.1.253', distanthorizons='3.3.3',
+                               iris='1.8.12-snapshot+mc1.21.1-local', sodium='0.6.13+mc1.21.1')
+    window = {'availability': 'available', 'focused': 'true', 'iconified': 'false', 'visible': 'true',
+              'window_width': 1488, 'window_height': 836, 'framebuffer_width': 2976, 'framebuffer_height': 1672,
+              'pacing': {'pause_on_lost_focus': False, 'fullscreen': False, 'configured_framerate_limit': 260, 'vsync': False},
+              'note': 'fixture cached GLFW state'}
+    for phase in report['phases']:
+        phase.update(elapsedSeconds=30, settleElapsedSeconds=75.01)
+        for boundary in ('inputStart', 'inputEnd'):
+            state = phase[boundary]
+            state.update(actual_shader_sha256=TERRAIN_PHOTON_SHA256, framebuffer_width=2976, framebuffer_height=1672,
+                         dh_present=True, terrain_confirmation=True, terrain_configured=phase['enabled'], terrain_active=phase['enabled'],
+                         requested_chunks=24, effective_chunks=16 if phase['enabled'] else 24, control_sha256='6' * 64,
+                         terrain_camera_type='FIRST_PERSON', terrain_fov=70)
+            state['lod_settings']['enabled'] = True
+            state['loaded_semantic_config']['lod']['enabled'] = True
+            state['loaded_semantic_config']['terrain'].update(enabled=phase['enabled'], warmSourceConfirmed=True)
+            state['geometry_policy'] = {'active': phase['enabled'], 'requestedChunks': 24,
+                'effectiveChunks': 16 if phase['enabled'] else 24, 'cap': 16, 'warmupTicks': 600,
+                'stableTicks': (1600 if boundary == 'inputStart' else 2000) if phase['enabled'] else 0,
+                'reason': 'DH terrain cap active' if phase['enabled'] else 'terrain policy disabled', 'detail': ''}
+            state['terrain_dh_state'] = {'world_loaded': True, 'rendering_enabled': True, 'rendering_mode': 'DEFAULT', 'chunks': 128}
+            state['terrain_window_state'] = copy.deepcopy(window)
+        capture = {'observations': 10, 'available_observations': 10, 'unavailable_observations': 0,
+                   'start': {'state': copy.deepcopy(window)}, 'end': {'state': copy.deepcopy(window)},
+                   'transition_counts': {}, 'transitions': [], 'dropped_transitions': 0}
+        for flag in ('focused', 'visible', 'iconified'):
+            capture[flag] = {'true_observations': 10 if window[flag] == 'true' else 0,
+                             'false_observations': 10 if window[flag] == 'false' else 0, 'unknown_observations': 0}
+        phase['windowState'] = {'schema': 1, 'capture': capture}
+        if phase['enabled']:
+            observed = copy.deepcopy(phase['inputStart'])
+            observed.update(terrain_active=False, effective_chunks=24)
+            observed['geometry_policy'].update(active=False, effectiveChunks=24, stableTicks=1, reason='warming DH scene')
+            phase['terrainRearm'] = {'attempts': 1, 'succeeded': True, 'elapsed_settle_seconds': .1,
+                'at_utc': '2026-10-05T12:00:00Z', 'scene_identifier': report['terrain_scene_identifier'],
+                'api': 'GeometryLodController.confirmCurrentScene', 'observed_input': observed}
+    report['terrain_initial_observation'] = copy.deepcopy(next(phase['inputStart'] for phase in report['phases'] if phase['enabled']))
+    report['stable_input_reference'] = semantic_state(report['terrain_initial_observation'], True, 'terrain')
+    return report
+
+
 class InprocessTests(unittest.TestCase):
+    def test_terrain_forward_reverse_only_selected_radius_policy_changes(self):
+        for reverse in (False, True):
+            result = analyze_report(terrain_fixture(reverse))
+            self.assertEqual(result['method'], TERRAIN_METHOD)
+            self.assertEqual(result['selected_flag'], 'terrain.enabled')
+            self.assertEqual(result['shader_sha256'], TERRAIN_PHOTON_SHA256)
+            self.assertEqual([p['terrain_policy_start']['effectiveChunks'] for p in result['phases']], [16, 24, 16, 24] if reverse else [24, 16, 24, 16])
+            self.assertIs(result['stable_input_reference']['lod_settings']['enabled'], True)
+            self.assertIs(result['stable_input_reference']['terrain_confirmation'], True)
+            self.assertNotIn('enabled', result['stable_input_reference']['loaded_semantic_config']['terrain'])
+            self.assertNotIn('effective_chunks', result['stable_input_reference'])
+            self.assertEqual(result['phases'][1]['terrain_policy_end']['stableTicks'], 0 if reverse else 2000)
+            self.assertIn('not a shader-only', result['effect_attribution'])
+            self.assertIn('correlated', result['uncertainty'])
+
+    def test_terrain_requires_explicit_label_pin_restore_and_long_settle(self):
+        for mutate in (
+                lambda r: r.update(method=EFFECTS_METHOD), lambda r: r.update(selected_flag='lod.enabled'),
+                lambda r: r['instrumentation_properties'].update(benchmarkFeature='effects'),
+                lambda r: r.update(restored_initial_feature=False), lambda r: r.update(initial_enabled=False),
+                lambda r: r.pop('terrain_initial_observation'), lambda r: r.update(terrain_scene_identifier='other'),
+                lambda r: r.update(settle_seconds=59), lambda r: r.update(measurement_seconds=20),
+                lambda r: r['phases'][0].update(settleElapsedSeconds=50),
+                lambda r: r['instrumentation_properties'].update(shadowObserve='true')):
+            report = terrain_fixture(); mutate(report)
+            with self.assertRaises(ValueError): analyze_report(report)
+        with self.assertRaises(ValueError): analyze_report(terrain_fixture(), expected_shader_sha256=PIN)
+
+    def test_terrain_requires_real_policy_at_both_boundaries_and_warm_eligibility(self):
+        for boundary in ('inputStart', 'inputEnd'):
+            for modify in (
+                    lambda s: s.pop('geometry_policy'), lambda s: s['geometry_policy'].update(active=False),
+                    lambda s: s['geometry_policy'].update(stableTicks=599), lambda s: s['geometry_policy'].update(warmupTicks=0),
+                    lambda s: s['geometry_policy'].update(cap=8), lambda s: s['geometry_policy'].update(reason='warming DH scene'),
+                    lambda s: s.update(effective_chunks=24), lambda s: s.update(terrain_active=False)):
+                report = terrain_fixture(); modify(report['phases'][1][boundary])
+                with self.assertRaises(ValueError): analyze_report(report)
+        report = terrain_fixture(); report['phases'][0]['inputEnd']['geometry_policy']['effectiveChunks'] = 16
+        with self.assertRaises(ValueError): analyze_report(report)
+
+    def test_terrain_once_only_fixed_scene_rearm_is_required_on_and_forbidden_off(self):
+        for modify in (
+                lambda p: p.pop('terrainRearm'), lambda p: p['terrainRearm'].update(attempts=2),
+                lambda p: p['terrainRearm'].update(succeeded=False), lambda p: p['terrainRearm'].update(elapsed_settle_seconds=20),
+                lambda p: p['terrainRearm'].update(scene_identifier='new scene'),
+                lambda p: p['terrainRearm'].pop('at_utc'),
+                lambda p: p['terrainRearm']['observed_input'].update(x=250),
+                lambda p: p['terrainRearm']['observed_input']['geometry_policy'].update(reason='Iris/DH pipeline unavailable'),
+                lambda p: p['terrainRearm']['observed_input']['terrain_dh_state'].update(chunks=24)):
+            report = terrain_fixture(); modify(report['phases'][1])
+            with self.assertRaises(ValueError): analyze_report(report)
+        report = terrain_fixture(); report['phases'][0]['terrainRearm'] = copy.deepcopy(report['phases'][1]['terrainRearm'])
+        with self.assertRaises(ValueError): analyze_report(report)
+
+    def test_terrain_rejects_counter_reset_and_full_option_change_with_valid_hash(self):
+        report = terrain_fixture(); report['phases'][1]['inputEnd']['geometry_policy']['stableTicks'] = 1000
+        with self.assertRaisesRegex(ValueError, 'counter reset'): analyze_report(report)
+        report = terrain_fixture(); state = report['phases'][1]['inputEnd']
+        state['effective_shader_options']['QUALITY'] = 'low'
+        state['effective_shader_options_sha256'] = hashlib.sha256(canonical(state['effective_shader_options']).encode()).hexdigest()
+        with self.assertRaisesRegex(ValueError, 'Stable inputs'): analyze_report(report)
+
+    def test_terrain_keeps_global_options_cpu_config_request_and_dh_immutable(self):
+        for modify in (
+                lambda s: s['lod_settings'].update(enabled=False),
+                lambda s: s['loaded_semantic_config']['lod'].update(enabled=False),
+                lambda s: s.update(requested_chunks=16), lambda s: s.update(terrain_confirmation=False),
+                lambda s: s['loaded_semantic_config']['terrain'].update(warmSourceConfirmed=False),
+                lambda s: s['loaded_semantic_config']['terrain'].update(vanillaChunkCap=8),
+                lambda s: s['effective_shader_options'].update(SHADERLOD_CLOUDS='false'),
+                lambda s: s.update(shadow_culling_active=True), lambda s: s.update(shadow_coherence_active=True),
+                lambda s: s['terrain_dh_state'].update(rendering_mode='DEBUG'), lambda s: s['terrain_dh_state'].update(chunks=64),
+                lambda s: s.update(control_sha256='8' * 64), lambda s: s.update(framebuffer_width=1488)):
+            report = terrain_fixture(); modify(report['phases'][1]['inputEnd'])
+            with self.assertRaises(ValueError): analyze_report(report)
+        for name, value in (('terrain_camera_type', 'THIRD_PERSON_BACK'), ('terrain_fov', 90)):
+            report = terrain_fixture(); report['phases'][1]['inputEnd'][name] = value
+            with self.assertRaises(ValueError): analyze_report(report)
+
+    def test_terrain_window_transitions_unknown_or_changed_pacing_rejected(self):
+        for modify in (
+                lambda p: p.pop('windowState'), lambda p: p['windowState']['capture'].update(transition_counts={'focused': 2}),
+                lambda p: p['windowState']['capture'].update(unavailable_observations=1),
+                lambda p: p['windowState']['capture']['focused'].update(unknown_observations=1),
+                lambda p: p['inputEnd']['terrain_window_state']['pacing'].update(vsync=True)):
+            report = terrain_fixture(); modify(report['phases'][1])
+            with self.assertRaises(ValueError): analyze_report(report)
+
+    def test_terrain_old_modes_remain_strict_and_session_identity_stays_exact(self):
+        report = terrain_fixture(); report.update(benchmark_feature='effects', method=EFFECTS_METHOD, selected_flag='lod.enabled')
+        report['instrumentation_properties']['benchmarkFeature'] = 'effects'
+        with self.assertRaises(ValueError): analyze_report(report)
+        a = analyze_report(terrain_fixture()); b = analyze_report(terrain_fixture(True))
+        self.assertFalse(compare_sessions([a, b])['archive_source_delta'])
+        b['loaded_artifacts_sha256']['iris.jar'] = '8' * 64
+        with self.assertRaises(ValueError): compare_sessions([a, b])
+        b = copy.deepcopy(a); b['shader_sha256'] = PIN
+        with self.assertRaises(ValueError): compare_sessions([a, b])
+
+    def test_terrain_java_route_restores_flag_and_captures_actual_policy_without_compilation(self):
+        root = Path(__file__).resolve().parents[1]
+        session = (root / 'src/devClient/java/com/pp/shaderlod/dev/BenchmarkSession.java').read_text()
+        inputs = (root / 'src/devClient/java/com/pp/shaderlod/dev/WorkloadInputs.java').read_text()
+        self.assertIn('case "terrain" -> "' + TERRAIN_METHOD + '"', session)
+        self.assertIn('ShaderLodConfig.TERRAIN_ENABLED.set(enabled)', session)
+        self.assertIn('ShaderLodConfig.TERRAIN_ENABLED.set(initialFeatureEnabled)', session)
+        self.assertIn('WorkloadInputs.validateTerrain(state, expectedEnabled)', session)
+        self.assertEqual(session.count('GeometryLodController.confirmCurrentScene();'), 1)
+        self.assertIn('current.terrainRearm != null', session)
+        self.assertIn('checkTerrainSceneIdentity();', session)
+        self.assertIn('inputs.terrainInputState()', session)
+        self.assertIn('toJsonTree(com.pp.shaderlod.GeometryLodController.status())', inputs)
+        self.assertIn('state.add("terrain_dh_state", terrainDhState())', inputs)
+        self.assertIn('getAsJsonObject("geometry_policy").remove("stableTicks")', inputs)
+
     def test_effects_allactive_and_mixed_options_hold_constant_in_both_orders(self):
         for switches in (EFFECT_OPTIONS, EFFECT_OPTIONS[:1], ()):
             for reverse in (False, True):
