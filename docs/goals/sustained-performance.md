@@ -2281,3 +2281,34 @@ acceptance remain unmet; do not promote the faster correlated pair.
 source review of remaining existing core fields. Common Java/config/helper/
 existing Photon ownership and the original design document remain reserved.
 No external message/push/publication; all previous failures remain retained.
+
+
+## Miniature existing-core contract reviewed; private implementation assigned
+
+Root reviewed frozen MINIATURE_CORE_CONFIGURATION_PLAN.md. Actual sender uses
+BALANCED0/PERFORMANCE1/AGGRESSIVE2, centered total transition width in radial
+view-space blocks, seven per-frame fields. Existing Miniature consumers omit
+preset/transition/debug; prior refinement GPU evidence remains flat. No new
+per-effect transport or atomic configuration transaction is inferred.
+
+Root assigned `makeup_adapter` ONLY five NEW files:
+scripts/build_miniature_core_config_probe.py,
+patches/miniature/2.19-core-config-probe.json,
+shaderpacks/miniature-core-config-probe/shaders/common/shaderlodCoreConfiguration.glsl,
+tests/test_miniature_core_config_probe.py,
+docs/MINIATURE_CORE_CONFIGURATION_EVIDENCE.md.
+Private default-off, literal original fallback, exact protocol2/known ordinal,
+enabled/debug restricted0/1 and strict finite bounded nonoverlapping bands.
+Budgets4/4/3,4/3/2,4/2/2; no new one-step kernel. One outer march/one refinement
+chain, premultiplied contribution/opacity transitions, sampler-qualified explicit
+active sampling. Diagnostic fixed-four mode proves no saved refinements; bounded
+mode remains unaccepted until real quality/cost evidence. MIT notice/source pins
+and untouched archive members required. Lightweight source/math fixtures only,
+no ZIP assembly, compiler, client or GPU work before freeze. Root owns all such
+integration/runtime. No main/shared/existing helper or prior probe changes.
+
+`stack_analysis` independently owns the new three-file original/disabled/active
+preparer described above. No overlapping edits, all runtime jobs terminal.
+Next review both freezes, actual build/compilation or baseline profile preparation,
+then exclusive runtime with honest per-field/quality/GPU acceptance. Full goal
+remains active and the ordinary repeated15%/second-workload gates remain unmet.

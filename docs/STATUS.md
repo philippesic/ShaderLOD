@@ -32,9 +32,10 @@ Photon forest/coastal attribution passed input and
 capture contracts. A matched-source coastal frame-only sample5 control retaining
 detailed CPU timers measured14.86ms versus23.85ms in the pass-timed run. This
 raises an instrumentation concern; one separate-JVM pair does not establish
-causation, an LOD gain or absolute effect budgets. A source-only worker is planning Miniature consumption of the remaining existing
-core fields (preset/transition/debug). It owns only a new plan document; common
-Java/config transport remains reserved. Root owns preparation and runtime.
+causation, an LOD gain or absolute effect budgets. A frozen source plan now defines Miniature consumption of the remaining existing
+core fields (preset/transition/debug). Its separate default-off private consumer
+and balanced original/disabled/enabled profile preparation are in bounded source
+implementation. Common Java/config transport remains reserved. Root owns runtime.
 Exact handles and stopping boundaries are in the active goal checkpoint.
 
 ## Current evidence
