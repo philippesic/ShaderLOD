@@ -191,3 +191,20 @@ not prove fewer physical operations, a frame improvement or the project gate.
 Keep flat/regressing samples and CPU limits; no adoption, integration, support
 promotion or default change follows from source tests or the earlier full-trace
 pose success.
+
+
+## Actual reduced tracing quality control
+
+Root3811 terminalexit0/complete41/41/0skips, actualenabledprivateZIP/native
+2976×1672/minimal/noDH/SSR-only/globaltrue/time12500/glintsweep atx500.
+All41actualNONE/noncollision/PNGhashchecks passed. Rootframe10inspection
+findsbroadbandremoved andsunreflectionvisible, approachingfull-trace control
+inthispose. No fullmotion/near-midtransition/thinreflection/pixelparity or
+physicalwork guarantee. Sequencea52402d4… andrawmanifest/log retained.
+
+Freshfour-armcostcontrols sharecanonicalsavef8f3b866…a365, originalsource/
+B15skip/fulltrace/reduced16vs8 sourcebudgets, onlySSRmoduleactive inpatched
+arms, fixedcamera87.380/3.735/time12500. Native serial45s warm25s capture/
+GPU1/16/minimal/noDH pilot launched; actualcostpending. Morefarworkvsskip and
+fewerselectedintersection/refinementsvsfull do not alone establish fasterGPU.
+No source/main/default/support promotion.
