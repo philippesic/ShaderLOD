@@ -2128,3 +2128,28 @@ residues: clouddeferred1+frame forest7–8/coastal4–5samples/residue, frameonl
 physicaluniforms/checkerboardpixel/rayexecution. Smallcoverage report retained
  dev/logs/photon-native-attribution-counter-coverage-r1.json. No liveclient now;
 cameraqualitysourceworker continues NEW3files, nextfreeze+fixtures+nativecapture.
+
+
+## Reduced far-SSR combined effects control live
+
+Previousturnprogress: threevalidatednativePhotonruns, samplecounterspread and
+committed sourceplan; no blockedcondition. Rootcheckedcurrentjobs/agents:
+no priorclientlive, camera_quality stillownsnewscript/test/doc andisfinishing.
+Root then freshcloned stoppedprivate-reduced profile into
+run-workloads/photon-reduced-all-effects-n5-r1/coastalwater/adaptive,
+copy/sourceworld9d6a0338...e3e3f9e checkedunderworldlock, parentcontrol/manifest
+retainedforlineage. effects-provenance.json records actual copiedworld/preinputs/
+classhashes; retained older workloadmanifest represents originalsource lineage,
+not a newly asserted current-savehash. Only five effect option values changedto
+true in freshsidecar, exactarchive636a1648...9800f83 unchanged. Private reduced
+switch remains its defaulttrue; preserveLighting/useModConfigtrue/cacheanalytic/
+debugfalse/CPUterrainfalse. No shader source/default/shared main changes.
+
+RootsoleGPU LIVEexec83967 effects mode OFF/ON/OFF/ON,45warm10settle25capture,
+minimal/noDH/native2976x1672/sample5/frameonly/CPUlayersoff/wetness0,
+runClientLodOn withfrozen devclasses. Logdev/logs/photon-reduced-all-effects-n5-r1.log.
+This checks existing combinedLODwithboundedglintfix, notSSRonlyphysicalraycounts
+orordinaryoriginalmodabsent acceptance. Nextstrictanalyzer explicitreducedpin,
+phaseimages/band/glint/window/control/source/class/contracts; reverseif useful.
+Cameraqualitysourceworker new3files stillpendingfreeze thenfixtures/native41slots.
+No otherclient/heavybuild/encoder. Fullgoalactive/unshrunk/originalownership intact.

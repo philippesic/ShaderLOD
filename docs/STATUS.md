@@ -22,7 +22,10 @@ registers seven fields; per-effect mod transport is not implemented. Other-pack
 core diagnostics consume version/global enable/near/far, not all core fields.
 Pack options, mod configuration and actual shader consumption remain separate.
 
-No client is currently live. Photon forest/coastal attribution passed input and
+Root owns a live five-effect Photon control using the existing private reduced
+far-SSR archive, native resolution and sample5 frame-only timing. This is a
+within-JVM diagnostic; ordinary mod-absent acceptance remains separate.
+Photon forest/coastal attribution passed input and
 capture contracts. A matched-source coastal frame-only sample5 control retaining
 detailed CPU timers measured14.86ms versus23.85ms in the pass-timed run. This
 raises an instrumentation concern; one separate-JVM pair does not establish
