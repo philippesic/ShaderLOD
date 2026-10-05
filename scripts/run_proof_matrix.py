@@ -276,6 +276,8 @@ def validate_report(report, request, expected_inputs, started_ns, report_path=No
     if request['case'].endswith('patched-off') and enabled is not False: raise ValueError('Patched disabled control has live LOD enabled')
     if request['case'].endswith(('adaptive', 'final', 'combined', 'geometry', 'alloff', '-only', '-culling')) or request['case'] in CLOUD_CASE_OPTIONS:
         if enabled is not True: raise ValueError('Adaptive/effect/culling control has live LOD disabled')
+    if request['case'].endswith('geometry'):
+        validate_geometry_report(report, request, expected_inputs)
     if request['case'] in CLOUD_CASE_OPTIONS:
         for name, value in CLOUD_CASE_OPTIONS[request['case']].items():
             if effective.get(name) != value: raise ValueError('Cloud isolation arm options do not match its label: ' + name)
@@ -295,6 +297,44 @@ def validate_report(report, request, expected_inputs, started_ns, report_path=No
     if request['gpu_queries'] and not any(s.get('scope') == 'game-render' for s in report.get('gpu_samples', [])):
         raise ValueError('Missing GPU frame timing stream')
     if not report.get('loaded_mods'): raise ValueError('Loaded mod inventory missing')
+
+
+def validate_geometry_report(report, request, expected_inputs):
+    """The inspected cap16 diagnostic must actually replace the 24-chunk ring."""
+    if report.get('modPresent') is not True or report.get('dhPresent') is not True or request.get('include_dh') is not True:
+        raise ValueError('Geometry arm requires actual ShaderLOD and DH')
+    if any(name in expected_inputs.get('control', {}) for name in ('enabled', 'terrainEnabled', 'terrainChunkCap', 'warmSourceConfirmed')):
+        raise ValueError('Geometry arm control overrides per-profile config')
+    for boundary in ('input_state_start', 'input_state_end'):
+        state = report.get(boundary, {})
+        if state.get('terrain_active') is not True or state.get('lod_settings', {}).get('enabled') is not True:
+            raise ValueError('Geometry policy inactive at ' + boundary)
+        for field, expected in (('requested_chunks', 24), ('effective_chunks', 16)):
+            value = state.get(field)
+            if not isinstance(value, int) or isinstance(value, bool) or value != expected:
+                raise ValueError('Geometry arm requires requested24/effective16 at ' + boundary)
+    policy = report.get('geometry_policy')
+    if not isinstance(policy, dict) or policy.get('active') is not True:
+        raise ValueError('Missing/inactive geometry policy evidence')
+    for field, expected in (('cap', 16), ('requestedChunks', 24), ('effectiveChunks', 16), ('warmupTicks', 600)):
+        value = policy.get(field)
+        if not isinstance(value, int) or isinstance(value, bool) or value != expected:
+            raise ValueError('Geometry policy evidence mismatch: ' + field)
+    ticks = policy.get('stableTicks')
+    if not isinstance(ticks, int) or isinstance(ticks, bool) or ticks < policy['warmupTicks']:
+        raise ValueError('Geometry policy has not completed stable warmup')
+    if policy.get('reason') != 'DH terrain cap active':
+        raise ValueError('Geometry policy eligibility reason differs')
+    for field in ('shadow_culling_active', 'separate_shadow_lists_active', 'shadow_frustum_coherence_active'):
+        if report.get(field) is not False:
+            raise ValueError('Geometry arm has missing/active CPU experiment: ' + field)
+    try:
+        dh = tomllib.loads(report.get('actual_dh_configuration', ''))
+        radius = dh['client']['advanced']['graphics']['quality']['lodChunkRenderDistanceRadius']
+    except (tomllib.TOMLDecodeError, TypeError, KeyError):
+        raise ValueError('Geometry arm DH128 configuration evidence missing/invalid') from None
+    if not isinstance(radius, int) or isinstance(radius, bool) or radius != 128:
+        raise ValueError('Geometry arm requires unchanged DH128')
 
 
 def validate_optional_stack(report, stack, lock):

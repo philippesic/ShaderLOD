@@ -1148,3 +1148,199 @@ Rootnext: reverse nativecoastal effectscontrol plushighratecue-offquality,
 then reviewworkerfreeze andboundedrealcompile/controlcaptures. Existingmain/
 sharedownerreserved, originalSHADOW_VISIBILITY_CACHE_DESIGN.md unstaged/
 untouched. No push/publication/messaging. Full goal/gates remainunshrunk.
+
+
+Local checkpointcommitc3f7cc5 saves35source/evidence files afterfrozenchecks,
+excluding originalowner SHADOW_VISIBILITY_CACHE_DESIGN.md. No push. LIVEexec18005
+nativecoastal reverse ON/OFF/ON/OFF same-JVM effectscontrol, B15/minimal/noDH/
+2976×1672/40s initial10s settle20s capture/GPU1/16/fixedwetness0. Log
+`dev/logs/photon-native-coastal-effects-reverse-r2.log`; rootsoleGPU. No other
+client/heavybuild whilelive. Nextstrictreverseanalysis, then10FPS original/
+globaldisabled/active shoreline motion quality using samepathandcue0, followed
+Miniaturemode1 full4explicit sampling vs mode2refinement privateprobe after
+workerfreeze. Nativegoalactive, main/sharedfilesreserved; newworker5files only.
+
+
+## Coastal reverse terminal; high-rate quality live
+
+18005 exit0/strictaccepted reverse ON/OFF/ON/OFF GPU12.8727/14.2618/12.8202/
+14.4741ms:9.74/11.43%adjacentGPUreductions, frame9.10/10.49%. Separatebyte-
+fingerprintedharness revisions sincefirstcoastal due optindiagnostics; each
+sessioninputs stable. Positivebalanced direction, no15%/modabsentfullacceptance.
+
+LIVEexec47878 originalPhoton/noDH/minimal/native2976×1672 10FPSshorelinequality:
+request `run-workloads/native-coastal-effects/shoreline-motion-10fps-r1.json`,
+30s warmup20s motionz680.5→640.5/y68/x240.5/yaw180/pitch3, sameverifiedopen
+watertrajectory withcorrect yaw forsource.201expectedPNGcallbacks. GPUtiming
+false, cameraQualityOnlytrue; log
+`dev/logs/photon-native-shoreline-original-motion-10fps-r1.log`. RootsoleGPU;
+no benchmark/perfgainfromPNGreadbacks/encodes. Next validateactualcamera/input/
+callbackhashes then identicalglobaldisabled/activequalitycaptures, inspect
+motion/reflections/clouds. WorkerMiniatureprivateprototype andsinglefile
+nativecap16sourceplan continuewithoutclient/build; fullgoalactive.
+
+
+## High-rate capture incomplete; writer repair and third control
+
+47878 terminalexit0 butstatusincomplete_capture22/201,179writerbackpressure.
+NativePNGwrite~0.727s/12MB saturatesoneinflight bound. Raworiginalnative
+session38bb5653-804e-443b-a3d1-34b0bf8427e6 retained asfailure, nothigh-rate
+quality. Cameraowner owns CameraQualitySession.java/newFastPngWriter.java/doc
+forisolatedlossless DeflaterPNG, noSTBglobalstate/GL/camera change. Encoding/
+compression0..1/pixelAPI/classhash/12GiBboundedcap recorded; tinyroundtripfixture
+allowed, nofullGradle/client. Rootwillcompile/retryfreshnative10FPS then matched
+arms; oldrawdataimmutable.
+
+Root launches thirdcoastalforward OFF/ON/OFF/ON on FROZENcompiledharness,
+explicit `-x compileDevClientJava` so camera sourceworkdoesnotcompile/change
+measuredclasses. B15/minimal/noDH/native2976×1672/40s initial10s settle20s
+capture/GPU1/16/fixedwetness0. Log
+`dev/logs/photon-native-coastal-effects-forward-r3.log`; actualhandle follows.
+RootsoleGPU; no fullbuild untilterminal. WorkerseparateMiniaturerefine5files,
+nativecap16preparer+geometryvalidation3files, cameraencoder3files. Fullgoalactive.
+
+
+LIVE thirdcoastalcontrol exec5121 verifiedfromlaunch; compileddev source task
+excluded intentionally, rootsoleGPU. Nextpoll exacthandle, strictanalyze and
+preservebenchmarkJSON/PNGs beforeanynextlaunch. Then wait/reviewfrozenfastwriter,
+compile/devjar exclusion/pixelroundtrip check and fresh10FPSnativeoriginalretry.
+Camera worker wasnotifiedofroot's one factual docappend duringownership; root
+stoppededitingitsfiles, correctedcoordinationrecordinUSER_LESSONS. No other
+source/fileownershiptransfer. Existingoriginalownerdesignfile staysunstaged.
+
+
+5121 terminalexit0/strictaccepted thirdcoastalforward GPU14.3219/12.9224/
+14.1451/12.6403ms (9.77/10.64%adjacentGPUreductions), frame8.84/8.90%.
+Priorcompiledharness frozen/classchecks passed. Tinyencoderfixturecompile may
+haveoverlapped CPUwork; preservedqualification, no15%orhardwarecausalupgrade.
+NoMinecraftclientnowlive. Camera fastwriter6pixel/CRC/row/alpha roundtrips
+passedstandalone atcompression0/1; workerfinishingfreeze. Rootmustwaitfreeze,
+then compiledev/build/jarexclusion andfreshnative10FPSretry. AvailableSSD299GiB,
+bounded12GiBpersequence fits; no rawcaptureoverwrite. Miniature5filesfrozen7
+fixtures, activeassembly/pixelcontrolstillunbuilt; nativecap16prep/geometry
+validationworkerfinishing3files. Fullgoalactive; rootsoleGPU.
+
+
+## Fast PNG source frozen and retry launched
+
+Camera3files frozen/reviewed. Six standalonepixel/alpha/row/CRC losslessroundtrips
+passed; rootdev/fullbuild nowpassed andproductionjar0deventries including
+FastPngWriter nestedclasses. PNGcompression0 explicitnewr2request; bounded12GiB
+persequence,64MiBperPNG, oneimage/row/fixedbuffers/callbackhashguard preserved.
+Priorincomplete22/201 r1manifest/images unchanged. CurrentSSD299GiB available.
+
+Root launchingfresh nativeoriginalPhoton 10FPS r2sameopenwaterpath,
+30s warmup20s capture/GPUtimingfalse/cameraOnly/noDH/minimal/2976×1672.
+Log `dev/logs/photon-native-shoreline-original-motion-10fps-r2.log`, request
+`run-workloads/native-coastal-effects/shoreline-motion-10fps-r2.json`.
+Actualhandle followslaunchoutput. RootsoleGPU; nocongame/heavybuild. Next
+validateall201callbackhashes/actualcamera/sourceencoding thenmatchedglobaloff/
+oncapturedatidenticalrate/path. Failuremustremainqualified, notresampledaway.
+
+Miniaturerefine7fixtures/rootPythoncompile passed; privateZIPbuilt SHA
+ df2a3d2b50bebdba2e7eae1066bd33c03cc6f3234f6c7143ce660b431b0010e6.
+Sameprofile sampler/evidencepins qualified; actualGL mode1/2stillunverified.
+Nativecap16prepare/validationworkerfinishingfrozenhandoff. Fullgoalactive,
+currentc3f7cc5 checkpoint plusnewunstagedsource/evidence; ownerdesignuntouched.
+
+
+## Native fast writer actual201/201; matched disabled launched
+
+69835 exit0/complete,201/201native10FPSPNGcallbacks/hashes,0skips. Original
+Photon/noDH/minimal/samepath20.0728s401ticks; total4.003GB andmedianwrite31.69ms.
+Rootfirst/mid/endPNG inspectedorientation/colors/openshoreline. Retainfailed
+r1separate; thiswriter success is noGPU/render speedup. CurrentCameraQuality/
+FastPngWriterclass/source/encoding metadataretained inactualmanifest.
+
+Root launchingidenticalr2path/rate nativeB15 patched-off/globaldisabled quality,
+30s warmup20s motion/GPUtimingfalse/cameraOnly/noDH/minimal; log
+`dev/logs/photon-native-shoreline-disabled-motion-10fps-r2.log`, profile
+`run-workloads/native-coastal-effects/coastalwater/patched-off`.
+Actualhandle followslaunchoutput. SoleGPU root; next201callback/camerahash
+validation, thensameadaptive/globalenabled quality. No glint/underwater/third-
+person/fulltemporalacceptance inferred fromoneshoreline trajectory.
+
+Nativecap16preparer/geometryvalidatorfrozen16new+18existinglightweightfixtures,
+onlypreparedsourceplan; rootrealcopy/render/timing stillpending. Miniatureprobe
+built/frozen7tests; mode1full4explicit vs mode2LOD driverquality/timingpending.
+Fullgoalactive, no15%/sourcecause/support/defaultpromotion, ownerdesignuntouched.
+
+
+Disablednativequality actuallylaunchedonce despiteoversizedexec imageoutput
+hidinghandle; exactownedGradlePID89151/profile/log verified, no duplicateclient.
+PID89151 nowterminal/logBUILD SUCCESSFUL. Disabledsequence complete201/201,
+allPNGhashes verified; sourcefirst/mid/endoriginalPNGs nowinspectedonepertool
+response (largeuncompressed images exceedIPC whenbatched). Originalpath
+approachesbank atlastframe; no inside-blockintersectionseen. SameRGBcolors/
+orientation andnormalwaterreflection, notglint/underwateracceptance.
+Root launching adaptive/globalenabled identicalnative10FPSr2quality;
+log `dev/logs/photon-native-shoreline-enabled-motion-10fps-r2.log`, profile
+`run-workloads/native-coastal-effects/coastalwater/adaptive`. Actualhandle
+followssmalllaunchresult; rootsoleGPU. Nextverify201frames/callbacks/poses,
+inspectmatchedframes/motion thennativecap16controls/Miniaturedriverprobe.
+
+
+## Native shoreline three-arm quality terminal
+
+45286 enabledterminalexit0/complete201/201/0skips; original/disabled/enabled
+all603PNGhashes verified. Same10FPS/r2request/native2976×1672/minimal/noDH,
+maxeasedZerror0.000149blocks/eyeY69.62constant. Fullsource/pose/options/config/
+artifact/encoding metadataretained; representativeoriginal0/100/200 andenabled
+100PNGs inspectedfororientation/colors/nearshadows/waterreflection. Noinside-
+blockintersectionseen; pathapproachesbank. Fullmotion/glint/underwater/
+thirdperson/independentperformance acceptance stillpending; qualityunmeasured.
+No Minecraftclientcurrentlylive, rootsoleGPU. Cameraowner nowonlynewdurable
+standalonePNGfixture+runner2files, no session/doc overlap orcompilerbyworker.
+
+Rootnativecap16preparation launchedafter16fixtures/staticguards passed:
+`prepare_native_terrain_profiles.py --source-root run-workloads/native-effect-isolation
+--output run-workloads/native-terrain-b15-r1 --acknowledge-warmed-scene`.
+Log `dev/logs/native-terrain-b15-preparation-r1.log`; sourcecanonicalhighsave
+all4arms, B15geometryclonednewadaptive, request24/effective16/DH128 andmanual
+warmedack. Actualhandle followsoutput. Nextterminalprepinspectmanifest, pilot
+4serialnative/minimal/DH controls withmandatoryactivepolicy/16boundary checks,
+quality/actualDH separated; no default/travelcoverage or novelmeshclaim.
+Miniaturemode1/full4explicit andmode2LOD privatecompiledrivertrial stillpending.
+Fullgoalactive, ownerdesignuntouched, currentc3f7cc5 plusunstagedwork.
+
+
+Nativepreparation91578 exit1 failedcopied-high fingerprint, failedoutputretained.
+Rootconfirmed metadata mode=ro SQLiteSELECT creates empty-wal/32KiB-shm beside
+WAL-mode source DB AFTERexpectedfingerprint. Reproducedisolatedcopywith21845rows;
+source/copy current230filehashes equal. No logicalMinecraft/DBrow write inferred.
+Workerrepair onlypreparer/tests/doc: querytemporaryDB+existingWAL snapshot,
+no immutable=1 ignoringpendingWAL, no source-sidecar deletion/hashbypass.
+Rootnextfreshoutputr2 afterfreeze/realchecks. No gamecurrentlylive, rootsoleGPU.
+DurablefastPNGfixture2filesfrozen; rootstandalonechecknowlaunching. Fullgoalactive.
+
+
+WALrepairfrozen21fixtures: metadataSQLread nowon temporaryDB+existingWAL,
+sourceWal/Shm untouched; locks/fingerprint guards unchanged, pendingWALlatest
+rows tested. Rootretrypreparationfreshoutputnative-terrain-b15-r2launched,
+failedr1retained; logdev/logs/native-terrain-b15-preparation-r2.log. NoMinecraft
+client live. CPUonly originalqualitypreviewencodinghandle33690 mustterminal
+beforeanyGPU timing. DurablePNGfixture actualrootexecutionpassed6roundtrips/
+247605pixel/CRC/boundchecks, outputbuild/fast-png-checks/check-n0nkruyx/check.json.
+Raw603nativePNG files retained; previewdownsized1488×836/yuv420/CRF18 is not
+nativepixelparity evidence. Rootnextterminalprep/encoder then4-case GPU pilot.
+
+
+## Source-preserving native terrain preparation complete; pilot launched
+
+51126 preparationr2 terminalexit0/statuscomplete; fourcanonicalworldhashes equal
+fb0bbac2a38d9c3213a85d2987f58306f9d120cb221b53b1cb30bfdce7ec19a3.
+Root21WAL/geometryfixtures passed; no sourceDBopen/sidecar deletion/fingerprint
+bypass. Failedr1retained. Sourcehigh/off/adaptive exactoptions/config/archive,
+geometryfromadaptiveB15 cap16/manualwarmack, request24/DH128. This is source/
+copy evidence, notwarmeddistantpixelquality/travelcoverage acceptance.
+
+All CPUpreviewencoders33690/94979/41256 terminalexit0, no heavybackgroundwork.
+Root launchesfourserialnative2976×1672/minimal/DH/high(originalmodabsent)/
+patchedglobaloff/adaptiveallactive/geometryexistingcap16 once,75s warmup30s
+capture/GPU1/16/fixedwetness0. Profiles `run-workloads/native-terrain-b15-r2/forest`;
+log `dev/logs/native-terrain-b15-pilot-r1-runner.log`. Actualhandlefollowslaunch.
+RootsoleGPU; noanotherclient/heavybuild/test/encoder untilterminal. Geometry
+mustreallybeactive/effective16 atbothboundariesandwarmstable, notsilently24.
+Nextinspectactualrender/options/source/policy/PNG andboundedpilot, thenbalanced
+repeatsifuseful. Separateshader/geometry/combined comparisons; neveraddpercentages
+orlabelcapgain novelshader/meshoptimization. Fullgoalremainsactive.

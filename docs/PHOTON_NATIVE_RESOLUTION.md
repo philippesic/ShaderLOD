@@ -120,3 +120,29 @@ mod-absent comparison, and cannot be added to the forest percentage. Raw
 `dev/logs/photon-native-coastal-effects-forward-r1-{benchmark,analysis}.json`
 and `.log` retain all inputs/captures. Sourceprofiles
 `run-workloads/native-coastal-effects/coastalwater/adaptive`.
+
+
+Second coastal reverse session18005 exit0/strictaccepted, ON/OFF/ON/OFF.
+GPU12.8727/14.2618/12.8202/14.4741ms, FPS70.550/64.132/70.881/63.447,
+thread6.9335/6.8356/6.7553/6.7195ms. Adjacent GPUreductions9.74/11.43%,
+frame9.10/10.49%. Same B15/options/resolution/scene/minimal/noDH; diagnostic
+sampler and DHdraw properties absent/off. Devinstrumentationclass/source hashes
+changed sincefirstcoastal session as probeswere integrated; eachsession's
+artifact/inputhashes separatelyvalidated. No claim of byte-identical cross-run
+harness or IIDframe samples. The positive direction repeatsinbalanced global
+controls, stillbelow15% and not originalmod-absent repeatedperformancegate.
+Raw `dev/logs/photon-native-coastal-effects-reverse-r2-{benchmark,analysis}.json`
+and `.log`. Movingquality and nativecapgeometrytradeoff remain separatechecks.
+
+
+Third coastal forward5121 exit0/strictaccepted withpriorcompiledharness held
+fixed (`-x compileDevClientJava`), OFF/ON/OFF/ON. GPU14.3219/12.9224/14.1451/
+12.6403ms, FPS64.658/70.929/65.815/72.243, thread7.0564/6.8435/6.6958/6.6925.
+AdjacentGPUreductions9.77/10.64%, frame8.84/8.90%. SameB15/globalcontrol,
+options/nativewindow/minimal/noDH. A tiny standalonePNGencoderfixture compilation
+wasallowedinparallel withsourcework andmayoverlap thissession; exactexternal
+CPUloadtimingwasnotinstrumented, so do not treatthis as a stronger isolated
+hardwarecausalclaim. Firsttwo balancedcoastal controlsremain separatelyretained.
+Allsource/artifact/window/pipeline checks passedwithinthissession. Raw
+`dev/logs/photon-native-coastal-effects-forward-r3-{benchmark,analysis}.json`
+and `.log`. None establish≥15% or originalabsentmod acceptance.

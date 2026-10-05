@@ -117,3 +117,35 @@ Exact report/filter data remain valid, but native literalpilot extrapolated
 resolution and did not itself record samplerstate. Correct the qualifier and
 capture native-size samplerstate before relying on exactnative-profile evidence.
 Use actual window/input reports rather than the source profile's prior resolution.
+
+
+## Camera-document ownership overlap
+
+Root appended a factual failedcapture checkpoint to CAMERA_QUALITY_HARNESS.md
+while the camera worker owned that document for encoder repair. Root notified
+the worker to preserve the appendix and stopped edits to its three owned files
+until freeze. No source/oldrawimage change resulted. Keep worker-owned docs
+under the same edit ownership as their code during active work; root milestone
+notes belong in STATUS/activegoal until handoff.
+
+
+## Large tool response can hide completed side effects
+
+Root batched three20MBuncompressednativePNG images witha clientlaunch inone
+exec. The combined79.7MBresponse exceededthe64MiBIPC limit andhidthelaunch
+handle, although theclientanddocwrites hadrun. Rootverified exactGradlePID/
+runDirectory/logs, avoidedduplicate launch, inspectedimagesonepercall andused
+process/log completion asauthoritative. Keep largeimagesseparatefrommutations
+and do not treat atransportfailure asproof that actiondidnotoccur.
+
+
+## Read-only SQLite connection is not a file-immutable inspection
+
+New native terrain preparer's metadata SELECT used mode=ro on a stopped WAL-mode
+DH database after fingerprinting the source. SQLite created empty-wal and32KiB-
+shm files, causing strict copied-save rejection. Root reproduced this on an
+isolated realDBcopy (21845rows) and found source/copy currentfiles identical.
+The planner/fixture owner had tested synthetic metadata but notthisactual WAL
+side effect. Repairmetadata inspection on an isolated database+WAL snapshot,
+preserve real sourcefiles andstrict worldhash guards; do notignore mismatch or
+assume mode=ro prevents filesystem side effects. Failedpreparationr1 retained.

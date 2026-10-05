@@ -32,15 +32,16 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * Explicit opt-in, development-only camera/capture experiment. This file is not
- * in a source set until reviewed. No performance result is produced here.
+ * Explicit opt-in, development-only camera/capture experiment.
+ * No performance result is produced here.
  * All state changes run on the client thread except one image write at a time.
  */
 public final class CameraQualitySession {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
     private static final long MAX_PIXELS = 4096L * 2160;
     private static final long MAX_PNG_BYTES = 64L * 1024 * 1024;
-    private static final long MAX_SEQUENCE_BYTES = 2L * 1024 * 1024 * 1024;
+    private static final long MAX_SEQUENCE_BYTES = 12L * 1024 * 1024 * 1024;
+    private static final boolean LITTLE_ENDIAN_PIXELS = java.nio.ByteOrder.nativeOrder() == java.nio.ByteOrder.LITTLE_ENDIAN;
     private final Path gameDirectory, output, source;
     private final String sourceHash;
     private final Config config;
@@ -121,6 +122,12 @@ public final class CameraQualitySession {
         report.addProperty("clock_policy", "20 Hz eased waypoint ticks; normal partial-tick camera interpolation; Iris clocks and temporal history advance normally");
         report.addProperty("world_policy", "Existing singleplayer control must freeze daylight/weather; no world rules/time/weather edits by this harness");
         report.addProperty("close_owned_client_requested", closeOwnedClient);
+        addPngEncoding(report);
+        report.addProperty("maximum_png_bytes", MAX_PNG_BYTES);
+        report.addProperty("maximum_sequence_png_bytes", MAX_SEQUENCE_BYTES);
+        report.addProperty("maximum_framebuffer_pixels", MAX_PIXELS);
+        report.addProperty("native_pixel_integer_byte_order", java.nio.ByteOrder.nativeOrder().toString());
+        report.addProperty("png_pixel_conversion", "Native RGBA byte layout; getPixelRGBA int -> canonical 0xAABBGGRR -> R,G,B,A bytes; no scaling, gamma or alpha conversion");
         report.add("config", GSON.toJsonTree(config));
         report.add("frames", frames);
         var mods = new JsonObject();
@@ -129,6 +136,9 @@ public final class CameraQualitySession {
         report.add("loaded_mod_artifacts", artifactIdentities());
         try (var stream = CameraQualitySession.class.getResourceAsStream("CameraQualitySession.class")) {
             if (stream != null) report.addProperty("harness_class_sha256", hash(stream.readAllBytes()));
+        }
+        try (var stream = FastPngWriter.class.getResourceAsStream("FastPngWriter.class")) {
+            if (stream != null) report.addProperty("png_writer_class_sha256", hash(stream.readAllBytes()));
         }
         report.addProperty("java_version", System.getProperty("java.version"));
         report.addProperty("os_name", System.getProperty("os.name"));
@@ -287,6 +297,7 @@ public final class CameraQualitySession {
         frame.addProperty("rain", client.level.getRainLevel(partial));
         frame.addProperty("thunder", client.level.getThunderLevel(partial));
         frame.addProperty("file", filename);
+        addPngEncoding(frame);
         frame.addProperty("status", "write_pending");
         frames.add(frame);
         // OpenGL readback occurs exactly here, after the frame's GUI pass.
@@ -297,6 +308,12 @@ public final class CameraQualitySession {
             frame.addProperty("failure", exception.toString());
             throw exception;
         }
+        frame.addProperty("native_image_format", image.format().name());
+        if (image.format() != com.mojang.blaze3d.platform.NativeImage.Format.RGBA) {
+            image.close();
+            frame.addProperty("status", "unsupported_native_image_format");
+            throw new IllegalStateException("Pinned screenshot RGBA format required by lossless PNG writer");
+        }
         writeInFlight = true;
         long bytesBeforeWrite = completedBytes;
         try {
@@ -306,9 +323,12 @@ public final class CameraQualitySession {
                 long startedWrite = System.nanoTime();
                 try (image) {
                     Path path = output.resolve(filename);
-                    image.writeToFile(path);
+                    long encodedBytes = FastPngWriter.write(path, image.getWidth(), image.getHeight(), (x, y) -> {
+                        int nativePixel = image.getPixelRGBA(x, y);
+                        return LITTLE_ENDIAN_PIXELS ? nativePixel : Integer.reverseBytes(nativePixel);
+                    }, config.pngCompressionLevel(), Math.min(MAX_PNG_BYTES, MAX_SEQUENCE_BYTES - bytesBeforeWrite));
                     bytes = Files.size(path);
-                    if (bytes > MAX_PNG_BYTES || bytesBeforeWrite + bytes > MAX_SEQUENCE_BYTES) throw new IllegalStateException("PNG exceeds 64 MiB or sequence exceeds 2 GiB disk bound");
+                    if (bytes != encodedBytes || bytes > MAX_PNG_BYTES || bytesBeforeWrite + bytes > MAX_SEQUENCE_BYTES) throw new IllegalStateException("PNG size mismatch or 64 MiB/12 GiB disk bound exceeded");
                     digest = WorkloadInputs.hash(path);
                 } catch (Exception exception) { error = exception.toString(); }
                 String completedHash = digest, completedError = error;
@@ -346,9 +366,17 @@ public final class CameraQualitySession {
         JsonObject frame = new JsonObject();
         frame.addProperty("slot", slot);
         frame.addProperty("scheduled_path_seconds", slot / (double)config.fps());
+        addPngEncoding(frame);
         frame.addProperty("status", reason);
         frames.add(frame);
         skippedFrames++;
+    }
+
+    private void addPngEncoding(JsonObject target) {
+        target.addProperty("png_encoding", FastPngWriter.ENCODING);
+        target.addProperty("png_compression_level", config.pngCompressionLevel());
+        target.addProperty("png_bit_depth", 8);
+        target.addProperty("png_colour_type", 6);
     }
 
     private void requireOwner(Minecraft client) throws Exception {
@@ -513,7 +541,7 @@ public final class CameraQualitySession {
         Pose lerp(Pose other, double t) { return new Pose(x + (other.x - x) * t, y + (other.y - y) * t, z + (other.z - z) * t, yaw + (other.yaw - yaw) * t, pitch + (other.pitch - pitch) * t); }
     }
     private record Waypoint(double seconds, Pose pose) {}
-    private record Config(String label, double warmupSeconds, int fps, List<Waypoint> waypoints) {
+    private record Config(String label, double warmupSeconds, int fps, int pngCompressionLevel, List<Waypoint> waypoints) {
         static Config parse(String text) {
             JsonObject value = JsonParser.parseString(text).getAsJsonObject();
             if (number(value, "schema", 1, 1) != 1) throw new IllegalArgumentException("schema must be 1");
@@ -523,6 +551,8 @@ public final class CameraQualitySession {
             double warmup = value.has("warmupSeconds") ? number(value, "warmupSeconds", 30, 120) : 30;
             double rate = value.has("fps") ? number(value, "fps", 1, 10) : 10;
             if (rate != Math.floor(rate)) throw new IllegalArgumentException("fps must be an integer");
+            double compression = value.has("pngCompressionLevel") ? number(value, "pngCompressionLevel", 0, 1) : 0;
+            if (compression != Math.floor(compression)) throw new IllegalArgumentException("pngCompressionLevel must be an integer 0 or 1");
             JsonArray points = value.getAsJsonArray("waypoints");
             if (points.size() < 2 || points.size() > 32) throw new IllegalArgumentException("Need 2-32 waypoints");
             List<Waypoint> result = new ArrayList<>();
@@ -550,7 +580,7 @@ public final class CameraQualitySession {
             if (result.getLast().seconds() < 20 || totalDistance > 512) throw new IllegalArgumentException("Sequence must last 20-30 seconds and travel <= 512 blocks");
             double slots = result.getLast().seconds() * rate;
             if (Math.abs(slots - Math.rint(slots)) > 1e-6) throw new IllegalArgumentException("Duration must end on a capture slot");
-            return new Config(label, warmup, (int)rate, List.copyOf(result));
+            return new Config(label, warmup, (int)rate, (int)compression, List.copyOf(result));
         }
         double duration() { return waypoints.getLast().seconds(); }
         int slotCount() { return (int)Math.round(duration() * fps) + 1; }

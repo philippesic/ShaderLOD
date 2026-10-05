@@ -6,7 +6,8 @@ Active goal: [Sustained performance and compatibility](goals/sustained-performan
 The user authorized ongoing team development, Photon first, benchmarks with
 optional performance mods, and immediate research/experimental testing of additional
 shaders. Support and performance promotion still require repeated evidence.
-Latest source/evidence checkpoints: `b003e05` (MakeUp core bridge), `7945a3c`
+Latest source/evidence checkpoints: `c3f7cc5` (pack controls and sampler evidence),
+`b003e05` (MakeUp core bridge), `7945a3c`
 (native controls and moving capture), `fc94094` (research and stack experiments).
 Main protocol implementation remains based on `8da8943`, reserved for the original
 chat. This performance chat owns all game/GPU clients and exploratory adapters.
@@ -126,3 +127,12 @@ Original Miniature finalpass filters were observed with non-mip depthnearest/
 colorlinear/aniso1/sampler0; a separate refinement experiment is sourcework,
 not yet compiled/rendered. See BSL_RUNTIME_PLAN.md and
 MINIATURE_CORE_BRIDGE_PROBE.md.
+
+
+Three native2976×1672 Photon shoreline motion sequences (original/disabled/
+enabled) now completed201/201 verifiedPNG frames each at10FPS. A customlossless
+PNGwriter repaired nativecapture backpressure, with durable pixel/CRCfixtures.
+This establishes boundedcapture/trajectory andrepresentative nearquality,
+notfull glint/underwater/temporalacceptance. Balancedcoastal controls reproduced
+7–11%GPU reductions, belowtheordinary15%gate. An explicitcap16/nativefour-arm
+pilot isnext, retainingrequested24/DH128 andmanualwarmack; defaults unchanged.
