@@ -20,7 +20,11 @@ import zipfile
 from summarize_workload import summarize
 
 ROOT = Path(__file__).resolve().parents[1]
+COMPLEMENTARY_RELEASE_SHA256 = 'fed6c879e732cf7fc7bc6570ebb1def43235aa7e96f62859fbdbdbfa0b484b38'
 CASES = {
+    'complementary-high': ('coastalwater/high', 'runClientLodOff'),
+    'complementary-water-sky': ('coastalwater/water-sky', 'runClientLodOff'),
+    'complementary-water-potato': ('coastalwater/water-potato', 'runClientLodOff'),
     'miniature-high': ('coastalwater/high', 'runClientLodOff'),
     'miniature-lower': ('coastalwater/lower', 'runClientLodOff'),
     'bsl-high': ('coastalwater/high', 'runClientLodOff'),
@@ -145,6 +149,20 @@ def archive_defaults(archive):
     # declared controls; it does not rewrite or establish support for a pack.
     settings = next((name for name in ('shaders/settings.glsl', 'shaders/lib/config.glsl', 'shaders/shader.h', 'shaders/lib/settings.glsl')
                      if name in archive.namelist()), None)
+    if settings is None and 'shaders/lib/common.glsl' in archive.namelist():
+        # This additional layout belongs only to the reviewed r5.9.3 original.
+        # A common.glsl filename or banner does not identify an arbitrary pack.
+        position = archive.fp.tell()
+        try:
+            archive.fp.seek(0)
+            digest = hashlib.sha256()
+            for chunk in iter(lambda: archive.fp.read(1024 * 1024), b''):
+                digest.update(chunk)
+        finally:
+            archive.fp.seek(position)
+        if digest.hexdigest() != COMPLEMENTARY_RELEASE_SHA256:
+            raise ValueError('Complementary option layout requires the exact pinned r5.9.3 archive')
+        settings = 'shaders/lib/common.glsl'
     if settings is None: raise ValueError('Unsupported experiment option layout')
     defaults = declared_defaults(archive.read(settings).decode())
     outside = {}

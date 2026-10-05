@@ -8,7 +8,7 @@ Photon performance, optional-stack evaluation, primary-source research and
 additional-pack rendering, quality and integration evidence. The ordinary ≥15%
 gate and broader configuration/support acceptance remain unmet.
 
-Latest checkpoints: `057ed06` (negative SSR cost), `f7f30d6` (far SSR cost controls), `409734a` (reduced far trace),
+Latest checkpoints: `2950127` (pinned SSR controls), `057ed06` (negative SSR cost), `f7f30d6` (far SSR cost controls), `409734a` (reduced far trace),
 `4dfcdfc` (bounded capture and full-trace diagnostic), `b9f4110` (SSR isolation).
 Main Java/config/uniform transport, shared helpers and existing Photon patches
 remain based on `8da8943` and reserved for the original chat. This performance
@@ -133,8 +133,14 @@ reduced18.90ms andfull18.39ms GPU intervals. Reduced/full removed the inspected
 band but did not establish useful performance. The pinned same-JVM SSR-only
 control now compiles; 38 analyzer and 24 stack fixtures pass. The reduced
 archive OFF/ON/OFF/ON session passed strict checks but GPU contrasts changed sign
-(+2.1%/-13.8% time reduction). Reverse order is running under root ownership. See
+(+2.1%/-13.8% time reduction). Reverse order passed and was flat (-0.64%/+0.73%). No stable benefit established. See
 [SSR control](NATIVE_INPROCESS_SSR_COST.md) and the active goal for the live handle.
 The common protocol owner’s last visible turn remains the handoff; its main
 Java/config/shared-helper ownership is preserved. No broader transport work is
 claimed from this chat’s pack diagnostics.
+
+
+Complementary original/native-water controls now have pinned preparation tooling;
+7 new and 19 prior matrix fixtures passed. Root prepared three unchanged-release
+profiles and launched original HIGH at native resolution/minimal/noDH. Actual
+compile/rendering remains pending; sources/defaults are not support evidence.

@@ -8,7 +8,7 @@ import shutil
 import zipfile
 
 from setup_comparison import ROOT, WORLD, file_hash, unlocked_world, world_fingerprint
-from run_proof_matrix import read_option_properties, archive_defaults, normalize_requested_options
+from run_proof_matrix import read_option_properties, archive_defaults, normalize_requested_options, COMPLEMENTARY_RELEASE_SHA256
 from prepare_workloads import profile_options
 
 
@@ -16,12 +16,27 @@ def prepare(source, output, family, bridge_cue=True, with_dh=False):
     source, output = source.resolve(), output.resolve()
     if output.exists() or source == output or source in output.parents or output in source.parents:
         raise ValueError('Choose a fresh, separate output directory')
-    scene = 'coastalwater' if family.startswith(('makeup-', 'miniature')) or family == 'bsl' else 'forest'
+    scene = 'coastalwater' if family.startswith(('makeup-', 'miniature')) or family in ('bsl', 'complementary') else 'forest'
     if source.parent.name != scene: raise ValueError('Source must be the matching inspected scene')
     runtime = json.loads((ROOT / 'dev/runtime.lock.json').read_text())
     if with_dh and not family.startswith('makeup-'):
         raise ValueError('DH compatibility override is scoped to pinned MakeUp experiments')
-    if family == 'bsl':
+    if family == 'complementary':
+        candidates = json.loads((ROOT / 'dev/shader-candidates.lock.json').read_text())
+        pin = next(p for p in candidates['candidates'] if p['modrinth_project'] == 'complementary-reimagined')['release']
+        if pin['version'] != 'r5.9.3' or pin['sha256'] != COMPLEMENTARY_RELEASE_SHA256:
+            raise ValueError('Complementary experiment requires the exact r5.9.3 release pin')
+        original = ROOT / 'dev/upstream/other-pack-research' / pin['filename']
+        if file_hash(original) != COMPLEMENTARY_RELEASE_SHA256:
+            raise ValueError('Complementary release differs from pin')
+        # Source defaults/HIGH; record the native full-reflection default so
+        # actual Iris consumption can be checked even after default removal.
+        options = {'WATER_REFLECT_QUALITY': '2'}
+        arms = {'high': (original, options),
+                'water-sky': (original, options | {'WATER_REFLECT_QUALITY': '0'}),
+                'water-potato': (original, options | {'WATER_REFLECT_QUALITY': '1'})}
+        include_dh = False
+    elif family == 'bsl':
         candidates = json.loads((ROOT / 'dev/shader-candidates.lock.json').read_text())
         pin = next(p for p in candidates['candidates'] if p['modrinth_project'] == 'bsl-shaders')['release']
         original = ROOT / 'dev/upstream/other-pack-research' / pin['filename']
@@ -151,7 +166,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--source', required=True, type=Path)
     parser.add_argument('--output', required=True, type=Path)
-    parser.add_argument('--family', required=True, choices=('bsl', 'miniature', 'miniature-core-bridge', 'miniature-refinement', 'makeup-water', 'makeup-probes', 'makeup-core-bridge', 'photon-cloud-consumer', 'photon-cloud-secondary', 'photon-cloud-literal'))
+    parser.add_argument('--family', required=True, choices=('complementary', 'bsl', 'miniature', 'miniature-core-bridge', 'miniature-refinement', 'makeup-water', 'makeup-probes', 'makeup-core-bridge', 'photon-cloud-consumer', 'photon-cloud-secondary', 'photon-cloud-literal'))
     parser.add_argument('--no-bridge-cue', action='store_true', help='Prepare normal core-bridge rendering, with diagnostic color compiled out')
     parser.add_argument('--with-dh', action='store_true', help='Pinned MakeUp compatibility experiment; never a support claim')
     args = parser.parse_args()

@@ -1956,3 +1956,26 @@ Log dev/logs/photon-ssr-inprocess-reduced-reverse-r2.log. No heavybuild/tests/
 encoder/otherclient. Next poll/analyze separately, retain mixed/negative results,
 then review Complementary preparation worker freeze before original runtime.
 Full goal remains active; original main/config/shared design ownership preserved.
+
+
+## Reverse SSR terminal; original Complementary smoke live
+
+exec93853 exited0, all4 phases strict accepted. Reverse ON/OFF/ON/OFF GPU
+15.8412/15.7409/15.7564/15.8719ms, FPS58.203/58.804/58.948/58.477,
+thread6.9644/6.8038/6.6908/6.6253. GPU reductions-0.637%/+0.728%, flat;
+forward/reverse establishes no stable reducedtrace gain. Rawbenchmark/analysis/
+log retained under dev/logs/photon-ssr-inprocess-reduced-reverse-r2-*.
+
+pack_research frozen/completed4files: explicit untouched original Complementary
+family, three cases modabsent, exact-release-only common.glsl layout. Root7new+
+19prior matrix fixtures pass; actual fresh preparation completed all3profiles at
+run-workloads/complementary-native-controls-r1/coastalwater. Original archive
+fed6c879e732cf7fc7bc6570ebb1def43235aa7e96f62859fbdbdbfa0b484b38 unchanged;
+HIGH source defaults, native water sky0/Potato1 separatequality controls/noDH.
+Root sole GPU now LIVEexec90231 runner complementary-high, native2976x1672,
+minimal/noDH/35warm15capture/GPU1/16/wetness0, --skip-build --freeze-dev-classes.
+Log dev/logs/complementary-original-smoke-r1-runner.log; runner result root
+ dev/logs/complementary-original-smoke-r1. No otherclient/build/encoder. Next
+actual compile/link/render/options/artifact and retainedimage inspection; keep
+first failure before narrowly justified native fallback retry. Main/shared/
+originalowned design untouched, no remoteaction, fullgoal stillactive/unshrunk.

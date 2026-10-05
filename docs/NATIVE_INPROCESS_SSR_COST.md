@@ -135,3 +135,12 @@ Reverse order runs separately with same archive and an equal stopped-source save
 clone; its result remains pending. Other policy archives remain separate source
 interventions. This mixed session does not promote a default or satisfy ordinary
 performance, motion-quality or broader configuration acceptance.
+
+
+Reverse root session ab6182ba-a9ab-464e-aded-e82580e4b366 completed and
+strict analyzer accepted all four source/window/config/image/restore contracts.
+ON/OFF/ON/OFF GPU15.8412/15.7409/15.7564/15.8719ms; FPS58.203/58.804/
+58.948/58.477; thread6.9644/6.8038/6.6908/6.6253ms. Adjacent GPU reductions
+-0.637%/+0.728% are essentially flat; no stable gain across forward/reverse.
+Exec93853 exited0. Raw dev/logs/photon-ssr-inprocess-reduced-reverse-r2-*
+retained separately. Private quality fix stays experimental; no default promoted.
