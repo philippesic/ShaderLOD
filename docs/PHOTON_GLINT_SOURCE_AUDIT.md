@@ -240,3 +240,35 @@ The c1 member is byte-identical to upstream, as are cloud sampling, sky.glsl,
 cloud-shadow include and p0 cloud preparation. Downstream visible differences
 can still propagate through their unchanged code. Actual linked/rendered
 behavior remains the coordinator's evidence boundary.
+
+
+## First actual module control
+
+Root34617 terminal/alloffnative10FPS sequencebd82c2b5… wrote200/201 (onewriter-
+backpressure skip); writtenNONE/noncollision/hashchecks passed, rawfailure
+retained. Rootframe50alloffinspection showsnoenabledbroadbrightband. This
+narrows toenabledmodule behavior butisnotfullquality/parity orcauseproof.
+Nextsamepathnative2FPS explicitlylabelledSSR-only andwater-only captures for
+bandidentification; lowratecontrols cannotreplace10FPS temporalacceptance.
+The original/disabled/enabled tripletall201completed andbandappearance persists
+asactualcandidatequality problem. No privatepatchselectedbeforeisolation.
+
+
+## Actual SSR-only versus water-only isolation
+
+RootSSR-only7364 andwater-only30204 terminalexit0/complete41/41/0skips each,
+explicitnative2FPS/same20s/pose/request/time12500 andfrozencompiledharness.
+All82actualNONE/noncollision/on-diskhashchecks passed. SSR-onlyframe10
+reproducesbroadbrightband; water-onlyframe10doesnot. Togetherwithalloffband
+absence andall-activebandpresence, SSR is sufficientforthisobservedartifact
+atthispose; this doesnot universallyclearwater/fog/cloud temporalquality.
+UUIDs8a59581b…/5eb3d15c… rawprofiles, manifests/logs retained. Lowratecontrols
+identifyappearance, notnative10FPS temporalacceptance.
+
+Privatequality/causalityprobe assignednew4files only: exactB15specmember
+independentdefault-off localSSR tier2→0 remap, preservingupstreamcaller/feature
+gates, originalcallerintersection/refinement budgets andexistingtrace/texture/
+projection/hit/fallback arguments. Near/mid/global-disable unchanged; rough
+ray-countLOD remainsB15 and mustnotbeclaimedrestored. Existingdownstream
+quality-dependentfog/sky uses needdocumentation. No shared/main/default edit
+or optimizationclaim; rootactualguardrender/movingquality stillpending.
