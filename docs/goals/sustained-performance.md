@@ -1979,3 +1979,26 @@ Log dev/logs/complementary-original-smoke-r1-runner.log; runner result root
 actual compile/link/render/options/artifact and retainedimage inspection; keep
 first failure before narrowly justified native fallback retry. Main/shared/
 originalowned design untouched, no remoteaction, fullgoal stillactive/unshrunk.
+
+
+## Complementary original rendered; native water cost pilot live
+
+exec90231 exit0, original HIGH accepted at native2976x1672/minimal/noDH/
+mainmodabsent. Actual Iris nofallback and option mapstyle1/RP1/water2/block3/
+detail2/cloud2/shadow192/coloredlighting0/worldreflection-1, detailed24/24.
+GPUmean14.0710/median14.0836/p9514.6663ms, FPS64.242, thread7.1419ms.
+Root inspected actual final PNG shoreline/trees/water/reflected objects/clouds/
+sunsetlighting. Uniform warning newbiome/End expressions retained; no claims
+for those dimensions/features/DH/motion/general support. Original archive intact.
+Raw dev/logs/complementary-original-smoke-r1 complete.
+
+Root prepared fresh equal stopped-save native controls at
+run-workloads/complementary-native-controls-r2/coastalwater. Root soleGPU
+LIVEexec38518 matrix3arms complementary-high/water-sky/water-potato, minimal/
+noDH/mainabsent, native2976x1672/35warm20capture/GPU1/16/wetness0,
+--skip-build --freeze-dev-classes, repeat1 (pilot only).
+Log dev/logs/complementary-native-water-pilot-r1-runner.log; results sameprefix
+folder. No otherclient/heavybuild/tests/encoder. Next actual three terminal
+contracts, costs, visual tradeoff before meaningful repeated/movingcamera work.
+Allworkers completed/frozen; shared main/config/helper ownership stillreserved.
+Fullgoalactive: ordinary15%, broadconfig/adapterquality/support remainunmet.

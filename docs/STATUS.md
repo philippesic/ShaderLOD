@@ -8,7 +8,7 @@ Photon performance, optional-stack evaluation, primary-source research and
 additional-pack rendering, quality and integration evidence. The ordinary ≥15%
 gate and broader configuration/support acceptance remain unmet.
 
-Latest checkpoints: `2950127` (pinned SSR controls), `057ed06` (negative SSR cost), `f7f30d6` (far SSR cost controls), `409734a` (reduced far trace),
+Latest checkpoints: `5be285e` (Complementary controls and SSR reverse), `2950127` (pinned SSR controls), `057ed06` (negative SSR cost), `f7f30d6` (far SSR cost controls), `409734a` (reduced far trace),
 `4dfcdfc` (bounded capture and full-trace diagnostic), `b9f4110` (SSR isolation).
 Main Java/config/uniform transport, shared helpers and existing Photon patches
 remain based on `8da8943` and reserved for the original chat. This performance
@@ -141,6 +141,7 @@ claimed from this chat’s pack diagnostics.
 
 
 Complementary original/native-water controls now have pinned preparation tooling;
-7 new and 19 prior matrix fixtures passed. Root prepared three unchanged-release
-profiles and launched original HIGH at native resolution/minimal/noDH. Actual
-compile/rendering remains pending; sources/defaults are not support evidence.
+7 new and 19 prior matrix fixtures passed. Original HIGH rendered at native resolution/minimal/noDH with no fallback:
+64.24 FPS and 14.07 ms GPU in one smoke, no gain claim. Iris new-biome/End
+uniform warnings retained. A fresh three-arm native reflection cost pilot is
+running; actual tradeoff/support/motion acceptance remains pending.

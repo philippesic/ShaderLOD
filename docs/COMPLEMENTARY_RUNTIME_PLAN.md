@@ -287,3 +287,31 @@ complementary-water-potato` with the same profiles root, minimal stack, DH absen
 and three repeats under another fresh tag. Keep source/compiled/GPU inputs frozen
 during captures. The worker stops here; compilation/rendering/performance and
 default-versus-reduced quality acceptance belong to root.
+
+
+## Root original runtime smoke
+
+Original HIGH completed: runner exec90231 exited0; matrix statuscomplete, sole
+case accepted. Unchanged release SHA256fed6c879...84b38, exact loaded artifacts,
+no main ShaderLOD/noDH, native2976x1672, detailed24/24, no Iris fallback.
+35s warmup/15s capture, GPU sparse1/16, artificial wetness0. Actual Iris option
+map confirmed style1/RP1/water2/block3/detail2/cloud2/shadowDistance192.0/
+coloredlighting0/worldreflection-1. Compile/link and visible Overworld rendering
+succeeded without speculative feature reductions or source edits.
+
+Root final capture shows shoreline terrain, tree/terrain reflections, water,
+block clouds and sunset lighting; image display was resized, not pixel-parity
+QA. First-person sun-glint pose same x500.5/y68/z660.5/87.38/3.735/day12500.
+GPU mean14.0710ms/median14.0836/p9514.6663, FPS64.242, render-thread7.1419ms.
+Single smoke establishes no gain, motion quality, adapter or general support.
+
+Iris warnings remain: unresolved BIOME_PALE_GARDEN/inPaleGarden,
+BIOME_SULFUR_CAVES/inSulfurCaves and endFlashIntensity/endFlashFactor0.
+They did not trigger fallback in this Overworld scene. New-biome/End behavior
+remains unverified; do not erase the warnings or claim full dimension coverage.
+Mac preprocessing/optional sampler allocation were not separately dumped here.
+
+Raw dev/logs/complementary-original-smoke-r1 contains exact matrix/inputs/
+artifacts/options/summary/console/final PNG. Root prepared a second fresh set
+from the same stopped original source for native water controls; those costs
+and images remain pending. License remains unchanged; no derivative produced.
