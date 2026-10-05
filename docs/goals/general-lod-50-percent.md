@@ -667,3 +667,37 @@ samplers, then native water/glint/near/far stills. Exact handles go in runtime
 queue. Stop at terminal audit and formal GPU return; no secondlaunch or timing.
 Source work continues during this untimed diagnostic. Repeated quiet fullscreen
 and quality/compatibility acceptance remain outstanding;50%goal staysactive.
+
+### Procedural driver rejection; independent repairs continue
+
+Procedural preparation61151 passed; watcher8692/PID5994 armed before launcher8612/
+PID5996, requestd6b4ba77-e2f7-4141-bb39-331c1ec10894. Exact source3octaves/
+parallax/waves/displacement confirmed. Launcher exited1 on actual Iris
+TransformPatcher failure for terrain_translucent: ParseCancellationException
+line14969:77 missingRPAREN at'{'. shadersInUse=false/fallback=true. Watcher exited0,
+all clients stopped and class/resources unchanged. Raw failure stays in
+dev/logs/parallel-procedural-qa-r1. No connection/sampler/quality proof can be
+derived from vanilla fallback; no second launch. Existing source tests did not
+cover this full transformer parse. Procedural and combined runtime batches must
+wait for corrected source, new pins and driver retry.
+
+Root created attached isolated procedural-parser-repair worktree at24f4d3d and
+assigned procedural_parser_repair the procedural sources/manifest/builder/tests/
+report there. Reproduce oldfailure using actual pinned fullparser, repair syntax
+without changing math, and return fresh pins/commit; no MAIN edits/client.
+Existing procedural owner continues NEW common normal-error-budget work.
+
+Lighting independent review found representative2x2 AO eligibility misses outer
+neighbors used by other tile members' reconstruction. lod_quality now owns ONLY
+lighting prepass/manifest/existing shaderfixture for a bounded full-union guard
+repair and fresh pins. Lighting profile owner continues separate NEW preparer/
+fixtures/report and waits for new pins before final qualification. Driver launch
+is deferred until known quality gap is fixed; old713/d41 remain historical freeze.
+
+Reflection source audit found expensive early-stop proof saves no extra depth
+fetches beyond cache-only continuation. It can save refinement arithmetic, but
+cost is unmeasured. Root created attached reflection-guard-cost worktree at24f4d3d;
+reflection owner implements cheap necessary gates/reused extent/homogeneous
+displacement bound with finite/pole/float32 fixtures, preserving MAIN freeze.
+Review in REFLECTION_LOD_COST_REVIEW.md. No gain inferred from source operation
+counts. Benchmark preparation continues with explicit driver rejection noted.

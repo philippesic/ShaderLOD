@@ -272,3 +272,14 @@ the capture method; CPU load/clocks remain plausible unisolated influences, not 
 confirmed cause or a user mistake. Future performance summaries must name the
 candidate and comparator and separate elapsed GPU time from FPS. Dedicated quiet
 measurements should match the requested fullscreen mode and use balanced repeats.
+
+## Check each effect's protection flag before preparing controls
+
+Root initially told the lighting-profile worker that OpaqueLighting ADAPTIVE
+controls required disabling preserveSalientLighting. Independent `lod_quality`
+inspection found OPAQUE_LIGHTING is declared with salientLighting=false, so the
+producer's normalization does not cap this effect. Root corrected the assignment:
+retain protection=true, explicitly request the lighting ratios, and distinguish
+requested settings from actual transport. AO/shadow designated salient effects
+retain their protection. This was an agent assumption corrected by source review,
+not a user error; it does not establish runtime lighting consumption.

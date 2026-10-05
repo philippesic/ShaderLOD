@@ -42,7 +42,10 @@ eight source/parser/math/assembly fixtures pass. Driver checks remain pending.
 `lod_quality` independently reviews pass and transport correctness.
 `procedural_lod` develops a reusable normal-error bound; `reflection_lod` audits
 refinement guard cost; `performance_audit` implements matched fullscreen batches.
-`ao_runtime` has sole GPU ownership for one untimed procedural-r2 coastal smoke.
+Procedural-r2's first coastal smoke failed Iris TransformPatcher parsing and
+fell back; no water driver/quality/performance acceptance. An isolated
+`procedural_parser_repair` worker repairs source and adds actual parser coverage.
+`ao_runtime` is finishing the failure audit, with all owned clients stopped.
 Reflection and volumetric packs compiled/rendered without fallback. Volume actual
 readback proves effect2/mode2/bands512/1536/128/ratios.85/.75. Their inspected stills
 show no gross failures, but motion/parity/physical work and performance remain
