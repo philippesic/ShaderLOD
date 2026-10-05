@@ -8,7 +8,7 @@
     {
       "name": "reflection",
       "manifest_path": "patches/photon-experiments/reflection-lod.json",
-      "manifest_sha256": "0c20609c50ee65d98ec803eb96294a0d727bff82d81a6634abb1504518d89e1a",
+      "manifest_sha256": "0c0905612ddacf358b92c2d112bb17f2d107de224551d418a6a67c8529ccf4ec",
       "builder_path": "scripts/build_photon_reflection_lod.py",
       "builder_sha256": "4236196227ad615a6ba41521bb8d617f42a03ce9a7a0f2b7c5dffad4a2b239d8",
       "switch": "SHADERLOD_REFLECTION_DEPTH_CACHE"
@@ -16,7 +16,7 @@
     {
       "name": "procedural",
       "manifest_path": "patches/photon-experiments/procedural-lod.json",
-      "manifest_sha256": "5849bc24c84f98b42a4ad7a85b013cdab6bb229a3f8c2d8e8c48d6097cd9e687",
+      "manifest_sha256": "b529fdb01aabef5670128e04a25224bfd4368c2a63641214023c352099d100e2",
       "builder_path": "scripts/build_photon_procedural_lod.py",
       "builder_sha256": "44c0b8f395d02428cc3bf54574f03e915b30dd67615a0e8107f06fc56003a6dd",
       "switch": "SHADERLOD_PROCEDURAL_FOOTPRINT"
@@ -43,8 +43,8 @@
     "shaders/include/shaderlod/photon_volume_adapter.glsl": "1a43641b71a7da67abed86aa9f5ad8c5489f3c546c002faf602c0fa91efcf7f1",
     "shaders/include/shaderlod/procedural_footprint.glsl": "4c5bd082702dcb2447e40a2e59753cbcd9a15a252a857b6821de36a8d0755e4d",
     "shaders/include/shaderlod/procedural_parallax.glsl": "e5d5f85afde015ab68256aa3a0976fe9028fbab96d12bf457c63eb35ef26e009",
-    "shaders/include/shaderlod/procedural_water.glsl": "7377d0a84743bbc72c55cc6cb95ced5f429ec17cdf11b12e7eb309030d70048a",
-    "shaders/include/shaderlod/reflection_depth_cache.glsl": "d485ee0ac883636ab3cb03962176c003b52d5c64cf77c74a1187d04a0f7b46a8",
+    "shaders/include/shaderlod/procedural_water.glsl": "49ed8b4b7522c700a007cec737b37b08e10cb3e8790beef6bdaf72d5531f95dc",
+    "shaders/include/shaderlod/reflection_depth_cache.glsl": "01e19f3a72b39322dcf9501d206cdc54dd3ac5bf0f77ad4322078aa2c7030e3c",
     "shaders/include/shaderlod/volume_budget.glsl": "ac1d7984264ffa6dfe5f525663cee69499511d15769d1f56d5497d491d9a8a84",
     "shaders/include/sky/clouds/cumulus.glsl": "5290d3c0c56693608c6cfe8efec831b67023334729d4f549b3551f430603d8e2",
     "shaders/program/gbuffers_all_translucent.fsh": "ddaa1f119d497c6b5bda24d43ba9a57f9fae6f8285517f4fc7e953796e813625",

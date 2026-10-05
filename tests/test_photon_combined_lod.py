@@ -3,10 +3,12 @@
 C preprocessing is source evidence, not GLSL driver compilation or GPU evidence.
 """
 import copy
+import io
 import itertools
 import json
 import os
 from pathlib import Path
+import posixpath
 import re
 import shutil
 import subprocess
@@ -123,6 +125,60 @@ class CombinedLexer {
         }
         System.out.println("exact original boolean/string union plus three gates; all helpers included; independent overrides");
     }
+}
+'''
+
+
+GRAMMAR = r'''
+import java.nio.file.*;
+import java.util.*;
+import net.irisshaders.iris.shaderpack.option.*;
+import net.irisshaders.iris.shaderpack.option.values.MutableOptionValues;
+import net.irisshaders.iris.shaderpack.include.AbsolutePackPath;
+import net.irisshaders.iris.shaderpack.preprocessor.JcppProcessor;
+import net.irisshaders.iris.helpers.StringPair;
+import io.github.douira.glsl_transformer.parser.EnhancedParser;
+import org.antlr.v4.runtime.misc.ParseCancellationException;
+class CombinedGlslProof {
+ static final String[] GATES={"SHADERLOD_REFLECTION_DEPTH_CACHE",
+   "SHADERLOD_PROCEDURAL_FOOTPRINT","SHADERLOD_VOLUMETRIC_INTEGRATION_LOD"};
+ static String prepare(Path file,String gates,boolean parallax) throws Exception {
+  var annotated=new OptionAnnotatedSource(Files.readString(file));
+  var options=annotated.getOptionSet(AbsolutePackPath.fromAbsolutePath("/source.fsh"),
+    annotated.getBooleanDefineReferences().keySet());
+  var overrides=new HashMap<String,String>();
+  for(String name:List.of("BORDER_FOG","CLOUD_SHADOWS","SHADOW_COLOR","SHADOW_VPS","SH_SKYLIGHT"))
+    overrides.put(name,"false");
+  for(int i=0;i<GATES.length;i++)overrides.put(GATES[i],Boolean.toString(gates.charAt(i)=='1'));
+  overrides.put("WATER_PARALLAX",Boolean.toString(parallax));
+  String selected=annotated.apply(new MutableOptionValues(options,overrides));
+  return JcppProcessor.glslPreprocessSource(selected,List.of(
+    new StringPair("MC_VERSION","12101"),new StringPair("MC_GL_VERSION","410"),
+    new StringPair("MC_GLSL_VERSION","410"),new StringPair("IS_IRIS","1")));
+ }
+ static void parse(String source) {
+  var parser=new EnhancedParser();parser.setThrowParseErrors(true);parser.parse(source);
+ }
+ public static void main(String[] args) throws Exception {
+  Path folder=Path.of(args[0]);int passes=0,regressions=0;
+  for(String row:Files.readAllLines(folder.resolve("cases.list"))) {
+   String[] fields=row.split("\\t");
+   String prepared=prepare(folder.resolve(fields[0]),fields[1],Boolean.parseBoolean(fields[2]));
+   if(fields[3].equals("broken")) {
+    try {parse(prepared);throw new AssertionError("old malformed helper parsed: "+row);}
+    catch(ParseCancellationException e) {
+     if(!e.getMessage().contains("missing RPAREN at '{'"))
+      throw new AssertionError("unexpected old-helper error "+row+": "+e.getMessage(),e);
+     regressions++;
+    }
+   } else {
+    try {parse(prepared);}catch(Throwable e){throw new AssertionError("failed "+row,e);}
+    passes++;
+   }
+  }
+  if(passes!=411||regressions!=3)throw new AssertionError("unexpected counts "+passes+"/"+regressions);
+  System.out.println("411 complete original/combined graphs parsed; all8 subsets; parallax on/off; 3 old malformed-helper failures reproduced");
+ }
 }
 '''
 
@@ -259,6 +315,92 @@ class CombinedTests(unittest.TestCase):
             result = subprocess.run(command, capture_output=True, text=True, timeout=30)
             self.assertEqual(0, result.returncode, result.stdout+result.stderr)
             self.assertIn('all helpers included; independent overrides', result.stdout)
+
+    def test_actual_iris_jcpp_full_glsl_grammar_all_affected_graphs_and_eight_switch_subsets(self):
+        """Pinned real grammar catches syntax that option/C token checks cannot.
+
+        Includes all three dimensions and every literal graph reaching a patched
+        program member. This does not execute TransformPatcher or a GL compiler.
+        """
+        scope = {c.reflection.SPECULAR, c.procedural.PROGRAM, c.volumetric.CUMULUS}
+
+        def dependencies(files, name, seen=None):
+            seen = set() if seen is None else seen
+            if name in seen: return seen
+            seen.add(name)
+            for target in re.findall(r'^\s*#include\s+"([^"]+)"', files[name].decode(), re.M):
+                child = ('shaders/' + target.lstrip('/') if target.startswith('/') else
+                         posixpath.normpath(posixpath.join(posixpath.dirname(name), target)))
+                self.assertIn(child, files)
+                dependencies(files, child, seen)
+            return seen
+
+        def expand(files, name, stack=()):
+            self.assertNotIn(name, stack, 'Cyclic literal include')
+            def include(match):
+                target = match.group(1)
+                child = ('shaders/' + target.lstrip('/') if target.startswith('/') else
+                         posixpath.normpath(posixpath.join(posixpath.dirname(name), target)))
+                return expand(files, child, stack+(name,))
+            return re.sub(r'^\s*#include\s+"([^"]+)"[^\n]*', include, files[name].decode(), flags=re.M)
+
+        entries = sorted(n for n in self.original if
+                         re.fullmatch(r'shaders/world[01-]+/[^/]+\.(?:fsh|vsh)', n)
+                         and dependencies(self.original, n) & scope)
+        self.assertEqual(43, len(entries))
+        self.assertEqual({'world0', 'world-1', 'world1'}, {n.split('/')[1] for n in entries})
+        self.assertFalse(any(n.endswith('/composite3.fsh') for n in entries))
+        helper = 'shaders/include/shaderlod/procedural_water.glsl'
+        fixed, broken = b'any(isinf(dy))) {', b'any(isinf(dy)) {'
+        self.assertEqual(1, self.disabled[helper].count(fixed))
+        regression = self.disabled | {helper: self.disabled[helper].replace(fixed, broken, 1)}
+        pin = self.pm['glsl_parser_regression']
+        iris_pin = self.pm['iris_option_discovery']
+        iris = ROOT / iris_pin['jar_path']
+        self.assertEqual(iris_pin['jar_sha256'], c.sha256(iris.read_bytes()))
+        deps = []
+        cache = Path.home()/'.gradle/caches/modules-2/files-2.1'
+        for pattern in ('com.google.guava/guava/32.1.2-jre/*/guava-32.1.2-jre.jar',
+                        'it.unimi.dsi/fastutil/8.5.12/*/fastutil-8.5.12.jar',
+                        'org.slf4j/slf4j-api/2.0.9/*/slf4j-api-2.0.9.jar',
+                        'org.antlr/antlr4-runtime/4.13.1/*/antlr4-runtime-4.13.1.jar'):
+            matches = list(cache.glob(pattern)); self.assertEqual(1, len(matches)); deps.extend(matches)
+        self.assertEqual(pin['antlr_sha256'], c.sha256(deps[-1].read_bytes()))
+        with tempfile.TemporaryDirectory(prefix='shaderlod-combined-glsl-') as temporary:
+            folder = Path(temporary); embedded = []
+            with zipfile.ZipFile(iris) as archive:
+                for name in ('glsl-transformer-2.0.1.jar', 'jcpp-1.4.14.jar'):
+                    data = archive.read('META-INF/jarjar/'+name)
+                    if name == 'glsl-transformer-2.0.1.jar':
+                        self.assertEqual(pin['transformer_sha256'], c.sha256(data))
+                        with zipfile.ZipFile(io.BytesIO(data)) as transformer:
+                            self.assertEqual(pin['class_sha256'], c.sha256(transformer.read(pin['class_path'])))
+                    path = folder/name; path.write_bytes(data); embedded.append(path)
+            rows = []
+            for index, name in enumerate(entries):
+                filename = f'{index}-original.fsh'
+                (folder/filename).write_text(expand(self.original, name))
+                rows.append('\t'.join((filename, '000', 'true', 'good')))
+                filename = f'{index}-combined.fsh'
+                (folder/filename).write_text(expand(self.disabled, name))
+                for bits in itertools.product('01', repeat=3):
+                    gates = ''.join(bits)
+                    rows.append('\t'.join((filename, gates, 'true', 'good')))
+                    if name.endswith('/gbuffers_water.fsh'):
+                        rows.append('\t'.join((filename, gates, 'false', 'good')))
+                if name.endswith('/gbuffers_water.fsh'):
+                    filename = f'{index}-broken.fsh'
+                    (folder/filename).write_text(expand(regression, name))
+                    rows.append('\t'.join((filename, '010', 'true', 'broken')))
+            self.assertEqual(414, len(rows))
+            (folder/'cases.list').write_text('\n'.join(rows)+'\n')
+            source = folder/'CombinedGlslProof.java'; source.write_text(GRAMMAR)
+            command = ['java', '-Xmx1G', '--class-path', os.pathsep.join(map(str, (iris, *deps, *embedded))),
+                       str(source), str(folder)]
+            result = subprocess.run(command, capture_output=True, text=True, timeout=120)
+            self.assertEqual(0, result.returncode, result.stdout+result.stderr)
+            self.assertIn('411 complete original/combined graphs parsed; all8 subsets; parallax on/off; 3 old malformed-helper failures reproduced', result.stdout)
+            print(result.stdout.strip())
 
 
 if __name__ == '__main__': unittest.main()

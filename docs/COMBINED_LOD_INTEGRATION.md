@@ -72,7 +72,7 @@ with repeated total-frame and GPU intervals, actual artifact/scene/option/config
 fingerprints, and query-free corroboration. A source freeze does not meet the 50%
 throughput goal.
 
-## Frozen artifact evidence
+## Historical r1 artifact evidence (superseded)
 
 Procedural r2 source freeze replaces the original helper include guards with
 equivalent `#if !defined` guards. The combined assembler takes this corrected
@@ -100,9 +100,9 @@ are identical, and each gate overrides independently. Iris may add another `//`
 when writing an already-disabled define; the fixture verifies disabled semantics
 without assuming identical comment spelling.
 
-All eight final private archives are assembled deterministically under ignored
-`build/`. `build/combined-lod-artifacts.json` retains exact paths/archive/member
-hashes; `combined-lod.json` keeps maintained member/helper pins in Git.
+These eight r1 private archives, their artifact ledger and their test log are
+retained under ignored `build/photon-combined-lod-r1/`. The hashes below describe
+that historical freeze. They are superseded by the corrected freeze below.
 
 | Enabled tracks (suffix after `Photon-CombinedLOD-`) | Archive SHA256 |
 | --- | --- |
@@ -119,3 +119,88 @@ Shared generated header SHA256:
 `2af74bf4e5c69df359ae1fb14acd5415bcf885cd25481641abb47671d3c4f186`.
 All source hashes are assembly evidence; combined runtime compilation, linkage,
 quality, motion, reload, DH compatibility and measured performance remain pending.
+
+## Corrected combined r2 freeze
+
+The r1 source and hashes above are superseded. The actual standalone procedural
+r2 client rejected a missing parenthesis in `procedural_water.glsl` under Iris's
+GLSL transformer, falling back to vanilla rendering. That rejection is retained
+in `dev/logs/parallel-procedural-qa-r1` and `PARALLEL_LOD_RUNTIME_QUEUE.md`.
+The previous option lexer and C-preprocessor checks did not validate full GLSL
+grammar. No driver acceptance follows from those historical checks.
+
+Root integrated procedural repair commit `6eb12b1975e3b9ef8d7c61cdf009df868a4f5144`
+and reflection guard repair commit `8c27393`. This combined freeze takes both
+approved source revisions. Procedural adds exactly the missing parenthesis without
+changing arithmetic. Reflection reduces guard overhead while preserving its
+bounded refinement contract. Volumetric sources are unchanged; lighting remains
+excluded. Prior reflection/volume driver observations apply to their exact older
+archives; they do not establish compilation of this combined archive or the
+revised reflection helper.
+
+Eight fixtures passed with zero failures/errors/skips in 82.515 seconds:
+
+```sh
+python3 -m unittest discover -s tests -p 'test_photon_combined_lod.py' -v
+```
+
+Log: ignored `build/combined-tests-r2.log`. All previous complete-inventory,
+literal-off, deterministic combination, actual option-lexer and exhaustive C token
+parity checks passed again. The new fixture expands each complete literal include
+graph, applies options with actual Iris `OptionAnnotatedSource`, preprocesses using
+actual `JcppProcessor`, and parses using the pinned `EnhancedParser` with thrown
+parse errors enabled. It covers all 43 entrypoints reaching any of the three changed
+program members across Overworld, Nether and End: 43 original graphs, 344 combined
+graphs for all eight independent feature subsets and 24 additional water graphs
+with parallax off. All 411 complete parses succeed. Three deliberately restored
+old malformed-helper cases reproduce `missing RPAREN at '{'`. The separate three
+unchanged dormant TAAU preprocessing errors remain explicitly asserted.
+
+The grammar fixture uses the held coastal options with BORDER_FOG, CLOUD_SHADOWS,
+SHADOW_COLOR, SHADOW_VPS and SH_SKYLIGHT false; MC_VERSION=12101, MC_GL_VERSION=410,
+MC_GLSL_VERSION=410 and IS_IRIS=1. It verifies the pinned Iris archive and the embedded
+glsl-transformer 2.0.1 archive/class plus ANTLR 4.13.1 hashes in the corrected
+procedural manifest. This is full grammar acceptance for those source routes,
+not execution of `TransformPatcher`, GL shader compilation, linked controls or
+rendering. No client/GPU process was started by this integration worker.
+
+Current combined manifest SHA256:
+`dcbb31d5878387bd00bdb048703be9b6c22539b30844ee8054dcc455a533cf19`.
+Combined builder is unchanged:
+`95dd7512646a141997ba9178a89c579d7e75fca0bdb20a47af82908d8050d538`.
+Fixture SHA256:
+`bee3f7f4fde187425a56de398f6a75d90e6caeb24aa0355cb2c2a413e1de7edd`.
+Track manifest pins are reflection
+`0c0905612ddacf358b92c2d112bb17f2d107de224551d418a6a67c8529ccf4ec`,
+procedural `b529fdb01aabef5670128e04a25224bfd4368c2a63641214023c352099d100e2`,
+and unchanged volumetric
+`08e1611a77a2f6d6364b91eda692ea2e300b1c3c2891c87d7abd6ecec98def9b`.
+
+The changed copied helper pins are reflection
+`01e19f3a72b39322dcf9501d206cdc54dd3ac5bf0f77ad4322078aa2c7030e3c`
+and procedural water
+`49ed8b4b7522c700a007cec737b37b08e10cb3e8790beef6bdaf72d5531f95dc`.
+All other combined member/helper/license pins remain those in the maintained
+manifest. Original LICENSE bytes/hash and generated shared core header are unchanged.
+
+Final archives live at `build/Photon-CombinedLOD-<suffix>.zip`. The ignored
+`build/combined-lod-artifacts-r2.json` and current `build/combined-lod-artifacts.json`
+retain every archive hash, member/helper digest and full canonical metadata object
+for downstream independent qualification. Archive metadata remains structurally
+identical to r1; manifest/source hashes change and all runtime claims remain
+`unverified`/`unmeasured`. The previous r1 archives/ledger/log are preserved separately.
+
+| Suffix | Corrected archive SHA256 |
+| --- | --- |
+| disabled | 87e12ac10401cf59c36d76eaabd1b7fdb9b8dc66365dfebdcfa2c7e7a329e41a |
+| reflection | e1c8ccf781b23aa737e31d04dd5b50e11a66b62f6b55c6b3a664efee3aee2437 |
+| procedural | 00caf32e515cfde057cbd076cdb57a6d43650571cb18d8b9945e408bfc6788db |
+| volumetric | 2b40c617439f6209d827a06f03a984deb9454fea549f3fe51046f86ec4493fa4 |
+| reflection-procedural | fc27f968b53c9e8ecaa29dc92e4a95be61dd3b5733332e3691df2164c1abaac6 |
+| reflection-volumetric | 4b1e263da43a5cfe2bd754d7cc75b47d4bddd10c3280aab05a08728ed953a76b |
+| procedural-volumetric | 8ffd853c0fa92c6e15715c41527edc422e5b926556c81d04b6e24e41168347d1 |
+| reflection-procedural-volumetric | 3a482b05827a68eaeb3df95b60c4fd76a7c5feb230c0f5bc0e0d6aebfedc2884 |
+
+Runtime operator must retry actual driver compilation and inspect interactions,
+linked controls, sampler state, quality, motion/reload and DH/noDH compatibility
+before any quiet fullscreen timing or performance claim. The 50% goal is unchanged.
