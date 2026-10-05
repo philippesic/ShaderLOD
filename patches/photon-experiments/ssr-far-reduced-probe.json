@@ -1,0 +1,58 @@
+{
+  "schema": 1,
+  "experiment": "photon-ssr-far-reduced-trace-probe",
+  "base_version": "v1.3b",
+  "baseline": "B15 protected-lighting/no-atmosphere",
+  "base_sha256": "b15d3c50f192e0e3de8e912afba2cc531e7d0520e3cbe573a7e35b993528e16c",
+  "license_sha256": "514402d18eedb0afe374344ca9f0fe87b7399779518184b8fc64e31674555fc5",
+  "baseline_metadata_sha256": "5653a52f590ce10cd75fbaff24f1ed053e49564ade7b4c79bb2747f69feed084",
+  "switch": "PHOTON_SSR_FAR_REDUCED_TRACE_PROBE",
+  "option_declaration": "// ShaderLOD private reduced far SSR probe; default off.\n//#define PHOTON_SSR_FAR_REDUCED_TRACE_PROBE\n",
+  "members": [
+    {
+      "path": "shaders/include/lighting/specular_lighting.glsl",
+      "source_sha256": "6a4a8c53675f7287cf28168913f3e3e2b7ce9bd9d2fb5755548a27927ee4d92d",
+      "patched_sha256": "6db453ffc732600265d642d3fd4b7ff9a2c34fda66ec64010ec9f9e24afa471a",
+      "replacements": [
+        {
+          "before": "    int quality = shaderlod_ssr_tier(length(view_pos), dither);\n",
+          "after": "    int quality = shaderlod_ssr_tier(length(view_pos), dither);\n#ifdef PHOTON_SSR_FAR_REDUCED_TRACE_PROBE\n    // Private quality/cost probe: keep far tracing at existing tier-1 budgets.\n    // Preserve caller/environment eligibility and all ray/sampling source.\n    if (quality == 2) quality = 1;\n#endif // PHOTON_SSR_FAR_REDUCED_TRACE_PROBE\n"
+        }
+      ]
+    },
+    {
+      "path": "shaders/settings.glsl",
+      "source_sha256": "d1f571e5d96ecffdf7ebcfcf28a13d34dc5bfd5c3606702e06832f95f88aa3cd",
+      "patched_sha256": "0f4099b0cf7bd4f24494f12cbeb89c1bde891d5e3f58921a8154e9ab789e04b2",
+      "enabled_sha256": "a61e7f1c13a78fd3c6eb9ce72d9aec079b707b14c1ae2c3fb6251aa072de7299",
+      "replacements": [
+        {
+          "before": "#define SETTINGS_INCLUDED\n",
+          "after": "#define SETTINGS_INCLUDED\n// ShaderLOD private reduced far SSR probe; default off.\n//#define PHOTON_SSR_FAR_REDUCED_TRACE_PROBE\n"
+        }
+      ]
+    }
+  ],
+  "policy": {
+    "eligible_trace_tier": 2,
+    "private_local_tier": 1,
+    "caller_eligibility": "unchanged; no do_ssr variable in exact B15",
+    "environment_guard": "ENVIRONMENT_REFLECTIONS unchanged",
+    "intersection_budget": "existing tier1 selected cap of upstream caller argument",
+    "refinement_budget": "existing min(upstream caller refinement,2u)",
+    "rough_ray_count": "B15 LOD unchanged",
+    "original_option_counts": {
+      "smooth_intersection": 16,
+      "rough_intersection": 8,
+      "refinement": 4
+    },
+    "performance_selected_counts": {
+      "smooth_intersection": 8,
+      "rough_intersection": 4,
+      "refinement": 2
+    },
+    "purpose": "Private far-trace quality/cost experiment; band repair and GPU benefit unproven; zero default change",
+    "ray_context": "Raytracer source/jitter input/projection/tolerance formula untouched, but selected counts alter spacing/start/tolerance and possible hits; no sample/extent/physical-ALU equivalence claim",
+    "sampling_scope": "No new texture call/form or enclosing sampling branch. Existing hit-dependent implicit fog and non-Overworld sky sampling remain; no universal derivative or pixel parity claim."
+  }
+}
