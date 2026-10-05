@@ -314,3 +314,21 @@ Sequence d66ac242-6f0e-4292-af0f-973c37d2a131, rawlog/manifest
 `dev/logs/photon-targeted-glint-original-r2` withsourcePNGs underprofile.
 Matchedglobaloff/on on sameimmutable request stillneeded. Underwater route
 prepared butnotexecuted; thirdpersonremainsunsupportedbycurrentharness.
+
+
+MatchedPhotonoriginal/off/on targetedglint sequences completed201frameseach,
+all603expectedNONE/non-fullcollision andPNGhashchecks passed. Enabledframe50
+hasbroadbrightdistantwaterband absentoriginal/off; capturedglintqualityproblem,
+not acceptedappearance or demonstratedcause. Sourceaudit flags overlapping
+farSSR skyfallback andwaternormal/parallax bands; separateoption-only controls
+are beingrendered. Directsunhighlight sourceunchanged, whichalonecannotprove
+unchangedglintappearance aftercomposition.
+
+Originalunderwater43689 exit0 butincompletecapture176written/25writerbackpressure
+atnative2976×1672/10FPS. All176writtenframes actualWATER/nonfullcollision and
+hashes verified; frame100 underwater Snell-window/water sceneinspected. This
+establishes sampledmedium/path, not201-slot orfulltemporalquality acceptance.
+Medianwrite30.54ms/max68.50ms, renderframes794; no driver/throughputcause asserted.
+Raw17a196a9…sequence retained. Next explicitlylabelledstandard1488×83610FPS
+retry, sameposition/requestcontract, beforematchedunderwater candidatearms.
+Nativeincomplete data are not silentlyresampled or replaced.
