@@ -667,3 +667,142 @@ It mustnot launch/compile or touch currentsource sets. Root integrates onlyafter
 review and currentGPUterminal; smooth owned-player travel and PNGsequence are
 unmeasured quality evidence, never speedup samples. Mainprotocol stilloriginal
 chat owned; freshroot build.gradle change only benchmarkwindow propertymapping.
+
+
+Source/evidence checkpoint committedfc94094. No push/publication. Unrelated
+SHADOW_VISIBILITY_CACHE_DESIGN.md remainsunstaged underoriginalownership.
+Nativepilot92027 stilllive after firstoriginalcapture: actual2976×1672,
+61.49FPS, GPUmean15.090ms, CPUthread9.084ms/wall16.239ms. This is a separate
+moreGPUlimited resolution arm; not performanceacceptance and not compared to
+scale1 for aLODgain. Continue same-resolution off/active before any inference.
+
+
+### Native pilot terminal and next action
+
+92027 exit0/all3complete; actual2976×1672. Original/off/active61.49/61.19/49.96FPS,
+GPU15.090/15.211/19.146ms, CPUthread9.084/9.163/9.261ms. ActiveGPU regressed while
+thread time nearlyheld. PHOTON_NATIVE_RESOLUTION.md retains failure and exact
+limits. No gate/defaultpromotion. Nextsafeaction is native-resolution effect
+isolation original/off/alloff/cloudonly/wateronly/fogonly/ssr/material, followed
+by repeat/sourceforensics on suspectedcause. Do not presume dynamicloops are
+responsible, or add a sourcefix before this qualification. No client is live
+at this terminal checkpoint; root retains soleGPUlease. Cameraquality source
+is outsideGradle and underworker review; integrate only after freeze/review.
+
+
+LIVE exec26695 native Photon effectisolation: same B15archivehash and upstream
+settings, nine serialarmsoneblock (original/globaloff/alloff/fiveisolatedeffects/
+allactive), minimal/DHpresent, nativewindowScale2,40swarm20scapture,GPU1/16,
+fixedwetness0. Rawdev/logs/photon-native-effects-r1, prepared source copies at
+run-workloads/native-effect-isolation. Runner/classes frozen; nootherclient/
+heavybuild. Rootownssource/evidence; effectpreparer nowselectsexact named frozen
+B15via--effect-archive lighting-tier-no-atmosphere, preservinghashguards.
+Foureffectfixturespassed; no source/shaderalgorithm change.
+Cameraquality worker remainsoutsideclasspath pendingreview.
+
+
+## Native sweep terminal; within-JVM effects repeats
+
+26695exit0/allnine; source sweep no proven culprit. Same-JVM effects50296
+exit0/complete accepted strictanalysis: OFF/ON/OFF/ON60.17/65.15/61.41/64.90FPS;
+GPU15.580/14.177/15.318/14.267ms (9.00/6.86% reductions). Retained butqualified
+for inherited automatic screenshot withinphase2, corrected before cleanrepeat.
+PHOTON_NATIVE_RESOLUTION.md preserves mixedcross-JVM and positivecorrelateddata;
+no15%gate or qualitypromotion.
+
+Camera+effects mode build52685 passed; productionJar excludes all devclasses.
+Camera standalone pinned21.1.253 compilealso passed after correcting missing
+classpath input in its first compilercommand; realmotion stillunverified.
+Camera source integrated onlyin devClient; mainprotocol untouched.
+
+LIVE reverse effects exec1395; log
+dev/logs/photon-native-effects-inprocess-reverse-r2.log. Samepack/world/pipeline
+and immutablefiveflags; ON/OFF/ON/OFF, noautomatic shots, native/minimal/DH,
+40swarm10ssettle20scapture,GPU1/16,fixedwetness0. Rootowns soleGPU. Next terminal
+analyze/preserve, forwardcleanrepeat, then actualCameraQuality smoke/sequence.
+
+
+Native camera/effects integration source nowcompiles. Mainconfig/transport and
+existing shaderhelpers/patches remain protocol-owned and untouched. Root's
+camera code is transferred into devClient and hashes actual loaded jars/class
+directory inputs, with world/pipeline reference guards. Only unmeasuredmotion
+quality will use it; first runtime smoke remains next after cleanphasecontrols.
+
+
+Clean reverse1395 terminalexit0/strictanalysisaccepted: ON/OFF/ON/OFF
+66.46/60.84/65.40/61.68FPS; GPU13.789/15.566/13.981/14.873ms.
+AdjacentGPUreductions11.42/5.99%, frame8.45/5.69%. Noautomaticlandscape shots.
+Report/imagehashes and exactloadedclass/jar/config/options checked; raw
+dev/logs/photon-native-effects-inprocess-reverse-r2-benchmark.json plusanalysis.
+This supports a native-resolution effect signal but not15%/second-workload or
+independentrunacceptance. Keepcross-JVM lossesandfirstqualifiedcontrolretained.
+
+Cleanforward exec62833 terminalexit0; logdev/logs/photon-native-effects-inprocess-forward-r3.log,
+sameimmutablepack/profile/world andOFF/ON/OFF/ON. No sourcebuild/edit used by
+client untilterminal. Nextpreserve/analyze thenCameraQuality originalsmoke2FPS/
+20secondmotion asunmeasuredquality; sourceJSON alreadyprepared at
+run-workloads/makeup-takeover/shoreline-motion-smoke.json.
+
+
+Cleanforward62833 strictanalysis/imagesaccepted: OFF/ON/OFF/ON61.76/66.48/
+61.83/66.29FPS; GPU14.988/13.753/14.907/13.714ms. AdjacentGPU8.24/8.01%,
+frame7.11/6.72%. Two clean correlatedsessions support effectsignal, not15%gate.
+
+CameraOriginal12937 exit0/all41imagescomplete; exactactualtrajectory/hashes
+verified, noHUD/perfgain claim. RootroutewrongdirectionintoTerrain: see
+CAMERA_QUALITY_HARNESS.md. LIVE activecamerasmoke exec72018 uses sameimmutable
+r1 path (preservecomparison), logdev/logs/makeup-camera-active-smoke-r1.log.
+NoGPUtiming/performanceclaims. Correctedr2waterpath separatelyprepared; do not
+mutateactive requestfile. Afterterminal runmatched original/off/on corrected
+path, inspect quality and prove shaderdistance behavior before promotion.
+
+
+### Existing-core adapter exploration
+
+Read-only threadstatus confirmed original protocol owner is idle afterhandoff,
+with files stillreserved; no message sent/no ownership taken. Main transport
+CommonUniformsMixin unconditionally registers existing protocol2 scalaruniforms.
+Fresh MakeUp worker now owns only new isolated bridgeprobe builder/manifest/
+sourcefixtures/doc/optionaloverlay, consuming those exact corefields without
+editing main or shared helpers. Defaultoff, explicitshaderopt-in, packfallback
+for absent/unknownprotocol, originalglobal-off path, radial near/far mapping and
+separate water diagnosticcolorcue. This is exploratory root-owned adapter work,
+not the owner's future per-effect transport. Realconnection/support/performance
+remainunverified untilroot shadercompile/render/config controls.
+
+Corrected originalwater cameramotion exec47470 terminalexit0/all41, log
+dev/logs/makeup-camera-original-water-r2.log; same immutable20s/2FPS request
+z680.5→640.5. Firstactivewrong-route72018 exited0/all41imagescomplete; retained
+asunmeasuredharness smoke. After correctedoriginal inspectroute then off/on.
+
+
+Corrected originalr2 UUID56ff265a-5895-46db-9b3a-0c768de1f6d0 complete41/41.
+RootfinalPNG confirms valid open shore/water route, not inside terrain.
+Next active sameimmutable request launch trackedbyactualexec handle; log
+dev/logs/makeup-camera-active-water-r2.log. Qualityonly, GPUtimingfalse.
+Existing-core bridgeprobe source worker consumes onlyexact protocol2 globals
+without main/shared edits and fallsbackonunknownversions; raw uniforms are
+transported unconditionally in currentCommonUniformsMixin. Actual newadapter
+config connection remains pending driver/diagnostic tests.
+
+
+Corrected activewater65445 exit0/complete41PNGcallbacks/hashes, UUID
+d5e62389-8f04-40cd-9c91-d0e77d25809b. RootfinalPNG retainsnear bank/water detail;
+farSSRloss expected, no fulltemporal/glint acceptance at2FPS. Correctedoriginal
+UUID56ff265a-5895-46db-9b3a-0c768de1f6d0 exactsame20s trajectory andrequest.
+Original sampledMP4 encodedforreview underdev/logs; no performanceinference.
+Disabledwater source launch handle10992 has log
+dev/logs/makeup-camera-disabled-water-r2.log; authoritativeterminal check is
+required beforeanynewclient. Bridgeprobe worker stillownsnewfilesonly.
+Nextcontinuation: collectdisabled qualitycomplete/hash check, inspectmatched
+near/farframes and stronger10FPStemporal/underwater/glint cases; assemble/test
+newcorebridgeprobe exactsource and diagnostic actualmod controls; retainnative
+cleanforward/reverse8%effects signal withoutclaiming15%or secondworkload.
+
+
+Disabled10992 exited0/all41hashes verified; UUID reported in rootcollection.
+All corrected original/off/on2FPS sequences complete. No game is live at this
+terminalcheckpoint. Root ownsGPU; bridgeworker source stillfinishing. Compile/
+assemble/review its standalone probe before diagnostic actualuniform tests.
+Source/evidence commits mustexcludeoriginalowner's unstaged
+SHADOW_VISIBILITY_CACHE_DESIGN.md and allignoredrawcaptures/worlds.

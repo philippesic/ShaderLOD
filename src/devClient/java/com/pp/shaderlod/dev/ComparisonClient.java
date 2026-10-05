@@ -32,6 +32,8 @@ final class ComparisonClient {
     private static final Logger LOGGER = LogUtils.getLogger();
     private final boolean enabled;
     private boolean opened, configured;
+    private final boolean cameraQualityRequested = !System.getProperty("shaderlod.dev.cameraQuality", "").isBlank();
+    private CameraQualitySession cameraQuality;
     private int ticks;
     private int captureTick = -1;
     private String captureName;
@@ -68,13 +70,13 @@ final class ComparisonClient {
         if (!configured) {
             configured = true;
             if (enabled && !ModList.get().isLoaded("shaderlod")) throw new IllegalStateException("LOD client is missing ShaderLOD");
-            if (ModList.get().isLoaded("shaderlod") && !Boolean.getBoolean("shaderlod.dev.measureWorkload")
+            if (!cameraQualityRequested && ModList.get().isLoaded("shaderlod") && !Boolean.getBoolean("shaderlod.dev.measureWorkload")
                     && !Boolean.getBoolean("shaderlod.dev.benchmark")) {
                 ShaderLodConfig.ENABLED.set(enabled);
                 ShaderLodConfig.PRESET.set(LodPreset.PERFORMANCE);
                 ShaderLodConfig.DEBUG.set(false);
             }
-            client.options.hideGui = false;
+            client.options.hideGui = cameraQualityRequested;
             client.options.guiScale().set(2);
             client.options.framerateLimit().set(260);
             client.options.enableVsync().set(false);
@@ -85,12 +87,26 @@ final class ComparisonClient {
             } catch (Exception exception) { LOGGER.warn("Cannot read DH display radius: {}", exception.toString()); }
             tileWindow(client);
             if (!Files.exists(controlFile())) chooseLandscape();
-            if (Boolean.getBoolean("shaderlod.dev.benchmark") && ModList.get().isLoaded("shaderlod")) benchmark = new BenchmarkSession(client.gameDirectory.toPath());
-            if (Boolean.getBoolean("shaderlod.dev.measureWorkload")) workload = new WorkloadSession(client.gameDirectory.toPath().toAbsolutePath().normalize());
+            if (cameraQualityRequested) {
+                cameraQuality = CameraQualitySession.createIfRequested(client.gameDirectory.toPath());
+                if (cameraQuality == null) {
+                    LOGGER.error("Camera quality request rejected; no benchmark started");
+                    if (Boolean.getBoolean("shaderlod.dev.cameraQualityOnly")) client.stop();
+                    return;
+                }
+            } else {
+                if (Boolean.getBoolean("shaderlod.dev.benchmark") && ModList.get().isLoaded("shaderlod")) benchmark = new BenchmarkSession(client.gameDirectory.toPath());
+                if (Boolean.getBoolean("shaderlod.dev.measureWorkload")) workload = new WorkloadSession(client.gameDirectory.toPath().toAbsolutePath().normalize());
+            }
             LOGGER.info("ShaderLOD landscape ready: side={}, modPresent={}, vanillaChunks={}, DH={}", enabled ? "LOD" : "baseline", ModList.get().isLoaded("shaderlod"), client.options.renderDistance().get(), ModList.get().isLoaded("distanthorizons"));
         }
         ++ticks;
         if (ticks % 10 == 0) applyControl();
+        if (cameraQualityRequested) {
+            if (cameraQuality != null) cameraQuality.tick(client);
+            GpuTimers.drainSamples(); CpuTimers.drainSamples();
+            return;
+        }
         if (ticks == captureTick) {
             Screenshot.grab(client.gameDirectory, captureName + ".png", client.getMainRenderTarget(),
                     message -> LOGGER.info("ShaderLOD control capture: {}", message.getString()));
@@ -99,7 +115,7 @@ final class ComparisonClient {
         if (workload != null) workload.tick();
         else if (benchmark != null) benchmark.tick();
         else { GpuTimers.drainSamples(); CpuTimers.drainSamples(); }
-        if (ticks == 600 || ticks == 1800) {
+        if (benchmark == null && workload == null && (ticks == 600 || ticks == 1800)) {
             Screenshot.grab(client.gameDirectory, "landscape-" + ticks + ".png", client.getMainRenderTarget(), message -> LOGGER.info("ShaderLOD landscape capture: {}", message.getString()));
             LOGGER.info("ShaderLOD landscape timing: FPS={}, {}", client.getFps(), GpuTimers.summary());
             reportDhStats();
@@ -166,7 +182,7 @@ final class ComparisonClient {
     private void tileWindow(Minecraft client) {
         var window = client.getWindow();
         boolean serialMeasurement = Boolean.getBoolean("shaderlod.dev.measureOnly")
-                || Boolean.getBoolean("shaderlod.dev.benchmarkOnly");
+                || Boolean.getBoolean("shaderlod.dev.benchmarkOnly") || Boolean.getBoolean("shaderlod.dev.cameraQualityOnly");
         window.setTitle(serialMeasurement ? (enabled ? "ShaderLOD serial measurement" : "Shader serial baseline")
                 : enabled ? "ShaderLOD landscape — LOD ON (left)" : "Shader landscape — BASELINE (right)");
         try (var stack = MemoryStack.stackPush()) {
@@ -190,6 +206,11 @@ final class ComparisonClient {
     }
     private void draw(RenderGuiEvent.Post event) {
         var client = Minecraft.getInstance();
+        if (cameraQuality != null) {
+            event.getGuiGraphics().flush();
+            cameraQuality.render(client);
+            return;
+        }
         if (client.level == null || client.options.hideGui) return;
         boolean mod = ModList.get().isLoaded("shaderlod");
         var lines = new ArrayList<String>();

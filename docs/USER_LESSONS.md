@@ -83,3 +83,25 @@ Packresearch traced them to Iris/Sodium nested copies and proved identical
 classes/resources except a NeoForge minimum bound satisfied by pinned21.1.253.
 Root retained strict rejection and required a separate exact-hash/runtime
 qualified mode. Same-version strings alone are insufficient artifact evidence.
+
+
+## 2026-10-05: automatic screenshot contamination
+
+Root inspected the first native effects-mode control log and found the older
+ComparisonClient automatic landscape screenshot at1800ticks during phase2.
+The new benchmark already schedules its own phase-boundary screenshots, so
+that inherited capture added unplanned readback/write work inside a timed
+phase. Root retained/qualifiedr1 and gated old automatic captures whenever
+benchmark/workload capture owns the client. Clean forward/reverse repetitions
+are required before treating a small effect as reliable. This is an agent
+instrumentation correction, not a user mistake.
+
+
+## 2026-10-05: camera path direction corrected
+
+Fresh root first chose z680.5→720.5 as forwardshoreline motion at yaw−180.
+Actual captured finalframe went throughterrain. Minecraft yaw−180 faces negativeZ;
+root corrected a separate immutable r2request towardz640.5. The first all41
+verified images remain harness/trajectory evidence only, not approved water
+quality. Cameraquality worker's actual-camera metadata exposed the mismatch;
+this was root's route assumption, not a user or shader failure.

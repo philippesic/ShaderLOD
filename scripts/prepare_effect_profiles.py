@@ -36,7 +36,7 @@ def options_for_arm(common, arm, declarations):
 
 
 def plan_effects(args):
-    args.archive = 'effects-no-atmosphere'
+    args.archive = getattr(args, 'effect_archive', 'effects-no-atmosphere')
     args.analytic = 'off'
     args.water_bands = 'current'
     operation = plan(args)
@@ -116,6 +116,7 @@ def main():
     parser.add_argument('--source-proof-root', type=Path, default=ROOT / 'run-workloads/ssr-probe')
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--archive-path', type=Path, help='Alternate location; exact effects-no-atmosphere SHA256 still required')
+    parser.add_argument('--effect-archive', choices=('effects-no-atmosphere', 'cloud-transition-no-atmosphere', 'lighting-tier-no-atmosphere'), default='effects-no-atmosphere', help='Explicit frozen candidate; preserves exact archive hash checks')
     parser.add_argument('--scenes', nargs='+', choices=SCENES, default=['coastalwater'])
     parser.add_argument('--without-dh', action='store_true', help='Preserve the SSR probe DH-absent path; use --dh absent in timing')
     parser.add_argument('--backup-existing', action='store_true')

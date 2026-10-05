@@ -118,6 +118,11 @@ neoForge {
             if (project.hasProperty('benchmarkWindowScale')) {
                 systemProperty 'shaderlod.dev.benchmarkWindowScale', project.property('benchmarkWindowScale').toString()
             }
+            for (name in ['cameraQuality', 'cameraQualityOnly']) {
+                if (project.hasProperty(name)) {
+                    systemProperty "shaderlod.dev.${name}", project.property(name).toString()
+                }
+            }
             if (project.hasProperty('cpuLayerTiming')) {
                 systemProperty 'shaderlod.dev.cpuLayerTiming', project.property('cpuLayerTiming').toString()
             }

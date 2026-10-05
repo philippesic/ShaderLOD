@@ -9,7 +9,7 @@ import unittest
 import uuid
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'scripts'))
-from analyze_inprocess_control import analyze_report, compare_sessions, canonical, OFF_OPTIONS, FALSE_FLAGS, METHOD, COHERENCE_METHOD, ORIGINAL_PHOTON_SHA256, semantic_state
+from analyze_inprocess_control import analyze_report, compare_sessions, canonical, OFF_OPTIONS, FALSE_FLAGS, METHOD, EFFECTS_METHOD, EFFECT_OPTIONS, COHERENCE_METHOD, ORIGINAL_PHOTON_SHA256, semantic_state
 
 PIN = '1' * 64
 
@@ -77,7 +77,147 @@ def coherence_fixture():
     return report
 
 
+def effects_fixture(enabled_options=EFFECT_OPTIONS, reverse=False, gpu=True, cpu=True):
+    report = fixture(gpu=gpu, cpu=cpu)
+    report.update(benchmark_feature='effects', method=EFFECTS_METHOD, selected_flag='lod.enabled', atmosphere_guard_absent=True)
+    report['instrumentation_properties']['benchmarkFeature'] = 'effects'
+    report['starting_order'] = 'ON/OFF/ON/OFF' if reverse else 'OFF/ON/OFF/ON'
+    for phase in report['phases']:
+        if reverse: phase['enabled'] = not phase['enabled']
+        for boundary in ('inputStart', 'inputEnd'):
+            state = phase[boundary]
+            state['lod_settings']['enabled'] = phase['enabled']
+            state['loaded_semantic_config']['lod']['enabled'] = phase['enabled']
+            state['loaded_semantic_config']['rendering']['shadowFrustumCoherence'] = False
+            state['shadow_coherence_configured'] = state['shadow_coherence_active'] = False
+            options = state['effective_shader_options']
+            for name in enabled_options: options[name] = 'true'
+            state['effective_shader_options_sha256'] = hashlib.sha256(canonical(options).encode()).hexdigest()
+    report['stable_input_reference'] = semantic_state(report['phases'][0]['inputStart'], True, 'effects')
+    return report
+
+
 class InprocessTests(unittest.TestCase):
+    def test_effects_allactive_and_mixed_options_hold_constant_in_both_orders(self):
+        for switches in (EFFECT_OPTIONS, EFFECT_OPTIONS[:1], ()):
+            for reverse in (False, True):
+                with self.subTest(switches=switches, reverse=reverse):
+                    report = effects_fixture(switches, reverse)
+                    result = analyze_report(report)
+                    self.assertEqual(result['benchmark_feature'], 'effects')
+                    self.assertEqual(result['selected_flag'], 'lod.enabled')
+                    self.assertEqual(result['method'], EFFECTS_METHOD)
+                    self.assertEqual(len(result['adjacent_pairs']), 2)
+                    self.assertEqual([p['enabled'] for p in result['phases']], [True, False, True, False] if reverse else [False, True, False, True])
+                    expected = {name: 'true' if name in switches else 'false' for name in EFFECT_OPTIONS}
+                    observed = result['stable_input_reference']['effective_shader_options']
+                    self.assertEqual({name: observed[name] for name in EFFECT_OPTIONS}, expected)
+                    self.assertNotIn('enabled', result['stable_input_reference']['loaded_semantic_config']['lod'])
+                    self.assertIn('correlated', result['uncertainty'])
+                    self.assertNotIn('confidence_interval', result)
+
+    def test_effects_requires_explicit_feature_method_selected_flag_and_source_guard(self):
+        for mutate in (
+                lambda r: r.pop('benchmark_feature'),
+                lambda r: r.update(benchmark_feature='other'),
+                lambda r: r.update(method=METHOD),
+                lambda r: r.update(selected_flag='rendering.shadowFrustumCoherence'),
+                lambda r: r['instrumentation_properties'].update(benchmarkFeature='global'),
+                lambda r: r.pop('atmosphere_guard_absent'),
+                lambda r: r.update(atmosphere_guard_absent=False)):
+            report = effects_fixture(); mutate(report)
+            with self.assertRaises(ValueError): analyze_report(report)
+
+    def test_existing_global_mode_still_rejects_active_effects(self):
+        report = effects_fixture()
+        report.update(benchmark_feature='global', method=METHOD)
+        report['instrumentation_properties']['benchmarkFeature'] = 'global'
+        with self.assertRaisesRegex(ValueError, 'Alloff option'): analyze_report(report)
+
+    def test_effects_requires_complete_literal_boolean_flags_even_when_fingerprints_match(self):
+        for name in EFFECT_OPTIONS:
+            for value in (None, True, False, 'TRUE', '1', 'false ', 1):
+                report = effects_fixture()
+                # Modify reference and both boundaries consistently so identity checks
+                # alone cannot conceal a missing or malformed effect option.
+                states = [report['stable_input_reference']] + [p[b] for p in report['phases'] for b in ('inputStart', 'inputEnd')]
+                for state in states:
+                    if value is None: state['effective_shader_options'].pop(name)
+                    else: state['effective_shader_options'][name] = value
+                    state['effective_shader_options_sha256'] = hashlib.sha256(canonical(state['effective_shader_options']).encode()).hexdigest()
+                with self.subTest(name=name, value=value):
+                    with self.assertRaisesRegex(ValueError, 'option'): analyze_report(report)
+
+    def test_effects_flag_change_rejected_with_valid_recomputed_option_hash(self):
+        report = effects_fixture()
+        state = report['phases'][1]['inputEnd']
+        state['effective_shader_options']['SHADERLOD_CLOUDS'] = 'false'
+        state['effective_shader_options_sha256'] = hashlib.sha256(canonical(state['effective_shader_options']).encode()).hexdigest()
+        with self.assertRaisesRegex(ValueError, 'Stable inputs'): analyze_report(report)
+
+    def test_effects_preserves_bridge_lighting_and_disables_debug_cache_analytic(self):
+        for name, value in (('SHADERLOD_USE_MOD_CONFIG', 'false'), ('SHADERLOD_PRESERVE_LIGHTING', 'false'),
+                            ('SHADERLOD_DEBUG', 'true'), ('SHADERLOD_CACHED_SKY', 'true'), ('SHADERLOD_WATER_ANALYTIC', 'true')):
+            report = effects_fixture()
+            state = report['phases'][0]['inputEnd']
+            state['effective_shader_options'][name] = value
+            state['effective_shader_options_sha256'] = hashlib.sha256(canonical(state['effective_shader_options']).encode()).hexdigest()
+            with self.assertRaises(ValueError): analyze_report(report)
+
+    def test_effects_rejects_mod_pipeline_hud_semantic_and_cpu_feature_changes(self):
+        for mutate in (
+                lambda s: s.update(mod_present=False), lambda s: s.update(shaders_in_use=False),
+                lambda s: s.update(fallback=True), lambda s: s.update(hide_gui=False),
+                lambda s: s['lod_settings'].update(enabled=True), lambda s: s['lod_settings'].update(debug=True),
+                lambda s: s.update(terrain_active=True), lambda s: s.update(shadow_culling_active=True),
+                lambda s: s.update(shadow_lists_active=True), lambda s: s.update(shadow_coherence_active=True),
+                lambda s: s.pop('shadow_coherence_configured'),
+                lambda s: s['loaded_semantic_config']['rendering'].update(shadowFrustumCoherence=True),
+                lambda s: s['loaded_semantic_config']['rendering'].pop('shadowFrustumCoherence'),
+                lambda s: s['loaded_semantic_config']['lod'].update(near=64),
+                lambda s: s['loaded_semantic_config']['terrain'].update(warmSourceConfirmed=True)):
+            report = effects_fixture(); mutate(report['phases'][0]['inputEnd'])
+            with self.assertRaises(ValueError): analyze_report(report)
+
+    def test_effects_frozen_archive_camera_weather_and_framebuffer_are_required(self):
+        for name, value in (('actual_shader_sha256', '9' * 64), ('x', 241.5), ('yaw', -179),
+                            ('rain', 1), ('day_time', 8000), ('framebuffer_width', 2976), ('effective_chunks', 16)):
+            report = effects_fixture(); report['phases'][0]['inputEnd'][name] = value
+            with self.assertRaises(ValueError): analyze_report(report)
+        report = effects_fixture()
+        report['phases'][0]['temporalEnd']['wetness']['suppliers'][0]['appliedMax'] = .5
+        with self.assertRaisesRegex(ValueError, 'Wetness'): analyze_report(report)
+
+    def test_effects_sessions_require_same_full_option_maps_artifacts_and_feature(self):
+        result = analyze_report(effects_fixture())
+        self.assertFalse(compare_sessions([result, analyze_report(effects_fixture())])['archive_source_delta'])
+        different = analyze_report(effects_fixture(EFFECT_OPTIONS[:1]))
+        with self.assertRaises(ValueError): compare_sessions([result, different])
+        different = copy.deepcopy(result); different['loaded_artifacts_sha256']['iris.jar'] = '9' * 64
+        with self.assertRaises(ValueError): compare_sessions([result, different])
+        with self.assertRaises(ValueError): compare_sessions([result, analyze_report(fixture())])
+
+    def test_effects_query_and_timer_free_modes_do_not_claim_gpu_metrics(self):
+        result = analyze_report(effects_fixture(gpu=False, cpu=False))
+        self.assertIsNone(result['adjacent_pairs'][0]['on_vs_off_percent_time_reduction']['gpu_mean_ms'])
+        self.assertIsNone(result['phases'][0]['cpu_wall_mean_ms'])
+
+    def test_effects_java_source_routes_match_analyzer_contract_without_compilation(self):
+        root = Path(__file__).resolve().parents[1]
+        session = (root / 'src/devClient/java/com/pp/shaderlod/dev/BenchmarkSession.java').read_text()
+        inputs = (root / 'src/devClient/java/com/pp/shaderlod/dev/WorkloadInputs.java').read_text()
+        self.assertIn('case "effects" -> "' + EFFECTS_METHOD + '"', session)
+        self.assertIn('WorkloadInputs.validateEffects(state, expectedEnabled)', session)
+        self.assertIn('if (feature.equals("global") || feature.equals("effects")) {\n                    inputs.validateNoAtmosphereGuard();', session)
+        self.assertIn('header.addProperty("atmosphere_guard_absent", true)', session)
+        self.assertIn('if (feature.equals("global") || feature.equals("effects")) return withoutEnabled(state);', inputs)
+        effects_body = inputs.split('public static void validateEffects(', 1)[1].split('private static void requireBoolean(', 1)[0]
+        for name in EFFECT_OPTIONS: self.assertIn('"' + name + '"', effects_body)
+        for name in ('shadow_coherence_active', 'shadow_coherence_configured', 'shadowFrustumCoherence',
+                     'SHADERLOD_CACHED_SKY', 'SHADERLOD_WATER_ANALYTIC', 'SHADERLOD_DEBUG',
+                     'SHADERLOD_PRESERVE_LIGHTING', 'SHADERLOD_USE_MOD_CONFIG'):
+            self.assertIn('"' + name + '"', effects_body)
+
     def test_coherence_selects_only_feature_and_keeps_global_enabled(self):
         report = coherence_fixture()
         result = analyze_report(report)

@@ -24,7 +24,7 @@ public final class WorkloadInputs {
     }
 
     public static JsonObject withoutFeature(JsonObject state, String feature) {
-        if (feature.equals("global")) return withoutEnabled(state);
+        if (feature.equals("global") || feature.equals("effects")) return withoutEnabled(state);
         if (!feature.equals("coherence")) throw new IllegalArgumentException("Unknown benchmark feature");
         JsonObject copy = semanticState(state);
         copy.remove("shadow_coherence_configured");
@@ -99,6 +99,59 @@ public final class WorkloadInputs {
         }
         for (String name : java.util.List.of("SHADERLOD_USE_MOD_CONFIG", "SHADERLOD_PRESERVE_LIGHTING")) {
             if (!options.has(name) || !options.get(name).getAsString().equals("true")) throw new IllegalStateException("Required bridge/lighting option: " + name);
+        }
+    }
+
+    /** Fixed pack options may activate effects; only the global Iris bridge input changes. */
+    public static void validateEffects(JsonObject state, boolean expectedEnabled) {
+        requireBoolean(state, "mod_present", true);
+        requireBoolean(state, "shaders_in_use", true);
+        requireBoolean(state, "fallback", false);
+        requireBoolean(state, "hide_gui", true);
+        for (String name : List.of("terrain_configured", "terrain_confirmation", "terrain_active", "shadow_culling_configured", "shadow_culling_active", "shadow_lists_configured", "shadow_lists_active", "shadow_coherence_configured", "shadow_coherence_active")) {
+            requireBoolean(state, name, false);
+        }
+        var lod = state.getAsJsonObject("lod_settings");
+        requireBoolean(lod, "enabled", expectedEnabled);
+        requireBoolean(lod, "debug", false);
+        var semantic = state.getAsJsonObject("loaded_semantic_config");
+        var loadedLod = semantic.getAsJsonObject("lod");
+        requireBoolean(loadedLod, "enabled", expectedEnabled);
+        requireBoolean(loadedLod, "debug", false);
+        var terrain = semantic.getAsJsonObject("terrain");
+        requireBoolean(terrain, "enabled", false);
+        requireBoolean(terrain, "warmSourceConfirmed", false);
+        var rendering = semantic.getAsJsonObject("rendering");
+        for (String name : List.of("optimizeShadowCulling", "separateShadowVisibilityLists", "shadowFrustumCoherence")) {
+            requireBoolean(rendering, name, false);
+        }
+        var options = state.getAsJsonObject("effective_shader_options");
+        for (String name : List.of("SHADERLOD_CLOUDS", "SHADERLOD_WATER", "SHADERLOD_FOG", "SHADERLOD_SSR", "SHADERLOD_MATERIALS")) {
+            if (options == null || !options.has(name) || !options.get(name).isJsonPrimitive()
+                    || !options.get(name).getAsJsonPrimitive().isString()
+                    || !List.of("true", "false").contains(options.get(name).getAsString())) {
+                throw new IllegalStateException("Complete boolean effect option required: " + name);
+            }
+        }
+        for (String name : List.of("SHADERLOD_CACHED_SKY", "SHADERLOD_WATER_ANALYTIC", "SHADERLOD_DEBUG")) {
+            requireOption(options, name, "false");
+        }
+        for (String name : List.of("SHADERLOD_USE_MOD_CONFIG", "SHADERLOD_PRESERVE_LIGHTING")) {
+            requireOption(options, name, "true");
+        }
+    }
+
+    private static void requireBoolean(JsonObject object, String name, boolean expected) {
+        if (object == null || !object.has(name) || !object.get(name).isJsonPrimitive()
+                || !object.get(name).getAsJsonPrimitive().isBoolean() || object.get(name).getAsBoolean() != expected) {
+            throw new IllegalStateException("Required effects-control state: " + name + "=" + expected);
+        }
+    }
+
+    private static void requireOption(JsonObject options, String name, String expected) {
+        if (options == null || !options.has(name) || !options.get(name).isJsonPrimitive()
+                || !options.get(name).getAsJsonPrimitive().isString() || !options.get(name).getAsString().equals(expected)) {
+            throw new IllegalStateException("Required effects-control option: " + name + "=" + expected);
         }
     }
 

@@ -14,7 +14,8 @@ capture and exact shadow-culling repeats have finished. Their results remain
 mixed; the ordinary-scene performance gate is unmet. MakeUp9.5g original rendered on the pinned runtime without DH; its experimental
 water adapter and wider support remain unverified. Exploratory research is authorized. See [REPEATED_RESULTS.md](REPEATED_RESULTS.md).
 
-Current committed source: `bbb70d5`. Explicit compile-time effect controls retain
+Latest performance/evidence checkpoint: `fc94094` (main protocol implementation
+remains based on `8da8943`; original chat owns its continuation). Explicit compile-time effect controls retain
 original code when off. Water analytic normals and the exact shadow-frustum
 fast path default off after negative or inconsistent measurements. Shadows/AO
 retain original budgets. Terrain radius policy remains opt-in and requires
@@ -105,3 +106,10 @@ Original MakeUp9.5g then compiled/rendered the noDH shoreline with visible
 reflections. Default-off water SSR adapter and isolated Photon cloud-consumer
 experiment have source fixtures only so far. Sole GPU owner is the fresh chat;
 current process/next steps are in the active goal's final checkpoint.
+
+
+Native2976×1672 Photon serialpilot regressed with active B15 and the nine-arm
+source sweep found no proven cause. First one-JVM all-active global control
+showed6.9–9.0%GPU reduction, qualified for an inherited automatic screenshot.
+Clean forward/reverse repetitions and motion checks are in progress; no
+ordinary15%gate or support/performance promotion. See PHOTON_NATIVE_RESOLUTION.md.

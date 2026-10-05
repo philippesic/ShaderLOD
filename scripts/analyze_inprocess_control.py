@@ -14,10 +14,12 @@ from summarize_workload import stream
 from run_proof_matrix import read_option_properties
 
 METHOD = 'One JVM/world/pipeline; all five modules off; only live global bridge enabled changes'
+EFFECTS_METHOD = 'One JVM/world/pipeline; fixed five-module effect options; only live global bridge enabled changes'
 COHERENCE_METHOD = 'One JVM/world/pipeline; original Photon; only shadow frustum coherence changes'
 ORIGINAL_PHOTON_SHA256 = '120897768eaa8cb1f14a3e98f88dff009ae3204ee3b96904a4fe8586edfc1ead'
 OFF_OPTIONS = ('SHADERLOD_CLOUDS', 'SHADERLOD_WATER', 'SHADERLOD_FOG', 'SHADERLOD_SSR', 'SHADERLOD_MATERIALS',
                'SHADERLOD_CACHED_SKY', 'SHADERLOD_WATER_ANALYTIC', 'SHADERLOD_DEBUG')
+EFFECT_OPTIONS = OFF_OPTIONS[:5]
 FALSE_FLAGS = ('terrain_active', 'terrain_configured', 'terrain_confirmation', 'shadow_culling_configured',
                'shadow_culling_active', 'shadow_lists_configured', 'shadow_lists_active')
 CONFIG_FIELDS = {'lod': {'enabled', 'preset', 'near', 'far', 'transition', 'debug'},
@@ -61,12 +63,13 @@ def semantic_state(state, strip_enabled=False, feature='global'):
     result = copy.deepcopy(state)
     semantic = result.get('loaded_semantic_config', {})
     for section, fields in CONFIG_FIELDS.items():
-        required = fields - {'enabled'} if section == 'lod' and strip_enabled and feature == 'global' else fields
+        required = fields - {'enabled'} if section == 'lod' and strip_enabled and feature in ('global', 'effects') else fields
         if section == 'rendering' and feature == 'coherence' and not strip_enabled: required = required | {'shadowFrustumCoherence'}
+        if section == 'rendering' and feature == 'effects': required = required | {'shadowFrustumCoherence'}
         if not required <= semantic.get(section, {}).keys(): raise ValueError('Incomplete loaded semantic config: ' + section)
     result.pop('config/shaderlod-client.toml_sha256', None)
     if strip_enabled:
-        if feature == 'global':
+        if feature in ('global', 'effects'):
             result.get('lod_settings', {}).pop('enabled', None)
             semantic['lod'].pop('enabled', None)
         else:
@@ -81,7 +84,7 @@ def validate_state(state, enabled, shader_hash, feature='global'):
     if state.get('mod_present') is not True or state.get('shaders_in_use') is not True or state.get('fallback') is not False:
         raise ValueError('Main mod or live Iris pipeline missing')
     if state.get('hide_gui') is not True: raise ValueError('Expected fixed hidden HUD')
-    global_enabled = enabled if feature == 'global' else True
+    global_enabled = enabled if feature in ('global', 'effects') else True
     if state.get('lod_settings', {}).get('enabled') is not global_enabled or state['loaded_semantic_config']['lod'].get('enabled') is not global_enabled:
         raise ValueError('Wrong live global flag in phase')
     if state['lod_settings'].get('debug') is not False: raise ValueError('Unexpected debug')
@@ -95,8 +98,13 @@ def validate_state(state, enabled, shader_hash, feature='global'):
     if state.get('actual_shader_sha256') != shader_hash: raise ValueError('Actual shader archive differs from pin')
     options = state.get('effective_shader_options', {})
     if not options: raise ValueError('Full effective options missing')
-    if feature == 'global':
-        for name in OFF_OPTIONS:
+    if feature in ('global', 'effects'):
+        if feature == 'effects':
+            if not isinstance(options, dict) or any(not isinstance(key, str) or not isinstance(value, str) for key, value in options.items()):
+                raise ValueError('Full string-valued effective option map required')
+            for name in EFFECT_OPTIONS:
+                if options.get(name) not in ('true', 'false'): raise ValueError('Complete boolean effect option required: ' + name)
+        for name in OFF_OPTIONS if feature == 'global' else OFF_OPTIONS[5:]:
             if options.get(name) != 'false': raise ValueError('Alloff option mismatch: ' + name)
         for name in ('SHADERLOD_USE_MOD_CONFIG', 'SHADERLOD_PRESERVE_LIGHTING'):
             if options.get(name) != 'true': raise ValueError('Bridge/lighting option mismatch: ' + name)
@@ -104,6 +112,9 @@ def validate_state(state, enabled, shader_hash, feature='global'):
             if name in state and state[name] is not False: raise ValueError('Coherence active in global control')
         if 'shadowFrustumCoherence' in semantic['rendering'] and semantic['rendering']['shadowFrustumCoherence'] is not False:
             raise ValueError('Coherence config enabled in global control')
+        if feature == 'effects':
+            for name in ('shadow_coherence_configured', 'shadow_coherence_active'):
+                if state.get(name) is not False: raise ValueError('Coherence must stay off in effects control')
     else:
         if shader_hash != ORIGINAL_PHOTON_SHA256: raise ValueError('Coherence requires exact original Photon')
         for name in ('shadow_coherence_configured', 'shadow_coherence_active'):
@@ -166,8 +177,13 @@ def time_reduction(off, on):
 def analyze_report(report, expected_shader_sha256=None, profile=None):
     if report.get('schema') != 3 or report.get('status') != 'complete': raise ValueError('Require a complete schema-3 control')
     feature = report.get('benchmark_feature', 'global')
-    if feature not in ('global', 'coherence'): raise ValueError('Unknown benchmark feature')
-    if report.get('method') != (METHOD if feature == 'global' else COHERENCE_METHOD): raise ValueError('Unrecognized pipeline/world guard method')
+    if feature not in ('global', 'coherence', 'effects'): raise ValueError('Unknown benchmark feature')
+    methods = {'global': METHOD, 'coherence': COHERENCE_METHOD, 'effects': EFFECTS_METHOD}
+    if report.get('method') != methods[feature]: raise ValueError('Unrecognized pipeline/world guard method')
+    if feature == 'effects':
+        if report.get('selected_flag') != 'lod.enabled': raise ValueError('Wrong selected effects flag')
+        if report.get('instrumentation_properties', {}).get('benchmarkFeature') != 'effects': raise ValueError('Explicit effects instrumentation feature missing')
+        if report.get('atmosphere_guard_absent') is not True: raise ValueError('Effects control requires verified absent atmosphere guard')
     require_uuid(report.get('session_id'))
     if report.get('restored_initial_enabled') is not True: raise ValueError('Initial config restoration not reported')
     if feature == 'coherence':
@@ -270,6 +286,7 @@ def analyze_report(report, expected_shader_sha256=None, profile=None):
         drift['ON' if enabled else 'OFF'] = {'phases': [phase['index'] for phase in same],
                                            'later_vs_earlier_percent_time_reduction': {key: time_reduction(same[0][key], same[1][key]) for key in keys}}
     return {'schema': 1, 'session_id': report['session_id'], 'benchmark_feature': feature,
+            'method': methods[feature],
             'selected_flag': 'rendering.shadowFrustumCoherence' if feature == 'coherence' else 'lod.enabled',
             'shader_sha256': pin, 'phases': output, 'adjacent_pairs': pairs,
             'same_state_drift': drift, 'stable_input_reference': reference, 'loaded_mods': report['loaded_mods'],

@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-/** One pipeline/world: only the global bridge flag changes, with all effect modules off. */
+/** Four correlated phases in one pipeline/world, varying one explicitly selected flag. */
 public final class BenchmarkSession {
     private final Path directory;
     private final WorkloadInputs inputs;
@@ -58,8 +58,11 @@ public final class BenchmarkSession {
         header.addProperty("session_id", sessionId);
         header.addProperty("created_at_utc", java.time.Instant.now().toString());
         header.addProperty("benchmark_feature", feature);
-        header.addProperty("method", feature.equals("coherence") ? "One JVM/world/pipeline; original Photon; only shadow frustum coherence changes"
-                : "One JVM/world/pipeline; all five modules off; only live global bridge enabled changes");
+        header.addProperty("method", switch (feature) {
+            case "coherence" -> "One JVM/world/pipeline; original Photon; only shadow frustum coherence changes";
+            case "effects" -> "One JVM/world/pipeline; fixed five-module effect options; only live global bridge enabled changes";
+            default -> "One JVM/world/pipeline; all five modules off; only live global bridge enabled changes";
+        });
         header.addProperty("starting_order", startEnabled ? "ON/OFF/ON/OFF" : "OFF/ON/OFF/ON");
         header.addProperty("initial_warmup_seconds", initialWarmup);
         header.addProperty("settle_seconds", switchWarmup);
@@ -117,7 +120,10 @@ public final class BenchmarkSession {
             if (worldReference != null && (Minecraft.getInstance().level != worldReference || Iris.getPipelineManager().getPipelineNullable() != pipelineReference)) throw new IllegalStateException("World/pipeline changed between boundaries");
             if (phase < 0) {
                 if ((now - started) * 1e-9 < initialWarmup) return;
-                if (feature.equals("global")) inputs.validateNoAtmosphereGuard();
+                if (feature.equals("global") || feature.equals("effects")) {
+                    inputs.validateNoAtmosphereGuard();
+                    if (feature.equals("effects")) header.addProperty("atmosphere_guard_absent", true);
+                }
                 startPhase(now);
                 return;
             }
@@ -212,6 +218,7 @@ public final class BenchmarkSession {
 
     private void validate(JsonObject state, boolean expectedEnabled) {
         if (feature.equals("coherence")) WorkloadInputs.validateCoherence(state, expectedEnabled);
+        else if (feature.equals("effects")) WorkloadInputs.validateEffects(state, expectedEnabled);
         else {
             WorkloadInputs.validateAlloff(state);
             if (state.getAsJsonObject("lod_settings").get("enabled").getAsBoolean() != expectedEnabled) throw new IllegalStateException("Wrong live global flag");
@@ -331,7 +338,7 @@ public final class BenchmarkSession {
 
     private static String benchmarkFeature() {
         String value = System.getProperty("shaderlod.dev.benchmarkFeature", "global");
-        if (!value.equals("global") && !value.equals("coherence")) throw new IllegalArgumentException("Unknown benchmark feature: " + value);
+        if (!value.equals("global") && !value.equals("coherence") && !value.equals("effects")) throw new IllegalArgumentException("Unknown benchmark feature: " + value);
         return value;
     }
 
