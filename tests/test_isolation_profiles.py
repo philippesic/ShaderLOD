@@ -1,5 +1,6 @@
 """Preparation guards use tiny archives only; no world copies or clients."""
 import argparse
+import copy
 import hashlib
 import json
 from pathlib import Path
@@ -9,7 +10,7 @@ import unittest
 import zipfile
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'scripts'))
-from prepare_isolations import plan, archive_contents, isolation_options, read_control, BANDS, PINNED
+from prepare_isolations import plan, archive_contents, isolation_options, read_control, BANDS, PINNED, filter_effective_options
 
 
 class IsolationTests(unittest.TestCase):
@@ -85,6 +86,26 @@ class IsolationTests(unittest.TestCase):
             self.assertEqual(matched['preset'], 'PERFORMANCE')
             control['x'] = float('nan'); (root / 'control.json').write_text(json.dumps(control))
             with self.assertRaises(ValueError): read_control(source)
+
+    def test_iris_header_defaults_transparent_and_explicit_overrides_preserved(self):
+        settings = '#define QUALITY high // [high low]\n'
+        declarations = {'QUALITY': [['shaders/settings.glsl', 'high']],
+                        'FRAGMENT_SHADER': [['shaders/pass.fsh', 'true']],
+                        'HEADER_GUARD': [['shaders/include/foo.glsl', 'true']],
+                        'EXTERNAL_CONTROL': [['shaders/include/foo.glsl', '4']]}
+        original = {'settings': settings, 'declarations': declarations}
+        candidate = {'settings': settings, 'declarations': copy.deepcopy(declarations)}
+        effective = {'QUALITY': 'high', 'FRAGMENT_SHADER': 'true', 'HEADER_GUARD': 'true', 'EXTERNAL_CONTROL': '4'}
+        common, evidence = filter_effective_options(effective, {}, original, candidate)
+        self.assertEqual(common, {'QUALITY': 'high'})
+        self.assertEqual(evidence['source_effective_shader_options'], effective)
+        self.assertEqual(evidence['omitted_non_settings_defaults']['FRAGMENT_SHADER'], 'true')
+        common, evidence = filter_effective_options(effective, {'EXTERNAL_CONTROL': '4'}, original, candidate)
+        self.assertEqual(common['EXTERNAL_CONTROL'], '4')
+        self.assertNotIn('EXTERNAL_CONTROL', evidence['omitted_non_settings_defaults'])
+        candidate['declarations']['EXTERNAL_CONTROL'] = [['shaders/include/foo.glsl', '8']]
+        with self.assertRaises(ValueError): filter_effective_options(effective, {'EXTERNAL_CONTROL': '4'}, original, candidate)
+        with self.assertRaises(ValueError): filter_effective_options(effective, {'UNKNOWN_USER_KNOB': 'true'}, original, candidate)
 
     def settings(self):
         return '''#define QUALITY high // [high low]

@@ -155,3 +155,28 @@ not dh_water's early-return Gbuffer path. Test rather than assume sampler counts
 Next after the live matrix: retain/analyze all repeats, add wetness telemetry and
 settled-weather checks, inspect images, then run targeted water/atmosphere and
 DH-absent SSR probes. Production/shader sources remain frozen while matrix runs.
+
+## Matrix completion and next implementation
+
+Session 11350 ended with exit 0. All 36 captures and paired analysis completed.
+See docs/REPEATED_RESULTS.md for retained median/range limits. Median paired GPU
+reductions: forest 5.83% minimal / 1.72% optimized; premium storm 25.91% / 23.43%.
+The ordinary performance gate is unmet; cloud input wetness was not captured,
+so cloud values remain exploratory. No shader expansion is authorized by a
+claimed gate pass yet.
+
+The benchmark worker now owns dev-only per-registration wetness telemetry, an
+optional fixed-wetness diagnostic, screenshot preservation and isolation
+preparer correction. Root owns build.gradle property mapping and clients. No
+Minecraft client is live; wait for worker freeze before compiling/launching.
+The real isolation preparer passed shoreline preparation without DH under
+run-workloads/ssr-probe/coastalwater; common ENVIRONMENT_REFLECTIONS and
+SKY_REFLECTIONS are enabled on high/off/active, normal/specular mapping and
+galaxy explicitly disabled. This is static preparation, not a link/render pass.
+Root's attempted forest isolation dry-run exposed non-Settings include guards
+in Iris's full option map; preparer correction is pending with the worker.
+
+Next: compile worker telemetry, launch original DH-absent shoreline SSR smoke
+with short matched capture and inspect driver/errors/actual reflections. Then
+measure fixed-wetness cloud controls and water/atmosphere isolations, plus
+geometry travel/reload restoration before recommending any new default.

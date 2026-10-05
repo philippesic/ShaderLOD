@@ -203,7 +203,8 @@ final class ComparisonClient {
                 lines.add(String.format(Locale.ROOT, "%s %.2f ms", label, stats.meanMs()));
             }
         }
-        lines.add(client.getWindow().getWidth() + " x " + client.getWindow().getHeight() + " | MC " + client.options.renderDistance().get() + "/" + client.options.getEffectiveRenderDistance() + "ch | DH " + dhChunks + "ch");
+        String distantReach = ModList.get().isLoaded("distanthorizons") ? "DH " + dhChunks + "ch" : "DH absent";
+        lines.add(client.getWindow().getWidth() + " x " + client.getWindow().getHeight() + " | MC " + client.options.renderDistance().get() + "/" + client.options.getEffectiveRenderDistance() + "ch | " + distantReach);
         lines.add(timings.status() + " | shared GPU preview");
         if (benchmark != null) lines.add(benchmark.status());
         if (workload != null) lines.add(workload.status());

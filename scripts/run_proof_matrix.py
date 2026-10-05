@@ -6,6 +6,7 @@ from datetime import datetime, timezone
 import fcntl
 import hashlib
 import json
+import math
 import os
 from pathlib import Path
 import re
@@ -75,10 +76,36 @@ def declared_defaults(settings):
     return result
 
 
+def archive_defaults(archive):
+    defaults = declared_defaults(archive.read('shaders/settings.glsl').decode())
+    outside = {}
+    for name in sorted(archive.namelist()):
+        if name.endswith(('.glsl', '.fsh', '.vsh', '.gsh', '.csh')):
+            for key, value in declared_defaults(archive.read(name).decode()).items():
+                if key not in defaults: outside.setdefault(key, set()).add(value)
+    # Explicit non-settings options require a single source default; conflicting
+    # per-stage macros are not safe normalization controls.
+    return defaults | {key: next(iter(values)) for key, values in outside.items() if len(values) == 1}
+
+
 def normalize_requested_options(defaults, requested):
     unknown = requested.keys() - defaults.keys()
     if unknown: raise ValueError('Requested undeclared shader options: ' + repr(sorted(unknown)))
     return defaults | requested
+
+
+def camera_difference(actual, expected, circular=False):
+    """Minecraft normalizes yaw; all camera values still require finite numbers."""
+    def finite_number(value):
+        if not isinstance(value, (int, float)) or isinstance(value, bool):
+            raise ValueError('Camera value must be a finite number')
+        try: converted = float(value)
+        except (OverflowError, ValueError): raise ValueError('Camera value must be a finite number') from None
+        if not math.isfinite(converted): raise ValueError('Camera value must be a finite number')
+        return converted
+    a, b = finite_number(actual), finite_number(expected)
+    if circular: return abs(((a % 360 - b % 360 + 180) % 360) - 180)
+    return abs(a - b)
 
 
 def balanced_plan(cases, stacks, repeats):
@@ -133,7 +160,7 @@ def profile_inputs(profile):
         raise ValueError('Prepared profile lacks a verified source save')
     requested = read_option_properties((profile / 'shaderpacks' / (pack + '.txt')).read_text())
     with zipfile.ZipFile(profile / 'shaderpacks' / pack) as archive:
-        defaults = declared_defaults(archive.read('shaders/settings.glsl').decode())
+        defaults = archive_defaults(archive)
     semantic = normalize_requested_options(defaults, requested)
     return {'files': {str(p.resolve()): sha256(p) for p in files}, 'shader_pack': pack,
             'shader_sha256': sha256(profile / 'shaderpacks' / pack),
@@ -167,8 +194,9 @@ def validate_report(report, request, expected_inputs, started_ns, report_path=No
     state = report.get('input_state_end', {})
     if state.get('shader_pack') != expected_inputs['shader_pack']: raise ValueError('Loaded Iris pack differs from requested archive')
     for key in ('x', 'y', 'z', 'yaw', 'pitch'):
-        if key in expected_inputs.get('control', {}) and abs(state.get(key, float('inf')) - expected_inputs['control'][key]) > .002:
-            raise ValueError('Camera differs from prepared control: ' + key)
+        if key in expected_inputs.get('control', {}):
+            if camera_difference(state.get(key), expected_inputs['control'][key], circular=key == 'yaw') > .002:
+                raise ValueError('Camera differs from prepared control: ' + key)
     enabled = state.get('lod_settings', {}).get('enabled')
     if request['case'].endswith('patched-off') and enabled is not False: raise ValueError('Patched disabled control has live LOD enabled')
     if request['case'].endswith(('adaptive', 'final', 'combined', 'geometry')) and enabled is not True: raise ValueError('Adaptive control has live LOD disabled')
@@ -204,6 +232,53 @@ def write_json(path, value):
     temporary.write_text(json.dumps(value, indent=2) + '\n'); temporary.replace(path)
 
 
+def wetness_value(value):
+    parsed = float(value)
+    if not math.isfinite(parsed) or not 0 <= parsed <= 1: raise argparse.ArgumentTypeError('Fixed wetness must be finite within [0,1]')
+    return parsed
+
+
+def validate_temporal_inputs(report, request):
+    """Dynamic drift is reported, while a requested fixed control must be proved."""
+    target = request.get('fixed_wetness')
+    start = report.get('shader_temporal_inputs_start', {}).get('wetness', {})
+    end = report.get('shader_temporal_inputs_end', {}).get('wetness', {})
+    def matches(value):
+        return isinstance(value, (float, int)) and not isinstance(value, bool) and math.isfinite(value) and abs(value - target) <= 1e-6
+    if target is not None:
+        for boundary in (start, end):
+            if boundary.get('mode') != 'fixed' or not matches(boundary.get('fixedWetness')):
+                raise ValueError('Fixed wetness policy missing/mismatched')
+            observed = [supplier for supplier in boundary.get('suppliers', []) if supplier.get('supplierReads', 0) > 0]
+            if not observed: raise ValueError('No wetness uniform supplier observations')
+            for supplier in observed:
+                if not matches(supplier.get('appliedWetness')):
+                    raise ValueError('Fixed wetness not applied to every observed supplier')
+                if supplier.get('measurementReads', 0):
+                    if any(not matches(supplier.get(key)) for key in ('appliedMin', 'appliedMax')):
+                        raise ValueError('Fixed wetness changed during capture')
+        if end.get('measurementReads', 0) < 1: raise ValueError('Fixed wetness was not observed during capture')
+    elif start.get('mode') == 'fixed' or end.get('mode') == 'fixed':
+        raise ValueError('Unexpected fixed shader weather in dynamic request')
+    return {'wetness_policy': 'fixed' if target is not None else 'dynamic', 'fixed_wetness': target,
+            'observation_status': 'observed' if end.get('measurementReads', 0) > 0 else 'missing wetness observations',
+            'start_raw_wetness': start.get('rawWetness'), 'end_raw_wetness': end.get('rawWetness'),
+            'capture_raw_min': end.get('rawMin'), 'capture_raw_max': end.get('rawMax'),
+            'capture_applied_min': end.get('appliedMin'), 'capture_applied_max': end.get('appliedMax'),
+            'limits': 'Observed values are per-registration suppliers; program IDs are unknown. Dynamic wetness/frame phase may advance and are not strict-input failures.'}
+
+
+def preserve_screenshot(profile, output, token, started_ns):
+    source = profile / 'screenshots/workload-final.png'
+    if not source.is_file() or source.stat().st_mtime_ns < started_ns:
+        raise ValueError('Fresh workload screenshot missing')
+    with source.open('rb') as stream:
+        if stream.read(8) != b'\x89PNG\r\n\x1a\n': raise ValueError('Workload screenshot is not a PNG')
+    destination = output / (token + '-final.png')
+    destination.write_bytes(source.read_bytes())
+    return {'screenshot': destination.name, 'screenshot_sha256': sha256(destination)}
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('cases', nargs='+', choices=CASES)
@@ -216,6 +291,7 @@ def main():
     p.add_argument('--sample-interval', type=int, default=1, choices=range(1,61))
     p.add_argument('--warmup', type=float, default=45)
     p.add_argument('--duration', type=float, default=30)
+    p.add_argument('--fixed-wetness', type=wetness_value, help='Dev-only artificial shader weather control; real rain/smoother clocks remain unchanged')
     p.add_argument('--timeout', type=float, default=300)
     p.add_argument('--skip-build', action='store_true')
     p.add_argument('--dry-run', action='store_true', help='Print ordering/commands without files, build or client launch')
@@ -232,6 +308,7 @@ def main():
                           '-PinitialWarmup=' + str(args.warmup), '-PmeasurementSeconds=' + str(args.duration),
                           '-PgpuSampleInterval=' + str(args.sample_interval)]
         if args.no_gpu_queries: row['command'].append('-PgpuTiming=false')
+        if args.fixed_wetness is not None: row['command'].append('-PfixedWetness=' + str(args.fixed_wetness))
     if args.dry_run:
         print(json.dumps({'plan': plan, 'minimum_capture_seconds': len(plan) * (args.warmup + args.duration)}, indent=2)); return
     tag = args.tag or ('matrix-' + datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ'))
@@ -249,6 +326,7 @@ def main():
                     'design': 'Williams order; partial cycles are interleaved, not perfectly position-balanced',
                     'profiles_root': str(profiles_root), 'include_dh': args.dh == 'present',
                     'gpu_queries': not args.no_gpu_queries, 'sample_interval': args.sample_interval,
+                    'fixed_wetness': args.fixed_wetness,
                     'source_inputs': inputs, 'runs': plan, 'git_head': subprocess.run(['git', 'rev-parse', 'HEAD'], cwd=ROOT, capture_output=True, text=True, check=True).stdout.strip(),
                     'runtime_lock_sha256': sha256(ROOT / 'dev/runtime.lock.json')}
         write_json(output / 'matrix-manifest.json', manifest)
@@ -265,6 +343,7 @@ def main():
                 request = dict(run_id=str(uuid.uuid4()), case=row['case'], stack=row['stack'], task=row['task'],
                                include_dh=args.dh == 'present', measurement_seconds=args.duration,
                                gpu_queries=not args.no_gpu_queries, block=row['block'])
+                request['fixed_wetness'] = args.fixed_wetness
                 write_json(profile / 'workload-request.json', request)
                 report = profile / 'workload-measurement.json'
                 if report.exists(): report.replace(output / (token + '-previous.json'))
@@ -279,7 +358,9 @@ def main():
                 data = json.loads(report.read_text())
                 # Preserve invalid fresh reports too; exclusion is explicit in the manifest.
                 (output / row['measurement']).write_bytes(report.read_bytes())
+                row.update(preserve_screenshot(profile, output, token, started_ns))
                 validate_report(data, request, inputs[row['case']], started_ns, report)
+                row['temporal_observations'] = validate_temporal_inputs(data, request)
                 reference = inputs[row['case']].get('effective_shader_options_sha256')
                 if reference is not None and reference != data['effective_shader_options_sha256']: raise ValueError('Effective shader options differ between repeated launches')
                 inputs[row['case']]['effective_shader_options_sha256'] = data['effective_shader_options_sha256']

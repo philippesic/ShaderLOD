@@ -105,3 +105,18 @@ and thermal drift; compare effects against each root's original baseline instead
 of treating them as directly paired or simultaneous. Preparation proves matching
 inputs and copies, not compilation, visual fidelity or performance. Actual Iris
 options, fallback and timing guards still apply at runtime.
+
+## Effective-map/header distinction
+
+Iris's complete loaded option map can also contain incidental pass/header
+macros such as `FRAGMENT_SHADER` and include guards outside `settings.glsl`.
+The preparer now preserves that complete source map as evidence while writing
+settings controls plus explicit user overrides. Unrequested non-settings default
+entries are listed under `omitted_non_settings_defaults`; they retain each
+archive's source declaration and are not silently reclassified as user knobs.
+Explicit non-settings requests are retained only when their declaration paths
+and defaults match between original and candidate archives. Unknown, changed or
+ambiguous explicit controls fail. The runner can normalize unambiguous
+archive-wide declarations; conflicting per-stage defaults are rejected rather
+than guessed. These parser checks remain separate from actual Iris option
+validation and rendering.

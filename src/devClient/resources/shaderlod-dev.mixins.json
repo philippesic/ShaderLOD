@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_21",
   "client": [
     "GameRendererTimingMixin",
+    "WorldShaderInputsMixin",
     "MinecraftFrameTimingMixin",
     "SodiumTerrainTimingMixin",
     "SodiumCommandTimingMixin",

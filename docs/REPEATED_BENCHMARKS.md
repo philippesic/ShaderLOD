@@ -127,3 +127,81 @@ GPU scope boundaries, coarse Apple elapsed-query attribution, CPU/driver time
 and overlapping scopes retain the limits in [GPU_TIMING.md](GPU_TIMING.md).
 Correct timings do not prove visual quality: inspect transitions, motion and
 salient lighting separately.
+
+## Wetness and temporal observation
+
+The dev harness now wraps the existing wetness `FloatSupplier` at the exact
+pinned Iris 1.8.12 `CommonUniforms.generalCommonUniforms` registration. The
+`UniformHolder.uniform1f` call is sliced between the `wetness` and `skyColor`
+string constants and requires one match. The actual registration uses
+`PER_TICK`. There is no `WorldInfoUniforms` class in this artifact. The original
+supplier is evaluated exactly once each time Iris normally evaluates it; the
+tracker never invokes a smoother while exporting a snapshot or reading back GL.
+
+Separate registrations can own separate smoothers. Telemetry therefore retains
+bounded registration IDs, holder class/frequency labels, per-supplier raw/applied
+last values, ranges and read counts. Those IDs are not shader program IDs:
+program identity is explicitly unknown. An overall latest value cannot prove
+all programs share the same state. The tracker makes no per-evaluation
+allocations; registration and snapshot allocations happen outside frame hot
+hooks. Capacity exhaustion fails visibly instead of silently omitting suppliers.
+
+`shader_temporal_inputs_initial/start/end` are exported separately from the
+strict input-state comparison. They include actual observed wetness and CPU
+source getters for frame counter, frame time, frameTimeCounter, full day time,
+world day/time, moon phase, rainStrength and Photon's derived world-age formula.
+The source getters are not a readback of uploaded custom uniforms; biome
+smoothing and all GPU histories remain unobserved. FrameCounter and real clocks
+continue advancing. Normal dynamic wetness changes are labeled in the matrix
+run metadata and do not invalidate exploratory captures merely because the
+smoother advances. Missing observations are labeled explicitly.
+
+An optional artificial steady shader-weather control is available:
+
+```sh
+python3 scripts/run_proof_matrix.py cloud-high cloud-patched-off cloud-adaptive --profiles-root run-workloads/photon-proof-v2 --stacks minimal --repeats 3 --warmup 35 --duration 20 --fixed-wetness 1 --tag cloud-fixed-wetness-r3
+```
+
+`--fixed-wetness` accepts finite values from 0 to 1 and maps to
+`-PfixedWetness` / `shaderlod.dev.fixedWetness`. It applies from initial uniform
+registration throughout warmup/capture, not by jumping weather at measurement
+start. Every wrapped supplier still evaluates its original raw smoother once,
+then publishes the fixed diagnostic value. Real rainStrength, smoothing clocks,
+frameCounter and animation clocks remain unchanged. Per-registration observations
+must prove the requested applied value at both boundaries and throughout the
+capture range. Missing or wrong fixed telemetry fails the run. A default run
+preserves the original wetness value exactly and rejects an unexpected fixed
+policy. This is dev-only instrumentation and never a production weather feature.
+
+The original 36-run matrix predates this telemetry and must not be retrospectively
+claimed to have matched actual shader wetness. See
+[PHOTON_TEMPORAL_INPUTS.md](PHOTON_TEMPORAL_INPUTS.md) for the source-based
+hypothesis and remaining unmeasured state.
+
+## Per-repeat images
+
+After the complete client JVM closes, the runner preserves that repeat's fresh
+`screenshots/workload-final.png` as `NNN-bB-CASE-STACK-final.png` in the matrix
+output, with path and SHA-256 in its row. It checks freshness and PNG signature;
+stale/missing images fail the run. Copying/hashing occurs after timing. The report
+and image are retained before subsequent profile captures overwrite them.
+Earlier matrix runs did not preserve every repeated image this way; no missing
+image is fabricated retroactively.
+
+Implementation checks passed: standalone Java policy/supplier tests verify
+clamping, property bounds, original evaluation once, distinct raw suppliers,
+fixed publishing and snapshot read independence; Python tests check all observed
+supplier guards, dynamic drift, missing/stale image handling and PNG preservation.
+`compileDevClientJava` passed. These checks do not establish runtime mixin
+application. Before the next measured matrix, verify a real original/mod-absent
+capture has supplier observations, fixed 1 reaches every observed registration,
+raw values continue evolving, clocks/counters advance, and a fresh image is
+preserved. Then run matched dynamic/fixed repeated controls and inspect images.
+
+The prepared-camera guard compares yaw modulo 360 because Minecraft wraps yaw:
+180, -180 and 540 degrees represent the same heading. XYZ and pitch comparisons
+remain linear with the same 0.002 tolerance. Both prepared and observed camera
+values must be finite numeric values; missing values, booleans, strings, NaN and
+infinity are rejected before modular arithmetic. The failed
+`ssr-original-probe` remains excluded from accepted performance evidence: its
+180/-180 guard mismatch was corrected in tooling, not retrospectively accepted.

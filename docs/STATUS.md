@@ -6,16 +6,19 @@ Active goal: [Sustained performance and compatibility](goals/sustained-performan
 The user authorized ongoing team development, Photon first, benchmarks with
 optional performance mods, and additional shaders after repeatable Photon gains.
 Previous completed goal: [Full-frame rendering proof](goals/full-frame-proof.md).
-The preview clients are closed. A serial repeated matrix is active under the
-coordinator; see the goal checkpoint for its session, profile paths and logs.
+The preview clients are closed. The first 36-run serial matrix completed;
+wetness-aware controls and DH-absent SSR probes are now in progress. See the
+goal checkpoint for current ownership, profile paths and logs.
 Earlier evidence and limitations are in [FULL_FRAME_PROOF.md](FULL_FRAME_PROOF.md).
 
 Current source: Photon analytic-water and atmosphere candidates, usable cloud
 bands, conservative scene-bound terrain safeguards, configuration UI/commands,
 and repeated effective-option verification. Java build, 10 geometry tests and
 20 Python tests (including 792 GLSL compilations) passed. Candidate rendering is
-verified in accepted captures; performance is mixed and not yet an acceptance
-claim. Photon's new gate and second shader support remain pending.
+verified in accepted captures. Exploratory paired median GPU reductions are
+5.83%/1.72% in forest and 25.91%/23.43% in premium clouds (minimal/optimized).
+Wetness was unmeasured in that matrix, so these are not acceptance claims.
+See [REPEATED_RESULTS.md](REPEATED_RESULTS.md). Photon's new gate and second shader support remain pending.
 
 ## Previous completed proof
 

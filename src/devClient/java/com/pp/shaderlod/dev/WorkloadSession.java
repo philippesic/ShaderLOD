@@ -6,6 +6,7 @@ import com.google.gson.JsonParser;
 import com.mojang.logging.LogUtils;
 import com.pp.shaderlod.dev.timing.GpuTimers;
 import com.pp.shaderlod.dev.timing.CpuTimers;
+import com.pp.shaderlod.dev.timing.ShaderInputTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Screenshot;
 import net.neoforged.fml.ModList;
@@ -27,6 +28,8 @@ final class WorkloadSession {
     private long measurementStarted;
     private final JsonObject request;
     private JsonObject inputStart;
+    private final JsonObject temporalInitial;
+    private JsonObject temporalStart;
     private String capturedAt;
     private boolean measuring, done;
     private int startFrames;
@@ -37,6 +40,7 @@ final class WorkloadSession {
         try {
             request = Files.exists(path) ? JsonParser.parseString(Files.readString(path)).getAsJsonObject() : new JsonObject();
         } catch (Exception failure) { throw new IllegalStateException("Invalid workload request", failure); }
+        temporalInitial = temporalInputs();
     }
     String status() { return done ? "Workload capture finished" : measuring ? "Workload measuring CPU/GPU" : "Workload warming"; }
     void tick() {
@@ -50,6 +54,8 @@ final class WorkloadSession {
             try { inputStart = inputState(); }
             catch (Exception failure) { throw new IllegalStateException("Cannot fingerprint measurement inputs", failure); }
             capturedAt = java.time.Instant.now().toString();
+            temporalStart = temporalInputs();
+            ShaderInputTracker.beginMeasurement();
             measuring = true; measurementStarted = now;
             startFrames = (int) GpuTimers.snapshot().renderFrames();
             LogUtils.getLogger().info("ShaderLOD workload measurement started: {}", directory);
@@ -78,13 +84,17 @@ final class WorkloadSession {
             report.addProperty("written_at_utc", java.time.Instant.now().toString());
             report.add("input_state_start", inputStart);
             report.add("input_state_end", inputState());
+            report.add("shader_temporal_inputs_initial", temporalInitial);
+            report.add("shader_temporal_inputs_start", temporalStart);
+            report.add("shader_temporal_inputs_end", temporalInputs());
+            report.addProperty("shader_temporal_note", "Wetness is observed at normal Iris supplier evaluation; clocks/day/weather are CPU source getters. Dynamic wetness and frame phase can advance. No smoother reevaluation, GPU readback, or clock freeze.");
             report.add("effective_shader_options", inputStart.get("effective_shader_options").deepCopy());
             report.addProperty("effective_shader_options_sha256", inputStart.get("effective_shader_options_sha256").getAsString());
             var mods = new JsonObject();
             for (var mod : ModList.get().getMods()) mods.addProperty(mod.getModId(), mod.getVersion().toString());
             report.add("loaded_mods", mods);
             var runtimeProperties = new JsonObject();
-            for (String property : List.of("shaderlod.dev.performanceStack", "shaderlod.dev.includeDh", "shaderlod.dev.gpuSampleInterval", "shaderlod.dev.gpuTiming", "shaderlod.dev.cpuLayerTiming")) {
+            for (String property : List.of("shaderlod.dev.performanceStack", "shaderlod.dev.includeDh", "shaderlod.dev.gpuSampleInterval", "shaderlod.dev.gpuTiming", "shaderlod.dev.cpuLayerTiming", "shaderlod.dev.fixedWetness")) {
                 runtimeProperties.addProperty(property, System.getProperty(property, "unspecified"));
             }
             report.add("runtime_properties", runtimeProperties);
@@ -163,6 +173,29 @@ final class WorkloadSession {
         for (String name : options.getOptionSet().getBooleanOptions().keySet()) sorted.put(name, Boolean.toString(values.getBooleanValueOrDefault(name)));
         for (String name : options.getOptionSet().getStringOptions().keySet()) sorted.put(name, values.getStringValueOrDefault(name));
         return new GsonBuilder().disableHtmlEscaping().create().toJsonTree(sorted).getAsJsonObject();
+    }
+
+    /** Advancing inputs deliberately live outside the strict fixed-input comparison. */
+    private JsonObject temporalInputs() {
+        var client = Minecraft.getInstance();
+        var result = new JsonObject();
+        result.add("wetness", new GsonBuilder().create().toJsonTree(ShaderInputTracker.snapshot()));
+        result.addProperty("frame_counter_source", net.irisshaders.iris.uniforms.SystemTimeUniforms.COUNTER.getAsInt());
+        result.addProperty("frame_time_counter_source", net.irisshaders.iris.uniforms.SystemTimeUniforms.TIMER.getFrameTimeCounter());
+        result.addProperty("frame_time_source", net.irisshaders.iris.uniforms.SystemTimeUniforms.TIMER.getLastFrameTime());
+        long dayTime = client.level.getDayTime();
+        var dimension = Iris.getCurrentDimension();
+        int worldTime = (int) (dimension == net.irisshaders.iris.shaderpack.DimensionId.END || dimension == net.irisshaders.iris.shaderpack.DimensionId.NETHER
+                ? dayTime % 24000 : client.level.dimensionType().fixedTime().orElse(dayTime % 24000));
+        int worldDay = (int) (dayTime / 24000);
+        result.addProperty("day_time_source", dayTime);
+        result.addProperty("world_time_source", worldTime);
+        result.addProperty("world_day_source", worldDay);
+        result.addProperty("photon_world_age_source", ((worldDay % 128) * 24000.0 + worldTime) / 20.0);
+        result.addProperty("moon_phase_source", client.level.getMoonPhase());
+        result.addProperty("rain_strength_source", Math.clamp(client.level.getRainLevel(net.irisshaders.iris.uniforms.CapturedRenderingState.INSTANCE.getTickDelta()), 0.0f, 1.0f));
+        result.addProperty("clock_policy", "normal; counter/frame-time remain real");
+        return result;
     }
 
     /** Capture once at each boundary; never add hashing or pipeline checks to frame hooks. */

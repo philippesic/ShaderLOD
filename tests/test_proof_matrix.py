@@ -2,6 +2,9 @@
 import copy
 import importlib.util
 import json
+import os
+import subprocess
+import zipfile
 from pathlib import Path
 import sys
 import tempfile
@@ -9,7 +12,7 @@ import unittest
 
 SCRIPTS = Path(__file__).resolve().parents[1] / 'scripts'
 sys.path.insert(0, str(SCRIPTS))
-from run_proof_matrix import balanced_plan, validate_report, profile_inputs, FATAL_LOG, canonical_options_hash, read_option_properties, declared_defaults, normalize_requested_options
+from run_proof_matrix import balanced_plan, validate_report, profile_inputs, FATAL_LOG, canonical_options_hash, read_option_properties, declared_defaults, normalize_requested_options, wetness_value, validate_temporal_inputs, preserve_screenshot, archive_defaults, camera_difference
 from analyze_proof_matrix import paired_effects, check_pair, run_metrics, analyze
 from summarize_workload import stream
 
@@ -91,9 +94,108 @@ class MatrixTests(unittest.TestCase):
         inputs['requested_shader_options']['INFO'] = '2'; inputs['shader_option_defaults']['INFO'] = '2'
         validate_report(report, request, inputs, 0)
 
+    def test_fixed_wetness_policy_and_each_observed_supplier(self):
+        for value in ('nan', 'inf', '-0.01', '1.01'):
+            with self.assertRaises(Exception): wetness_value(value)
+        self.assertEqual(wetness_value('0'), 0)
+        self.assertEqual(wetness_value('1'), 1)
+        supplier = {'supplierReads': 30, 'measurementReads': 10, 'appliedWetness': 1, 'appliedMin': 1, 'appliedMax': 1}
+        wetness = {'mode': 'fixed', 'fixedWetness': 1, 'measurementReads': 10, 'suppliers': [supplier]}
+        report = {'shader_temporal_inputs_start': {'wetness': copy.deepcopy(wetness)}, 'shader_temporal_inputs_end': {'wetness': copy.deepcopy(wetness)}}
+        self.assertEqual(validate_temporal_inputs(report, {'fixed_wetness': 1})['wetness_policy'], 'fixed')
+        report['shader_temporal_inputs_end']['wetness']['suppliers'].append(dict(supplier, appliedWetness=.7))
+        with self.assertRaises(ValueError): validate_temporal_inputs(report, {'fixed_wetness': 1})
+        report['shader_temporal_inputs_end']['wetness']['suppliers'].pop()
+        report['shader_temporal_inputs_end']['wetness']['suppliers'][0]['appliedMin'] = None
+        with self.assertRaises(ValueError): validate_temporal_inputs(report, {'fixed_wetness': 1})
+        dynamic = {'shader_temporal_inputs_start': {'wetness': {'mode': 'dynamic', 'rawWetness': .3}},
+                   'shader_temporal_inputs_end': {'wetness': {'mode': 'dynamic', 'rawWetness': .5, 'measurementReads': 10}}}
+        self.assertEqual(validate_temporal_inputs(dynamic, {})['end_raw_wetness'], .5)
+        with self.assertRaises(ValueError): validate_temporal_inputs(dynamic, {'fixed_wetness': 1})
+
+    def test_screenshots_preserved_and_stale_rejected(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory); profile = root / 'profile'; output = root / 'output'
+            (profile / 'screenshots').mkdir(parents=True); output.mkdir()
+            screenshot = profile / 'screenshots/workload-final.png'
+            contents = b'\x89PNG\r\n\x1a\nfixture'
+            screenshot.write_bytes(contents)
+            result = preserve_screenshot(profile, output, 'run', 0)
+            self.assertEqual((output / result['screenshot']).read_bytes(), contents)
+            with self.assertRaises(ValueError): preserve_screenshot(profile, output, 'stale', screenshot.stat().st_mtime_ns + 1)
+            screenshot.write_text('invalid')
+            with self.assertRaises(ValueError): preserve_screenshot(profile, output, 'bad', 0)
+
+    def test_archive_default_controls_outside_settings(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'pack.zip'
+            with zipfile.ZipFile(path, 'w') as archive:
+                archive.writestr('shaders/settings.glsl', '#define QUALITY high // [high low]\n')
+                archive.writestr('shaders/pass.fsh', '#define FRAGMENT_SHADER\n#define AMBIGUOUS one\n')
+                archive.writestr('shaders/pass.vsh', '#define AMBIGUOUS two\n')
+            with zipfile.ZipFile(path) as archive:
+                defaults = archive_defaults(archive)
+            self.assertEqual(defaults['FRAGMENT_SHADER'], 'true')
+            self.assertNotIn('AMBIGUOUS', defaults)
+
+    def test_java_wetness_supplier_preservation_and_clamp(self):
+        root = SCRIPTS.parent
+        iris = root / 'dev/runtime/iris-neoforge-1.8.12+mc1.21.1.jar'
+        if not iris.exists(): self.skipTest('Pinned Iris jar unavailable for standalone tracker test')
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory)
+            java = path / 'TrackerCheck.java'
+            java.write_text(r'''import com.pp.shaderlod.dev.timing.ShaderInputTracker;
+import java.util.concurrent.atomic.AtomicInteger;
+public class TrackerCheck {
+ public static void main(String[] args) {
+  if (ShaderInputTracker.parseFixedWetness(null) != null) throw new AssertionError();
+  for (String value : new String[]{"NaN", "Infinity", "-0.1", "1.1"}) {
+   try { ShaderInputTracker.parseFixedWetness(value); throw new AssertionError(value); }
+   catch (IllegalArgumentException expected) {}
+  }
+  if (ShaderInputTracker.applyWetness(.2f, 2f) != 1 || ShaderInputTracker.applyWetness(.2f, -1f) != 0) throw new AssertionError("clamp");
+  AtomicInteger calls = new AtomicInteger();
+  var first = ShaderInputTracker.wrapWetness(() -> { calls.incrementAndGet(); return .2f; }, "first");
+  var second = ShaderInputTracker.wrapWetness(() -> { calls.incrementAndGet(); return .7f; }, "second");
+  ShaderInputTracker.beginMeasurement();
+  float fixed = args.length == 0 ? -1 : Float.parseFloat(args[0]);
+  if (first.getAsFloat() != (fixed < 0 ? .2f : fixed) || second.getAsFloat() != (fixed < 0 ? .7f : fixed)) throw new AssertionError("publish");
+  var snapshot = ShaderInputTracker.snapshot();
+  if (calls.get() != 2 || snapshot.suppliers().size() != 2 || snapshot.measurementReads() != 2) throw new AssertionError("supplier count");
+  if (snapshot.suppliers().get(0).rawWetness() != .2f || snapshot.suppliers().get(1).rawWetness() != .7f) throw new AssertionError("raw per supplier");
+  if (fixed >= 0 && (snapshot.appliedMin() != fixed || snapshot.appliedMax() != fixed)) throw new AssertionError("all fixed");
+  ShaderInputTracker.snapshot();
+  if (calls.get() != 2) throw new AssertionError("snapshot reevaluated smoother");
+ }
+}''')
+            source = root / 'src/devClient/java/com/pp/shaderlod/dev/timing/ShaderInputTracker.java'
+            subprocess.run(['javac', '--release', '21', '-cp', str(iris), '-d', str(path), str(source), str(java)], check=True, capture_output=True)
+            classpath = os.pathsep.join((str(path), str(iris)))
+            subprocess.run(['java', '-cp', classpath, 'TrackerCheck'], check=True, capture_output=True)
+            subprocess.run(['java', '-Dshaderlod.dev.fixedWetness=1', '-cp', classpath, 'TrackerCheck', '1'], check=True, capture_output=True)
+
     def test_missing_profile_guard(self):
         with tempfile.TemporaryDirectory() as directory:
             with self.assertRaises(ValueError): profile_inputs(Path(directory))
+
+    def test_circular_yaw_and_strict_finite_camera_guard(self):
+        self.assertEqual(camera_difference(-180, 180, circular=True), 0)
+        self.assertEqual(camera_difference(-180, 540, circular=True), 0)
+        self.assertEqual(camera_difference(-179, 180, circular=True), 1)
+        self.assertEqual(camera_difference(-180, 180), 360)  # XYZ and pitch stay linear.
+        for invalid in (None, True, False, '180', float('nan'), float('inf'), -float('inf')):
+            with self.assertRaises(ValueError): camera_difference(invalid, 180, circular=True)
+            with self.assertRaises(ValueError): camera_difference(-180, invalid, circular=True)
+        report, request, inputs = self.fixture()
+        inputs['control'] = {'yaw': 540, 'pitch': 3}
+        for boundary in ('input_state_start', 'input_state_end'): report[boundary].update(yaw=-180, pitch=3)
+        validate_report(report, request, inputs, 0)
+        for boundary in ('input_state_start', 'input_state_end'): report[boundary]['yaw'] = -179
+        with self.assertRaises(ValueError): validate_report(report, request, inputs, 0)
+        for invalid in (None, True, float('nan'), float('inf')):
+            for boundary in ('input_state_start', 'input_state_end'): report[boundary]['yaw'] = invalid
+            with self.assertRaises(ValueError): validate_report(report, request, inputs, 0)
 
     def pair_fixture(self):
         report = {'input_state_end': {'framebuffer_width': 1488, 'effective_chunks': 24}, 'loaded_mods': {'iris': '1'},

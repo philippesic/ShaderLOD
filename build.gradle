@@ -89,6 +89,9 @@ neoForge {
             if (project.hasProperty('measurementSeconds')) {
                 systemProperty 'shaderlod.dev.measurementSeconds', project.property('measurementSeconds').toString()
             }
+            if (project.hasProperty('fixedWetness')) {
+                systemProperty 'shaderlod.dev.fixedWetness', project.property('fixedWetness').toString()
+            }
             if (project.hasProperty('gpuAttribution')) {
                 systemProperty 'shaderlod.dev.gpuAttribution', project.property('gpuAttribution').toString()
             }

@@ -49,8 +49,13 @@ def archive_contents(path, expected_sha256, photon, original_license=None):
                 raise ValueError('Derivative archive metadata does not match pinned Photon')
             if metadata.get('bridge_version') != 2: raise ValueError('Unsupported ShaderLOD uniform bridge')
         settings = archive.read('shaders/settings.glsl').decode()
+        declarations = {}
+        for name in sorted(names):
+            if name.endswith(('.glsl', '.vsh', '.fsh', '.gsh', '.csh')):
+                for option, value in declared_defaults(archive.read(name).decode()).items():
+                    declarations.setdefault(option, []).append([name, value])
     return {'sha256': expected_sha256, 'license_sha256': __import__('hashlib').sha256(license_bytes).hexdigest(),
-            'license_bytes': license_bytes, 'settings': settings, 'metadata': metadata}
+            'license_bytes': license_bytes, 'settings': settings, 'metadata': metadata, 'declarations': declarations}
 
 
 def plan(args):
@@ -77,7 +82,7 @@ def plan(args):
                                       target_profiles=[str(output / scene / mode) for mode in MODES]) for scene in args.scenes]}
 
 
-def common_options(source, selected_archive):
+def common_options(source, selected_archive, candidate=None):
     """Use stopped source's resolved values when available, never normalized file bytes."""
     iris = read_option_properties((source / 'config/iris.properties').read_text())
     selected = iris.get('shaderPack', '')
@@ -87,7 +92,9 @@ def common_options(source, selected_archive):
     raw_options = (source / 'shaderpacks' / (selected + '.txt')).read_text()
     requested = read_option_properties(raw_options)
     defaults = declared_defaults(selected_archive['settings'])
-    normalize_requested_options(defaults, requested)  # reject undeclared source requests
+    archive_defaults = defaults | {name: records[0][1] for name, records in selected_archive['declarations'].items()
+                                   if name not in defaults and len({record[1] for record in records}) == 1}
+    normalize_requested_options(archive_defaults, requested)  # reject unknown/ambiguous source requests
     report_path = source / 'workload-measurement.json'
     evidence = 'Static declared defaults plus requested options; runtime unverified'
     if report_path.exists():
@@ -101,18 +108,40 @@ def common_options(source, selected_archive):
         for name, value in requested.items():
             if name == 'INFO' and name not in effective and value == defaults.get(name): continue
             if effective.get(name) != value: raise ValueError('Current source options differ from measured loaded values: ' + name)
-        common = {name: value for name, value in effective.items() if not name.startswith('SHADERLOD_')}
+        common, option_evidence = filter_effective_options(effective, requested, selected_archive, candidate)
         evidence = 'Source runtime effective values captured; new profiles runtime pending'
     else:
         # Identical upstream source defaults supply absent values; do not invent
         # editable controls from unused preprocessor macros.
         common = {name: value for name, value in requested.items() if not name.startswith('SHADERLOD_')}
-    return common, evidence
+        option_evidence = {'source_effective_shader_options': None, 'omitted_non_settings_defaults': {},
+                           'written_explicit_options': requested, 'note': 'No runtime option map available; matching explicit overrides over identical source defaults'}
+    return common, evidence, option_evidence
 
 
-def isolation_options(common, settings, analytic_enabled, water_bands):
+def filter_effective_options(effective, requested, original, candidate):
+    """Write settings controls and explicit user overrides, not incidental header guards."""
+    defaults = declared_defaults(original['settings'])
+    common = {name: value for name, value in effective.items() if name in defaults and not name.startswith('SHADERLOD_')}
+    omitted = {name: value for name, value in effective.items() if name not in defaults and not name.startswith('SHADERLOD_')}
+    for name, value in requested.items():
+        if name.startswith('SHADERLOD_'): raise ValueError('Original source unexpectedly requests ShaderLOD options')
+        if name == 'INFO' and name not in effective and value == defaults.get(name): continue
+        if effective.get(name) != value: raise ValueError('Requested option differs from measured Iris value: ' + name)
+        if name not in defaults:
+            a = original['declarations'].get(name)
+            b = candidate['declarations'].get(name) if candidate else None
+            if not a or candidate and a != b: raise ValueError('Explicit non-settings control lacks matched archive declarations: ' + name)
+        common[name] = value
+        omitted.pop(name, None)
+    return common, {'source_effective_shader_options': effective, 'omitted_non_settings_defaults': omitted,
+                    'written_explicit_options': requested,
+                    'note': 'Settings controls plus explicit overrides are written. Unrequested non-settings/header defaults retain each archive source; full source map preserved. These are declarations, not universal editable-control assumptions.'}
+
+
+def isolation_options(common, settings, analytic_enabled, water_bands, declarations=None):
     defaults = declared_defaults(settings)
-    if any(name not in defaults for name in common): raise ValueError('Derivative lacks an upstream option from source')
+    if any(name not in defaults and name not in (declarations or {}) for name in common): raise ValueError('Derivative lacks an upstream option from source')
     near, far, transition = water_bands
     options = common | {
         'SHADERLOD_PRESERVE_LIGHTING': 'true', 'SHADERLOD_CACHED_SKY': 'false',
@@ -169,8 +198,8 @@ def prepare(args):
         if provenance.get('configuration_only') or not provenance.get('source_world_sha256'):
             raise ValueError('Source lacks verified save provenance')
         control = read_control(source)
-        common, evidence = common_options(source, original)
-        patched = isolation_options(common, candidate['settings'], operation['analytic_enabled'], operation['water_bands'])
+        common, evidence, option_evidence = common_options(source, original, candidate)
+        patched = isolation_options(common, candidate['settings'], operation['analytic_enabled'], operation['water_bands'], candidate['declarations'])
         original_defaults, candidate_defaults = declared_defaults(original['settings']), declared_defaults(candidate['settings'])
         if any(candidate_defaults.get(name) != value for name, value in original_defaults.items() if not name.startswith('SHADERLOD_')):
             raise ValueError('Candidate changes upstream source defaults; not an isolated control')
@@ -184,7 +213,7 @@ def prepare(args):
         if any(jar.name != dh['filename'] for jar in jars): raise ValueError('Source has unmanaged optional profile mod jars')
         if jars and file_hash(jars[0], 'sha512') != dh['hashes']['sha512']: raise ValueError('Source DH artifact checksum mismatch')
         scenes.append(dict(scene=item['scene'], source=source, world=world, common=common, patched=patched,
-                           control=control, provenance=provenance, evidence=evidence, source_files=sources, dh_jars=jars,
+                           control=control, provenance=provenance, evidence=evidence, option_evidence=option_evidence, source_files=sources, dh_jars=jars,
                            raw_source_files_sha256={str(path): file_hash(path) for path in sources}))
     if args.dry_run:
         print(json.dumps(operation | {'validation': 'Archive/config/provenance checks only; no world hashes/copies or runtime checks'}, indent=2)); return
@@ -247,6 +276,7 @@ def prepare(args):
                     'adaptive_pack_sha256': candidate['sha256'], 'adaptive_build': candidate['metadata'],
                     'quality_options': {'high': scene['common'], 'patched-off': scene['patched'], 'adaptive': scene['patched']},
                     'validation': scene['evidence'], 'isolation_variant': operation,
+                    'source_option_evidence': scene['option_evidence'],
                     'raw_source_files_sha256': scene['raw_source_files_sha256'],
                     'source_provenance': scene['provenance'], 'runtime_lock': runtime_lock,
                     'dh_installed': bool(scene['dh_jars']) and not args.without_dh,
