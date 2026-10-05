@@ -463,3 +463,34 @@ new files elsewhere. Workers continue source work in parallel; coordinate heavy
 local tests/builds away from measured25s windows and keep one GPU operator.
 Record each code owner, acceptance check, stopping boundary and integration queue.
 No new native goal, platform, supported pack, remote push or external message.
+
+### Parallel code ownership and current freezes
+
+User also questioned performance comparability. Root clarified that prior5.6%/
+1.2% FPS regressions were a particular experimental five-effect candidate in serial
+windowed native-size captures, not a replay of the user's roughly10% faster
+fullscreen observation. FPS=renderedframes/captureseconds afterwarmup; asynchronous
+GPUelapsed every5frames is separate. CPU load/focus/clocks/source/window changes
+remain unisolated; no contrary universal current-LOD claim. Future benchmark batches
+must be quiet, matched source/settings/fullscreen and balanced, while source
+implementation remains parallel. Root primarily orchestrates these tracks:
+
+| Agent | Owned implementation | Workspace and stopping boundary |
+| --- | --- | --- |
+| effect_api | OpaqueLighting/effectsVersion2/43fields, config commands, coherent snapshots, reload handling | Managed lod-interfaces worktree; commit2892035,60tests/build pass, root integrated exactpatch and3test-classpath lines preserving prior dirtybuild; runtime/reload/consumption pending |
+| lod_opportunities | 2x2 distant irradiance prepass/resolve, full-res albedo/specular, practical edge fallbacks | Managed lod-lighting-rate worktree; actual code in progress, no GPU/source support claim |
+| reflection_lod | Bounded projected refinement termination+depth reuse, original full traversal/coverage | MAIN distinctnewfiles;9source/parser/mathtests pass, default-off archive d11de4c94fb58520e9972a816e9739486fa8578b876fbd20c17aa933a4a82e16; driver/quality/cost pending |
+| procedural_lod | Footprint-filtered water octaves with actual displaced coordinates/parallax, fullnear/caustics | MAIN distinctnewfiles;13tests pass, default-off archive894c5c37de5d0427f283775a01fec0de1a4fde5a2162d108993bd648b5b96a1a; sampled far normals22.115degrees risk, no quality/gain acceptance |
+| volumetric_lod | General interval/budget helper and primary cumulus integration, unchanged total interval/secondary work | MAIN distinctnewfiles;12tests pass, default-off archive3685e47e94cd08f3994053f300981bbdd92ae108a65f7fadb700bd6d9422a6b5; active controls/runtime quality/counts/cost pending |
+| lod_quality | Reusable2x2 surface continuity/near/depth/normal/material/lightmap guards | MAIN three newfiles;9tests/300planarfixtures pass, helper2fff58476c6d49d40eb61e5f6683dc58697ed964f128a3f444442677b06327b0; handed tolighting implementation, shader/quality unverified |
+| ao_runtime | Shared explicit source-qualified profile preparation and driver/quality queue | Ownnewprepare_parallel_lod_profiles.py/test/PARALLEL_LOD_RUNTIME_QUEUE.md; source implementation in progress, no launch until rootreview; oneGPUowner only |
+
+Managed paths: `/Users/pippo/.codex/worktrees/lod-interfaces/shaderlod` and
+`/Users/pippo/.codex/worktrees/lod-lighting-rate/shaderlod`, based on67ef5ba,
+registered tothischat. Ignored dev/runtime/upstream are read-only symlinks to main;
+no binaries/symlinks committed. MAIN finalinterface integration
+`./gradlew test build compileDevClientJava` passed (test task/fromcache60 matching
+inputs); no current Minecraft client, root owns GPU. No main sampler/dev harness
+change; archived r2 proofs remain historical class fingerprints. Heavy CPU checks
+pause only during dedicated timed windows; untimed compilation/quality diagnostics
+permit parallel source development with no performance inference.

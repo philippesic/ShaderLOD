@@ -1,0 +1,87 @@
+{
+  "schema": 1,
+  "experiment": "photon-primary-volumetric-integration-lod",
+  "base_version": "v1.3b",
+  "base_sha256": "120897768eaa8cb1f14a3e98f88dff009ae3204ee3b96904a4fe8586edfc1ead",
+  "license_sha256": "514402d18eedb0afe374344ca9f0fe87b7399779518184b8fc64e31674555fc5",
+  "switch": "SHADERLOD_VOLUMETRIC_INTEGRATION_LOD",
+  "option_declaration": "// ShaderLOD distance/footprint volumetric integration experiment; default off.\n//#define SHADERLOD_VOLUMETRIC_INTEGRATION_LOD\n",
+  "stage_guard": "#if defined PROGRAM_DEFERRED1 && !defined ATMOSPHERE_TRANSMITTANCE_LUT\n",
+  "members": [
+    {
+      "path": "shaders/include/sky/clouds/cumulus.glsl",
+      "source_sha256": "1923542cd9ad862a6166a542dbdcb1597fd70316e4338b236deefc2ccb932ba5",
+      "patched_sha256": "5290d3c0c56693608c6cfe8efec831b67023334729d4f549b3551f430603d8e2",
+      "replacements": [
+        {
+          "before": "CloudsResult draw_cumulus_clouds(\n",
+          "after": "#ifdef SHADERLOD_VOLUMETRIC_INTEGRATION_LOD\n#if defined PROGRAM_DEFERRED1 && !defined ATMOSPHERE_TRANSMITTANCE_LUT\nCloudsResult shaderlod_original_draw_cumulus_clouds(\n#else\nCloudsResult draw_cumulus_clouds(\n#endif // SHADERLOD_VOLUME_STAGE\n#else\nCloudsResult draw_cumulus_clouds(\n#endif // SHADERLOD_VOLUMETRIC_INTEGRATION_LOD\n"
+        },
+        {
+          "before": "        apparent_distance\n    );\n}\n\n#endif\n",
+          "after": "        apparent_distance\n    );\n}\n\n#ifdef SHADERLOD_VOLUMETRIC_INTEGRATION_LOD\n#if defined PROGRAM_DEFERRED1 && !defined ATMOSPHERE_TRANSMITTANCE_LUT\n#include \"/include/shaderlod/photon_volume_adapter.glsl\"\n#else\n#endif // SHADERLOD_VOLUME_STAGE\n#else\n#endif // SHADERLOD_VOLUMETRIC_INTEGRATION_LOD\n#endif\n"
+        }
+      ]
+    },
+    {
+      "path": "shaders/settings.glsl",
+      "source_sha256": "93401d268fe859cc1df81929ad41156757a98db80f80cf32af80d9cdca96c394",
+      "patched_sha256": "b9b1c432b484d190c036f7cf243059f1f5d33c5c2c0564a9592c5323e05dd348",
+      "replacements": [
+        {
+          "before": "#define SETTINGS_INCLUDED\n",
+          "after": "#define SETTINGS_INCLUDED\n// ShaderLOD distance/footprint volumetric integration experiment; default off.\n//#define SHADERLOD_VOLUMETRIC_INTEGRATION_LOD\n"
+        }
+      ],
+      "enabled_sha256": "e69f2812c0c1ef49eeeef9d43c2748cfb06d173a9dfa0ef7d77daec09bc76160"
+    }
+  ],
+  "additions": [
+    {
+      "path": "shaders/include/shaderlod/volume_budget.glsl",
+      "source_path": "shaderpacks/common/shaders/include/shaderlod/volume_budget.glsl",
+      "sha256": "ac1d7984264ffa6dfe5f525663cee69499511d15769d1f56d5497d491d9a8a84"
+    },
+    {
+      "path": "shaders/include/shaderlod/photon_volume_adapter.glsl",
+      "source_path": "shaderpacks/photon-volumetric-lod/shaders/include/shaderlod/photon_volume_adapter.glsl",
+      "sha256": "e9ad858b3ab98f45118362e18e357f5e41a0193b23085f73992f5787c82938eb"
+    }
+  ],
+  "core_version": 2,
+  "effect_versions": [
+    1,
+    2
+  ],
+  "activation": "private compile option AND main PROGRAM_DEFERRED1 AND analytic transmittance path AND core2/global1 AND known extension1or2 AND valid Volumetrics policy",
+  "units": "camera-relative entry and interval converted from atmosphere meters to blocks via CLOUDS_SCALE; final pixel footprint in blocks",
+  "integration": "ceil continuous work_target cells; final cell shortened; all cell optical depths use actual cell length; no density strength change",
+  "retained_minimum": 8,
+  "inherit_retained_ratios": [
+    0.85,
+    0.75
+  ],
+  "inside_above": "radius >= inner_radius - 1 atmosphere unit remains original",
+  "overhead": "smooth full-quality restore for abs(world ray y) 0.35..0.65; full above0.65",
+  "quality_status": "unverified variable-medium quadrature; constant-medium math is not visual quality acceptance",
+  "sampler_constraints": {
+    "status": "controlled_profile_only",
+    "report_path": "dev/logs/cloud-sampler-state-diagnostic-r3.json",
+    "report_sha256": "5dbc7edf7fa5b11cebd2a4ac948a2c8e9553ddf467f5141831c29e162e283e67",
+    "minimum_filter": "LINEAR nonmipmapped",
+    "base_level": 0,
+    "sampler_object": 0,
+    "anisotropy": 1.0,
+    "active_density_sampling": "textureLod level0, including local coverage and both noise fields",
+    "limitation": "prior measured sampler state is not a new archive rendering/parity result; repeat driver sampler checks before acceptance"
+  },
+  "iris_option_discovery": {
+    "jar_path": "dev/runtime/iris-neoforge-1.8.12+mc1.21.1.jar",
+    "jar_sha256": "3e3f94d2d5cdcb8145c4385d521974aa2d8669b2cc212351f70cf06488182e83",
+    "class_path": "net/irisshaders/iris/shaderpack/option/OptionAnnotatedSource.class",
+    "class_sha256": "bcc5221aacd9b72619c966ac753e137144b45a8e6462511d104d9155db6bbba7",
+    "parse_rule": "parseLine only enters declaration/ifdef/ifndef paths; parseIfdef accepts one word and line end; #if defined does not register boolean reference",
+    "guard_contract": "outer #ifdef private switch; inner #if defined PROGRAM_DEFERRED1 && !defined ATMOSPHERE_TRANSMITTANCE_LUT",
+    "acceptance": "actual OptionAnnotatedSource/getOptionSet fixture with stage entry; private gate sole added option, default/override validation; compilation/rendering pending"
+  }
+}

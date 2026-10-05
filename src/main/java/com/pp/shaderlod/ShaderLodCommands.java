@@ -1,7 +1,11 @@
 package com.pp.shaderlod;
 
 import com.mojang.brigadier.arguments.BoolArgumentType;
+import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.builder.RequiredArgumentBuilder;
+import com.pp.shaderlod.lod.Effect;
 import net.irisshaders.iris.Iris;
 import net.irisshaders.iris.api.v0.IrisApi;
 import net.minecraft.client.Minecraft;
@@ -31,6 +35,7 @@ public final class ShaderLodCommands {
                 .executes(context -> status(context.getSource()))
                 .then(Commands.literal("status").executes(context -> status(context.getSource())))
                 .then(presetCommands)
+                .then(effectCommands())
                 .then(Commands.literal("terrain")
                         .executes(context -> status(context.getSource()))
                         .then(Commands.literal("enabled").then(Commands.argument("value", BoolArgumentType.bool()).executes(context -> {
@@ -82,6 +87,85 @@ public final class ShaderLodCommands {
         return 1;
     }
 
+    /** Effect commands edit requested config, not inferred shader capabilities. */
+    static LiteralArgumentBuilder<net.minecraft.commands.CommandSourceStack> effectCommands() {
+        var effects = LiteralArgumentBuilder.<net.minecraft.commands.CommandSourceStack>literal("effects")
+                .executes(context -> effectsStatus(context.getSource(), null))
+                .then(LiteralArgumentBuilder.<net.minecraft.commands.CommandSourceStack>literal("status")
+                        .executes(context -> effectsStatus(context.getSource(), null)));
+        for (Effect effect : Effect.values()) {
+            var entry = LiteralArgumentBuilder.<net.minecraft.commands.CommandSourceStack>literal(ShaderLodEffectConfig.effectKey(effect))
+                    .executes(context -> effectsStatus(context.getSource(), effect))
+                    .then(LiteralArgumentBuilder.<net.minecraft.commands.CommandSourceStack>literal("status")
+                            .executes(context -> effectsStatus(context.getSource(), effect)));
+            var modes = LiteralArgumentBuilder.<net.minecraft.commands.CommandSourceStack>literal("mode");
+            for (var mode : ShaderLodEffectConfig.Mode.values()) {
+                modes.then(LiteralArgumentBuilder.<net.minecraft.commands.CommandSourceStack>literal(mode.name().toLowerCase(Locale.ROOT))
+                        .executes(context -> editEffect(context.getSource(), effect,
+                                () -> ShaderLodEffectConfig.setMode(effect, mode))));
+            }
+            entry.then(modes);
+            entry.then(LiteralArgumentBuilder.<net.minecraft.commands.CommandSourceStack>literal("bands")
+                    .then(RequiredArgumentBuilder.<net.minecraft.commands.CommandSourceStack, Double>argument("near", DoubleArgumentType.doubleArg(1, 4095))
+                    .then(RequiredArgumentBuilder.<net.minecraft.commands.CommandSourceStack, Double>argument("far", DoubleArgumentType.doubleArg(2, 4096))
+                    .then(RequiredArgumentBuilder.<net.minecraft.commands.CommandSourceStack, Double>argument("transition", DoubleArgumentType.doubleArg(0, 512))
+                            .executes(context -> editEffect(context.getSource(), effect, () -> ShaderLodEffectConfig.setBands(effect,
+                                    DoubleArgumentType.getDouble(context, "near"), DoubleArgumentType.getDouble(context, "far"),
+                                    DoubleArgumentType.getDouble(context, "transition"))))))));
+            entry.then(LiteralArgumentBuilder.<net.minecraft.commands.CommandSourceStack>literal("ratios")
+                    .then(RequiredArgumentBuilder.<net.minecraft.commands.CommandSourceStack, Double>argument("medium", DoubleArgumentType.doubleArg(0, 1))
+                    .then(RequiredArgumentBuilder.<net.minecraft.commands.CommandSourceStack, Double>argument("far", DoubleArgumentType.doubleArg(0, 1))
+                            .executes(context -> editEffect(context.getSource(), effect, () -> ShaderLodEffectConfig.setRatios(effect,
+                                    DoubleArgumentType.getDouble(context, "medium"), DoubleArgumentType.getDouble(context, "far")))))));
+            entry.then(LiteralArgumentBuilder.<net.minecraft.commands.CommandSourceStack>literal("protection")
+                    .then(RequiredArgumentBuilder.<net.minecraft.commands.CommandSourceStack, Boolean>argument("value", BoolArgumentType.bool())
+                            .executes(context -> editEffect(context.getSource(), effect,
+                                    () -> ShaderLodEffectConfig.setProtection(effect, BoolArgumentType.getBool(context, "value"))))));
+            effects.then(entry);
+        }
+        return effects;
+    }
+
+    private static int editEffect(net.minecraft.commands.CommandSourceStack source, Effect effect, Runnable edit) {
+        try {
+            edit.run();
+            return effectsStatus(source, effect);
+        } catch (IllegalArgumentException | IllegalStateException exception) {
+            source.sendFailure(Component.literal("Effects request rejected: " + exception.getMessage()));
+            return 0;
+        }
+    }
+
+    private static int effectsStatus(net.minecraft.commands.CommandSourceStack source, Effect effect) {
+        source.sendSuccess(() -> Component.literal(effect == null ? describeEffects() : describeEffect(effect)), false);
+        return 1;
+    }
+
+    static String describeEffects() {
+        var controls = ShaderLodEffectConfig.snapshot();
+        var result = new StringBuilder("effectsProtocol=").append(ShaderLodEffectConfig.PROTOCOL_VERSION)
+                .append(", IrisRegistrationObserved=").append(ShaderLodEffectConfig.irisRegistrationObserved())
+                .append(", requestedModes=");
+        for (Effect effect : Effect.values()) {
+            result.append(ShaderLodEffectConfig.effectKey(effect)).append(':').append(controls.get(effect).mode()).append(' ');
+        }
+        return result.append("; shader consumption unverified").toString();
+    }
+
+    static String describeEffect(Effect effect) {
+        var control = ShaderLodEffectConfig.snapshot().get(effect);
+        var request = control.requested();
+        var transport = control.policy();
+        return "effect=" + ShaderLodEffectConfig.effectKey(effect) + ", requestedMode=" + control.mode()
+                + ", requestedBands=" + request.bands().nearBlocks() + "/" + request.bands().farBlocks() + "/" + request.bands().transitionBlocks()
+                + ", requestedRatios=" + request.mediumWorkRatio() + "/" + request.farWorkRatio()
+                + ", transportRatios=" + transport.mediumWorkRatio() + "/" + transport.farWorkRatio()
+                + ", preserveSalientLighting=" + request.preserveSalientLighting() + ", repaired=" + control.repaired()
+                + ", effectsProtocol=" + ShaderLodEffectConfig.PROTOCOL_VERSION
+                + ", IrisRegistrationObserved=" + ShaderLodEffectConfig.irisRegistrationObserved()
+                + "; shader consumption unverified";
+    }
+
     public static void reportRuntime(ClientTickEvent.Post event) {
         if (Minecraft.getInstance().level == null) {
             lastRuntimeStatus = "";
@@ -108,6 +192,9 @@ public final class ShaderLodCommands {
                 + ", transition=" + settings.transition()
                 + ", debug=" + settings.debug()
                 + ", detailedChunks=" + GeometryLodController.status().effectiveChunks()
-                + ", terrainPolicy=" + GeometryLodController.status().reason();
+                + ", terrainPolicy=" + GeometryLodController.status().reason()
+                + ", effectsProtocolDeclared=" + ShaderLodEffectConfig.PROTOCOL_VERSION
+                + ", effectsIrisRegistrationObserved=" + ShaderLodEffectConfig.irisRegistrationObserved()
+                + "; per-effect requests: /shaderlod effects (consumption unverified)";
     }
 }

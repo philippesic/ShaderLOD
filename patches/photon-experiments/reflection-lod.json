@@ -1,0 +1,69 @@
+{
+  "schema": 1,
+  "experiment": "photon-reflection-footprint-refinement-lod",
+  "base_version": "v1.3b",
+  "base_sha256": "120897768eaa8cb1f14a3e98f88dff009ae3204ee3b96904a4fe8586edfc1ead",
+  "license_sha256": "514402d18eedb0afe374344ca9f0fe87b7399779518184b8fc64e31674555fc5",
+  "switch": "SHADERLOD_REFLECTION_DEPTH_CACHE",
+  "option_declaration": "// ShaderLOD bounded reflection footprint LOD; default off.\n//#define SHADERLOD_REFLECTION_DEPTH_CACHE\n",
+  "quality_class": "bounded_projected_refinement_lod_candidate",
+  "members": [
+    {
+      "path": "shaders/include/lighting/specular_lighting.glsl",
+      "source_sha256": "01d260e65de1dc1766e62044d79adef61dbdee9b75a8d48bd15ff8bd778a15e0",
+      "patched_sha256": "8d600e6f0d77443a3f029a553f64819a3909cf0bf323dccacd4c2dfffd80f736",
+      "replacements": [
+        {
+          "before": "#include \"/include/misc/raytracer.glsl\"\n",
+          "after": "#include \"/include/misc/raytracer.glsl\"\n#ifdef SHADERLOD_REFLECTION_DEPTH_CACHE\n#include \"/include/shaderlod/reflection_depth_cache.glsl\"\n#endif // SHADERLOD_REFLECTION_DEPTH_CACHE\n"
+        },
+        {
+          "before": "    bool hit = raymarch_depth_buffer(\n",
+          "after": "#ifdef SHADERLOD_REFLECTION_DEPTH_CACHE\n    bool hit = shaderlod_reflection_depth_trace(\n#else\n    bool hit = raymarch_depth_buffer(\n#endif // SHADERLOD_REFLECTION_DEPTH_CACHE\n"
+        }
+      ]
+    },
+    {
+      "path": "shaders/settings.glsl",
+      "source_sha256": "93401d268fe859cc1df81929ad41156757a98db80f80cf32af80d9cdca96c394",
+      "patched_sha256": "4efa691c3dc70812effa51daeed214143370a00d7e62862b57512d4e3ff2b585",
+      "replacements": [
+        {
+          "before": "#define SETTINGS_INCLUDED\n",
+          "after": "#define SETTINGS_INCLUDED\n// ShaderLOD bounded reflection footprint LOD; default off.\n//#define SHADERLOD_REFLECTION_DEPTH_CACHE\n"
+        }
+      ],
+      "enabled_sha256": "de56940e5a0f75a15d6196b51cb8945435d69a6358207df5dcd6b4dff572498c"
+    }
+  ],
+  "added_members": [
+    {
+      "path": "shaders/include/shaderlod/reflection_depth_cache.glsl",
+      "source_path": "shaderpacks/photon-reflection-lod/shaders/include/shaderlod/reflection_depth_cache.glsl",
+      "sha256": "b5dd57b6f6155ada9489416ad94c5b4be00286615b9fce71ecf09400968ca44a"
+    }
+  ],
+  "derived_source": {
+    "path": "shaders/include/misc/raytracer.glsl",
+    "sha256": "10aecc98cec4db7828787423000730bb2b16b06bd4730fd72fe72cb46c0d6aba"
+  },
+  "consumed_core_fields": [
+    "shaderlodBridgeVersion",
+    "shaderlodEnabled",
+    "shaderlodNear",
+    "shaderlodFar",
+    "shaderlodTransition"
+  ],
+  "iris_option_discovery": {
+    "jar_path": "dev/runtime/iris-neoforge-1.8.12+mc1.21.1.jar",
+    "jar_sha256": "3e3f94d2d5cdcb8145c4385d521974aa2d8669b2cc212351f70cf06488182e83",
+    "class_path": "net/irisshaders/iris/shaderpack/option/OptionAnnotatedSource.class",
+    "class_sha256": "bcc5221aacd9b72619c966ac753e137144b45a8e6462511d104d9155db6bbba7",
+    "parse_rule": "parseLine only enters declaration/ifdef/ifndef paths; parseIfdef accepts one word and line end; #if defined does not register boolean reference",
+    "guard_contract": "standalone #ifdef private switch; helper guard uses #if !defined",
+    "acceptance": "actual OptionAnnotatedSource/getOptionSet fixture with stage entry; private gate sole added option, default/override validation; compilation/rendering pending"
+  },
+  "refinement_error_pixels": 0.25,
+  "refinement_depth_tolerance_fraction": 0.0625,
+  "refinement_view_error_blocks": 0.05
+}

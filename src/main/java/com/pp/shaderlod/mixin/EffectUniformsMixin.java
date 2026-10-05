@@ -20,10 +20,10 @@ public abstract class EffectUniformsMixin {
     @Inject(method = "generalCommonUniforms", at = @At("TAIL"), remap = false)
     private static void shaderlod$registerEffects(UniformHolder uniforms, FrameUpdateNotifier notifier,
                                                  PackDirectives directives, CallbackInfo ci) {
-        var state = new EffectUniformFrame();
-        notifier.addListener(state::beginFrame);
+        var state = EffectUniformFrame.forNotifier(notifier, notifier::addListener);
+        ShaderLodEffectConfig.observeIrisRegistration();
         var frequency = UniformUpdateFrequency.PER_FRAME;
-        uniforms.uniform1i(frequency, "shaderlodEffectsVersion", () -> 1);
+        uniforms.uniform1i(frequency, "shaderlodEffectsVersion", () -> ShaderLodEffectConfig.PROTOCOL_VERSION);
         for (Effect effect : Effect.values()) {
             String prefix = "shaderlod" + effect.uniformKeySuffix();
             uniforms.uniform1i(frequency, prefix + "Mode", () -> state.control(effect).mode().protocolValue());

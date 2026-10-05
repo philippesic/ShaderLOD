@@ -19,13 +19,25 @@ remain retained; the latest operational checkpoint is at the end of the goal.
 
 ## Ownership and current work
 
-Root owns integration and the GPU until a recorded runtime handoff. The initial
-team owns separate new files: `effect_api` (general Java policies),
-`lod_opportunities` (private exact AO depth reuse), `performance_audit` (cost/target
-audit), `ao_runtime` (fresh AO profiles and runtime plan). General policies and
-additive config/uniform registration compile; all 47 Java tests and dev-client
-compilation passed. Extension1 has no accepted linked consumer yet; core2 stays
-unchanged. Shadow/AO budget protection remains on and overrides default INHERIT.
+Root primarily orchestrates independent parallel implementation tracks, per the
+user's reiterated direction. `effect_api` implemented protocol2/43effect fields,
+OpaqueLighting controls/commands/coherent reload snapshots in an isolated worktree;
+root integrated it and main test/build/dev compilation passes all60tests. Core2
+stays unchanged; defaults INHERIT/unity/protected lighting. Actual extension
+linkage/config reload in the client remains unverified.
+
+`reflection_lod` implemented bounded footprint refinement (9tests),
+`procedural_lod` implemented displaced-footprint water/parallax (13tests),
+`volumetric_lod` implemented normalized primary integration (12tests), and
+`lod_quality` implemented reusable edge/near/plane guards (9tests). All are
+source-tested/default-off; driver/quality/performance acceptance pending.
+`lod_opportunities` builds the 2x2 irradiance prepass/resolve in its isolated
+lighting-rate worktree. `ao_runtime` prepares a shared source-qualified untimed
+driver/quality queue; no launch before rootreview. Source development stays
+parallel; one GPU operator and dedicated quiet benchmark windows. Root currently
+owns GPU, with no live client. Exact ownership/paths/pins are in the active goal.
+
+Retained first-wave experiments:
 AO pilot runner exec89240 exited0, all three normal WorkloadSession contracts
 passed and compiled source rendered. Original/off/on mean GPU13.2830/12.5266/
 17.7031ms; FPS68.4552/72.6664/53.1302. No useful gain; candidate stays private/off.

@@ -1,15 +1,14 @@
 # Spatial shading LOD: minimal mod interface
 
-2026-10-05. Source-only proposal for the
+2026-10-05. Spatial-adapter proposal and implemented mod surface for the
 [general 50% goal](goals/general-lod-50-percent.md), coordinated with
 `lod_opportunities`' lower-rate `DISTANT_DIFFUSE_IRRADIANCE` investigation. Only
-this document is owned by `effect_api`; no Java/config/GLSL/resource edits,
-tests, compiler, archive or client ran. This proposal is not an accepted shader
-consumer or performance/quality result.
+the interface sources are owned by `effect_api` in an isolated worktree. The
+mod surface below is implemented; storage/reconstruction is the shader owner's
+separate adapter. Rendering, performance and quality require runtime acceptance.
 
-**Recommend:** reuse the existing immutable distance/work policy and config shape,
-with one additive `OPAQUE_LIGHTING` effect only when root selects an explicit
-spatial consumer. Its first declared Photon capability is opaque diffuse
+The interface reuses immutable distance/work policy and config shape with
+one additive `OPAQUE_LIGHTING` effect. Its first proposed Photon capability is opaque diffuse
 irradiance reconstruction. Keep albedo, material decoding, specular/reflections,
 geometry and existing shadow/AO policy controls separate. A four-to-one evaluation
 rate is a plausible quality/performance tradeoff worth testing; it does not need
@@ -40,9 +39,12 @@ caps or smooth spatial transitions were consumed. The first cost control can
 apply one representative only beyond the completed far band; motion/transition
 inspection must then decide whether to implement intermediate rates or a stable
 tile-coherent transition schedule. Such a schedule requires a declared rate
-mapping; it is not automatically provided by smooth ratios or TAA.
+mapping; it is not automatically provided by smooth ratios or TAA. The shader
+owner may instead blend full and cached irradiance in a narrow transition band,
+executing both paths there; account for that extra work and do not call it K2/K3
+evaluation-budget consumption.
 
-## Proposed mod surface
+## Implemented mod surface
 
 `MATERIALS` is the wrong existing category: its reference adapter controls
 POM/material work, while this experiment retains full-rate material and albedo
@@ -51,7 +53,7 @@ sampling; reusing those controls would imply that their current protection or
 quality budgets authorize a spatial diffuse change. `VOLUMETRICS` is unrelated.
 Reuse their implementation shape, not their semantic identities.
 
-A future root-owned integration would add `OPAQUE_LIGHTING` with stable suffix
+The isolated interface source adds `OPAQUE_LIGHTING` with stable suffix
 `OpaqueLighting` and config section `effects.opaque_lighting`. Reuse `mode`,
 `near`, `far`, `transition`, `mediumWorkRatio` and `farWorkRatio`; no tile-size,
 reconstruction-tolerance, registry or driver-specific public config is needed
@@ -65,7 +67,7 @@ version 1's six-effect/37-field source contract. Existing core version 2 and all
 existing per-effect field names/mode numbers retain their meanings. The additive
 effect adds six fields, giving 43 extension fields including the version:
 
-| Proposed field | Meaning |
+| Registered source field | Meaning |
 | --- | --- |
 | `shaderlodOpaqueLightingMode` | 0 INHERIT, 1 FULL, 2 ADAPTIVE |
 | `shaderlodOpaqueLightingNear` | Full-to-medium centered boundary in blocks |
@@ -77,8 +79,10 @@ effect adds six fields, giving 43 extension fields including the version:
 The new consumer must require its exact accepted extension version, valid fields
 and core global enable before reducing work. Absent mod/version 1/unknown mode,
 unsupported pinned source, FULL or invalid conversion selects original full-rate
-shading. INHERIT preserves the adapter's original/default pack policy, which is
-full rate in this proposed adapter. An old version-1 consumer must explicitly
+shading. INHERIT preserves the explicit pack-option policy. The private option
+defaults OFF/full; choosing private ON can inherit its declared K4/K1 defaults.
+INHERIT does not consume all custom OpaqueLighting fields. Use ADAPTIVE to prove
+mod-requested bands/ratios affect the adapter. An old version-1 consumer must explicitly
 review version-2 acceptance; changing the number alone cannot establish support.
 No new capability uniform or automatic shader rewriting is proposed.
 
@@ -159,17 +163,23 @@ it; an apparently unused sampler is not enough. A lower-rate producer viewport
 must not shrink unrelated full-resolution gbuffer attachments. Verify actual
 active bindings, driver limits and DH variants rather than assuming source
 declarations count live units. Unsupported maps/Voxy/DH/TAAU/resource combinations
-select compile-time original fallback. This conditional slot reuse is an adapter
+select compile-time original fallback. The current shader plan keeps colortex2's
+allocation full size and uses its lower-left quarter with a half-resolution
+producer viewport, rather than shrinking the gbuffer attachment. Its proposed
+numbered stages are producer deferred4 and original resolve moved to deferred5;
+graphics `_a` stages are not available on this pinned Iris seam. These source
+constraints require driver acceptance. Conditional slot reuse is an adapter
 restriction, not a general mod API assumption.
 Audit Photon attachment ownership, dimensions/formats, ping-pong and clear rules;
 never sample an attachment being written or reuse stale irradiance after reload,
 camera/world change, resizing or mode changes. Unsupported resource state falls
 back to original rendering.
 
-Reuse lazy immutable controls per registration/frame and validate float conversion.
-Snapshot consistency within a uniform group is not proof that every pass sees
-the same generation after a mid-frame config reload; root must establish an
-update boundary or carry a coherent producer/consumer state. A uniform-coherent
+The interface publishes immutable maps on config events/edits and shares one
+snapshot per Iris frame notifier across program registrations. Reloads appear
+at the next frame boundary without supplier allocation. Older core suppliers
+remain unchanged; validate actual notifier ordering, float conversion and
+reloads in the real producer/consumer pipeline. A uniform-coherent
 global FULL/OFF switch must not reconstruct data generated under another mode.
 
 Record the exact consumed fields: core global enable/version, extension version,
@@ -188,3 +198,8 @@ Iterate practical thresholds/rates to obtain little discernible quality loss;
 revert or stop for flat timing or visible failures. Repeat balanced whole-frame
 GPU and total-time controls after source/quality acceptance. No 75% effect-work
 reduction or 50% total-throughput gain follows from the 4→1 count alone.
+
+The isolated interface implementation passed `./gradlew test build`: all 60 tests,
+including real config events/persistence, commands, coherent extension snapshots
+and exact 43-field callback registration. These checks establish the requested
+mod surface, not this spatial adapter's driver linking, output or speedup.

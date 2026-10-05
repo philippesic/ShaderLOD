@@ -1,0 +1,103 @@
+{
+  "schema": 1,
+  "experiment": "photon-procedural-projected-footprint",
+  "base_version": "v1.3b",
+  "base_sha256": "120897768eaa8cb1f14a3e98f88dff009ae3204ee3b96904a4fe8586edfc1ead",
+  "switch": "SHADERLOD_PROCEDURAL_FOOTPRINT",
+  "quality_class": "experimental_unaccepted",
+  "option_declaration": "// ShaderLOD projected-footprint procedural LOD; default off.\n//#define SHADERLOD_PROCEDURAL_FOOTPRINT\n",
+  "distance_units": "Camera distance in Minecraft blocks; procedural differential in tangent block units per raster pixel; thresholds in cycles per raster pixel.",
+  "transition": "Original through 32 blocks; smoothstep32..48 enables continuous octave weights; second-harmonic-aware 0.125..0.25 cycles/pixel fade; first octave remains full. Parallax footprint expansion2..4 fades back to full normals; expansion>=4 retains original normal.",
+  "fallback": "Literal original for private off, non-water-wave program, absent/unsupported core, global off, invalid/singular parallax/quad footprint, nonfinite derivatives or singular persistence; shadow/caustics/DH entry unchanged. Full near original finite-difference normal retained; active full parallax clone qualifies pinned level-zero sampling without reducing quality.",
+  "activation": "private option AND PROGRAM_GBUFFERS_WATER AND WATER_WAVES AND core version2 AND global enabled1; supports WATER_PARALLAX on/off",
+  "attribution": "Photon v1.3b by Benjamin Stott (SixthSurge), retained original LICENSE and Belmu wave comment.",
+  "pins": [
+    {
+      "path": "LICENSE",
+      "sha256": "514402d18eedb0afe374344ca9f0fe87b7399779518184b8fc64e31674555fc5"
+    },
+    {
+      "path": "shaders/include/surface/water_normal.glsl",
+      "sha256": "a6d2dc6bed11d723e5468e22f46b9d8c2fdb090a3e2e1b5131ff1759e89849d3"
+    },
+    {
+      "path": "shaders/image/noise.png",
+      "sha256": "9972ae2cad05ccf00fbe2d81209244e265e3c089e840862f3cf0859443f77c34"
+    },
+    {
+      "path": "shaders/image/noise.png.mcmeta",
+      "sha256": "a74d9e0d21ac66b314df62542a1b8750cc16412da6148089fb0c007ab6e9685d"
+    },
+    {
+      "path": "shaders/shaders.properties",
+      "sha256": "f8cc8df60f930612e8817e4176a34886c1a9de778c15427a5468ecbc4f71ee9a"
+    }
+  ],
+  "members": [
+    {
+      "path": "shaders/settings.glsl",
+      "source_sha256": "93401d268fe859cc1df81929ad41156757a98db80f80cf32af80d9cdca96c394",
+      "replacements": [
+        {
+          "before": "#define SETTINGS_INCLUDED\n",
+          "after": "#define SETTINGS_INCLUDED\n// ShaderLOD projected-footprint procedural LOD; default off.\n//#define SHADERLOD_PROCEDURAL_FOOTPRINT\n"
+        }
+      ],
+      "patched_sha256": "6a38e2be4b55a44428569f71f070d09262f4831bd732a0c4757daa1768a03458",
+      "enabled_sha256": "bd874db4b16b00c9631ac8d33967d1bb8d08d507dd45d116030ab38c1219341c"
+    },
+    {
+      "path": "shaders/program/gbuffers_all_translucent.fsh",
+      "source_sha256": "01c04bc017069cf19c319a0a0875ca706554575dd01e291e17cad8565645b82f",
+      "replacements": [
+        {
+          "before": "#include \"/include/surface/water_normal.glsl\"\n",
+          "after": "#include \"/include/surface/water_normal.glsl\"\n#ifdef SHADERLOD_PROCEDURAL_FOOTPRINT\n#if defined PROGRAM_GBUFFERS_WATER && defined WATER_WAVES\n#include \"/include/shaderlod/procedural_water.glsl\"\n#include \"/include/shaderlod/procedural_parallax.glsl\"\n#else // SHADERLOD_PROCEDURAL_STAGE\n#endif // SHADERLOD_PROCEDURAL_STAGE\n#else // SHADERLOD_PROCEDURAL_FOOTPRINT\n#endif // SHADERLOD_PROCEDURAL_FOOTPRINT\n"
+        },
+        {
+          "before": "void main() {\n",
+          "after": "void main() {\n#ifdef SHADERLOD_PROCEDURAL_FOOTPRINT\n#if defined PROGRAM_GBUFFERS_WATER && defined WATER_WAVES\n    // All lane values initialized. The flat water primitive runs full parallax\n    // before discard; derivatives execute after that branch/while reconverges.\n    mat3 shaderlod_coord_tbn = tbn;\n#if defined LOD_MOD_ACTIVE\n    if (tbn[2].y > 0.99) {\n        shaderlod_coord_tbn = mat3(vec3(1.0, 0.0, 0.0),\n            vec3(0.0, 0.0, 1.0), vec3(0.0, 1.0, 0.0));\n    }\n#endif\n    vec2 shaderlod_displaced_coord = -((position_scene + cameraPosition) * shaderlod_coord_tbn).xy;\n    vec2 shaderlod_base_dx = dFdx(shaderlod_displaced_coord);\n    vec2 shaderlod_base_dy = dFdy(shaderlod_displaced_coord);\n    bool shaderlod_coord_valid = true;\n    bool shaderlod_procedural_active = shaderlodBridgeVersion == 2 && shaderlodEnabled == 1;\n#if defined WATER_PARALLAX\n    if (shaderlod_procedural_active && material_mask == MATERIAL_WATER) {\n        bool vertical_side = abs(tbn[2].y) < eps;\n        bool flowing_water = abs(tbn[2].y) < 0.99 || vertical_side;\n        vec2 flow_dir = vertical_side ? (vec3(0.0, 1.0, 0.0) * shaderlod_coord_tbn).xy :\n            (flowing_water ? normalize(tbn[2].xz) : vec2(0.0));\n        vec3 direction_world = normalize(position_scene - gbufferModelViewInverse[3].xyz);\n        shaderlod_displaced_coord = shaderlod_procedural_full_parallax(\n            direction_world * shaderlod_coord_tbn, shaderlod_displaced_coord,\n            flow_dir, flowing_water, shaderlod_coord_valid);\n    }\n#endif\n    // Uniform control point. Raster partials of the ACTUAL displaced coordinates,\n    // in blocks/pixel; no derivatives inside material/while/normal LOD branches.\n    vec2 shaderlod_coord_dx = dFdx(shaderlod_displaced_coord);\n    vec2 shaderlod_coord_dy = dFdy(shaderlod_displaced_coord);\n    float shaderlod_coord_valid_scalar = shaderlod_coord_valid ? 1.0 : 0.0;\n    float shaderlod_coord_valid_dx = dFdx(shaderlod_coord_valid_scalar);\n    float shaderlod_coord_valid_dy = dFdy(shaderlod_coord_valid_scalar);\n    bool shaderlod_footprint_valid = shaderlod_coord_valid &&\n        shaderlod_coord_valid_dx == 0.0 && shaderlod_coord_valid_dy == 0.0;\n    float shaderlod_footprint_expansion = max(\n        length(shaderlod_coord_dx) / max(length(shaderlod_base_dx), eps),\n        length(shaderlod_coord_dy) / max(length(shaderlod_base_dy), eps));\n    // Unstable/discontinuous displacement fades back to full normal smoothly.\n    float shaderlod_footprint_confidence = 1.0 - smoothstep(2.0, 4.0, shaderlod_footprint_expansion);\n#else // SHADERLOD_PROCEDURAL_STAGE\n#endif // SHADERLOD_PROCEDURAL_STAGE\n#else // SHADERLOD_PROCEDURAL_FOOTPRINT\n#endif // SHADERLOD_PROCEDURAL_FOOTPRINT\n"
+        },
+        {
+          "before": "            coord = get_water_parallax_coord(\n                direction_tangent,\n                coord,\n                flow_dir,\n                flowing_water\n            );\n",
+          "after": "#ifdef SHADERLOD_PROCEDURAL_FOOTPRINT\n#if defined PROGRAM_GBUFFERS_WATER && defined WATER_WAVES\n            if (shaderlod_procedural_active && shaderlod_footprint_valid) {\n                coord = shaderlod_displaced_coord;\n            } else {\n            coord = get_water_parallax_coord(\n                direction_tangent,\n                coord,\n                flow_dir,\n                flowing_water\n            );\n            }\n#else // SHADERLOD_PROCEDURAL_STAGE\n            coord = get_water_parallax_coord(\n                direction_tangent,\n                coord,\n                flow_dir,\n                flowing_water\n            );\n#endif // SHADERLOD_PROCEDURAL_STAGE\n#else // SHADERLOD_PROCEDURAL_FOOTPRINT\n            coord = get_water_parallax_coord(\n                direction_tangent,\n                coord,\n                flow_dir,\n                flowing_water\n            );\n#endif // SHADERLOD_PROCEDURAL_FOOTPRINT\n"
+        },
+        {
+          "before": "            normal_tangent = get_water_normal(\n                world_pos,\n                flat_normal,\n                coord,\n                flow_dir,\n                light_levels.y,\n                flowing_water\n            );\n",
+          "after": "#ifdef SHADERLOD_PROCEDURAL_FOOTPRINT\n#if defined PROGRAM_GBUFFERS_WATER && defined WATER_WAVES\n            normal_tangent = shaderlod_procedural_normal(\n                world_pos, flat_normal, coord, flow_dir, light_levels.y,\n                flowing_water, shaderlod_coord_dx, shaderlod_coord_dy,\n                shaderlod_footprint_valid, shaderlod_footprint_confidence\n            );\n#else // SHADERLOD_PROCEDURAL_STAGE\n            normal_tangent = get_water_normal(\n                world_pos,\n                flat_normal,\n                coord,\n                flow_dir,\n                light_levels.y,\n                flowing_water\n            );\n#endif // SHADERLOD_PROCEDURAL_STAGE\n#else // SHADERLOD_PROCEDURAL_FOOTPRINT\n            normal_tangent = get_water_normal(\n                world_pos,\n                flat_normal,\n                coord,\n                flow_dir,\n                light_levels.y,\n                flowing_water\n            );\n#endif // SHADERLOD_PROCEDURAL_FOOTPRINT\n"
+        }
+      ],
+      "patched_sha256": "ddaa1f119d497c6b5bda24d43ba9a57f9fae6f8285517f4fc7e953796e813625"
+    }
+  ],
+  "helpers": [
+    {
+      "path": "shaders/include/shaderlod/procedural_footprint.glsl",
+      "sha256": "1dd2a28d54d9767c7c60b5b396afbd2448718d18c605bb1050e3204cfbd9ccae"
+    },
+    {
+      "path": "shaders/include/shaderlod/procedural_parallax.glsl",
+      "sha256": "4748cf599475ece90c8f21e48591edb29c117fa409a653db51e82758a7111550"
+    },
+    {
+      "path": "shaders/include/shaderlod/procedural_water.glsl",
+      "sha256": "855b9d6a80fda47aef709c9629c6be95006fca4890cbf402194100b5111a8d2a"
+    }
+  ],
+  "iris_option_discovery": {
+    "jar_path": "dev/runtime/iris-neoforge-1.8.12+mc1.21.1.jar",
+    "jar_sha256": "3e3f94d2d5cdcb8145c4385d521974aa2d8669b2cc212351f70cf06488182e83",
+    "class_path": "net/irisshaders/iris/shaderpack/option/OptionAnnotatedSource.class",
+    "class_sha256": "bcc5221aacd9b72619c966ac753e137144b45a8e6462511d104d9155db6bbba7",
+    "parse_rule": "parseLine only enters declaration/ifdef/ifndef paths; parseIfdef accepts one word and line end; #if defined does not register boolean reference",
+    "guard_contract": "outer #ifdef private switch; inner #if defined PROGRAM_GBUFFERS_WATER && defined WATER_WAVES",
+    "acceptance": "actual OptionAnnotatedSource/getOptionSet fixture with stage entry; private gate sole added option, default/override validation; compilation/rendering pending"
+  },
+  "noise_filter_source": {
+    "jar_path": "dev/runtime/iris-neoforge-1.8.12+mc1.21.1.jar",
+    "jar_sha256": "3e3f94d2d5cdcb8145c4385d521974aa2d8669b2cc212351f70cf06488182e83",
+    "class_path": "net/irisshaders/iris/targets/backed/NativeImageBackedCustomTexture.class",
+    "class_sha256": "ea6ff36d1cf8564badb81eca65b44307575d7564dfae8631ee828b4df276b66b",
+    "contract": "Pinned custom PNG mcmeta blur true clamp false; bytecode shouldBlur branch sets min/mag9729 LINEAR. No mip upload; actual binding readback pending."
+  }
+}

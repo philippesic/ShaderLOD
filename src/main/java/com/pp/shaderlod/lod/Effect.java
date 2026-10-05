@@ -7,7 +7,8 @@ public enum Effect {
     REFLECTIONS("Reflections", false),
     VOLUMETRICS("Volumetrics", false),
     WATER_SURFACE("WaterSurface", false),
-    MATERIALS("Materials", false);
+    MATERIALS("Materials", false),
+    OPAQUE_LIGHTING("OpaqueLighting", false);
 
     private final String uniformKeySuffix;
     private final boolean salientLighting;

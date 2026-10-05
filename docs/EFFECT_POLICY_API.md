@@ -37,6 +37,7 @@ not imply that all reflection, water, volumetric or material reductions are safe
 | Volumetrics | `Volumetrics` | 32 / 96 / 8 | No |
 | Water surface | `WaterSurface` | 96 / 256 / 32 | No |
 | Materials | `Materials` | 32 / 96 / 8 | No |
+| Opaque lighting | `OpaqueLighting` | 32 / 96 / 8 | No; spatial guards are adapter-owned |
 
 Do not serialize enum ordinals. These suffixes are stable identifiers; an adapter
 must document which operations each broad effect category actually covers.
@@ -97,9 +98,9 @@ that still depends on the original fractional ray position.
 
 The integration source now registers a separate NeoForge client config and Iris
 uniform extension. `ShaderLod.java` registers `ShaderLodEffectConfig.SPEC` in
-`shaderlod-effects-client.toml`. Its six `effects.<effect>` sections use enum names
+`shaderlod-effects-client.toml`. Its seven `effects.<effect>` sections use enum names
 in lower snake case: `shadow_filtering`, `ambient_occlusion`, `reflections`,
-`volumetrics`, `water_surface`, and `materials`. Each section exposes `mode`,
+`volumetrics`, `water_surface`, `materials`, and `opaque_lighting`. Each section exposes `mode`,
 `near`, `far`, `transition`, `mediumWorkRatio`, `farWorkRatio`, and
 `preserveSalientLighting`. Defaults are INHERIT, the table's block bands, unity
 ratios and lighting protection enabled.
@@ -110,18 +111,22 @@ then raises far to at least near+1. Transition's config range is
 capped to medium ratio. These are deterministic normalization rules in the config
 integration, while direct construction of the pure API still rejects malformed
 input. The pure API supports finite positive distances beyond those config ranges.
-Snapshot construction itself does not catch invalid/non-finite raw config values;
-the config spec is responsible for validating persisted entries. Do not infer a
-transport exception recovery path from the numerical API's invalid-runtime guards.
+The config spec validates persisted scalar values. Additional normalization
+replaces non-finite raw numbers with valid default bands and forces FULL/unity
+work; null modes select INHERIT/unity. Repaired cross-fields are flagged in status.
+Commands reject invalid ranges/overlap/increasing ratios before changing stored
+fields. Reload repair changes effective request/transport values, not the file.
 
 For shadow/AO with protection enabled, the config snapshot publishes both ratios
 as 1 while retaining the immutable policy protection flag. Protection is therefore
 baked into the transmitted ratios; there is no separate protection uniform. This
 protects quality budget counts and does not disable independent exact work reuse.
+`Control.requested` retains normalized requested ratios; `Control.policy` holds
+protected transport values. Releasing protection restores the stored request.
 
 `EffectUniformsMixin`, listed in `shaderlod.mixins.json`, injects at the tail of
-pinned Iris `CommonUniforms.generalCommonUniforms`. It registers 37 PER_FRAME
-fields: one integer `shaderlodEffectsVersion` with value 1, plus these six fields
+pinned Iris `CommonUniforms.generalCommonUniforms`. It registers 43 PER_FRAME
+fields: one integer `shaderlodEffectsVersion` with value 2, plus these six fields
 for each `shaderlod<Suffix>` prefix in the effect table above:
 
 | Field suffix | Iris registration | Source value |
@@ -140,17 +145,54 @@ and `shaderlodAmbientOcclusionFarWorkRatio`. Enum ordinals are not used for mode
 The existing seven core fields, including `shaderlodBridgeVersion=2` and global
 `shaderlodEnabled`, retain their existing registration and semantics.
 
-An `EffectUniformFrame` instance belongs to each registration group. Its frame
-notifier callback clears cached controls; the first queried per-effect supplier
-lazily takes one immutable map snapshot, and subsequent suppliers in that group
-reuse it for the frame. Registration of the constant extension version alone does
-not query the config. This is source-level supplier behavior, not a measured
-overhead reduction or proof that a particular program linked these uniforms.
+Version 2 adds OpaqueLighting to version 1's six effects. Older groups retain all
+names, modes, units and ratio meanings; an explicit old consumer may accept both
+versions for its unchanged group. OpaqueLighting requires version 2.
+
+Mod config loading/reloading events publish one volatile immutable map after
+conversion; unloading publishes safe defaults. Commands edit related fields
+atomically, publish the map, and save **outside** the policy lock. FML save/reload
+owns another lock before posting events, so saving under the policy lock would
+invert that order. Only this SPEC is handled; existing core config is unchanged.
+
+One `EffectUniformFrame` is shared by all program registrations using the same
+Iris frame notifier, with one listener. At frame start it captures the published
+map pointer. Every extension supplier uses that map until the next frame, even
+when a command/reload publishes another map meanwhile. Maps allocate on config
+conversion/edit, not suppliers or ordinary frames. Weak notifier keys allow
+disposed pipeline state to be released. This extension guarantee does not change
+the older core's suppliers. Actual notifier ordering and driver reload behavior
+still require client acceptance; no measured overhead saving is claimed.
 
 No Photon adapter consumption, driver linking/readback, config reload behavior,
 runtime mixin application or performance gain has been established by this source
 review. Build acceptance and the GPU/runtime owner must record those checks
 separately.
+
+## Requested controls and diagnostics
+
+The command tree adds `/shaderlod effects`, `/shaderlod effects status`, and
+`/shaderlod effects <effect> status`, using the seven lower snake case keys.
+Per-effect edits are:
+
+```text
+/shaderlod effects opaque_lighting mode adaptive
+/shaderlod effects opaque_lighting bands 32 96 8
+/shaderlod effects opaque_lighting ratios 1 0.25
+/shaderlod effects shadow_filtering protection true
+```
+
+Modes are `inherit`, `full`, `adaptive`; protection is boolean. Valid edits save
+the separate config and reach extension suppliers at the next frame boundary.
+Status reports requested bands/ratios/mode, protected transport ratios, repair
+state and whether the Iris registration callback was observed. It explicitly
+labels shader consumption unverified. Registration, config or an archive name
+does not establish a linked consumer; no supported-path guesses are introduced.
+
+OpaqueLighting ratios describe retained shading evaluations, not radiance scaling.
+Its first spatial adapter may support K4/K1 only and must declare unsupported
+intermediate rates and its geometry/material/light-edge fallback. Existing
+shadow/AO sample protection does not certify spatial shadow reconstruction.
 
 | Mode | Intended adapter behavior |
 | --- | --- |
@@ -189,20 +231,27 @@ zero-width/touching bands, invalid configuration/runtime inputs, off states,
 lighting protection, caller floors, zero work, large integer counts, stable keys,
 and bounded monotonic quantization across representative distances.
 
-Root can run `./gradlew test --tests 'com.pp.shaderlod.lod.*'` after the source
-freeze. The worker deliberately did not invoke Gradle, a compiler or a Minecraft
-client while the first team wave was running. These tests are source deliverables
-until root records their execution. No shader compilation, live transport,
-quality acceptance or performance gain is established by this API.
+The isolated implementation adds `ShaderLodEffectConfigTest`,
+`EffectUniformFrameTest`, `EffectCommandsTest` and `EffectUniformRegistrationTest`.
+They use actual FML sealed config/TOML persistence and reload-event dispatch in
+temporary directories; actual Brigadier parsing/ranges; requested/protected
+values; frame coherence/shared notifier ownership; and the actual mixin callback
+with a fake Iris UniformHolder checking all 43 names/types/defaults. FML config
+paths are initialized in temporary directories; no Minecraft registry/bootstrap,
+GL context, game client or new testing framework is used. Callback invocation
+does not establish that Mixin injection applied in the game.
 
-Integration acceptance should also exercise all default INHERIT modes without
-changing the core config; cross-field normalization (far<=near, overlapping width,
-far ratio>medium); protected AO/shadow ratios under ADAPTIVE; unprotected ratios;
-and FULL's distinction from INHERIT. A controlled reload test should confirm one
-protection value is captured per effect snapshot and that within-frame suppliers
-reuse one control map while the next frame observes new config. A fake uniform
-holder can check all 37 exact names/types if the pinned Iris test seam permits it;
-source assertions alone do not establish runtime mixin application. A diagnostic
-pack must link and read back the extension before claiming actual transport, and
-ordinary effect code must consume it before claiming adaptation. These are test
-recommendations, not worker-executed checks.
+A minimal build hunk gives tests access to the pinned main API classpath, without
+changing production dependencies or JAR packaging. Run `./gradlew test build` in
+the interface worktree outside GPU measurement windows. Root must integrate that
+hunk while preserving prior main-checkout changes, then check driver fields and
+actual consumption in the selected explicit shader adapter. Build/unit checks
+are separate from rendering, quality acceptance and performance evidence.
+
+Interface worktree acceptance on 2026-10-05: `./gradlew test build` passed all
+60 JUnit tests, zero failures/skips. Production `shaderlod-0.1.0-dev.jar` contains
+the effect mixin but no dev-client/JUnit/integration-test classes; Git whitespace
+checks passed. Initial runs exposed the existing pure-test classpath restriction
+and FML's sealed loaded-config/path setup requirements; the minimal test-only
+classpath hunk and real temporary config fixture resolved them. No main-checkout
+build, Minecraft client, shader compilation or GPU run was performed by this owner.

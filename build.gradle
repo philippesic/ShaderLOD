@@ -10,6 +10,9 @@ base { archivesName = mod_id }
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 sourceSets { devClient }
 sourceSets.devClient.compileClasspath += sourceSets.main.compileClasspath
+// Lightweight effect config/command integration tests need the pinned main APIs.
+sourceSets.test.compileClasspath += sourceSets.main.compileClasspath
+sourceSets.test.runtimeClasspath += sourceSets.main.compileClasspath
 
 configurations {
     runtimeClasspath.extendsFrom localRuntime

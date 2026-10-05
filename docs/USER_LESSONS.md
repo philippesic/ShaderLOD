@@ -259,3 +259,16 @@ procedural detail, volumetric sampling and mod interfaces, with distinct files
 or isolated worktrees. Only interactive clients/GPU measurements and heavy local
 checks during capture need serialization; source development continues in parallel.
 This was root's coordination misunderstanding, not a user error.
+
+
+## Experimental serial results are not the user's fullscreen comparison
+
+The user reported about10% faster LOD in an earlier fullscreen comparison and
+challenged root's current-standing regression table. That table used one earlier
+experimental reduced-SSR five-effect candidate versus original Photon, in serial
+native-size windowed captures. It was not a controlled repetition of the user's
+same-pack fullscreen setup. Root clarified source/order/window differences and
+the capture method; CPU load/clocks remain plausible unisolated influences, not a
+confirmed cause or a user mistake. Future performance summaries must name the
+candidate and comparator and separate elapsed GPU time from FPS. Dedicated quiet
+measurements should match the requested fullscreen mode and use balanced repeats.
