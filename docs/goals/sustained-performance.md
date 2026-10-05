@@ -2072,3 +2072,28 @@ seven-category GPU5/detailedCPU/wetness0/-x compileDevClientJava. Log
 validation/archive/options/window/PNG +sourceplan mapping/read-only summarization
 AFTERlive ends; do not heavyparse1.8M CPUevents during capture. Allsourceworkers
 stillreadonly/newboundedfiles, main/shared/originaldesign unchanged.
+
+
+## Native coastal attribution accepted; instrumentation control live
+
+exec48687 exit0, UUID853035d6...dceb, 60s2387frames/39.779FPS. Existingguards
+archive/options/request/camera/native24/24/noDH/mainabsent/pipeline/temporal/
+classes/PNG pass. Forestandcoastal each1201sampledwindowobservations, available/
+visible/nonminimized/vsyncoff, zeroobservedtransitions (notcontinuouscoverage).
+Coastalraw dev/logs/photon-native-attribution-coastal-r1/measurement.json,
+provenance/validation/summary/originalfinalPNG plusconsole.log.
+68samplesperordinarycategory; diagnosticmeanms game-render23.8452,
+deferred1 4.0692/worldtranslucent3.6844/deferred4 2.2578/deferred1.8094/
+final1.2855/worldopaque1.2309/composite1.0950/composite4 1.0490.
+DetailedCPU1076536events. Largerframecost thanoldframeonly is NOTmatchedcause
+orregression claim. Sourceeffectbudgets cannotbe acceptedfrominstrumentedmeans.
+
+RootsoleGPU LIVEexec80447 originalcoastal frameonly instrumentationcontrol,
+freshprofile run-workloads/photon-native-attribution-frameonly-r2/coastalwater/high.
+Copied SAMEsourceworld89c962...c7b46, exactsamepack/options/scene/versions/
+resolution/45warm60capture/sample5/wetness0/detailedCPUtrue. Only requested
+GPU pass timingfalse vsattributiontrue in separateJVM; nopairedcausalconclusion.
+Request0293267c-3708-49c4-a5ff-c8f490b4081e, provenanceandclasses saved.
+Logdev/logs/photon-native-attribution-frameonly-r2.log. Nextstrictterminal guards
+andframe/timing comparison ascontrol, retainallraw then movingquality files.
+No otherclient/build/encoder; workerssourceonly. Fullgoalactive/unshrunk.

@@ -22,10 +22,11 @@ registers seven fields; per-effect mod transport is not implemented. Other-pack
 core diagnostics consume version/global enable/near/far, not all core fields.
 Pack options, mod configuration and actual shader consumption remain separate.
 
-Root owns a live original-Photon native coastal attribution run, with separate
-seven-category timing, sample interval5 and detailed CPU scopes. The forest run
-passed existing input/capture contracts; its frame total
-is not an acceptance comparison with prior frame-only timings. Source-only
+Root owns a live original-Photon coastal frame-only instrumentation control.
+Forest and coastal attribution passed existing input/capture contracts. Coastal
+diagnostic cost was substantially higher than earlier frame-only captures; a
+fresh matched-source sample5 control retains detailed CPU timers. Separate JVMs
+and instrumentation differences do not establish a source regression or cause. Source-only
 workers own the attribution plan and new Complementary motion-preparation files.
 Exact handles and stopping boundaries are in the active goal checkpoint.
 
