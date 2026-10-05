@@ -165,7 +165,15 @@ def inspect_scene(item, probe_path, runtime, root=ROOT):
                           'workload-measurement-original.json': profile / 'workload-measurement.json'})
 
 
-def prepare(output, scenes=SCENES, sources=None, probe=PROBE, runtime_lock=None, root=ROOT):
+def prepare(output, scenes=SCENES, sources=None, probe=PROBE, runtime_lock=None, root=ROOT,
+            source_inspector=None, experiment=EXPERIMENT,
+            marker_name='photon-ao-reuse-preparation.json',
+            source_qualification_key='ao_reuse_source_qualification'):
+    # Explicit callers may supply another pinned source inspector while sharing
+    # only the stopped-save/copy invariants. The default AO contract is unchanged.
+    require(Path(marker_name).name == marker_name and marker_name.endswith('.json'), 'Invalid preparation marker')
+    require(bool(experiment) and bool(source_qualification_key), 'Missing explicit experiment identity/key')
+    inspector = source_inspector or inspect_scene
     operation = plan(output, scenes, sources, probe, root)
     require_exclusive_runtime()
     runtime_lock = Path(runtime_lock or Path(root) / 'dev/runtime.lock.json')
@@ -173,13 +181,17 @@ def prepare(output, scenes=SCENES, sources=None, probe=PROBE, runtime_lock=None,
     with ExitStack() as locks:
         for item in operation['scene_operations']:
             locks.enter_context(unlocked_world(Path(item['source_profile']) / 'saves' / WORLD))
-        selected = [inspect_scene(item, Path(operation['probe']), runtime, root) for item in operation['scene_operations']]
+        selected = [inspector(item, Path(operation['probe']), runtime, root) for item in operation['scene_operations']]
+        if source_inspector is not None:
+            manifests = {scene['qualification']['manifest_path'] for scene in selected}
+            require(len(manifests) == 1, 'Source inspectors disagree on manifest identity')
+            operation['manifest'] = next(iter(manifests))
         for scene in selected: scene['world_sha256'] = world_fingerprint(scene['world'])
         output.parent.mkdir(parents=True, exist_ok=True); output.mkdir(exist_ok=False)
         state = dict(schema=1, status='preparing', operation=operation, runtime_lock=runtime,
                      runtime_lock_sha256=file_hash(runtime_lock), created_at_utc=datetime.now(timezone.utc).isoformat(), scenes={},
                      validation='Preparation only; compilation/rendering/performance/quality pending')
-        marker = output / 'photon-ao-reuse-preparation.json'; write_json(marker, state)
+        marker = output / marker_name; write_json(marker, state)
         try:
             for scene in selected:
                 base = output / scene['scene']; base.mkdir()
@@ -220,10 +232,11 @@ def prepare(output, scenes=SCENES, sources=None, probe=PROBE, runtime_lock=None,
                     source_world=str(scene['world']), source_world_sha256=scene['world_sha256'], copied_world_sha256=copies,
                     source_provenance=scene['manifest'], source_files_sha256=scene['source_files_sha256'],
                     source_option_evidence=scene['option_evidence'], removed_control_overrides=scene['removed_control_overrides'], control=scene['control'],
-                    experiment_family=EXPERIMENT, experiment_arms=arms, quality_options={arm: arms[arm]['requested_options'] for arm in ARMS},
-                    original_sha256=BASE_SHA256, adaptive_pack_sha256=scene['probe']['sha256'], ao_reuse_source_qualification=scene['qualification'],
+                    experiment_family=experiment, experiment_arms=arms, quality_options={arm: arms[arm]['requested_options'] for arm in ARMS},
+                    original_sha256=BASE_SHA256, adaptive_pack_sha256=scene['probe']['sha256'],
                     requested_chunks=24, expected_framebuffer=[2976, 1672], runtime_lock=runtime, dh_installed=False, geometry_enabled=False, shader_only=True,
                     validation='Qualified patch/member/options, equal canonical copies and physical DH removal only; actual native rendering and performance/quality pending')
+                manifest[source_qualification_key] = scene['qualification']
                 write_json(base / 'workload-manifest.json', manifest)
                 state['scenes'][scene['scene']] = dict(source_world_sha256=scene['world_sha256'], copied_world_sha256=copies,
                                                      probe_sha256=scene['probe']['sha256'], manifest_sha256=scene['qualification']['manifest_sha256'])

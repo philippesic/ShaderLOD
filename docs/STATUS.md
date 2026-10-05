@@ -33,9 +33,18 @@ One serial block, cross-arm focus differences and uncertain lightweight source-t
 CPU overlap prevent quiet causal/repeated acceptance. Dev classes stayed frozen.
 New effects config actually loaded with six INHERIT/unity controls; extension
 shader consumption remains unverified. No Minecraft clients live. Runtime proof
-and exact handles: PHOTON_AO_REUSE_RUNTIME.md. Root next evaluates the bounded
-projected procedural-detail candidate in PROJECTED_DETAIL_LOD_PLAN.md, beginning
-with a quality-changing cost control before calibration. The 50% goal remains
+and exact handles: PHOTON_AO_REUSE_RUNTIME.md. Density cost-control r1 rendered
+original/off but failed strict validation: private option absent from Iris's active
+map, and original focus differed. Enabled never launched; raw failures retained.
+Pinned Iris parser inspection identified the combined guard discovery gap; nested
+guards now pass actual-parser discovery/override/no-stage-leak tests. R2 completed
+all source/options/driver/focus/window/input contracts. Diagnostic mean GPU
+15.4416/15.3720/14.9639ms and FPS60.1758/60.8841/62.1495: only2.655% GPU reduction
+versus disabled in one quality-changing block. Calibration is deferred; no causal/
+repeated/quality gain promoted. An existing no-GPU-timing core/sampler readback
+smoke is authorized to `ao_runtime`; no clients live at r2 return. Exact handles
+and validation are in PHOTON_DENSITY_DETAIL_RUNTIME.md. Next plans investigate
+far irradiance shading at lower rate with full-res textures retained. The 50% goal remains
 unachieved; no shader support or default-quality reduction is promoted.
 
 The following describes retained work from the superseded goal, not active

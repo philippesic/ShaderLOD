@@ -2,15 +2,20 @@
 import copy
 import json
 from pathlib import Path
+import os
+import shutil
+import subprocess
 import sys
+import tempfile
 import unittest
+import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 import build_photon_density_detail_probe as probe
 
 MANIFEST = json.loads((ROOT / probe.MANIFEST).read_text())
-CONDITION = f"#if defined {probe.SWITCH} && defined PROGRAM_DEFERRED1\n"
+CONDITION = f"#ifdef {probe.SWITCH}\n"
 
 
 def select_control(source: bytes, private_on: bool, main_program: bool) -> bytes:
@@ -19,21 +24,27 @@ def select_control(source: bytes, private_on: bool, main_program: bool) -> bytes
     declaration = MANIFEST["option_declaration"]
     text = text.replace(declaration, "", 1).replace(
         declaration.replace(f"//#define {probe.SWITCH}", f"#define {probe.SWITCH}"), "", 1)
-    output, selected = [], None
+    output, selected = [], []
     for line in text.splitlines(keepends=True):
         if line == CONDITION:
-            if selected is not None:
+            if selected:
                 raise AssertionError("Nested private directive")
-            selected = private_on and main_program
-        elif line == "#else\n" and selected is not None:
-            selected = not selected
+            selected.append(private_on)
+        elif line == "#if defined PROGRAM_DEFERRED1\n" and selected:
+            selected.append(main_program)
+        elif line == "#else\n" and selected:
+            selected[-1] = not selected[-1]
+        elif line == "#endif // PROGRAM_DEFERRED1\n" and selected:
+            if len(selected) != 2:
+                raise AssertionError("Unmatched program directive")
+            selected.pop()
         elif line == f"#endif // {probe.SWITCH}\n":
-            if selected is None:
+            if len(selected) != 1:
                 raise AssertionError("Unmatched private directive")
-            selected = None
-        elif selected is None or selected:
+            selected.pop()
+        elif not selected or all(selected):
             output.append(line)
-    if selected is not None:
+    if selected:
         raise AssertionError("Unclosed private directive")
     return "".join(output).encode()
 
@@ -116,6 +127,110 @@ class PinnedSourceTests(unittest.TestCase):
             probe.build(output=ROOT / "must-not-write.zip")
         with self.assertRaises(ValueError):
             probe.build(arm="other")
+
+    def test_actual_pinned_iris_lexer_discovers_nested_guard_and_applies_boolean_override(self):
+        evidence = MANIFEST["iris_option_discovery"]
+        iris = ROOT / evidence["jar_path"]
+        if not iris.exists() or not shutil.which("java"):
+            self.skipTest("Actual pinned Iris lexer/JDK unavailable; no discovery acceptance")
+        self.assertEqual(evidence["jar_sha256"], probe.sha256(iris.read_bytes()))
+        with zipfile.ZipFile(iris) as archive:
+            self.assertEqual(evidence["class_sha256"], probe.sha256(archive.read(evidence["class_path"])))
+        cache = Path.home() / ".gradle/caches/modules-2/files-2.1"
+        dependencies = []
+        for relative, filename in (("com.google.guava/guava/32.1.2-jre", "guava-32.1.2-jre.jar"),
+                                   ("it.unimi.dsi/fastutil/8.5.12", "fastutil-8.5.12.jar")):
+            matches = sorted((cache / relative).glob("*/" + filename))
+            if len(matches) != 1:
+                self.skipTest("Existing Iris lexer dependencies unavailable; no downloads/build")
+            dependencies.append(matches[0])
+        harness = r'''
+import java.nio.file.*;
+import java.util.*;
+import net.irisshaders.iris.shaderpack.option.*;
+import net.irisshaders.iris.shaderpack.include.AbsolutePackPath;
+import net.irisshaders.iris.shaderpack.option.values.MutableOptionValues;
+class DensityIrisLexer {
+    static void require(boolean ok, String message) {
+        if (!ok) throw new AssertionError(message);
+    }
+    static Set<String> references(String... sources) {
+        Set<String> result = new HashSet<>();
+        for (String source : sources)
+            result.addAll(new OptionAnnotatedSource(source).getBooleanDefineReferences().keySet());
+        return result;
+    }
+    static Set<String> options(Set<String> references, String... sources) {
+        Set<String> result = new HashSet<>();
+        for (int i = 0; i < sources.length; i++)
+            result.addAll(new OptionAnnotatedSource(sources[i]).getOptionSet(
+                AbsolutePackPath.fromAbsolutePath("/source" + i + ".glsl"), references).getBooleanOptions().keySet());
+        return result;
+    }
+    public static void main(String[] args) throws Exception {
+        String name = args[0];
+        String declaration = "//#define " + name + "\n";
+        var legacy = new OptionAnnotatedSource(declaration +
+            "#if defined " + name + " && defined PROGRAM_DEFERRED1\n#endif\n");
+        require(!legacy.getBooleanDefineReferences().containsKey(name), "combined guard unexpectedly referenced");
+        require(!legacy.getOptionSet(AbsolutePackPath.fromAbsolutePath("/legacy.glsl"),
+            legacy.getBooleanDefineReferences().keySet()).getBooleanOptions().containsKey(name),
+            "legacy option unexpectedly retained");
+        String density = Files.readString(Path.of(args[1]));
+        var actual = new OptionAnnotatedSource(density);
+        require(actual.getBooleanDefineReferences().containsKey(name), "actual nested guard unreferenced");
+        String originalDensity = Files.readString(Path.of(args[4]));
+        String originalSettings = Files.readString(Path.of(args[5]));
+        String stageEntry = Files.readString(Path.of(args[6]));
+        String disabledSettings = Files.readString(Path.of(args[2]));
+        var baselineReferences = references(originalDensity, originalSettings, stageEntry);
+        var actualReferences = references(density, disabledSettings, stageEntry);
+        var addedReferences = new HashSet<>(actualReferences);
+        addedReferences.removeAll(baselineReferences);
+        require(addedReferences.equals(Set.of(name)), "unintended reference added: " + addedReferences);
+        require(!actualReferences.contains("PROGRAM_DEFERRED1"), "entry stage became option reference");
+        var baselineOptions = options(baselineReferences, originalDensity, originalSettings, stageEntry);
+        var actualOptions = options(actualReferences, density, disabledSettings, stageEntry);
+        var expectedOptions = new HashSet<>(baselineOptions);
+        expectedOptions.add(name);
+        require(actualOptions.equals(expectedOptions), "option set differs beyond private gate");
+        require(!actualOptions.contains("PROGRAM_DEFERRED1"), "entry stage leaked into options");
+        for (int i = 2; i <= 3; i++) {
+            boolean expectedDefault = i == 3;
+            var settings = new OptionAnnotatedSource(Files.readString(Path.of(args[i])));
+            var option = settings.getBooleanOptions().values().stream()
+                .filter(value -> value.getName().equals(name)).findFirst().orElseThrow();
+            require(option.getDefaultValue() == expectedDefault, "source default mismatch");
+            var set = settings.getOptionSet(AbsolutePackPath.fromAbsolutePath("/settings.glsl"),
+                actual.getBooleanDefineReferences().keySet());
+            require(set.getBooleanOptions().containsKey(name), "actual option not retained");
+            boolean override = !expectedDefault;
+            var values = new MutableOptionValues(set, Map.of(name, Boolean.toString(override)));
+            String edited = settings.apply(values);
+            String expectedLine = (override ? "#define " : "//#define ") + name;
+            require(edited.lines().anyMatch(expectedLine::equals), "actual Iris override did not edit declaration");
+        }
+        System.out.println("combined absent; actual nested discovered; default false/true; overrides true/false applied; sole new option; no stage leak");
+    }
+}
+'''
+        disabled = probe.patch_members(self.files, MANIFEST, "disabled")
+        enabled = probe.patch_members(self.files, MANIFEST, "enabled")
+        with tempfile.TemporaryDirectory(prefix="shaderlod-density-lexer-") as temporary:
+            directory = Path(temporary)
+            java_source = directory / "DensityIrisLexer.java"
+            java_source.write_text(harness)
+            inputs = [directory / name for name in ("density.glsl", "disabled.glsl", "enabled.glsl",
+                                                    "original-density.glsl", "original-settings.glsl", "entry.fsh")]
+            payloads = (disabled[probe.CUMULUS], disabled[probe.SETTINGS], enabled[probe.SETTINGS],
+                        self.files[probe.CUMULUS], self.files[probe.SETTINGS], self.files["shaders/world0/deferred1.fsh"])
+            for path, data in zip(inputs, payloads):
+                path.write_bytes(data)
+            command = ["java", "--class-path", os.pathsep.join(map(str, (iris, *dependencies))),
+                       str(java_source), probe.SWITCH, *map(str, inputs)]
+            result = subprocess.run(command, capture_output=True, text=True, timeout=30)
+            self.assertEqual(0, result.returncode, result.stdout + result.stderr)
+            self.assertIn("combined absent; actual nested discovered; default false/true; overrides true/false applied; sole new option; no stage leak", result.stdout)
 
 
 class DiagnosticSemanticsTests(unittest.TestCase):

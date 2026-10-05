@@ -272,3 +272,194 @@ Next exact action: review that source freeze, run bounded fixtures, assemble pin
 disabled density archive, prepare equal coastal cloud-visible arms, then hand off
 quiet fixed-focus original/off/on cost-control capture. Stop before calibration
 if the source region provides no useful aggregate signal.
+
+## Continuation audit and next team wave
+
+Previous goal turn was progress: committed general policy/config/Iris interfaces,
+passed integration/source tests, and acquired the unfavorable actual AO pilot.
+This continuation re-read STATUS/checkpoint and inspected processes: no client or
+proof runner live. Root assembled actual density default-off archive SHA256
+`0c0ac07a08a3c1e2c58658aabea95a564cc425795ff91c6a6b77bc0d8f2287d6`;
+all member/source/license metadata qualification passed assembly, but compilation,
+rendering and cost remain pending.
+
+`ao_runtime` continues the minimal preparation refactor/wrapper. Root alone owns
+GPU/build. `performance_audit` owns only new GENERAL_LOD_MEASUREMENT_RELIABILITY.md,
+read/data review of variance/instrumentation/focus with a minimal executable neutral
+control recommendation. `effect_api` owns only new FOOTPRINT_LIGHTING_LOD_PLAN.md,
+source investigation of footprint/error-aware protected lighting (no budget/default
+changes). Both are read-only during timed windows; no tests/compilers/encoders.
+`lod_opportunities` density source is frozen. Current native objective is unchanged;
+50% acceptance and full quality/config/compatibility proof are still unmet.
+
+### Density preparation accepted; runtime handoff
+
+Root independently passed seven unchanged AO preparation fixtures plus five new
+density fixtures, reviewed the default-preserving stopped-copy callback seam and
+the density wrapper's complete pinned source/member/metadata/license qualification.
+Coastal native report/option pins, cloud40/20 light6 ambient2, original366-option
+parity and noDH/native24 guards remain explicit. No Java/class/resource mutation.
+
+Root transfers sole GPU/client ownership to `ao_runtime` for actual fresh
+`run-workloads/photon-density-detail-coast-pilot-r1` preparation and one serial
+water-high/water-patched-off/water-adaptive capture,45warm25capture,N5,frame-only,
+CPUlayersoff,native2976x1672,minimal/noDH,wetness0,frozenclasses. Operator sets Codex
+foreground once early in each warmup; all captures must be visible/noniconified,
+stable unfocused with identical pacing. Reject any unknown/transition/cross-arm
+focus difference. No tests/builds/assembly/encoders/image processing by other agents
+until all clients terminal. Runtime operator records exact live/stop handles next.
+
+No density driver/timing/quality acceptance yet. The fixed0.5 intervention changes
+density and occupancy; only a source-region cost hypothesis is under test. Root
+may consider a balanced repeat only for useful signal; no automatic calibration.
+
+### Density r1 terminal: Iris option-discovery integration failure
+
+`ao_runtime` actual preparation exec77224 exited0, canonical source/copies
+`89c9629693e97f7e0c12d41a9ef2cd5a4fa82cd9585644b2dbf2b32bab8c7b46`.
+Runner exec84020/PID40110 exited1 after original and patched-off rendering:
+strict validator rejected missing active Iris option
+`SHADERLOD_DENSITY_DETAIL_COST_CONTROL`. Enabled was never launched. Retain raw
+failed manifest/reports/PNGs under dev/logs/photon-density-detail-coast-pilot-r1;
+no diagnostic activation/performance acceptance or source cost claim follows.
+
+Warmup focus watcher exec29951/PID40294 stopped by exact SIGTERM (exit143), all
+Minecraft clients stopped, classes/resources unchanged. Original focus action was
+missed and deliberately not performed during capture; off warmup action succeeded.
+Any new run must start the focus watcher before the first launch and reject unknown
+or mismatched observed focus. Root owns GPU again.
+
+The combined `#if defined SWITCH && defined PROGRAM_DEFERRED1` usage is a candidate
+Iris boolean-option discovery issue, not yet a verified parser cause. Root assigned
+`lod_opportunities` its four density source files to inspect pinned Iris parser,
+correct explicit nested guard syntax and add actual parser/source-discovery
+coverage. Own archive_defaults/source fixtures had passed but did not prove Iris
+option discovery. `ao_runtime` updates only exact qualifier pins/tests/runtime
+evidence after corrected builder freeze. Preserve r1 archive and reports; use a
+fresh archive/profile/tag for retry. No unchanged-mode acceptance relabeling.
+
+### Density r2 source/parser acceptance
+
+Pinned Iris OptionAnnotatedSource bytecode and actual pure lexer prove the r1
+cause: references are discovered from standalone #ifdef/#ifndef, not combined
+#if defined guards. Corrected source uses outer #ifdef private gate and inner
+#if defined PROGRAM_DEFERRED1, avoiding an unintended stage-macro option. Actual
+lexer/OptionSet/MutableOptionValues tests prove gate discovery, default false/true,
+both overrides, private gate as the sole added option/reference and no PROGRAM
+leak. Root reran all nine source/parser/scalar fixtures: pass (no skips).
+
+Corrected manifest SHA256 `542e6e61b1565532ce1d8975416917a29a866bc07165f80d5536d1a6124ad9dd`,
+cumulus `3a5b3fbae654259567e76e660fac012fa0c2743e60c09519945f57d2e7440024`.
+Root assembled actual corrected default-off archive SHA256
+`066fc9862085cbd977d039c8a9efc31b4c9423eb018ec318533f0248adfdd1c4`.
+R1 archives/reports remain in their fresh profile/log roots; no failure erased.
+Strict wrapper pins updated only to the corrected source; original/coastal/native
+cloud/viewport/runtime/license pins unchanged. Root reran seven prior AO and five
+density preparation fixtures: pass. Java/classes/resources unchanged.
+
+Root will transfer sole GPU to `ao_runtime` for fresh r2 preparation/capture only
+after the bounded focus watcher acknowledges ready before runner launch. All
+workers freeze tests/builds/assembly/encoders/images again. Use source/scene/control
+and timing settings from r1, require observed fixed focus and exactly one private
+option delta. Actual corrected driver/link/activation/performance remain pending.
+
+### Density r2 live handles
+
+Preparation exec84245 exited0; source and all copies have canonical world SHA256
+`89c9629693e97f7e0c12d41a9ef2cd5a4fa82cd9585644b2dbf2b32bab8c7b46`.
+Private archive066fc.../manifest542e... qualify; profile mods empty. Watcher
+exec83230/PID41590 acknowledged ARMED while output absent before runner, did not
+create runner output. First warmup focus action20:51:25.865675Z succeeded before
+capture. Runner exec8247/PID41611; original client PID41630 at launch. Operator
+owns exact stop handles and next phase tracking in PHOTON_DENSITY_DETAIL_RUNTIME.md.
+Raw output/profile roots photon-density-detail-coast-pilot-r2. Root/other workers
+remain quiet; actual capture focus, gate, contracts, driver result and cost pending.
+
+## Density r2 terminal; no calibration promoted
+
+Runner exec8247 exited0; watcher exec83230 exited0 after three early warmup focus
+actions. Operator validated UUID/source/archive/options/config/temporal/classes,
+native2976x1672/requested-effective24/noDH, and focus=false/visible/noniconified/
+unknown0/no transitions in all arms. All366 upstream options unchanged; only the
+private true gate added, no stage-macro leak, patched maps equal. Class/resource
+trees unchanged and all clients/watchers stopped; GPU returned to root.
+
+| Coastal arm | FPS | Mean total ms | GPU mean/median/p95 ms |
+| --- | ---: | ---: | ---: |
+| Original, mod absent | 60.1758 | 16.6180 | 15.4416/15.3553/16.8092 |
+| Same private source, global off | 60.8841 | 16.4246 | 15.3720/15.2213/17.1652 |
+| Same private source, global on | 62.1495 | 16.0902 | 14.9639/14.8469/16.3433 |
+
+Observed OFF→ON GPU reduction2.655% (0.4081ms), mean-frame reduction2.036%,
+throughput+2.078%; original→ON GPU3.094%, throughput+3.280%. One quiet serial
+quality-changing block, not causal/repeated/quality-equivalent acceptance or an
+isolated fetch budget/strict ceiling. GPU within-run third-mean ranges0.183–0.271ms
+are substantial relative to the contrast but are not a noise floor/CI. Mean render
+thread CPU rises4.83% in ON. Root defers calibration/repeats at this weak aggregate
+signal; do not promote a default. Density/occupancy/early-exit changes are retained.
+
+Actual gate discovery and driver rendering now pass. Resized2048x1151 stills show
+similar broad cloud/sun/shore composition, without conclusively isolated fine
+opacity differences; no parity or physical texture-count proof. Raw profiles/logs/
+PNGs/audit preserved under photon-density-detail-coast-pilot-r2. DENSITY_DETAIL_COST_DECISION
+records exact hashes/drift and future minimal reverse-order/query-off controls.
+
+Root authorized one existing sampler/core readback smoke (no GPU timing) to verify
+core version2/enable1 linkage before closing the source region. `ao_runtime` sole
+GPU owner for fresh photon-density-core-readback-r1 adaptive profile,25warm5capture,
+GPUfalse/CPUlayersfalse/cloudSamplerProbe=true/frozenclasses; no new harness or
+source code. Firstdraw uniform/sampler state is diagnostic, not settled reload,
+density0.5 output or physical fetch-count proof. Exact handles to follow.
+
+Next source-only team: DISTANT_LIGHTING_RATE_PLAN and SPATIAL_LOD_INTERFACE_PLAN
+investigate a 2x2 far diffuse-irradiance cache with full-res albedo/specular retained,
+near/material/depth/normal/light edge fallbacks. Ordinary Iris supports targets0..15;
+Voxy colortex16 is not a free slot. Strict reduced-profile conditional colortex2
+liveness/format/viewport/stage route is source-audited, not driver accepted. Keep
+existing lighting protections and INHERIT defaults until actual quality/cost proof.
+No code/performance acceptance follows from these plans; numerical goal unchanged.
+
+### Density core binding smoke terminal
+
+Existing sampler observer smoke preparation7277/watcher56490/launcher62163 exited0,
+fresh UUID `ffec820f-e57e-4888-9abe-9c39af18e56e`, profile/log root
+photon-density-core-readback-r1. Source/options/native24/fixed pose/weather/focus/
+request/temporal/PNG/frozen-class contracts pass. GPU sample stream empty and no
+timing inference. Exactly one of22 first-observed draw programs (numeric18) exposes
+GL_INT size1 version2/location31 and enabled1/location38 at21:19:59.807476Z. The
+frozen source declares this pair only under private cumulus PROGRAM_DEFERRED1;
+main-cloud attribution is source inference, not an observed program name. Other
+five core fields are inactive/unknown; no extension uniform readback.
+
+Three remapped scalar3D samplers customtex1/0/2 are bound to nonzero objects with
+LINEAR/base-max-level0/LOD0/aniso1/sampler0. Allocation dimensions/content were not
+queried;64³ remains a source declaration. Firstdraw preceded fixed-camera control;
+this proves sampled binding, not settled reload, density0.5 output, physical fetch
+savings or quality parity. OpenAL shutdown warning retained, no graphics/probe
+failure marker. All clients/watchers stopped, class/resource trees unchanged and
+operator formally returned GPU ownership to root. No further density calibration.
+
+Next action: `lod_opportunities` owns four new bounded lighting-region cost-control
+files (builder/manifest/tests/evidence), not a pass graph or API expansion yet.
+Approved simple far receivers only: decoded zeroSSS/sheen/emission/nonmetal/no
+reflection mask, valid core2/global1/near/far/width, sky/hand/overlay/wetness/fullnear
+fallback. The intentional control bypasses AO reconstruction/PCF/SSRT/diffuse
+prefix and substitutes cheap declared values; current fullres material/highlight/
+reflection/edge/fog composition stays common, but changed shared AO/shadow inputs
+must be disclosed. Only this private-scoped PCSS's three comparisons use explicit
+LOD0 based on pinned no-mip LINEAR_HW source; driver equivalence pending. Require
+actual Iris parser sole-option coverage and original nonselected/off bytes before
+assembly/driver. No tests/build/client during later timed handoff. Root owns GPU.
+
+## User correction: independent parallel implementation
+
+User explicitly reiterated that teams must spread work across many areas at once,
+not mostly support one experiment. Root accepts the correction: serial GPU ownership
+does not justify serial source implementation. Preserve the full50% objective and
+quality evidence. Launch independent implementation tracks for distant lighting,
+reflections, procedural/water detail, volumetric integration and mod interfaces.
+Use isolated worktrees for main Java or overlapping adapter code, explicit distinct
+new files elsewhere. Workers continue source work in parallel; coordinate heavy
+local tests/builds away from measured25s windows and keep one GPU operator.
+Record each code owner, acceptance check, stopping boundary and integration queue.
+No new native goal, platform, supported pack, remote push or external message.

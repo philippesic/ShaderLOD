@@ -223,3 +223,39 @@ processes during timed windows and instructed `ao_runtime` to retain the pilot
 with possible external CPU activity qualified. No interference or effect on
 GPU/FPS is proven, and the data must not be promoted as a quiet causal comparison.
 This was root's coordination boundary, not a user error or worker violation.
+
+
+## GLSL guards must also satisfy Iris option discovery
+
+The first density diagnostic passed our archive-default/source fixtures but failed
+actual Iris option validation: its requested switch was absent from the effective
+option map. `lod_opportunities` inspected the pinned Iris OptionAnnotatedSource
+bytecode: option references recognize standalone #ifdef/#ifndef, while combined
+#if defined guards are not discovered by that path. Root retained the failed r1
+reports/archive and assigned nested guards plus an actual pinned-parser fixture
+before retry. Valid GLSL and our defaults parser do not prove Iris recognizes a
+shader-pack option. This was an agent integration-test gap, not a user error.
+
+
+## Arm focus automation must precede the first client
+
+In density r1, `ao_runtime` reached the first manual focus action after capture
+started and correctly skipped changing focus during measurement. The original
+capture therefore remained focused while disabled was unfocused. The operator's
+subsequent watcher fixed only later warmups. Root retained both independent
+rejections (missing Iris gate and focus mismatch); no relabeling or gain claim.
+The retry must arm/acknowledge the warmup-only watcher before the runner launches,
+then validate actual report focus for every arm. This was the runtime agent's
+sequencing correction, not a user mistake or proof that focus caused slower FPS.
+
+
+## Parallel teams must own independent implementation tracks
+
+The user corrected root's general-LOD workflow: several workers had supported
+one shader experiment at a time, leaving most implementation serial. Parallel
+research/documents around one candidate did not satisfy the requested breadth.
+Root is assigning independent code tracks for distant lighting, reflections,
+procedural detail, volumetric sampling and mod interfaces, with distinct files
+or isolated worktrees. Only interactive clients/GPU measurements and heavy local
+checks during capture need serialization; source development continues in parallel.
+This was root's coordination misunderstanding, not a user error.

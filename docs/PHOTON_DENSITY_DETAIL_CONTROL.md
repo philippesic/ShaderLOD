@@ -1,6 +1,6 @@
 # Photon fine-density cost control
 
-Source freeze: 2026-10-05. This is a **quality-changing cost control**, not an
+Corrected source/parser freeze: 2026-10-05. This is a **quality-changing cost control**, not an
 accepted LOD optimization, filtered density approximation, isolated texture-fetch
 budget or demonstrated performance gain. It tests whether fine 3D cumulus-density
 sampling merits the later projected-detail work in
@@ -30,6 +30,14 @@ value, global off, other programs or private off retains the literal original
 fine texture sample. The branch encloses the fetch itself. Only existing
 `shaderlodBridgeVersion` and `shaderlodEnabled` are consumed; no per-effect policy,
 ratio, preset, near/far, transition or debug field is wired.
+
+The corrected source uses an outer `#ifdef SHADERLOD_DENSITY_DETAIL_COST_CONTROL`
+and inner `#if defined PROGRAM_DEFERRED1`, with explicit original fallbacks for both.
+The original combined `#if defined ... && defined ...` preserved GLSL logic but
+failed Iris boolean-option discovery. The two source forms are not equivalent
+for Iris's option parser. The stage guard stays a non-option expression; an inner
+`#ifdef PROGRAM_DEFERRED1` would register a stage reference and could expose the
+entry point's stage `#define` as an unintended boolean option.
 
 Overworld entry: `shaders/world0/deferred1.fsh` → `program/d1_clouds.fsh` →
 `clouds.glsl` → `draw_cumulus_clouds`/`clouds_cumulus_density`.
@@ -68,12 +76,33 @@ Ran:
 python3 -m unittest discover -s tests -p 'test_photon_density_detail_probe.py' -v
 ```
 
-Eight source/scalar fixtures passed in 0.018 seconds. They verify default-off and
+The original eight source/scalar fixtures passed but missed actual Iris option
+discovery; they did not establish integration acceptance. The corrected nine
+fixtures passed in 0.425 seconds, including the actual pinned Iris pure lexer.
+They verify default-off and
 non-main-program byte parity for every original member, the sole fine-fetch source
 intervention, strict activation, option/license/member scope, rejected source or
 manifest mutations, literal original fallback, and a counterexample to nonlinear
-mean/occupancy preservation. No output ZIP, GLSL compiler, game, image, physical
-fetch-count or GPU timing check was performed by this worker.
+mean/occupancy preservation. No output ZIP, GLSL compiler, Gradle build, game,
+image, physical fetch-count or GPU timing check was performed by this worker.
+
+The lexer fixture source-launches a tiny temporary Java program with existing
+Guava/Fastutil dependencies and the actual runtime Iris JAR, SHA-256
+`3e3f94d2d5cdcb8145c4385d521974aa2d8669b2cc212351f70cf06488182e83`.
+It pins `OptionAnnotatedSource.class` SHA-256
+`bcc5221aacd9b72619c966ac753e137144b45a8e6462511d104d9155db6bbba7`.
+`javap -p -c` inspection establishes that `parseLine` first admits only `#define`,
+`const`, `#ifdef` and `#ifndef` usages, while `parseIfdef` accepts whitespace,
+one word and line end. The actual `OptionAnnotatedSource` fixture demonstrates
+combined-guard references absent, patched nested-guard references present, and
+`getOptionSet` retention of the private boolean. Actual Iris `MutableOptionValues`
+and `apply` then demonstrate source-default false/true and true/false overrides.
+The fixture includes the original `world0/deferred1.fsh` stage entry and original/
+patched settings and cumulus sources. Comparing actual parser reference/option
+sets shows the private gate is the sole addition and `PROGRAM_DEFERRED1` is not
+exposed. Runtime aggregate effective-option equality still needs validation;
+only the explicitly declared private gate may be excluded from that comparison.
+This is parser acceptance, not selected-program compilation or live activation.
 
 After review, root/runtime operator can assemble once and freeze output hashes:
 
@@ -93,6 +122,29 @@ keys include `experiment=photon-cumulus-fine-density-cost-control`, `arm`,
 `physical_work_caveat`, `runtime_compilation=unverified` and `gpu_benefit=unmeasured`.
 Use this explicit intervention class when qualifying profile/source differences;
 do not silently classify it as ordinary upstream-quality parity.
+
+## Retained r1 failure and correction
+
+Root's runner exec `84020` exited 1 after original and patched-off arms. Patched-off
+loaded/rendered the private pack without fallback, but actual effective Iris
+options omitted the requested private gate. Validation rejected:
+
+```text
+Requested option is not an active Iris option: SHADERLOD_DENSITY_DETAIL_COST_CONTROL
+```
+
+Enabled was never launched. This establishes startup/rendering for that pipeline,
+not a selected diagnostic compile or activation. The failed private archive
+SHA-256 `0c0ac07a08a3c1e2c58658aabea95a564cc425795ff91c6a6b77bc0d8f2287d6`
+and original manifest SHA-256
+`5b66b98cf065857d4df66e0ebbdcfbec281e619e8cde85e8dc58e44fc46fb1bd`
+remain historical pins; the corrected source requires fresh archives/profiles/tag.
+Raw reports, PNGs and `density-runtime-rejected-audit.json` remain under
+`dev/logs/photon-density-detail-coast-pilot-r1/`. A separate original-focused versus
+off-unfocused mismatch also rejected matched timing. No raw report, validator or
+option map was repaired to bypass either failure. All clients/watchers were
+stopped before this source/parser repair. Root records the confirmed shader
+owner integration-test coverage gap in the project lessons/checkpoint.
 
 ## Runtime gate and stopping boundary
 

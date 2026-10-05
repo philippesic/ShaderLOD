@@ -35,7 +35,9 @@ def patch_members(files: dict[str, bytes], manifest: dict, arm: str) -> dict[str
             or manifest.get("base_sha256") != BASE_SHA256
             or manifest.get("switch") != SWITCH
             or manifest.get("diagnostic_fine_noise") != 0.5
-            or manifest.get("quality_class") != "quality_changing_cost_control"):
+            or manifest.get("quality_class") != "quality_changing_cost_control"
+            or manifest.get("iris_option_discovery", {}).get("guard_contract")
+            != "outer #ifdef private switch; inner #if defined PROGRAM_DEFERRED1"):
         raise ValueError("Unexpected original-Photon density control manifest")
     entries = manifest["members"]
     if tuple(entry["path"] for entry in entries) != MEMBERS:

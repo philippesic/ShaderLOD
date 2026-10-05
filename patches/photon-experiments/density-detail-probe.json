@@ -8,23 +8,23 @@
   "diagnostic_fine_noise": 0.5,
   "quality_class": "quality_changing_cost_control",
   "option_declaration": "// ShaderLOD quality-changing density cost control; default off.\n//#define SHADERLOD_DENSITY_DETAIL_COST_CONTROL\n",
-  "declarations": "#if defined SHADERLOD_DENSITY_DETAIL_COST_CONTROL && defined PROGRAM_DEFERRED1\n// ShaderLOD diagnostic density cost control, derived from Photon v1.3b\n// by Benjamin Stott (SixthSurge). Original Photon LICENSE remains applicable.\nuniform int shaderlodBridgeVersion;\nuniform int shaderlodEnabled;\n#endif // SHADERLOD_DENSITY_DETAIL_COST_CONTROL\n",
+  "declarations": "#ifdef SHADERLOD_DENSITY_DETAIL_COST_CONTROL\n#if defined PROGRAM_DEFERRED1\n// ShaderLOD diagnostic density cost control, derived from Photon v1.3b\n// by Benjamin Stott (SixthSurge). Original Photon LICENSE remains applicable.\nuniform int shaderlodBridgeVersion;\nuniform int shaderlodEnabled;\n#endif // PROGRAM_DEFERRED1\n#endif // SHADERLOD_DENSITY_DETAIL_COST_CONTROL\n",
   "original_fine_sample": "    float worley_1 =\n        texture(SAMPLER_WORLEY_SWIRLEY, (pos + 0.4 * wind) * 0.005).x;",
-  "active_fine_sample": "#if defined SHADERLOD_DENSITY_DETAIL_COST_CONTROL && defined PROGRAM_DEFERRED1\n    float worley_1;\n    // Intentionally changes density and early-exit occupancy: cost control only.\n    if (shaderlodBridgeVersion == 2 && shaderlodEnabled == 1) {\n        worley_1 = 0.5; // Declared diagnostic, not a texture mean or opacity match.\n    } else {\n        worley_1 =\n            texture(SAMPLER_WORLEY_SWIRLEY, (pos + 0.4 * wind) * 0.005).x;\n    }\n#else\n    float worley_1 =\n        texture(SAMPLER_WORLEY_SWIRLEY, (pos + 0.4 * wind) * 0.005).x;\n#endif // SHADERLOD_DENSITY_DETAIL_COST_CONTROL",
+  "active_fine_sample": "#ifdef SHADERLOD_DENSITY_DETAIL_COST_CONTROL\n#if defined PROGRAM_DEFERRED1\n    float worley_1;\n    // Intentionally changes density and early-exit occupancy: cost control only.\n    if (shaderlodBridgeVersion == 2 && shaderlodEnabled == 1) {\n        worley_1 = 0.5; // Declared diagnostic, not a texture mean or opacity match.\n    } else {\n        worley_1 =\n            texture(SAMPLER_WORLEY_SWIRLEY, (pos + 0.4 * wind) * 0.005).x;\n    }\n#else\n    float worley_1 =\n        texture(SAMPLER_WORLEY_SWIRLEY, (pos + 0.4 * wind) * 0.005).x;\n#endif // PROGRAM_DEFERRED1\n#else\n    float worley_1 =\n        texture(SAMPLER_WORLEY_SWIRLEY, (pos + 0.4 * wind) * 0.005).x;\n#endif // SHADERLOD_DENSITY_DETAIL_COST_CONTROL",
   "source_intervention": "Only fine worley_1 density sample in PROGRAM_DEFERRED1; fixed diagnostic can change occupancy/early exits; no calibrated mean or isolated fetch-budget claim",
   "members": [
     {
       "path": "shaders/include/sky/clouds/cumulus.glsl",
       "source_sha256": "1923542cd9ad862a6166a542dbdcb1597fd70316e4338b236deefc2ccb932ba5",
-      "patched_sha256": "e64f2c71ce370203ab506f14e54ff64230013cf0f7eef5fe5e56e3ad2ae25db9",
+      "patched_sha256": "3a5b3fbae654259567e76e660fac012fa0c2743e60c09519945f57d2e7440024",
       "replacements": [
         {
           "before": "#define INCLUDE_SKY_CLOUDS_CUMULUS\n",
-          "after": "#define INCLUDE_SKY_CLOUDS_CUMULUS\n#if defined SHADERLOD_DENSITY_DETAIL_COST_CONTROL && defined PROGRAM_DEFERRED1\n// ShaderLOD diagnostic density cost control, derived from Photon v1.3b\n// by Benjamin Stott (SixthSurge). Original Photon LICENSE remains applicable.\nuniform int shaderlodBridgeVersion;\nuniform int shaderlodEnabled;\n#endif // SHADERLOD_DENSITY_DETAIL_COST_CONTROL\n"
+          "after": "#define INCLUDE_SKY_CLOUDS_CUMULUS\n#ifdef SHADERLOD_DENSITY_DETAIL_COST_CONTROL\n#if defined PROGRAM_DEFERRED1\n// ShaderLOD diagnostic density cost control, derived from Photon v1.3b\n// by Benjamin Stott (SixthSurge). Original Photon LICENSE remains applicable.\nuniform int shaderlodBridgeVersion;\nuniform int shaderlodEnabled;\n#endif // PROGRAM_DEFERRED1\n#endif // SHADERLOD_DENSITY_DETAIL_COST_CONTROL\n"
         },
         {
           "before": "    float worley_1 =\n        texture(SAMPLER_WORLEY_SWIRLEY, (pos + 0.4 * wind) * 0.005).x;",
-          "after": "#if defined SHADERLOD_DENSITY_DETAIL_COST_CONTROL && defined PROGRAM_DEFERRED1\n    float worley_1;\n    // Intentionally changes density and early-exit occupancy: cost control only.\n    if (shaderlodBridgeVersion == 2 && shaderlodEnabled == 1) {\n        worley_1 = 0.5; // Declared diagnostic, not a texture mean or opacity match.\n    } else {\n        worley_1 =\n            texture(SAMPLER_WORLEY_SWIRLEY, (pos + 0.4 * wind) * 0.005).x;\n    }\n#else\n    float worley_1 =\n        texture(SAMPLER_WORLEY_SWIRLEY, (pos + 0.4 * wind) * 0.005).x;\n#endif // SHADERLOD_DENSITY_DETAIL_COST_CONTROL"
+          "after": "#ifdef SHADERLOD_DENSITY_DETAIL_COST_CONTROL\n#if defined PROGRAM_DEFERRED1\n    float worley_1;\n    // Intentionally changes density and early-exit occupancy: cost control only.\n    if (shaderlodBridgeVersion == 2 && shaderlodEnabled == 1) {\n        worley_1 = 0.5; // Declared diagnostic, not a texture mean or opacity match.\n    } else {\n        worley_1 =\n            texture(SAMPLER_WORLEY_SWIRLEY, (pos + 0.4 * wind) * 0.005).x;\n    }\n#else\n    float worley_1 =\n        texture(SAMPLER_WORLEY_SWIRLEY, (pos + 0.4 * wind) * 0.005).x;\n#endif // PROGRAM_DEFERRED1\n#else\n    float worley_1 =\n        texture(SAMPLER_WORLEY_SWIRLEY, (pos + 0.4 * wind) * 0.005).x;\n#endif // SHADERLOD_DENSITY_DETAIL_COST_CONTROL"
         }
       ]
     },
@@ -40,5 +40,14 @@
       ],
       "enabled_sha256": "1a0f19998e9e19e311b52fb2624ffbeefd550e8fe5c9be4554467476ac261061"
     }
-  ]
+  ],
+  "iris_option_discovery": {
+    "jar_path": "dev/runtime/iris-neoforge-1.8.12+mc1.21.1.jar",
+    "jar_sha256": "3e3f94d2d5cdcb8145c4385d521974aa2d8669b2cc212351f70cf06488182e83",
+    "class_path": "net/irisshaders/iris/shaderpack/option/OptionAnnotatedSource.class",
+    "class_sha256": "bcc5221aacd9b72619c966ac753e137144b45a8e6462511d104d9155db6bbba7",
+    "parse_rule": "parseLine only enters declaration/ifdef/ifndef paths; parseIfdef accepts one word and line end; #if defined does not register boolean reference",
+    "guard_contract": "outer #ifdef private switch; inner #if defined PROGRAM_DEFERRED1",
+    "acceptance": "actual OptionAnnotatedSource/getOptionSet fixture with stage entry; private gate sole added option, default/override validation; compilation/rendering pending"
+  }
 }
