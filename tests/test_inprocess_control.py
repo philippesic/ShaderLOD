@@ -9,7 +9,7 @@ import unittest
 import uuid
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'scripts'))
-from analyze_inprocess_control import analyze_report, compare_sessions, canonical, OFF_OPTIONS, FALSE_FLAGS, METHOD
+from analyze_inprocess_control import analyze_report, compare_sessions, canonical, OFF_OPTIONS, FALSE_FLAGS, METHOD, COHERENCE_METHOD, ORIGINAL_PHOTON_SHA256, semantic_state
 
 PIN = '1' * 64
 
@@ -55,8 +55,55 @@ def fixture(gpu=True, cpu=True):
         report['phases'].append(phase)
     return report
 
+def coherence_fixture():
+    report = fixture()
+    report.update(benchmark_feature='coherence', method=COHERENCE_METHOD, selected_flag='rendering.shadowFrustumCoherence',
+                  initial_enabled=True, restored_initial_feature=True,
+                  diagnostic_policy={'shadow_coherence_oracle': False, 'visibility_phase_observer': False})
+    report['instrumentation_properties'].update(shadowCoherenceOracle='false', visibilityLists='false', benchmarkFeature='coherence')
+    options = {'QUALITY': 'high'}  # Original Photon has no ShaderLOD pack switches.
+    for phase in report['phases']:
+        for key in ('inputStart', 'inputEnd'):
+            state = phase[key]
+            state['actual_shader_sha256'] = ORIGINAL_PHOTON_SHA256
+            state['effective_shader_options'] = options.copy()
+            state['effective_shader_options_sha256'] = hashlib.sha256(canonical(options).encode()).hexdigest()
+            state['lod_settings']['enabled'] = True
+            state['loaded_semantic_config']['lod']['enabled'] = True
+            state['loaded_semantic_config']['rendering']['shadowFrustumCoherence'] = phase['enabled']
+            state['shadow_coherence_configured'] = phase['enabled']
+            state['shadow_coherence_active'] = phase['enabled']
+    report['stable_input_reference'] = semantic_state(report['phases'][0]['inputStart'], True, 'coherence')
+    return report
+
 
 class InprocessTests(unittest.TestCase):
+    def test_coherence_selects_only_feature_and_keeps_global_enabled(self):
+        report = coherence_fixture()
+        result = analyze_report(report)
+        self.assertEqual(result['benchmark_feature'], 'coherence')
+        self.assertEqual(result['shader_sha256'], ORIGINAL_PHOTON_SHA256)
+        self.assertIs(result['stable_input_reference']['lod_settings']['enabled'], True)
+        for mutate in (lambda s: s['lod_settings'].update(enabled=False),
+                       lambda s: s['loaded_semantic_config']['lod'].update(enabled=False),
+                       lambda s: s.update(shadow_coherence_active=False),
+                       lambda s: s.update(shadow_culling_active=True),
+                       lambda s: s.update(actual_shader_sha256=PIN)):
+            bad = coherence_fixture(); mutate(bad['phases'][1]['inputEnd'])
+            with self.assertRaises(ValueError): analyze_report(bad)
+        with self.assertRaises(ValueError): analyze_report(report, expected_shader_sha256=PIN)
+
+    def test_coherence_rejects_oracle_observer_and_mixed_artifacts(self):
+        for field in ('shadow_coherence_oracle', 'visibility_phase_observer'):
+            bad = coherence_fixture(); bad['diagnostic_policy'][field] = True
+            with self.assertRaises(ValueError): analyze_report(bad)
+        bad = coherence_fixture(); bad['instrumentation_properties']['shadowCoherenceOracle'] = 'true'
+        with self.assertRaises(ValueError): analyze_report(bad)
+        a = analyze_report(coherence_fixture()); b = copy.deepcopy(a)
+        b['loaded_artifacts_sha256']['iris.jar'] = '8' * 64
+        with self.assertRaises(ValueError): compare_sessions([a, b])
+        with self.assertRaises(ValueError): compare_sessions([a, analyze_report(fixture())])
+
     def test_valid_pairs_keep_metrics_and_unknown_windows_separate(self):
         result = analyze_report(fixture())
         self.assertEqual(len(result['adjacent_pairs']), 2)

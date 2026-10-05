@@ -127,7 +127,7 @@ neoForge {
             if (project.findProperty('benchmarkOnly') == 'true') {
                 systemProperty 'shaderlod.dev.benchmarkOnly', 'true'
             }
-            for (name in ['benchmarkSettleSeconds', 'benchmarkStartEnabled']) {
+            for (name in ['benchmarkSettleSeconds', 'benchmarkStartEnabled', 'benchmarkFeature']) {
                 if (project.hasProperty(name)) {
                     systemProperty "shaderlod.dev.${name}", project.property(name).toString()
                 }

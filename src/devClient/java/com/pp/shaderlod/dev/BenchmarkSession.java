@@ -24,6 +24,7 @@ import java.util.UUID;
 public final class BenchmarkSession {
     private final Path directory;
     private final WorkloadInputs inputs;
+    private final String feature = benchmarkFeature();
     private final String sessionId = UUID.randomUUID().toString();
     private final List<Phase> phases = new ArrayList<>();
     private final double initialWarmup = seconds("initialWarmup", 60);
@@ -33,6 +34,7 @@ public final class BenchmarkSession {
     private final boolean gpuRequested = Boolean.parseBoolean(System.getProperty("shaderlod.dev.gpuTiming", "true"));
     private final boolean cpuRequested = Boolean.parseBoolean(System.getProperty("shaderlod.dev.cpuTiming", "true"));
     private final boolean initialEnabled = ShaderLodConfig.ENABLED.get();
+    private final boolean initialFeatureEnabled = feature.equals("coherence") ? ShaderLodConfig.SHADOW_FRUSTUM_COHERENCE.get() : initialEnabled;
     private final boolean initialHideGui = Minecraft.getInstance().options.hideGui;
     private final long started = System.nanoTime();
     private final JsonObject temporalInitial;
@@ -49,12 +51,15 @@ public final class BenchmarkSession {
         this.directory = directory.toAbsolutePath().normalize();
         this.inputs = new WorkloadInputs(this.directory);
         if (Boolean.getBoolean("shaderlod.dev.measureWorkload")) throw new IllegalStateException("Benchmark and workload capture are mutually exclusive");
+        if (feature.equals("coherence") && (!initialEnabled || Boolean.getBoolean("shaderlod.dev.shadowCoherenceOracle") || Boolean.getBoolean("shaderlod.dev.visibilityLists"))) throw new IllegalStateException("Coherence timing requires global enabled and oracle/phase observer disabled");
         temporalInitial = inputs.temporalInputs();
         Minecraft.getInstance().options.hideGui = true; // one fixed configured HUD policy for all phases
         header.addProperty("schema", 3);
         header.addProperty("session_id", sessionId);
         header.addProperty("created_at_utc", java.time.Instant.now().toString());
-        header.addProperty("method", "One JVM/world/pipeline; all five modules off; only live global bridge enabled changes");
+        header.addProperty("benchmark_feature", feature);
+        header.addProperty("method", feature.equals("coherence") ? "One JVM/world/pipeline; original Photon; only shadow frustum coherence changes"
+                : "One JVM/world/pipeline; all five modules off; only live global bridge enabled changes");
         header.addProperty("starting_order", startEnabled ? "ON/OFF/ON/OFF" : "OFF/ON/OFF/ON");
         header.addProperty("initial_warmup_seconds", initialWarmup);
         header.addProperty("settle_seconds", switchWarmup);
@@ -63,6 +68,8 @@ public final class BenchmarkSession {
         header.addProperty("cpu_requested", cpuRequested);
         header.addProperty("configured_hide_gui", true);
         header.addProperty("initial_enabled", initialEnabled);
+        header.addProperty("initial_feature_enabled", initialFeatureEnabled);
+        header.addProperty("selected_flag", feature.equals("coherence") ? "rendering.shadowFrustumCoherence" : "lod.enabled");
         header.addProperty("uniform_observation_note", "Config values are intended bridge inputs; no GPU readback or proof of active linked uniforms. PhaseMarker allows a bounded dev observer to label original supplier evaluations.");
         header.addProperty("limits", "Correlated phases, not independent JVM repeats. GPU timeline is not busy utilization; CPU includes driver work. Clocks/noise keep advancing. No causal attribution to an individual uniform call.");
         header.add("shader_temporal_inputs_initial", temporalInitial);
@@ -70,10 +77,16 @@ public final class BenchmarkSession {
         for (var mod : ModList.get().getMods()) mods.addProperty(mod.getModId(), mod.getVersion().toString());
         header.add("loaded_mods", mods);
         var properties = new JsonObject();
-        for (String name : List.of("gpuTiming", "cpuTiming", "cpuLayerTiming", "gpuPassTiming", "gpuSampleInterval", "fixedWetness", "performanceStack", "includeDh")) {
+        for (String name : List.of("gpuTiming", "cpuTiming", "cpuLayerTiming", "gpuPassTiming", "gpuSampleInterval", "fixedWetness", "performanceStack", "includeDh", "benchmarkFeature", "shadowCoherenceOracle", "visibilityLists", "shadowObserve")) {
             properties.addProperty(name, System.getProperty("shaderlod.dev." + name, "unspecified"));
         }
         header.add("instrumentation_properties", properties);
+        if (feature.equals("coherence")) {
+            var policy = new JsonObject();
+            policy.addProperty("shadow_coherence_oracle", false);
+            policy.addProperty("visibility_phase_observer", false);
+            header.add("diagnostic_policy", policy);
+        }
         if (ShadowInputObserver.enabled()) {
             var options = new java.util.TreeMap<String, String>();
             WorkloadInputs.effectiveOptions().entrySet().forEach(entry -> options.put(entry.getKey(), entry.getValue().getAsString()));
@@ -104,7 +117,7 @@ public final class BenchmarkSession {
             if (worldReference != null && (Minecraft.getInstance().level != worldReference || Iris.getPipelineManager().getPipelineNullable() != pipelineReference)) throw new IllegalStateException("World/pipeline changed between boundaries");
             if (phase < 0) {
                 if ((now - started) * 1e-9 < initialWarmup) return;
-                inputs.validateNoAtmosphereGuard();
+                if (feature.equals("global")) inputs.validateNoAtmosphereGuard();
                 startPhase(now);
                 return;
             }
@@ -115,7 +128,7 @@ public final class BenchmarkSession {
                 JsonObject state = inputs.benchmarkInputState();
                 validate(state, current.enabled);
                 if (stableReference == null) {
-                    stableReference = WorkloadInputs.withoutEnabled(state);
+                    stableReference = WorkloadInputs.withoutFeature(state, feature);
                     worldReference = Minecraft.getInstance().level;
                     pipelineReference = Iris.getPipelineManager().getPipelineNullable();
                     header.add("stable_input_reference", stableReference);
@@ -147,7 +160,8 @@ public final class BenchmarkSession {
     private void startPhase(long now) {
         phase++;
         boolean enabled = (phase % 2 == 0) == startEnabled;
-        ShaderLodConfig.ENABLED.set(enabled);
+        if (feature.equals("coherence")) ShaderLodConfig.SHADOW_FRUSTUM_COHERENCE.set(enabled);
+        else ShaderLodConfig.ENABLED.set(enabled);
         current = new Phase(phase + 1, enabled);
         phaseStarted = now;
         sampling = false;
@@ -196,13 +210,16 @@ public final class BenchmarkSession {
         }));
     }
 
-    private static void validate(JsonObject state, boolean expectedEnabled) {
-        WorkloadInputs.validateAlloff(state);
-        if (state.getAsJsonObject("lod_settings").get("enabled").getAsBoolean() != expectedEnabled) throw new IllegalStateException("Wrong live global flag");
+    private void validate(JsonObject state, boolean expectedEnabled) {
+        if (feature.equals("coherence")) WorkloadInputs.validateCoherence(state, expectedEnabled);
+        else {
+            WorkloadInputs.validateAlloff(state);
+            if (state.getAsJsonObject("lod_settings").get("enabled").getAsBoolean() != expectedEnabled) throw new IllegalStateException("Wrong live global flag");
+        }
     }
 
     private void checkIdentity(JsonObject state) {
-        if (!WorkloadInputs.withoutEnabled(state).equals(stableReference)) throw new IllegalStateException("Input changed beyond the expected global flag");
+        if (!WorkloadInputs.withoutFeature(state, feature).equals(stableReference)) throw new IllegalStateException("Input changed beyond the selected feature flag");
         if (Minecraft.getInstance().level != worldReference || Iris.getPipelineManager().getPipelineNullable() != pipelineReference) throw new IllegalStateException("World/pipeline reloaded in one-JVM control");
     }
 
@@ -279,6 +296,10 @@ public final class BenchmarkSession {
     }
 
     private void restore() {
+        if (feature.equals("coherence")) {
+            ShaderLodConfig.SHADOW_FRUSTUM_COHERENCE.set(initialFeatureEnabled);
+            com.pp.shaderlod.ShadowFrustumCoherenceController.configure(false); // fail open until normal eligibility tick restores an initially enabled feature
+        }
         ShaderLodConfig.ENABLED.set(initialEnabled);
         Minecraft.getInstance().options.hideGui = initialHideGui;
         marker = null;
@@ -295,6 +316,7 @@ public final class BenchmarkSession {
             report.add("phases", new GsonBuilder().create().toJsonTree(phases));
             if (current != null && !phases.contains(current)) report.add("partial_phase", new GsonBuilder().create().toJsonTree(current));
             report.addProperty("restored_initial_enabled", done);
+            report.addProperty("restored_initial_feature", done);
             Path temporary = directory.resolve("benchmark.json.tmp"), target = directory.resolve("benchmark.json");
             Files.writeString(temporary, new GsonBuilder().setPrettyPrinting().create().toJson(report));
             Files.move(temporary, target, StandardCopyOption.REPLACE_EXISTING);
@@ -304,6 +326,12 @@ public final class BenchmarkSession {
     private static double seconds(String property, double defaultValue) {
         double value = Double.parseDouble(System.getProperty("shaderlod.dev." + property, Double.toString(defaultValue)));
         if (!Double.isFinite(value) || value < 1) throw new IllegalArgumentException("Invalid benchmark seconds: " + property);
+        return value;
+    }
+
+    private static String benchmarkFeature() {
+        String value = System.getProperty("shaderlod.dev.benchmarkFeature", "global");
+        if (!value.equals("global") && !value.equals("coherence")) throw new IllegalArgumentException("Unknown benchmark feature: " + value);
         return value;
     }
 

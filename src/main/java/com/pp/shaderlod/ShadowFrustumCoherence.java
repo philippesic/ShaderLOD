@@ -81,6 +81,35 @@ public final class ShadowFrustumCoherence {
         return inside;
     }
 
+    /** Diagnostic boundary only; verifies owner context without consulting/changing proof entries. */
+    boolean diagnosticMatchesContext(float[][] expectedPlanes, int expectedCount, boolean expectedFma, double expectedLimit) {
+        return ShadowFrustumCoherenceDiagnostics.ENABLED && planes == expectedPlanes && planeCount == expectedCount
+                && useFma == expectedFma
+                && Double.doubleToRawLongBits(distanceLimit) == Double.doubleToRawLongBits(expectedLimit);
+    }
+
+    /** Clone relevant source bits once for an offline trace; never called by canAccept. */
+    ShadowFrustumCoherenceDiagnostics.PlaneContext diagnosticPlaneContext() {
+        if (!ShadowFrustumCoherenceDiagnostics.ENABLED) return null;
+        if (planes == null || planeCount < 0 || planeCount > planes.length || planeCount > 64) {
+            return new ShadowFrustumCoherenceDiagnostics.PlaneContext(false, "unsupported plane array/count", planeCount,
+                    useFma, Double.doubleToRawLongBits(distanceLimit), null);
+        }
+        int[][] bits = new int[planeCount][4];
+        for (int i = 0; i < planeCount; i++) {
+            float[] plane = planes[i];
+            if (plane == null || plane.length < 4) {
+                return new ShadowFrustumCoherenceDiagnostics.PlaneContext(false, "missing/malformed plane", planeCount,
+                        useFma, Double.doubleToRawLongBits(distanceLimit), null);
+            }
+            for (int coordinate = 0; coordinate < 4; coordinate++) {
+                bits[i][coordinate] = Float.floatToRawIntBits(plane[coordinate]);
+            }
+        }
+        return new ShadowFrustumCoherenceDiagnostics.PlaneContext(true, "raw plane context cloned", planeCount,
+                useFma, Double.doubleToRawLongBits(distanceLimit), bits);
+    }
+
     private static int cell(float value) {
         float scaled = value * (1.0f / 64.0f);
         int integral = (int) scaled;

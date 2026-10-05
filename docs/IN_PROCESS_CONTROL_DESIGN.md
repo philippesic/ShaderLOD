@@ -264,3 +264,50 @@ final compile; runtime application remains unverified. No Minecraft capture was
 run by this worker. GPU-disabled policy accepts query-free CPU-only/FPS-only
 modes and reports disabled/absent GPU data; requested GPU modes require a supported
 backend. Root still owns observer wiring, final integrated checks and launch.
+
+## Original-Photon coherence performance mode
+
+The later bounded extension selects
+`shaderlod.dev.benchmarkFeature=coherence` (default remains `global`). This is a
+separate experiment: the main mod is present in every phase and global enabled
+stays true. Only `rendering.shadowFrustumCoherence` changes
+false/true/false/true, or the reversed order when requested. ON/OFF labels and
+`PhaseMarker.enabled` now describe the selected feature; explicit
+`benchmark_feature`/`selected_flag` report fields prevent interpreting coherence
+OFF as globally disabling the mod.
+
+Coherence timing requires the original Photon archive with exact SHA256
+`120897768eaa8cb1f14a3e98f88dff009ae3204ee3b96904a4fe8586edfc1ead`.
+Original shader options have no ShaderLOD module switches. Global enablement,
+lighting/material/cloud quality, pipeline/world identity, camera, HUD, fixed
+wetness and instrumentation remain fixed. Terrain, shadow-culling math,
+separate visibility-list ownership and debug stay false. Correctness oracle
+`shaderlod.dev.shadowCoherenceOracle` and visibility phase observer
+`shaderlod.dev.visibilityLists` must be false during timing; their full
+instrumented correctness captures are separate work. Source state checks require
+configured and cached-active coherence flags to equal the selected phase after
+settling, not merely a requested label.
+
+Cross-phase coherence identity removes only
+`shadow_coherence_configured`, `shadow_coherence_active` and the loaded semantic
+`rendering.shadowFrustumCoherence` value. It keeps global enabled in both loaded
+and validated LOD settings. Every other complete semantic field, effective
+option and source fingerprint stays part of the comparison. Raw config byte
+hash remains observational because the expected selected setter can change it.
+The initial coherence config is restored; cached activation fails open until the
+normal eligibility tick restores an initially enabled feature. Global enabled
+remains its initial required true value.
+
+The analyzer recognizes the selected method/feature, enforces the exact original
+archive, global true and settled coherence activity, rejects unrelated feature
+changes or oracle/phase-observer timing interference, and rejects cross-session
+feature or runtime-artifact mismatches. Existing legacy global reports retain
+their original interpretation. Query-free CPU-only remains valid without a GPU
+estimate. Same-JVM feature OFF is not a mod-absent baseline and cannot alone
+establish the product's improvement over no ShaderLOD.
+
+Nine tiny analyzer fixtures passed, including coherence-only identity and
+activity, global mutation, original-archive pin, oracle interference and mixed
+artifacts. This worker performed no game, Gradle build or real profile mutation.
+Root owns final compilation, the original-pack profile, correctness capture and
+four-phase performance launch.

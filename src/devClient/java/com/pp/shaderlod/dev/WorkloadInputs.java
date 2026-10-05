@@ -23,6 +23,16 @@ public final class WorkloadInputs {
         return copy;
     }
 
+    public static JsonObject withoutFeature(JsonObject state, String feature) {
+        if (feature.equals("global")) return withoutEnabled(state);
+        if (!feature.equals("coherence")) throw new IllegalArgumentException("Unknown benchmark feature");
+        JsonObject copy = semanticState(state);
+        copy.remove("shadow_coherence_configured");
+        copy.remove("shadow_coherence_active");
+        copy.getAsJsonObject("loaded_semantic_config").getAsJsonObject("rendering").remove("shadowFrustumCoherence");
+        return copy;
+    }
+
     public static JsonObject semanticState(JsonObject state) {
         JsonObject copy = state.deepCopy();
         // Enabled may be persisted by config autosave. Full loaded fields replace
@@ -90,6 +100,23 @@ public final class WorkloadInputs {
         for (String name : java.util.List.of("SHADERLOD_USE_MOD_CONFIG", "SHADERLOD_PRESERVE_LIGHTING")) {
             if (!options.has(name) || !options.get(name).getAsString().equals("true")) throw new IllegalStateException("Required bridge/lighting option: " + name);
         }
+    }
+
+    public static void validateCoherence(JsonObject state, boolean expected) {
+        if (!state.has("mod_present") || !state.get("mod_present").getAsBoolean()) throw new IllegalStateException("Coherence control requires ShaderLOD present");
+        if (!state.get("shaders_in_use").getAsBoolean() || state.get("fallback").getAsBoolean()) throw new IllegalStateException("Iris pipeline unavailable");
+        if (!state.get("hide_gui").getAsBoolean()) throw new IllegalStateException("Coherence control requires hidden HUD");
+        if (!state.get("actual_shader_sha256").getAsString().equals("120897768eaa8cb1f14a3e98f88dff009ae3204ee3b96904a4fe8586edfc1ead")) throw new IllegalStateException("Coherence control requires pinned original Photon archive");
+        if (!state.getAsJsonObject("lod_settings").get("enabled").getAsBoolean()) throw new IllegalStateException("Global enabled must remain true in coherence control");
+        if (!state.getAsJsonObject("loaded_semantic_config").getAsJsonObject("lod").get("enabled").getAsBoolean()) throw new IllegalStateException("Loaded global enabled must remain true");
+        if (state.getAsJsonObject("lod_settings").get("debug").getAsBoolean()) throw new IllegalStateException("Debug must remain false");
+        for (String name : List.of("terrain_configured", "terrain_confirmation", "terrain_active", "shadow_culling_configured", "shadow_culling_active", "shadow_lists_configured", "shadow_lists_active")) {
+            if (state.get(name).getAsBoolean()) throw new IllegalStateException("Unrelated control active: " + name);
+        }
+        for (String name : List.of("shadow_coherence_configured", "shadow_coherence_active")) {
+            if (state.get(name).getAsBoolean() != expected) throw new IllegalStateException("Coherence did not reach expected settled state: " + name);
+        }
+        if (state.getAsJsonObject("loaded_semantic_config").getAsJsonObject("rendering").get("shadowFrustumCoherence").getAsBoolean() != expected) throw new IllegalStateException("Loaded coherence config mismatch");
     }
 
     public static boolean gpuBackendAccepted(String backend, boolean requested) {

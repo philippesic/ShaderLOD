@@ -165,3 +165,66 @@ Coordinator runtime plan:
 4. Capture ordered caster/region membership and inspect images separately.
    Then run repeated serial performance controls with this property **false**;
    diagnostic plane reevaluation/counters cannot substantiate a speedup.
+
+## Bounded first-frame replay trace
+
+The existing oracle snapshot now includes `replayTrace`; no extra Workload API
+is required. Enabled `beginMeasurement()` preallocates storage for one BASE
+frustum/frame, at most 8,192 queries. Property-disabled captures allocate no
+trace storage and inspect no context. Recording uses the actual six float
+endpoints and already-computed actual/original booleans; it never reruns the
+helper, classifier or GL work for tracing.
+
+At the first recorded BASE RETURN, one optional reflection boundary calls
+`ShadowFrustumCoherenceDiagnostics.captureReplayContext(Object frustum)`.
+It verifies the injected owner's `shaderlod$coherence` reference is exactly the
+last recorded helper, then verifies helper versus current owner plane-array
+identity, plane count, FMA policy and original primary-box distance limit.
+Mismatch/missing seams fail unknown. Only after that association does the helper
+clone relevant plane coefficient bits. There is no per-query reflection or
+proof-cache read/update. The captured plane bits do not alias live plane arrays.
+
+`replayTrace` fields:
+
+```text
+kind = BASE
+started, frustumClass, frustumIdentity, renderFrame
+prepareOrPlaneGeneration, planeCount, fma, preparedX/Y/Z
+contextAvailable, contextAvailability, context
+sequenceEnded, endReason, sequenceBoundaryObserved
+totalObservedQueries, recordedQueries, truncated, complete
+originalUnavailable, revisitedAfterClose, proofCacheStateCaptured = false
+queries = [{index, rawBoundsBits: [minX,minY,minZ,maxX,maxY,maxZ], actual, original}]
+```
+
+Raw bounds and plane coefficients are signed Java int32 IEEE754 float bits.
+Context fields include `available`, `availability`, `ownerAssociationVerified`,
+helper/frustum identities/class, exact `helperSourceSha256`, `planeCount`, `fma`,
+`rawPlaneBits`, signed int64 `rawDistanceLimitBits`, lossless
+`distanceLimitBitsHex`, finite/null distance plus kind, global request/invalidation
+sequences and last helper outcome. The source SHA identifies the captured helper
+source, not a shader/JAR hash; recompute its constant if the helper changes.
+
+A different observed frustum/frame ends the first sequence. A same-frame owner
+context/generation change ends it as incomplete. Revisited owner/frame calls,
+unavailable original classification, overflow beyond 8,192 stored queries or an
+unobserved closing boundary prevent a complete trace. Overflow still counts
+all owner/frame observations until closure. `complete` means the first observed
+callback sequence was captured under one verified context, not every query in
+the world or all possible float cases. Raw bits preserve nonfinite inputs; a
+replay tool must explicitly describe that scope rather than pretending those
+are ordinary finite terrain boxes.
+
+The existing proof-cache contents are deliberately not captured. Offline replay
+starts from a fresh helper, so cache-hit counts/timing may differ from the first
+runtime callback if its helper was already warm. This trace can compare boolean
+results and explore grid/extent/slot variants on actual scalar queries, but it
+cannot establish GPU fidelity, predict total frame savings or make frozen-trace
+microbenchmarks a replacement for live repeated controls.
+
+Temporary `/tmp/shaderlod-coherence-replay-fixture/` checks passed verified owner
+association, rejected another helper's context, raw signed-zero/bool capture,
+cloned plane bits, next-frame completion, context-generation/revisit rejection,
+8,192 capacity with honest total/truncation, and default-disabled no-trace gating.
+No game or Gradle run was performed by this worker. Actual transformed field
+resolution and useful runtime query/context association remain coordinator checks.

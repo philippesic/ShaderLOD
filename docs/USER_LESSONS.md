@@ -56,3 +56,13 @@ differently from reused rainy saves. Actual wetness was not logged in the first
 Record effective options and relevant temporal uniforms, inspect initialization,
 and verify steady inputs before claiming a matched cloud workload. Frame count
 alone and a fixed warmup duration do not prove that every shader input settled.
+
+
+## Restarting completed native workers
+
+During the frustum replay handoff, the coordinator sent a CPU-window release with
+send_message after the worker had completed its turn. That queued information but
+did not start execution. Checking process/output state exposed the idle handoff;
+followup_task started the authorized replay. Use followup_task for new execution
+by completed workers, and send_message for steering an already-running worker.
+This was a coordinator error, not a missing user authorization or user mistake.

@@ -14,6 +14,8 @@ from summarize_workload import stream
 from run_proof_matrix import read_option_properties
 
 METHOD = 'One JVM/world/pipeline; all five modules off; only live global bridge enabled changes'
+COHERENCE_METHOD = 'One JVM/world/pipeline; original Photon; only shadow frustum coherence changes'
+ORIGINAL_PHOTON_SHA256 = '120897768eaa8cb1f14a3e98f88dff009ae3204ee3b96904a4fe8586edfc1ead'
 OFF_OPTIONS = ('SHADERLOD_CLOUDS', 'SHADERLOD_WATER', 'SHADERLOD_FOG', 'SHADERLOD_SSR', 'SHADERLOD_MATERIALS',
                'SHADERLOD_CACHED_SKY', 'SHADERLOD_WATER_ANALYTIC', 'SHADERLOD_DEBUG')
 FALSE_FLAGS = ('terrain_active', 'terrain_configured', 'terrain_confirmation', 'shadow_culling_configured',
@@ -55,25 +57,32 @@ def require_sha(value):
     return value
 
 
-def semantic_state(state, strip_enabled=False):
+def semantic_state(state, strip_enabled=False, feature='global'):
     result = copy.deepcopy(state)
     semantic = result.get('loaded_semantic_config', {})
     for section, fields in CONFIG_FIELDS.items():
-        required = fields - {'enabled'} if section == 'lod' and strip_enabled else fields
+        required = fields - {'enabled'} if section == 'lod' and strip_enabled and feature == 'global' else fields
+        if section == 'rendering' and feature == 'coherence' and not strip_enabled: required = required | {'shadowFrustumCoherence'}
         if not required <= semantic.get(section, {}).keys(): raise ValueError('Incomplete loaded semantic config: ' + section)
     result.pop('config/shaderlod-client.toml_sha256', None)
     if strip_enabled:
-        result.get('lod_settings', {}).pop('enabled', None)
-        semantic['lod'].pop('enabled', None)
+        if feature == 'global':
+            result.get('lod_settings', {}).pop('enabled', None)
+            semantic['lod'].pop('enabled', None)
+        else:
+            result.pop('shadow_coherence_configured', None)
+            result.pop('shadow_coherence_active', None)
+            semantic['rendering'].pop('shadowFrustumCoherence', None)
     return result
 
 
-def validate_state(state, enabled, shader_hash):
-    semantic_state(state)
+def validate_state(state, enabled, shader_hash, feature='global'):
+    semantic_state(state, feature=feature)
     if state.get('mod_present') is not True or state.get('shaders_in_use') is not True or state.get('fallback') is not False:
         raise ValueError('Main mod or live Iris pipeline missing')
     if state.get('hide_gui') is not True: raise ValueError('Expected fixed hidden HUD')
-    if state.get('lod_settings', {}).get('enabled') is not enabled or state['loaded_semantic_config']['lod'].get('enabled') is not enabled:
+    global_enabled = enabled if feature == 'global' else True
+    if state.get('lod_settings', {}).get('enabled') is not global_enabled or state['loaded_semantic_config']['lod'].get('enabled') is not global_enabled:
         raise ValueError('Wrong live global flag in phase')
     if state['lod_settings'].get('debug') is not False: raise ValueError('Unexpected debug')
     semantic = state['loaded_semantic_config']
@@ -86,10 +95,20 @@ def validate_state(state, enabled, shader_hash):
     if state.get('actual_shader_sha256') != shader_hash: raise ValueError('Actual shader archive differs from pin')
     options = state.get('effective_shader_options', {})
     if not options: raise ValueError('Full effective options missing')
-    for name in OFF_OPTIONS:
-        if options.get(name) != 'false': raise ValueError('Alloff option mismatch: ' + name)
-    for name in ('SHADERLOD_USE_MOD_CONFIG', 'SHADERLOD_PRESERVE_LIGHTING'):
-        if options.get(name) != 'true': raise ValueError('Bridge/lighting option mismatch: ' + name)
+    if feature == 'global':
+        for name in OFF_OPTIONS:
+            if options.get(name) != 'false': raise ValueError('Alloff option mismatch: ' + name)
+        for name in ('SHADERLOD_USE_MOD_CONFIG', 'SHADERLOD_PRESERVE_LIGHTING'):
+            if options.get(name) != 'true': raise ValueError('Bridge/lighting option mismatch: ' + name)
+        for name in ('shadow_coherence_configured', 'shadow_coherence_active'):
+            if name in state and state[name] is not False: raise ValueError('Coherence active in global control')
+        if 'shadowFrustumCoherence' in semantic['rendering'] and semantic['rendering']['shadowFrustumCoherence'] is not False:
+            raise ValueError('Coherence config enabled in global control')
+    else:
+        if shader_hash != ORIGINAL_PHOTON_SHA256: raise ValueError('Coherence requires exact original Photon')
+        for name in ('shadow_coherence_configured', 'shadow_coherence_active'):
+            if state.get(name) is not enabled: raise ValueError('Coherence settled activity/config mismatch')
+        if semantic['rendering'].get('shadowFrustumCoherence') is not enabled: raise ValueError('Coherence semantic config mismatch')
     if state.get('effective_shader_options_sha256') != hashlib.sha256(canonical(options).encode()).hexdigest():
         raise ValueError('Effective option fingerprint mismatch')
     for field in ('x', 'y', 'z', 'yaw', 'pitch', 'day_time', 'rain', 'thunder'):
@@ -146,16 +165,26 @@ def time_reduction(off, on):
 
 def analyze_report(report, expected_shader_sha256=None, profile=None):
     if report.get('schema') != 3 or report.get('status') != 'complete': raise ValueError('Require a complete schema-3 control')
-    if report.get('method') != METHOD: raise ValueError('Unrecognized pipeline/world guard method')
+    feature = report.get('benchmark_feature', 'global')
+    if feature not in ('global', 'coherence'): raise ValueError('Unknown benchmark feature')
+    if report.get('method') != (METHOD if feature == 'global' else COHERENCE_METHOD): raise ValueError('Unrecognized pipeline/world guard method')
     require_uuid(report.get('session_id'))
     if report.get('restored_initial_enabled') is not True: raise ValueError('Initial config restoration not reported')
+    if feature == 'coherence':
+        if report.get('restored_initial_feature') is not True or report.get('initial_enabled') is not True: raise ValueError('Coherence/global restoration evidence missing')
+        if report.get('selected_flag') != 'rendering.shadowFrustumCoherence': raise ValueError('Wrong selected coherence flag')
+        policy = report.get('diagnostic_policy', {})
+        if policy.get('shadow_coherence_oracle') is not False or policy.get('visibility_phase_observer') is not False: raise ValueError('Oracle/phase observer timing interference')
+        for name in ('shadowCoherenceOracle', 'visibilityLists'):
+            if report.get('instrumentation_properties', {}).get(name, 'unspecified') not in ('false', 'unspecified'): raise ValueError('Diagnostic observer property enabled')
     if report.get('starting_order') not in ('OFF/ON/OFF/ON', 'ON/OFF/ON/OFF'): raise ValueError('Invalid four-phase order')
     if not isinstance(report.get('gpu_requested'), bool) or not isinstance(report.get('cpu_requested'), bool): raise ValueError('Timing policy missing')
-    pin = expected_shader_sha256 or report.get('workload-manifest.json', {}).get('adaptive_pack_sha256')
+    pin = ORIGINAL_PHOTON_SHA256 if feature == 'coherence' else expected_shader_sha256 or report.get('workload-manifest.json', {}).get('adaptive_pack_sha256')
+    if feature == 'coherence' and expected_shader_sha256 is not None and expected_shader_sha256 != pin: raise ValueError('Explicit pin conflicts with required original Photon')
     pin = require_sha(pin)
     reference = report.get('stable_input_reference')
     if not isinstance(reference, dict): raise ValueError('Stable semantic input reference missing')
-    reference = semantic_state(reference, True)
+    reference = semantic_state(reference, True, feature)
     if reference.get('actual_shader_sha256') != pin: raise ValueError('Pinned archive/reference mismatch')
     if report['gpu_requested'] and report.get('backend') not in ('TIMESTAMP', 'ELAPSED_ALTERNATING'):
         raise ValueError('Requested GPU timing backend unsupported')
@@ -189,9 +218,9 @@ def analyze_report(report, expected_shader_sha256=None, profile=None):
         requested_duration = finite(report.get('measurement_seconds'), 'measurement_seconds')
         if requested_duration <= 0 or elapsed < requested_duration * .95: raise ValueError('Phase capture too short')
         for state in (phase.get('inputStart', {}), phase.get('inputEnd', {})):
-            validate_state(state, enabled, pin)
-            if canonical(semantic_state(state, True)) != canonical(reference): raise ValueError('Stable inputs changed beyond enabled')
-        if canonical(semantic_state(phase['inputStart'])) != canonical(semantic_state(phase['inputEnd'])):
+            validate_state(state, enabled, pin, feature)
+            if canonical(semantic_state(state, True, feature)) != canonical(reference): raise ValueError('Stable inputs changed beyond selected feature')
+        if canonical(semantic_state(phase['inputStart'], feature=feature)) != canonical(semantic_state(phase['inputEnd'], feature=feature)):
             raise ValueError('In-phase semantic mutation')
         validate_temporal(phase)
         gpu, cpu = phase.get('gpu', []), phase.get('cpu', [])
@@ -240,7 +269,9 @@ def analyze_report(report, expected_shader_sha256=None, profile=None):
         same = [phase for phase in output if phase['enabled'] is enabled]
         drift['ON' if enabled else 'OFF'] = {'phases': [phase['index'] for phase in same],
                                            'later_vs_earlier_percent_time_reduction': {key: time_reduction(same[0][key], same[1][key]) for key in keys}}
-    return {'schema': 1, 'session_id': report['session_id'], 'shader_sha256': pin, 'phases': output, 'adjacent_pairs': pairs,
+    return {'schema': 1, 'session_id': report['session_id'], 'benchmark_feature': feature,
+            'selected_flag': 'rendering.shadowFrustumCoherence' if feature == 'coherence' else 'lod.enabled',
+            'shader_sha256': pin, 'phases': output, 'adjacent_pairs': pairs,
             'same_state_drift': drift, 'stable_input_reference': reference, 'loaded_mods': report['loaded_mods'],
             'loaded_artifacts_sha256': report['loaded_artifacts_sha256'], 'instrumentation': report.get('instrumentation_properties'),
             'backend': report.get('backend'), 'sampling_policy': report.get('sampling_policy'),
@@ -260,6 +291,7 @@ def compare_sessions(summaries):
         if any(properties != maps[0] for properties in maps[1:]): raise ValueError('Across-session meaningful Iris configuration difference')
         identity.pop('config/iris.properties_sha256', None)
     for summary in summaries[1:]:
+        if summary.get('benchmark_feature', 'global') != first.get('benchmark_feature', 'global'): raise ValueError('Across-session selected-feature mismatch')
         candidate = copy.deepcopy(summary['stable_input_reference']); candidate.pop('actual_shader_sha256', None)
         if iris_verified: candidate.pop('config/iris.properties_sha256', None)
         if canonical(candidate) != canonical(identity): raise ValueError('Across-session quality/renderer/input mismatch')
