@@ -202,3 +202,34 @@ of the old interpolated-angle model. No capture/PNG/request/rig source changed.
 Initial failed-validator note retained in dev/logs; raw manifest remains intact.
 
 Pinned source member SHA256: {"net/minecraft/client/Camera.java": "012faacc33b2b597237a6b81e369ef49f876a97a08b22db736db64baae411178", "net/minecraft/client/player/LocalPlayer.java": "3b2fefe879002cfe64da769ce487fbe87607f815585669721595d90a808c5308"}
+
+
+## Three native sequences structurally accepted
+
+All three owned processes exited0. Corrected validator accepted all123 native
+frames (41/arm), zero skips, all hashes/PNG dimensions/options/source/artifact/
+slot/callback/pose/NONE/no-full-collision contracts, pending writer count0 and
+one-image peak1. Stable eyeY69.61999988555908. Exact loaded versions were
+Minecraft1.21.1, NeoForge21.1.253, Iris1.8.12-snapshot+mc1.21.1-local and
+Sodium0.6.13+mc1.21.1; main ShaderLOD/DH/optional optimizers absent. Iris's
+bundled Fabric API components are dependencies, not a Fabric mod implementation.
+
+| Arm | Owned sequence UUID | Median/max PNG write ms |
+| --- | --- | --- |
+| Full | 0c35fb78-3727-4afa-b248-357e09e36347 | 32.14 / 50.08 |
+| Sky | a4a7be0f-5571-42bb-b617-fc5066ea7604 | 34.78 / 45.41 |
+| Potato | 2f886bf7-9cef-4c44-a18b-f20a562ce5ed | 35.75 / 49.62 |
+
+Root inspected matched slot14 in all three: yaw95.99726/pitch4.9995737 and
+identical camera position. Full retains reflected shoreline/trees; sky removes
+those reflected objects; Potato visibly displaces the reflected trees/shore
+relative to full. Shader clocks/history differ; no pixel parity or continuous
+motion-quality acceptance is asserted. The2FPS sweep remains sampled evidence,
+not exclusion of high-frequency flicker, underwater/DH/near-far ring support.
+No derivative or ShaderLOD adapter produced, no cheaper mode promoted.
+
+Raw manifests copied into dev/logs/complementary-motion-{high,water-sky,
+water-potato}-r1-manifest.json; summary in
+ dev/logs/complementary-motion-quality-r1-summary.json. Native PNG sequences
+remain in the explicit profile UUID directories. Console logs retain original/
+sky/Potato warnings. All runtime jobs terminal; root owns future GPU runs.

@@ -2194,3 +2194,28 @@ fixedrequest/minimal/noDH/mainabsent/native/GPUfalse/wetness0. Log
  dev/logs/complementary-motion-sky-r1.log. Next exactownedUUIDterminalvalidator,
 thenPotato afteracceptedterminal; fullvisual/motion/parity remainunaccepted.
 OriginalUUID0c35fb78-3727-4afa-b248-357e09e36347 retained; no otherclient/compiler.
+
+
+## Complementary motion triplet terminal; existing-core configuration plan
+
+exec48047 sky andexec73615Potato exited0, both41/41strictaccepted; total123native
+frames/zero slotsmissed/pending0/peak1/NONE/noFullCollision/hashes/PNGdimensions/
+options/versions/drain/pose. SkyUUIDa4a7be0f-5571-42bb-b617-fc5066ea7604,
+PotatoUUID2f886bf7-9cef-4c44-a18b-f20a562ce5ed. Rootmatchedframe14actualyaw
+95.99726/pitch4.9995737/eye69.61999988555908 inall3: sky losesreflectedobjects,
+Potato visiblydisplacesreflectedshoretrees. Nativeclockhistories differ, 2FPS
+cannotexclude>1Hz shimmer/fullmotionquality. No adapter/defaultsupport promoted.
+Median/maxPNGms full32.14/50.08 sky34.78/45.41 Potato35.75/49.62. Rawmanifests/
+summary copieddev/logs/complementary-motion-*; nativeimages/oldvalidatorfailure
+retained. All runtime jobs nowterminal/rootsolefutureGPU.
+
+New worker makeup_adapter owns ONLY NEWdocs/MINIATURE_CORE_CONFIGURATION_PLAN.md,
+source-only exactpinned Miniature/core/refinement and existingsevenuniforms.
+Investigate actualpresetordinal/transitionunits/debugconsumer/fallback/quality/
+sampler/GLSL constraints before a boundeddefault-off privateconsumer. No Java/
+sharedhelpers/shader/pack/code changes, no inventedper-effecttransport, no
+build/compiler/client/encoder. Stopsourcefreeze thenrootreview/runtimeplanning.
+Allotherworkerscomplete/frozen, main/config/shared/helpers/originaldesign still
+reserved. Fullgoalactive/unshrunk, ordinary15%/broadconfig/supportquality gates
+unmet. Currentturnprogress measuredPhoton+123motionframes+validatorbugfix and
+fixtures; no blocker audit triggered.

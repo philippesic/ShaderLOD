@@ -23,13 +23,16 @@ core diagnostics consume version/global enable/near/far, not all core fields.
 Pack options, mod configuration and actual shader consumption remain separate.
 
 The reduced far-SSR five-effect Photon control passed with GPU contrasts
-+9.23%/+0.057%, no useful repeated gain. Root owns the first Complementary
-native 41-frame motion capture; structural and visual acceptance are pending.
++9.23%/+0.057%, no useful repeated gain. Complementary full/sky/Potato
+sequences each passed41-frame structural checks; matched views show reflection
+loss/displacement. No client is live; full visual/temporal acceptance is pending.
 Photon forest/coastal attribution passed input and
 capture contracts. A matched-source coastal frame-only sample5 control retaining
 detailed CPU timers measured14.86ms versus23.85ms in the pass-timed run. This
 raises an instrumentation concern; one separate-JVM pair does not establish
-causation, an LOD gain or absolute effect budgets. All source workers are frozen; root owns the integrated preparation and runtime.
+causation, an LOD gain or absolute effect budgets. A source-only worker is planning Miniature consumption of the remaining existing
+core fields (preset/transition/debug). It owns only a new plan document; common
+Java/config transport remains reserved. Root owns preparation and runtime.
 Exact handles and stopping boundaries are in the active goal checkpoint.
 
 ## Current evidence
