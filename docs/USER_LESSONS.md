@@ -187,3 +187,14 @@ metadata/family/gate exception that annotates a source intervention. Other quali
 mismatches still reject; four new fixtures and19 prior tests passed. Recovery
 analysis is a separate derived manifest with original hash/status retained.
 This was an agent integration gap, not a user error or a reason to erase failure.
+
+
+## Weather controls need a real pack consumer
+
+Root reused the Photon fixed-wetness0 smoke request for Miniature. The new shader
+compiled/rendered and exposed all7core fields, but temporal validation correctly
+rejected missing wetness supplier observations. The frozen Miniature shader
+sources contain no wetness token. Root preserved the rejected request/report,
+kept the guard strict and made a fresh normal-weather request with actual clear
+scene weather. A JVM control is not proof that each pack consumes that uniform.
+This was a root assumption, not a user mistake or shader compilation failure.

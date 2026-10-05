@@ -2412,3 +2412,25 @@ savings/quality/count/GPU claim from MODE2. No otherclient/build/encoder.
 New camera_quality worker owns ONLY new Miniature variant preparation script/
 test/runtimeplan, source-only. Existing main/shared/source/old design untouched.
 Full objective remains active; ordinary15%/second-workload/quality gates unmet.
+
+
+## Miniature compiled; first temporal request rejected; fresh retry live
+
+Exec88931 exited0/noFallback/drivercompiled MODE2, numericprogram16 firstdraw
+readback all7matching2/1/PERFORMANCE1/near96/far160/W8/debug0. Generic fixedwetness0
+request failed temporal validation: no supplier observations, exactfrozen shader
+source no wetness token. Rawrequest/report/readback and validation-failure note
+retained under dev/logs/miniature-seven-core-quality-smoke-r1. No fullcontract/
+quality/count/gain claim. Root corrected assumption recordedUSER_LESSONS.
+
+RootsoleGPU LIVEexec28594 fresh MODE2r2 profile
+run-workloads/miniature-seven-core-quality-smoke-r2/coastalwater/profile,
+normalshaderweather (request fixed_wetness=null, noJVMfixedWetness), actualclear
+scene, unchangedfrozen e0e6a037...7552 source/control/config. 25warm5capture/
+minimal/noDH/native2976x1672/GPUfalse/CPUlayersfalse/sevenfieldprobe. Request
+3ca806cc-86da-4a7b-b2af-62113c1bb30a; preinputs/classes/world hashes saved.
+Logdev/logs/miniature-seven-core-quality-smoke-r2.log. Nextstrictactualtemporal/
+source/artifact/native/PNG validation +normal7readback/type/sampler inspection.
+Camera_quality worker notified: variant weather requests must be normal and
+record clear rain/time, no false fixedwetness consumer claim. No otherclient/
+compiler/encoder. Fullgoalactive/sourceownershipreserved/oldfailuresretained.

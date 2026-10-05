@@ -240,3 +240,21 @@ root actual driver/normal seven-field/quality/refinement-count evidence is pendi
 Do not rebuild this frozen archive merely because runtime prose later changes.
 The existing Photon seven-core readback verifies the dev diagnostic, not this
 Miniature consumer. No main/transport/shared-source changes were introduced.
+
+
+## First driver smoke: temporal request rejected
+
+The frozen MODE2 archive compiled/linked and rendered without fallback in root
+exec88931, which exited0. Numeric program16 read back all seven expected fields:
+version2/enabled1/presetPERFORMANCE1/near96/far160/transition8/debug0. This is
+first-draw data, not a later live-change observation or refinement count proof.
+
+The generic smoke request incorrectly required fixed wetness0. Temporal validation
+rejected it because no wetness supplier was observed. Exact frozen shader source
+has no wetness token; this pack cannot be assumed to consume Photon's weather
+control. The original request/report/log/readback are retained with a rejected
+contract note under dev/logs/miniature-seven-core-quality-smoke-r1. No tolerance
+or temporal guard was relaxed. A new profile/request uses normal shader weather
+(fixed_wetness=null, no fixedWetness JVM property), with actual clear scene/rain
+recorded. Rootexec28594 retry is running; full smoke acceptance remains pending.
+No source/ZIP/Java changes or performance inference follow from the retry.
