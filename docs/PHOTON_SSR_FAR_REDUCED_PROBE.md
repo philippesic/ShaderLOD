@@ -208,3 +208,30 @@ arms, fixedcamera87.380/3.735/time12500. Native serial45s warm25s capture/
 GPU1/16/minimal/noDH pilot launched; actualcostpending. Morefarworkvsskip and
 fewerselectedintersection/refinementsvsfull do not alone establish fasterGPU.
 No source/main/default/support promotion.
+
+
+## Native four-arm cost pilot: no useful gain
+
+Root71320 exit0/statuscomplete/all4accepted, fixedglintpose/time12500/native
+2976×1672/minimal/noDH/45s warm25s capture/GPU1/16/fixedwetness0. Initial
+worldcopiesequal, actualsource/options/class/window/controls/loadedartifacts
+validated; allfallbackfalse. Original/full/reduced rendered sameboundedscene.
+
+| Arm | FPS | GPU mean ms | GPU p95 ms | Thread mean ms |
+| --- | ---: | ---: | ---: | ---: |
+| Original |60.686|15.0436|15.8895|7.5632|
+| B15 skip |61.172|15.0882|16.8025|7.5656|
+| Reduced far trace |49.497|18.9037|21.2377|7.6709|
+| Full far trace |50.883|18.3937|19.8995|7.5777|
+
+Reduced/fulltrace regressed~25.66/22.27%GPU versusoriginal inthisone serial
+pilot; skipwas~0.30%slowerGPUandhasobservedqualityfailure. Reduced didnotbeat
+fulltrace here. Fewerselectedsource steps do notprove physicaloperations or
+cheaperGPUtimeline. No source/JVM/driver/thermal/hit-semanticcause asserted;
+retainallarms. Raw `dev/logs/photon-ssr-cost-pilot-r1` includes samples/PNGs/
+exactinput/artifact maps. No release/default/performancepromotion.
+
+An explicit pinned SSR-only same-JVM global control is beingprepared to compare
+ON policy/OFF originaltracebudgets within each fixedarchive. It cannotcompare
+acrossarchives causally or turnthisnegative pilotintoa15%gain. Broaderquality/
+transition andmatchedrepeats remainunmet.
