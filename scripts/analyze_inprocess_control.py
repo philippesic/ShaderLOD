@@ -1,0 +1,297 @@
+#!/usr/bin/env python3
+"""Validate four correlated live-bridge phases and summarize separate timing streams."""
+from __future__ import annotations
+import argparse
+import copy
+import hashlib
+import json
+import math
+from pathlib import Path
+import statistics
+import uuid
+
+from summarize_workload import stream
+from run_proof_matrix import read_option_properties
+
+METHOD = 'One JVM/world/pipeline; all five modules off; only live global bridge enabled changes'
+OFF_OPTIONS = ('SHADERLOD_CLOUDS', 'SHADERLOD_WATER', 'SHADERLOD_FOG', 'SHADERLOD_SSR', 'SHADERLOD_MATERIALS',
+               'SHADERLOD_CACHED_SKY', 'SHADERLOD_WATER_ANALYTIC', 'SHADERLOD_DEBUG')
+FALSE_FLAGS = ('terrain_active', 'terrain_configured', 'terrain_confirmation', 'shadow_culling_configured',
+               'shadow_culling_active', 'shadow_lists_configured', 'shadow_lists_active')
+CONFIG_FIELDS = {'lod': {'enabled', 'preset', 'near', 'far', 'transition', 'debug'},
+                 'terrain': {'enabled', 'vanillaChunkCap', 'warmSourceConfirmed', 'warmupSeconds'},
+                 'rendering': {'optimizeShadowCulling', 'separateShadowVisibilityLists'}}
+
+
+def canonical(value):
+    return json.dumps(value, sort_keys=True, separators=(',', ':'), ensure_ascii=False, allow_nan=False)
+
+
+def digest(path):
+    result = hashlib.sha256()
+    with path.open('rb') as source:
+        for block in iter(lambda: source.read(1024 * 1024), b''): result.update(block)
+    return result.hexdigest()
+
+
+def require_uuid(value):
+    try: uuid.UUID(value)
+    except (ValueError, TypeError, AttributeError): raise ValueError('Invalid session/phase UUID') from None
+
+
+def integer(value, name):
+    if not isinstance(value, int) or isinstance(value, bool) or value < 0: raise ValueError('Invalid integer: ' + name)
+    return value
+
+
+def finite(value, name):
+    if not isinstance(value, (int, float)) or isinstance(value, bool) or not math.isfinite(value): raise ValueError('Invalid finite number: ' + name)
+    return value
+
+
+def require_sha(value):
+    if not isinstance(value, str) or len(value) != 64 or any(character not in '0123456789abcdef' for character in value):
+        raise ValueError('Exact lowercase SHA256 required')
+    return value
+
+
+def semantic_state(state, strip_enabled=False):
+    result = copy.deepcopy(state)
+    semantic = result.get('loaded_semantic_config', {})
+    for section, fields in CONFIG_FIELDS.items():
+        required = fields - {'enabled'} if section == 'lod' and strip_enabled else fields
+        if not required <= semantic.get(section, {}).keys(): raise ValueError('Incomplete loaded semantic config: ' + section)
+    result.pop('config/shaderlod-client.toml_sha256', None)
+    if strip_enabled:
+        result.get('lod_settings', {}).pop('enabled', None)
+        semantic['lod'].pop('enabled', None)
+    return result
+
+
+def validate_state(state, enabled, shader_hash):
+    semantic_state(state)
+    if state.get('mod_present') is not True or state.get('shaders_in_use') is not True or state.get('fallback') is not False:
+        raise ValueError('Main mod or live Iris pipeline missing')
+    if state.get('hide_gui') is not True: raise ValueError('Expected fixed hidden HUD')
+    if state.get('lod_settings', {}).get('enabled') is not enabled or state['loaded_semantic_config']['lod'].get('enabled') is not enabled:
+        raise ValueError('Wrong live global flag in phase')
+    if state['lod_settings'].get('debug') is not False: raise ValueError('Unexpected debug')
+    semantic = state['loaded_semantic_config']
+    for section, fields in (('terrain', ('enabled', 'warmSourceConfirmed')), ('rendering', ('optimizeShadowCulling', 'separateShadowVisibilityLists'))):
+        if any(semantic[section][field] is not False for field in fields): raise ValueError('Semantic feature config not disabled')
+    if semantic['lod']['debug'] is not False: raise ValueError('Semantic debug not disabled')
+    for field in ('near', 'far', 'transition'): finite(semantic['lod'][field], 'semantic ' + field)
+    for field in FALSE_FLAGS:
+        if state.get(field) is not False: raise ValueError('Unexpected feature activity/config: ' + field)
+    if state.get('actual_shader_sha256') != shader_hash: raise ValueError('Actual shader archive differs from pin')
+    options = state.get('effective_shader_options', {})
+    if not options: raise ValueError('Full effective options missing')
+    for name in OFF_OPTIONS:
+        if options.get(name) != 'false': raise ValueError('Alloff option mismatch: ' + name)
+    for name in ('SHADERLOD_USE_MOD_CONFIG', 'SHADERLOD_PRESERVE_LIGHTING'):
+        if options.get(name) != 'true': raise ValueError('Bridge/lighting option mismatch: ' + name)
+    if state.get('effective_shader_options_sha256') != hashlib.sha256(canonical(options).encode()).hexdigest():
+        raise ValueError('Effective option fingerprint mismatch')
+    for field in ('x', 'y', 'z', 'yaw', 'pitch', 'day_time', 'rain', 'thunder'):
+        finite(state.get(field), field)
+    for field in ('framebuffer_width', 'framebuffer_height', 'requested_chunks', 'effective_chunks', 'gui_scale'):
+        if integer(state.get(field), field) < 1: raise ValueError('Nonpositive input: ' + field)
+
+
+def validate_samples(samples, epoch, first_frame, last_frame, fields):
+    if samples:
+        integer(epoch, 'timing epoch')
+    elif epoch is not None:
+        raise ValueError('Declared epoch without timing observations')
+    for sample in samples:
+        if integer(sample.get('epoch'), 'sample epoch') != epoch: raise ValueError('Mixed/mismatched timing epoch')
+        frame = integer(sample.get('frameId'), 'sample frame')
+        if not first_frame < frame <= last_frame: raise ValueError('Timing sample outside phase frame range')
+        if not isinstance(sample.get('scope'), str) or not sample['scope']: raise ValueError('Invalid timing scope')
+        for field in fields:
+            value = sample.get(field)
+            if value is None and field != 'threadMilliseconds': raise ValueError('Required timing value missing: ' + field)
+            if value is not None and finite(value, field) < 0: raise ValueError('Negative timing sample')
+
+
+def metric(streams, scope, name='mean_ms'):
+    return (streams.get(scope, {}).get('per_sampled_frame') or {}).get(name)
+
+
+def validate_temporal(phase):
+    targets = []
+    for key in ('temporalStart', 'temporalEnd'):
+        temporal = phase.get(key)
+        if not isinstance(temporal, dict): raise ValueError('Temporal boundary evidence missing')
+        wetness = temporal.get('wetness', {})
+        if wetness.get('mode') != 'fixed': raise ValueError('Fixed shader weather evidence missing')
+        target = finite(wetness.get('fixedWetness'), 'fixed wetness')
+        if not 0 <= target <= 1: raise ValueError('Fixed wetness outside [0,1]')
+        targets.append(target)
+        observed = [supplier for supplier in wetness.get('suppliers', []) if supplier.get('supplierReads', 0) > 0]
+        if not observed: raise ValueError('Observed wetness suppliers missing')
+        for supplier in observed:
+            if abs(finite(supplier.get('appliedWetness'), 'applied wetness') - target) > 1e-6: raise ValueError('Applied wetness mismatch')
+            if key == 'temporalEnd' and supplier.get('measurementReads', 0) > 0:
+                for field in ('appliedMin', 'appliedMax'):
+                    if abs(finite(supplier.get(field), field) - target) > 1e-6: raise ValueError('Wetness varied during phase')
+        if key == 'temporalEnd' and wetness.get('measurementReads', 0) < 1: raise ValueError('No capture wetness observations')
+    if targets[0] != targets[1]: raise ValueError('Fixed wetness target changed')
+
+
+def time_reduction(off, on):
+    if off is None or on is None or off <= 0: return None
+    return 100 * (off - on) / off
+
+
+def analyze_report(report, expected_shader_sha256=None, profile=None):
+    if report.get('schema') != 3 or report.get('status') != 'complete': raise ValueError('Require a complete schema-3 control')
+    if report.get('method') != METHOD: raise ValueError('Unrecognized pipeline/world guard method')
+    require_uuid(report.get('session_id'))
+    if report.get('restored_initial_enabled') is not True: raise ValueError('Initial config restoration not reported')
+    if report.get('starting_order') not in ('OFF/ON/OFF/ON', 'ON/OFF/ON/OFF'): raise ValueError('Invalid four-phase order')
+    if not isinstance(report.get('gpu_requested'), bool) or not isinstance(report.get('cpu_requested'), bool): raise ValueError('Timing policy missing')
+    pin = expected_shader_sha256 or report.get('workload-manifest.json', {}).get('adaptive_pack_sha256')
+    pin = require_sha(pin)
+    reference = report.get('stable_input_reference')
+    if not isinstance(reference, dict): raise ValueError('Stable semantic input reference missing')
+    reference = semantic_state(reference, True)
+    if reference.get('actual_shader_sha256') != pin: raise ValueError('Pinned archive/reference mismatch')
+    if report['gpu_requested'] and report.get('backend') not in ('TIMESTAMP', 'ELAPSED_ALTERNATING'):
+        raise ValueError('Requested GPU timing backend unsupported')
+    if not report.get('loaded_mods') or not report.get('loaded_artifacts_sha256'): raise ValueError('Runtime versions/artifact identities missing')
+    phases = report.get('phases', [])
+    if len(phases) != 4: raise ValueError('Require exactly four phases')
+    ids, images, gpu_epochs, cpu_epochs = set(), set(), set(), set()
+    previous_end = -1
+    output = []
+    verified_iris = None
+    if profile is not None:
+        iris_path = profile / 'config/iris.properties'
+        if not iris_path.is_file() or digest(iris_path) != reference.get('config/iris.properties_sha256'):
+            raise ValueError('Stopped profile Iris bytes do not match capture fingerprint')
+        verified_iris = {'raw_sha256': digest(iris_path), 'properties': read_option_properties(iris_path.read_text()),
+                         'verification': 'Current stopped-profile bytes matched the captured reference SHA256 before comment/order normalization'}
+    start_enabled = report['starting_order'].startswith('ON')
+    for index, phase in enumerate(phases, 1):
+        if phase.get('status') != 'complete' or phase.get('index') != index: raise ValueError('Incomplete or misordered phase')
+        require_uuid(phase.get('id'))
+        if phase['id'] in ids: raise ValueError('Duplicate phase UUID')
+        ids.add(phase['id'])
+        enabled = start_enabled if index % 2 else not start_enabled
+        if phase.get('enabled') is not enabled: raise ValueError('Wrong phase alternation')
+        first, last = integer(phase.get('startFrame'), 'startFrame'), integer(phase.get('endFrame'), 'endFrame')
+        if first <= previous_end or last <= first: raise ValueError('Overlapping/reversed source-frame intervals')
+        previous_end = last
+        frames = integer(phase.get('renderFrames'), 'renderFrames')
+        if frames != last - first or frames < 30: raise ValueError('Render-frame count mismatch')
+        elapsed = finite(phase.get('elapsedSeconds'), 'elapsedSeconds')
+        requested_duration = finite(report.get('measurement_seconds'), 'measurement_seconds')
+        if requested_duration <= 0 or elapsed < requested_duration * .95: raise ValueError('Phase capture too short')
+        for state in (phase.get('inputStart', {}), phase.get('inputEnd', {})):
+            validate_state(state, enabled, pin)
+            if canonical(semantic_state(state, True)) != canonical(reference): raise ValueError('Stable inputs changed beyond enabled')
+        if canonical(semantic_state(phase['inputStart'])) != canonical(semantic_state(phase['inputEnd'])):
+            raise ValueError('In-phase semantic mutation')
+        validate_temporal(phase)
+        gpu, cpu = phase.get('gpu', []), phase.get('cpu', [])
+        if not isinstance(gpu, list) or not isinstance(cpu, list): raise ValueError('Timing arrays missing')
+        if report['gpu_requested'] and not any(sample.get('scope') == 'game-render' for sample in gpu): raise ValueError('Requested GPU frame observations missing')
+        if not report['gpu_requested'] and gpu: raise ValueError('Unexpected GPU samples in query-free control')
+        if report['cpu_requested'] and not any(sample.get('scope') == 'run-tick' for sample in cpu): raise ValueError('Requested CPU observations missing')
+        if not report['cpu_requested'] and cpu: raise ValueError('Unexpected CPU samples in timer-free control')
+        validate_samples(gpu, phase.get('gpuEpoch'), first, last, ('milliseconds',))
+        validate_samples(cpu, phase.get('cpuEpoch'), first, last, ('wallMilliseconds', 'threadMilliseconds'))
+        for samples, epoch, used in ((gpu, phase.get('gpuEpoch'), gpu_epochs), (cpu, phase.get('cpuEpoch'), cpu_epochs)):
+            if samples:
+                if epoch in used: raise ValueError('Timing epoch reused between phases')
+                used.add(epoch)
+        image = phase.get('image')
+        if not isinstance(image, str) or Path(image).name != image or not image.endswith('.png') or image in images:
+            raise ValueError('Phase image names must be unique local PNGs')
+        images.add(image)
+        image_hash = require_sha(phase.get('imageSha256'))
+        if profile is not None:
+            image_path = profile / 'screenshots' / image
+            if not image_path.is_file() or digest(image_path) != image_hash: raise ValueError('Phase image missing/hash mismatch')
+            with image_path.open('rb') as source:
+                if source.read(8) != b'\x89PNG\r\n\x1a\n': raise ValueError('Phase image is not a PNG')
+        gpu_stats, cpu_wall, cpu_thread = stream(gpu, 'milliseconds'), stream(cpu, 'wallMilliseconds'), stream(cpu, 'threadMilliseconds')
+        fps = frames / elapsed
+        output.append({'index': index, 'phase_id': phase['id'], 'enabled': enabled, 'render_fps': fps, 'frame_mean_ms': 1000 / fps,
+                       'elapsed_seconds': elapsed, 'render_frames': frames, 'source_frame_interval': [first, last],
+                       'gpu_epoch': phase.get('gpuEpoch'), 'cpu_epoch': phase.get('cpuEpoch'),
+                       'gpu': gpu_stats, 'cpu_wall': cpu_wall, 'cpu_thread': cpu_thread,
+                       'gpu_mean_ms': metric(gpu_stats, 'game-render'), 'gpu_median_ms': metric(gpu_stats, 'game-render', 'median_ms'),
+                       'gpu_p95_ms': metric(gpu_stats, 'game-render', 'p95_ms'), 'gpu_p99_ms': metric(gpu_stats, 'game-render', 'p99_ms'),
+                       'cpu_wall_mean_ms': metric(cpu_wall, 'run-tick'), 'cpu_thread_mean_ms': metric(cpu_thread, 'run-tick'),
+                       'image': image, 'image_sha256': image_hash, 'image_verified': profile is not None,
+                       'window_state': copy.deepcopy(phase.get('windowState')), 'temporal_start': copy.deepcopy(phase.get('temporalStart')),
+                       'temporal_end': copy.deepcopy(phase.get('temporalEnd')), 'uniform_observation': copy.deepcopy(phase.get('uniform_observation'))})
+    pairs = []
+    keys = ('frame_mean_ms', 'gpu_mean_ms', 'gpu_median_ms', 'gpu_p95_ms', 'cpu_wall_mean_ms', 'cpu_thread_mean_ms')
+    for a, b in ((output[0], output[1]), (output[2], output[3])):
+        off, on = (a, b) if not a['enabled'] else (b, a)
+        pairs.append({'off_phase': off['index'], 'on_phase': on['index'],
+                      'on_vs_off_percent_time_reduction': {key: time_reduction(off[key], on[key]) for key in keys},
+                      'on_vs_off_fps_change_percent': 100 * (on['render_fps'] / off['render_fps'] - 1)})
+    drift = {}
+    for enabled in (False, True):
+        same = [phase for phase in output if phase['enabled'] is enabled]
+        drift['ON' if enabled else 'OFF'] = {'phases': [phase['index'] for phase in same],
+                                           'later_vs_earlier_percent_time_reduction': {key: time_reduction(same[0][key], same[1][key]) for key in keys}}
+    return {'schema': 1, 'session_id': report['session_id'], 'shader_sha256': pin, 'phases': output, 'adjacent_pairs': pairs,
+            'same_state_drift': drift, 'stable_input_reference': reference, 'loaded_mods': report['loaded_mods'],
+            'loaded_artifacts_sha256': report['loaded_artifacts_sha256'], 'instrumentation': report.get('instrumentation_properties'),
+            'backend': report.get('backend'), 'sampling_policy': report.get('sampling_policy'),
+            'verified_iris_configuration': verified_iris,
+            'pipeline_world_check': 'Complete report declares the source method that checks reference equality; raw world/pipeline IDs are not exported and cannot be independently reconstructed.',
+            'uncertainty': 'Four correlated phases in one JVM, two adjacent contrasts; no independent-run CI/significance. Frame samples are autocorrelated. Window/temporal unknowns are retained, not inferred stable.',
+            'limits': 'Positive reduction means ON faster. GPU elapsed intervals are not busy time; CPU includes driver work. Query-free controls have no GPU effect estimate. Source/archive changes across sessions are separate causal interventions, not an ordinary-scene ShaderLOD gain.'}
+
+
+def compare_sessions(summaries):
+    first = summaries[0]
+    identity = copy.deepcopy(first['stable_input_reference'])
+    identity.pop('actual_shader_sha256', None)
+    iris_verified = all(summary.get('verified_iris_configuration') is not None for summary in summaries)
+    if iris_verified:
+        maps = [summary['verified_iris_configuration']['properties'] for summary in summaries]
+        if any(properties != maps[0] for properties in maps[1:]): raise ValueError('Across-session meaningful Iris configuration difference')
+        identity.pop('config/iris.properties_sha256', None)
+    for summary in summaries[1:]:
+        candidate = copy.deepcopy(summary['stable_input_reference']); candidate.pop('actual_shader_sha256', None)
+        if iris_verified: candidate.pop('config/iris.properties_sha256', None)
+        if canonical(candidate) != canonical(identity): raise ValueError('Across-session quality/renderer/input mismatch')
+        for field in ('loaded_mods', 'loaded_artifacts_sha256', 'instrumentation', 'sampling_policy', 'backend'):
+            if summary[field] != first[field]: raise ValueError('Across-session runtime/instrumentation mismatch: ' + field)
+    return {'session_ids': [summary['session_id'] for summary in summaries],
+            'shader_sha256': [summary['shader_sha256'] for summary in summaries],
+            'archive_source_delta': len({summary['shader_sha256'] for summary in summaries}) > 1,
+            'iris_configurations': [summary.get('verified_iris_configuration') for summary in summaries],
+            'iris_semantically_verified': iris_verified,
+            'note': 'Matched observed inputs/runtime only. Different archives document a separate source intervention; comparisons remain separate correlated-phase sessions, not paired independent repeats or proof of a specific code-path cause.'}
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('reports', nargs='+', type=Path)
+    parser.add_argument('--expected-shader-sha256', help='For one report; otherwise each report must carry its preparation pin')
+    parser.add_argument('--profile', type=Path, help='Verify actual phase images in this profile/screenshots directory (one report only)')
+    parser.add_argument('--profiles', nargs='+', type=Path, help='Stopped profile for every report in the same order; verifies images and captured Iris bytes')
+    parser.add_argument('--output', type=Path)
+    args = parser.parse_args()
+    if len(args.reports) > 1 and (args.profile or args.expected_shader_sha256): parser.error('Profile/explicit archive pin require one report')
+    if args.profile and args.profiles: parser.error('Use either --profile or --profiles')
+    if args.profiles and len(args.profiles) != len(args.reports): parser.error('Provide one stopped profile per report')
+    if args.output and args.output.resolve() in {path.resolve() for path in args.reports}: parser.error('Output may not overwrite an original report')
+    profiles = args.profiles or [args.profile] * len(args.reports)
+    summaries = [analyze_report(json.loads(path.read_text()), args.expected_shader_sha256, profile) for path, profile in zip(args.reports, profiles)]
+    for path, summary in zip(args.reports, summaries): summary['source'] = str(path.resolve())
+    result = summaries[0] if len(summaries) == 1 else {'sessions': summaries, 'comparison': compare_sessions(summaries)}
+    contents = json.dumps(result, indent=2, allow_nan=False) + '\n'
+    if args.output: args.output.write_text(contents)
+    else: print(contents, end='')
+
+
+if __name__ == '__main__': main()

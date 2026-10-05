@@ -11,13 +11,17 @@ public final class ShadowCullingRuntime {
 
     public static void onClientTick(ClientTickEvent.Post event) {
         boolean configured = ShaderLodConfig.ENABLED.get() && ShaderLodConfig.OPTIMIZE_SHADOW_CULLING.get();
+        boolean coherence = ShaderLodConfig.ENABLED.get() && ShaderLodConfig.SHADOW_FRUSTUM_COHERENCE.get();
         ShadowCullingController.configure(configured);
-        if (!configured || Minecraft.getInstance().level == null) {
+        if ((!configured && !coherence) || Minecraft.getInstance().level == null) {
             ShadowCullingController.setEligible(false);
+            ShadowFrustumCoherenceController.configure(false);
             return;
         }
         String pack = Iris.getCurrentPackName();
         boolean photon = "Photon-ShaderLOD.zip".equals(pack) || "photon_v1.3b.zip".equals(pack);
-        ShadowCullingController.setEligible(photon && IrisApi.getInstance().isShaderPackInUse() && !Iris.isFallback());
+        boolean eligible = photon && IrisApi.getInstance().isShaderPackInUse() && !Iris.isFallback();
+        ShadowCullingController.setEligible(eligible);
+        ShadowFrustumCoherenceController.configure(coherence && eligible);
     }
 }

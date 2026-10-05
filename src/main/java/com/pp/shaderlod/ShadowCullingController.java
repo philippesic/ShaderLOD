@@ -25,6 +25,8 @@ public final class ShadowCullingController {
 
     /** Implemented on the base Iris frustum; inherited by its reversed subclass. */
     public interface PlaneAccess {
+        boolean shaderlod$coherentAccept(boolean reversed, double distanceLimit,
+                                        float minX, float minY, float minZ, float maxX, float maxY, float maxZ);
         boolean shaderlod$testPositiveVertices(float minX, float minY, float minZ,
                                               float maxX, float maxY, float maxZ);
         boolean shaderlod$testOriginalVertices(float minX, float minY, float minZ,

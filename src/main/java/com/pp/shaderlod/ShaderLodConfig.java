@@ -16,6 +16,7 @@ public final class ShaderLodConfig {
     public static final ModConfigSpec.IntValue TERRAIN_WARMUP_SECONDS;
     public static final ModConfigSpec.BooleanValue OPTIMIZE_SHADOW_CULLING;
     public static final ModConfigSpec.BooleanValue SEPARATE_SHADOW_VISIBILITY_LISTS;
+    public static final ModConfigSpec.BooleanValue SHADOW_FRUSTUM_COHERENCE;
 
     static {
         var builder = new ModConfigSpec.Builder();
@@ -48,6 +49,8 @@ public final class ShaderLodConfig {
                 .define("optimizeShadowCulling", false);
         SEPARATE_SHADOW_VISIBILITY_LISTS = builder.comment("Experimental separate shadow-owned region membership arrays. Keeps all existing visibility traversals; not a frame-rate optimization.")
                 .define("separateShadowVisibilityLists", false);
+        SHADOW_FRUSTUM_COHERENCE = builder.comment("Experimental frame-local containing-box proofs for exact shadow visibility acceptance. Keeps all casters and original fallback tests.")
+                .define("shadowFrustumCoherence", false);
         builder.pop();
         SPEC = builder.build();
     }

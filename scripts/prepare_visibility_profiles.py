@@ -14,6 +14,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--source-proof-root', type=Path, default=ROOT / 'run-workloads/cloud-shore-default')
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--coherence', action='store_true', help='Test frame-local frustum coherence; separate region lists stay off')
     args = parser.parse_args()
     args.scenes = ['coastalwater']
     args.archive = 'cloud-transition-no-atmosphere'
@@ -70,13 +71,16 @@ def main():
             old['lod']['debug'] = False
             old['terrain']['enabled'] = False
             old['terrain']['warmSourceConfirmed'] = False
-            old['rendering'] = dict(optimizeShadowCulling=False, separateShadowVisibilityLists=arm == 'enabled')
+            old['rendering'] = dict(optimizeShadowCulling=False,
+                                    separateShadowVisibilityLists=arm == 'enabled' and not args.coherence,
+                                    shadowFrustumCoherence=arm == 'enabled' and args.coherence)
             config.write_text(''.join('[' + section + ']\n' + ''.join(k + '=' + (str(v).lower() if isinstance(v, bool) else json.dumps(v)) + '\n' for k, v in values.items()) for section, values in old.items()))
             copied[arm] = world_fingerprint(target / 'saves' / WORLD)
             if copied[arm] != manifest['source_world_sha256']: raise ValueError('Diagnostic copy fingerprint changed')
         manifest.update(configuration_only=False, preparation_status='complete', proof_profiles=list(copied),
                         copied_world_sha256=copied, quality_options={arm: common for arm in copied},
                         visibility_diagnostic=True, original_photon_sha256=ORIGINAL_SHA256,
+                        diagnostic_kind='frustum-coherence' if args.coherence else 'region-list-ownership',
                         validation='Stopped original save copies and configuration only; transformed ownership, sprites and rendering remain unverified. Diagnostic overhead prevents performance claims.')
         write_json(manifest_path, manifest)
         state.update(status='complete', visibility_diagnostic=True, diagnostic_profiles=list(copied))

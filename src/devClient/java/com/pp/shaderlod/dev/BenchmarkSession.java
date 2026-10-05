@@ -211,8 +211,17 @@ public final class BenchmarkSession {
         for (var modFile : ModList.get().getModFiles()) {
             Path file = modFile.getFile().getFilePath();
             if (Files.isRegularFile(file)) files.addProperty(file.toAbsolutePath().toString(), WorkloadInputs.hash(file));
+            else if (Files.isDirectory(file)) files.add(file.toAbsolutePath().toString(), directoryIdentity(file));
         }
         header.add("loaded_artifacts_sha256", files);
+        var resources = new JsonObject();
+        for (String name : List.of("shaderlod.mixins.json", "shaderlod-dev.mixins.json")) {
+            try (var stream = BenchmarkSession.class.getClassLoader().getResourceAsStream(name)) {
+                if (stream != null) resources.addProperty(name, java.util.HexFormat.of().formatHex(
+                        java.security.MessageDigest.getInstance("SHA-256").digest(stream.readAllBytes())));
+            }
+        }
+        header.add("loaded_mixin_resources_sha256", resources);
         for (String name : List.of("control.json", "workload-manifest.json")) {
             Path path = directory.getParent().resolve(name);
             if (Files.exists(path)) {
@@ -220,6 +229,33 @@ public final class BenchmarkSession {
                 header.addProperty(name + "_sha256", WorkloadInputs.hash(path));
             }
         }
+    }
+
+    private static JsonObject directoryIdentity(Path root) throws Exception {
+        var result = new JsonObject();
+        result.addProperty("kind", "development directory; regular files only, symlinks excluded");
+        var digest = java.security.MessageDigest.getInstance("SHA-256");
+        int count = 0;
+        long bytes = 0;
+        try (var paths = Files.walk(root)) {
+            var iterator = paths.filter(path -> Files.isRegularFile(path, java.nio.file.LinkOption.NOFOLLOW_LINKS)).sorted().iterator();
+            while (iterator.hasNext()) {
+                Path path = iterator.next();
+                bytes += Files.size(path);
+                if (++count > 5000 || bytes > 32L * 1024 * 1024) {
+                    result.addProperty("complete", false);
+                    result.addProperty("limit", "5000 files / 32 MiB; no partial tree hash advertised");
+                    return result;
+                }
+                String entry = root.relativize(path).toString().replace('\\', '/') + "\0" + WorkloadInputs.hash(path) + "\n";
+                digest.update(entry.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+            }
+        }
+        result.addProperty("complete", true);
+        result.addProperty("files", count);
+        result.addProperty("bytes", bytes);
+        result.addProperty("tree_sha256", java.util.HexFormat.of().formatHex(digest.digest()));
+        return result;
     }
 
     private void complete() {

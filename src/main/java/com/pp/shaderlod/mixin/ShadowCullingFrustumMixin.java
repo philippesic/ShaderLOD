@@ -2,6 +2,8 @@ package com.pp.shaderlod.mixin;
 
 import com.pp.shaderlod.ShadowCullingController;
 import com.pp.shaderlod.ShadowCullingMath;
+import com.pp.shaderlod.ShadowFrustumCoherence;
+import com.pp.shaderlod.ShadowFrustumCoherenceController;
 import net.irisshaders.iris.shadows.frustum.BoxCuller;
 import net.irisshaders.iris.shadows.frustum.advanced.AdvancedShadowCullingFrustum;
 import net.irisshaders.iris.shadows.frustum.advanced.ReversedAdvancedShadowCullingFrustum;
@@ -18,6 +20,10 @@ public abstract class ShadowCullingFrustumMixin implements ShadowCullingControll
     @Shadow @Final private float[][] planes;
     @Shadow private int planeCount;
     @Shadow @Final private static boolean FMA_SUPPORT;
+    @Shadow public double x;
+    @Shadow public double y;
+    @Shadow public double z;
+    @Unique private ShadowFrustumCoherence shaderlod$coherence;
     @Shadow protected abstract int checkCornerVisibility(float minX, float minY, float minZ,
                                                        float maxX, float maxY, float maxZ);
 
@@ -28,6 +34,8 @@ public abstract class ShadowCullingFrustumMixin implements ShadowCullingControll
     @Overwrite(remap = false)
     public boolean testAab(float minX, float minY, float minZ,
                            float maxX, float maxY, float maxZ) {
+        if (ShadowFrustumCoherenceController.isActive() && shaderlod$coherentAccept(false,
+                Double.POSITIVE_INFINITY, minX, minY, minZ, maxX, maxY, maxZ)) return true;
         if (boxCuller != null && boxCuller.isCulledSodium(minX, minY, minZ, maxX, maxY, maxZ)) {
             return false;
         }
@@ -35,6 +43,44 @@ public abstract class ShadowCullingFrustumMixin implements ShadowCullingControll
             return checkCornerVisibility(minX, minY, minZ, maxX, maxY, maxZ) > 0;
         }
         return shaderlod$testPositiveVertices(minX, minY, minZ, maxX, maxY, maxZ);
+    }
+
+    /**
+     * @author ShaderLOD
+     * @reason Preserve prepared position and invalidate frame-local proofs without per-AABB hooks.
+     */
+    @Overwrite(remap = false)
+    public void prepare(double x, double y, double z) {
+        if (boxCuller != null) boxCuller.setPosition(x, y, z);
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        if (shaderlod$coherence != null) shaderlod$coherence.invalidate();
+    }
+
+    /**
+     * @author ShaderLOD
+     * @reason Preserve the pinned sole plane mutator and invalidate any preceding proofs.
+     */
+    @Overwrite(remap = false)
+    private void addPlane(float[] plane) {
+        planes[planeCount] = plane;
+        planeCount++;
+        if (shaderlod$coherence != null) shaderlod$coherence.invalidate();
+    }
+
+    @Unique @Override
+    public boolean shaderlod$coherentAccept(boolean reversed, double distanceLimit,
+                                           float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
+        // The reversed primary box is an early ACCEPT, not a rejecting constraint.
+        double limit = reversed ? distanceLimit : boxCuller == null ? Double.POSITIVE_INFINITY
+                : ((ShadowBoxDistanceAccessor) boxCuller).shaderlod$maxDistance();
+        if (shaderlod$coherence == null) {
+            shaderlod$coherence = new ShadowFrustumCoherence(planes, planeCount, FMA_SUPPORT, limit);
+        } else if (!shaderlod$coherence.matches(planes, planeCount, FMA_SUPPORT, limit)) {
+            shaderlod$coherence.reset(planes, planeCount, FMA_SUPPORT, limit);
+        }
+        return shaderlod$coherence.canAccept(minX, minY, minZ, maxX, maxY, maxZ);
     }
 
     @Unique
@@ -71,13 +117,18 @@ public abstract class ShadowCullingFrustumMixin implements ShadowCullingControll
         @Overwrite(remap = false)
         public boolean testAab(float minX, float minY, float minZ,
                                float maxX, float maxY, float maxZ) {
+            ShadowCullingController.PlaneAccess access = (ShadowCullingController.PlaneAccess) this;
+            if (ShadowFrustumCoherenceController.isActive()) {
+                double limit = distanceCuller == null ? Double.POSITIVE_INFINITY
+                        : ((ShadowBoxDistanceAccessor) distanceCuller).shaderlod$maxDistance();
+                if (access.shaderlod$coherentAccept(true, limit, minX, minY, minZ, maxX, maxY, maxZ)) return true;
+            }
             if (distanceCuller != null
                     && distanceCuller.isCulledSodium(minX, minY, minZ, maxX, maxY, maxZ)) {
                 return false;
             }
             // Those members belong to the base target. Resolve them there,
             // rather than declaring @Shadow on inherited subclass members.
-            ShadowCullingController.PlaneAccess access = (ShadowCullingController.PlaneAccess) this;
             if (access.shaderlod$acceptReversedBox(minX, minY, minZ, maxX, maxY, maxZ)) {
                 return true;
             }

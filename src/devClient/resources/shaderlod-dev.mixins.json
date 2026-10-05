@@ -21,7 +21,9 @@
     "ShadowInputObserverMixin",
     "ShadowMatrixObserverMixin",
     "MinecraftTimingCleanupMixin",
-    "VisibilityListPhaseMixin"
+    "VisibilityListPhaseMixin",
+    "ShadowCoherenceOracleMixin",
+    "ShadowCoherenceOracleMixin$Reversed"
   ],
   "injectors": {
     "defaultRequire": 1

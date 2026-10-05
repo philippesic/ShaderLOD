@@ -99,6 +99,9 @@ neoForge {
             if (project.hasProperty('visibilityLists')) {
                 systemProperty 'shaderlod.dev.visibilityLists', project.property('visibilityLists').toString()
             }
+            if (project.hasProperty('shadowCoherenceOracle')) {
+                systemProperty 'shaderlod.dev.shadowCoherenceOracle', project.property('shadowCoherenceOracle').toString()
+            }
             if (project.hasProperty('jfrRecording')) {
                 def recording = project.file(project.property('jfrRecording').toString()).absolutePath
                 jvmArgument "-XX:StartFlightRecording=name=shaderlod-render,settings=profile,dumponexit=true,maxsize=256m,filename=${recording}"

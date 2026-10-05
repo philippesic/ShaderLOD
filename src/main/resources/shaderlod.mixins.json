@@ -9,7 +9,8 @@
     "ShadowCullingFrustumMixin",
     "ShadowCullingFrustumMixin$Reversed",
     "ShadowRegionListsMixin",
-    "ShadowSpriteListsMixin"
+    "ShadowSpriteListsMixin",
+    "ShadowBoxDistanceAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

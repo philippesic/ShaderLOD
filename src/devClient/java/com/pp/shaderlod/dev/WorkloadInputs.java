@@ -58,6 +58,7 @@ public final class WorkloadInputs {
             var rendering = new JsonObject();
             rendering.addProperty("optimizeShadowCulling", com.pp.shaderlod.ShaderLodConfig.OPTIMIZE_SHADOW_CULLING.get());
             rendering.addProperty("separateShadowVisibilityLists", com.pp.shaderlod.ShaderLodConfig.SEPARATE_SHADOW_VISIBILITY_LISTS.get());
+            rendering.addProperty("shadowFrustumCoherence", com.pp.shaderlod.ShaderLodConfig.SHADOW_FRUSTUM_COHERENCE.get());
             semantic.add("rendering", rendering);
             state.add("loaded_semantic_config", semantic);
             state.addProperty("terrain_configured", com.pp.shaderlod.ShaderLodConfig.TERRAIN_ENABLED.get());
@@ -66,6 +67,8 @@ public final class WorkloadInputs {
             state.addProperty("shadow_culling_active", com.pp.shaderlod.ShadowCullingController.isActive());
             state.addProperty("shadow_lists_configured", com.pp.shaderlod.ShaderLodConfig.SEPARATE_SHADOW_VISIBILITY_LISTS.get());
             state.addProperty("shadow_lists_active", com.pp.shaderlod.ShadowVisibilityListsController.isActive());
+            state.addProperty("shadow_coherence_configured", com.pp.shaderlod.ShaderLodConfig.SHADOW_FRUSTUM_COHERENCE.get());
+            state.addProperty("shadow_coherence_active", com.pp.shaderlod.ShadowFrustumCoherenceController.isActive());
         }
         Path archive = directory.resolve("shaderpacks").resolve(Iris.getCurrentPackName());
         state.addProperty("actual_shader_sha256", hash(archive));
@@ -76,7 +79,7 @@ public final class WorkloadInputs {
         if (!state.has("mod_present") || !state.get("mod_present").getAsBoolean()) throw new IllegalStateException("In-process control requires ShaderLOD");
         if (!state.get("shaders_in_use").getAsBoolean() || state.get("fallback").getAsBoolean()) throw new IllegalStateException("Iris pipeline unavailable");
         if (!state.has("hide_gui") || !state.get("hide_gui").getAsBoolean()) throw new IllegalStateException("In-process control requires configured hidden HUD");
-        for (String name : java.util.List.of("terrain_configured", "terrain_confirmation", "terrain_active", "shadow_culling_configured", "shadow_culling_active", "shadow_lists_configured", "shadow_lists_active")) {
+        for (String name : java.util.List.of("terrain_configured", "terrain_confirmation", "terrain_active", "shadow_culling_configured", "shadow_culling_active", "shadow_lists_configured", "shadow_lists_active", "shadow_coherence_configured", "shadow_coherence_active")) {
             if (state.get(name).getAsBoolean()) throw new IllegalStateException("In-process control feature must stay off: " + name);
         }
         if (state.getAsJsonObject("lod_settings").get("debug").getAsBoolean()) throw new IllegalStateException("Mod debug must stay off");

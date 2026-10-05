@@ -10,6 +10,7 @@ import com.pp.shaderlod.dev.timing.ShaderInputTracker;
 import com.pp.shaderlod.dev.timing.ShadowInputObserver;
 import com.pp.shaderlod.dev.timing.WindowStateTracker;
 import com.pp.shaderlod.dev.timing.VisibilityListPhaseObserver;
+import com.pp.shaderlod.dev.timing.ShadowCoherenceOracle;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Screenshot;
 import net.neoforged.fml.ModList;
@@ -80,6 +81,7 @@ final class WorkloadSession {
             ShaderInputTracker.beginMeasurement();
             ShadowInputObserver.beginMeasurement();
             VisibilityListPhaseObserver.beginMeasurement();
+            ShadowCoherenceOracle.beginMeasurement();
             measuring = true; measurementStarted = now;
             startFrames = (int) GpuTimers.snapshot().renderFrames();
             LogUtils.getLogger().info("ShaderLOD workload measurement started: {}", directory);
@@ -91,6 +93,7 @@ final class WorkloadSession {
             done = true;
             write((now - measurementStarted) * 1e-9);
             VisibilityListPhaseObserver.endMeasurement();
+            ShadowCoherenceOracle.endMeasurement();
             Screenshot.grab(client.gameDirectory, "workload-final.png", client.getMainRenderTarget(), message -> {
                 LogUtils.getLogger().info("Workload screenshot: {}", message.getString());
                 if (Boolean.getBoolean("shaderlod.dev.measureOnly")) client.execute(client::stop);
@@ -114,6 +117,7 @@ final class WorkloadSession {
             report.add("shader_temporal_inputs_end", temporalInputs());
             report.add("shadow_observation", gson.toJsonTree(ShadowInputObserver.snapshot()));
             report.add("visibility_observation", gson.toJsonTree(VisibilityListPhaseObserver.snapshot()));
+            report.add("shadow_coherence_oracle", gson.toJsonTree(ShadowCoherenceOracle.snapshot()));
             report.add("window_state", gson.toJsonTree(windowState.snapshot()));
             report.addProperty("shader_temporal_note", "Wetness is observed at normal Iris supplier evaluation; clocks/day/weather are CPU source getters. Dynamic wetness and frame phase can advance. No smoother reevaluation, GPU readback, or clock freeze.");
             report.add("effective_shader_options", inputStart.get("effective_shader_options").deepCopy());
@@ -122,7 +126,7 @@ final class WorkloadSession {
             for (var mod : ModList.get().getMods()) mods.addProperty(mod.getModId(), mod.getVersion().toString());
             report.add("loaded_mods", mods);
             var runtimeProperties = new JsonObject();
-            for (String property : List.of("shaderlod.dev.performanceStack", "shaderlod.dev.includeDh", "shaderlod.dev.gpuSampleInterval", "shaderlod.dev.gpuTiming", "shaderlod.dev.cpuLayerTiming", "shaderlod.dev.fixedWetness", "shaderlod.dev.shadowObserve")) {
+            for (String property : List.of("shaderlod.dev.performanceStack", "shaderlod.dev.includeDh", "shaderlod.dev.gpuSampleInterval", "shaderlod.dev.gpuTiming", "shaderlod.dev.cpuLayerTiming", "shaderlod.dev.fixedWetness", "shaderlod.dev.shadowObserve", "shaderlod.dev.visibilityLists", "shaderlod.dev.shadowCoherenceOracle")) {
                 runtimeProperties.addProperty(property, System.getProperty(property, "unspecified"));
             }
             report.add("runtime_properties", runtimeProperties);
@@ -151,6 +155,8 @@ final class WorkloadSession {
                     && com.pp.shaderlod.ShadowCullingController.isActive());
             report.addProperty("separate_shadow_lists_active", ModList.get().isLoaded("shaderlod")
                     && com.pp.shaderlod.ShadowVisibilityListsController.isActive());
+            report.addProperty("shadow_frustum_coherence_active", ModList.get().isLoaded("shaderlod")
+                    && com.pp.shaderlod.ShadowFrustumCoherenceController.isActive());
             report.addProperty("elapsed_seconds", seconds);
             report.addProperty("warmup_seconds", warmup);
             report.addProperty("render_frames", GpuTimers.snapshot().renderFrames() - startFrames);

@@ -186,3 +186,31 @@ unverified. All screenshots/reports/failures are retained. Next: source-equivale
 alloff in-process bridge toggles with the same program/JVM and captured state,
 plus correctness prerequisites for exact CPU visibility reuse. New modes remain
 experimental, default mode0; Photon ordinary gate and second shader stay pending.
+
+
+## Same-JVM source-equivalent alloff controls
+
+Both four-phase controls endedexit0/complete: old8fba session36243 and newb15d
+protected-lighting call-site candidate session6158. One unchanged world/pipeline
+per session, allfiveeffects-off, fixedwetness0, 45swarmup+8ssettle/20scapture per
+phase, sparseGPUinterval16, minimal/noDH, hiddenHUD. This HUDpolicy differs from
+prior visible-HUD matrix runs; absoluteFPSisnot a ShaderLODgain comparison there.
+All phases werefocused/visible/unminimized with no observed window transitions.
+Semantic loadedoptions/config/camera/world were stable exceptexpectedenabledflag;
+raw Irisfiles differed onlytimestampcomments, verified againstcapturedhashes.
+All UUID phaseimages and hashes validated. See IN_PROCESS_RESULTS.md.
+
+| Archive | OFF1 FPS | ON1 FPS | OFF2 FPS | ON2 FPS |
+| --- | ---: | ---: | ---: | ---: |
+| Existing8fba | 153.19 | 150.44 | 150.34 | 153.09 |
+| Lighting-tier b15d | 154.11 | 154.07 | 153.79 | 153.60 |
+
+Existing adjacentONframe reductions were-1.83%/+1.80%, GPU-4.70%/+1.51%; new
+frame-0.024%/-0.123%, GPU-1.76%/+0.035%. The old ON/OFF FPSmeans are virtually
+equal. No reproducible large enablepenalty or meaningfulgain is established.
+Each archivehas one correlatedsession; a small cross-session difference is not
+an ordinary performancegatepass. Original145→75/badalloff variation remains
+unexplained; these captures did not reproduce the slow regime. Class/resource
+hashes were preserved post-capture before the coherence rebuild, explicitly
+qualified rather thaninvented aspre-start in-report fingerprints. Future controls
+capture development directories/mixin resource hashes at a boundary.
