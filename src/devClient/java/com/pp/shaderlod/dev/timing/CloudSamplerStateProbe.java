@@ -36,10 +36,22 @@ public final class CloudSamplerStateProbe {
     private static final boolean ENABLED = Boolean.getBoolean("shaderlod.dev.cloudSamplerProbe");
     private static final int PROGRAM_LIMIT = 64;
     private static final int UNIFORM_LIMIT = 4096;
+    private static final int UNIFORM_NAME_LIMIT = 1024;
     private static final String[] WATCHED = {"colortex8", "noisetex", "colortex6", "colortex7"};
     private static final String[] CORE_UNIFORMS = {"shaderlodBridgeVersion", "shaderlodEnabled", "shaderlodNear", "shaderlodFar",
             "shaderlodPreset", "shaderlodTransition", "shaderlodDebug"};
     private static final Set<String> CORE_INTEGER_UNIFORMS = Set.of("shaderlodBridgeVersion", "shaderlodEnabled", "shaderlodPreset", "shaderlodDebug");
+    private static final String[] EFFECT_UNIFORMS = {"shaderlodEffectsVersion",
+            "shaderlodVolumetricsMode", "shaderlodVolumetricsNear", "shaderlodVolumetricsFar", "shaderlodVolumetricsTransition",
+            "shaderlodVolumetricsMediumWorkRatio", "shaderlodVolumetricsFarWorkRatio",
+            "shaderlodOpaqueLightingMode", "shaderlodOpaqueLightingNear", "shaderlodOpaqueLightingFar", "shaderlodOpaqueLightingTransition",
+            "shaderlodOpaqueLightingMediumWorkRatio", "shaderlodOpaqueLightingFarWorkRatio"};
+    private static final Set<String> EFFECT_INTEGER_UNIFORMS = Set.of("shaderlodEffectsVersion", "shaderlodVolumetricsMode", "shaderlodOpaqueLightingMode");
+    private static final UniformReader GL_UNIFORM_READER = new UniformReader() {
+        public int location(int program, String name) { return GL20.glGetUniformLocation(program, name); }
+        public int integerValue(int program, int location) { return GL20.glGetUniformi(program, location); }
+        public float floatValue(int program, int location) { return GL20.glGetUniformf(program, location); }
+    };
     private static final Set<Integer> SEEN = new HashSet<>();
     private static final JsonArray PROGRAMS = new JsonArray();
     private static JsonObject report;
@@ -49,6 +61,15 @@ public final class CloudSamplerStateProbe {
 
     /** Called at pinned Iris FullScreenQuadRenderer.renderQuad()V HEAD. */
     public static void beforeQuadDraw() {
+        beforeDraw("iris-fullscreen-quad");
+    }
+
+    /** Optional pinned Sodium native draw-site hook; the hook owner proves binding order. */
+    public static void beforeRasterDraw() {
+        beforeDraw("sodium-raster-submission");
+    }
+
+    private static void beforeDraw(String origin) {
         if (!ENABLED || failed || SEEN.size() >= PROGRAM_LIMIT) return;
         try {
             int program = GL11.glGetInteger(GL20.GL_CURRENT_PROGRAM);
@@ -58,6 +79,7 @@ public final class CloudSamplerStateProbe {
             JsonObject entry = new JsonObject();
             entry.addProperty("timestamp_utc", Instant.now().toString());
             entry.addProperty("current_program", program);
+            entry.addProperty("draw_origin", origin);
             try {
                 capture(program, entry, capabilities);
             } catch (RuntimeException exception) {
@@ -90,10 +112,15 @@ public final class CloudSamplerStateProbe {
         result.addProperty("max_combined_texture_units", GL11.glGetInteger(GL20.GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS));
         result.addProperty("program_limit", PROGRAM_LIMIT);
         result.addProperty("uniform_scan_limit", UNIFORM_LIMIT);
-        result.addProperty("sampler_selection", "Watched aliases plus all active scalar sampler2D/sampler3D uniforms in the bounded linked-uniform scan; other sampler types/arrays outside watched aliases are inventory only");
+        result.addProperty("uniform_name_length_limit", UNIFORM_NAME_LIMIT);
+        result.addProperty("sampler_selection", "Watched aliases plus active scalar sampler2D/sampler3D/sampler2DShadow uniforms in the bounded linked-uniform scan; other sampler types/arrays outside watched aliases are inventory only");
         result.addProperty("core_uniform_schema", 2);
         result.addProperty("core_uniform_selection", "Seven existing core fields: version/enable/preset/debug scalar int and near/far/transition scalar float linked-program readbacks; no source/supplier reevaluation; first observed draw is not a settled live-reload guarantee");
-        result.addProperty("scope", "First draw per numeric GL program ID in this JVM; full-screen draws only; not a program-name or cloud-stage proof");
+        result.addProperty("effect_uniform_schema", 2);
+        result.addProperty("effect_uniform_selection", "Effects version plus six Volumetrics and six OpaqueLighting fields; version/mode scalar int, bands/retained ratios scalar float; actual linked readbacks, not mod suppliers or inferred consumption");
+        result.addProperty("texture_allocation_scope", "Bound nonzero 2D/3D texture level 0 dimensions/internal format only; no other mip images, completeness, texture contents or physical fetch counts");
+        result.addProperty("raster_hook", "Optional pinned Sodium native draw-site callback; availability/injection verified separately by hook owner");
+        result.addProperty("scope", "First draw per numeric GL program ID in this JVM across enabled fullscreen/raster hooks; per-entry draw_origin is not a program-name or shader-stage proof");
         result.addProperty("query_status", "Driver values queried without consuming glGetError; inspect runtime GL logs for errors");
         result.addProperty("interpretation", "Missing/inactive/unsupported state is unknown; sampler state alone does not prove divergent implicit derivatives safe");
         result.add("programs", PROGRAMS);
@@ -102,23 +129,26 @@ public final class CloudSamplerStateProbe {
 
     private static void capture(int program, JsonObject entry, GLCapabilities capabilities) {
         entry.add("core_uniforms", coreUniforms(program, Map.of(), "not inspected; see capture_failure if present"));
+        entry.add("effect_uniforms", effectUniforms(program, Map.of(), "not inspected; see capture_failure if present", GL_UNIFORM_READER));
         int linked = GL20.glGetProgrami(program, GL20.GL_LINK_STATUS);
         entry.addProperty("linked", linked != GL11.GL_FALSE);
         if (linked == GL11.GL_FALSE) {
             entry.add("samplers", unknown("current program not linked"));
             entry.add("core_uniforms", coreUniforms(program, Map.of(), "current program not linked"));
+            entry.add("effect_uniforms", effectUniforms(program, Map.of(), "current program not linked", GL_UNIFORM_READER));
             return;
         }
         int count = GL20.glGetProgrami(program, GL20.GL_ACTIVE_UNIFORMS);
         int maxLength = GL20.glGetProgrami(program, GL20.GL_ACTIVE_UNIFORM_MAX_LENGTH);
         entry.addProperty("active_uniform_count", count);
         entry.addProperty("uniform_scan_truncated", count > UNIFORM_LIMIT);
+        entry.addProperty("uniform_name_length_truncated", maxLength > UNIFORM_NAME_LIMIT);
         Map<String, Uniform> uniforms = new LinkedHashMap<>();
         try (MemoryStack stack = MemoryStack.stackPush()) {
             var size = stack.mallocInt(1);
             var type = stack.mallocInt(1);
             for (int index = 0; index < Math.min(count, UNIFORM_LIMIT); index++) {
-                String name = GL20.glGetActiveUniform(program, index, Math.max(1, maxLength), size, type);
+                String name = GL20.glGetActiveUniform(program, index, Math.max(1, Math.min(maxLength, UNIFORM_NAME_LIMIT)), size, type);
                 uniforms.put(name, new Uniform(name, size.get(0), type.get(0)));
             }
         }
@@ -134,6 +164,9 @@ public final class CloudSamplerStateProbe {
         entry.add("core_uniforms", coreUniforms(program, uniforms, count > UNIFORM_LIMIT
                 ? "not found in truncated active-uniform scan"
                 : "inactive, optimized out, or undeclared; linked introspection cannot distinguish"));
+        entry.add("effect_uniforms", effectUniforms(program, uniforms, count > UNIFORM_LIMIT || maxLength > UNIFORM_NAME_LIMIT
+                ? "not found in bounded/truncated active-uniform scan"
+                : "inactive, optimized out, or undeclared; linked introspection cannot distinguish", GL_UNIFORM_READER));
         JsonObject samplers = new JsonObject();
         entry.add("samplers", samplers);
         int previousActiveTexture = GL11.glGetInteger(GL13.GL_ACTIVE_TEXTURE);
@@ -151,11 +184,11 @@ public final class CloudSamplerStateProbe {
                     samplers.add(name, unknown(exception.toString()));
                 }
             }
-            // Capture linked scalar 2D/3D names as well as watched aliases.
+            // Capture linked scalar 2D/3D/shadow names as well as watched aliases.
             // This includes final-pass depth/color samplers and Iris-remapped
             // custom textures without assuming source aliases survive.
             for (var uniform : uniforms.values()) {
-                if ((uniform.type() != GL20.GL_SAMPLER_2D && uniform.type() != GL20.GL_SAMPLER_3D)
+                if (samplerTarget(uniform.type()) == 0
                         || uniform.size() != 1 || samplers.has(uniform.name())) continue;
                 try { samplers.add(uniform.name(), sampler(program, uniform, capabilities)); }
                 catch (RuntimeException exception) { samplers.add(uniform.name(), unknown(exception.toString())); }
@@ -168,10 +201,24 @@ public final class CloudSamplerStateProbe {
     }
 
     private static JsonObject coreUniforms(int program, Map<String, Uniform> uniforms, String missingReason) {
+        return coreUniforms(program, uniforms, missingReason, GL_UNIFORM_READER);
+    }
+
+    static JsonObject coreUniforms(int program, Map<String, Uniform> uniforms, String missingReason, UniformReader reader) {
+        return uniformReadbacks(program, uniforms, missingReason, CORE_UNIFORMS, CORE_INTEGER_UNIFORMS, reader);
+    }
+
+    static JsonObject effectUniforms(int program, Map<String, Uniform> uniforms, String missingReason, UniformReader reader) {
+        JsonObject result = uniformReadbacks(program, uniforms, missingReason, EFFECT_UNIFORMS, EFFECT_INTEGER_UNIFORMS, reader);
+        result.getAsJsonObject("shaderlodEffectsVersion").addProperty("expected_protocol_version", 2);
+        return result;
+    }
+
+    private static JsonObject uniformReadbacks(int program, Map<String, Uniform> uniforms, String missingReason,
+                                              String[] names, Set<String> integers, UniformReader reader) {
         JsonObject result = new JsonObject();
-        for (int index = 0; index < CORE_UNIFORMS.length; index++) {
-            String name = CORE_UNIFORMS[index];
-            int expectedType = CORE_INTEGER_UNIFORMS.contains(name) ? GL11.GL_INT : GL11.GL_FLOAT;
+        for (String name : names) {
+            int expectedType = integers.contains(name) ? GL11.GL_INT : GL11.GL_FLOAT;
             Uniform uniform = uniforms.get(name);
             JsonObject value = new JsonObject();
             result.add(name, value);
@@ -192,16 +239,16 @@ public final class CloudSamplerStateProbe {
                 continue;
             }
             try {
-                int location = GL20.glGetUniformLocation(program, name);
+                int location = reader.location(program, name);
                 value.addProperty("uniform_location", location);
                 if (location < 0) {
                     value.addProperty("status", "unknown");
                     value.addProperty("reason", "active linked uniform has no queryable location; value not queried");
                 } else if (expectedType == GL11.GL_INT) {
-                    value.addProperty("value", GL20.glGetUniformi(program, location));
+                    value.addProperty("value", reader.integerValue(program, location));
                     value.addProperty("status", "queried_without_gl_error_consumption");
                 } else {
-                    float actual = GL20.glGetUniformf(program, location);
+                    float actual = reader.floatValue(program, location);
                     if (Float.isFinite(actual)) {
                         value.addProperty("value", actual);
                         value.addProperty("status", "queried_without_gl_error_consumption");
@@ -223,15 +270,10 @@ public final class CloudSamplerStateProbe {
         result.addProperty("active_uniform_name", uniform.name());
         result.addProperty("active_uniform_size", uniform.size());
         result.addProperty("active_uniform_type", uniform.type());
-        int target = switch (uniform.type()) {
-            case GL20.GL_SAMPLER_2D -> GL11.GL_TEXTURE_2D;
-            case GL20.GL_SAMPLER_3D -> GL12.GL_TEXTURE_3D;
-            default -> 0;
-        };
-        result.addProperty("active_uniform_type_name", target == GL11.GL_TEXTURE_2D ? "sampler2D"
-                : target == GL12.GL_TEXTURE_3D ? "sampler3D" : "unknown/unsupported");
+        int target = samplerTarget(uniform.type());
+        result.addProperty("active_uniform_type_name", samplerTypeName(uniform.type()));
         if (target == 0 || uniform.size() != 1) {
-            result.add("binding", unknown("only scalar sampler2D/sampler3D uniforms supported by this pinned probe"));
+            result.add("binding", unknown("only scalar sampler2D/sampler3D/sampler2DShadow uniforms supported by this pinned probe"));
             return result;
         }
         int location = GL20.glGetUniformLocation(program, uniform.name());
@@ -254,11 +296,13 @@ public final class CloudSamplerStateProbe {
         JsonObject textureParameters;
         if (texture == 0) {
             textureParameters = unknown("no nonzero texture bound; default-object parameters not treated as sampled state");
+            result.add("texture_level_zero", unknown("no nonzero texture bound; allocation not queried"));
         } else {
             textureParameters = parameters(target, 0, capabilities);
             textureParameters.addProperty("base_level", GL11.glGetTexParameteri(target, GL12.GL_TEXTURE_BASE_LEVEL));
             textureParameters.addProperty("max_level", GL11.glGetTexParameteri(target, GL12.GL_TEXTURE_MAX_LEVEL));
-            textureParameters.addProperty("level_scope", "Texture level bounds only; allocated mip images/completeness not queried");
+            textureParameters.addProperty("level_scope", "Level 0 allocation queried separately; other mip images/completeness not queried");
+            result.add("texture_level_zero", textureLevelZero(target, capabilities));
         }
         result.add("texture_parameters", textureParameters);
         if (!samplerObjects(capabilities)) {
@@ -275,7 +319,7 @@ public final class CloudSamplerStateProbe {
                 JsonObject samplerParameters = parameters(target, boundSampler, capabilities);
                 result.add("sampler_parameters", samplerParameters);
                 result.add("effective_sampling_parameters", samplerParameters.deepCopy());
-                result.addProperty("effective_parameter_source", "sampler object overrides filtering/LOD/anisotropy; texture retains base/max levels");
+                result.addProperty("effective_parameter_source", "sampler object overrides filtering/LOD/anisotropy/comparison; texture retains base/max levels/allocation");
             }
         }
         return result;
@@ -293,6 +337,17 @@ public final class CloudSamplerStateProbe {
         result.addProperty("min_lod", floatParameter(target, sampler, GL12.GL_TEXTURE_MIN_LOD, capabilities));
         result.addProperty("max_lod", floatParameter(target, sampler, GL12.GL_TEXTURE_MAX_LOD, capabilities));
         result.addProperty("lod_bias", floatParameter(target, sampler, GL14.GL_TEXTURE_LOD_BIAS, capabilities));
+        if (capabilities.OpenGL14 || capabilities.GL_ARB_shadow) {
+            int mode = integerParameter(target, sampler, GL14.GL_TEXTURE_COMPARE_MODE, capabilities);
+            int function = integerParameter(target, sampler, GL14.GL_TEXTURE_COMPARE_FUNC, capabilities);
+            result.addProperty("compare_mode", mode);
+            result.addProperty("compare_mode_name", compareModeName(mode));
+            result.addProperty("compare_func", function);
+            result.addProperty("compare_func_name", compareFunctionName(function));
+        } else {
+            result.add("compare_mode", unknown("texture comparison parameters unsupported by context"));
+            result.add("compare_func", unknown("texture comparison parameters unsupported by context"));
+        }
         if (anisotropy(capabilities)) {
             result.addProperty("max_anisotropy", floatParameter(target, sampler, EXTTextureFilterAnisotropic.GL_TEXTURE_MAX_ANISOTROPY_EXT, capabilities));
         } else {
@@ -319,8 +374,74 @@ public final class CloudSamplerStateProbe {
         return capabilities.OpenGL46 || capabilities.GL_EXT_texture_filter_anisotropic || capabilities.GL_ARB_texture_filter_anisotropic;
     }
 
-    private static boolean is3d(Uniform uniform) {
-        return uniform != null && uniform.type() == GL20.GL_SAMPLER_3D;
+    private static JsonObject textureLevelZero(int target, GLCapabilities capabilities) {
+        if (!capabilities.OpenGL11 || (target == GL12.GL_TEXTURE_3D && !capabilities.OpenGL12)) {
+            return unknown("texture level allocation getters unsupported by context");
+        }
+        try {
+            int width = GL11.glGetTexLevelParameteri(target, 0, GL11.GL_TEXTURE_WIDTH);
+            int height = GL11.glGetTexLevelParameteri(target, 0, GL11.GL_TEXTURE_HEIGHT);
+            int format = GL11.glGetTexLevelParameteri(target, 0, GL11.GL_TEXTURE_INTERNAL_FORMAT);
+            int depth = target == GL12.GL_TEXTURE_3D ? GL11.glGetTexLevelParameteri(target, 0, GL12.GL_TEXTURE_DEPTH) : 1;
+            return allocation(target, width, height, depth, format);
+        } catch (RuntimeException exception) {
+            return unknown(exception.toString());
+        }
+    }
+
+    static JsonObject allocation(int target, int width, int height, int depth, int format) {
+        if (target != GL11.GL_TEXTURE_2D && target != GL12.GL_TEXTURE_3D) return unknown("unsupported texture allocation target");
+        JsonObject result = new JsonObject();
+        result.addProperty("level", 0);
+        result.addProperty("width", width);
+        result.addProperty("height", height);
+        if (target == GL12.GL_TEXTURE_3D) result.addProperty("depth", depth);
+        result.addProperty("dimensions", target == GL12.GL_TEXTURE_3D ? 3 : 2);
+        result.addProperty("internal_format", format);
+        boolean known = width > 0 && height > 0 && depth > 0 && format > 0;
+        result.addProperty("status", known ? "queried_without_gl_error_consumption" : "unknown");
+        if (!known) result.addProperty("reason", "level 0 image absent or getter result not meaningful; no GL error consumed");
+        result.addProperty("scope", "Level 0 allocation only; no image contents, other mip levels or completeness claim");
+        return result;
+    }
+
+    static int samplerTarget(int type) {
+        return switch (type) {
+            case GL20.GL_SAMPLER_2D, GL20.GL_SAMPLER_2D_SHADOW -> GL11.GL_TEXTURE_2D;
+            case GL20.GL_SAMPLER_3D -> GL12.GL_TEXTURE_3D;
+            default -> 0;
+        };
+    }
+
+    static String samplerTypeName(int type) {
+        return switch (type) {
+            case GL20.GL_SAMPLER_2D -> "sampler2D";
+            case GL20.GL_SAMPLER_2D_SHADOW -> "sampler2DShadow";
+            case GL20.GL_SAMPLER_3D -> "sampler3D";
+            default -> "unknown/unsupported";
+        };
+    }
+
+    static String compareModeName(int mode) {
+        return switch (mode) {
+            case GL11.GL_NONE -> "GL_NONE";
+            case GL30.GL_COMPARE_REF_TO_TEXTURE -> "GL_COMPARE_REF_TO_TEXTURE";
+            default -> "unknown";
+        };
+    }
+
+    static String compareFunctionName(int function) {
+        return switch (function) {
+            case GL11.GL_LESS -> "GL_LESS";
+            case GL11.GL_LEQUAL -> "GL_LEQUAL";
+            case GL11.GL_EQUAL -> "GL_EQUAL";
+            case GL11.GL_GREATER -> "GL_GREATER";
+            case GL11.GL_GEQUAL -> "GL_GEQUAL";
+            case GL11.GL_NOTEQUAL -> "GL_NOTEQUAL";
+            case GL11.GL_ALWAYS -> "GL_ALWAYS";
+            case GL11.GL_NEVER -> "GL_NEVER";
+            default -> "unknown";
+        };
     }
 
     private static String filterName(int value) {
@@ -355,5 +476,12 @@ public final class CloudSamplerStateProbe {
         LOGGER.info("Cloud sampler-state probe captured {} / {} programs: {}", SEEN.size(), PROGRAM_LIMIT, output);
     }
 
-    private record Uniform(String name, int size, int type) {}
+    record Uniform(String name, int size, int type) {}
+
+    /** Narrow getter seam for scalar fixtures; no mod supplier or GL state mutation. */
+    interface UniformReader {
+        int location(int program, String name);
+        int integerValue(int program, int location);
+        float floatValue(int program, int location);
+    }
 }

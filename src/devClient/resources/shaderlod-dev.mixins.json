@@ -19,6 +19,7 @@
     "BufferedDrawTimingMixin",
     "CompositeRendererTimingMixin",
     "CloudSamplerStateMixin",
+    "RasterSamplerStateMixin",
     "FinalPassTimingMixin",
     "ShadowRendererTimingMixin",
     "ShadowInputObserverMixin",

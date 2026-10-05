@@ -1,6 +1,6 @@
 # Projected procedural detail LOD source freeze
 
-2026-10-05. Owner: `procedural_lod`; bounded read-only mathematics advisor:
+2026-10-05, corrected source freeze r2. Owner: `procedural_lod`; bounded read-only mathematics advisor:
 `procedural_lod/parallax_math`. Source implementation is private, default off,
 experimental and **unaccepted for quality or performance**. Neither worker owned
 clients, shader reloads or GPU measurement. Root retains runtime ownership.
@@ -117,11 +117,15 @@ parallax-confidence boundaries; 1..8 octave fetch omission; flow/noise repeat
 seams/height-variation/frequency/persistence/ray safeguards.
 
 Actual pinned Iris `OptionAnnotatedSource`, `OptionSet` and `MutableOptionValues`
-ran through its real Java lexer. Complete settings/program/stage inputs retain
-exact baseline boolean options/references plus the sole private gate. The upstream
+ran through its real Java lexer. Complete recursive water include graphs from all three world entries cover
+52 original and 55 modified source members, including all three private helpers.
+They retain exact baseline boolean options/references plus the sole public private
+gate, and identical upstream string options. The upstream
 shared program already references `PROGRAM_GBUFFERS_WATER`; this test checks no
 additional stage leak rather than wrongly asserting baseline absence. Default
-false/true and both overrides pass. This is option parsing, not driver compilation.
+false/true and opposite overrides true/false pass. Internal guards are absent from
+references/options; reverting each guard in-memory reproduces the old Iris boolean
+option leak. This is option parsing, not driver compilation.
 
 The independently expressed scalar parallax reference differs by at most
 `3.457650183405701e-13` coordinate units in the chosen fixture set. Neighboring
@@ -146,7 +150,7 @@ Original LICENSE SHA256:
 Pinned Iris 1.8.12-local JAR SHA256:
 `3e3f94d2d5cdcb8145c4385d521974aa2d8669b2cc212351f70cf06488182e83`.
 Manifest `patches/photon-experiments/procedural-lod.json` SHA256:
-`d504b81be34ce45b63e37bc51e2c663f470bd173b2e77a4e372e31af36578a9d`.
+`5849bc24c84f98b42a4ad7a85b013cdab6bb229a3f8c2d8e8c48d6097cd9e687`.
 
 All three arms were actually assembled by `scripts/build_photon_procedural_lod.py`
 under ignored `build/`. Their ZIPs include attribution and audit metadata.
@@ -157,9 +161,33 @@ original ZIP remains the comparison reference.
 
 | Assembled source arm | Ignored archive SHA256 |
 | --- | --- |
-| Original members plus metadata | `38f57e66d73cc61c4faf061fc510410b661582bd8d2562292406d4552d5c461f` |
-| Private option default off | `894c5c37de5d0427f283775a01fec0de1a4fde5a2162d108993bd648b5b96a1a` |
-| Private option default on | `4423eb17943e18b75adb5173899ec7bf716d56a3aeb68e64f35fbae076139992` |
+| Original members plus metadata | `5493190271007cf6d3b6435a378b24c4955549661cd80d4ade5cc583609b947e` |
+| Private option default off | `eb9fa7db90fffff1ee264b90098a2b14a8dd322d3e8a111b8460fc329eea0719` |
+| Private option default on | `15ab3f80698e4759e02d18e31b60db6ba77613307212e6e19b50d392833f4460` |
+
+## Corrected option-discovery coverage and superseded r1
+
+Integration review found that the first parser fixture omitted the helper payloads.
+Those helpers used `#ifndef` plus a one-word `#define`, which Iris treated as
+internal boolean options. The prior fixture's sole-option claim was therefore too
+narrow to establish full-graph option safety. R2 changes only each of the three
+helper first-line include guards to `#if !defined`; near/parallax/filter arithmetic
+and upstream patch bodies remain unchanged. Builder validation now enforces the
+exact three helper paths, safe guard form and matching reviewed fingerprints.
+
+All 13 previous source/math test cases still pass; the actual Iris fixture now
+reads the complete recursive graph and reproduces all three old guard leaks as
+regression controls. Upstream entry/settings/program references remain identical
+apart from the public private gate. Root, runtime operator and combiner were
+notified to hold old hashes before new artifacts were copied. No client, reload,
+CPU/GPU timing or runtime compilation occurred during the correction.
+
+Superseded r1 manifest `d504b81be34ce45b63e37bc51e2c663f470bd173b2e77a4e372e31af36578a9d`,
+default-off ZIP `894c5c37de5d0427f283775a01fec0de1a4fde5a2162d108993bd648b5b96a1a`,
+and on ZIP `4423eb17943e18b75adb5173899ec7bf716d56a3aeb68e64f35fbae076139992`
+must not be used for the corrected source freeze. Current archive paths were
+regenerated for r2. Corrected builder SHA256:
+`44c0b8f395d02428cc3bf54574f03e915b30dd67615a0e8107f06fc56003a6dd`.
 
 ## Runtime queue and measurement needed
 

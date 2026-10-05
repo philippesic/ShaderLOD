@@ -1,4 +1,4 @@
-#ifndef SHADERLOD_PROCEDURAL_PARALLAX_INCLUDED
+#if !defined SHADERLOD_PROCEDURAL_PARALLAX_INCLUDED
 #define SHADERLOD_PROCEDURAL_PARALLAX_INCLUDED
 // Full-quality Photon v1.3b water height/parallax derivative, SixthSurge/Belmu.
 // Preserves original arithmetic and loops; only qualifies pinned no-mip noise at

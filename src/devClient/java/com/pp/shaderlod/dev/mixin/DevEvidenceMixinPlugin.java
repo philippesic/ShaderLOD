@@ -12,6 +12,9 @@ public final class DevEvidenceMixinPlugin implements IMixinConfigPlugin {
     @Override public void onLoad(String mixinPackage) {}
     @Override public String getRefMapperConfig() { return null; }
     @Override public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
+        if (mixinClassName.endsWith(".RasterSamplerStateMixin")) {
+            return Boolean.getBoolean("shaderlod.dev.cloudSamplerProbe");
+        }
         return !mixinClassName.endsWith(".DhDrawEvidenceMixin")
                 || Boolean.getBoolean("shaderlod.dev.dhDrawEvidence");
     }

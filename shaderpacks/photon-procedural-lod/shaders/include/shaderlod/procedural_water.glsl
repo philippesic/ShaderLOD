@@ -1,4 +1,4 @@
-#ifndef SHADERLOD_PROCEDURAL_WATER_INCLUDED
+#if !defined SHADERLOD_PROCEDURAL_WATER_INCLUDED
 #define SHADERLOD_PROCEDURAL_WATER_INCLUDED
 // ShaderLOD experimental Photon v1.3b derivative, Benjamin Stott (SixthSurge).
 // Original Photon LICENSE and Belmu Gerstner attribution remain in the pack.

@@ -6,6 +6,7 @@ import io
 import json
 import math
 import os
+import posixpath
 import re
 from pathlib import Path
 import shutil
@@ -263,35 +264,135 @@ class PinnedSourceTests(unittest.TestCase):
         for field in ('base_sha256','switch','quality_class','base_version'):
             m=copy.deepcopy(MANIFEST);m[field]='bad'
             with self.assertRaises(ValueError):probe.patch_members(self.files,m,'enabled')
+        m=copy.deepcopy(MANIFEST);m['iris_option_discovery']['helper_guard_contract']='old #ifndef'
+        with self.assertRaises(ValueError):probe.patch_members(self.files,m,'enabled')
         with self.assertRaises(ValueError):probe.build(ROOT/'bad.zip')
 
     def test_actual_iris_discovers_only_private_option_and_applies_overrides(self):
-        # Reuse the actual-parser fixture source, not a hand-written lexer.
-        # It reads this track's full settings/program/entry; dependencies stay local.
-        baseline=(ROOT/'tests/test_photon_density_detail_probe.py').read_text()
-        java=baseline.split("harness = r'''",1)[1].split("'''",1)[0]
-        java=java.replace('DensityIrisLexer','ProceduralIrisLexer').replace('PROGRAM_DEFERRED1','PROGRAM_GBUFFERS_WATER')
-        # This original shared program already references PROGRAM_GBUFFERS_WATER.
-        # Test equal baseline sets plus one private gate, rather than absence.
-        java=java.replace('require(!actualReferences.contains("PROGRAM_GBUFFERS_WATER"), "entry stage became option reference");', '')
-        java=java.replace('require(!actualOptions.contains("PROGRAM_GBUFFERS_WATER"), "entry stage leaked into options");', '')
-        jar=ROOT/MANIFEST['iris_option_discovery']['jar_path']
+        # Compare complete recursively included water graphs, including helpers.
+        # Iris discovers options before conditional GLSL branches are evaluated.
+        def include_graph(files):
+            graph={}
+            def visit(name):
+                if name in graph:return
+                self.assertIn(name,files,'Missing literal include '+name)
+                graph[name]=files[name]
+                for target in re.findall(r'^\s*#include\s+"([^"]+)"',files[name].decode(),re.M):
+                    path='shaders/'+target.lstrip('/') if target.startswith('/') else posixpath.normpath(posixpath.join(posixpath.dirname(name),target))
+                    visit(path)
+            for world in ('world0','world-1','world1'):
+                visit('shaders/'+world+'/gbuffers_water.fsh')
+            self.assertIn(probe.SETTINGS,graph)
+            self.assertIn(probe.PROGRAM,graph)
+            return graph
+        java=r'''
+import java.nio.file.*;
+import java.util.*;
+import net.irisshaders.iris.shaderpack.option.*;
+import net.irisshaders.iris.shaderpack.include.AbsolutePackPath;
+import net.irisshaders.iris.shaderpack.option.values.MutableOptionValues;
+class ProceduralIrisLexer {
+    static void require(boolean ok, String message) {
+        if (!ok) throw new AssertionError(message);
+    }
+    static Map<String,OptionAnnotatedSource> graph(String directory) throws Exception {
+        Path root=Path.of(directory);
+        Map<String,OptionAnnotatedSource> result=new TreeMap<>();
+        try(var paths=Files.walk(root)) {
+            for(Path p:paths.filter(Files::isRegularFile).toList())
+                result.put(root.relativize(p).toString().replace('\\','/'),new OptionAnnotatedSource(Files.readString(p)));
+        }
+        return result;
+    }
+    static Set<String> references(Map<String,OptionAnnotatedSource> graph) {
+        Set<String> result=new TreeSet<>();
+        for(var source:graph.values())result.addAll(source.getBooleanDefineReferences().keySet());
+        return result;
+    }
+    static Set<String> options(Map<String,OptionAnnotatedSource> graph, Set<String> refs, boolean strings) {
+        Set<String> result=new TreeSet<>();
+        for(var entry:graph.entrySet()) {
+            var set=entry.getValue().getOptionSet(AbsolutePackPath.fromAbsolutePath("/"+entry.getKey().substring("shaders/".length())),refs);
+            result.addAll(strings?set.getStringOptions().keySet():set.getBooleanOptions().keySet());
+        }
+        return result;
+    }
+    public static void main(String[] args) throws Exception {
+        String name=args[0];
+        var original=graph(args[1]);
+        var disabled=graph(args[2]);
+        var enabled=graph(args[3]);
+        var beforeRefs=references(original);
+        var expectedRefs=new TreeSet<>(beforeRefs);expectedRefs.add(name);
+        var beforeBooleans=options(original,beforeRefs,false);
+        var expectedBooleans=new TreeSet<>(beforeBooleans);expectedBooleans.add(name);
+        var beforeStrings=options(original,beforeRefs,true);
+        String[] guards={"SHADERLOD_PROCEDURAL_FOOTPRINT_INCLUDED","SHADERLOD_PROCEDURAL_WATER_INCLUDED","SHADERLOD_PROCEDURAL_PARALLAX_INCLUDED"};
+        int index=0;
+        for(var graph:List.of(disabled,enabled)) {
+            var refs=references(graph);
+            require(refs.equals(expectedRefs),"unintended added/removed graph references: "+refs+" vs "+expectedRefs);
+            var booleans=options(graph,refs,false);
+            require(booleans.equals(expectedBooleans),"graph boolean options differ beyond private gate: "+booleans+" vs "+expectedBooleans);
+            require(options(graph,refs,true).equals(beforeStrings),"upstream graph string options changed");
+            for(String guard:guards) {
+                require(!refs.contains(guard),"internal helper guard leaked into references: "+guard);
+                require(!booleans.contains(guard),"internal helper guard leaked into options: "+guard);
+            }
+            var settings=graph.get("shaders/settings.glsl");
+            boolean expectedDefault=index++==1;
+            var sourceOption=settings.getBooleanOptions().values().stream().filter(v->v.getName().equals(name)).findFirst().orElseThrow();
+            require(sourceOption.getDefaultValue()==expectedDefault,"source default mismatch");
+            var set=settings.getOptionSet(AbsolutePackPath.fromAbsolutePath("/settings.glsl"),refs);
+            for(boolean override:List.of(!expectedDefault)) {
+                var values=new MutableOptionValues(set,Map.of(name,Boolean.toString(override)));
+                String edited=settings.apply(values);
+                String expectedLine=(override?"#define ":"//#define ")+name;
+                require(edited.lines().anyMatch(expectedLine::equals),"actual Iris override failed: "+override+" expected "+expectedLine+" actual "+edited.lines().filter(l->l.contains(name)).toList());
+            }
+        }
+        // Regression proof: the old helper first-line guard IS detected by Iris.
+        int guardIndex=0;
+        for(String helper:List.of("procedural_footprint.glsl","procedural_water.glsl","procedural_parallax.glsl")) {
+            String path="shaders/include/shaderlod/"+helper;
+            String source=Files.readString(Path.of(args[2]).resolve(path));
+            require(source.startsWith("#if !defined "),"helper guard source contract failed");
+            var old=new OptionAnnotatedSource(source.replaceFirst("#if !defined ","#ifndef "));
+            String guard=guards[guardIndex++];
+            require(old.getBooleanDefineReferences().containsKey(guard),"regression guard unreferenced");
+            require(old.getOptionSet(AbsolutePackPath.fromAbsolutePath("/include/shaderlod/"+helper),old.getBooleanDefineReferences().keySet()).getBooleanOptions().containsKey(guard),"regression guard not recognized as option");
+        }
+        System.out.println("complete original/modified graphs "+original.size()+"/"+disabled.size()+"; all3 helpers covered; sole public gate/reference; string options equal; no internal guard/stage leaks; both defaults and overrides; oldguard regressions reproduced");
+    }
+}
+'''
+        pin=MANIFEST['iris_option_discovery']
+        jar=ROOT/pin['jar_path']
+        self.assertEqual(pin['jar_sha256'],probe.sha256(jar.read_bytes()))
+        with zipfile.ZipFile(jar) as archive:
+            self.assertEqual(pin['class_sha256'],probe.sha256(archive.read(pin['class_path'])))
         cache=Path.home()/'.gradle/caches/modules-2/files-2.1'
         deps=[]
         for pattern in ('com.google.guava/guava/32.1.2-jre/*/guava-32.1.2-jre.jar','it.unimi.dsi/fastutil/8.5.12/*/fastutil-8.5.12.jar'):
             matches=list(cache.glob(pattern))
             self.assertEqual(1,len(matches),'Pinned local Iris parser dependency absent')
             deps.append(matches[0])
-        disabled=probe.patch_members(self.files,MANIFEST,'disabled')
-        enabled=probe.patch_members(self.files,MANIFEST,'enabled')
+        graphs=[include_graph(self.files),include_graph(probe.patch_members(self.files,MANIFEST,'disabled')),include_graph(probe.patch_members(self.files,MANIFEST,'enabled'))]
+        helper_names={h['path'] for h in MANIFEST['helpers']}
+        self.assertEqual(3,len(helper_names))
+        self.assertEqual(helper_names,set(graphs[1])-set(graphs[0]))
+        self.assertEqual(set(graphs[1]),set(graphs[2]))
         with tempfile.TemporaryDirectory(prefix='shaderlod-procedural-iris-') as tmp:
             directory=Path(tmp);java_file=directory/'ProceduralIrisLexer.java';java_file.write_text(java)
-            inputs=[directory/('source'+str(i)+'.glsl') for i in range(6)]
-            payloads=(disabled[probe.PROGRAM],disabled[probe.SETTINGS],enabled[probe.SETTINGS],self.files[probe.PROGRAM],self.files[probe.SETTINGS],self.files['shaders/world0/gbuffers_water.fsh'])
-            for p,data in zip(inputs,payloads):p.write_bytes(data)
-            run=subprocess.run(['java','--class-path',os.pathsep.join(map(str,[jar,*deps])),str(java_file),probe.SWITCH,*map(str,inputs)],capture_output=True,text=True,timeout=30)
+            graph_dirs=[]
+            for index,graph in enumerate(graphs):
+                graph_dir=directory/str(index);graph_dirs.append(graph_dir)
+                for name,data in graph.items():
+                    path=graph_dir/name;path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(data)
+            run=subprocess.run(['java','--class-path',os.pathsep.join(map(str,[jar,*deps])),str(java_file),probe.SWITCH,*map(str,graph_dirs)],capture_output=True,text=True,timeout=30)
             self.assertEqual(0,run.returncode,run.stdout+run.stderr)
-            self.assertIn('sole new option; no stage leak',run.stdout)
+            self.assertIn('all3 helpers covered; sole public gate/reference; string options equal; no internal guard/stage leaks; both defaults and overrides; oldguard regressions reproduced',run.stdout)
+            print(run.stdout.strip())
 
 
 class NumericalFixtures(unittest.TestCase):

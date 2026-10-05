@@ -519,3 +519,63 @@ AftercandidateQA, schedule a quiet true-fullscreen matchedoriginal/disabled/enab
 balanced benchmark batch with actual source/class/scene/config/window fingerprints,
 query-free total-throughput corroboration for useful signals. Goal remains active;
 no new LODperformance orquality claim, target not reduced.
+
+## Continuation: runtime observability and combined integration
+
+Previous turn was progress: independent source implementations were committed,
+interface worktree code integrated and main60tests passed. Current state inspected:
+no live Minecraft/proofrunner; main retains only prior dirty fullscreen/shadow/
+ComparisonClient/Miniature files plus new integration work. Full objective retained.
+
+Root assigned effect_api in isolated lod-interfaces worktree a bounded extension
+to the existing opt-in observer: read actual effectsVersion2 and Volumetrics/
+OpaqueLighting fields, 2D-shadow sampler state and allocation information. No
+supplier callbacks/setters, no query when disabled; source/driver distinction.
+lod_quality owns separate raster-hook/mixin-list/plugin files in the same worktree
+with explicit partitions. Source hook targets pinned Sodium native draw boundary,
+only applies when cloudSamplerProbe=true;3source/plugin/bytecode fixtures pass.
+Compile/integration/runtime acceptance still pending. Their Gradle is coordinated.
+
+feature_integration owns explicit three-track combined builder/manifest/tests/doc
+in MAIN, not a universal rewriter. It identified duplicated core declarations
+across copied helpers and procedural #ifndef include-guard option leaks. Root
+assigned procedural_lod its own exact guard/full-recursive-Iris-parser correction;
+old d504.../894c... procedural pins are superseded pending freeze. Runtime queue
+must not copy old procedural artifacts. Combined writer continues with exact
+known payload transforms and waits for final source pins. All-off/isolated-switch
+shader parity and complete source-option union are required; no gain summed.
+
+ao_runtime owns shared explicit-pin profile preparation/queue implementation,
+currently source work only. Reflection/volume remain source-frozen and ready for
+first untimed compile/quality tests after rootreview. Lighting 2x2 pass implementation
+continues independently in its worktree. Root owns idle GPU; ordinary source/tests
+continue in parallel. Performance tests wait for quiet fullscreen matched batches.
+
+### Integrated observer and first untimed runtime handoff
+
+effect_api commit6a4d835 adds read-only effect-schema2 version/Volumetrics/Opaque
+values (13fields), scalar2DShadow comparison state, level0 allocations and draw
+origin, preserving core7. lod_quality commit610f7ce adds the opt-in-only Sodium
+raster boundary hook. Root applied both exact owner patches; main test/build/
+compileDevClientJava and processDevClientResources/classpath generation pass.
+Main60tests unchanged/valid; root3rasterhook fixtures pass. Runtime state/query
+restoration/effectvalues still require real GL context; no diagnostic timing claim.
+
+Procedural r2 manifest5849bc24c84f98b42a4ad7a85b013cdab6bb229a3f8c2d8e8c48d6097cd9e687
+replaces only3helper guards and fullrecursiveIrisfixture coverage.13tests pass,
+default-off archiveeb9fa7db90fffff1ee264b90098a2b14a8dd322d3e8a111b8460fc329eea0719.
+Old helper option leaks are reproduced; no logic/quality claim changed.
+Combined manifest238da80f9bf998fe12ba857ced929c2b79129fed895c95e51a569141977350fc
+and default-offb6eb562df5ecdae8521e8aa7dbe0ba395e53f28e55466f0eabfeb11ce70a9df9
+are frozen:7fixtures pass, all531original members restore,329valid entrypoints
+off/isolated parity, exact3publicoptions and8deterministic arms.3unmodified dormant
+upstreamTAAU errors explicitly retained. No actualGLcompiler/performance proof.
+
+Root reviewed queue and independently passed6preparationfixtures. New soleGPU
+handoff to ao_runtime: fresh parallel-reflection-qa-r1/coastalwater/adaptive,25warm/
+5capture, GPUfalse/CPUlayersfalse/cloudSamplerProbe=true/native2976x1672/minimalnoDH/
+wetness0/frozenproducer-v2classes/resources. Onlyreflectionfirst; no timings or
+additional launch untilfirstresult reviewed. Source/code/tests may continue in
+parallel because this is UNT IMED; no other client/reloads/GPU. Exactlive/stophandles
+tofollow in PARALLEL_LOD_RUNTIME_QUEUE.md. Probe reads sampled binding/state, not
+physical savedrefinements, settledreload orquality parity. Goal remainsactive.

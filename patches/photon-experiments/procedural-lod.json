@@ -73,15 +73,15 @@
   "helpers": [
     {
       "path": "shaders/include/shaderlod/procedural_footprint.glsl",
-      "sha256": "1dd2a28d54d9767c7c60b5b396afbd2448718d18c605bb1050e3204cfbd9ccae"
+      "sha256": "4c5bd082702dcb2447e40a2e59753cbcd9a15a252a857b6821de36a8d0755e4d"
     },
     {
       "path": "shaders/include/shaderlod/procedural_parallax.glsl",
-      "sha256": "4748cf599475ece90c8f21e48591edb29c117fa409a653db51e82758a7111550"
+      "sha256": "e5d5f85afde015ab68256aa3a0976fe9028fbab96d12bf457c63eb35ef26e009"
     },
     {
       "path": "shaders/include/shaderlod/procedural_water.glsl",
-      "sha256": "855b9d6a80fda47aef709c9629c6be95006fca4890cbf402194100b5111a8d2a"
+      "sha256": "f8ba0beff94d4578c6a23fbedcbc8e8006a91d98f4b6f5eed13628388457b436"
     }
   ],
   "iris_option_discovery": {
@@ -91,7 +91,8 @@
     "class_sha256": "bcc5221aacd9b72619c966ac753e137144b45a8e6462511d104d9155db6bbba7",
     "parse_rule": "parseLine only enters declaration/ifdef/ifndef paths; parseIfdef accepts one word and line end; #if defined does not register boolean reference",
     "guard_contract": "outer #ifdef private switch; inner #if defined PROGRAM_GBUFFERS_WATER && defined WATER_WAVES",
-    "acceptance": "actual OptionAnnotatedSource/getOptionSet fixture with stage entry; private gate sole added option, default/override validation; compilation/rendering pending"
+    "acceptance": "actual pinned OptionAnnotatedSource/getOptionSet across complete recursive world0/world-1/world1 water include graphs including all3 private helpers: sole added public gate/reference, equal upstream string options, defaults/overrides, guard-regression detection; compilation/rendering pending",
+    "helper_guard_contract": "all3 helpers use #if !defined (not #ifndef), preserving compile include guards without Iris boolean references/options"
   },
   "noise_filter_source": {
     "jar_path": "dev/runtime/iris-neoforge-1.8.12+mc1.21.1.jar",

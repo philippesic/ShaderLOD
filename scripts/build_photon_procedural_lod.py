@@ -19,6 +19,9 @@ MEMBERS = (SETTINGS, PROGRAM)
 METADATA = 'shaderlod-procedural-lod.json'
 ARMS = ('original', 'disabled', 'enabled')
 HELPER_ROOT = Path('shaderpacks/photon-procedural-lod')
+HELPERS = tuple('shaders/include/shaderlod/' + name + '.glsl' for name in
+                ('procedural_footprint', 'procedural_parallax', 'procedural_water'))
+HELPER_GUARD_CONTRACT = 'all3 helpers use #if !defined (not #ifndef), preserving compile include guards without Iris boolean references/options'
 
 
 def sha256(data: bytes) -> str:
@@ -47,6 +50,9 @@ def patch_members(files: dict[str, bytes], manifest: dict, arm: str,
         raise ValueError('Unexpected procedural LOD manifest')
     if tuple(e['path'] for e in manifest['members']) != MEMBERS:
         raise ValueError('Unexpected procedural patch scope/order')
+    if (tuple(e['path'] for e in manifest['helpers']) != HELPERS
+            or manifest.get('iris_option_discovery', {}).get('helper_guard_contract') != HELPER_GUARD_CONTRACT):
+        raise ValueError('Unexpected helper scope or Iris-safe include-guard contract')
     for pin in manifest['pins']:
         if pin['path'] not in files or sha256(files[pin['path']]) != pin['sha256']:
             raise ValueError('Pinned upstream dependency changed: ' + pin['path'])
@@ -75,6 +81,9 @@ def patch_members(files: dict[str, bytes], manifest: dict, arm: str,
         if name in files:
             raise ValueError('Helper collides with original member')
         data = (root / HELPER_ROOT / name).read_bytes()
+        guard = 'SHADERLOD_' + PurePosixPath(name).stem.upper() + '_INCLUDED'
+        if not data.startswith(('#if !defined ' + guard + '\n#define ' + guard + '\n').encode()):
+            raise ValueError('Helper include guard must not become an Iris option: ' + name)
         if sha256(data) != helper['sha256']:
             raise ValueError('Reviewed helper fingerprint changed: ' + name)
         if arm != 'original':

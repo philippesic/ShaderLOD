@@ -1,0 +1,53 @@
+{
+  "schema": 1,
+  "experiment": "photon-explicit-three-track-combined-lod",
+  "base_version": "v1.3b",
+  "base_sha256": "120897768eaa8cb1f14a3e98f88dff009ae3204ee3b96904a4fe8586edfc1ead",
+  "license_sha256": "514402d18eedb0afe374344ca9f0fe87b7399779518184b8fc64e31674555fc5",
+  "tracks": [
+    {
+      "name": "reflection",
+      "manifest_path": "patches/photon-experiments/reflection-lod.json",
+      "manifest_sha256": "0c20609c50ee65d98ec803eb96294a0d727bff82d81a6634abb1504518d89e1a",
+      "builder_path": "scripts/build_photon_reflection_lod.py",
+      "builder_sha256": "4236196227ad615a6ba41521bb8d617f42a03ce9a7a0f2b7c5dffad4a2b239d8",
+      "switch": "SHADERLOD_REFLECTION_DEPTH_CACHE"
+    },
+    {
+      "name": "procedural",
+      "manifest_path": "patches/photon-experiments/procedural-lod.json",
+      "manifest_sha256": "5849bc24c84f98b42a4ad7a85b013cdab6bb229a3f8c2d8e8c48d6097cd9e687",
+      "builder_path": "scripts/build_photon_procedural_lod.py",
+      "builder_sha256": "44c0b8f395d02428cc3bf54574f03e915b30dd67615a0e8107f06fc56003a6dd",
+      "switch": "SHADERLOD_PROCEDURAL_FOOTPRINT"
+    },
+    {
+      "name": "volumetric",
+      "manifest_path": "patches/photon-experiments/volumetric-lod.json",
+      "manifest_sha256": "08e1611a77a2f6d6364b91eda692ea2e300b1c3c2891c87d7abd6ecec98def9b",
+      "builder_path": "scripts/build_photon_volumetric_lod.py",
+      "builder_sha256": "6d2e7e2c83584e3592e3ab65103852caed1a5da8acd14c81860109769309f6f2",
+      "switch": "SHADERLOD_VOLUMETRIC_INTEGRATION_LOD"
+    }
+  ],
+  "settings_anchor": "#define SETTINGS_INCLUDED\n",
+  "core_version": 2,
+  "effect_versions": [
+    1,
+    2
+  ],
+  "original_inventory_sha256": "595f5a515124e493072377222f4d1b2d8ad19445fe3261c882b6c4f060789735",
+  "disabled_member_sha256": {
+    "shaders/include/lighting/specular_lighting.glsl": "8d600e6f0d77443a3f029a553f64819a3909cf0bf323dccacd4c2dfffd80f736",
+    "shaders/include/shaderlod/combined_core.glsl": "2af74bf4e5c69df359ae1fb14acd5415bcf885cd25481641abb47671d3c4f186",
+    "shaders/include/shaderlod/photon_volume_adapter.glsl": "1a43641b71a7da67abed86aa9f5ad8c5489f3c546c002faf602c0fa91efcf7f1",
+    "shaders/include/shaderlod/procedural_footprint.glsl": "4c5bd082702dcb2447e40a2e59753cbcd9a15a252a857b6821de36a8d0755e4d",
+    "shaders/include/shaderlod/procedural_parallax.glsl": "e5d5f85afde015ab68256aa3a0976fe9028fbab96d12bf457c63eb35ef26e009",
+    "shaders/include/shaderlod/procedural_water.glsl": "7377d0a84743bbc72c55cc6cb95ced5f429ec17cdf11b12e7eb309030d70048a",
+    "shaders/include/shaderlod/reflection_depth_cache.glsl": "d485ee0ac883636ab3cb03962176c003b52d5c64cf77c74a1187d04a0f7b46a8",
+    "shaders/include/shaderlod/volume_budget.glsl": "ac1d7984264ffa6dfe5f525663cee69499511d15769d1f56d5497d491d9a8a84",
+    "shaders/include/sky/clouds/cumulus.glsl": "5290d3c0c56693608c6cfe8efec831b67023334729d4f549b3551f430603d8e2",
+    "shaders/program/gbuffers_all_translucent.fsh": "ddaa1f119d497c6b5bda24d43ba9a57f9fae6f8285517f4fc7e953796e813625",
+    "shaders/settings.glsl": "5532a4c66458cdc2a99bcc3f3e37fd62c010f1c8d47c023cdd3429e1d855a4a4"
+  }
+}

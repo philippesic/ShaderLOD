@@ -1,4 +1,4 @@
-#ifndef SHADERLOD_PROCEDURAL_FOOTPRINT_INCLUDED
+#if !defined SHADERLOD_PROCEDURAL_FOOTPRINT_INCLUDED
 #define SHADERLOD_PROCEDURAL_FOOTPRINT_INCLUDED
 // General carrier-plus-modulator footprint policy. Derivatives supplied by caller
 // in procedural coordinate units per raster pixel, captured before divergence.
