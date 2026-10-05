@@ -2002,3 +2002,25 @@ folder. No otherclient/heavybuild/tests/encoder. Next actual three terminal
 contracts, costs, visual tradeoff before meaningful repeated/movingcamera work.
 Allworkers completed/frozen; shared main/config/helper ownership stillreserved.
 Fullgoalactive: ordinary15%, broadconfig/adapterquality/support remainunmet.
+
+
+## Complementary native controls complete; next bounded work
+
+Previous goalturnprogress: SSR newmode/runtimecontrols+originalComplementary
+rendered/committed. Currentexec38518 exit0, all3 nativecasesaccepted, no game live.
+Full/sky/Potato FPS65.590/73.126/72.759, GPU13.7679/12.3120/12.3002,
+thread7.1079/7.1449/7.1385. Native lowerquality~10.6%GPUdifference only. Rootsky
+losesland/treereflections, Potato projectedreflections visiblyshift. Notadapter/
+qualityequivalence. Raw dev/logs/complementary-native-water-pilot-r1 intact.
+
+Workeroptimization_research ownsONLY NEWdocs/PHOTON_NATIVE_ATTRIBUTION_PLAN.md,
+source-only exact scopes/profileflags/samplinglimits (no client/compiler). Source
+notes N16 may alias cloud checkerboard16phase; no guaranteed coverage without
+actualframeCounter/runTick relationship. Rootnextreviewfreeze andsourcepreserving
+nativePhoton coarsepass/terrain/CPUmeasurements, distinctacceptanceframeonly.
+Workercamera_quality ownsONLY NEWscripts/prepare_complementary_quality_profiles.py,
+NEWtests/test_complementary_quality_profiles.py andNEWdocs/COMPLEMENTARY_MOTION_QUALITY.md:
+unchangedoriginal/nativequality controls fixedsafeSUNpose20s2FPS41slots,
+firstwaypointmatchescontrol87.38/3.735, NONE/fullblockguard/maxinflight1. Stopbefore
+runtime. RootsoleGPU/allpriorclientsstopped; no main/shared/design changes.
+Fullgoalactive ordinary15%/broadconfig/support/quality acceptance stillunmet.

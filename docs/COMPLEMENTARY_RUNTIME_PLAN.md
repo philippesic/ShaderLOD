@@ -315,3 +315,25 @@ Raw dev/logs/complementary-original-smoke-r1 contains exact matrix/inputs/
 artifacts/options/summary/console/final PNG. Root prepared a second fresh set
 from the same stopped original source for native water controls; those costs
 and images remain pending. License remains unchanged; no derivative produced.
+
+
+## Native water reflection pilot terminal
+
+exec38518 exit0; three cases completed and runner accepted actual fixed source,
+artifacts/options/control/window/wetness/class/input/PNG contracts. Minimal/noDH/
+mainabsent/native2976x1672/35swarm20scapture/GPU1/16, same full pinned release.
+
+| Native water option | FPS | Mean GPU ms | Render-thread ms |
+| --- | --- | --- | --- |
+| Full2 | 65.590 | 13.7679 | 7.1079 |
+| Sky0 | 73.126 | 12.3120 | 7.1449 |
+| Potato1 | 72.759 | 12.3002 | 7.1385 |
+
+Single serial pilot sky/Potato GPU reductions10.57%/10.66%, different quality.
+Root sky image loses reflected shoreline/trees; Potato retains projected
+reflections but tree/terrain positions visibly differ from full. This is no
+ShaderLOD adapter or quality-equivalent gain. Static resized inspection cannot
+accept motion/near-far transitions. New-biome/End expression warnings retained
+in all logs. Source-exact mod-absent native experiments require repeated controls
+and motion checks before any broader inference. Raw complete matrix/captures:
+dev/logs/complementary-native-water-pilot-r1. No derivative or license change.

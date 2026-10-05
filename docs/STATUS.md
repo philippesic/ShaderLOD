@@ -143,5 +143,6 @@ claimed from this chat’s pack diagnostics.
 Complementary original/native-water controls now have pinned preparation tooling;
 7 new and 19 prior matrix fixtures passed. Original HIGH rendered at native resolution/minimal/noDH with no fallback:
 64.24 FPS and 14.07 ms GPU in one smoke, no gain claim. Iris new-biome/End
-uniform warnings retained. A fresh three-arm native reflection cost pilot is
-running; actual tradeoff/support/motion acceptance remains pending.
+uniform warnings retained. The native three-arm pilot completed: full13.77ms, sky12.31ms, Potato12.30ms.
+Sky loses reflected trees and Potato shifts them; no adapter/quality-equivalent
+gain claimed. Motion preparation and Photon native attribution review are active.
