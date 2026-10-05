@@ -7,6 +7,8 @@ Aggressive presets preserve near work and reduce distant sampling. Shadow and
 occlusion budgets are protected by default. Starting terrain boundaries are
 32/96 blocks; cloud bands default to 128/1024 blocks with a 64-block transition.
 Water uses separate 96/256-block bands and keeps the original near-water path.
+Cheap water kernels use fixed loop counts; analytic normals remain experimental
+and default off until measured benefits justify them.
 
 Development targets **Minecraft 1.21.1**, chosen for the established NeoForge
 ecosystem. [Version selection](docs/VERSION_SELECTION.md) records the public
@@ -103,7 +105,7 @@ Build and packaging checks:
 python3 -m unittest discover -s tests -v
 ```
 
-Install `glslangValidator` to run the 792 fragment-program compilation variants;
+Install `glslangValidator` to run the 1,017 fragment-program compilation variants;
 that check is skipped when the executable is absent. Iris/OpenGL runtime checks
 are separate. Results and limitations are recorded with the active goal;
 individual pass savings do not imply a proportional whole-frame improvement.

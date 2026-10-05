@@ -1,110 +1,159 @@
-# Photon water-normal candidate and usable cloud defaults
+# Photon static water-loop candidate
 
-Prepared 2026-10-04 for the sustained performance goal. Owner: shader worker.
-This is a statically validated rendering hypothesis; runtime compilation,
-transition fidelity and GPU gains belong to the coordinator's measurements.
-Pinned Photon remains v1.3b; original archive hashes are unchanged.
+Updated 2026-10-04 for the sustained performance goal. This is a statically
+validated source hypothesis. Actual Apple driver compilation, repeated GPU
+performance and moving-water quality remain coordinator checks. Photon remains
+pinned to v1.3b, with unchanged original artifact hashes and retained license.
 
-## Mechanism
+## Why the water implementation changed again
 
-Photon's `include/surface/water_normal.glsl:get_water_normal` computes three
-wave heights at adjacent coordinates, subtracts them, and normalizes the result.
-Each height evaluation samples one noise texture per wave octave and evaluates
-one Gerstner-wave sine per octave. With height variation enabled, each height
-also samples its variation texture. Existing ShaderLOD reduced octave counts
-at distance but retained all three evaluations.
+The previous explicit patch reduced water octave counts by passing a per-pixel
+integer into the original height function. Both wave-noise and height loops then
+used dynamic bounds, including inside parallax. Near/disabled results matched
+upstream mathematically, but the compiler no longer saw its original constant
+loop source. The first analytic shoreline pilot regressed around 140→113 FPS;
+a later finite-normal pilot was also negative around 143→134. Those short pairs
+changed other active effects too and do not prove dynamic loops or the analytic
+normal caused the loss. See [WATER_LOOP_SPECIALIZATION.md](WATER_LOOP_SPECIALIZATION.md).
 
-The candidate evaluates analytic wave slopes once for medium/far water. The
-Gerstner height is `(0.5 + 0.5 sin(phi))^2`, so its spatial derivative with
-locally constant noise is `(0.5 + 0.5 sin(phi)) cos(phi) * dphi/dcoord`.
-The new `get_water_gradient` accumulates that derivative with the original
-frequency, wavelength, amplitude, rotation and height normalization. It keeps
-height variation as a multiplier. This avoids two thirds of the wave noise
-texture fetches and two height evaluations in affected surface pixels. The
-new gradient uses both sine and cosine, so the arithmetic reduction is smaller
-than the texture/evaluation reduction and GPU benefit is unproven.
+The candidate now retains these **original Photon function bodies byte for
+byte** in `include/surface/water_normal.glsl`: gerstner_wave, water_waves_setup,
+get_water_height, get_water_normal and get_water_parallax_coord. Original
+functions keep compile-time WATER_WAVE_ITERATIONS and the four-step full
+parallax source. Shadow caustic call sites remain upstream and unchanged.
 
-The noise texture derivative and slower height-variation derivative are omitted.
-This changes distant normal detail and is an explicit approximation. It does
-not flatten the water normal or modify geometric shadows/AO. It is unsuitable
-for a claim of mathematically identical full-noise normals. Near, disabled and
-shadow caustic paths keep the original three finite-difference heights and
-original normalization expression. The branch selects one path before those
-expensive evaluations; it does not evaluate both normals and blend afterward.
+Vanilla water and DH distant-water surface call sites invoke explicit LOD
+wrappers. Tier 0/disabled returns the original full function. Medium/far normal
+paths dispatch to fixed-count helper functions, and medium parallax dispatches
+to a fixed octave/step pair. Far parallax retains the earlier coordinate-return
+policy. Current enable/preset transport remains the existing Iris mod bridge;
+unknown bridge versions retain shader-option fallback semantics.
 
-## Options and budgets
+## Literal-count specialization
+
+New ShaderLOD includes implement fixed height/normal templates and a parallax
+template. water_lod.glsl emits only reachable counts for the configured original
+option and the three live presets. Original 3 finite mode emits only cheap 1/2
+height-normal kernels, rather than eight unrelated kernels; equal full budgets
+reuse the original function. Cheap loops and temporary arrays have literal
+preprocessor counts, and their normalization has a compile-time exponent.
+Medium parallax kernels use literal 3/2/1 step counts for Balanced/Performance/
+Aggressive and call a literal cheap-height function or the original full height.
+They preserve the original first-crossing while condition and interpolation.
+
+The cap formulas are integer ceil ratios matching the existing helper:
+medium B/P/A = ceil(3N/4), ceil(N/2), ceil(N/4);
+far B/P/A = ceil(N/2), ceil(N/4), ceil(N/8), for supported original N 1–8.
+They never increase the selected original count. The driver can now specialize
+these fixed kernels; source does not establish actual unrolling, register
+allocation or execution cost. Transition pixels still diverge between chosen
+paths. Only one helper runs per selected pixel, rather than computing every
+normal and blending afterward.
+
+Near source is preserved literally, but calling the wrapper still adds tier
+classification when enabled. Disabling through the bridge returns full quality;
+compile-time disabled controls can eliminate even that dynamic branch structure.
+Keep these two disabled-control meanings distinct when attributing small costs.
+
+## Analytic normal remains an experimental, default-off option
+
+`SHADERLOD_WATER_ANALYTIC` now defaults **false**. No repeatable measured positive
+result established its benefit, and the severe first pilot motivates keeping
+finite differences as the candidate default. A stored profile option=true still
+overrides this source default; explicitly set false for finite benchmark arms.
+
+The option remains available for an isolated test. Its medium/far derivative
+kernels now also have literal counts. They differentiate the original squared
+sine Gerstner term with locally constant noise, retain frequency/amplitude/
+wavelength/rotation/normalization and scalar height variation, and omit noise
+and height-variation texture derivatives. This is an approximation. Near and
+shadow paths always retain original finite differences. Analytic helper selection
+can change sampled texture/trigonometric work, but arithmetic counts and extra
+sine/cosine calls do not prove a complete frame-time benefit.
+
+## Existing options and quality boundaries
 
 | Option | Default | Meaning |
 | --- | ---: | --- |
-| `SHADERLOD_WATER_ANALYTIC` | true | Analytic medium/far normals; false retains finite differences at the selected octave count. |
-| `SHADERLOD_WATER_NEAR` | 96 blocks | Center of full-to-medium transition. Full quality through 80 blocks at the default width. |
-| `SHADERLOD_WATER_FAR` | 256 blocks | Center of medium-to-low transition. Fully low from 272 blocks. |
-| `SHADERLOD_WATER_TRANSITION` | 32 blocks | Smooth probabilistic tier transitions; zero gives hard thresholds. |
-| `SHADERLOD_CLOUD_NEAR` | 128 blocks | Replaces ineffective legacy 512-block default. |
-| `SHADERLOD_CLOUD_FAR` | 1024 blocks | Replaces legacy 4096-block default. |
-| `SHADERLOD_CLOUD_TRANSITION` | 64 blocks | Full cloud sampling through 96 blocks. |
+| SHADERLOD_WATER_ANALYTIC | false | Experimental literal-count analytic distant normals; finite differences otherwise. |
+| SHADERLOD_WATER_NEAR | 96 blocks | Full-to-medium center; full through 80 at default width. |
+| SHADERLOD_WATER_FAR | 256 blocks | Medium-to-low center; fully low from 272. |
+| SHADERLOD_WATER_TRANSITION | 32 blocks | Probabilistic transition width. |
+| SHADERLOD_CLOUD_NEAR/FAR/TRANSITION | 128/1024/64 blocks | Existing revised cloud policy; unchanged by this water implementation. |
 
-Water normal and water parallax use the same water bands. The mod's validated
-uniform bridge supplies enabled/preset live; the water/cloud bands remain
-shader-pack options. They do not pretend to follow the generic mod 32/96 bands.
-Disabling ShaderLOD through bridge version 1/2 produces tier zero at all
-water distances. Unknown bridge versions use pack fallbacks.
+Water and cloud bands remain shader options; the live mod supplies enable and
+preset. Generic mod 32/96/8 bands still govern other surface effects. Water bands
+are deliberately longer, preserving more water/parallax work than the old
+32/96 policy. Original shadows/AO remain protected and cached sky approximation
+stays off. The water specialization does not modify cloud ray spacing, cloud
+noise or fog/SSR budgets.
 
-Photon defaults to three wave octaves. At those original settings, Balanced
-uses 3/2 medium/far, Performance 2/1, and Aggressive 1/1. The Performance
-medium normal drops wave-noise fetches from 9 original to 2 (the former
-finite-difference LOD used 6), before parallax and other work.
+Photon defaults to three original wave octaves. Balanced normal uses 3/2
+medium/far, Performance 2/1 and Aggressive 1/1. These are selected kernel budgets,
+not measured instructions or frame savings. Full near remains 3 and shadow
+caustics remain original. At eight original octaves, medium B/P/A is 6/4/2 and
+far is 4/2/1; those reachable kernels are compiled only when required by that
+configured original count.
 
-An eight-octave original water setting keeps eight near octaves. Balanced uses
-6/4 medium/far octaves; Performance uses 4/2; Aggressive uses 2/1. Those budgets
-are caps and never increase original settings. At Performance medium quality,
-normal wave-noise fetches fall from the original 24 to 4 rather than the former
-LOD's 12. Optional variation fetches fall from 3 to 1. This count excludes
-parallax, reflection, fog and other pixel work. Far water parallax still follows
-the prior skip policy; medium parallax still reduces its own steps.
+The main pack retains the previously introduced conditional terrain-atmosphere
+calculation, unchanged by this task. It is distance-independent work avoidance
+with unverified runtime benefit. A separate ignored-source-root artifact omits
+only that patch for strict comparison against preserved water-only 7ca. Its
+metadata identifies the exact source manifest/overlay hashes; it is an explicit
+isolation artifact, not a silent source change.
 
-The 128/1024/64 cloud defaults match the previous measured premium-cloud
-candidate, rather than adding a new cloud algorithm. Original surface lighting
-is still protected and cached sky lighting remains off. Stored user options
-can retain older cloud bands and override these defaults; explicitly record
-resolved profile options in every benchmark.
+## Static checks and runtime stopping boundary
 
-## Checks and acceptance boundary
+The deterministic builder verifies pinned archive/source hashes and literal
+anchors. Original water function-body equality and upstream shadow-file equality
+are tested independently. Packaging preserves unmodified upstream bytes and
+license. The only new upstream source target compared with the previous pack is
+the distant-water call site in include/misc/distant_water.glsl.
 
-The package builder still verifies exact pinned source hashes and unambiguous
-literal patch anchors. The source targets remain settings/properties/language
-and the already supported water-normal include. No new sampler is introduced.
-The license and all unmodified upstream bytes remain preserved.
+Actual GLSL helper bodies are executed in CPU adapters against independently
+instantiated original Photon height, finite-normal and parallax bodies for all
+original settings 1–8. Fixtures span all presets/tiers, coordinate-dependent
+procedural noise and constant noise, height variation on/off, flowing/still
+rotation, several coordinates, times and grazing/regular view directions.
+Finite height/normal/parallax results must agree to documented double-adapter
+absolute tolerance 1e-9; real GPU floating-point tolerances remain separate.
+Constant-noise gradient checks use independent central differences with 1e-5
+slope tolerance. Shadow and near routing preserve the original full result even
+when the analytic option is compiled. Preprocessed fixtures also assert that
+only reachable cheap kernels are emitted.
 
-`python3 -m unittest discover -s tests -v` checks reproducible packaging, source
-hash failures, option legality, actual helper distance math, dynamic bridge
-on/off/preset behavior and actual GLSL gradient bodies against independent
-finite differences of actual wave-height bodies with constant noise. The
-CPU gradient oracle spans 1/2/4/8 octaves, multiple positions/directions and
-height variation both on and off. It checks derivative sign, scale, rotation
-and normalization; real texture derivatives are deliberately outside its claim.
-Static result: 11 tests passed in 45.146 seconds; raw output is retained at
-`dev/logs/photon-optimization-static-tests.log` outside Git.
+The broad fragment matrix covers all three dimensions and 11 programs across 25
+variants (825 compilations); a focused 192-compilation water matrix covers all
+original settings 1–8, three presets, analytic on/off and vanilla/DH/shadow/
+composite-water programs. Total 1017 GLSL compilations check syntax/types without
+emulating Iris or the real GPU. Static success does not confirm a performance
+improvement.
 
-The fragment matrix expands all three dimensions and 11 original/vanilla/DH
-programs across 22 configurations (726 GLSL compilations), including analytic
-off, height variation off, disabled LOD, protected/legacy lighting and shadow
-caustic variants. These checks do not emulate Iris or the OpenGL driver.
+Coordinator next controls: original absent-mod, patched bridge-disabled, active
+finite specialization and active analytic specialization on the same inspected
+SSR shoreline. Use the no-atmosphere isolation archive if comparing directly
+with the old 7ca pilot. Keep DH presence, wetness telemetry, geometry, camera,
+resolution, upstream cloud/fog/SSR settings and real clock policy identical.
+Repeat balanced complete-JVM pairs, retain variability and inspect motion,
+transition bands, near water and shadow caustics. A separate effect-isolation
+pack can restore clouds/fog/SSR to upstream if the combined active arm regresses.
+The ordinary-scene performance gate remains unmet until those measurements
+prove otherwise. No new shader support follows from static tests alone.
 
-Coordinator runtime comparisons should include original mod-absent, patched
-bridge-disabled, active analytic-off and active analytic-on with identical
-`WATER_WAVES=true`/`WATER_PARALLAX` settings. Keep geometry policy off to isolate
-shader benefit. Use original wave iteration settings for both original and
-active; do not inflate the high baseline. Inspect near water, distance bands,
-flowing water, reflections and camera motion before advertising quality.
-Record whole-render CPU/GPU results and repeat variability. Ordinary forest
-water and a coastal view are candidate workloads; the premium-cloud result
-remains separate. There are no new measured performance claims in this file.
+Static checkpoint: 13 shaderpack tests passed in 71.928 seconds, including 1017
+fragment compilations. The final numerical fixture additionally passed in 14.673
+seconds after expanding to three animation phases. Raw output remains ignored
+at dev/logs/photon-static-water-tests.log and
+photon-static-water-math-tests.log. No Minecraft process was launched here.
 
+| Built artifact | SHA256 |
+| --- | --- |
+| build/photon-static-water-candidate.zip (main source, existing atmosphere guard) | fe089ff2020168342309713a07082ebc0eddb233daec31ac0ee61c9a264ce8f8 |
+| build/photon-static-water-no-atmosphere.zip (strict water isolation) | 39fcc8132e958157e02a13ea2055ad6fdbaed7a92ca54133148d03b0b7667436 |
 
-A subsequent coordinator-authorized structural candidate guards unused terrain
-atmosphere work while retaining original enabled sky and border/blocky-cloud
-behavior. It is independent of distance budgets. See
-[PHOTON_NEXT_OPTIMIZATIONS.md](PHOTON_NEXT_OPTIMIZATIONS.md) for exact source and
-pinned Iris sampler evidence. The expanded matrix has 24 variants / 792 fragment
-compilations; runtime benefit remains unverified.
+The isolation source root is build/static-water-no-atmosphere-source. Its
+manifest SHA256 is a65c1f1b1d787d5fabb97485cadccc684c1ebf9275dd9469a8ed1fe40459b9ae;
+the main manifest is 6d80df2a9537df2eb66285c412a62e4397eb70ac18e92869b29532b9947efaa4.
+Both archives embed shaderlod-build.json with exact per-overlay hashes. The
+isolation cloud-march files and d4 source were checked byte-identical to the
+preserved 7ca water-only archive. It does not add another algorithmic change.

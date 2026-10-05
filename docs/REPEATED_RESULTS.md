@@ -63,3 +63,38 @@ runner so repeats do not overwrite quality evidence. Run atmosphere/water
 isolations using the prepared tooling and a DH-absent SSR driver probe suggested
 by the source sampler audit. Do not expand shader targets until Photon meets
 the meaningful-performance and quality gates.
+
+## DH-absent SSR and water pilots
+
+The original Photon shoreline with environment/sky reflections enabled linked
+and rendered on the Apple driver with DH absent. The inspected image contains
+shoreline/tree and sky reflections. This verifies that narrow masked profile;
+full desktop options and DH+SSR remain unverified. The new dev-only wetness
+wrapper applied fixed zero to every observed supplier while retaining raw zero
+and advancing real clocks/counters. Its registration IDs are not program IDs.
+
+The first smoke tag `ssr-original-probe` failed the prepared-camera guard because
+Minecraft normalizes 180 degrees to -180. Its raw capture remains excluded from
+performance rankings. The guard now compares yaw circularly, rejects nonfinite
+values and retains linear position/pitch checks. Fresh `ssr-lod-pilot` completed:
+
+| Single pilot / minimal, no DH | FPS | GPU mean | Thread CPU |
+| --- | ---: | ---: | ---: |
+| Original SSR shoreline | 139.87 | 6.580 ms | 6.634 ms |
+| Patched disabled, analytic archive | 139.33 | 6.540 ms | 6.429 ms |
+| Active analytic archive | 113.05 | 8.135 ms | 7.138 ms |
+
+A separate `ssr-finite-pilot` using the same archive and water bands with analytic
+normals disabled measured original 143.11 FPS / 6.404 ms and active 133.99 /
+6.887 ms. These are single exploratory pairs, not independent multi-repeat
+proof of a culprit. They motivate rejecting the current analytic path as a
+recommended default and isolating compiler-visible loop structure.
+
+Source audit found the earlier patch changed original constant water loops into
+per-pixel dynamic loops, including nested parallax work. The new specialization
+restores untouched original full functions and calls literal-count cheap
+kernels. Analytic remains available but defaults off. Static numerical checks
+and 1017 GLSL compilations passed; current runtime pilot is pending under
+`dev/logs/ssr-static-pilot/`. No performance improvement is inferred from those
+static checks. Cloud source was unchanged so that factor remains a potential
+confounder of the combined active shoreline arm.

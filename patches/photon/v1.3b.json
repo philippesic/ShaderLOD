@@ -6,7 +6,7 @@
       "path": "shaders/settings.glsl",
       "source_sha256": "93401d268fe859cc1df81929ad41156757a98db80f80cf32af80d9cdca96c394",
       "before": "const int noiseTextureResolution = 512;",
-      "after": "// ShaderLOD options (mod bridge falls back to these when ShaderLOD is absent).\n  #define SHADERLOD_ENABLED\n  #define SHADERLOD_USE_MOD_CONFIG\n  #define SHADERLOD_WATER_ANALYTIC\n  #define SHADERLOD_WATER_NEAR 96.0 // [32.0 48.0 64.0 96.0 128.0 192.0]\n  #define SHADERLOD_WATER_FAR 256.0 // [96.0 128.0 192.0 256.0 384.0 512.0]\n  #define SHADERLOD_WATER_TRANSITION 32.0 // [0.0 8.0 16.0 32.0 64.0]\n  #define SHADERLOD_PRESERVE_LIGHTING\n//#define SHADERLOD_CACHED_SKY\n  #define SHADERLOD_PRESET 1 // [0 1 2]\n  #define SHADERLOD_CLOUD_NEAR 128.0 // [64.0 96.0 128.0 192.0 256.0 512.0 1024.0]\n  #define SHADERLOD_CLOUD_FAR 1024.0 // [256.0 512.0 1024.0 2048.0 4096.0 8192.0]\n  #define SHADERLOD_CLOUD_TRANSITION 64.0 // [0.0 32.0 64.0 128.0 256.0 512.0]\n  #define SHADERLOD_NEAR 32.0 // [16.0 24.0 32.0 48.0 64.0]\n  #define SHADERLOD_FAR 96.0 // [48.0 64.0 96.0 128.0 192.0 256.0]\n  #define SHADERLOD_TRANSITION 8.0 // [0.0 4.0 8.0 16.0 24.0 32.0]\n//#define SHADERLOD_DEBUG\n\nconst int noiseTextureResolution = 512;"
+      "after": "// ShaderLOD options (mod bridge falls back to these when ShaderLOD is absent).\n  #define SHADERLOD_ENABLED\n  #define SHADERLOD_USE_MOD_CONFIG\n//#define SHADERLOD_WATER_ANALYTIC\n  #define SHADERLOD_WATER_NEAR 96.0 // [32.0 48.0 64.0 96.0 128.0 192.0]\n  #define SHADERLOD_WATER_FAR 256.0 // [96.0 128.0 192.0 256.0 384.0 512.0]\n  #define SHADERLOD_WATER_TRANSITION 32.0 // [0.0 8.0 16.0 32.0 64.0]\n  #define SHADERLOD_PRESERVE_LIGHTING\n//#define SHADERLOD_CACHED_SKY\n  #define SHADERLOD_PRESET 1 // [0 1 2]\n  #define SHADERLOD_CLOUD_NEAR 128.0 // [64.0 96.0 128.0 192.0 256.0 512.0 1024.0]\n  #define SHADERLOD_CLOUD_FAR 1024.0 // [256.0 512.0 1024.0 2048.0 4096.0 8192.0]\n  #define SHADERLOD_CLOUD_TRANSITION 64.0 // [0.0 32.0 64.0 128.0 256.0 512.0]\n  #define SHADERLOD_NEAR 32.0 // [16.0 24.0 32.0 48.0 64.0]\n  #define SHADERLOD_FAR 96.0 // [48.0 64.0 96.0 128.0 192.0 256.0]\n  #define SHADERLOD_TRANSITION 8.0 // [0.0 4.0 8.0 16.0 24.0 32.0]\n//#define SHADERLOD_DEBUG\n\nconst int noiseTextureResolution = 512;"
     },
     {
       "path": "shaders/shaders.properties",
@@ -18,7 +18,7 @@
       "path": "shaders/lang/en_US.lang",
       "source_sha256": "fa0dad5cf1048c70532d562eb3ac3f0c2739aa81e7bedc29fce049a6c45809f8",
       "before": "# Profiles",
-      "after": "# ShaderLOD\nscreen.shaderlod = ShaderLOD\noption.SHADERLOD_ENABLED = Distance LOD\noption.SHADERLOD_ENABLED.comment = Reduce shadow, AO, fog, cloud, SSR and POM work with distance, including DH terrain.\noption.SHADERLOD_USE_MOD_CONFIG = Use ShaderLOD mod config\noption.SHADERLOD_USE_MOD_CONFIG.comment = Use live mod values when bridge version 1 or 2 is available; otherwise use these options.\noption.SHADERLOD_NEAR = Near boundary (blocks)\noption.SHADERLOD_FAR = Far boundary (blocks)\noption.SHADERLOD_TRANSITION = Transition width (blocks)\noption.SHADERLOD_DEBUG = Show LOD zones\noption.SHADERLOD_DEBUG.comment = Tint opaque vanilla terrain green/full, amber/medium, red/far. Includes DH; excludes sky and hand.\n\noption.SHADERLOD_PRESET = LOD preset\nvalue.SHADERLOD_PRESET.0 = Balanced\nvalue.SHADERLOD_PRESET.1 = Performance\nvalue.SHADERLOD_PRESET.2 = Aggressive\noption.SHADERLOD_CLOUD_NEAR = Cloud near boundary (blocks)\noption.SHADERLOD_CLOUD_FAR = Cloud far boundary (blocks)\noption.SHADERLOD_CLOUD_TRANSITION = Cloud transition width (blocks)\noption.SHADERLOD_CLOUD_TRANSITION.comment = Entire transition band, clamped to avoid overlap or negative starts. Narrow bands retain full quality overhead when using short cloud thresholds.\noption.SHADERLOD_PRESET.comment = Higher presets lower actual ray/sample budgets. Aggressive bypasses far AO.\n\noption.SHADERLOD_CACHED_SKY = Reduce cached sky-map work\noption.SHADERLOD_CACHED_SKY.comment = Global cloud-lighting/reflection approximation: Performance halves cached cloud budgets, Aggressive uses eighth budgets (effect minima apply); Balanced and disabled stay full.\n\noption.SHADERLOD_PRESERVE_LIGHTING = Preserve shadows and occlusion\noption.SHADERLOD_PRESERVE_LIGHTING.comment = Keep original PCF, screen-space shadow, GTAO and SSAO budgets. Recommended: retain tree depth while reducing cloud/fog/water work.\n\n# Profiles\noption.SHADERLOD_WATER_ANALYTIC=Analytic distant water normals\noption.SHADERLOD_WATER_ANALYTIC.comment=Compute medium/far wave slopes in one wave evaluation. Near water and shadow caustics keep original finite differences.\noption.SHADERLOD_WATER_NEAR=Water medium distance\noption.SHADERLOD_WATER_FAR=Water low distance\noption.SHADERLOD_WATER_TRANSITION=Water transition width\n"
+      "after": "# ShaderLOD\nscreen.shaderlod = ShaderLOD\noption.SHADERLOD_ENABLED = Distance LOD\noption.SHADERLOD_ENABLED.comment = Reduce shadow, AO, fog, cloud, SSR and POM work with distance, including DH terrain.\noption.SHADERLOD_USE_MOD_CONFIG = Use ShaderLOD mod config\noption.SHADERLOD_USE_MOD_CONFIG.comment = Use live mod values when bridge version 1 or 2 is available; otherwise use these options.\noption.SHADERLOD_NEAR = Near boundary (blocks)\noption.SHADERLOD_FAR = Far boundary (blocks)\noption.SHADERLOD_TRANSITION = Transition width (blocks)\noption.SHADERLOD_DEBUG = Show LOD zones\noption.SHADERLOD_DEBUG.comment = Tint opaque vanilla terrain green/full, amber/medium, red/far. Includes DH; excludes sky and hand.\n\noption.SHADERLOD_PRESET = LOD preset\nvalue.SHADERLOD_PRESET.0 = Balanced\nvalue.SHADERLOD_PRESET.1 = Performance\nvalue.SHADERLOD_PRESET.2 = Aggressive\noption.SHADERLOD_CLOUD_NEAR = Cloud near boundary (blocks)\noption.SHADERLOD_CLOUD_FAR = Cloud far boundary (blocks)\noption.SHADERLOD_CLOUD_TRANSITION = Cloud transition width (blocks)\noption.SHADERLOD_CLOUD_TRANSITION.comment = Entire transition band, clamped to avoid overlap or negative starts. Narrow bands retain full quality overhead when using short cloud thresholds.\noption.SHADERLOD_PRESET.comment = Higher presets lower actual ray/sample budgets. Aggressive bypasses far AO.\n\noption.SHADERLOD_CACHED_SKY = Reduce cached sky-map work\noption.SHADERLOD_CACHED_SKY.comment = Global cloud-lighting/reflection approximation: Performance halves cached cloud budgets, Aggressive uses eighth budgets (effect minima apply); Balanced and disabled stay full.\n\noption.SHADERLOD_PRESERVE_LIGHTING = Preserve shadows and occlusion\noption.SHADERLOD_PRESERVE_LIGHTING.comment = Keep original PCF, screen-space shadow, GTAO and SSAO budgets. Recommended: retain tree depth while reducing cloud/fog/water work.\n\n# Profiles\noption.SHADERLOD_WATER_ANALYTIC=Analytic distant water normals\noption.SHADERLOD_WATER_ANALYTIC.comment=Experimental, default off: compute medium/far slopes in one evaluation; benefit unverified. Near water and shadow caustics keep original finite differences.\noption.SHADERLOD_WATER_NEAR=Water medium distance\noption.SHADERLOD_WATER_FAR=Water low distance\noption.SHADERLOD_WATER_TRANSITION=Water transition width\n"
     },
     {
       "path": "shaders/include/lighting/shadows/pcss.glsl",
@@ -501,6 +501,12 @@
       "after": "ao * rcp(float(step_count))"
     },
     {
+      "path": "shaders/program/d4_deferred_shading.fsh",
+      "source_sha256": "212081e707c20c78e17cbfd3380b2f22eb696cc1aa14bdf006c07d59f53f67e0",
+      "before": "    vec3 atmosphere = atmosphere_scattering(\n        direction_world,\n        sun_color,\n        sun_dir,\n        moon_color,\n        moon_dir,\n        /* use_klein_nishina_phase */ depth == 1.0\n    );",
+      "after": "    // Preserve all original inputs and full sky quality. With border fog and\n    // blocky clouds off, terrain has no consumer for this four-LUT calculation.\n    vec3 atmosphere = vec3(0.0);\n    if (shaderlod_needs_atmosphere(depth)) {\n        atmosphere = atmosphere_scattering(\n            direction_world,\n            sun_color,\n            sun_dir,\n            moon_color,\n            moon_dir,\n            /* use_klein_nishina_phase */ depth == 1.0\n        );\n    }"
+    },
+    {
       "path": "shaders/include/surface/water_normal.glsl",
       "source_sha256": "a6d2dc6bed11d723e5468e22f46b9d8c2fdb090a3e2e1b5131ff1759e89849d3",
       "before": "#define INCLUDE_MISC_WATER_NORMAL",
@@ -509,110 +515,26 @@
     {
       "path": "shaders/include/surface/water_normal.glsl",
       "source_sha256": "a6d2dc6bed11d723e5468e22f46b9d8c2fdb090a3e2e1b5131ff1759e89849d3",
-      "before": "float get_water_height(vec2 coord, vec2 wave_dir, mat2 wave_rot, float t) {",
-      "after": "float get_water_height(vec2 coord, vec2 wave_dir, mat2 wave_rot, float t, int wave_iterations) {"
-    },
-    {
-      "path": "shaders/include/surface/water_normal.glsl",
-      "source_sha256": "a6d2dc6bed11d723e5468e22f46b9d8c2fdb090a3e2e1b5131ff1759e89849d3",
-      "before": "const float amplitude_normalization_factor",
-      "after": "float amplitude_normalization_factor"
-    },
-    {
-      "path": "shaders/include/surface/water_normal.glsl",
-      "source_sha256": "a6d2dc6bed11d723e5468e22f46b9d8c2fdb090a3e2e1b5131ff1759e89849d3",
-      "before": "pow(persistence, float(WATER_WAVE_ITERATIONS))",
-      "after": "pow(persistence, float(wave_iterations))"
-    },
-    {
-      "path": "shaders/include/surface/water_normal.glsl",
-      "source_sha256": "a6d2dc6bed11d723e5468e22f46b9d8c2fdb090a3e2e1b5131ff1759e89849d3",
-      "before": "    for (uint i = 0u; i < WATER_WAVE_ITERATIONS; ++i) {\n        wave_noise",
-      "after": "    for (uint i = 0u; i < uint(wave_iterations); ++i) {\n        wave_noise"
-    },
-    {
-      "path": "shaders/include/surface/water_normal.glsl",
-      "source_sha256": "a6d2dc6bed11d723e5468e22f46b9d8c2fdb090a3e2e1b5131ff1759e89849d3",
-      "before": "    for (uint i = 0u; i < WATER_WAVE_ITERATIONS; ++i) {\n        height",
-      "after": "    for (uint i = 0u; i < uint(wave_iterations); ++i) {\n        height"
-    },
-    {
-      "path": "shaders/include/surface/water_normal.glsl",
-      "source_sha256": "a6d2dc6bed11d723e5468e22f46b9d8c2fdb090a3e2e1b5131ff1759e89849d3",
-      "before": "    const float h = 0.1;",
-      "after": "#if defined PROGRAM_SHADOW\n    // Keep caustic-map generation identical; this policy is surface shading.\n    const int quality = 0;\n    int wave_iterations = WATER_WAVE_ITERATIONS;\n#else\n    int quality = shaderlod_water_quality_at(distance(world_pos, cameraPosition), gl_FragCoord.xy, float(frameCounter));\n    int wave_iterations = shaderlod_budget(WATER_WAVE_ITERATIONS, quality, 1);\n#endif\n    const float h = 0.1;"
-    },
-    {
-      "path": "shaders/include/surface/water_normal.glsl",
-      "source_sha256": "a6d2dc6bed11d723e5468e22f46b9d8c2fdb090a3e2e1b5131ff1759e89849d3",
-      "before": "    float wave0 = get_water_height(coord, wave_dir, wave_rot, t);",
-      "after": "    float wave0 = get_water_height(coord, wave_dir, wave_rot, t, wave_iterations);"
-    },
-    {
-      "path": "shaders/include/surface/water_normal.glsl",
-      "source_sha256": "a6d2dc6bed11d723e5468e22f46b9d8c2fdb090a3e2e1b5131ff1759e89849d3",
-      "before": "    float depth_value = get_water_height(coord, wave_dir, wave_rot, t);",
-      "after": "    float depth_value = get_water_height(coord, wave_dir, wave_rot, t, wave_iterations);"
-    },
-    {
-      "path": "shaders/include/surface/water_normal.glsl",
-      "source_sha256": "a6d2dc6bed11d723e5468e22f46b9d8c2fdb090a3e2e1b5131ff1759e89849d3",
-      "before": "        depth_value = get_water_height(coord, wave_dir, wave_rot, t);",
-      "after": "        depth_value = get_water_height(coord, wave_dir, wave_rot, t, wave_iterations);"
-    },
-    {
-      "path": "shaders/include/surface/water_normal.glsl",
-      "source_sha256": "a6d2dc6bed11d723e5468e22f46b9d8c2fdb090a3e2e1b5131ff1759e89849d3",
-      "before": "get_water_height(coord + vec2(h, 0.0), wave_dir, wave_rot, t)",
-      "after": "get_water_height(coord + vec2(h, 0.0), wave_dir, wave_rot, t, wave_iterations)"
-    },
-    {
-      "path": "shaders/include/surface/water_normal.glsl",
-      "source_sha256": "a6d2dc6bed11d723e5468e22f46b9d8c2fdb090a3e2e1b5131ff1759e89849d3",
-      "before": "get_water_height(coord + vec2(0.0, h), wave_dir, wave_rot, t)",
-      "after": "get_water_height(coord + vec2(0.0, h), wave_dir, wave_rot, t, wave_iterations)"
-    },
-    {
-      "path": "shaders/include/surface/water_normal.glsl",
-      "source_sha256": "a6d2dc6bed11d723e5468e22f46b9d8c2fdb090a3e2e1b5131ff1759e89849d3",
-      "before": "vec2 get_water_parallax_coord(\n    vec3 tangent_dir,",
-      "after": "vec2 get_water_parallax_coord(\n    vec3 world_pos,\n    vec3 tangent_dir,"
-    },
-    {
-      "path": "shaders/include/surface/water_normal.glsl",
-      "source_sha256": "a6d2dc6bed11d723e5468e22f46b9d8c2fdb090a3e2e1b5131ff1759e89849d3",
-      "before": "    const int step_count = 4;",
-      "after": "#if defined PROGRAM_SHADOW\n    const int quality = 0;\n#else\n    int quality = shaderlod_water_quality_at(distance(world_pos, cameraPosition), gl_FragCoord.xy, float(frameCounter));\n#endif\n    if (quality == 2) return coord;\n    int step_count = shaderlod_budget(4, quality, 1);\n    int wave_iterations = shaderlod_budget(WATER_WAVE_ITERATIONS, quality, 1);"
+      "before": "#endif // INCLUDE_MISC_WATER_NORMAL",
+      "after": "#include \"/include/shaderlod/water_lod.glsl\"\n\n#endif // INCLUDE_MISC_WATER_NORMAL"
     },
     {
       "path": "shaders/program/gbuffers_all_translucent.fsh",
       "source_sha256": "01c04bc017069cf19c319a0a0875ca706554575dd01e291e17cad8565645b82f",
-      "before": "            coord = get_water_parallax_coord(\n                direction_tangent,",
-      "after": "            coord = get_water_parallax_coord(\n                world_pos,\n                direction_tangent,"
+      "before": "get_water_normal(",
+      "after": "get_water_normal_lod("
     },
     {
-      "path": "shaders/include/surface/water_normal.glsl",
-      "source_sha256": "a6d2dc6bed11d723e5468e22f46b9d8c2fdb090a3e2e1b5131ff1759e89849d3",
-      "before": "vec3 get_water_normal(\n",
-      "after": "// Evaluate wave slopes once instead of three finite-difference heights.\n// Noise is low frequency relative to the waves; its derivative (and the\n// slower height-variation derivative) is deliberately omitted at distance.\nvec2 get_water_gradient(vec2 coord, vec2 wave_dir, mat2 wave_rot, float t, int wave_iterations) {\n    const float wave_frequency = 0.7 * WATER_WAVE_FREQUENCY;\n    const float persistence = 0.5 * WATER_WAVE_PERSISTENCE;\n    const float lacunarity = 1.7 * WATER_WAVE_LACUNARITY;\n    const float noise_frequency = 0.007;\n    const float noise_strength = 2.0;\n    float normalization = (1.0 - persistence) /\n        (1.0 - pow(persistence, float(wave_iterations)));\n    vec2 noise_coord = (coord + vec2(0.0, 0.25 * t)) * noise_frequency;\n    vec2 gradient = vec2(0.0);\n    float wavelength = 1.0;\n    float amplitude = 1.0;\n    float frequency = wave_frequency;\n    for (int i = 0; i < wave_iterations; ++i) {\n        float noise = texture(noisetex, noise_coord).y * noise_strength;\n        float k = tau / wavelength;\n        float phase = sqrt(9.8 * k) * t - k * (dot(wave_dir, coord * frequency) + noise);\n        float wave = sin(phase) * 0.5 + 0.5;\n        gradient += (-k * frequency * wave * cos(phase) * amplitude) * wave_dir;\n        amplitude *= persistence;\n        frequency *= lacunarity;\n        wavelength *= 1.5;\n        noise_coord *= 2.5;\n        wave_dir *= wave_rot;\n    }\n#ifdef WATER_WAVES_HEIGHT_VARIATION\n    float height_noise = texture(noisetex,\n        (coord + vec2(0.0, 0.1 * t)) * 0.001).y;\n    gradient *= max(0.4, height_noise * 2.0 - 0.5);\n#endif\n    return gradient * normalization;\n}\n\nvec3 get_water_normal(\n"
+      "path": "shaders/include/misc/distant_water.glsl",
+      "source_sha256": "5757afc498ee87130a023a1d2b51600bd5a988f94c978bb2c86d465f68b6924e",
+      "before": "get_water_normal(",
+      "after": "get_water_normal_lod("
     },
     {
-      "path": "shaders/include/surface/water_normal.glsl",
-      "source_sha256": "a6d2dc6bed11d723e5468e22f46b9d8c2fdb090a3e2e1b5131ff1759e89849d3",
-      "before": "    float wave0 = get_water_height(coord, wave_dir, wave_rot, t, wave_iterations);\n    float wave1 = get_water_height(coord + vec2(h, 0.0), wave_dir, wave_rot, t, wave_iterations);\n    float wave2 = get_water_height(coord + vec2(0.0, h), wave_dir, wave_rot, t, wave_iterations);",
-      "after": "    vec2 wave_delta;\n#ifdef SHADERLOD_WATER_ANALYTIC\n    if (quality != 0) {\n        wave_delta = h * get_water_gradient(coord, wave_dir, wave_rot, t, wave_iterations);\n    } else\n#endif\n    {\n        // Exact original evaluation in near/disabled/shadow paths.\n        float wave0 = get_water_height(coord, wave_dir, wave_rot, t, wave_iterations);\n        float wave1 = get_water_height(coord + vec2(h, 0.0), wave_dir, wave_rot, t, wave_iterations);\n        float wave2 = get_water_height(coord + vec2(0.0, h), wave_dir, wave_rot, t, wave_iterations);\n        wave_delta = vec2(wave1 - wave0, wave2 - wave0);\n    }"
-    },
-    {
-      "path": "shaders/include/surface/water_normal.glsl",
-      "source_sha256": "a6d2dc6bed11d723e5468e22f46b9d8c2fdb090a3e2e1b5131ff1759e89849d3",
-      "before": "    vec3 normal = vec3(wave1 - wave0, wave2 - wave0, h);",
-      "after": "    vec3 normal = vec3(wave_delta, h);"
-    },
-    {
-      "path": "shaders/program/d4_deferred_shading.fsh",
-      "source_sha256": "212081e707c20c78e17cbfd3380b2f22eb696cc1aa14bdf006c07d59f53f67e0",
-      "before": "    vec3 atmosphere = atmosphere_scattering(\n        direction_world,\n        sun_color,\n        sun_dir,\n        moon_color,\n        moon_dir,\n        /* use_klein_nishina_phase */ depth == 1.0\n    );",
-      "after": "    // Preserve all original inputs and full sky quality. With border fog and\n    // blocky clouds off, terrain has no consumer for this four-LUT calculation.\n    vec3 atmosphere = vec3(0.0);\n    if (shaderlod_needs_atmosphere(depth)) {\n        atmosphere = atmosphere_scattering(\n            direction_world,\n            sun_color,\n            sun_dir,\n            moon_color,\n            moon_dir,\n            /* use_klein_nishina_phase */ depth == 1.0\n        );\n    }"
+      "path": "shaders/program/gbuffers_all_translucent.fsh",
+      "source_sha256": "01c04bc017069cf19c319a0a0875ca706554575dd01e291e17cad8565645b82f",
+      "before": "get_water_parallax_coord(\n                direction_tangent,",
+      "after": "get_water_parallax_coord_lod(\n                world_pos,\n                direction_tangent,"
     }
   ]
 }

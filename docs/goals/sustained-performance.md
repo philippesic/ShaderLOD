@@ -180,3 +180,34 @@ Next: compile worker telemetry, launch original DH-absent shoreline SSR smoke
 with short matched capture and inspect driver/errors/actual reflections. Then
 measure fixed-wetness cloud controls and water/atmosphere isolations, plus
 geometry travel/reload restoration before recommending any new default.
+
+## Water specialization checkpoint
+
+Wetness telemetry and screenshot preservation committed as 156fbce. Original
+SSR without DH rendered and exported actual applied/raw zero with real clocks;
+first tag failed only yaw normalization and remains excluded. Corrected SSR
+pilot original/disabled/active: 139.87 / 139.33 / 113.05 FPS, GPU6.580 /6.540 /
+8.135 ms. Finite-no-analytic pilot: original143.11/6.404, active133.99/6.887.
+All remain exploratory single pairs. See REPEATED_RESULTS.md. No recommendation
+or gate pass follows from them.
+
+Shader worker restored original water functions/constant loops and introduced
+literal-count cheap kernels; analytical approximation defaults off. 13
+shaderpack tests and1017GLSL compilations plus actual-function numerical fixtures
+passed. Main candidate with existing atmosphere guard SHAfe089ff2020168342309713a07082ebc0eddb233daec31ac0ee61c9a264ce8f8.
+Clean no-atmosphere candidate SHA39fcc8132e958157e02a13ea2055ad6fdbaed7a92ca54133148d03b0b7667436,
+archive build/photon-static-water-no-atmosphere.zip. Root preparation supports
+both exact hashes and created run-workloads/ssr-static with analytic=false.
+
+Live pilot session5789: high/off/active, minimal stack, no DH, fixedwetness0,
+35s warmup/15s capture, tagssr-static-pilot. Root owns soleGPU; source ZIPs are
+frozen. Wait for terminal handle before any other launch/compile/heavy preparation.
+After it ends, inspect baseline/off/active and images; repeat promising results,
+or isolate cloud/SSR and specialize further rather than proclaiming a win.
+
+Shadow-cache and pass-split source designs now exist. A shadow renderer HEAD
+cancel alone is unsafe (targets cleared earlier; matrices regenerated elsewhere).
+Sky-only pass split frees only one sampler and does not solve both DH+SSR
+blockers. Both designs remain unimplemented research, with costs/quality gates.
+Photon's own license text/attribution is retained under patches/photon; it is not
+the mod's MIT license. Source checkpoint pending commit below; goal remains active.

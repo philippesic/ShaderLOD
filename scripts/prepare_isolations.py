@@ -19,6 +19,8 @@ from prepare_workloads import declared_options
 PINNED = {
     'analytic': ('build/photon-analytic-candidate.zip', '7cae01ced084885d6e66102b26803077fb0ed2093f854fe791b1ac8327abba19'),
     'structural': ('build/photon-structural-candidate.zip', '999eae1c4c3551e0f02d45ae06b517c87f966b87b7ca6a8e779a16566c6a003b'),
+    'static-water': ('build/photon-static-water-candidate.zip', 'fe089ff2020168342309713a07082ebc0eddb233daec31ac0ee61c9a264ce8f8'),
+    'static-water-no-atmosphere': ('build/photon-static-water-no-atmosphere.zip', '39fcc8132e958157e02a13ea2055ad6fdbaed7a92ca54133148d03b0b7667436'),
 }
 ORIGINAL_SHA256 = '120897768eaa8cb1f14a3e98f88dff009ae3204ee3b96904a4fe8586edfc1ead'
 SCENES = ('forest', 'cloudstorm', 'coastalwater')
