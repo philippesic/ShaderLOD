@@ -11,7 +11,9 @@ time) against matched original Photon, with repeated GPU/total-frame and quality
 evidence. This target is unachieved. The previous 15% gate is superseded; historical
 evidence and unresolved checks below remain retained.
 
-Latest checkpoints: `270f992` (123 motion frames), `fc86429` (camera rotation
+Latest checkpoint: `373804c` (new general 50% goal, reusable policy/config/uniform
+interfaces, source tests and unfavorable bounded AO runtime pilot). Earlier
+checkpoints: `270f992` (123 motion frames), `fc86429` (camera rotation
 validator), `a3dd9cd` (motion controls), `8249ce3` (attribution sample spread). Historical failures and raw reports
 remain retained; the latest operational checkpoint is at the end of the goal.
 

@@ -243,3 +243,10 @@ reviewed. Root alone owns GPU/build. No diagnostic density control is assembled,
 compiled, rendered or measured yet. Completed API/audit workers are idle; reuse
 native teams for subsequent independent work. Before any next timing handoff,
 all workers must freeze builds, tests and image processing and record fixed focus.
+
+Local integration checkpoint `373804c` (Start general LOD goal) saved verified
+first-wave sources/docs/tests. Prior dirty build.gradle, shadow design and
+ComparisonClient edits and Miniature preparation files remain uncommitted and
+untouched by this goal. No remote push. Density second-wave files are still
+worker-owned source in progress; await source freeze before tests/assembly, then
+runtime handoff. Native Goal remains active with no token budget requested.
