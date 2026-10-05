@@ -2049,3 +2049,26 @@ diagnosticframecost to acceptanceframeonly orclaim guaranteedcloudphasecoverage.
 Then coastal sameflags afterforestattestedterminal. No otherclient/build/encoder.
 Workers remain sourceonly, cameraqualitynewfiles and attributionplandoc. Goalfull
 active/unshrunk, commonowner/design reserved, no externalmessages/push/publish.
+
+
+## Native forest attribution accepted; coastal live
+
+exec64539 exit0, UUID02cc3c72...c2f1/60scapture4202frames, existingreport UUID/
+archive/options/camera/native/minimal/noDH/mainabsent/pipeline/temporal/classes/
+PNG guards accepted. Samples3960GPU; detailedCPU1827869 (instrumentation-heavy,
+not ordinaryperformance comparison). Raw measurement/provenance/validation/
+summary/image in dev/logs/photon-native-attribution-forest-r1; console .log.
+120samples per ordinaryGPUcategory. Diagnosticmeanms game-render13.0483,
+deferred1 1.42665/final1.28458/deferred4 1.26007/worldopaque1.02859,
+deferred0.74736/composite0.68589/composite4 .53352/composite1 .48458/
+deferred2 .45198/deferred3 .39774/shadowmap .39429. Overlapping/differentframe
+scopes notsummed, timingnotbusyutilization or drivercause. No cloudphasecoverage
+inferred fromsample5. Zero-valued tiny/empty scopes retained, notzeroGPUproof.
+
+RootsoleGPU LIVEexec48687 originalcoastal profileprepared sameclone batch,
+runClientLodOff/minimal/noDH/mainabsent/native2976x1672/45warm60capture,
+seven-category GPU5/detailedCPU/wetness0/-x compileDevClientJava. Log
+ dev/logs/photon-native-attribution-coastal-r1.log. Nextstrictactualterminal
+validation/archive/options/window/PNG +sourceplan mapping/read-only summarization
+AFTERlive ends; do not heavyparse1.8M CPUevents during capture. Allsourceworkers
+stillreadonly/newboundedfiles, main/shared/originaldesign unchanged.

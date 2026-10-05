@@ -22,8 +22,9 @@ registers seven fields; per-effect mod transport is not implemented. Other-pack
 core diagnostics consume version/global enable/near/far, not all core fields.
 Pack options, mod configuration and actual shader consumption remain separate.
 
-Root owns a live original-Photon native forest attribution run, with separate
-seven-category timing, sample interval5 and detailed CPU scopes. Its frame total
+Root owns a live original-Photon native coastal attribution run, with separate
+seven-category timing, sample interval5 and detailed CPU scopes. The forest run
+passed existing input/capture contracts; its frame total
 is not an acceptance comparison with prior frame-only timings. Source-only
 workers own the attribution plan and new Complementary motion-preparation files.
 Exact handles and stopping boundaries are in the active goal checkpoint.
