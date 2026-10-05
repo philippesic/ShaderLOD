@@ -2097,3 +2097,25 @@ Request0293267c-3708-49c4-a5ff-c8f490b4081e, provenanceandclasses saved.
 Logdev/logs/photon-native-attribution-frameonly-r2.log. Nextstrictterminal guards
 andframe/timing comparison ascontrol, retainallraw then movingquality files.
 No otherclient/build/encoder; workerssourceonly. Fullgoalactive/unshrunk.
+
+
+## Frame-only control terminal; attribution plan frozen
+
+exec80447 exited0, strict existingcontracts UUID/source/option/artifact/classes/
+native24/24/wetness/window/PNG accepted. 1201sampledwindowstates/zerotransitions.
+Fresh equal89c962...sourceworld; actualframeonlysample5/CPUlayertrue, same45/60s
+andnativecoastalcamera/noDH/minimal/mainabsent. Frames3706/FPS61.754,
+740GPUgamesamplesmean14.8650/median14.7677/p9516.0502ms/thread7.9865,
+CPU1671405events. Raw dev/logs/photon-native-attribution-frameonly-r2 retained.
+One separateJVMpair 23.8452pass-timed→14.8650frameonly suggestsinstrumentation
+concern, notcausation/LODgain; scopebudgetsremainqualified/notabsolute. No old
+slowrecords discarded. Ordinaryacceptance frameonly remainsseparate.
+
+optimization_research completed/frozen NEWdocs/PHOTON_NATIVE_ATTRIBUTION_PLAN.md,
+rootreviewedexact pass→sources/looplimits/pins/categoryrotations/N5checkerboard
+qualifications/nonadditivecounts andactual forest/coastal summaries. Rootadded
+terminalframeonlycontrol; no shader/main/timing codechanges. Sourceplan frozen.
+Cameraquality worker new3filepreparation stillactive, root awaitsfreeze then
+lightweightfixtures/freshprepare/native41slotoriginalfirst. No clientcurrently
+live, root solefutureGPU; main/shared/originalowneddesignstillreserved.
+Fullobjectiveactive/unshrunk, notblockedwhileusefulindependentworkproceeds.
