@@ -346,3 +346,26 @@ Next: root serial seven-arm shoreline driver pilot with fixed wetness 0, followe
 by normal-resolution rainy controls and balanced repeats of promising candidates.
 Record actual window telemetry and keep every negative result. No ordinary gate
 pass or second shader support yet; native goal remains active.
+
+
+## Live cloud driver pilot
+
+Source checkpoint edffbef. Root launched sole serial runner session45404,
+`dev/logs/cloud-shore-default-r1-runner.log`, tagcloud-shore-default-r1. Seven
+shoreline controls, minimal stack/DH absent, cloud upscale4, fixedwetness0,
+35swarmup/15scapture, sparse GPU interval16. Do not run a second client, modify
+frozen main production/dev/shader source or profiles, or run heavy CPU tests
+until the session terminates. An initial CLI invocation rejected unsupported
+--cases before creating a matrix/client; its console is retained separately.
+
+Workerperformance_stack has isolated worktree
+`/Users/pippo/.codex/worktrees/visibility-lists/shaderlod`, basededffbef. Its
+bounded task is a default-off per-region shadow membership-list separation
+prerequisite without skipping traversal, marks or task/animation consumers.
+No builds/heavytests/GPU permitted during live root capture. Main source is
+unaffected; integrate only after review and runtime correctness evidence.
+
+Nextcontinuation: poll actualsession45404 for terminal/newoutput, inspect fresh
+manifest/reports/windowobservations/images, retainnegativecomparisons, then
+choose repeats/raincloudscene. If a realguard/compilefailure appears, preserve
+it and repair causally before retry. No Photon gate pass; native goal active.

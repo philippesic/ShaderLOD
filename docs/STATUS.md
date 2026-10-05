@@ -6,13 +6,13 @@ Active goal: [Sustained performance and compatibility](goals/sustained-performan
 The user authorized ongoing team development, Photon first, benchmarks with
 optional performance mods, and additional shaders after repeatable Photon gains.
 Previous completed goal: [Full-frame rendering proof](goals/full-frame-proof.md).
-All benchmark clients are closed. The first 36-run matrix, water pilots,
+Root owns a live seven-arm shoreline cloud pilot (session45404). The first 36-run matrix, water pilots,
 nine-arm effect sweep, compiled-source controls, sparse-query repeats, JFR
 capture and exact shadow-culling repeats have finished. Their results remain
 mixed; the ordinary-scene performance gate is unmet. Second shader support has
 not started. See [REPEATED_RESULTS.md](REPEATED_RESULTS.md).
 
-Current committed source: `9f5a64d`. Explicit compile-time effect controls retain
+Current committed source: `edffbef`. Explicit compile-time effect controls retain
 original code when off. Water analytic normals and the exact shadow-frustum
 fast path default off after negative or inconsistent measurements. Shadows/AO
 retain original budgets. Terrain radius policy remains opt-in and requires
@@ -26,9 +26,9 @@ or explain the 145 to 75 FPS baseline variation. See
 successfully after repairing an inherited Mixin lookup, but repeated minimal
 stack CPU times regressed; its default remains off.
 
-Current bounded team work: validate cloud transition candidates, prepare matched
-cloud-only controls, add report-only window-state telemetry and strict culling
-guards, and audit visibility traversal reuse. Root owns all client/GPU launches;
+Cloud candidates, seven matched controls, report-only window telemetry and strict
+culling/cloud guards passed static checks. Root is testing the real driver. A
+worker is developing a no-skip list-ownership prerequisite in an isolated worktree. Root owns all client/GPU launches;
 no worker may launch a game. Static checks establish source correctness only.
 The active goal checkpoint records detailed ownership and the next experiments.
 
