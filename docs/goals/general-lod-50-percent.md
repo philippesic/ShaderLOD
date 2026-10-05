@@ -593,3 +593,29 @@ validation in PARALLEL_LOD_RUNTIME_QUEUE.md.25warm5capture, GPUfalse/minimalnoDH
 native2/wetness0; no FPS/GPU inference. OtherCPU/sourcework maycontinue, no other
 client/reloads/GPU. Root next awaits actualterminal driver/field/sampler/visual
 contracts before further queue launches; timedperformance/50% proof stillunmet.
+
+### Reflection untimed QA terminal; volume next
+
+Launcher47437 and watcher54250 exited0; client96042 ended naturally and all
+processes absent. Operator confirms unchanged main/dev/resource hashes, emptyGPU
+sample stream. Exactd11de4 reflection pack compiled/rendered, shaders=true/noFallback,
+all366upstream options unchanged and soleprivategate=true. New observer28programs
+captures core2/enable1/near32/far96/width8 with matching scalar types/locations in
+fullscreenprogram21 and raster458; before/after active texture restored. This is
+sampled connection proof, not physical refinement saving or live-reload guarantee.
+
+Actual noise allocation512x512RGBA8/LINEAR/base0 and shadow2048x2048depth/LINEAR/
+LEQUAL comparison; depthtex1NEAREST firstfullscreen1708x960 thenraster2976x1672
+reflects early viewportresize, not contradiction ofnativecapture. SevenINHERIT/
+unity effects loaded; reflectiondeclares no effectconsumer, inactivevaluesunknown.
+Nativeglint/near/far still crops show no obvious broad brightwaterband; singleactive
+still is not original/off parity ormotion/temporal acceptance. No FPS/GPU claim.
+Raw firstQA evidence retained underparallel-reflection-qa-r1; operator returnedGPU.
+
+Root authorizes next serial untimed volumeQA while source implementation continues:
+freshparallel-volume-qa-r1/adaptive, exact3685e47...pack, explicitADAPTIVE
+512/1536/128,.85/.75,25warm5capture,GPUfalse/newobserver/nativeresolution/minimalnoDH/
+wetness0/frozenclasses. Verify actualeffectsversion2/VolumetricsMode2/bands/ratios
+via typedreadback, notsavedconfiguration inference; originaldispatch/overheadguard
+maystillselectfull integration. Source counts/linkedvalues do not prove physical
+iterations. Operator soleGPU; no secondlaunch/timing untilrootreviews nextresult.
