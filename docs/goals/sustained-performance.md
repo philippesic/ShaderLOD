@@ -394,3 +394,37 @@ sprite/list ownership and camera/world/reload without claiming speedup. Implemen
 bounded in-process controls with current fingerprints/window/wetness and CPU-only
 variant before another broad cloud matrix. Preserve bad alloff evidence and seek
 actual native wait/source effect cause. Nativegoal active; no userblocker.
+
+
+## Ownership diagnostics and in-process controls integrated
+
+Previous goal turn was progress: new cloud implementation/drivercaptures changed
+source and authoritative evidence. Current source38a657d/bdc8222 integrates default-
+off per-region shadow-list ownership, dev phase snapshots, shared WorkloadInputs,
+strict four-phase in-process alloff controls, and protected-lighting tier work
+avoidance. 24 JUnit+34Pythonfixtures and integrated build/devcompile passed.
+Shader19tests/1512GLSLcompilations passed. New clean lighting archive SHA256
+b15d3c50f192e0e3de8e912afba2cc531e7d0520e3cbe573a7e35b993528e16c.
+Only d4/translucent call sites plus metadata differ from8fba; helpers/defaults/effects
+unchanged. Prepared seven fresh profiles at lighting-tier-shore-default.
+
+Original-Photon ownership enabled49846 and disabled/baseline44245 allterminalexit0,
+no root clientlive.8pairs/0errorsperarm. Enabled64sampled shadowobjects distinctand
+unchanged aftermain; controls64borrowedfingerprints changed, outergeneration/count
+hashes changed8/8controls vs0/8enabled. Sprite models match current hypothesis,
+not actual sprite activations. Root staticimages show no gross near shadow/geometry
+loss. Details/limits in VISIBILITY_LIST_SEPARATION.md; no skip or gain claim.
+
+Workerperformance_stack has CPUwindow for isolated coherence worktree
+`/Users/pippo/.codex/worktrees/frustum-coherence/shaderlod`, base5a06ccd. New default-
+off candidate proves containing coarse boxes with original positive-plane arithmetic
+then reuses accepts within the current frustum/preparation. Conservative fallback,
+64slots, invalidation and distance constraints; nine tests await execution. Root
+reviewed source bounds but actualMixin/runtime and gain unverified. No games byworker.
+
+Next: collect coherence build/fuzz proof, then root same-JVM OFF/ON/OFF/ON alloff
+old8fba control with HUDhidden/fixedwetness0 and stableworld/pipeline; reverse and
+query-free checks, then compare new lighting-tier candidate. Do not claim absolute
+FPSgain versus old visible-HUD captures. After correctness review integrate
+coherence into separate runtimecontrol and testactualvisibility againstoriginal
+before performance. No ordinary Photon gate or second shader yet. Nativegoalactive.

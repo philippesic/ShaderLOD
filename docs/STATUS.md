@@ -13,7 +13,7 @@ capture and exact shadow-culling repeats have finished. Their results remain
 mixed; the ordinary-scene performance gate is unmet. Second shader support has
 not started. See [REPEATED_RESULTS.md](REPEATED_RESULTS.md).
 
-Current committed source: `edffbef`. Explicit compile-time effect controls retain
+Current committed source: `38a657d` / `bdc8222`. Explicit compile-time effect controls retain
 original code when off. Water analytic normals and the exact shadow-frustum
 fast path default off after negative or inconsistent measurements. Shadows/AO
 retain original budgets. Terrain radius policy remains opt-in and requires
@@ -27,11 +27,14 @@ or explain the 145 to 75 FPS baseline variation. See
 successfully after repairing an inherited Mixin lookup, but repeated minimal
 stack CPU times regressed; its default remains off.
 
-Cloud candidates, seven matched controls, report-only window telemetry and strict
-culling/cloud guards passed static checks. All new cloud modes rendered; the pilot established no ordinary gain. A
-worker is developing a no-skip list-ownership prerequisite in an isolated worktree. Root owns all client/GPU launches;
-no worker may launch a game. Static checks establish source correctness only.
-The active goal checkpoint records detailed ownership and the next experiments.
+Cloud modes rendered without ordinary gain. A new exact protected-lighting tier
+candidate passed 1,512 GLSL compilations; real performance remains unverified.
+The default-off shadow-list ownership prototype rendered in enabled/disabled/
+mod-absent controls, preserving observed shadow snapshots across main rebuilds.
+It skips no traversal. Same-JVM bridge controls are ready for runtime diagnosis.
+An isolated worker is testing a separate spatial-coherence optimization. Root
+owns every client/GPU launch; no worker may launch a game. Current process
+ownership and pending checks are recorded in the active goal checkpoint.
 
 ## Previous completed proof
 

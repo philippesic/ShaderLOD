@@ -134,3 +134,39 @@ producer/consumer modeling from the audit is required before any subsequent
 skip. Eligibility is cached on ticks; the engine experiment is limited to the
 current pinned layouts and tested Photon names, not advertised as a universal
 Sodium/Iris compatibility layer.
+
+
+## Coordinator runtime checkpoint
+
+Integrated source38a657d / fixturecheckpointbdc8222. Main build/devcompile and
+24 JUnit tests passed. Original Photon at the inspected SSR shoreline rendered
+under Iris with the feature enabled, disabled and physically absent main mod.
+Enabled session49846 and disabled/baseline session44245 all endedexit0. Reports:
+`dev/logs/visibility-{enabled,disabled,baseline}-probe-measurement.json`.
+Profiles `run-workloads/visibility-list-probe-v2/coastalwater/{enabled,disabled,baseline}`.
+Minimal stack/noDH, GPUqueriesoff, fixedwetness0, 35swarmup/10scapture; these are
+instrumented ownership diagnostics, not performance comparisons.
+
+Each arm captured8realshadow/main RETURNpairs with0errors. The merged Iris field
+resolved to `shadowRenderLists`. Enabled had64distinct sampled original/shadow
+objects,64unchanged shadow fingerprints after main, and0borrowed-source changes.
+Disabled and mod-absent controls had0separateobjects and64borrowed-source changes;
+shadow outer counts/generation hash changed in8/8pairs versus0/8enabled. Samples
+include generation/count/ordered-membership data; a changed generation alone is
+not proof of changed geometry indices. All selected64 enabled prior-main geometry
+hashes happened to match their subsequent main geometry hashes in this static
+scene. Whole-list sprite models differed by pass and matched the current shared
+hypothesis in every arm/pair, but actual sprite activation/animation is unobserved.
+
+Root inspected enabled/baseline static captures: near tree depth/shadows and
+shore geometry remained present with no gross discrepancy; normal temporal water
+samples differ. Images do not establish pixel equality or camera-motion/reload/
+world-edit/build-completion compatibility. Runtime Mixin application and bounded
+ownership preservation now have evidence; the remaining lifecycle/overhead checks
+and every temporal-reuse requirement stay pending. No graph traversal is skipped.
+
+First preparer attempt preserved a failed fresh output because patched base copies
+contained only the derivative archive. The corrected preparer explicitly copies
+and verifies pinned original Photon into every new diagnostic arm; successfulv2
+keeps original selected and all shaderLOD effects absent. Failure evidence remains
+under ignored run-workloads/visibility-list-probe and dev/logs/visibility-list-preparation.log.
