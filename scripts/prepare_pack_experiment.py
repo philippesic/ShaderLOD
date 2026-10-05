@@ -36,6 +36,11 @@ def prepare(source, output, family):
             for probe in ('duplicate-implicit', 'duplicate-explicit', 'classifier-full'):
                 arms[probe] = (ROOT / f'build/MakeUp-ShaderLOD-Probe-{probe}-9.5g.zip',
                                options | {'SHADERLOD_MAKEUP_WATER_SSR': '1'})
+        if family == 'makeup-core-bridge':
+            probe = ROOT / 'build/MakeUp-ShaderLOD-CoreBridge2-Probe-9.5g.zip'
+            controls = options | {'SHADERLOD_MAKEUP_WATER_SSR': '0',
+                                 'SHADERLOD_MAKEUP_CORE_BRIDGE': '1', 'SHADERLOD_MAKEUP_BRIDGE_CUE': '1'}
+            arms = {name: (probe, controls) for name in ('bridge-absent', 'bridge-disabled', 'bridge-enabled', 'bridge-bands')}
         include_dh = False
     else:
         original = ROOT / 'dev/upstream' / runtime['artifacts']['photon']['filename']
@@ -72,6 +77,12 @@ def prepare(source, output, family):
             iris['shaderPack'] = pack.name
             (profile / 'config/iris.properties').write_text(''.join(f'{k}={v}\n' for k,v in iris.items()))
             if not include_dh: (profile / 'mods' / runtime['artifacts']['distanthorizons']['filename']).unlink(missing_ok=True)
+            if family == 'makeup-core-bridge':
+                enabled = arm in ('bridge-enabled', 'bridge-bands')
+                near, far = (8.0, 16.0) if arm == 'bridge-bands' else (96.0, 160.0)
+                (profile / 'config/shaderlod-client.toml').write_text(
+                    f'[lod]\nenabled={str(enabled).lower()}\npreset="PERFORMANCE"\nnear={near}\nfar={far}\ntransition=8.0\ndebug=false\n'
+                    '[terrain]\nenabled=false\nvanillaChunkCap=16\nwarmSourceConfirmed=false\nwarmupSeconds=30\n')
             for stale in ('workload-request.json', 'workload-measurement.json'): (profile / stale).unlink(missing_ok=True)
             hashes[arm] = {'archive': pack.name, 'sha256': file_hash(pack), 'requested_options': options}
         (destination / 'control.json').write_text(json.dumps(control, indent=2) + '\n')
@@ -86,7 +97,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--source', required=True, type=Path)
     parser.add_argument('--output', required=True, type=Path)
-    parser.add_argument('--family', required=True, choices=('makeup-water', 'makeup-probes', 'photon-cloud-consumer'))
+    parser.add_argument('--family', required=True, choices=('makeup-water', 'makeup-probes', 'makeup-core-bridge', 'photon-cloud-consumer'))
     args = parser.parse_args()
     prepare(args.source, args.output, args.family)
 

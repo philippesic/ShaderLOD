@@ -806,3 +806,31 @@ terminalcheckpoint. Root ownsGPU; bridgeworker source stillfinishing. Compile/
 assemble/review its standalone probe before diagnostic actualuniform tests.
 Source/evidence commits mustexcludeoriginalowner's unstaged
 SHADOW_VISIBILITY_CACHE_DESIGN.md and allignoredrawcaptures/worlds.
+
+
+Checkpoint7945a3c commits verifiednative controls and devCameraQuality capture;
+fc94094 retains prior experiments/evidence. No pushes/publication. Main/shared
+protocol files untouched. Corrected original/off/on2FPSmotion allcomplete41/41
+PNGcallbacks/hashes and actualtrajectorymetadata. High-rate qualitypending.
+
+Isolatedcorebridge worker completed8sourcefixtures; rootassembled exactnew
+MakeUpCoreBridge2ProbeZIP and fourclonedstopped profiles at
+run-workloads/makeup-core-bridge-probe/coastalwater. Diagnosticwatercue1,
+coreoptin1, legacywaterswitch0, samemod-absent/disabled/enabled/changed8→16
+versus96→160bands. This consumesexistingversion2globals without anymain edit.
+Runtime/connection remainpendinguntilfourrendered cues inspected; noGPUtiming
+and no performance inference from diagnostic earlyreturn. Nativecue runner
+handle reported below; root retains exclusiveGPU.
+
+
+## MakeUp existing-core transport rendered
+
+35659 exit0/allfouraccepted; sourcecue absentmagenta/disabledyellow/enabled
+96→160 green-to-blue/8→16 closerbluefade. RootallPNGs inspected andSHAchecked.
+Samearchive/options; onlyphysicalmodpresence orloadedexistingglobal/near/far
+changed. Actualexistingcoreuniformconsumption verified in newadapteronM3/Iris.
+No avoidedwork/performance/support claim fromdiagnostic. Sourceandactualrecord
+MAKEUP_CORE_BRIDGE_PROBE.md; helperdefaultoff andunknownversionsfallback.
+No game currentlylive; rootsoleGPU. Next cue-off render/quality/GPU controls,
+then meaningfulPhoton optimization/secondworkload and broaderadapterverification.
+Native8%clean signal remainsqualified below15%goal; sharedfullobjectiveactive.

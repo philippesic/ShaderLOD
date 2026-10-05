@@ -113,3 +113,10 @@ source sweep found no proven cause. First one-JVM all-active global control
 showed6.9–9.0%GPU reduction, qualified for an inherited automatic screenshot.
 Clean forward/reverse repetitions and motion checks are in progress; no
 ordinary15%gate or support/performance promotion. See PHOTON_NATIVE_RESOLUTION.md.
+
+
+MakeUp standalone corebridge probe nowrendered withdiagnosticproof ofexisting
+protocol2 globalenabled andnear/far fields reachingwaterpixels. This changes
+the adapterfromshaderoptions-only toan experimentallyverifiedcoreconsumer;
+per-effectconfig/preset/debug/transition are stillunconsumed. Diagnosticoff
+rendering,quality/repeatedtiming andsupportpromotionremainpending.

@@ -1,0 +1,64 @@
+{
+  "schema": 1,
+  "kind": "makeup-core-bridge2-probe",
+  "base_sha256": "6c3f423173ddf12f2ab3f10f6e18f6bc07f304aa70201b5bebe5902587c59671",
+  "accepted_protocol": 2,
+  "declared_core_fields": {
+    "shaderlodBridgeVersion": "int",
+    "shaderlodEnabled": "int",
+    "shaderlodNear": "float",
+    "shaderlodFar": "float"
+  },
+  "unused_core_fields": [
+    "shaderlodPreset",
+    "shaderlodTransition",
+    "shaderlodDebug"
+  ],
+  "transport_source": "src/main/java/com/pp/shaderlod/mixin/CommonUniformsMixin.java",
+  "transport_source_inspection_sha256": "7e97be4ade495c6f59717c541e1a8782924bbdf283b1ac43c7dca64cc6f63980",
+  "source_sha256": {
+    "shaders/lib/water.glsl": "5c528242be4f9ea1fdf1b58e387b4345989993abfbbf0637117ef58c98a8f8f5",
+    "shaders/lib/config.glsl": "d0ac345aba565ad50b837fb909a1d8c6fa5be3dfe667d136295418bb01fdee30",
+    "shaders/shaders.properties": "64424184504b5ba414e6ce1b5ecbfd0c90f88552cab674482b172dfcc1025741",
+    "shaders/lang/en_US.lang": "b184c997e9b00fd07c4ce196ee36a9b64c0db6c589e0ef1ce86ac8f06df35e22",
+    "shaders/lib/shaderlod/water_ssr.glsl": "a5c79a6ed1092ac068b8adc37914ea8e188c09dd84e46ea4ceebf99ae6d76f5c",
+    "shaders/src/position_vertex_water.glsl": "5fab44f4f246f8b5b15b906bb5d0c6bc009199feb2126bdf7bf4e2217bfb9329"
+  },
+  "overlay_sha256": {
+    "shaders/lib/shaderlod/core_bridge_probe.glsl": "cf5dd6f1a6220c068bc9035de657001a6068e2554e9c59d7a4dd6e2cd198875c"
+  },
+  "patches": [
+    {
+      "path": "shaders/lib/water.glsl",
+      "before": "/* MakeUp - water.glsl\nWater reflection and refraction related functions.\n*/\n",
+      "after": "/* MakeUp - water.glsl\nWater reflection and refraction related functions.\n*/\n\n// Isolated default-off protocol 2 consumer/cue; modified 2026-10-05.\n#if SHADERLOD_MAKEUP_CORE_BRIDGE == 1 || SHADERLOD_MAKEUP_BRIDGE_CUE == 1\n#include \"/lib/shaderlod/core_bridge_probe.glsl\"\n#endif\n"
+    },
+    {
+      "path": "shaders/lib/water.glsl",
+      "before": "#if SHADERLOD_MAKEUP_WATER_SSR == 1 && REFLECTION == 1 && SSR_TYPE == 1\n#include \"/lib/shaderlod/water_ssr.glsl\"\n// Modified 2026-10-05: vanilla water only; distant SSR fades to native fallback.\nvec4 reflection_calc(vec3 fragpos, vec3 normal, vec3 reflected, inout float infinite, float dither) {\n    float ssrWeight = shaderlodWaterSSRWeight(fragpos);\n    // Skip before ANY trace/depth/scene fetch. Native sky/cloud color remains\n    // in water_shader; infinite=1 retains the native offscreen sun glint path.\n    if (ssrWeight <= 0.0) {\n        infinite = 1.0;\n        return vec4(0.0);\n    }\n\n    vec3 pos = shaderlodWaterRaymarch(reflected, fragpos, infinite, dither);\n    float border =\n        clamp((1.0 - (max(0.0, abs(pos.y - 0.5)) * 2.0)) * 50.0, 0.0, 1.0);\n    border = clamp(border - pow(pos.y, 10.0), 0.0, 1.0);\n    pos.x = abs(pos.x);\n    if (pos.x > 1.0) {\n        pos.x = 1.0 - (pos.x - 1.0);\n    }\n    // Pinned gaux1 is unmipmapped. Explicit base-level sample makes the new\n    // nonuniform distance branch independent of implicit texture derivatives.\n    return vec4(texture2DLod(gaux1, pos.xy, 0.0).rgb, border * ssrWeight);\n}\n#else\nvec4 reflection_calc(vec3 fragpos, vec3 normal, vec3 reflected, inout float infinite, float dither) {\n    #if SSR_TYPE == 0  // Flipped image\n        #if defined DISTANT_HORIZONS || defined VOXY\n            vec3 pos = camera_to_screen(fragpos + reflected * 768.0);\n        #else\n            vec3 pos = camera_to_screen(fragpos + reflected * 76.0);\n        #endif\n    #else  // Raymarch\n        vec3 pos = fastRaymarch(reflected, fragpos, infinite, dither);\n    #endif\n\n    float border =\n        clamp((1.0 - (max(0.0, abs(pos.y - 0.5)) * 2.0)) * 50.0, 0.0, 1.0);\n\n    border = clamp(border - pow(pos.y, 10.0), 0.0, 1.0);\n\n    pos.x = abs(pos.x);\n    if (pos.x > 1.0) {\n        pos.x = 1.0 - (pos.x - 1.0);\n    }\n\n    return vec4(texture2D(gaux1, pos.xy).rgb, border);\n}\n\n#endif\n",
+      "after": "#if SHADERLOD_MAKEUP_CORE_BRIDGE == 1 && REFLECTION == 1 && SSR_TYPE == 1\n#include \"/lib/shaderlod/water_ssr.glsl\"\n// Bridge-disabled path retains the complete original function body/fetches.\nvec4 shaderlodMakeupOriginalReflection(vec3 fragpos, vec3 normal, vec3 reflected, inout float infinite, float dither) {\n    #if SSR_TYPE == 0  // Flipped image\n        #if defined DISTANT_HORIZONS || defined VOXY\n            vec3 pos = camera_to_screen(fragpos + reflected * 768.0);\n        #else\n            vec3 pos = camera_to_screen(fragpos + reflected * 76.0);\n        #endif\n    #else  // Raymarch\n        vec3 pos = fastRaymarch(reflected, fragpos, infinite, dither);\n    #endif\n\n    float border =\n        clamp((1.0 - (max(0.0, abs(pos.y - 0.5)) * 2.0)) * 50.0, 0.0, 1.0);\n\n    border = clamp(border - pow(pos.y, 10.0), 0.0, 1.0);\n\n    pos.x = abs(pos.x);\n    if (pos.x > 1.0) {\n        pos.x = 1.0 - (pos.x - 1.0);\n    }\n\n    return vec4(texture2D(gaux1, pos.xy).rgb, border);\n}\n\n// Modified 2026-10-05: vanilla water only; distant SSR fades to native fallback.\nvec4 shaderlodMakeupCoreActiveReflection(vec3 fragpos, vec3 normal, vec3 reflected, inout float infinite, float dither) {\n    float ssrWeight = shaderlodMakeupCoreSSRWeight(fragpos);\n    // Skip before ANY trace/depth/scene fetch. Native sky/cloud color remains\n    // in water_shader; infinite=1 retains the native offscreen sun glint path.\n    if (ssrWeight <= 0.0) {\n        infinite = 1.0;\n        return vec4(0.0);\n    }\n\n    vec3 pos = shaderlodWaterRaymarch(reflected, fragpos, infinite, dither);\n    float border =\n        clamp((1.0 - (max(0.0, abs(pos.y - 0.5)) * 2.0)) * 50.0, 0.0, 1.0);\n    border = clamp(border - pow(pos.y, 10.0), 0.0, 1.0);\n    pos.x = abs(pos.x);\n    if (pos.x > 1.0) {\n        pos.x = 1.0 - (pos.x - 1.0);\n    }\n    // Pinned gaux1 is unmipmapped. Explicit base-level sample makes the new\n    // nonuniform distance branch independent of implicit texture derivatives.\n    return vec4(texture2DLod(gaux1, pos.xy, 0.0).rgb, border * ssrWeight);\n}\n// This decision depends only on uniform core fields or compile-time options.\n// The original path's implicit texture calls remain in uniform control flow.\nvec4 reflection_calc(vec3 fragpos, vec3 normal, vec3 reflected, inout float infinite, float dither) {\n    if (!shaderlodMakeupCoreEnabled()) {\n        return shaderlodMakeupOriginalReflection(fragpos, normal, reflected, infinite, dither);\n    }\n    return shaderlodMakeupCoreActiveReflection(fragpos, normal, reflected, infinite, dither);\n}\n#else\n#if SHADERLOD_MAKEUP_WATER_SSR == 1 && REFLECTION == 1 && SSR_TYPE == 1\n#include \"/lib/shaderlod/water_ssr.glsl\"\n// Modified 2026-10-05: vanilla water only; distant SSR fades to native fallback.\nvec4 reflection_calc(vec3 fragpos, vec3 normal, vec3 reflected, inout float infinite, float dither) {\n    float ssrWeight = shaderlodWaterSSRWeight(fragpos);\n    // Skip before ANY trace/depth/scene fetch. Native sky/cloud color remains\n    // in water_shader; infinite=1 retains the native offscreen sun glint path.\n    if (ssrWeight <= 0.0) {\n        infinite = 1.0;\n        return vec4(0.0);\n    }\n\n    vec3 pos = shaderlodWaterRaymarch(reflected, fragpos, infinite, dither);\n    float border =\n        clamp((1.0 - (max(0.0, abs(pos.y - 0.5)) * 2.0)) * 50.0, 0.0, 1.0);\n    border = clamp(border - pow(pos.y, 10.0), 0.0, 1.0);\n    pos.x = abs(pos.x);\n    if (pos.x > 1.0) {\n        pos.x = 1.0 - (pos.x - 1.0);\n    }\n    // Pinned gaux1 is unmipmapped. Explicit base-level sample makes the new\n    // nonuniform distance branch independent of implicit texture derivatives.\n    return vec4(texture2DLod(gaux1, pos.xy, 0.0).rgb, border * ssrWeight);\n}\n#else\nvec4 reflection_calc(vec3 fragpos, vec3 normal, vec3 reflected, inout float infinite, float dither) {\n    #if SSR_TYPE == 0  // Flipped image\n        #if defined DISTANT_HORIZONS || defined VOXY\n            vec3 pos = camera_to_screen(fragpos + reflected * 768.0);\n        #else\n            vec3 pos = camera_to_screen(fragpos + reflected * 76.0);\n        #endif\n    #else  // Raymarch\n        vec3 pos = fastRaymarch(reflected, fragpos, infinite, dither);\n    #endif\n\n    float border =\n        clamp((1.0 - (max(0.0, abs(pos.y - 0.5)) * 2.0)) * 50.0, 0.0, 1.0);\n\n    border = clamp(border - pow(pos.y, 10.0), 0.0, 1.0);\n\n    pos.x = abs(pos.x);\n    if (pos.x > 1.0) {\n        pos.x = 1.0 - (pos.x - 1.0);\n    }\n\n    return vec4(texture2D(gaux1, pos.xy).rgb, border);\n}\n\n#endif\n\n#endif\n"
+    },
+    {
+      "path": "shaders/lib/water.glsl",
+      "before": "vec3 water_shader(\n    vec3 fragpos,\n    vec3 normal,\n    vec3 color,\n    vec3 sky_reflect,\n    vec3 reflected,\n    float fresnel,\n    float visibleSky,\n    float dither,\n    vec3 lightColor\n) {\n",
+      "after": "vec3 water_shader(\n    vec3 fragpos,\n    vec3 normal,\n    vec3 color,\n    vec3 sky_reflect,\n    vec3 reflected,\n    float fresnel,\n    float visibleSky,\n    float dither,\n    vec3 lightColor\n) {\n    // Water-only diagnostic, compiled out by default. It proves transported\n    // state/distance through pixels, not avoided SSR work or performance.\n    #if SHADERLOD_MAKEUP_BRIDGE_CUE == 1\n        return shaderlodMakeupCoreCue(fragpos);\n    #endif\n"
+    },
+    {
+      "path": "shaders/lib/config.glsl",
+      "before": "// ShaderLOD experimental shader OPTIONS only; no Java/common protocol bridge.\n",
+      "after": "// Isolated protocol 2 probe, modified 2026-10-05. Both controls default off.\n#define SHADERLOD_MAKEUP_CORE_BRIDGE 0 // [0 1] Opt into version 2 global enable/near/far for water SSR.\n#define SHADERLOD_MAKEUP_BRIDGE_CUE 0 // [0 1] Water-only connection diagnostic; disable for quality/timing.\n\n// ShaderLOD experimental shader OPTIONS only; no Java/common protocol bridge.\n"
+    },
+    {
+      "path": "shaders/shaders.properties",
+      "before": "screen.SHADERLOD_MAKEUP_SCREEN = SHADERLOD_MAKEUP_WATER_SSR SHADERLOD_MAKEUP_SSR_START SHADERLOD_MAKEUP_SSR_END",
+      "after": "screen.SHADERLOD_MAKEUP_SCREEN = SHADERLOD_MAKEUP_WATER_SSR SHADERLOD_MAKEUP_SSR_START SHADERLOD_MAKEUP_SSR_END SHADERLOD_MAKEUP_CORE_BRIDGE SHADERLOD_MAKEUP_BRIDGE_CUE"
+    },
+    {
+      "path": "shaders/lang/en_US.lang",
+      "before": "#Profiles\n",
+      "after": "#Profiles\n# Isolated ShaderLOD core bridge probe; modified 2026-10-05.\noption.SHADERLOD_MAKEUP_CORE_BRIDGE=Core protocol 2 probe\noption.SHADERLOD_MAKEUP_CORE_BRIDGE.comment=Opt-in global mod enable and near/far radial SSR fade. Only version 2 is accepted. Otherwise original pack controls apply. No per-effect or preset bridge.\noption.SHADERLOD_MAKEUP_BRIDGE_CUE=Core connection water cue\noption.SHADERLOD_MAKEUP_BRIDGE_CUE.comment=Diagnostic only: opted-out gray, absent/unknown magenta, version 2 disabled yellow, enabled near green and far blue. Turn off for quality and GPU measurements.\n"
+    }
+  ],
+  "default_enabled": false,
+  "license_notice": "MakeUp Ultra Fast by Javier Garduño, LGPL v3. Original GPL/LGPL text, editable source and attribution retained. Isolated bridge diagnostic modifications 2026-10-05."
+}
