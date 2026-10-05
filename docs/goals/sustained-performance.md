@@ -2253,3 +2253,31 @@ are completed/frozen. Main/config/shared helper ownership remains reserved;
 no new per-effect transport, remote message, push or publication is inferred.
 The full goal remains active with configuration, quality and useful repeated
 performance acceptance unfinished.
+
+
+## Reverse combined control terminal; baseline preparation delegated
+
+Exec26888 exited0; explicit-pin analyzer, precompiled fingerprint and sampled
+window checks accepted all four phases. ON/OFF/ON/OFF GPU mean14.0221/15.3827/
+13.7307/16.3705ms, FPS65.636/60.215/66.927/56.923, thread6.9791/6.7677/
+6.6790/6.8442. GPU reductions8.85%/16.13%, forward9.23%/0.057%; inconsistent,
+not repeated original-mod-absent acceptance. All raw samples/PNG/report retained
+under dev/logs/photon-reduced-all-effects-n5-reverse-r2-* and the owned profile.
+No source/driver/clock/thermal cause assigned; full goal remains active.
+
+All runtime jobs now terminal. Root owns future GPU. `stack_analysis` now owns
+ONLY NEW scripts/prepare_reduced_effects_profiles.py,
+NEW tests/test_reduced_effects_profiles.py and NEW docs/PHOTON_REDUCED_EFFECTS_PLAN.md:
+fresh exact-original/reduced archive preparation, equal canonical stopped saves
+for native forest/coastal high/patched-off/adaptive, fixed upstream options,
+all5effects/private reduced switch and protected lighting, real global OFF/ON,
+noDH/terrain/CPU experiments. Existing matrix cases suffice; no runner/main/
+shader/source change. Lightweight fixture checks only, no actual world prep,
+compiler/client/encoder. Stop at freeze for root integration and baseline pilot,
+then balanced repeats if useful. Ordinary15%/secondscene/quality/configuration
+acceptance remain unmet; do not promote the faster correlated pair.
+
+`makeup_adapter` still owns ONLY NEW MINIATURE_CORE_CONFIGURATION_PLAN.md,
+source review of remaining existing core fields. Common Java/config/helper/
+existing Photon ownership and the original design document remain reserved.
+No external message/push/publication; all previous failures remain retained.

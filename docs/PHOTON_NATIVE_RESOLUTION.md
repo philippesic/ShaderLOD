@@ -172,3 +172,26 @@ Original mod-absent gate remains separate. Counter cadence5 avoids the obvious
 16-stride alias risk but proves no physical effect work or sample execution.
 Raw dev/logs/photon-reduced-all-effects-n5-r1-{benchmark,analysis}.json/.log;
 profile run-workloads/photon-reduced-all-effects-n5-r1/coastalwater/adaptive.
+
+
+Reverse reduced combined control completed, exec26888 exit0. Strict analyzer,
+prelaunch compiled hashes and sampled window guards accepted all four phases;
+archive/flags/scene/native settings matched the forward preparation. Session
+3859175e-bbb6-4c39-9cda-fe25d06ab281, ON/OFF/ON/OFF:
+
+| Phase | Global | FPS | GPU mean / median ms | Thread ms |
+| --- | --- | --- | --- | --- |
+| 1 | ON | 65.636 | 14.0221 / 14.0316 | 6.9791 |
+| 2 | OFF | 60.215 | 15.3827 / 15.3850 | 6.7677 |
+| 3 | ON | 66.927 | 13.7307 / 13.7253 | 6.6790 |
+| 4 | OFF | 56.923 | 16.3705 / 16.3284 | 6.8442 |
+
+Adjacent mean GPU reductions8.85%/16.13%, while forward was9.23%/0.057%.
+The final OFF state was slower than the earlier OFF; no cause is assigned.
+One correlated pair crossing15% does not satisfy repeated original-mod-absent
+acceptance or a second workload. Retain all observations. Next balanced
+original/disabled/enabled runs require equal copied worlds, fixed upstream
+quality/native settings and independent run-level comparisons; moving quality
+and per-effect/common transport remain separate requirements.
+Raw dev/logs/photon-reduced-all-effects-n5-reverse-r2-{benchmark,analysis}.json
+and .log, with explicit phase PNGs in the prepared profile.

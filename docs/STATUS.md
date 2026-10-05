@@ -24,8 +24,10 @@ Pack options, mod configuration and actual shader consumption remain separate.
 The reduced far-SSR five-effect Photon control passed with GPU contrasts
 +9.23%/+0.057%, no useful repeated gain. Complementary full/sky/Potato
 sequences each passed41-frame structural checks; matched views show reflection
-loss/displacement. Root owns a live reverse-order Photon combined control; full
-visual/temporal acceptance is pending.
+loss/displacement. The reverse Photon control passed with8.85%/16.13% GPU
+contrasts, but the forward result was9.23%/flat. No runtime is live; balanced
+mod-absent baselines and a second workload are being prepared. Full quality
+acceptance remains pending.
 Photon forest/coastal attribution passed input and
 capture contracts. A matched-source coastal frame-only sample5 control retaining
 detailed CPU timers measured14.86ms versus23.85ms in the pass-timed run. This
