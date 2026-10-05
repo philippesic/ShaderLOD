@@ -37,7 +37,9 @@ public final class CloudSamplerStateProbe {
     private static final int PROGRAM_LIMIT = 64;
     private static final int UNIFORM_LIMIT = 4096;
     private static final String[] WATCHED = {"colortex8", "noisetex", "colortex6", "colortex7"};
-    private static final String[] CORE_UNIFORMS = {"shaderlodBridgeVersion", "shaderlodEnabled", "shaderlodNear", "shaderlodFar"};
+    private static final String[] CORE_UNIFORMS = {"shaderlodBridgeVersion", "shaderlodEnabled", "shaderlodNear", "shaderlodFar",
+            "shaderlodPreset", "shaderlodTransition", "shaderlodDebug"};
+    private static final Set<String> CORE_INTEGER_UNIFORMS = Set.of("shaderlodBridgeVersion", "shaderlodEnabled", "shaderlodPreset", "shaderlodDebug");
     private static final Set<Integer> SEEN = new HashSet<>();
     private static final JsonArray PROGRAMS = new JsonArray();
     private static JsonObject report;
@@ -89,7 +91,8 @@ public final class CloudSamplerStateProbe {
         result.addProperty("program_limit", PROGRAM_LIMIT);
         result.addProperty("uniform_scan_limit", UNIFORM_LIMIT);
         result.addProperty("sampler_selection", "Watched aliases plus all active scalar sampler2D/sampler3D uniforms in the bounded linked-uniform scan; other sampler types/arrays outside watched aliases are inventory only");
-        result.addProperty("core_uniform_selection", "Exact bridge version/enable scalar int and near/far scalar float linked-program readbacks; no source/supplier reevaluation");
+        result.addProperty("core_uniform_schema", 2);
+        result.addProperty("core_uniform_selection", "Seven existing core fields: version/enable/preset/debug scalar int and near/far/transition scalar float linked-program readbacks; no source/supplier reevaluation; first observed draw is not a settled live-reload guarantee");
         result.addProperty("scope", "First draw per numeric GL program ID in this JVM; full-screen draws only; not a program-name or cloud-stage proof");
         result.addProperty("query_status", "Driver values queried without consuming glGetError; inspect runtime GL logs for errors");
         result.addProperty("interpretation", "Missing/inactive/unsupported state is unknown; sampler state alone does not prove divergent implicit derivatives safe");
@@ -168,7 +171,7 @@ public final class CloudSamplerStateProbe {
         JsonObject result = new JsonObject();
         for (int index = 0; index < CORE_UNIFORMS.length; index++) {
             String name = CORE_UNIFORMS[index];
-            int expectedType = index < 2 ? GL11.GL_INT : GL11.GL_FLOAT;
+            int expectedType = CORE_INTEGER_UNIFORMS.contains(name) ? GL11.GL_INT : GL11.GL_FLOAT;
             Uniform uniform = uniforms.get(name);
             JsonObject value = new JsonObject();
             result.add(name, value);

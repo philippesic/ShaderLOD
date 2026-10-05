@@ -2312,3 +2312,29 @@ preparer described above. No overlapping edits, all runtime jobs terminal.
 Next review both freezes, actual build/compilation or baseline profile preparation,
 then exclusive runtime with honest per-field/quality/GPU acceptance. Full goal
 remains active and the ordinary repeated15%/second-workload gates remain unmet.
+
+
+## Seven-field dev readback extension compiled; Photon diagnostic live
+
+Root alone extended CloudSamplerStateProbe to preset/transition/debug in
+addition to the existing four fields. Explicit name-based int/float mapping,
+active scalar/location checks and unknown entries remain read-only; additive
+core_uniform_schema2 records the extended selection. No production transport,
+supplier calls, setters, per-effect fields or shader source changed. Gradle
+build+compileDevClientJava succeeded; production JAR has zero dev entries.
+Historical four-field sampler hashes remain immutable qualification snapshots.
+
+Root owns LIVEexec76970 opt-in original-core readback on the existing private
+Photon reduced/all5 candidate, fresh profile
+run-workloads/photon-seven-core-readback-r1/coastalwater/adaptive.
+Requestdb76b25a-b988-4231-9072-6265fb0b397d, source/copiedworld checked and
+prelaunch input/class provenance retained. Minimal/noDH/native2976x1672,
+25warm5capture, GPUtimingfalse/CPUlayersfalse/cloudSamplerProbe=true/wetness0,
+frozen dev classes. Logdev/logs/photon-seven-core-readback-r1.log. Diagnostic
+getters may stall; no performance inference. Next terminal workload/source/
+class/window/PNG validation and actual linked-field type/value inspection.
+Firstdraw-only readback does not guarantee settled reload/physical work.
+
+Both source workers remain in their separate NEW file partitions. No other
+client/build/encoder; main/shared/old shader/design ownership preserved. Full
+objective active and not completed or blocked.
