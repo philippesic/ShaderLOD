@@ -494,3 +494,28 @@ inputs); no current Minecraft client, root owns GPU. No main sampler/dev harness
 change; archived r2 proofs remain historical class fingerprints. Heavy CPU checks
 pause only during dedicated timed windows; untimed compilation/quality diagnostics
 permit parallel source development with no performance inference.
+
+### Parallel integration checkpoint
+
+Root saved source/interface integration as0a4d7a9. Main test XML proves60tests,
+0failures/errors/skips; test/build/devcompile succeeded, using matching Gradle
+cache entries for unchanged inputs. Source-only reflection9/procedural13/volume12/
+continuity9 fixtures and artifact hashes are recorded in their owned reports;
+these do not establish driver/quality/gain. Original procedural overlayLICENSE
+bytes intentionally retained with upstream whitespace, exempted only that file
+from whitespace lint; allotherstagedchecks passed. Prior dirty fullscreen build
+hook, ComparisonClient and shadow-design files and Miniaturepreparation remain
+unstaged/untouched. Only newtest-classpath build hunk integrated/committed.
+
+RootGPU currentlyidle. Next exact actions: review ao_runtime's sharedexplicit-pins
+queue sourcefreeze, then serial untimed driver/config/core/qualitysmokes for ready
+reflection/volume/water candidates while lighting implementation continues in its
+worktree. Untimed results cannot be performance numbers. Volume inherits conservative
+0.85/0.75 budgets or requires explicitrecordedADAPTIVE settings; command/producer
+v2/sourcefields linkage remains real-driver acceptance. Old observer reads seven
+core fields and inventories active uniforms; it does not read all43effectvalues.
+Queue that observability gap explicitly ratherthan infer values fromsavedconfig.
+AftercandidateQA, schedule a quiet true-fullscreen matchedoriginal/disabled/enabled
+balanced benchmark batch with actual source/class/scene/config/window fingerprints,
+query-free total-throughput corroboration for useful signals. Goal remains active;
+no new LODperformance orquality claim, target not reduced.
