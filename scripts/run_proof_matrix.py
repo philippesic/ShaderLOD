@@ -21,6 +21,14 @@ from summarize_workload import summarize
 
 ROOT = Path(__file__).resolve().parents[1]
 CASES = {
+    'miniature-high': ('coastalwater/high', 'runClientLodOff'),
+    'miniature-lower': ('coastalwater/lower', 'runClientLodOff'),
+    'bsl-high': ('coastalwater/high', 'runClientLodOff'),
+    'bsl-parallax-off': ('coastalwater/parallax-off', 'runClientLodOff'),
+    'miniature-bridge-absent': ('coastalwater/bridge-absent', 'runClientLodOff'),
+    'miniature-bridge-disabled': ('coastalwater/bridge-disabled', 'runClientLodOn'),
+    'miniature-bridge-enabled': ('coastalwater/bridge-enabled', 'runClientLodOn'),
+    'miniature-bridge-bands': ('coastalwater/bridge-bands', 'runClientLodOn'),
     'makeup-high': ('coastalwater/high', 'runClientLodOff'),
     'makeup-off': ('coastalwater/adapter-off', 'runClientLodOff'),
     'makeup-on': ('coastalwater/adapter-on', 'runClientLodOff'),
@@ -34,6 +42,12 @@ CASES = {
     'makeup-bridge-bands': ('coastalwater/bridge-bands', 'runClientLodOn'),
     'forest-cloudguard-off': ('forest/cloudguard-off', 'runClientLodOff'),
     'forest-cloudguard-on': ('forest/cloudguard-on', 'runClientLodOff'),
+    'forest-secondary-base': ('forest/secondary-base', 'runClientLodOn'),
+    'forest-secondary-off': ('forest/secondary-off', 'runClientLodOn'),
+    'forest-secondary-on': ('forest/secondary-on', 'runClientLodOn'),
+    'forest-literal-base': ('forest/literal-base', 'runClientLodOn'),
+    'forest-literal-off': ('forest/literal-off', 'runClientLodOn'),
+    'forest-literal-on': ('forest/literal-on', 'runClientLodOn'),
     'cloud-high': ('cloudstorm/high', 'runClientLodOff'),
     'cloud-lower': ('cloudstorm/lower', 'runClientLodOff'),
     'cloud-adaptive': ('cloudstorm/adaptive', 'runClientLodOn'),
@@ -121,9 +135,9 @@ def declared_defaults(settings):
 
 
 def archive_defaults(archive):
-    # Explicit layouts for pinned Photon and MakeUp experiments. This inspects
+    # Explicit layouts for pinned pack experiments. This inspects
     # declared controls; it does not rewrite or establish support for a pack.
-    settings = next((name for name in ('shaders/settings.glsl', 'shaders/lib/config.glsl')
+    settings = next((name for name in ('shaders/settings.glsl', 'shaders/lib/config.glsl', 'shaders/shader.h', 'shaders/lib/settings.glsl')
                      if name in archive.namelist()), None)
     if settings is None: raise ValueError('Unsupported experiment option layout')
     defaults = declared_defaults(archive.read(settings).decode())

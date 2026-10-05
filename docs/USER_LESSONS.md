@@ -105,3 +105,15 @@ root corrected a separate immutable r2request towardz640.5. The first all41
 verified images remain harness/trajectory evidence only, not approved water
 quality. Cameraquality worker's actual-camera metadata exposed the mismatch;
 this was root's route assumption, not a user or shader failure.
+
+
+## Sampler diagnostic resolution provenance
+
+Root's carried summary described sampler r2 as native2976×1672. The actual
+retained workload report and launch log establish1488×836 in
+`run-workloads/cloud-sampler-state-probe/forest/secondary-base`. The cloud
+worker repeated the supplied context; root owns the mistaken assumption.
+Exact report/filter data remain valid, but native literalpilot extrapolated
+resolution and did not itself record samplerstate. Correct the qualifier and
+capture native-size samplerstate before relying on exactnative-profile evidence.
+Use actual window/input reports rather than the source profile's prior resolution.

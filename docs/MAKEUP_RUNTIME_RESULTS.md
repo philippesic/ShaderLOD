@@ -72,3 +72,31 @@ prove that explicitLOD0 causes the loss or that the classifier is cost-free;
 equal calls can fold. Capture/source inspection plus repeated/reloadcontrols
 are required. Exact diagnostic patches/quality intent in MAKEUP_REGRESSION_PROBES.md.
 No sampler/form change or active adapter promotion follows.
+
+
+## Original MakeUp with DH installed
+
+Root runner51489 ended exit0, single accepted original9.5g/minimal/DHpresent
+shoreline at1488×836,40s warmup20s capture/GPU1/16. Exact loaded DH3.3.3,
+Iris/Sodium/NeoForge and archived source/options confirmed. DH terrain/water
+shaders linked, fallback=false and renderer setup completed; driver emitted
+unsupported GL_ARB_shader_texture_lod extension warnings. Inspected final PNG
+shows near shoreline/water reflections and distant hazy land with no gross
+failure. This run did not record VBO draw statistics, so actual distant terrain
+draw acceptance remains incomplete. DH installation alone is insufficient.
+
+Frame8.358ms/GPU7.436ms/thread7.372ms (~119.65FPS), one pilot only. Do not compare
+this DH-present result to earlier noDH timings as an isolated adapter effect.
+Raw `dev/logs/makeup-original-dh-smoke-r1` preserves full source/jar/classes,
+actual options/window/camera, logs, capture and timing. Next bounded diagnostic
+must observe real DH draw counts; no support promotion.
+
+
+DH submission diagnostic28154 subsequently exited0: opted-in verified3.3.3
+terrain hook recorded394725opaque and389269translucent world submissions,
+cumulativewarmup included. Hook exercised, exactjarhash matched, renderer
+notdisabled and fallbackfalse; finalshoreline/distantland/water PNG inspected.
+These actualCPUdraw submissions improve compatibility evidence beyond module
+presence/renderlistcounts. They do not prove GPUcompletion/distantpixelidentity,
+waterboundary/underwater quality or shadow correctness. See DH_RENDER_EVIDENCE.md;
+raw diagnosticGPUqueries0 is excluded from performance comparisons.

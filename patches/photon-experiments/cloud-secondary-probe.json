@@ -1,0 +1,106 @@
+{
+  "schema": 1,
+  "experiment": "photon-cloud-secondary-extent-probe",
+  "base_version": "v1.3b",
+  "baseline": "B15 protected-lighting/no-atmosphere",
+  "base_sha256": "b15d3c50f192e0e3de8e912afba2cc531e7d0520e3cbe573a7e35b993528e16c",
+  "license_sha256": "514402d18eedb0afe374344ca9f0fe87b7399779518184b8fc64e31674555fc5",
+  "baseline_metadata_sha256": "5653a52f590ce10cd75fbaff24f1ed053e49564ade7b4c79bb2747f69feed084",
+  "switch": "PHOTON_CLOUD_SECONDARY_EXTENT_PROBE",
+  "option_declaration": "// ShaderLOD standalone secondary-extent probe; default off.\n//#define PHOTON_CLOUD_SECONDARY_EXTENT_PROBE\n",
+  "members": [
+    {
+      "path": "shaders/include/sky/clouds/cumulus.glsl",
+      "source_sha256": "a17f8fba86589b1b138063bbd3d1c261055f135b79ad4985579786abb1773d9c",
+      "patched_sha256": "05da1b9b1c68b7e7e7c45cb0b485871cf5a11035a8122bd0be0adc10d8ba9114",
+      "replacements": [
+        {
+          "before": "float clouds_cumulus_optical_depth(\n    vec3 ray_origin,\n    vec3 ray_dir,\n    float dither,\n    uint step_count,\n    uint original_steps\n) {",
+          "after": "#ifdef PHOTON_CLOUD_SECONDARY_EXTENT_PROBE\n// ShaderLOD standalone probe: preserve B15's ratio and operation order.\nfloat clouds_cumulus_secondary_extent_scale(uint step_count, uint original_steps) {\n    return (float(step_count) / float(original_steps)) *\n            (exp2(float(original_steps)) - 1.0) / (exp2(float(step_count)) - 1.0);\n}\n\n#endif // PHOTON_CLOUD_SECONDARY_EXTENT_PROBE\nfloat clouds_cumulus_optical_depth(\n    vec3 ray_origin,\n    vec3 ray_dir,\n    float dither,\n    uint step_count,\n#ifdef PHOTON_CLOUD_SECONDARY_EXTENT_PROBE\n    uint original_steps,\n    float extent_scale\n#else\n    uint original_steps\n#endif // PHOTON_CLOUD_SECONDARY_EXTENT_PROBE\n) {"
+        },
+        {
+          "before": "        step_length *= (float(step_count) / float(original_steps)) *\n            (exp2(float(original_steps)) - 1.0) / (exp2(float(step_count)) - 1.0);\n",
+          "after": "#ifdef PHOTON_CLOUD_SECONDARY_EXTENT_PROBE\n        step_length *= extent_scale;\n#else\n        step_length *= (float(step_count) / float(original_steps)) *\n            (exp2(float(original_steps)) - 1.0) / (exp2(float(step_count)) - 1.0);\n#endif // PHOTON_CLOUD_SECONDARY_EXTENT_PROBE\n"
+        },
+        {
+          "before": "#endif // SHADERLOD_CLOUD_MODE\n",
+          "after": "#endif // SHADERLOD_CLOUD_MODE\n#ifdef PHOTON_CLOUD_SECONDARY_EXTENT_PROBE\n    // Selected counts are final and invariant throughout this primary ray.\n    float lighting_extent_scale = 1.0;\n    float ambient_extent_scale = 1.0;\n    if (lighting_steps != CLOUDS_CUMULUS_LIGHTING_STEPS) {\n        lighting_extent_scale = clouds_cumulus_secondary_extent_scale(\n            lighting_steps, CLOUDS_CUMULUS_LIGHTING_STEPS);\n    }\n    if (ambient_steps != CLOUDS_CUMULUS_AMBIENT_STEPS) {\n        ambient_extent_scale = clouds_cumulus_secondary_extent_scale(\n            ambient_steps, CLOUDS_CUMULUS_AMBIENT_STEPS);\n    }\n#endif // PHOTON_CLOUD_SECONDARY_EXTENT_PROBE\n"
+        },
+        {
+          "before": "        float light_optical_depth = clouds_cumulus_optical_depth(\n            ray_pos,\n            light_dir,\n            hash.x,\n            lighting_steps,\n            CLOUDS_CUMULUS_LIGHTING_STEPS\n        );",
+          "after": "        float light_optical_depth = clouds_cumulus_optical_depth(\n            ray_pos,\n            light_dir,\n            hash.x,\n            lighting_steps,\n#ifdef PHOTON_CLOUD_SECONDARY_EXTENT_PROBE\n            CLOUDS_CUMULUS_LIGHTING_STEPS,\n            lighting_extent_scale\n#else\n            CLOUDS_CUMULUS_LIGHTING_STEPS\n#endif // PHOTON_CLOUD_SECONDARY_EXTENT_PROBE\n        );"
+        },
+        {
+          "before": "        float sky_optical_depth = clouds_cumulus_optical_depth(\n            ray_pos,\n            sky_dir,\n            hash.y,\n            ambient_steps,\n            CLOUDS_CUMULUS_AMBIENT_STEPS\n        );",
+          "after": "        float sky_optical_depth = clouds_cumulus_optical_depth(\n            ray_pos,\n            sky_dir,\n            hash.y,\n            ambient_steps,\n#ifdef PHOTON_CLOUD_SECONDARY_EXTENT_PROBE\n            CLOUDS_CUMULUS_AMBIENT_STEPS,\n            ambient_extent_scale\n#else\n            CLOUDS_CUMULUS_AMBIENT_STEPS\n#endif // PHOTON_CLOUD_SECONDARY_EXTENT_PROBE\n        );"
+        }
+      ]
+    },
+    {
+      "path": "shaders/include/sky/clouds/altocumulus.glsl",
+      "source_sha256": "d13de78fb87924295a4dd90af455a1bfa86776a708e1b461e2a158636d550255",
+      "patched_sha256": "35a189103069aa96ef5e6add78d1a3ea592a55a80958373a0f34f546eba36091",
+      "replacements": [
+        {
+          "before": "float clouds_altocumulus_optical_depth(\n    vec3 ray_origin,\n    vec3 ray_dir,\n    float dither,\n    uint step_count,\n    uint original_steps\n) {",
+          "after": "#ifdef PHOTON_CLOUD_SECONDARY_EXTENT_PROBE\n// ShaderLOD standalone probe: preserve B15's ratio and operation order.\nfloat clouds_altocumulus_secondary_extent_scale(uint step_count, uint original_steps) {\n    return (float(step_count) / float(original_steps)) *\n            (exp2(float(original_steps)) - 1.0) / (exp2(float(step_count)) - 1.0);\n}\n\n#endif // PHOTON_CLOUD_SECONDARY_EXTENT_PROBE\nfloat clouds_altocumulus_optical_depth(\n    vec3 ray_origin,\n    vec3 ray_dir,\n    float dither,\n    uint step_count,\n#ifdef PHOTON_CLOUD_SECONDARY_EXTENT_PROBE\n    uint original_steps,\n    float extent_scale\n#else\n    uint original_steps\n#endif // PHOTON_CLOUD_SECONDARY_EXTENT_PROBE\n) {"
+        },
+        {
+          "before": "        step_length *= (float(step_count) / float(original_steps)) *\n            (exp2(float(original_steps)) - 1.0) / (exp2(float(step_count)) - 1.0);\n",
+          "after": "#ifdef PHOTON_CLOUD_SECONDARY_EXTENT_PROBE\n        step_length *= extent_scale;\n#else\n        step_length *= (float(step_count) / float(original_steps)) *\n            (exp2(float(original_steps)) - 1.0) / (exp2(float(step_count)) - 1.0);\n#endif // PHOTON_CLOUD_SECONDARY_EXTENT_PROBE\n"
+        },
+        {
+          "before": "#endif // SHADERLOD_CLOUD_MODE\n",
+          "after": "#endif // SHADERLOD_CLOUD_MODE\n#ifdef PHOTON_CLOUD_SECONDARY_EXTENT_PROBE\n    // Selected counts are final and invariant throughout this primary ray.\n    float lighting_extent_scale = 1.0;\n    float ambient_extent_scale = 1.0;\n    if (lighting_steps != CLOUDS_ALTOCUMULUS_LIGHTING_STEPS) {\n        lighting_extent_scale = clouds_altocumulus_secondary_extent_scale(\n            lighting_steps, CLOUDS_ALTOCUMULUS_LIGHTING_STEPS);\n    }\n    if (ambient_steps != CLOUDS_ALTOCUMULUS_AMBIENT_STEPS) {\n        ambient_extent_scale = clouds_altocumulus_secondary_extent_scale(\n            ambient_steps, CLOUDS_ALTOCUMULUS_AMBIENT_STEPS);\n    }\n#endif // PHOTON_CLOUD_SECONDARY_EXTENT_PROBE\n"
+        },
+        {
+          "before": "        float light_optical_depth = clouds_altocumulus_optical_depth(\n            ray_pos,\n            light_dir,\n            hash.x,\n            lighting_steps,\n            CLOUDS_ALTOCUMULUS_LIGHTING_STEPS\n        );",
+          "after": "        float light_optical_depth = clouds_altocumulus_optical_depth(\n            ray_pos,\n            light_dir,\n            hash.x,\n            lighting_steps,\n#ifdef PHOTON_CLOUD_SECONDARY_EXTENT_PROBE\n            CLOUDS_ALTOCUMULUS_LIGHTING_STEPS,\n            lighting_extent_scale\n#else\n            CLOUDS_ALTOCUMULUS_LIGHTING_STEPS\n#endif // PHOTON_CLOUD_SECONDARY_EXTENT_PROBE\n        );"
+        },
+        {
+          "before": "        float sky_optical_depth = clouds_altocumulus_optical_depth(\n            ray_pos,\n            sky_dir,\n            hash.y,\n            ambient_steps,\n            CLOUDS_ALTOCUMULUS_AMBIENT_STEPS\n        );",
+          "after": "        float sky_optical_depth = clouds_altocumulus_optical_depth(\n            ray_pos,\n            sky_dir,\n            hash.y,\n            ambient_steps,\n#ifdef PHOTON_CLOUD_SECONDARY_EXTENT_PROBE\n            CLOUDS_ALTOCUMULUS_AMBIENT_STEPS,\n            ambient_extent_scale\n#else\n            CLOUDS_ALTOCUMULUS_AMBIENT_STEPS\n#endif // PHOTON_CLOUD_SECONDARY_EXTENT_PROBE\n        );"
+        }
+      ]
+    },
+    {
+      "path": "shaders/include/sky/clouds/cumulus_congestus.glsl",
+      "source_sha256": "3e17ef9f8909861ec11a5d2bf8da7883333cb2816a3e1def2fed74d82d52f5b2",
+      "patched_sha256": "87c1acc1975fb3eb788a68c627488a993225d12aaf13bca332fffa8cfa653c86",
+      "replacements": [
+        {
+          "before": "float clouds_cumulus_congestus_optical_depth(\n    vec3 ray_origin,\n    vec3 ray_dir,\n    float dither,\n    uint step_count,\n    uint original_steps\n) {",
+          "after": "#ifdef PHOTON_CLOUD_SECONDARY_EXTENT_PROBE\n// ShaderLOD standalone probe: preserve B15's ratio and operation order.\nfloat clouds_cumulus_congestus_secondary_extent_scale(uint step_count, uint original_steps) {\n    return (float(step_count) / float(original_steps)) *\n            (exp2(float(original_steps)) - 1.0) / (exp2(float(step_count)) - 1.0);\n}\n\n#endif // PHOTON_CLOUD_SECONDARY_EXTENT_PROBE\nfloat clouds_cumulus_congestus_optical_depth(\n    vec3 ray_origin,\n    vec3 ray_dir,\n    float dither,\n    uint step_count,\n#ifdef PHOTON_CLOUD_SECONDARY_EXTENT_PROBE\n    uint original_steps,\n    float extent_scale\n#else\n    uint original_steps\n#endif // PHOTON_CLOUD_SECONDARY_EXTENT_PROBE\n) {"
+        },
+        {
+          "before": "        step_length *= (float(step_count) / float(original_steps)) *\n            (exp2(float(original_steps)) - 1.0) / (exp2(float(step_count)) - 1.0);\n",
+          "after": "#ifdef PHOTON_CLOUD_SECONDARY_EXTENT_PROBE\n        step_length *= extent_scale;\n#else\n        step_length *= (float(step_count) / float(original_steps)) *\n            (exp2(float(original_steps)) - 1.0) / (exp2(float(step_count)) - 1.0);\n#endif // PHOTON_CLOUD_SECONDARY_EXTENT_PROBE\n"
+        },
+        {
+          "before": "#endif // SHADERLOD_CLOUD_MODE\n",
+          "after": "#endif // SHADERLOD_CLOUD_MODE\n#ifdef PHOTON_CLOUD_SECONDARY_EXTENT_PROBE\n    // Selected counts are final and invariant throughout this primary ray.\n    float lighting_extent_scale = 1.0;\n    float ambient_extent_scale = 1.0;\n    if (lighting_steps != CLOUDS_CUMULUS_CONGESTUS_LIGHTING_STEPS) {\n        lighting_extent_scale = clouds_cumulus_congestus_secondary_extent_scale(\n            lighting_steps, CLOUDS_CUMULUS_CONGESTUS_LIGHTING_STEPS);\n    }\n    if (ambient_steps != CLOUDS_CUMULUS_CONGESTUS_AMBIENT_STEPS) {\n        ambient_extent_scale = clouds_cumulus_congestus_secondary_extent_scale(\n            ambient_steps, CLOUDS_CUMULUS_CONGESTUS_AMBIENT_STEPS);\n    }\n#endif // PHOTON_CLOUD_SECONDARY_EXTENT_PROBE\n"
+        },
+        {
+          "before": "        float light_optical_depth = clouds_cumulus_congestus_optical_depth(\n            ray_pos,\n            light_dir,\n            hash.x,\n            lighting_steps,\n            CLOUDS_CUMULUS_CONGESTUS_LIGHTING_STEPS\n        );",
+          "after": "        float light_optical_depth = clouds_cumulus_congestus_optical_depth(\n            ray_pos,\n            light_dir,\n            hash.x,\n            lighting_steps,\n#ifdef PHOTON_CLOUD_SECONDARY_EXTENT_PROBE\n            CLOUDS_CUMULUS_CONGESTUS_LIGHTING_STEPS,\n            lighting_extent_scale\n#else\n            CLOUDS_CUMULUS_CONGESTUS_LIGHTING_STEPS\n#endif // PHOTON_CLOUD_SECONDARY_EXTENT_PROBE\n        );"
+        },
+        {
+          "before": "        float sky_optical_depth = clouds_cumulus_congestus_optical_depth(\n            ray_pos,\n            sky_dir,\n            hash.y,\n            ambient_steps,\n            CLOUDS_CUMULUS_CONGESTUS_AMBIENT_STEPS\n        );",
+          "after": "        float sky_optical_depth = clouds_cumulus_congestus_optical_depth(\n            ray_pos,\n            sky_dir,\n            hash.y,\n            ambient_steps,\n#ifdef PHOTON_CLOUD_SECONDARY_EXTENT_PROBE\n            CLOUDS_CUMULUS_CONGESTUS_AMBIENT_STEPS,\n            ambient_extent_scale\n#else\n            CLOUDS_CUMULUS_CONGESTUS_AMBIENT_STEPS\n#endif // PHOTON_CLOUD_SECONDARY_EXTENT_PROBE\n        );"
+        }
+      ]
+    },
+    {
+      "path": "shaders/settings.glsl",
+      "source_sha256": "d1f571e5d96ecffdf7ebcfcf28a13d34dc5bfd5c3606702e06832f95f88aa3cd",
+      "patched_sha256": "22681254cf65e59e3b9b9b6a6c87954f62f99b4dded5fe2ca068083a344d66e0",
+      "enabled_sha256": "98af4a747a14e01702ce5c605df13c080fd69368df0ff0d84bf3ec814f0c8134",
+      "replacements": [
+        {
+          "before": "#define SETTINGS_INCLUDED\n",
+          "after": "#define SETTINGS_INCLUDED\n// ShaderLOD standalone secondary-extent probe; default off.\n//#define PHOTON_CLOUD_SECONDARY_EXTENT_PROBE\n"
+        }
+      ]
+    }
+  ]
+}

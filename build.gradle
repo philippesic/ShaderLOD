@@ -123,6 +123,12 @@ neoForge {
                     systemProperty "shaderlod.dev.${name}", project.property(name).toString()
                 }
             }
+            if (project.hasProperty('cloudSamplerProbe')) {
+                systemProperty 'shaderlod.dev.cloudSamplerProbe', project.property('cloudSamplerProbe').toString()
+            }
+            if (project.hasProperty('dhDrawEvidence')) {
+                systemProperty 'shaderlod.dev.dhDrawEvidence', project.property('dhDrawEvidence').toString()
+            }
             if (project.hasProperty('cpuLayerTiming')) {
                 systemProperty 'shaderlod.dev.cpuLayerTiming', project.property('cpuLayerTiming').toString()
             }

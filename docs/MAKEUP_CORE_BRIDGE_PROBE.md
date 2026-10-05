@@ -203,3 +203,31 @@ No mainconfig/transport/sharedhelper changes. Existingcore globalenable and
 radialnear/far consumed; per-effect/preset/transition/debug unconsumed. Pack
 support stillunpromoted. Next cue-off original/disabled/active images, motion
 and repeatedGPU captures, modabsentbehavior, DH compatibility and reloads.
+
+
+## Normal-render pilot with cue compiled out
+
+exec91556 exit0/allfourcomplete. Same frozen bridge archive and native medium
+profile, minimal/noDH,35swarm20scapture/GPU1/16,1488×836, same shoreline.
+All loaded options require corebridge1/cue0/legacywaterLOD0. Root inspected
+disabled and enabled96/160 PNGs: normal near bank/water reflections remain,
+with no gross terrain/shadow change. It is not full-motion or glint acceptance.
+
+| Case | Mod state | GPU mean ms | Frame duration ms | Thread mean ms |
+| --- | --- | ---: | ---: | ---: |
+| Absent | physical main mod absent |6.150|6.639|6.261|
+| Disabled | enable=false,96/160 |6.160|6.457|6.152|
+| Enabled | enable=true,96/160 |6.086|6.583|6.218|
+| Changed bands | enable=true,8/16 |6.225|6.658|6.305|
+
+This singleblock establishes bounded normal rendering after real diagnostic
+transport proof. It does not establish a useful gain. Earlier119.85FPS active
+shader-only failure stays retained; connected probe nowapproximately150FPS
+does not identify a compiler/driver cause. Archive/source/layout differ and
+between-JVM variance remains. No default/support/performance promotion.
+Rawdev/logs/makeup-core-bridge-render-r1 retains screenshots, all source/input
+hashes, actual mod/config/options, elapsed samples and failures.
+
+Next: cue-off high-rate near/transition/far/glint quality, enabled/disabled
+repeated controls and DH-present original/probe compatibility. Existing core
+near/far change is not a verified future per-effect or preset API.

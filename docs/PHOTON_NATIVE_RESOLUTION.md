@@ -68,3 +68,55 @@ Old automatic shots now gated while benchmark/workload owns capture. Rawreport
 preserved asdev/logs/photon-native-effects-inprocess-r1-benchmark.json; analyzed
 phases/images checked at originalprofile, outputadjacent-analysis JSON. Clean
 forward/reverse repetitions are next; no promotion from this session.
+
+
+## Isolated cloud control in one JVM
+
+exec34162 exit0/strictanalysisaccepted; B15/cloud-only optionsfixed, other
+five-effect modulesfalse, lightingprotected/cache/analytic/debugoff, native
+2976×1672, minimal/DH,40sinitial10ssettle20scapture/GPU1/16/fixedwetness0.
+OFF/ON/OFF/ONFPS61.353/64.348/61.415/64.174; GPUmeans14.702/14.038/14.926/14.054ms,
+threadmeans8.748/8.705/8.463/8.686ms. AdjacentGPUreductions4.52/5.84%,
+frame4.65/4.30%. These correlatedphases support cloudmodulecontribution, not
+a secondary-loop cause or independent/second-workload acceptance.
+Rawdev/logs/photon-native-cloud-inprocess-r1-{benchmark,analysis}.json andlog;
+sourcephasePNG/hashes verifiedat native-effect-isolation/forest/cloud-only.
+Next fog/watercontrols, cloudrepeat/secondworkload, then conditional math-
+preserving secondaryextent hoist probe with source/off/live-disable controls.
+
+
+## Fog and water controls
+
+Fog69423 andwater24468 terminalexit0/strictanalysisaccepted, same native
+profile/method, eachone correlatedfourphase session. FogGPUOFF/ON/OFF/ON
+15.093/14.968/15.544/15.429ms, adjacentreductions0.83/0.74%; frame1.96/−0.10%.
+WaterGPU14.809/15.208/14.906/14.929ms, adjacent−2.70/−0.15%; frame+0.07/+0.11%.
+Threadtimesroughlylevel. Fogsmall andwaternousefulforestsignal, not a benefit
+claim for everyeffect or any shoreline/fullwater workload.
+Rawdev/logs/photon-native-{fog,water}-inprocess-r1-{benchmark,analysis}.json
+andlogs retainnegativearms andverifiedsource/images. Aggregate8%signal is
+not decomposed by addingthese overlapping/independentlycaptured intervals.
+Cloudsetup sourceprobe shouldbe tested as its ownsource intervention, with
+unchanged budgets/motion quality and retainedemptyray/register risks.
+
+
+## Native coastal second-workload control
+
+Root3149 exit0; strict effects analyzer accepted exactB15 and every phase input,
+window, artifact, flag map, screenshot hash and unchanged world/pipeline.
+Minimal/DHabsent, original SSR reflections enabled, native2976×1672,
+40s initial warmup10s settle20s capture/GPU1/16/fixedwetness0. Archive and
+all five effect options fixed; only existing live globalenable changed.
+
+OFF/ON/OFF/ON GPU14.0414/12.7941/13.8791/12.9075ms, FPS65.487/71.474/66.450/
+70.680, thread7.1643/7.1018/6.7304/7.1689ms. Adjacent GPUreductions8.88/7.00%,
+frame8.38/5.99%. Root enabledphasePNG inspected: shoreline terrain/shadows and
+nearwater tree reflections visible, no gross failure. Moving edge/glint/
+underwater and restoration imagery remain separate quality work.
+
+This is a positive correlated within-session signal on a second ordinary
+workload. It is not repeated independent-run/≥15%acceptance, nor an original
+mod-absent comparison, and cannot be added to the forest percentage. Raw
+`dev/logs/photon-native-coastal-effects-forward-r1-{benchmark,analysis}.json`
+and `.log` retain all inputs/captures. Sourceprofiles
+`run-workloads/native-coastal-effects/coastalwater/adaptive`.

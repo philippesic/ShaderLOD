@@ -834,3 +834,317 @@ MAKEUP_CORE_BRIDGE_PROBE.md; helperdefaultoff andunknownversionsfallback.
 No game currentlylive; rootsoleGPU. Next cue-off render/quality/GPU controls,
 then meaningfulPhoton optimization/secondworkload and broaderadapterverification.
 Native8%clean signal remainsqualified below15%goal; sharedfullobjectiveactive.
+
+
+Checkpointb003e05 commits MakeUpexisting-core consumption source andrealcue
+evidence. Next normalrenderingprofilesfreshlyprepared withcue0; oldcue1
+rawprofiles/reports unmodified. Nativeproof runner launched selectedabsent/
+disabled/enabled96→160/enabled8→16, minimal/noDH,35swarm20scapture,GPU1/16,
+dynamicclearweather. ExactsamebridgeZIP andupstreamquality. Root mustinspect
+normalreflections/disabledrestoration andpreserve single-pilotlimits. Raw
+dev/logs/makeup-core-bridge-render-r1; exclusiveGPUoperatorroot.
+Fullnativegoal remainsactive; no stage1/15%/supportedsecondpack completion.
+
+
+LIVE session91556 verifiedbyexec handle afterlaunch, soleownedGPUclient via
+makeup-core-bridge-render-r1 matrixrunner. Continue bypollingthis exact handle
+or authoritative process/log/manifest; neverstart anotherclient whilelive.
+Ifterminal, analyzeall4normalrendercaptures andimages, then cue-off moving
+quality/repeatedGPU andDHcompatibility. RetainnegativeMakeUp/Photonserial
+pilots, sourcecore-diagnosticproof, clean native8%signals, optionalstack
+negative/qualification andhardwarelimits. No source/main ownershiptransfer
+or externalmessage/push/publication. Pendingunstaged ownerfile
+SHADOW_VISIBILITY_CACHE_DESIGN.md remainsuntouched.
+
+
+## Cue-off MakeUp terminal; Photon cloud control live
+
+91556 exit0/allfouraccepted cue-off normalrender. Absent/disabled/enabled/
+changedbands GPU6.150/6.160/6.086/6.225ms, frame6.639/6.457/6.583/6.658ms.
+Nearwater/bank imagery inspected; no useful singlepilotgain/qualitypromotion.
+MAKEUP_CORE_BRIDGE_PROBE.md records old shaderonlyfailure too.
+
+LIVE exec34162 Photon cloud-only native same-JVM effectscontrol: immutable
+B15, rootprofile native-effect-isolation/forest/cloud-only, OFF/ON/OFF/ON,
+40sinitial10ssettle20scapture,GPU1/16,fixedwetness0,minimal/DHpresent,
+windowScale2/hiddenHUD. Logdev/logs/photon-native-cloud-inprocess-r1.log.
+RootsoleGPU; no sourcecompile/change untilterminal. Nextanalyze exactarchive/
+options/semantics/images then fog/water isolatedcontrols, repeatanyuseful
+effect and secondworkload. Cloud-secondary hoist worker onlynewstandalone
+sourceprobe files outsideexistingpatches; no archivebuild/compiler/client.
+
+
+Cloud34162 terminalexit0/strictaccepted; nativecloud-onlyOFF/ON/OFF/ON
+GPU14.702/14.038/14.926/14.054ms. Adjacent4.52/5.84%lowerGPU, stablethread.
+LIVEfog exec69423 sameconditions/profileforest/fog-only, log
+dev/logs/photon-native-fog-inprocess-r1.log. Sourcefrozen untilterminal.
+Miniature sourceplanner owns MINIATURE_RUNTIME_PLAN.md only, preparingexact
+original noDH smoke requirements; no adaptation/support claim fromsource.
+Cloudprobe workerhoists exactratio onlycount!=original; records emptyray
+setup/registerrisk and no physicalsavings claim. Actualprobeunbuilt.
+
+
+## Isolations terminal; cloud-secondary runtime probe
+
+Fog69423 exit0/strictaccepted: GPUOFF/ON/OFF/ON15.093/14.968/15.544/15.429ms,
+adjacent0.83/0.74% reductions with mixedframeeffect. Water24468 exit0/
+strictaccepted: GPU14.809/15.208/14.906/14.929ms (−2.70/−0.15%), frame~0.1%.
+No waterforestgain and no positiveclaimforeverymodule. Source/effectresults
+retained in PHOTON_NATIVE_RESOLUTION.md andexactrawsession files.
+
+Secondaryextent probe nine sourcefixtures passed, including702float32
+ray/outputchecks; rootassembled disabled/enabled privatearchives fromexactB15
+afterGPUterminal. No source-shared edit. Three fresh cloud-only profiles
+prepared at run-workloads/cloud-secondary-extent-probe/forest.
+LIVEexec53149 baseline/probeoff/probeon once, native2976×1672/minimal/DH,
+40swarm20scapture/GPU1/16/fixedwetness0; log
+dev/logs/photon-cloud-secondary-pilot-r1-runner.log. No otherclient/build.
+Nextactualcompile/render/negativeorpositive pilotinspection, then matched
+repeats/quality/sourcecheck. Hoist changes no samples/jitter/density/math;
+emptyray setup andregisterliveness risks remain. Sourcefixture≠GPUgain.
+MiniatureRuntimePlan complete/pinned sourceonly; next originalnoDH compatibility
+smoke before adapting. Commonmain/sharedprotocol stilloriginalowned.
+
+
+Cloudsecondary53149 terminalexit0/all3accepted: B15/off/on GPU14.538/14.454/
+18.998ms, FPS63.76/62.56/48.77. Math-equivalent enabledsource pilot regressed;
+defaultoff/no adoption. PHOTON_CLOUD_SECONDARY_PROBE.md retainsfailure/limits.
+LIVEexec33846 enabledarchive a405f364...inoneJVM globalOFF/ON/OFF/ON, same
+cloud-only/native/minimal/DH/40sinitial10ssettle20scapture/GPU1/16/fixedwetness0.
+Logdev/logs/photon-cloud-secondary-inprocess-r1.log. RootsoleGPU; no source/
+archive/classchange untilterminal. Next analyzeexacthash/states/PNGs, then
+matchedsource repeats ifqualified; otherwise retainnegative andmoveon.
+Miniatureoriginalbaseline noDH smoke and MakeUpDH/reload/motion acceptance
+remain meaningful independentnextwork. Sharedfullobjective/gates unchanged.
+
+
+## Hoist diagnostic terminal; additional baseline smoke
+
+33846 exit0/strictaccepted: compiledhoist source globalOFF/ON/OFF/ON GPU
+14.846/14.091/15.116/14.259ms (5.09/5.67%reductions). SimilarB15cloud4.52/5.84%;
+no demonstratedincrementalhoist benefit, serial18.998msfailure retained.
+No sharedintegration/defaultchange. Separate newliteral-secondary sourceprobe
+worker tests onlyeligiblechangedlighting2/ambient1 fromB15, preservingdensity/
+ratio/ray/jitter andallother/disabledgenericpaths. Sourcecannotproveunrolling.
+
+Miniatureoriginal2.19 freshnoDHprofilesprepared fromstoppedshoreline. Explicit
+source-default outer10/stride1.6/binary4, nativebinary2lowercontrol only; exact
+releaseSHA verified. Originalfirstdriver smoke launched byroot, raw
+dev/logs/miniature-original-smoke-r1; rootsoleGPU. No adapter/support/gain
+promoted andno DHclaim. Exactjob handle followsauthoritativeexecoutput.
+Afterterminal inspect shadererrors/fallback/renderedreflections/options, preserve
+failure ifany, then explicitboundedadapter research/testing. FullPhoton and
+modgoals/gates remainactive/unshrunk. SourceUniforms mainowneruntouched.
+
+
+## Resume checkpoint: sampler evidence and DH baseline
+
+No game was live at resume; preparation handle92787 completed exit0. Miniature
+original smoke99413 and MakeUp cue-off91556 are terminal, as are all prior
+Photon timing controls. Root remains sole GPU owner.
+
+Sampler diagnostic78902 completed exit0 with timing disabled. Preserved report
+`dev/logs/cloud-sampler-state-diagnostic-r2.json` SHA256
+`b72de09d2adc5b70ff3d6dac7a1d1ff50de19e04664ae146b158f70b1895cd67`
+observed non-mipmap linear filters, anisotropy1 and no bound sampler override
+for complete cloud inputs. Active texture was restored. This narrowly qualifies
+private literal-secondary assembly/testing on the exact B15 profile, not
+universal derivative safety or pixel parity. Worker owns only new literal
+builder/manifest/tests/doc; root must build after timing client is terminal.
+
+LIVE exec51489 runs `makeup-original-dh-smoke-r1`, original pinned MakeUp9.5g,
+minimal stack, DHpresent, shoreline profile
+`run-workloads/makeup-dh-compatibility/coastalwater/high`, 40s warmup,
+20s capture, GPU1/16, original resolution1488×836. Stop only this owned runner/
+client if needed. Log `dev/logs/makeup-original-dh-smoke-r1-runner.log`.
+Next inspect real DH terrain/VBO/render and shader failure evidence; DH mod
+presence alone is insufficient. No simultaneous game or heavy build.
+
+Miniature diagnostic worker is assigned only new pack-specific core cue source,
+pinned builder/manifest/tests/doc/licenses. It will preserve all original SSR
+samples and demonstrate existing core transport before any refinement adapter.
+No main/shared ownership transfer, remote push, publication or external message.
+Full sustained goal and ordinary15%/second-workload/quality gates remain active.
+
+
+## DH baseline terminal; literal-secondary pilot live
+
+51489 exit0/accepted original MakeUp9.5g with DH3.3.3 present. DH terrain/water
+programs linked, renderer setup complete and fallbackfalse; shoreline PNG
+inspected. Unsupported textureLOD extension warnings retained. Drawn DH VBO
+count was not captured, so terrain acceptance incomplete. Frame8.358/GPU7.436/
+thread7.372ms, single pilot and different DH input from earlier noDH captures.
+
+Literal14 tests repeated; three private archives built after terminal. Enabled
+SHA2564bd113c947daa57d191370067c6ba1514ff350602298e5dfa2ec15b150dc4758,
+disabled344181d05ebc143be843e4d8ba8b873dc384ce915072cde5edf17723518647f0.
+Fresh stoppedB15 cloud-only clones preserve effective coverage=true.
+LIVEexec21212 runs exact B15/disabled/enabled serial oneblock, native2976×1672,
+minimal/DHpresent,40s warmup20s capture/GPU1/16/fixedwetness0. RootsoleGPU.
+Log `dev/logs/photon-cloud-literal-pilot-r1-runner.log`; profiles
+`run-workloads/cloud-literal-secondary-probe/forest/literal-{base,off,on}`.
+No otherclient/heavybuild untilterminal. Next inspect actualrender/compiler/
+pixelquality and exactinputs; retain any regression, then repeat only justified
+controls. Candidate mathematical structure does not prove sampler/output parity.
+
+Workers: Miniature owns new diagnostic-only core consumer, SSR untouched;
+sampler operator owns new two-file read-only terminal DH evidence utility and
+bytecode review, no integration/client/build. Original shared/main owner remains
+reserved and SHADOW_VISIBILITY_CACHE_DESIGN.md untouched. Full goal active.
+
+
+## Literal pilot terminal; second workload preparation
+
+21212 exit0/all three accepted. B15/probeoff/probeon GPU14.5028/14.6946/18.6599ms,
+FPS62.186/63.022/51.225. Candidate driver compiled, fallbackfalse and PNGs
+inspected without grossscene failure. Enabled single serial pilot regressed;
+defaultoff/no integration or source-cause/derivativeparity claim. Retained full
+raw evidence and limits in PHOTON_CLOUD_LITERAL_PROBE.md.
+
+No Minecraft client live. Preparation exec55851 builds fresh stopped Photon
+coastal effect profiles from actually rendered original SSR shoreline, exact
+B15 protectedlighting/noatmo candidate, DHabsent. Source original SSR options
+retained; original/adaptive/globaloff and per-effect configurations documented.
+Next terminal prep, then same-JVM native all-active global control on this
+second ordinary workload. Sole root GPU, no source ownership change.
+Workers still Miniature diagnostic and terminal DH draw evidence, newfiles only.
+
+
+Second-workload preparation55851 exit0. Root now launching native coastal
+B15 adaptive, reflections enabled/DHabsent, same-JVM OFF/ON/OFF/ON global
+effects control,40s initial10s settle20s capture/GPU1/16/fixedwetness0,
+windowScale2. Exact handle follows tool launch output. Log
+`dev/logs/photon-native-coastal-effects-forward-r1.log`. No otherclient/build.
+Next validate full options/source/epoch/inputmap and inspect actualnormalwater,
+then analyze bounded second-workload signal; not a≥15%acceptance fromonepilot.
+
+
+LIVE coastal benchmark handle3149 verified; no concurrentclient/build. Root
+found and records sampler resolution assumption error: r2 actual1488×836,
+notnative2976×1672. Rawdata unchanged; native literalpilot extrapolated state
+across resolution. Corrected PHOTON_CLOUD_LITERAL_PROBE/USER_LESSONS; old
+builtmanifest qualification context flaggederroneous. Next after3149terminal:
+strict coastal analysis, then sampler r3 B15 sameprofile with windowScale2 and
+GPUtimingfalse; refresh literal sampler evidence/context only afterrealreport.
+New DHdraw utility/mixin/doc frozen, notregistered/compiled yet; integration
+and a separate actualDraw diagnostic follow. RootsoleGPU; fullgoalactive.
+
+
+## Native coastal control and corrected sampler terminal
+
+3149 exit0/strictaccepted exactB15 coastal effects OFF/ON/OFF/ON. GPU14.0414/
+12.7941/13.8791/12.9075ms:8.88/7.00% adjacentreductions; frame8.38/5.99%.
+Root normalwater/shoreline PNG inspected; preserved source/capture/inputhashes.
+Secondworkload correlatedsignal, not≥15% or repeatedoriginalbaseline acceptance.
+
+77521 native-size sampler r3 exit0, actual2976×1672 verified in retained
+workloadjson, B15/minimal/DH/precompute=true, GPU samples0. Report
+`dev/logs/cloud-sampler-state-diagnostic-r3.json` SHA256
+5dbc7edf7fa5b11cebd2a4ac948a2c8e9553ddf467f5141831c29e162e283e67.
+Reviewed samecompleteinput constraints pass; literalworker refreshes only
+fourfrozen source/evidence files, with unchangedshader memberhashes. Prior r2
+resolutionerror/history retained; no nativepixelparity or performanceclaim.
+
+Root integrated opt-in DHdraw utility/mixin and default-off devplugin gate.
+`compileDevClientJava build` passed; productionjar check found0dev entries.
+Only dev/build sources changed. Root now launches originalMakeUp DHdraw
+30s warmup5s diagnostic, GPUtimingfalse, fixedwetness0, standard1488×836,
+log `dev/logs/makeup-dh-draw-diagnostic-r1.log`; authoritativehandle follows.
+No secondclient/build untilterminal. Acceptance requires positiveworlddraws,
+exactartifact/classhook and inspecteddistantimage, notlistcountalone.
+
+
+## DH actual submissions terminal; BSL baseline live
+
+28154 exit0; opted-in hooked _neoforge DHrenderer submitted394725opaque/
+389269translucent positive-index worlddraws cumulativesincewarmup. ExactDH3.3.3
+hashmatches; rendererexceptiondisabled=false, Irisfallbackfalse, GPUqueries0.
+Rootshoreline/farland/water PNG inspected. Submission plus boundedimage evidence,
+not completedGPU/perpixelwaterboundary/shadowcorrectness. Retained log/report/
+PNG and precise list-vs-draw semantics in DH_RENDER_EVIDENCE.md.
+
+BSLoriginal10.1.8 sourceplan complete andfreshprofiles27200terminal. Untouched
+HIGHdefaults keep authorMac-incompatible voxel optionoff. Originalplusnative
+WATER_PARALLAX=false only lowerqualitycontrol; no sourceadapter/redistribution.
+Root launches `bsl-original-smoke-r1`, minimal/noDH, standard1488×836,
+35s warmup20s capture/GPU1/16, inspectedshoreline. Authoritativehandle follows
+execoutput; log `dev/logs/bsl-original-smoke-r1-runner.log`. RootsoleGPU;
+nootherclient/build. Next originalshaderfailure/render/options inspection.
+Miniaturecore8fixtures passed andexactarchivebuilt; fresh4cueprofiles87851
+terminal, ready afterBSL. Cuechangesno SSRwork; no performanceclaim.
+Literalworker refreshingnative r3 sourcequalification, originalshaderpatch
+hashes unchanged. Originalmain/shared ownershipreserved; fullgoalactive.
+
+
+LIVE BSLrunner handle6187 verified; soleGPU root, currentoriginalHIGH arm.
+Literal r3qualifier source/tests/doc frozen16fixtures, correctactualhash
+loading and separate source/diagnostic profiles; shaderpatchhashes unchanged.
+Sampleroperator now owns only CloudSamplerStateProbe.java and itsdoc for
+bounded all-active-scalar2D fullscreen capture, enabling future Miniaturedepth/
+color filtering review. Existing r2/r3 rawdata untouched. No sourcecompileuntil
+6187terminal; worker no builds/clients. Miniaturecue runtime comes next, then
+original samplerdiagnostic ifrefinement experiment is stillworthwhile.
+
+
+## BSL terminal; Miniature diagnostic live
+
+6187 exit0/bothaccepted originalBSL10.1.8 HIGH/noDH. FulloriginalSHADOW/colored
+shadow/lightshaft/TAA/REFLECTION2,2048/256shadowparameters, voxelguardsoff.
+RootPNG inspected actualterrain/waterwaves/reflectedtrees/shadows, fallbackfalse.
+OriginalGPU8.0697ms/FPS114.319 versusnativeWATER_PARALLAX=false7.8431/117.271:
+2.81%GPU singlepilotdifferentquality, noLODgain/performancepromotion. Rawsource/
+options/artifacts/samples/logs/PNGs retained. No derivative/distribution.
+
+Scalar2D/fullscreen samplerprobe extension frozen and rootlaunchcompile next.
+Miniaturecorecue runner launched4states absent/disabled/enabled96→160/8→16,
+noDH/minimal,25s warmup8s capture/GPUqueriesdisabled. Sameexactprivatearchive,
+optionsCORE_PROBE1/CORE_CUE1; nativeSSR/budgets unchanged. Log
+`dev/logs/miniature-core-bridge-cue-r1-runner.log`; rootsoleGPU, actualhandle
+followslaunchoutput. Next verifyall4actualwatercuecolors/hashes, compile/fallback
+and actualcoreconnection. Diagnostic is no performance/quality acceptance.
+Then originalMiniature scalar2D samplerstate and high-rate cue-off motion/repeat
+nativecoastal controls, preserving≥15%/independentruns/quality pendinggates.
+
+
+## Miniature core cue terminal; original sampler diagnostic live
+
+21160 exit0/all4accepted. Root inspectedabsentmagenta/disabledyellow/enabled
+96→160greenblue/8→16mostlybluewater. Actual existingcore2/globalenable/nearfar
+reachMiniaturepixels; sampler/SSRfunctions/budgets unchanged. ZIP0855cf136e73ff
+4773f5609440dfae25e5d8bf59a097810dd5edb1c9145fe97e. No optimization/support/
+performanceclaim; eightfixtures and exactsource/artifact/PNGchecks retained.
+
+LIVEexec55863 originalMiniature2.19/noDH/minimal/1488×836shoreline,
+20s warmup5s diagnostic/GPUtimingfalse/fullscreen scalar2Dsamplerprobe,
+log `dev/logs/miniature-sampler-state-diagnostic-r1.log`, profile
+`run-workloads/miniature-original-probe/coastalwater/high`. RootsoleGPU.
+Nextterminal preservejson/workload/PNG, reviewactivefinalpass depthtex0 and
+colortex0/6/7 filters/LOD/aniso, then qualifiedexplicitdistance-refinement
+sourcehypothesis versusnativeoriginal2-refinement control. BroaderPhoton
+repeat/motion/15%gate andconfigqualityremainactive; mainsharedreserved.
+
+
+## Checkpoint before continued refinement and quality work
+
+55863 exit0: actualoriginalMiniature1488×836/minimal/noDH, GPUqueries0.
+PreservedreportSHA b04ab014bd202a8e4ba48a539bb1c65867e10e13b3fa4694ef37e2f6187cc68e.
+Complete depthtex0/colortex0/6/7 linkedset observedprogram16: non-mip
+nearestdepth/linearcolor, aniso1/sampler0/bias0/base0; broadLOD/levelbounds,
+activeunitrestored. Exactframebuffer/source verified separatelyinworkloadjson.
+No client currentlylive. Nativegoalactive, rootsoleGPU. Priorhandles allterminal.
+
+Frozenmilestone checks: Java/buildintegrationpassed; devclassesexcludedfrom
+productionjar; actualDHhookaccepted; literal16, hoist9 andMiniaturecore8
+lightweightfixtures passed, Pythoncompile/scopeddiff clean. Negativecloud
+probesretained, BSLnativecontrolsinglepilot, Photonsecondworkloadpositivebut
+correlated7–9%signal. No15%/independent-run/performance/support promotion.
+
+New Miniaturerefinementworker owns onlynew5files (builder/patch/privatehelper/
+tests/doc), acceptingexistingcore2 with4near/3mid/2far refinements onlynative4.
+Outertrace/bracket/mask/jitter unchanged; activeassemblyqualifiedexactnative
+samplerreport, privatefull4 explicitsampling controlrequired, syntaxstillneeds
+actualIrisdriver. It doesnot ownpriorcuefiles/main/sharedbuilds/clients.
+Rootnext: reverse nativecoastal effectscontrol plushighratecue-offquality,
+then reviewworkerfreeze andboundedrealcompile/controlcaptures. Existingmain/
+sharedownerreserved, originalSHADOW_VISIBILITY_CACHE_DESIGN.md unstaged/
+untouched. No push/publication/messaging. Full goal/gates remainunshrunk.
