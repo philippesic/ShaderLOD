@@ -16,6 +16,8 @@
 | 2026-10-04 | Sustain agent-team performance development; add shader targets only after meaningful Photon gains | Explicit user grants broad implementation freedom, retains current NeoForge/MC target, and asks for optional performance-mod benchmarks | Active goal: sustained-performance |
 | 2026-10-04 | Start with minimal Iris/Sodium versus ModernFix/FerriteCore/ImmediatelyFast; culling separate | Iris requires Sodium; additional optimizer gains must be separated from ShaderLOD gains | Pinned artifacts; runtime verification underway |
 | 2026-10-04 | Use repeated run-level comparisons and provisional 15% meaningful-gain gate | Coordinator engineering criterion under user authorization; prior single-run variation prevents broad claims | Pending evidence, adjustable transparently |
+| 2026-10-05 | General LOD and adjacent rendering work avoidance; reusable integration interfaces; Photon is the only currently supported shader; consistently use bounded native agent teams | Explicit user direction; supersedes additional-pack implementation work in the previous goal | Active: general-lod-50-percent |
+| 2026-10-05 | Target 50% higher total rendering throughput with little discernible quality difference | Explicit user target; coordinator interprets faster as 1.5x throughput / 33.333% less frame time and records both metrics | Target unachieved; replaces provisional 15% gate |
 
 Dependency artifacts are recorded in `dev/runtime.lock.json`. Verify this set
 in the development client before calling it supported. Photon upstream does

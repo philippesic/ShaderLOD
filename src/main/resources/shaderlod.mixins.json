@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_21",
   "client": [
     "CommonUniformsMixin",
+    "EffectUniformsMixin",
     "EffectiveRenderDistanceMixin",
     "ShadowCullingFrustumMixin",
     "ShadowCullingFrustumMixin$Reversed",

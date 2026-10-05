@@ -18,6 +18,7 @@ public final class ShaderLod {
 
     public ShaderLod(ModContainer container) {
         container.registerConfig(ModConfig.Type.CLIENT, ShaderLodConfig.SPEC);
+        container.registerConfig(ModConfig.Type.CLIENT, ShaderLodEffectConfig.SPEC, "shaderlod-effects-client.toml");
         container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
         NeoForge.EVENT_BUS.addListener(ShaderLodCommands::register);
         NeoForge.EVENT_BUS.addListener(ShaderLodCommands::reportRuntime);

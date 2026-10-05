@@ -1,0 +1,48 @@
+{
+  "schema": 1,
+  "experiment": "photon-ao-consecutive-depth-reuse-probe",
+  "base_version": "v1.3b",
+  "base_sha256": "120897768eaa8cb1f14a3e98f88dff009ae3204ee3b96904a4fe8586edfc1ead",
+  "license_sha256": "514402d18eedb0afe374344ca9f0fe87b7399779518184b8fc64e31674555fc5",
+  "switch": "SHADERLOD_AO_DEPTH_REUSE_PROBE",
+  "option_declaration": "// ShaderLOD private AO depth-reuse experiment; default off.\n//#define SHADERLOD_AO_DEPTH_REUSE_PROBE\n",
+  "source_scope": "original Photon archive only; two upstream members; no core patch overlay",
+  "policy": "Reuse only consecutive valid depth texels. Original radius, loop, fractional ray positions, dithering, falloff and horizon math retained. No quality budget reduction.",
+  "original_kernel_sha256": "618f50c9e87ae9f1ee360e5ac38873579d7416c3ee929158306e83d7b5b2e199",
+  "cache_state": "    // Reuse only consecutive in-range depth texels; keep every fractional ray point.\n    ivec2 depth_texture_size = textureSize(combined_depth_tex, 0);\n    bool depth_cache_valid = false;\n    ivec2 depth_cache_texel = ivec2(0);\n    float depth_cache_value = 0.0;\n\n",
+  "original_fetch": "        float depth = texelFetch(combined_depth_tex, texel, 0).x;",
+  "cache_fetch": "        bool cacheable_texel = all(greaterThanEqual(texel, ivec2(0))) &&\n            all(lessThan(texel, depth_texture_size));\n        float depth;\n        if (cacheable_texel && depth_cache_valid &&\n            all(equal(texel, depth_cache_texel))) {\n            depth = depth_cache_value;\n        } else {\n            depth = texelFetch(combined_depth_tex, texel, 0).x;\n        }\n        // Out-of-range upstream fetches are undefined: never reuse their result.\n        depth_cache_valid = cacheable_texel;\n        depth_cache_texel = texel;\n        depth_cache_value = depth;",
+  "members": [
+    {
+      "path": "shaders/include/lighting/ao/gtao.glsl",
+      "source_sha256": "0889647aa827357ba9e5101431b4294299a078055f7f3537468a94fb6430b0d3",
+      "patched_sha256": "f9d8d369a1cda257ec3cf346208a906ff44ed9412918d0cee4165de5e96af3ec",
+      "replacements": [
+        {
+          "before": "vec2 compute_gtao(",
+          "after": "#ifdef SHADERLOD_AO_DEPTH_REUSE_PROBE\n// ShaderLOD private exact-work-reuse experiment, derived from Photon v1.3b\n// by Benjamin Stott (SixthSurge). Preserve the original Photon LICENSE.\nuniform int shaderlodBridgeVersion;\nuniform int shaderlodEnabled;\n\nfloat shaderlod_maximum_horizon_angle_reuse(\n    vec3 view_slice_dir,\n    vec3 viewer_dir,\n    vec3 screen_pos,\n    vec3 view_pos,\n    float radius,\n    float dither,\n    bool is_lod\n) {\n    float step_size = (GTAO_RADIUS * rcp(float(GTAO_HORIZON_STEPS))) * radius;\n\n    float max_cos_theta = -1.0;\n\n    vec2 ray_step =\n        (view_to_screen_space(\n             view_pos + view_slice_dir * step_size,\n             true,\n             is_lod\n         ) -\n         screen_pos)\n            .xy;\n    vec2 ray_pos = screen_pos.xy +\n        ray_step * (dither + max_of(view_pixel_size) * rcp_length(ray_step));\n\n    // Reuse only consecutive in-range depth texels; keep every fractional ray point.\n    ivec2 depth_texture_size = textureSize(combined_depth_tex, 0);\n    bool depth_cache_valid = false;\n    ivec2 depth_cache_texel = ivec2(0);\n    float depth_cache_value = 0.0;\n\n    for (int i = 0; i < GTAO_HORIZON_STEPS; ++i, ray_pos += ray_step) {\n        ivec2 texel =\n            ivec2(clamp01(ray_pos) * view_res * taau_render_scale - 0.5);\n        bool cacheable_texel = all(greaterThanEqual(texel, ivec2(0))) &&\n            all(lessThan(texel, depth_texture_size));\n        float depth;\n        if (cacheable_texel && depth_cache_valid &&\n            all(equal(texel, depth_cache_texel))) {\n            depth = depth_cache_value;\n        } else {\n            depth = texelFetch(combined_depth_tex, texel, 0).x;\n        }\n        // Out-of-range upstream fetches are undefined: never reuse their result.\n        depth_cache_valid = cacheable_texel;\n        depth_cache_texel = texel;\n        depth_cache_value = depth;\n\n        if (depth == 1.0 || depth < hand_depth || depth == screen_pos.z) {\n            continue;\n        }\n\n        vec3 offset = screen_to_view_space(\n                          combined_projection_matrix_inverse,\n                          vec3(ray_pos, depth),\n                          true\n                      ) -\n            view_pos;\n\n        float len_sq = length_squared(offset);\n        float norm = inversesqrt(len_sq);\n\n        float distance_falloff = linear_step(\n            GTAO_FALLOFF_START * GTAO_RADIUS,\n            GTAO_RADIUS,\n            len_sq * norm * rcp(radius)\n        );\n\n        float cos_theta = dot(viewer_dir, offset) * norm;\n        cos_theta = mix(cos_theta, -1.0, distance_falloff);\n\n        max_cos_theta = max(cos_theta, max_cos_theta);\n    }\n\n    return fast_acos(clamp(max_cos_theta, -1.0, 1.0));\n}\nfloat shaderlod_maximum_horizon_angle(\n    vec3 view_slice_dir,\n    vec3 viewer_dir,\n    vec3 screen_pos,\n    vec3 view_pos,\n    float radius,\n    float dither,\n    bool is_lod\n) {\n    // Uniform-coherent activation. Unknown/absent bridge keeps the original kernel.\n    if (shaderlodBridgeVersion == 2 && shaderlodEnabled == 1) {\n        return shaderlod_maximum_horizon_angle_reuse(\n            view_slice_dir, viewer_dir, screen_pos, view_pos, radius, dither, is_lod\n        );\n    }\n    return compute_maximum_horizon_angle(\n        view_slice_dir, viewer_dir, screen_pos, view_pos, radius, dither, is_lod\n    );\n}\n\n#endif // SHADERLOD_AO_DEPTH_REUSE_PROBE\nvec2 compute_gtao("
+        },
+        {
+          "before": "        max_horizon_angles.x = compute_maximum_horizon_angle(",
+          "after": "#ifdef SHADERLOD_AO_DEPTH_REUSE_PROBE\n        max_horizon_angles.x = shaderlod_maximum_horizon_angle(\n#else\n        max_horizon_angles.x = compute_maximum_horizon_angle(\n#endif // SHADERLOD_AO_DEPTH_REUSE_PROBE"
+        },
+        {
+          "before": "        max_horizon_angles.y = compute_maximum_horizon_angle(",
+          "after": "#ifdef SHADERLOD_AO_DEPTH_REUSE_PROBE\n        max_horizon_angles.y = shaderlod_maximum_horizon_angle(\n#else\n        max_horizon_angles.y = compute_maximum_horizon_angle(\n#endif // SHADERLOD_AO_DEPTH_REUSE_PROBE"
+        }
+      ]
+    },
+    {
+      "path": "shaders/settings.glsl",
+      "source_sha256": "93401d268fe859cc1df81929ad41156757a98db80f80cf32af80d9cdca96c394",
+      "patched_sha256": "a225fe7d86cf0aae56882154e73d1dbe75c1b6c0fe9786aef60be38879f24305",
+      "replacements": [
+        {
+          "before": "#define SETTINGS_INCLUDED\n",
+          "after": "#define SETTINGS_INCLUDED\n// ShaderLOD private AO depth-reuse experiment; default off.\n//#define SHADERLOD_AO_DEPTH_REUSE_PROBE\n"
+        }
+      ],
+      "enabled_sha256": "c3016594cc654a2eaae91e96f75c167dbaa91175379a682ac86da2074b9145b8"
+    }
+  ]
+}

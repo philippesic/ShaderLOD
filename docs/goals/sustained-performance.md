@@ -1,6 +1,8 @@
 # Sustained performance and compatibility development
 
-Created: 2026-10-04. Status: active.
+Created: 2026-10-04. Status: superseded on 2026-10-05 by the user-requested
+[general LOD 50% goal](general-lod-50-percent.md). Unmet acceptance and historical
+checkpoints below are retained; this goal was not completed.
 
 ## Authorization and objective
 

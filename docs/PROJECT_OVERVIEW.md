@@ -48,10 +48,12 @@ Renderer-specific CPU experiments remain secondary, optional components. They
 must not become the product's main abstraction or change sunlight cadence to
 manufacture results. No sunlight updates or shadow-map refreshes have been changed;
 source cadence investigation only informs possible visibility reuse. Photon stays
-the reference implementation. The latest fresh-chat authorization allows other
-pack research and exploratory testing now; accepted support and performance
-still require each pack's own compilation, rendering, repeated timing and quality
-evidence.
+the reference implementation. The latest 2026-10-05 user direction focuses
+development on general LOD and adjacent work avoidance, reusable integration
+interfaces and little discernible quality loss, with Photon as the only supported
+shader. Other-pack experiments are retained historical evidence. Additional pack
+implementation is outside the current goal; future support still requires each
+pack's own compilation, rendering, repeated timing and quality evidence.
 
 ## Initial risks
 

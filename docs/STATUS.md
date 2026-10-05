@@ -2,17 +2,42 @@
 
 Updated: 2026-10-05.
 
-Active goal: [Sustained performance and compatibility](goals/sustained-performance.md).
-The full goal remains active: broadly configurable explicit adapters, useful
-repeated Photon performance, optional-stack evaluation, primary-source research
-and additional-pack rendering, quality and integration evidence. The ordinary
-≥15% gate and broader configuration/support acceptance remain unmet.
+Active goal: [General LOD performance: 50% faster](goals/general-lod-50-percent.md).
+The user explicitly superseded the previous sustained-performance direction:
+general distance LOD/adjacent work avoidance, reusable mod interfaces, little
+discernible quality loss, Photon as the only supported shader, and consistent
+native agent teams. Target: 1.5x total rendering throughput (33.333% less frame
+time) against matched original Photon, with repeated GPU/total-frame and quality
+evidence. This target is unachieved. The previous 15% gate is superseded; historical
+evidence and unresolved checks below remain retained.
 
 Latest checkpoints: `270f992` (123 motion frames), `fc86429` (camera rotation
 validator), `a3dd9cd` (motion controls), `8249ce3` (attribution sample spread). Historical failures and raw reports
 remain retained; the latest operational checkpoint is at the end of the goal.
 
 ## Ownership and current work
+
+Root owns integration and the GPU until a recorded runtime handoff. The initial
+team owns separate new files: `effect_api` (general Java policies),
+`lod_opportunities` (private exact AO depth reuse), `performance_audit` (cost/target
+audit), `ao_runtime` (fresh AO profiles and runtime plan). General policies and
+additive config/uniform registration compile; all 47 Java tests and dev-client
+compilation passed. Extension1 has no accepted linked consumer yet; core2 stays
+unchanged. Shadow/AO budget protection remains on and overrides default INHERIT.
+AO pilot runner exec89240 exited0, all three normal WorkloadSession contracts
+passed and compiled source rendered. Original/off/on mean GPU13.2830/12.5266/
+17.7031ms; FPS68.4552/72.6664/53.1302. No useful gain; candidate stays private/off.
+One serial block, cross-arm focus differences and uncertain lightweight source-test
+CPU overlap prevent quiet causal/repeated acceptance. Dev classes stayed frozen.
+New effects config actually loaded with six INHERIT/unity controls; extension
+shader consumption remains unverified. No Minecraft clients live. Runtime proof
+and exact handles: PHOTON_AO_REUSE_RUNTIME.md. Root next evaluates the bounded
+projected procedural-detail candidate in PROJECTED_DETAIL_LOD_PLAN.md, beginning
+with a quality-changing cost control before calibration. The 50% goal remains
+unachieved; no shader support or default-quality reduction is promoted.
+
+The following describes retained work from the superseded goal, not active
+other-pack development or a current live-client assignment:
 
 Main Java/config/uniform transport, shared helpers and existing Photon patches
 remain based on `8da8943` and reserved for the original chat. This performance

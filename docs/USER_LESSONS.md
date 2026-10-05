@@ -198,3 +198,28 @@ sources contain no wetness token. Root preserved the rejected request/report,
 kept the guard strict and made a fresh normal-weather request with actual clear
 scene weather. A JVM control is not proof that each pack consumes that uniform.
 This was a root assumption, not a user mistake or shader compilation failure.
+
+
+## Protection must use one value per effect snapshot
+
+Root's first additive per-effect config snapshot read the lighting-protection
+flag twice. `effect_api` review identified that a reload between those reads
+could pair protected policy metadata with reduced transmitted ratios. Root
+captured the flag once and used that same value for policy and transport, then
+the integrated build and 47 Java tests passed. No runtime occurrence of that
+race was observed; this was a source-level integration correction contributed
+by the reviewer, not a user mistake. Frame caching does not by itself establish
+an atomic transaction across all independently editable config fields.
+
+
+## Quiet GPU windows include source-test processes
+
+During the first general-LOD AO pilot, root prohibited builds/compilers/encoders
+but allowed lightweight source/math fixtures. `effect_api` executed an eight-test
+binary32 source suite lasting about4.6seconds while the serial pilot was live.
+Its import-cache mtime is2026-10-05T20:16:49Z, but exact suite start/end and capture
+overlap are not established. Root corrected the team boundary to forbid test
+processes during timed windows and instructed `ao_runtime` to retain the pilot
+with possible external CPU activity qualified. No interference or effect on
+GPU/FPS is proven, and the data must not be promoted as a quiet causal comparison.
+This was root's coordination boundary, not a user error or worker violation.
