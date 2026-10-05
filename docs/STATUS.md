@@ -25,8 +25,10 @@ The reduced far-SSR five-effect Photon control passed with GPU contrasts
 +9.23%/+0.057%, no useful repeated gain. Complementary full/sky/Potato
 sequences each passed41-frame structural checks; matched views show reflection
 loss/displacement. The reverse Photon control passed with8.85%/16.13% GPU
-contrasts, but the forward result was9.23%/flat. The opt-in Photon diagnostic read back all seven linked core fields; no runtime
-is live. This does not prove new Miniature consumption. Balanced
+contrasts, but the forward result was9.23%/flat. The opt-in Photon diagnostic read back all seven linked core fields. Root owns
+a live six-arm forest/coastal pilot from equal original/off/active copies.
+Miniature’s separate seven-field private archive is built but driver/rendering
+acceptance is pending. Balanced
 mod-absent baselines and a second workload are being prepared. Full quality
 acceptance remains pending.
 Photon forest/coastal attribution passed input and
@@ -35,8 +37,8 @@ detailed CPU timers measured14.86ms versus23.85ms in the pass-timed run. This
 raises an instrumentation concern; one separate-JVM pair does not establish
 causation, an LOD gain or absolute effect budgets. A frozen source plan now defines Miniature consumption of the remaining existing
 core fields (preset/transition/debug). Its separate default-off private consumer
-and balanced original/disabled/enabled profile preparation are in bounded source
-implementation. Common Java/config transport remains reserved. Root owns runtime.
+and balanced original/disabled/enabled profile preparation passed source checks and actual preparation/assembly; runtime acceptance is
+pending. Common Java/config transport remains reserved. Root owns runtime.
 Exact handles and stopping boundaries are in the active goal checkpoint.
 
 ## Current evidence

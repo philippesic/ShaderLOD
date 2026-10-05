@@ -2355,3 +2355,30 @@ newMiniature actualconsumption stillpending. All runtime jobs nowterminal.
 Two workers continue their separate NEW source partitions; rootnextreviewfreeze,
 fixture acceptance and actualbaselineprepare/privateassembly/drivercompile.
 Fullgoalactive/unshrunk/commonownerreserved/allhistoricalfailuresretained.
+
+
+## Prepared equal baselines; Miniature private source built; six-arm pilot live
+
+Both workers froze their scoped source. Root12preparationfixtures and8Miniature
+source/mathfixtures passed. Real Photon both-scene preparation completed: each
+forest copyf752339d...c7be08b andcoastalcopy89c96296...c7b46 equal original canonical
+save. Exactoriginal120897...c1ead/private636a...0f83 archives/options/member/license
+qualification passed, originalfilespreserved, physicalDHremovedonlyfreshcopies.
+Masterprofilesrun-workloads/photon-reduced-five-effects-r1 remainuntouched.
+
+Root assembled Miniature private7-field consumerZIP e0e6a037f586f4ac0dbc1e264f525166
+75740d64d4c5e2e8914eaac6f3bc7552,111members/default0/exactMIT+source/sampler/Iris
+qualification. Four upstream members changed; originalSSRfunction untouched.
+No drivercompilation/rendering/nearparity/seven-fieldconsumption/count/gainclaim.
+The package is frozen; runtimeproseupdateswon't trigger rebuild duringmeasurements.
+
+Root cloned six masters underworldlocks into
+run-workloads/photon-reduced-five-effects-pilot-r1, checkedallcopied/sourcehashes.
+RootsoleGPU LIVEexec48805 sixserial original/off/active forest/coastal cases,
+minimal/noDH/native2976x1672/45warm25capture/GPU5/frame-only/CPUlayersoff/wetness0,
+--skip-build --freeze-dev-classes, repeat1. Log
+ dev/logs/photon-reduced-five-effects-pilot-r1-runner.log, reports sameprefixfolder.
+Nextstrictall6actualartifact/options/configflags/scene/window/class/PNG/contracts,
+retainfailed/negativearms; then untouchedtimingclones andbalancedrepeatsifuseful.
+No Miniatureclient/compiler/tests/encoder whiletimedpilotlive. Allworkersfrozen/
+completed, main/shared/originaldesign stillreserved. Fullgoalactive/unshrunk.
