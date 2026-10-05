@@ -2119,3 +2119,12 @@ Cameraquality worker new3filepreparation stillactive, root awaitsfreeze then
 lightweightfixtures/freshprepare/native41slotoriginalfirst. No clientcurrently
 live, root solefutureGPU; main/shared/originalowneddesignstillreserved.
 Fullobjectiveactive/unshrunk, notblockedwhileusefulindependentworkproceeds.
+
+
+Root additionally checked native attribution counterboundarydelta=renderedframes
+forest4202/coastal2387/frameonly3706. ExportedGPUframeindexmod16 coversall16
+residues: clouddeferred1+frame forest7–8/coastal4–5samples/residue, frameonly
+46–47. SupportsN5aliasreductionintent, doesnotprove perqueryshadercounter/
+physicaluniforms/checkerboardpixel/rayexecution. Smallcoverage report retained
+ dev/logs/photon-native-attribution-counter-coverage-r1.json. No liveclient now;
+cameraqualitysourceworker continues NEW3files, nextfreeze+fixtures+nativecapture.

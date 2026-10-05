@@ -336,3 +336,14 @@ not absolute effect budgets or fractions of an uninstrumented frame. A balanced
 repeat would test the instrumentation hypothesis if further attribution depends
 on those numbers. Keep lower-overhead frame-only acceptance measurements
 separate; do not normalize pass means by a scalar or subtract them from14.8650.
+
+
+Root checked temporal boundaries and exported GPU frame indices: source counter
+3140→7342 matched4202forest rendered frames,1299→3686 matched2387coastal,
+2748→6454 matched3706frame-only. Both attribution `iris/deferred1` and frame
+streams included all16 render-index residues (forest7–8samples/residue,
+coastal4–5); frame-only had46–47/residue. This supports the alias-reduction
+intent. It does not observe per-query shader frameCounter, physical uniforms,
+all checkerboard pixels or actual cloud ray execution. Raw small coverage report:
+dev/logs/photon-native-attribution-counter-coverage-r1.json. Keep this evidence
+separate from the instrumented GPU intervals and quality/performance gates.
