@@ -149,7 +149,9 @@ loaded actual chunk-cache guards and finite near-plane positions. The player
 must stay500.5/68/660.5, rendered X/Z within0.0002 blocks, stable eyeY about69.62,
 advancing source render frames and finite Iris clocks. Recorded path time must
 stay within0.1 seconds of its half-second slot, and rendered yaw/pitch within
-0.05 degrees of the bounded eased request. Context and screenshot camera values
+0.05 degrees of the current motion tick’s bounded eased request. LocalPlayer
+rotation uses the current tick, while recorded path time/position use the partial
+tick; the validator checks both clocks independently. Context and screenshot camera values
 must agree. These checks do not prove glint/ray visibility, partial-shape
 clearance, continuous fluid state between samples or visual parity.
 
@@ -182,4 +184,21 @@ including the final lock-delegation and option-boundary guards. Real fresh
 preparation completed at run-workloads/complementary-motion-quality-r1,
 worldSHA89c9629693e97f7e0c12d41a9ef2cd5a4fa82cd9585644b2dbf2b32bab8c7b46,
 requestSHA9886fda859251159de7b02f395e2ada5657e8d777dd2b589365b7a859c9a2289.
-Original HIGH root launch is live (exec83288), exact41-frame acceptance pending.
+Original HIGH exec83288 exited0; all41 frames passed the corrected structural
+validator. Native sky-only exec48047 is running; actual visual acceptance remains
+separate.
+
+
+Root corrected an initial validator false positive using pinned Minecraft/NeoForge
+source. LocalPlayer.getViewXRot returns current XRot; non-passenger getViewYRot
+returns current YRot (source lines192–199). Camera.setup forwards these view
+rotations, then interpolates position/eye height (lines54–61). The camera rig
+applies the eased pose at motion_tick/20, whereas observed_path_seconds tracks
+(motion_tick−1+tick_delta)/20. Angle validation now uses the current tick and
+also verifies player angles; partial/path clock validation remains strict.
+The0.05degree tolerance was not relaxed. All41 original frames match the current
+requested angles within0.000007degrees. Seven fixtures pass, including rejection
+of the old interpolated-angle model. No capture/PNG/request/rig source changed.
+Initial failed-validator note retained in dev/logs; raw manifest remains intact.
+
+Pinned source member SHA256: {"net/minecraft/client/Camera.java": "012faacc33b2b597237a6b81e369ef49f876a97a08b22db736db64baae411178", "net/minecraft/client/player/LocalPlayer.java": "3b2fefe879002cfe64da769ce487fbe87607f815585669721595d90a808c5308"}

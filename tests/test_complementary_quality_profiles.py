@@ -136,12 +136,14 @@ class ComplementaryQualityTest(unittest.TestCase):
         frames = []
         for slot in range(41):
             seconds = slot / 2
-            if seconds <= 7:
-                t, a, b = seconds / 7, (87.38, 3.735), (96, 5)
-            elif seconds <= 14:
-                t, a, b = (seconds - 7) / 7, (96, 5), (78, 2.2)
+            motion_tick = int(seconds * 20) + 1
+            angle_seconds = min(20, motion_tick / 20)
+            if angle_seconds <= 7:
+                t, a, b = angle_seconds / 7, (87.38, 3.735), (96, 5)
+            elif angle_seconds <= 14:
+                t, a, b = (angle_seconds - 7) / 7, (96, 5), (78, 2.2)
             else:
-                t, a, b = (seconds - 14) / 6, (78, 2.2), (87.38, 3.735)
+                t, a, b = (angle_seconds - 14) / 6, (78, 2.2), (87.38, 3.735)
             weight = t * t * (3 - 2 * t)
             yaw, pitch = tuple(x + (y - x) * weight for x, y in zip(a, b))
             name = f'frame-{slot:04d}.png'
@@ -157,8 +159,9 @@ class ComplementaryQualityTest(unittest.TestCase):
                                png_compression_level=0, maximum_in_flight_images=1, file=name,
                                png_sha256=file_hash(directory / name), bytes=len(png), callback_completed_at_utc='fixture',
                                camera_context={'camera': camera}, observed_path_seconds=seconds,
+                               motion_tick=motion_tick, tick_delta=0,
                                camera_x=500.5, camera_y=69.62, camera_z=660.5, camera_yaw=yaw, camera_pitch=pitch,
-                               player_pose=dict(x=500.5, y=68.0, z=660.5), session_render_frame=slot * 30 + 1,
+                               player_pose=dict(x=500.5, y=68.0, z=660.5, yaw=yaw, pitch=pitch), session_render_frame=slot * 30 + 1,
                                source_iris_frame_counter=slot * 30 + 1, source_iris_frame_time_counter=seconds))
         report = dict(status='complete', requested_capture_slots=41, png_callback_successes=41,
                       skipped_capture_slots=0, writer_pending_at_finalization=False, request_unchanged_at_end=True,
@@ -186,6 +189,9 @@ class ComplementaryQualityTest(unittest.TestCase):
                 'fluid': lambda m: m['frames'][0]['camera_context']['camera'].update(fog_type='WATER'),
                 'callback': lambda m: m['frames'][2].update(callback_slot_id=1),
                 'pose': lambda m: m['frames'][0].update(camera_yaw=78),
+                'clock': lambda m: m['frames'][20].update(tick_delta=.5),
+                'motiontick': lambda m: m['frames'][20].update(motion_tick=201.5),
+                'playerangle': lambda m: m['frames'][20]['player_pose'].update(yaw=78),
                 'resolution': lambda m: m['frames'][0].update(framebuffer_width=1488),
                 'mainmod': lambda m: m['loaded_mod_versions'].update(shaderlod='unexpected'),
                 'pending': lambda m: m['capture_write_tracker'].update(pendingCount=1),
@@ -201,6 +207,22 @@ class ComplementaryQualityTest(unittest.TestCase):
             (path.parent / 'frame-0000.png').write_bytes(b'corrupt retained fixture')
             with self.assertRaisesRegex(ValueError, 'hash/size'):
                 quality.validate_capture(output, 'water-potato', path)
+
+    def test_local_view_uses_current_tick_while_position_clock_uses_partial(self):
+        with self.fixture() as (source, output, pin):
+            quality.prepare(source, output)
+            path, report = self.synthetic_capture(output, 'high')
+            frame = report['frames'][20]
+            self.assertEqual(frame['observed_path_seconds'], 10)
+            self.assertEqual(frame['motion_tick'], 201)
+            self.assertEqual(frame['tick_delta'], 0)
+            self.assertAlmostEqual(frame['camera_yaw'], 88.7261516035, places=5)
+            quality.validate_capture(output, 'high', path)
+            # The earlier interpolated-angle model is wrong for LocalPlayer.
+            frame['camera_yaw'] = 88.915451895
+            path.write_text(json.dumps(report))
+            with self.assertRaisesRegex(ValueError, 'Rendered camera angle drift'):
+                quality.validate_capture(output, 'high', path)
 
 
 if __name__ == '__main__':

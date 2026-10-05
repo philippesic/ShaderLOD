@@ -211,9 +211,20 @@ def validate_capture(output, arm, manifest_path):
         number(frame['source_iris_frame_time_counter'], 'Iris time')
         observed = number(frame['observed_path_seconds'], 'path time')
         require(abs(observed - slot / 2) <= .1, 'Capture slot path-time drift')
-        yaw, pitch = angles(request, observed)
+        motion_tick = number(frame['motion_tick'], 'motion tick')
+        partial = number(frame['tick_delta'], 'tick delta')
+        require(motion_tick == int(motion_tick) and motion_tick >= 0 and 0 <= partial <= 1,
+                'Invalid motion tick/partial evidence')
+        interpolated_seconds = 0 if motion_tick == 0 else min(20, (motion_tick - 1 + partial) / 20)
+        require(abs(observed - interpolated_seconds) <= 1e-6, 'Recorded partial-tick path clock mismatch')
+        # Pinned LocalPlayer.getViewXRot/YRot use current rotation when not
+        # riding; Camera.setup only interpolates position/eye height here.
+        yaw, pitch = angles(request, min(20, motion_tick / 20))
         require(abs((number(frame['camera_yaw'], 'yaw') - yaw + 180) % 360 - 180) <= .05
                 and abs(number(frame['camera_pitch'], 'pitch') - pitch) <= .05, 'Rendered camera angle drift')
+        require(abs((number(frame['player_pose']['yaw'], 'player yaw') - yaw + 180) % 360 - 180) <= .05
+                and abs(number(frame['player_pose']['pitch'], 'player pitch') - pitch) <= .05,
+                'Applied player angle differs from current tick request')
         require(abs(number(frame['camera_x'], 'x') - 500.5) <= .0002
                 and abs(number(frame['camera_z'], 'z') - 660.5) <= .0002, 'Rendered camera translation drift')
         current_eye = number(frame['camera_y'], 'eye y')

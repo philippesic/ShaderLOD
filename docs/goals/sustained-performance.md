@@ -2176,3 +2176,21 @@ hashes/slot/pose/options/loadedversions/drainchecks; retainfailureifany. Then
 native sky/Potato sequentially AFTERfirstacceptedterminal. No concurrentclient/
 compiler/encoder, allworkerscompleted/frozen, main/shared/designstillreserved.
 Fullgoalactive/ordinary15%/broaderconfig/quality/supportunfinished.
+
+
+## Original41 motion frames accepted after angle-model repair; sky live
+
+exec83288 exit0/complete41/41. Newvalidatorinitial false rejection Renderedcamera
+angle drift retainednote. Pinned21.1.253 sourceaudit LocalPlayer currentviewrot /
+Camera.setup partialposition resolved modeldifference. Allactualangles current
+motionTick/20 match max6.17e-6deg. Root Pythonfix checks currenttick camera+player
+angles andpartialpositionclockrelation, same.05 tolerance. 7fixtures pass inclold
+anglemodelregression andactualall41source/options/native/slots/hashes/NONE/
+nonfullcollision/drain/posecontracts accepted. No Java/rig/request/rawchange.
+Confirmed agent+rootreview misunderstanding recordedUSER_LESSONS.
+
+RootsoleGPU LIVEexec48047 nativeComplementarywater-sky qualityonly, same41slot/
+fixedrequest/minimal/noDH/mainabsent/native/GPUfalse/wetness0. Log
+ dev/logs/complementary-motion-sky-r1.log. Next exactownedUUIDterminalvalidator,
+thenPotato afteracceptedterminal; fullvisual/motion/parity remainunaccepted.
+OriginalUUID0c35fb78-3727-4afa-b248-357e09e36347 retained; no otherclient/compiler.

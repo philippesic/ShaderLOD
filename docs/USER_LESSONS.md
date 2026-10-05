@@ -160,3 +160,17 @@ scenes hidthisassumption. Rootretained575eb8ba…zero-framefailure and addedan
 acquisition barrier requiringclient dimension/daytime equalobserved frozen
 server scene beforeinitialfingerprint. Afteracquisition alltime/config guards
 staystrict; no toleratedcapture change or worldclock override added.
+
+
+## Local camera rotation differs from position interpolation
+
+The camera-quality worker's new Complementary validator, and root's source
+review, assumed yaw/pitch followed observed partial-tick path seconds. The
+original41-frame runtime exposed a false rejection up to0.185degrees. Pinned
+Minecraft1.21.1/NeoForge21.1.253 LocalPlayer view methods return current rotation
+when not riding; Camera.setup interpolates position/eye height separately.
+Root verified all41 angles against motion_tick/20 (maximum error0.000007degrees),
+corrected the validator's angle clock and added partial-clock/player-angle checks
+and a regression fixture. Seven tests and the original actual sequence pass;
+the tolerance and raw captures were not changed. This was an agent assumption,
+not a user error. Position and rotation clocks must be checked independently.
