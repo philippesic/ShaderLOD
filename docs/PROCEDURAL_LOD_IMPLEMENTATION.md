@@ -1,6 +1,6 @@
 # Projected procedural detail LOD source freeze
 
-2026-10-05, corrected source freeze r2. Owner: `procedural_lod`; bounded read-only mathematics advisor:
+2026-10-05, corrected source freeze r3. Original owner: `procedural_lod`; syntax repair owner: `procedural_parser_repair`; bounded read-only mathematics advisor:
 `procedural_lod/parallax_math`. Source implementation is private, default off,
 experimental and **unaccepted for quality or performance**. Neither worker owned
 clients, shader reloads or GPU measurement. Root retains runtime ownership.
@@ -57,8 +57,9 @@ This is not a calibrated conditional noise mean or a guarantee of equivalent
 normal variance/specular energy. High-frequency slope variance is intentionally
 removed; no BRDF roughness compensation is applied. The modulation bound is an
 upper bound, so it can conservatively overfilter actual resolved detail. Near
-identity and phase mean do not establish distant sun-glint parity. The angle
-fixture below exposes a material quality risk that runtime review must resolve.
+identity and phase mean do not establish distant sun-glint parity. The scalar
+angle fixtures include an over-range flowing-water stress coefficient; corrected
+source-domain results below still require matched runtime/motion review.
 
 `WATER_PARALLAX=true` is supported. Before any discard, the first `main` block
 initializes coordinates in all invocations, reproduces upstream corrected TBN and
@@ -106,7 +107,7 @@ at persistence2.0, so this is baseline retention, not a mathematical repair.
 ## Static and mathematical evidence
 
 Executed `python3 -m unittest discover -s tests -p test_photon_procedural_lod.py -v`:
-**13 tests passed, no skips**, under approximately one second on this host.
+**14 tests passed, no skips**, in 5.286 seconds on this host. This includes the r3 complete-translation-unit parser regression described below.
 
 Checks include exact private-off/nonselected upstream source restoration; unchanged
 license/water/shadow/DH members; fail-closed source/helper/archive pins and output
@@ -133,9 +134,22 @@ actual mapped coordinates produce up to `249.7361861445753`× footprint expansio
 with five terminal-count switches, supporting the explicit confidence fallback.
 Normal fixtures using actual pinned green-channel noise, 1/3/8 octaves, several
 flows/times and influence values through 0.38 produce a maximum sampled angular
-change of **22.115413607216066 degrees** when fine waves are fully filtered. Near
-change is zero in the scalar model. This is a finite fixture envelope, not a
-worst-case proof or a perceptual acceptance bound. Distant quality is unaccepted.
+change of **22.115413607216066 degrees** when fine waves are fully filtered. That
+maximum is retained as an **over-range flowing-water stress case**: influence0.38
+with flowing=true exceeds the pinned flowing branch’s supported maximum0.2
+(0.1×strength≤2). It does not prove a physically reachable Photon quality loss.
+Near change is zero in the scalar model. This is a finite stress fixture envelope,
+not a worst-case proof or a perceptual acceptance bound. Distant quality is unaccepted.
+
+A separate [normal-error source-domain oracle](NORMAL_ERROR_BUDGET.md) now derives
+the actual rain/skylight/strength/grazing coefficient and checks original/filtered
+full-N normalization, raw h0.1 and all removed octaves jointly. In its expanded
+supported-domain scalar set, maximum sampled changes are12.143127667783164° for
+three octaves and12.968803156563101° for eight; default strength1/rain0/sky1/nongrazing
+coefficient samples peak6.151089991832627°/4.470371684286197°, respectively. These
+are point-normal scalar observations, not rendered/perceptual results. Input
+mismatches reject a source-equivalence certificate. Matched runtime/motion quality
+remains unaccepted; this correction does not change the frozen adapter or pins.
 
 No client, Gradle build, GL shader compiler, runtime reload, driver program linkage,
 physical texture-count observation or GPU timing ran on this track. No performance
@@ -150,7 +164,7 @@ Original LICENSE SHA256:
 Pinned Iris 1.8.12-local JAR SHA256:
 `3e3f94d2d5cdcb8145c4385d521974aa2d8669b2cc212351f70cf06488182e83`.
 Manifest `patches/photon-experiments/procedural-lod.json` SHA256:
-`5849bc24c84f98b42a4ad7a85b013cdab6bb229a3f8c2d8e8c48d6097cd9e687`.
+`b529fdb01aabef5670128e04a25224bfd4368c2a63641214023c352099d100e2`.
 
 All three arms were actually assembled by `scripts/build_photon_procedural_lod.py`
 under ignored `build/`. Their ZIPs include attribution and audit metadata.
@@ -161,9 +175,9 @@ original ZIP remains the comparison reference.
 
 | Assembled source arm | Ignored archive SHA256 |
 | --- | --- |
-| Original members plus metadata | `5493190271007cf6d3b6435a378b24c4955549661cd80d4ade5cc583609b947e` |
-| Private option default off | `eb9fa7db90fffff1ee264b90098a2b14a8dd322d3e8a111b8460fc329eea0719` |
-| Private option default on | `15ab3f80698e4759e02d18e31b60db6ba77613307212e6e19b50d392833f4460` |
+| Original members plus metadata | `beed8e0a0c96ad50b6f5cf040d029bef9f3bd0f8dd8b438ac2ede63261b6ff9b` |
+| Private option default off | `267f6358e87b8dd51e4e5a6fcf26f999344f8e1abf79fb36c5bd99fa0d7bd9ea` |
+| Private option default on | `6c10372159019e9a4f300446eaa5b35df311a4840180231b6145912816dffa9b` |
 
 ## Corrected option-discovery coverage and superseded r1
 
@@ -186,8 +200,62 @@ Superseded r1 manifest `d504b81be34ce45b63e37bc51e2c663f470bd173b2e77a4e372e31af
 default-off ZIP `894c5c37de5d0427f283775a01fec0de1a4fde5a2162d108993bd648b5b96a1a`,
 and on ZIP `4423eb17943e18b75adb5173899ec7bf716d56a3aeb68e64f35fbae076139992`
 must not be used for the corrected source freeze. Current archive paths were
-regenerated for r2. Corrected builder SHA256:
+regenerated for r3. Corrected builder SHA256:
 `44c0b8f395d02428cc3bf54574f03e915b30dd67615a0e8107f06fc56003a6dd`.
+
+## Runtime parser failure and r3 syntax repair
+
+The r2 coastal smoke actually attempted compilation and failed, with
+`shadersInUse=false` and fallback enabled. Raw evidence remains at
+`dev/logs/parallel-procedural-qa-r1/smoke-console.log` lines 298–299 and 549–550
+in MAIN. Iris's `TransformPatcher.transformInternal` rejected
+`terrain_translucent` with `ParseCancellationException: line 14969:77 missing
+RPAREN at '{'`. The old 13 tests covered the option lexer and scalar mathematics,
+not complete GLSL grammar. They did not establish compilable GLSL.
+
+The private normal fallback condition in `procedural_water.glsl` omitted the
+selection statement's final closing parenthesis after `any(isinf(dy))`. R3 adds
+exactly that one delimiter. Near/parallax/footprint/filter arithmetic, branches,
+thresholds, derivative positions, upstream patch bodies and the other two helper
+bytes remain unchanged. Corrected water-helper SHA256:
+`eeac0a12ad90546f6b134454aa4f95af750f05118b3204b103617c238c140687`.
+The unchanged builder SHA is recorded above.
+
+The new fixture expands all literal includes for all 24 affected translucent
+fragment wrappers (eight programs in each of world0/world-1/world1). It applies
+actual Iris option overrides for the held coastal reduced profile: BORDER_FOG,
+CLOUD_SHADOWS, SHADOW_COLOR, SHADOW_VPS and SH_SKYLIGHT false, three default water
+wave octaves, and WATER_PARALLAX true. It runs the actual pinned Iris
+`JcppProcessor.glslPreprocessSource`, followed by glsl-transformer 2.0.1
+`EnhancedParser.parse` with throwing syntax errors enabled. Native macro inputs
+are MC_VERSION12101, MC_GL_VERSION410, MC_GLSL_VERSION410 and IS_IRIS1; DH/VOXY
+are absent. These are source-profile inputs, not a runtime device query.
+
+All 75 complete entrypoint/profile syntax checks pass: 24 original, 24 private
+off, 24 private on, and the three water wrappers additionally with parallax off.
+An in-memory reversion of only the missing delimiter reproduces the same
+`missing RPAREN at '{'` error in all three water wrappers at column 77. Standalone
+include expansion yields line 15022/15026 rather than runtime line 14969; no claim
+of an identical driver-preprocessed line map is made. This regression establishes
+the syntax defect and repair, without running TransformPatcher transformations,
+semantic GLSL compilation or a GL context.
+
+Pinned embedded transformer JAR SHA256:
+`b8ca5e61b41ae18ddd5d4d5d6785cb9acd8fd7ac0c5c0b0689b872b039c11b9f`;
+EnhancedParser.class SHA256:
+`11133ca7cbfbc89777b15f06a31323b26c1ab6448b1822f4086e9503f3527814`;
+ANTLR 4.13.1 JAR SHA256:
+`54665d2838cc66458343468efc539e454fc95b46a8a04b13c6ac43fc9be63505`.
+These are checked by the fixture, not downloaded during it.
+
+Superseded r2 manifest
+`5849bc24c84f98b42a4ad7a85b013cdab6bb229a3f8c2d8e8c48d6097cd9e687`
+and default-off ZIP
+`eb9fa7db90fffff1ee264b90098a2b14a8dd322d3e8a111b8460fc329eea0719`
+must not enter a new runtime or combined-source queue. R2's failed raw evidence
+remains retained. The combined builder, runtime qualifier and fullscreen batch
+pins require explicit requalification to the r3 manifest and archive above.
+An actual driver retry remains required. No quality or performance is accepted.
 
 ## Runtime queue and measurement needed
 
