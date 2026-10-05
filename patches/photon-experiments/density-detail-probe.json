@@ -1,0 +1,44 @@
+{
+  "schema": 1,
+  "experiment": "photon-cumulus-fine-density-cost-control",
+  "base_version": "v1.3b",
+  "base_sha256": "120897768eaa8cb1f14a3e98f88dff009ae3204ee3b96904a4fe8586edfc1ead",
+  "license_sha256": "514402d18eedb0afe374344ca9f0fe87b7399779518184b8fc64e31674555fc5",
+  "switch": "SHADERLOD_DENSITY_DETAIL_COST_CONTROL",
+  "diagnostic_fine_noise": 0.5,
+  "quality_class": "quality_changing_cost_control",
+  "option_declaration": "// ShaderLOD quality-changing density cost control; default off.\n//#define SHADERLOD_DENSITY_DETAIL_COST_CONTROL\n",
+  "declarations": "#if defined SHADERLOD_DENSITY_DETAIL_COST_CONTROL && defined PROGRAM_DEFERRED1\n// ShaderLOD diagnostic density cost control, derived from Photon v1.3b\n// by Benjamin Stott (SixthSurge). Original Photon LICENSE remains applicable.\nuniform int shaderlodBridgeVersion;\nuniform int shaderlodEnabled;\n#endif // SHADERLOD_DENSITY_DETAIL_COST_CONTROL\n",
+  "original_fine_sample": "    float worley_1 =\n        texture(SAMPLER_WORLEY_SWIRLEY, (pos + 0.4 * wind) * 0.005).x;",
+  "active_fine_sample": "#if defined SHADERLOD_DENSITY_DETAIL_COST_CONTROL && defined PROGRAM_DEFERRED1\n    float worley_1;\n    // Intentionally changes density and early-exit occupancy: cost control only.\n    if (shaderlodBridgeVersion == 2 && shaderlodEnabled == 1) {\n        worley_1 = 0.5; // Declared diagnostic, not a texture mean or opacity match.\n    } else {\n        worley_1 =\n            texture(SAMPLER_WORLEY_SWIRLEY, (pos + 0.4 * wind) * 0.005).x;\n    }\n#else\n    float worley_1 =\n        texture(SAMPLER_WORLEY_SWIRLEY, (pos + 0.4 * wind) * 0.005).x;\n#endif // SHADERLOD_DENSITY_DETAIL_COST_CONTROL",
+  "source_intervention": "Only fine worley_1 density sample in PROGRAM_DEFERRED1; fixed diagnostic can change occupancy/early exits; no calibrated mean or isolated fetch-budget claim",
+  "members": [
+    {
+      "path": "shaders/include/sky/clouds/cumulus.glsl",
+      "source_sha256": "1923542cd9ad862a6166a542dbdcb1597fd70316e4338b236deefc2ccb932ba5",
+      "patched_sha256": "e64f2c71ce370203ab506f14e54ff64230013cf0f7eef5fe5e56e3ad2ae25db9",
+      "replacements": [
+        {
+          "before": "#define INCLUDE_SKY_CLOUDS_CUMULUS\n",
+          "after": "#define INCLUDE_SKY_CLOUDS_CUMULUS\n#if defined SHADERLOD_DENSITY_DETAIL_COST_CONTROL && defined PROGRAM_DEFERRED1\n// ShaderLOD diagnostic density cost control, derived from Photon v1.3b\n// by Benjamin Stott (SixthSurge). Original Photon LICENSE remains applicable.\nuniform int shaderlodBridgeVersion;\nuniform int shaderlodEnabled;\n#endif // SHADERLOD_DENSITY_DETAIL_COST_CONTROL\n"
+        },
+        {
+          "before": "    float worley_1 =\n        texture(SAMPLER_WORLEY_SWIRLEY, (pos + 0.4 * wind) * 0.005).x;",
+          "after": "#if defined SHADERLOD_DENSITY_DETAIL_COST_CONTROL && defined PROGRAM_DEFERRED1\n    float worley_1;\n    // Intentionally changes density and early-exit occupancy: cost control only.\n    if (shaderlodBridgeVersion == 2 && shaderlodEnabled == 1) {\n        worley_1 = 0.5; // Declared diagnostic, not a texture mean or opacity match.\n    } else {\n        worley_1 =\n            texture(SAMPLER_WORLEY_SWIRLEY, (pos + 0.4 * wind) * 0.005).x;\n    }\n#else\n    float worley_1 =\n        texture(SAMPLER_WORLEY_SWIRLEY, (pos + 0.4 * wind) * 0.005).x;\n#endif // SHADERLOD_DENSITY_DETAIL_COST_CONTROL"
+        }
+      ]
+    },
+    {
+      "path": "shaders/settings.glsl",
+      "source_sha256": "93401d268fe859cc1df81929ad41156757a98db80f80cf32af80d9cdca96c394",
+      "patched_sha256": "18914450d1be097f7fd2f1cb8c620ff2338200a4ea61a7902d140a3f8ec4b7ad",
+      "replacements": [
+        {
+          "before": "#define SETTINGS_INCLUDED\n",
+          "after": "#define SETTINGS_INCLUDED\n// ShaderLOD quality-changing density cost control; default off.\n//#define SHADERLOD_DENSITY_DETAIL_COST_CONTROL\n"
+        }
+      ],
+      "enabled_sha256": "1a0f19998e9e19e311b52fb2624ffbeefd550e8fe5c9be4554467476ac261061"
+    }
+  ]
+}

@@ -250,3 +250,25 @@ ComparisonClient edits and Miniature preparation files remain uncommitted and
 untouched by this goal. No remote push. Density second-wave files are still
 worker-owned source in progress; await source freeze before tests/assembly, then
 runtime handoff. Native Goal remains active with no token budget requested.
+
+### Density source freeze and review
+
+`lod_opportunities` froze four new density-detail source-control files, and root
+reran all eight source/scalar fixtures after the AO clients exited: pass. Manifest
+SHA256 `5b66b98cf065857d4df66e0ebbdcfbec281e619e8cde85e8dc58e44fc46fb1bd`.
+Root reviewed the uniform-coherent branch before the original fine texture fetch,
+main PROGRAM_DEFERRED1 gate, core2/enable1 requirement, literal original fallback,
+default-off option, and unchanged coarse/ray/integration/reconstruction sources.
+Fixed0.5 changes density/occupancy and downstream early exits; it is exploratory
+cost control, not an isolated fetch budget, accepted quality LOD or strict upper
+bound. No actual archive assembly, driver compilation or timing yet.
+
+`ao_runtime` is authorized to factor the existing AO preparer's stopped-scene
+copy loop with default-preserving explicit inspector/experiment/marker/qualification
+parameters and add a small exact-density qualifier wrapper/test/runtime plan.
+No globals monkeypatching, generic source rewriting or new runtime harness. Preserve
+the seven existing AO preparation fixtures and keep runtime/GPU/build with root.
+Next exact action: review that source freeze, run bounded fixtures, assemble pinned
+disabled density archive, prepare equal coastal cloud-visible arms, then hand off
+quiet fixed-focus original/off/on cost-control capture. Stop before calibration
+if the source region provides no useful aggregate signal.

@@ -8,7 +8,7 @@ cloud shape, primary/lighting ray counts and integration intervals. This is a
 general procedural-detail LOD mechanism with an explicit Photon consumer. It
 targets work repeated throughout a volumetric pass, unlike AO depth reuse's
 small qualified pass budget. Actual total cost and benefit remain unmeasured.
-First measure an intentionally quality-changing upper-bound control; discard
+First measure an intentionally quality-changing exploratory cost control; discard
 the candidate promptly if that control saves little GPU time.
 
 ## Exact source and existing work avoidance
