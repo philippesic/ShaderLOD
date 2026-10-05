@@ -52,7 +52,7 @@ def plan_clouds(args):
     if getattr(args, 'backup_existing', False): raise ValueError('Cloud profiles require a fresh output; backup replacement is not supported')
     if str(args.cloud_upscaling) not in ('1', '4'): raise ValueError('Cloud resolution control must be 1 or 4')
     if any(scene not in SCENES for scene in args.scenes): raise ValueError('Cloud scenes must be coastalwater or cloudstorm')
-    args.archive = SELECTOR
+    args.archive = getattr(args, 'candidate', SELECTOR)
     args.analytic = 'off'
     args.water_bands = 'current'
     args.backup_existing = False
@@ -155,6 +155,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--source-proof-root', type=Path, default=ROOT / 'run-workloads/photon-proof-v2')
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--candidate', choices=(SELECTOR, 'lighting-tier-no-atmosphere'), default=SELECTOR)
     parser.add_argument('--archive-path', type=Path, help='Alternate location; exact pinned cloud-transition SHA256 is still required')
     parser.add_argument('--scenes', nargs='+', choices=SCENES, default=['cloudstorm'])
     parser.add_argument('--cloud-upscaling', type=int, choices=(1, 4), default=1)

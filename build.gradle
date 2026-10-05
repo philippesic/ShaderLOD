@@ -38,6 +38,7 @@ if (performanceStack != 'minimal') {
 dependencies {
     devClientCompileOnly sourceSets.main.output
     compileOnly files("dev/runtime/${runtimeLock.artifacts.iris.filename}")
+    compileOnly files("dev/runtime/${runtimeLock.artifacts.sodium.filename}")
     localRuntime files("dev/runtime/${runtimeLock.artifacts.iris.filename}",
                        "dev/runtime/${runtimeLock.artifacts.sodium.filename}")
     localRuntime files(optionalRuntimeFiles)
@@ -95,6 +96,9 @@ neoForge {
             if (project.hasProperty('shadowObserve')) {
                 systemProperty 'shaderlod.dev.shadowObserve', project.property('shadowObserve').toString()
             }
+            if (project.hasProperty('visibilityLists')) {
+                systemProperty 'shaderlod.dev.visibilityLists', project.property('visibilityLists').toString()
+            }
             if (project.hasProperty('jfrRecording')) {
                 def recording = project.file(project.property('jfrRecording').toString()).absolutePath
                 jvmArgument "-XX:StartFlightRecording=name=shaderlod-render,settings=profile,dumponexit=true,maxsize=256m,filename=${recording}"
@@ -119,6 +123,11 @@ neoForge {
             }
             if (project.findProperty('benchmarkOnly') == 'true') {
                 systemProperty 'shaderlod.dev.benchmarkOnly', 'true'
+            }
+            for (name in ['benchmarkSettleSeconds', 'benchmarkStartEnabled']) {
+                if (project.hasProperty(name)) {
+                    systemProperty "shaderlod.dev.${name}", project.property(name).toString()
+                }
             }
             if (project.hasProperty('gpuPassTiming')) {
                 systemProperty 'shaderlod.dev.gpuPassTiming', project.property('gpuPassTiming').toString()

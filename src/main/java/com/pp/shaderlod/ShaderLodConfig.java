@@ -15,6 +15,7 @@ public final class ShaderLodConfig {
     public static final ModConfigSpec.BooleanValue TERRAIN_WARM_SOURCE_CONFIRMED;
     public static final ModConfigSpec.IntValue TERRAIN_WARMUP_SECONDS;
     public static final ModConfigSpec.BooleanValue OPTIMIZE_SHADOW_CULLING;
+    public static final ModConfigSpec.BooleanValue SEPARATE_SHADOW_VISIBILITY_LISTS;
 
     static {
         var builder = new ModConfigSpec.Builder();
@@ -45,6 +46,8 @@ public final class ShaderLodConfig {
         builder.push("rendering");
         OPTIMIZE_SHADOW_CULLING = builder.comment("Use the equivalent positive-vertex-only boolean shadow visibility test on the pinned Iris/Photon runtime. Does not remove casters or change shadow quality.")
                 .define("optimizeShadowCulling", false);
+        SEPARATE_SHADOW_VISIBILITY_LISTS = builder.comment("Experimental separate shadow-owned region membership arrays. Keeps all existing visibility traversals; not a frame-rate optimization.")
+                .define("separateShadowVisibilityLists", false);
         builder.pop();
         SPEC = builder.build();
     }

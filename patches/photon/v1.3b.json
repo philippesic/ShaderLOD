@@ -72,7 +72,7 @@
       "path": "shaders/program/d4_deferred_shading.fsh",
       "source_sha256": "212081e707c20c78e17cbfd3380b2f22eb696cc1aa14bdf006c07d59f53f67e0",
       "before": "    vec3 position_world = position_scene + cameraPosition;",
-      "after": "    vec3 position_world = position_scene + cameraPosition;\n    // Combined depth is already reconstructed using the combined projection, including DH.\n    int shaderlod_quality = (depth == 1.0 || is_hand) ? 0 : shaderlod_quality_at(\n        length(position_view), gl_FragCoord.xy, float(frameCounter)\n    );"
+      "after": "    vec3 position_world = position_scene + cameraPosition;\n    // Protected lighting has no distance-tier consumer. Preserve the original\n    // full-tier argument and defer diagnostic quality until debug is requested.\n    int shaderlod_quality = 0;\n#ifndef SHADERLOD_PRESERVE_LIGHTING\n    // Combined projection already includes DH depth; sky/hand stay full.\n    shaderlod_quality = (depth == 1.0 || is_hand) ? 0 : shaderlod_quality_at(\n        length(position_view), gl_FragCoord.xy, float(frameCounter)\n    );\n#endif"
     },
     {
       "path": "shaders/program/d4_deferred_shading.fsh",
@@ -84,13 +84,13 @@
       "path": "shaders/program/d4_deferred_shading.fsh",
       "source_sha256": "212081e707c20c78e17cbfd3380b2f22eb696cc1aa14bdf006c07d59f53f67e0",
       "before": "        fragment_color = purkinje_shift(fragment_color, light_levels);",
-      "after": "        fragment_color = purkinje_shift(fragment_color, light_levels);\n        if (shaderlod_debug_enabled() && !is_hand) {\n            fragment_color = mix(fragment_color, shaderlod_debug_color(shaderlod_quality), 0.7);\n        }"
+      "after": "        fragment_color = purkinje_shift(fragment_color, light_levels);\n        if (shaderlod_debug_enabled() && !is_hand) {\n#ifdef SHADERLOD_PRESERVE_LIGHTING\n            int shaderlod_debug_quality = shaderlod_quality_at(\n                length(position_view), gl_FragCoord.xy, float(frameCounter));\n#else\n            // Lighting already computed this deterministic same-frame tier.\n            int shaderlod_debug_quality = shaderlod_quality;\n#endif\n            fragment_color = mix(fragment_color, shaderlod_debug_color(shaderlod_debug_quality), 0.7);\n        }"
     },
     {
       "path": "shaders/program/gbuffers_all_translucent.fsh",
       "source_sha256": "01c04bc017069cf19c319a0a0875ca706554575dd01e291e17cad8565645b82f",
       "before": "        shadow_distance_fade,\n        sss_depth\n    );",
-      "after": "        shadow_distance_fade,\n        sss_depth,\n        shaderlod_quality_at(length(position_view), gl_FragCoord.xy, float(frameCounter))\n    );"
+      "after": "        shadow_distance_fade,\n        sss_depth,\n#ifdef SHADERLOD_PRESERVE_LIGHTING\n        0\n#else\n        shaderlod_quality_at(length(position_view), gl_FragCoord.xy, float(frameCounter))\n#endif\n    );"
     },
     {
       "path": "shaders/include/lighting/shadows/pcss.glsl",

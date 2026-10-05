@@ -23,6 +23,7 @@ PINNED = {
     'static-water-no-atmosphere': ('build/photon-static-water-no-atmosphere.zip', '39fcc8132e958157e02a13ea2055ad6fdbaed7a92ca54133148d03b0b7667436'),
     'effects-no-atmosphere': ('build/photon-effects-no-atmosphere.zip', 'ab1b6d859829fe3e0925b69cdd3759369c44bc876cc97de77d9878ed27b8658d'),
     'cloud-transition-no-atmosphere': ('build/photon-cloud-transition-no-atmosphere.zip', '8fbaa117d87b4f729ea64ecce4d86390cdc56d03cd3b5a02ec2be9ffe2213235'),
+    'lighting-tier-no-atmosphere': ('build/photon-lighting-tier-no-atmosphere.zip', 'b15d3c50f192e0e3de8e912afba2cc531e7d0520e3cbe573a7e35b993528e16c'),
 }
 ORIGINAL_SHA256 = '120897768eaa8cb1f14a3e98f88dff009ae3204ee3b96904a4fe8586edfc1ead'
 SCENES = ('forest', 'cloudstorm', 'coastalwater')

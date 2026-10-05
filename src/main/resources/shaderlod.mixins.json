@@ -7,7 +7,9 @@
     "CommonUniformsMixin",
     "EffectiveRenderDistanceMixin",
     "ShadowCullingFrustumMixin",
-    "ShadowCullingFrustumMixin$Reversed"
+    "ShadowCullingFrustumMixin$Reversed",
+    "ShadowRegionListsMixin",
+    "ShadowSpriteListsMixin"
   ],
   "injectors": {
     "defaultRequire": 1

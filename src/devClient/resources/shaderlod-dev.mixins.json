@@ -20,7 +20,10 @@
     "ShadowRendererTimingMixin",
     "ShadowInputObserverMixin",
     "ShadowMatrixObserverMixin",
-    "MinecraftTimingCleanupMixin"
+    "MinecraftTimingCleanupMixin",
+    "VisibilityListPhaseMixin"
   ],
-  "injectors": { "defaultRequire": 1 }
+  "injectors": {
+    "defaultRequire": 1
+  }
 }

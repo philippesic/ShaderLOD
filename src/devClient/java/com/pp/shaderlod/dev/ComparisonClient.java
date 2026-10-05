@@ -67,7 +67,8 @@ final class ComparisonClient {
         if (!configured) {
             configured = true;
             if (enabled && !ModList.get().isLoaded("shaderlod")) throw new IllegalStateException("LOD client is missing ShaderLOD");
-            if (ModList.get().isLoaded("shaderlod") && !Boolean.getBoolean("shaderlod.dev.measureWorkload")) {
+            if (ModList.get().isLoaded("shaderlod") && !Boolean.getBoolean("shaderlod.dev.measureWorkload")
+                    && !Boolean.getBoolean("shaderlod.dev.benchmark")) {
                 ShaderLodConfig.ENABLED.set(enabled);
                 ShaderLodConfig.PRESET.set(LodPreset.PERFORMANCE);
                 ShaderLodConfig.DEBUG.set(false);
@@ -163,7 +164,8 @@ final class ComparisonClient {
     }
     private void tileWindow(Minecraft client) {
         var window = client.getWindow();
-        boolean serialMeasurement = Boolean.getBoolean("shaderlod.dev.measureOnly");
+        boolean serialMeasurement = Boolean.getBoolean("shaderlod.dev.measureOnly")
+                || Boolean.getBoolean("shaderlod.dev.benchmarkOnly");
         window.setTitle(serialMeasurement ? (enabled ? "ShaderLOD serial measurement" : "Photon serial baseline")
                 : enabled ? "ShaderLOD landscape — LOD ON (left)" : "Photon landscape — BASELINE (right)");
         try (var stack = MemoryStack.stackPush()) {
@@ -182,7 +184,7 @@ final class ComparisonClient {
     }
     private void draw(RenderGuiEvent.Post event) {
         var client = Minecraft.getInstance();
-        if (client.level == null) return;
+        if (client.level == null || client.options.hideGui) return;
         boolean mod = ModList.get().isLoaded("shaderlod");
         var lines = new ArrayList<String>();
         lines.add((mod ? "LOD " + (ShaderLodConfig.snapshot().enabled() ? "ON " : "OFF ") + ShaderLodConfig.PRESET.get() : "PHOTON BASELINE (no ShaderLOD)") + " | " + client.getFps() + " FPS");
