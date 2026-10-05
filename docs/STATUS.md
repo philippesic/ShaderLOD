@@ -8,9 +8,8 @@ repeated Photon performance, optional-stack evaluation, primary-source research
 and additional-pack rendering, quality and integration evidence. The ordinary
 ≥15% gate and broader configuration/support acceptance remain unmet.
 
-Latest checkpoints: `cbf8044` (native reflection tradeoffs), `424a62c`
-(Complementary original rendered), `5be285e` (Complementary controls and SSR
-reverse), `2950127` (pinned SSR cost control). Historical failures and raw reports
+Latest checkpoints: `270f992` (123 motion frames), `fc86429` (camera rotation
+validator), `a3dd9cd` (motion controls), `8249ce3` (attribution sample spread). Historical failures and raw reports
 remain retained; the latest operational checkpoint is at the end of the goal.
 
 ## Ownership and current work
@@ -25,7 +24,8 @@ Pack options, mod configuration and actual shader consumption remain separate.
 The reduced far-SSR five-effect Photon control passed with GPU contrasts
 +9.23%/+0.057%, no useful repeated gain. Complementary full/sky/Potato
 sequences each passed41-frame structural checks; matched views show reflection
-loss/displacement. No client is live; full visual/temporal acceptance is pending.
+loss/displacement. Root owns a live reverse-order Photon combined control; full
+visual/temporal acceptance is pending.
 Photon forest/coastal attribution passed input and
 capture contracts. A matched-source coastal frame-only sample5 control retaining
 detailed CPU timers measured14.86ms versus23.85ms in the pass-timed run. This

@@ -2219,3 +2219,37 @@ Allotherworkerscomplete/frozen, main/config/shared/helpers/originaldesign still
 reserved. Fullgoalactive/unshrunk, ordinary15%/broadconfig/supportquality gates
 unmet. Currentturnprogress measuredPhoton+123motionframes+validatorbugfix and
 fixtures; no blocker audit triggered.
+
+
+## Reduced combined control: reverse order live
+
+The previous turn made progress: 123 structurally accepted Complementary motion
+frames, corrected pinned LocalPlayer rotation semantics with seven fixtures,
+and the measured Photon combined result (+9.23% then flat). No completion or
+blocker claim follows. Root verified all prior runtime processes terminal.
+
+Root prepared a fresh reverse profile at
+`run-workloads/photon-reduced-all-effects-n5-reverse-r2/coastalwater/adaptive`.
+Its world SHA256 equals the forward stopped-source clone:
+`9d6a03387745991f560253fa1908bddce45259bb8af2f21c501697d33e3e3f9e`.
+The existing private reduced archive remains pinned to
+`636a164832f5d4915548e288491a83e33f14a591f72987c77b7d8931e9800f83`;
+all five effect options are true, lighting protected, cache/analytic/debug and
+terrain/CPU experiments off. Provenance retains prelaunch inputs/classes and
+actual copied world; parent workload manifest remains original source lineage.
+
+Root owns LIVE exec `26888`: ON/OFF/ON/OFF, effects mode, minimal/noDH,
+native2976x1672, 45s warmup/10s settle/25s capture, GPU sample5/frame-only,
+CPU layers off, fixed wetness0, frozen compiled dev classes. Log:
+`dev/logs/photon-reduced-all-effects-n5-reverse-r2.log`.
+No other client, build or encoder during timing. Next validate terminal output
+with explicit archive pin, sampled windows/classes and phase images; retain all
+contrasts rather than choose the faster pair. This remains distinct from the
+ordinary original-mod-absent performance gate.
+
+`makeup_adapter` owns only NEW `docs/MINIATURE_CORE_CONFIGURATION_PLAN.md`,
+source-only review of existing preset/transition/debug fields. All other workers
+are completed/frozen. Main/config/shared helper ownership remains reserved;
+no new per-effect transport, remote message, push or publication is inferred.
+The full goal remains active with configuration, quality and useful repeated
+performance acceptance unfinished.
