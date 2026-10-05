@@ -1,7 +1,7 @@
 # ShaderLOD project overview
 
-ShaderLOD explores reducing expensive Photon shader work as scene distance
-increases. The first platform is NeoForge with Iris required. Photon is the
+ShaderLOD targets general-purpose, configurable distance quality control across
+shader packs. Photon is the first implementation and performance proof. The first platform is NeoForge with Iris required. Photon is the
 explicit compatibility target, and DH is optional for the mod while included
 in the development runtime for compatibility checks.
 
@@ -35,6 +35,20 @@ A Java config file does not automatically become an Iris custom uniform.
 Document and test the actual bridge before claiming the mod controls shader
 quality live. Shader-pack options can support the first proof independently.
 Do not expand into automatic rewriting of arbitrary shader packs during setup.
+
+## Product direction clarified by the user
+
+The intended product eventually supports many shaders through a common Iris LOD
+protocol, per-effect configuration and explicit pack adapters. Configuration can
+map options, units, budgets, compatibility and defaults. Each shader still needs
+reviewed code that avoids effect work with distance; names or preset changes alone
+do not establish that connection. Pin and verify adapters independently.
+
+Renderer-specific CPU experiments remain secondary, optional components. They
+must not become the product's main abstraction or change sunlight cadence to
+manufacture results. No sunlight updates or shadow-map refreshes have been changed;
+source cadence investigation only informs possible visibility reuse. Keep Photon
+performance proof first and preserve the user's existing expansion gate.
 
 ## Initial risks
 

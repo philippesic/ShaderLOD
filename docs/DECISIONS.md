@@ -48,3 +48,14 @@ Recommended sequence, not a newly approved goal or frozen numerical gate:
 
 Keep live comparison windows intact during analysis. No new experiment was
 launched or performance threshold accepted solely by this proposal.
+
+
+## General-purpose direction reaffirmed
+
+User clarified that configurable support for a wide variety of shader packs is
+the eventual product, and questioned sunlight-specific work. Core priorities are
+a reusable Iris protocol, per-effect configuration and explicit, verified pack
+adapters. Photon remains first. ShaderLOD has not changed sunlight update cadence
+or shadow-map refresh frequency. CPU/frustum research is an optional secondary
+path, justified by profiling but not the definition of the mod. Do not claim
+configuration alone adds distance-aware code to unmodified shaders.

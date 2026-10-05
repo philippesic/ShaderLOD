@@ -457,3 +457,28 @@ sameowner/context/generation/complete trace, preserveexactsourcehelperhash, run
 CPUreplay againstactualreferenceoutputs andselectcandidate. Thenrealoracle with
 movingcamera/sun andruntimeperformancecontrols (oracleOFF) underbothstacks. Never
 advertise offlineop/nanocounts asGPU/FPSgain. Keepfulloriginalgoalactive/unshrunk.
+
+
+## User check-in and comparison inspection
+
+User returned and requested status plusfloatingwindows. Root openedlatest protected
+PhotonB15 vsphysicallyabsentmod/originalPhoton, forestcamera,24vanilla/DH128,minimal,
+allshaderLOD effectsactive, preservedlighting,cachedsky/geometry/frustumexperiments
+off. Handles5769/52317 launched andrenderedleftx8/rightx760. Both subsequently
+stoppednormally (logs23:42:03/07); no rootclientlive. Shared-client35%GPUdifference
+is notserialacceptance; savedCPUthread9.36/9.52ms wasmostlyunchanged. Capturesalso
+have differenttimes, so donottreattheirFPS/GPUratioas anisolatedpairedwin.
+
+User clarified general-purpose configurable shaderLOD asproductgoal. Core remains
+commonIrisprotocol/effectconfig/explicitpackadapters; Photonproof precedesexpansion.
+Sun cadence wasinspected, notchanged; shadowmaprefreshunchanged. Rendererexperiments
+secondary. Nativefullobjectiveunchanged; rootwillreport concretefeaturelist and
+limits. Shadowkeyprobe remainsisolatedsource-only; no GPUworkerlaunches.
+
+Preinspectioncoherencecontrol50905 endedexit0/complete. OFF151.76/151.25FPS,
+ON146.89/152.07; no consistentgain. Analysis acceptedactualimages/pins under
+ dev/logs/coherence-inprocess-r1-analysis.json. Realtrace3594queriescomplete and
+9replayvariantsexactbutCPUmodelallslower1.36–1.76x. No promotion; defaultoff.
+Nexttechnicalwork prioritizesactualkey/producercorrectness onlyasboundedsecondary
+research plusreusableconfiguration/adapterdesign without claimingunsupportedpack
+support or droppingtheperformancegate. No userblocker; nativegoalactive.
