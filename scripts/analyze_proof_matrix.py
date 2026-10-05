@@ -15,6 +15,46 @@ REDUCED_SSR_SHA256 = next(pin for pin, value in SSR_COST_ARCHIVES.items() if val
 REDUCED_SSR_GATE = 'PHOTON_SSR_FAR_REDUCED_TRACE_PROBE'
 
 
+def qualified_fullscreen_lod_pair(baseline, candidate, baseline_report, candidate_report, manifest):
+    """Explicit six-arm family only; no arbitrary private flag exemption."""
+    import prepare_fullscreen_lod_batch as batch
+    from prepare_parallel_lod_profiles import SOURCE_PINS
+    from run_proof_matrix import canonical_options_hash
+    from setup_comparison import ROOT
+    for run, report in ((baseline, baseline_report), (candidate, candidate_report)):
+        preparation = report.get('workload-manifest.json', {})
+        if preparation.get('experiment_family') != batch.EXPERIMENT or preparation.get('proof_profiles') != list(batch.ARMS):
+            raise ValueError('Fullscreen LOD comparison lacks explicit six-arm preparation')
+        arm = run['case'].split('-', 1)[1]
+        if arm not in batch.ARMS:
+            raise ValueError('Unknown fullscreen LOD arm label')
+        pin = batch.combined.BASE_SHA256 if arm == 'high' else batch.ARCHIVE_SHA256
+        if report.get('actual_shader_sha256') != pin or manifest['source_inputs'][run['case']].get('shader_sha256') != pin:
+            raise ValueError('Fullscreen LOD archive differs from frozen family')
+        qualification = preparation.get(batch.QUALIFICATION_KEY, {})
+        if qualification.get('qualified') is not True or qualification.get('manifest_sha256') != batch.MANIFEST_SHA256:
+            raise ValueError('Fullscreen LOD source qualification missing or changed')
+        expected = batch.qualify_combined(ROOT/'dev/upstream/photon_v1.3b.zip', ROOT/'build'/batch.ARCHIVE_NAME,
+                                         preparation['runtime_lock'], ROOT)
+        if qualification != expected:
+            raise ValueError('Fullscreen LOD complete source/member/helper/metadata qualification differs')
+        flags = batch.feature_flags(arm)
+        actual_flags = {key:value for key,value in report['effective_shader_options'].items() if key.startswith('SHADERLOD_')}
+        if actual_flags != flags:
+            raise ValueError('Fullscreen LOD active public gates differ from arm')
+        scene = preparation['scene']
+        upstream = {key:value for key,value in report['effective_shader_options'].items() if key not in batch.combined.SWITCHES}
+        if scene not in SOURCE_PINS or canonical_options_hash(upstream) != SOURCE_PINS[scene][1]:
+            raise ValueError('Fullscreen LOD changed original effective option map')
+        if arm != 'high' and report['input_state_end'].get('lod_settings', {}).get('enabled') is not (arm != 'patched-off'):
+            raise ValueError('Fullscreen LOD global state differs from arm')
+        if preparation.get('fullscreen_required') is not True:
+            raise ValueError('Fullscreen LOD family does not require actual fullscreen')
+    return {'family': batch.EXPERIMENT, 'manifest_sha256':batch.MANIFEST_SHA256,
+            'private_archive_sha256':batch.ARCHIVE_SHA256,
+            'limits':'Whole integration controls; different private compile gates are not same-gates effect-work isolation; no summed gains.'}
+
+
 def qualified_reduced_ssr_change(baseline, candidate, baseline_report, candidate_report, manifest):
     """One exact source intervention, never a generic private-option exemption."""
     expected = (ORIGINAL_PHOTON_SHA256, REDUCED_SSR_SHA256)
@@ -73,6 +113,18 @@ def check_pair(baseline, candidate, baseline_report, candidate_report, manifest)
         problems.append('Unmatched source save')
     if problems: raise ValueError('; '.join(problems))
     changes = {}
+    new_modes = ('reflection-only', 'volume-only', 'procedural-only', 'combined')
+    is_fullscreen_family = any(report.get('workload-manifest.json', {}).get('experiment_family') == 'photon-fullscreen-explicit-six-arm-lod-batch'
+                              for report in (baseline_report, candidate_report))
+    new_case = any(run['case'] in {prefix+'-'+mode for prefix in ('forest','water') for mode in new_modes}
+                   for run in (baseline, candidate))
+    if is_fullscreen_family or new_case:
+        changes['qualified_fullscreen_lod_family'] = qualified_fullscreen_lod_pair(baseline, candidate, baseline_report, candidate_report, manifest)
+        from run_proof_matrix import validate_fullscreen_report
+        for report in (baseline_report, candidate_report):
+            if report.get('request', {}).get('fullscreen') is not True:
+                raise ValueError('Fullscreen LOD report lacks actual fullscreen request')
+            validate_fullscreen_report(report, report['request'])
     a = {key: value for key, value in baseline_report['effective_shader_options'].items() if not key.startswith('SHADERLOD_')}
     b = {key: value for key, value in candidate_report['effective_shader_options'].items() if not key.startswith('SHADERLOD_')}
     differences = {key: [a.get(key), b.get(key)] for key in sorted(a.keys() | b.keys()) if a.get(key) != b.get(key)}

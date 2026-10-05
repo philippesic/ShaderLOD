@@ -78,6 +78,9 @@ CASES = {
 for _prefix, _scene in (('forest', 'forest'), ('cloud', 'cloudstorm'), ('water', 'coastalwater')):
     for _mode in ('alloff', 'cloud-only', 'water-only', 'ssr-only', 'fog-only', 'materials-only'):
         CASES[_prefix + '-' + _mode] = (_scene + '/' + _mode, 'runClientLodOn')
+for _prefix, _scene in (('forest', 'forest'), ('water', 'coastalwater')):
+    for _mode in ('reflection-only', 'volume-only', 'procedural-only', 'combined'):
+        CASES[_prefix + '-' + _mode] = (_scene + '/' + _mode, 'runClientLodOn')
 CLOUD_CASE_OPTIONS = {}
 for _prefix, _scene in (('cloud', 'cloudstorm'), ('water-cloud', 'coastalwater')):
     for _name, _mode, _overhead in (('current', '0', 'false'), ('independent', '1', 'true'),
@@ -321,6 +324,73 @@ def validate_report(report, request, expected_inputs, started_ns, report_path=No
     if request['gpu_queries'] and not any(s.get('scope') == 'game-render' for s in report.get('gpu_samples', [])):
         raise ValueError('Missing GPU frame timing stream')
     if not report.get('loaded_mods'): raise ValueError('Loaded mod inventory missing')
+    if request.get('fullscreen') is True:
+        validate_fullscreen_report(report, request)
+
+
+def validate_fullscreen_report(report, request):
+    """Validate actual sampled fullscreen state, not a window-scale label."""
+    capture = report.get('window_state', {}).get('capture', {})
+    observations = capture.get('observations', 0)
+    if not isinstance(observations, int) or isinstance(observations, bool) or observations < 1 or capture.get('available_observations') != observations:
+        raise ValueError('Fullscreen capture lacks available window observations')
+    if capture.get('unavailable_observations') != 0 or any(capture.get('transition_counts', {}).values()):
+        raise ValueError('Fullscreen capture window state changed or unavailable')
+    focus = capture.get('focused', {})
+    focused = ('true' if focus.get('true_observations') == observations else
+               'false' if focus.get('false_observations') == observations else None)
+    if focused is None or focus.get('unknown_observations') != 0 or focus.get('true_observations', 0) + focus.get('false_observations', 0) != observations:
+        raise ValueError('Fullscreen capture focus is unknown or mixed')
+    if request.get('expected_focus') is not None and focused != request['expected_focus']:
+        raise ValueError('Fullscreen capture focus differs from matched baseline')
+    for name, true_count in (('visible', observations), ('iconified', 0)):
+        values = capture.get(name, {})
+        if values.get('true_observations') != true_count or values.get('false_observations') != observations - true_count or values.get('unknown_observations') != 0:
+            raise ValueError('Fullscreen capture is hidden, iconified or unknown')
+    start = capture.get('start', {}).get('state', {})
+    end = capture.get('end', {}).get('state', {})
+    if start != end or start.get('pacing') != dict(pause_on_lost_focus=False, fullscreen=True,
+                                                 configured_framerate_limit=260, vsync=False):
+        raise ValueError('Actual fullscreen/pacing does not match configured-260 capture contract')
+    dimensions = [report['input_state_end'].get('framebuffer_width'), report['input_state_end'].get('framebuffer_height')]
+    if any(not isinstance(value, int) or isinstance(value, bool) or value < 1 for value in dimensions):
+        raise ValueError('Invalid fullscreen framebuffer dimensions')
+    if request.get('expected_framebuffer') is not None and dimensions != request['expected_framebuffer']:
+        raise ValueError('Fullscreen framebuffer differs from observed baseline')
+    key = 'x'.join(map(str, dimensions))
+    if capture.get('framebuffer_size_counts') != {key: observations}:
+        raise ValueError('Fullscreen sampled dimensions differ from capture boundary')
+    if any(start.get(name) != dimensions[index] for index, name in enumerate(('framebuffer_width', 'framebuffer_height'))):
+        raise ValueError('Fullscreen window/report dimensions disagree')
+    logical = [start.get('window_width'), start.get('window_height')]
+    if any(not isinstance(value, int) or isinstance(value, bool) or value < 1 for value in logical):
+        raise ValueError('Invalid fullscreen logical dimensions')
+    if capture.get('window_size_counts') != {'x'.join(map(str, logical)): observations}:
+        raise ValueError('Fullscreen logical dimensions changed')
+    if request.get('expected_window') is not None and logical != request['expected_window']:
+        raise ValueError('Fullscreen logical dimensions differ from matched baseline')
+    properties = report.get('runtime_properties', {})
+    if properties.get('shaderlod.dev.cpuLayerTiming') != 'false':
+        raise ValueError('Fullscreen detailed CPU layer timers were not explicitly disabled')
+    if request.get('sample_interval') is not None and properties.get('shaderlod.dev.gpuSampleInterval') != str(request['sample_interval']):
+        raise ValueError('Fullscreen GPU sampling cadence differs from request')
+    if request.get('gpu_queries') is False and report.get('gpu_samples'):
+        raise ValueError('Query-free fullscreen capture contains GPU results')
+    for name in ('cloudSamplerProbe', 'dhDrawEvidence', 'waterSceneSurvey', 'shadowObserve', 'visibilityLists', 'shadowCoherenceOracle'):
+        if properties.get('shaderlod.dev.' + name) != 'false':
+            raise ValueError('Fullscreen timed diagnostic was not explicitly disabled: ' + name)
+    return dict(fullscreen=True, validated=True, framebuffer=dimensions, window=logical,
+                focused=focused, pacing=start['pacing'])
+
+
+def validate_fullscreen_batch_readiness(profile, gpu_queries):
+    """Known driver failures stop the whole selected timed batch before launch."""
+    if not gpu_queries: return
+    preparation = json.loads((Path(profile).parent/'workload-manifest.json').read_text())
+    if preparation.get('experiment_family') == 'photon-fullscreen-explicit-six-arm-lod-batch':
+        arm = preparation.get('experiment_arms', {}).get(Path(profile).name, {})
+        if arm.get('runtime_blocked') is True:
+            raise ValueError('Fullscreen arm is blocked by retained driver failure: ' + Path(profile).name)
 
 
 def validate_geometry_report(report, request, expected_inputs):
@@ -462,6 +532,9 @@ def main():
     p.add_argument('--tag', default=None)
     p.add_argument('--sample-interval', type=int, default=1, choices=range(1,61))
     p.add_argument('--window-scale', type=int, default=1, choices=(1,2), help='Scale comparison window; actual framebuffer/window dimensions remain recorded')
+    p.add_argument('--fullscreen', action='store_true', help='Request true fullscreen; validate sampled fullscreen, pacing and matched actual dimensions')
+    p.add_argument('--expected-framebuffer', nargs=2, type=int, metavar=('WIDTH', 'HEIGHT'), help='Pin dimensions discovered by a separate fullscreen smoke')
+    p.add_argument('--fullscreen-reference', type=Path, help='Pin physical/logical dimensions, focus, pacing and compiled inputs from a successful fresh fullscreen matrix smoke')
     p.add_argument('--warmup', type=float, default=45)
     p.add_argument('--duration', type=float, default=30)
     p.add_argument('--fixed-wetness', type=wetness_value, help='Dev-only artificial shader weather control; real rain/smoother clocks remain unchanged')
@@ -471,6 +544,24 @@ def main():
     p.add_argument('--dry-run', action='store_true', help='Print ordering/commands without files, build or client launch')
     args = p.parse_args()
     if args.freeze_dev_classes and not args.skip_build: p.error('--freeze-dev-classes requires --skip-build')
+    if args.expected_framebuffer is not None and (not args.fullscreen or min(args.expected_framebuffer) < 1):
+        p.error('--expected-framebuffer requires --fullscreen and positive dimensions')
+    fullscreen_source = None
+    fullscreen_reference = dict(framebuffer=args.expected_framebuffer, window=None, focused=None)
+    if args.fullscreen_reference is not None:
+        if not args.fullscreen: p.error('--fullscreen-reference requires --fullscreen')
+        fullscreen_source = json.loads(args.fullscreen_reference.read_text())
+        reference = fullscreen_source.get('fullscreen_reference', {})
+        if fullscreen_source.get('status') != 'complete' or reference.get('validated') is not True or reference.get('fullscreen') is not True:
+            p.error('Fullscreen reference must be a completed validated fullscreen smoke manifest')
+        if any(not isinstance(reference.get(key), list) or len(reference[key]) != 2 or
+               any(not isinstance(n, int) or isinstance(n, bool) or n < 1 for n in reference[key]) for key in ('framebuffer', 'window')):
+            p.error('Fullscreen reference dimensions are invalid')
+        if reference.get('focused') not in ('true', 'false'):
+            p.error('Fullscreen reference focus is unavailable')
+        if args.expected_framebuffer is not None and args.expected_framebuffer != reference['framebuffer']:
+            p.error('Explicit framebuffer conflicts with fullscreen smoke reference')
+        fullscreen_reference = reference
     if not 1 <= args.repeats <= 100 or args.warmup < 5 or args.duration < 5: p.error('Invalid repeats/warmup/duration')
     plan = balanced_plan(args.cases, args.stacks, args.repeats)
     profiles_root = args.profiles_root.resolve()
@@ -483,7 +574,10 @@ def main():
                           '-PinitialWarmup=' + str(args.warmup), '-PmeasurementSeconds=' + str(args.duration),
                           '-PgpuSampleInterval=' + str(args.sample_interval),
                           '-PbenchmarkWindowScale=' + str(args.window_scale)]
-        if args.no_gpu_queries: row['command'].append('-PgpuTiming=false')
+        row['command'].extend('-P' + name + '=false' for name in
+                              ('cloudSamplerProbe', 'dhDrawEvidence', 'waterSceneSurvey', 'shadowObserve', 'visibilityLists', 'shadowCoherenceOracle'))
+        if args.fullscreen: row['command'].append('-PcomparisonFullscreen=true')
+        row['command'].append('-PgpuTiming=' + str(not args.no_gpu_queries).lower())
         if args.freeze_dev_classes: row['command'].extend(['-x', 'compileDevClientJava'])
         if args.fixed_wetness is not None: row['command'].append('-PfixedWetness=' + str(args.fixed_wetness))
     if args.dry_run:
@@ -498,6 +592,9 @@ def main():
         if output.exists(): p.error('Output already exists; use a new tag to preserve prior evidence')
         require_exclusive_runtime()
         inputs = {case: profile_inputs(profiles_root / CASES[case][0]) for case in args.cases}
+        if args.fullscreen:
+            for row in plan:
+                validate_fullscreen_batch_readiness(row['profile'], not args.no_gpu_queries)
         output.mkdir()
         manifest = {'schema': 2, 'created_at_utc': utc_now(), 'status': 'running', 'repeats': args.repeats,
                     'design': 'Williams order; partial cycles are interleaved, not perfectly position-balanced',
@@ -511,10 +608,18 @@ def main():
                     'runtime_lock_sha256': sha256(ROOT / 'dev/runtime.lock.json'),
                     'performance_mods_lock_sha256': sha256(ROOT / 'dev/performance-mods.lock.json'),
                     'performance_mods_lock': optional_lock}
+        if args.fullscreen:
+            manifest['fullscreen'] = True
+            manifest['fullscreen_reference'] = fullscreen_reference.copy()
+            if args.fullscreen_reference is not None:
+                manifest['fullscreen_reference_source'] = str(args.fullscreen_reference.resolve())
+                manifest['fullscreen_reference_source_sha256'] = sha256(args.fullscreen_reference)
         write_json(output / 'matrix-manifest.json', manifest)
         try:
             if not args.skip_build: subprocess.run(['./gradlew', 'build', 'compileDevClientJava'], cwd=ROOT, check=True)
             manifest['development_runtime_inputs'] = development_fingerprints()
+            if fullscreen_source is not None and manifest['development_runtime_inputs'] != fullscreen_source.get('development_runtime_inputs'):
+                raise ValueError('Compiled runtime differs from fullscreen smoke reference')
             write_json(output / 'matrix-manifest.json', manifest)
             for index, row in enumerate(plan):
                 require_exclusive_runtime()
@@ -530,6 +635,11 @@ def main():
                                include_dh=args.dh == 'present', measurement_seconds=args.duration,
                                gpu_queries=not args.no_gpu_queries, block=row['block'])
                 request['fixed_wetness'] = args.fixed_wetness
+                if args.fullscreen:
+                    reference = manifest['fullscreen_reference']
+                    request.update(fullscreen=True, expected_framebuffer=reference['framebuffer'],
+                                   expected_window=reference['window'], expected_focus=reference['focused'], sample_interval=args.sample_interval)
+                    validate_fullscreen_batch_readiness(profile, request['gpu_queries'])
                 write_json(profile / 'workload-request.json', request)
                 report = profile / 'workload-measurement.json'
                 if report.exists(): report.replace(output / (token + '-previous.json'))
@@ -548,6 +658,8 @@ def main():
                 (output / row['measurement']).write_bytes(report.read_bytes())
                 row.update(preserve_screenshot(profile, output, token, started_ns))
                 validate_report(data, request, inputs[row['case']], started_ns, report)
+                if args.fullscreen:
+                    manifest['fullscreen_reference'] = validate_fullscreen_report(data, request)
                 validate_optional_stack(data, row['stack'], optional_lock)
                 row['temporal_observations'] = validate_temporal_inputs(data, request)
                 reference = inputs[row['case']].get('effective_shader_options_sha256')
