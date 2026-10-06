@@ -1124,3 +1124,17 @@ appearance insufficient to authorize cleanup of a client; owner now corrects
 tracking to require explicit profile/process ownership and preserves all raw
 completed evidence. No live clients. Raw capture-core worker remains active,
 new files only, no builds/hooks/client access yet. Root owns idle GPU/integration.
+
+
+Runtime report/runner freeze accepted after ownership correction. Completed raw
+controls remain preserved. Corrected future tracking requires stable process
+identity and exact profile cwd/log/world-lock association before a Java PID can
+be signaled; foreign/ambiguous/reused candidates remain unsignaled. Eight scoped
+mock fixtures pass. Live platform association with a future client is still
+unverified and must pass before any automatic cleanup authority. This is resource
+ownership correctness, not rendering/performance evidence.
+
+Commit 7465b7b preserves reviewed quality and pilot/repeated evaluation controls.
+Only spatial_layout_evidence remains active, owning its new dev capture core/test/
+report. Root owns idle GPU and will integrate capture hooks after source freeze.
+No further shader tuning or client launch has occurred. Target remains active.

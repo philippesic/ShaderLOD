@@ -1,9 +1,11 @@
 # Shared spatial driver controls
 
-2026-10-05. Prepared and source-qualified; **no client launch, GPU check, shader
-driver compilation, parity, DH rendering or performance acceptance**. This is a
-bounded diagnostic of the general shared LOD mechanism with Photon as its explicit
-source adapter. Root owns the idle GPU and any later launch.
+2026-10-05. Four bounded untimed controls rendered in-world and passed exact
+source/options/window/input guards. Actual first-draw typed spatial capability
+and opaque policy values were observed in private ON. **Exact consuming-stage
+mapping, physical layout, parity, DH rendering, motion quality and performance
+remain unverified.** The general mechanism uses Photon as its explicit source
+adapter. All owned clients ended; the idle GPU returned to root.
 
 [Preparer](../scripts/prepare_shared_spatial_runtime.py) never assembles shaders,
 builds Java, launches a client, changes the source world or writes personal config.
@@ -73,10 +75,10 @@ production JAR SHA-256
 Preparation does not freeze Java classes/resources across a later build: the
 operator must record and verify the actual final development fingerprints at
 launch and completion. Previously recorded hardware is AppleM3Max/OpenGL4.1
-Metal91.7; this operation did not query the GPU or verify the current driver.
+Metal91.7; preparation did not query the GPU or verify the current driver.
 Record actual GPU, driver, Java and OS from the launched diagnostic evidence.
 
-## Commands actually run
+## Preparation commands actually run
 
 ```sh
 python3 -m unittest discover -s tests -p test_shared_spatial_runtime.py -v > build/shared-spatial-runtime-tests-r1.log 2>&1
@@ -148,3 +150,141 @@ near/far/transition motion, foliage/albedo/thin shadows/water/reflections,
 optional-DH fallback, actual physical work and repeated quiet total-frame/GPU
 performance. A title screen is startup only. In-world compilation is distinct
 from these checks. No goal completion or gain follows from this handoff.
+
+## Completed four-arm untimed driver diagnostic
+
+Root authorized and reserved this bounded client/GPU lane after commit`c716f68`.
+The runtime operator acquired the proof lock and requalified all frozen archives,
+all four prepared profiles, exact configs/options/registrations/worlds, the
+production JAR and final main/dev classes/resources. No compilation, resource
+build, tuning, manual shader reload or timed experiment occurred. The existing
+early-warmup focus helper ran before each capture and exited before the window.
+
+Exact executed wrapper:
+
+```sh
+python3 scripts/run_shared_spatial_diagnostic.py --profiles run-workloads/shared-spatial-driver-r1 --output dev/logs/shared-spatial-driver-r1 > dev/logs/shared-spatial-driver-r1-runner.log 2>&1
+```
+
+[Runner](../scripts/run_shared_spatial_diagnostic.py) uses each held prepared
+command in reviewed order, stops the sequence on the first failure and preserves
+raw artifacts. Two pure fixtures in
+[its test](../tests/test_shared_spatial_diagnostic.py) passed before launch; they
+reject changed commands before file access, retain actual capability0/1/unknown,
+and reject capture/state-restoration failures. Raw fixture output is
+`build/shared-spatial-diagnostic-tests-r1.log`.
+
+All four controls exited0, rendered the exact selected source without Iris
+fallback, and passed exact complete366/367 option maps, native extent24-chunk
+radius, unchanged inputs, global enable, forest camera/time/weather, fixed wetness
+supplier observations,25s warmup/5s capture, false focus/visible/noniconified
+window and matched actual component artifacts. GPU and CPU timing streams were
+empty in every raw report. Fresh2976×1672 screenshots were copied for every arm.
+These are diagnostic captures; their overlay FPS and wall durations are not
+performance evidence. Still parity and motion quality have not been accepted.
+
+| Arm | Run UUID | Launcher PID/session | Exact Java PID |
+| --- | --- | --- | --- |
+| original | `f0ab504a-d910-4443-adf2-c2e5223943bd` |61692/61692|61708|
+| privateOFF | `9adaaabe-fd0e-4bea-be24-e5a7b0e221d0` |62048/62048|62062|
+| privateON-FULL | `679868d9-aac1-4742-a61c-a5ca2a77a19c` |62268/62268|62284|
+| privateON-ADAPTIVE | `8340c2e3-4f01-4007-b67c-3364a37679a8` |62736/62736|62754|
+
+Runner PID/session 61678/61678, shell session 62693 exited 0. Each Java process was
+discovered and its exact process identity persisted while live. Java clients were
+children of the existing Gradle daemon, outside the new launcher session; cleanup
+targets exact client identities and the exact launcher group rather than the
+shared daemon group. All listed client/launcher identities ended normally;
+terminal verification found no Minecraft PIDs. The lock was released and root
+received the idle GPU. Source files and stopped source world still match their
+preparation pins. Main/dev outputs stayed unchanged across all controls.
+
+Actual driver probe: Apple M3 Max, vendor Apple, OpenGL `4.1 Metal - 91.7`, GLSL 4.10.
+Host macOS 27.0/build 26A428/Darwin 27.0.0/ARM64; Java 21.0.9+7-LTS-338. Loaded component
+versions match the held versions above; main ShaderLOD`0.1.0-dev`, dev
+harness`0.1.0`, noDH. Actual loaded Iris SHA-256:
+`3e3f94d2d5cdcb8145c4385d521974aa2d8669b2cc212351f70cf06488182e83`;
+Sodium:
+`7acd7af2ef75ec883a6872c17494ead65e38025151eb08a1d60e36d34377f403`.
+Full actual loaded versions/hashes and all compiled-member inventories are
+preserved in the audit and derived summary, not replaced by lock declarations.
+The console retains the same unsupported`GL_ARB_shader_image_load_store`
+shadow-extension warnings in all controls; no selected-source shader compilation
+failure/fallback or logged invalid-GL/error was found. Getters deliberately do not
+consume GL error flags, so absence of logged errors is not an exhaustive GL check.
+
+In each private ON JVM, first-observed linked programs 21/22 actually queried
+scalar GL_INT capability schema 1, spatial availability 1, core 2/global 1 and
+effects 2. Both actually queried the opaque mode (FULL 1 / ADAPTIVE 2),
+near 32/far 96/transition 8 blocks and retained ratios 1/0.25. Every accepted field's
+linked inventory type, scalar size 1, nonnegative location and queried status
+was checked directly against the raw records. No queried spatial field was
+available in original/privateOFF; those records remain unknown/inactive,
+not fabricated zero observations. Other inactive core and volumetric fields
+also remain unknown. Active-texture restoration matched every completed capture.
+
+These numeric programs are **unmapped** to exact consuming stages. The first
+draw is not settled/live-reload proof. No actual producer/consumer framebuffer
+attachments, input/output0 physical distinction, cache2 completion/contents or
+valid certificates were captured. The new physical layout diagnostic must resolve
+those before stage/layout/work acceptance. Independent still-quality analysis and
+motion/transition proof also remain separate.
+
+Raw evidence directory: `dev/logs/shared-spatial-driver-r1/`. Authoritative terminal
+status/commands/processes/compiled inventories:
+`shared-spatial-terminal-audit.json`. Derived typed/hardware/hash summary with
+each original input path/hash: `shared-spatial-diagnostic-summary.json`.
+Each arm retains `*-workload-measurement.json`, `*-cloud-sampler-state.json`,
+`*-final.png`, warmup-focusJSON and numbered console logs. Screenshot inspection
+confirmed an actual forest/shore/cloud scene in original and FULL; no image or
+parity acceptance is inferred from that gross visual check.
+
+## Runner ownership correction before future launch
+
+Root review found that the completed runner adopted any Minecraft PID appearing
+after its exclusive empty launch, including during cleanup. Global appearance
+alone cannot prove ownership: another client could start outside the cooperative
+lock. This was a runner design error. The completed raw controls remain valid;
+their recorded processes ended normally, and no unrelated process was stopped.
+Their historical identity records are preserved rather than retroactively
+relabelled as the stronger evidence below.
+
+The corrected runner tracks a Java candidate only after an explicit stable live
+identity and association with the current arm's unique canonical profile. Identity
+now includes PID, parent PID, process group, start time and command. Narrow macOS
+`lsof` queries select that exact PID's working-directory descriptor, or only the
+two explicit arm paths `logs/latest.log` and
+`saves/ShaderLOD-Landscape/session.lock`. A matching PID record and exact canonical
+path are required, and process identity is rechecked after the query. It never
+scans a whole open-file inventory, directory tree or another profile.
+
+A foreign/ambiguous candidate stops the launch sequence and is recorded without
+ownership or signaling authority. An exited candidate is not adopted. A reused
+PID cannot inherit or reacquire an earlier client's authority. Cleanup applies
+the same proof to late-created candidates, leaves unproven clients untouched,
+and rechecks identity plus profile association immediately before each SIGTERM
+or SIGKILL. Java signals target only the proven PID. The separately owned
+launcher session can still be stopped by its exact process group; the shared
+Gradle daemon group is never a Java cleanup target. Any remaining client keeps
+terminal cleanup status failed and requires ownership review rather than broad
+termination.
+
+Eight scoped fixture groups now pass, including positive cwd and explicit-open-log
+proof, a daemon-parent client, foreign and unavailable evidence, wrong returned
+PID, identity changes during proof, no tracking/signaling of foreign clients,
+proven-PID-only signaling, association loss and PID reuse. The initial fixture
+file had a multiline `with` syntax error; no test ran in that failed invocation.
+Both raw outcomes are retained:
+`build/shared-spatial-diagnostic-ownership-tests-r1.log` (failure) and
+`build/shared-spatial-diagnostic-ownership-tests-r2.log` (eight pass, 0.002 s).
+Scoped whitespace checks passed. Corrected source freeze:
+`build/shared-spatial-diagnostic-ownership-source-freeze.json`.
+
+This correction was source/mock-tested only; no client, Java/resource build or
+GPU action occurred. The installed platform reports `/usr/sbin/lsof` 4.91.
+Live `lsof` association with a future Minecraft arm remains unverified; missing
+permissions, unavailable cwd/logs, deleted-path annotations or a query timeout
+fail closed as ambiguous. macOS provides no atomic PID handle in this runner:
+start-time identity and immediate reproof reduce ordinary PID-reuse risk, but
+the small identity-check-to-signal race remains a platform boundary. GPU stays
+idle with root; no worker-owned live process remains.
