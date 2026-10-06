@@ -18,6 +18,12 @@ public final class IrisAdapterRuntime {
         REGISTRATION.register(descriptor, sources, exports);
     }
 
+    /** Optional structural layout/domain requirement, evaluated using actual rendered dimensions. */
+    public static void register(AdapterDescriptor descriptor, List<SourceBinding> sources,
+                                List<CapabilityExport> exports, RuntimeLayoutRequirement layout) {
+        REGISTRATION.register(descriptor, sources, exports, layout);
+    }
+
     private static synchronized AdapterRuntimeBinding runtime() {
         if (binding == null) {
             sealed = REGISTRATION.seal();
@@ -47,6 +53,8 @@ public final class IrisAdapterRuntime {
                     "shaderlod:capabilities", AdapterRuntimeBinding.CAPABILITIES_VERSION));
             registration.register(PhotonReferenceAdapter.descriptor(), PhotonReferenceAdapter.sourceBindings(),
                     List.of(new CapabilityExport(LodOperations.VOLUME_INTEGRATION, "shaderlodVolumeIntegrationAvailable")));
+            registration.register(PhotonSpatialReferenceAdapter.descriptor(), PhotonSpatialReferenceAdapter.sourceBindings(),
+                    PhotonSpatialReferenceAdapter.exports(), PhotonSpatialReferenceAdapter.layoutRequirement());
             return registration;
         }
     }

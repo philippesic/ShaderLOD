@@ -219,6 +219,51 @@ class AdapterLayoutTest {
         assertEquals((float) (1L << 24), (float) ((1L << 24) + 1));
     }
 
+    @Test void packedFloatingFormatReportsItsActualUnsignedRgbPrecision() {
+        var packed = TargetFormat.R11F_G11F_B10F;
+        assertEquals(3, packed.channels());
+        assertEquals(TargetFormat.NumericClass.FLOAT, packed.numericClass());
+        assertEquals(10, packed.componentBits());
+        assertEquals(List.of(11, 11, 10), List.of(packed.componentBits(0), packed.componentBits(1), packed.componentBits(2)));
+        assertFalse(packed.hasFloatingSignBit());
+        assertEquals(5, packed.floatingExponentBits());
+        assertEquals(List.of(6, 6, 5), List.of(packed.floatingFractionBits(0), packed.floatingFractionBits(1),
+                packed.floatingFractionBits(2)));
+        assertThrows(IndexOutOfBoundsException.class, () -> packed.componentBits(3));
+        assertEquals(32, TargetFormat.RGBA32F.componentBits());
+        assertEquals(23, TargetFormat.RGBA32F.floatingFractionBits(0));
+        assertTrue(TargetFormat.RGBA32F.hasFloatingSignBit());
+        assertEquals(10, TargetFormat.RGBA16F.floatingFractionBits(0));
+        assertThrows(IllegalStateException.class, () -> TargetFormat.RGBA32I.floatingFractionBits(0));
+    }
+
+    @Test void packedFloatingTargetPermitsThreeChannelQuantityAndCoherentMixedFormatMrt() {
+        var sky = target("sky", FULL, TargetFormat.R11F_G11F_B10F, LINEAR_QUANTITY, 3);
+        var cache = target("cache", FULL, TargetFormat.RGBA32F, GENERAL, 4);
+        var result = new AdapterLayout(List.of(sky, cache), List.of(pass(FULL, "sky", "cache"))).validate(SURFACE);
+        assertTrue(result.valid(), () -> result.problems().toString());
+        var producer = new PassDeclaration("example:producer", List.of(new PassDeclaration.Read(sky.id(),
+                PassDeclaration.Fetch.FLOAT_OR_NORMALIZED)), List.of(
+                new PassDeclaration.DrawGroup(List.of(sky.id(), cache.id()), FULL)),
+                PassDeclaration.FeedbackPolicy.DISTINCT_IMAGES_EXTERNALLY_VERIFIED);
+        assertTrue(new AdapterLayout(List.of(sky, cache), List.of(producer)).validate(SURFACE).valid());
+    }
+
+    @Test void packedFloatingTargetRejectsAlphaAndAllExactCertificateRoles() {
+        var packed = TargetFormat.R11F_G11F_B10F;
+        var rgba = target("rgba", FULL, packed, LINEAR_QUANTITY, 4);
+        has(new AdapterLayout(List.of(rgba), List.of(pass(FULL, "rgba"))).validate(SURFACE), INCOMPATIBLE_STORAGE);
+        for (var role : List.of(EXACT_SIGNED_INT32_METADATA, EXACT_UNSIGNED_INT32_METADATA,
+                BINARY32_MINIMUM_DISTANCE, EXACT_BINARY32_BOUNDED_INTEGER_METADATA)) {
+            var quantity = role == EXACT_BINARY32_BOUNDED_INTEGER_METADATA
+                    ? new TargetDeclaration.Quantity("example:metadata", role, 1, 1L << 24)
+                    : new TargetDeclaration.Quantity("example:metadata", role, 1);
+            var metadata = new TargetDeclaration("example:metadata", FULL, packed, quantity);
+            has(new AdapterLayout(List.of(metadata), List.of(pass(FULL, "metadata")))
+                    .validate(SURFACE), INCOMPATIBLE_STORAGE);
+        }
+    }
+
     @Test void unknownReadsAndAttachmentsFailWithoutHidingOtherFailures() {
         var known = target("known", FULL, TargetFormat.RGBA32F, GENERAL, 4);
         var pass = new PassDeclaration("example:unknown", List.of(new PassDeclaration.Read("example:absent",

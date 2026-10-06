@@ -11,20 +11,13 @@ time) against matched original Photon, with repeated GPU/total-frame and quality
 evidence. This target is unachieved. The previous 15% gate is superseded; historical
 evidence and unresolved checks below remain retained.
 
-Latest implementation: `000f355` connects shared LOD policies, explicit adapter
-contracts, source binding and runtime extension registration. The current build
-passes 103 Java tests. A prior binding revision rendered the first shared volume
-consumer with actual capability and effect values; the latest registration
-lifecycle passed current-revision readback. No measured new gain is accepted.
-Earlier commits `2556b61`, `5679cf2`, `ebcf2f8` and `4c0f178` preserve experimental
-benchmarks and source work; pack-specific micro-optimizations are set aside.
-`0a4d7a9` preserves independent
-parallel shader/quality implementations and protocol2/interface commands;60Java
-tests. Prior `67ef5ba` preserves
-corrected density runtime/core binding and the team direction. Earlier
-checkpoints: `270f992` (123 motion frames), `fc86429` (camera rotation
-validator), `a3dd9cd` (motion controls), `8249ce3` (attribution sample spread). Historical failures and raw reports
-remain retained; the latest operational checkpoint is at the end of the goal.
+Latest integrated commit `800eca2` validates adapter layout declarations and
+same-draw executed-work diagnostics. The current coordinated build passed 131 Java
+tests, production assembly and dev compilation, including packed RGB formats
+and shared-spatial registration. No new performance gain is accepted. Photon-specific tuning
+is set aside; Photon supplies inputs and original operations to shared LOD code.
+Historical checks and failures remain below; the operational checkpoint is at
+the end of the active goal.
 
 ## Ownership and current work
 
@@ -61,15 +54,24 @@ adaptive GPU median increased 71.6% and frame median 64.8% versus original. This
 an adverse diagnostic, not a repeated or causal conclusion. No useful gain.
 [Pilot](SHARED_LOD_PERFORMANCE.md), [work audit](SHARED_VOLUME_WORK_AUDIT.md).
 
-Shared spatial-tier transitions and a producer-certificate reconstruction kernel
-are implemented/source-tested in `137095d`; no adapter/driver/performance proof
-yet. Three bounded workers now implement a general executed-work counter API,
-its diagnostic reference adapter and raw GPU attachment capture. Smaller requested
-budgets can execute more work through resampling and changed early exits; measure
-actual operations before another performance batch. All clients/builds stopped;
-root owns idle GPU. First fullscreen baseline was rejected for window transitions.
-The 50% throughput target and little-discernible-difference requirement remain
-unmet. Prior experiments and failures below remain historical evidence.
+Shared spatial planning and producer-certified reconstruction are source-tested.
+The explicit Photon callback now passes 5 adapter fixtures, including 1,008 Iris
+parses, 332 private-OFF token comparisons, 1,352 upstream layout checks and two
+complete offline semantic compilations. No actual driver, quality or speed
+acceptance follows. [Reference contract](SHARED_SPATIAL_REFERENCE.md).
+
+Executed-work diagnostic r1 failed an attachment extent guard. R2 repaired only
+the diagnostic layout and captured three same-draw RGBA32F pages successfully in
+both arms. Per 16-ray snapshot, original primary/density/secondary counts were
+209/409/200; shared counts were 193/385/192. Temporal pairing is unproved, so
+these are observations rather than causal work savings or speed evidence.
+[Runtime evidence](WORK_TRACE_RUNTIME.md).
+
+The binding and dev-readback workers finished their freezes; root integrated
+them. Active worker `spatial_runtime_preparation` owns exact matched untimed
+controls. Root owns checkpoint and idle GPU; no Minecraft client is live.
+Next: review the controls and validate the shared spatial adapter in the actual
+renderer before quality and repeated performance measurements. The 1.5 × throughput and quality target remains unmet.
 
 Retained first-wave experiments:
 AO pilot runner exec89240 exited0, all three normal WorkloadSession contracts

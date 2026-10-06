@@ -49,6 +49,15 @@ initialization delegates reference declarations to `ReferenceComposition` inside
 `IrisAdapterRuntime`; the generic lifecycle and resolver have no Photon branches.
 The pinned `PhotonReferenceAdapter` sources are unchanged.
 
+Spatial adapters can also pass an optional `RuntimeLayoutRequirement` through
+`IrisAdapterRuntime.register(descriptor, reviewedSources, exports, requirement)`.
+The requirement declares formats, quantity roles, pass groups and a rendered-size
+domain. The shared frame snapshot caches validation per pack identity and actual
+rendered dimensions; unavailable or incompatible dimensions return availability
+0. Existing three-argument registrations retain their semantics. A declaration
+does not verify physical images or feedback safety. See
+[layout binding](SPATIAL_REFERENCE_BINDING.md) for the first explicit consumer.
+
 ## Validation and shared exports
 
 Registration is atomic: a rejected bundle leaves no descriptor, source or export
@@ -79,9 +88,10 @@ bindings are allowed and cannot select a runtime capability.
 
 Schema 1 retains `shaderlodCapabilitiesVersion = 1` and the default
 `shaderlodVolumeIntegrationAvailable` mapping to the shared volume count
-operation. With no extensions the mixin still registers exactly these two
-capability fields, alongside the unchanged 43 effect fields and seven core
-fields. Additional exports are additive `uniform1i(PER_FRAME, ...)` booleans.
+operation. The built-in spatial reference additionally exports
+`shaderlodOpaqueSpatialAvailable`; the three capability fields remain separate
+from the unchanged 43 effect fields and seven core fields. Additional exports
+are additive `uniform1i(PER_FRAME, ...)` booleans.
 Their shader consumers must require exact capabilities schema 1 and availability
 1, plus their existing core/effect enable, mode, input and quality gates.
 

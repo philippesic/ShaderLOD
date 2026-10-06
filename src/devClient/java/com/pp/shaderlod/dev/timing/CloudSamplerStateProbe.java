@@ -47,7 +47,8 @@ public final class CloudSamplerStateProbe {
             "shaderlodOpaqueLightingMode", "shaderlodOpaqueLightingNear", "shaderlodOpaqueLightingFar", "shaderlodOpaqueLightingTransition",
             "shaderlodOpaqueLightingMediumWorkRatio", "shaderlodOpaqueLightingFarWorkRatio"};
     private static final Set<String> EFFECT_INTEGER_UNIFORMS = Set.of("shaderlodEffectsVersion", "shaderlodVolumetricsMode", "shaderlodOpaqueLightingMode");
-    private static final String[] CAPABILITY_UNIFORMS = {"shaderlodCapabilitiesVersion", "shaderlodVolumeIntegrationAvailable"};
+    private static final String[] CAPABILITY_UNIFORMS = {"shaderlodCapabilitiesVersion", "shaderlodVolumeIntegrationAvailable",
+            "shaderlodOpaqueSpatialAvailable"};
     private static final Set<String> CAPABILITY_INTEGER_UNIFORMS = Set.of(CAPABILITY_UNIFORMS);
     private static final UniformReader GL_UNIFORM_READER = new UniformReader() {
         public int location(int program, String name) { return GL20.glGetUniformLocation(program, name); }
@@ -121,7 +122,7 @@ public final class CloudSamplerStateProbe {
         result.addProperty("effect_uniform_schema", 2);
         result.addProperty("effect_uniform_selection", "Effects version plus six Volumetrics and six OpaqueLighting fields; version/mode scalar int, bands/retained ratios scalar float; actual linked readbacks, not mod suppliers or inferred consumption");
         result.addProperty("capability_uniform_schema", 1);
-        result.addProperty("capability_uniform_selection", "Capabilities version and VolumeIntegration availability scalar int linked-program readbacks; actual sampled values, no source detection or supplier invocation; first observed draw may precede capability availability");
+        result.addProperty("capability_uniform_selection", "Capabilities version, VolumeIntegration availability and OpaqueSpatial availability scalar int linked-program readbacks; actual sampled values, no source detection or supplier invocation; first observed draw may precede capability availability");
         result.addProperty("texture_allocation_scope", "Bound nonzero 2D/3D texture level 0 dimensions/internal format only; no other mip images, completeness, texture contents or physical fetch counts");
         result.addProperty("raster_hook", "Optional pinned Sodium native draw-site callback; availability/injection verified separately by hook owner");
         result.addProperty("scope", "First draw per numeric GL program ID in this JVM across enabled fullscreen/raster hooks; per-entry draw_origin is not a program-name or shader-stage proof");

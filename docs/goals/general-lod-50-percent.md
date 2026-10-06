@@ -976,3 +976,64 @@ checkpoint no Minecraft process is live; owner will record exact handles before
 launch. No other worker builds or operates GPU. Remaining decisive evidence is
 actual synchronized counts/path validity, followed by a reviewed system change
 and repeated ordinary timing. Goal stays active with the full target unachieved.
+
+### Shared spatial reference and actual work diagnostic milestone
+
+2026-10-05. User direction reaffirmed: shared, extensible LOD mechanisms;
+Photon is the explicit first adapter, without standalone pack tuning. Native
+goal remains active and unachieved. No new verified performance gain.
+
+Commit `800eca2` preserves pure layout validation and executed-work runtime
+preparation/evidence. Last root integrated build passed 120 Java tests; subsequent
+packed R11F_G11F_B10F declarations passed 20 isolated layout tests and await the
+next integrated build. These source declarations do not prove actual allocation.
+
+Work diagnostic r1 failed mismatched attachment extents and remains preserved.
+Corrected r2 captured three same-draw RGBA32F pages at 744 × 418 in both arms,
+without invalid/unknown records or restoration exceptions. Per 16-ray snapshot:
+original primary/density/secondary 209/409/200; shared 193/385/192. One ray showed
+37/37/0 versus 32/40/8. Time/jitter/surface pairing is unproved; no causal savings
+or timing claim. Exact handles and raw inputs: WORK_TRACE_RUNTIME.md. Both clients
+ended; root verified no client process remains. Idle Gradle daemon is not a GPU
+job.
+
+Shared spatial adapter source is frozen: 5 fixtures, 1,008 Iris parses, 332 OFF
+parity comparisons, 1,352 layouts and 2 complete offline semantic compilations.
+Manifest bd9fbf3f70bb117a1825f630cc3a20e34089bd7bf9f8dd14377e2cc72ac582fa;
+ON c2790b61bd4d096e24eedbf9ca800d35541ca81e8ec5efeecec122b764dbf6f0;
+OFF a8c004f5be0b341ed117220da0d2e2a0dadeefd62fd899ff64a3100c19a54ceb.
+Exact 25-member/options ledger: build/photon-shared-spatial-freeze.json.
+The common kernel owns policy/classification/certification/reconstruction. Photon
+supplies decoded surfaces and original linear lighting callbacks. Sky, recipient
+material/specular/fog remain full resolution. Producer 0/2 and consumer 0/3 are
+full-size; extra pass, duplicated classification, cache traffic and transitions
+are real costs. Source samplers 11/12 fit the reviewed limit but actual linking,
+physical image separation, cache completion, sampler state and quality are pending.
+Source version-gated option mismatch was corrected without forcing an upstream
+macro. Evidence: SHARED_SPATIAL_REFERENCE.md; failed intermediate logs retained.
+
+Live file owners: spatial_runtime_binding (main integration/layout gates/tests),
+spatial_capability_probe (dev capability readback/fixtures), and
+spatial_runtime_preparation (new preparer/fixtures/runtime report). No recursive
+workers or GPU launches. Root owns idle GPU and final coordinated build. Next:
+review freezes, one integrated build, then actual untimed driver/capability/layout
+proof before quality and repeated ordinary frame/GPU measurements. Preserve all
+unrelated fullscreen, shadow-design and Miniature changes.
+
+
+Integration acceptance: `./gradlew test build compileDevClientJava` passed
+131 Java tests, zero skips/failures/errors. Log:
+build/shared-spatial-integrated-build.log. Production JAR SHA-256
+0d499564c24d652c782a5c0e6b26fbae4a93b323542c5a4c58bbeee58da8ae9f;
+no dev profiling members. Public optional layout registration, cached actual-image
+size gate, exact source/member/options binding and typed spatial capability
+readback are integrated. Ordinary new tests pass without generated artifacts;
+the separate mandatory source fixture passes and rejects missing artifacts.
+Binding isolated suite 63 passed; dev capability/effect mocks 9 + 7 passed.
+Docs: SPATIAL_REFERENCE_BINDING.md and SPATIAL_CAPABILITY_READBACK.md.
+
+Root accepted ownership from both completed implementation workers. Remaining
+worker spatial_runtime_preparation owns only new controls/fixtures/report; no
+client launch authorized to it yet. GPU remains idle/root-owned. Next decisive
+check is actual shared spatial rendering and full-path parity, followed by cache/
+sampler/layout and motion-quality evidence. Source/build is not speed evidence.

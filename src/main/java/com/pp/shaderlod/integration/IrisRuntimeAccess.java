@@ -7,6 +7,8 @@ import java.util.Set;
 import net.irisshaders.iris.Iris;
 import net.irisshaders.iris.api.v0.IrisApi;
 import net.irisshaders.iris.shaderpack.option.ShaderPackOptions;
+import com.pp.shaderlod.lod.adapter.layout.Dimensions;
+import net.minecraft.client.Minecraft;
 
 /** Pinned Iris 1.8.12 APIs; only loaded OptionSet keys count as effective options. */
 public final class IrisRuntimeAccess implements AdapterRuntimeBinding.RuntimeAccess {
@@ -44,4 +46,11 @@ public final class IrisRuntimeAccess implements AdapterRuntimeBinding.RuntimeAcc
 
     /** Called at frame snapshot, never while constructing or validating a pipeline. */
     @Override public boolean pipelineAvailable() { return IrisApi.getInstance().isShaderPackInUse(); }
+
+    /** Same actual main-target dimensions used by pinned Iris ViewportUniforms and target resize. */
+    @Override public Optional<Dimensions> renderedSurface() {
+        var target = Minecraft.getInstance().getMainRenderTarget();
+        return target == null || target.width <= 0 || target.height <= 0 ? Optional.empty()
+                : Optional.of(new Dimensions(target.width, target.height));
+    }
 }

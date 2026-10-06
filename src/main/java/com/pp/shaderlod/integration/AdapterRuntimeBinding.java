@@ -1,8 +1,10 @@
 package com.pp.shaderlod.integration;
 
 import com.pp.shaderlod.lod.adapter.AdapterDescriptor;
+import com.pp.shaderlod.lod.adapter.AdapterIdentity;
 import com.pp.shaderlod.lod.adapter.AdapterRegistry;
 import com.pp.shaderlod.lod.adapter.WorkKey;
+import com.pp.shaderlod.lod.adapter.layout.Dimensions;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.nio.file.Path;
@@ -31,13 +33,16 @@ public final class AdapterRuntimeBinding {
         Optional<Pack> currentPack();
         boolean fallback();
         boolean pipelineAvailable();
+        /** Actual rendered image dimensions, never window/display dimensions. Unavailable is fail-full. */
+        default Optional<Dimensions> renderedSurface() { return Optional.empty(); }
     }
 
     @FunctionalInterface public interface SourceReader { SourceFingerprint read(Path source) throws IOException; }
 
     public enum Reason { AVAILABLE, NO_PACK, UNVALIDATED_PACK, UNKNOWN_SOURCE, SOURCE_UNREADABLE,
         AMBIGUOUS_SOURCE, UNREGISTERED_ADAPTER, MISSING_PROTOCOL, UNSUPPORTED_PROTOCOL,
-        REQUIRED_OPTION_MISSING_OR_UNSUPPORTED, FALLBACK, PIPELINE_UNAVAILABLE, RUNTIME_UNAVAILABLE }
+        REQUIRED_OPTION_MISSING_OR_UNSUPPORTED, LAYOUT_DIMENSIONS_UNAVAILABLE, LAYOUT_INCOMPATIBLE,
+        FALLBACK, PIPELINE_UNAVAILABLE, RUNTIME_UNAVAILABLE }
 
     /** Eligible declaration is not proof that a linked program consumes any of these operations. */
     public record Snapshot(Reason reason, AdapterDescriptor descriptor, Set<WorkKey> operations) {
@@ -46,21 +51,44 @@ public final class AdapterRuntimeBinding {
         public static Snapshot unavailable(Reason reason) { return new Snapshot(reason, null, Set.of()); }
     }
 
-    private record Validated(WeakReference<Object> identity, SourceBinding binding, Snapshot selection) {}
+    private static final class Validated {
+        private final WeakReference<Object> identity;
+        private final SourceBinding binding;
+        private final Snapshot selection;
+        private Dimensions layoutDimensions;
+        private boolean layoutAccepted;
+
+        private Validated(Object identity, SourceBinding binding, Snapshot selection) {
+            this.identity = new WeakReference<>(identity);
+            this.binding = binding;
+            this.selection = selection;
+        }
+    }
     private final AdapterRegistry descriptors;
     private final List<SourceBinding> bindings;
     private final Map<String, Integer> protocols;
     private final RuntimeAccess access;
     private final SourceReader sourceReader;
+    private final Map<AdapterIdentity, RuntimeLayoutRequirement> layouts;
     private final List<Validated> cache = new ArrayList<>();
 
     public AdapterRuntimeBinding(AdapterRegistry descriptors, List<SourceBinding> bindings,
                                  Map<String, Integer> protocols, RuntimeAccess access, SourceReader sourceReader) {
+        this(descriptors, bindings, protocols, access, sourceReader, Map.of());
+    }
+
+    public AdapterRuntimeBinding(AdapterRegistry descriptors, List<SourceBinding> bindings,
+                                 Map<String, Integer> protocols, RuntimeAccess access, SourceReader sourceReader,
+                                 Map<AdapterIdentity, RuntimeLayoutRequirement> layouts) {
         this.descriptors = Objects.requireNonNull(descriptors, "descriptors");
         this.bindings = List.copyOf(bindings);
         this.protocols = Map.copyOf(protocols);
         this.access = Objects.requireNonNull(access, "access");
         this.sourceReader = Objects.requireNonNull(sourceReader, "sourceReader");
+        this.layouts = Map.copyOf(layouts);
+        if (!descriptors.descriptors().keySet().containsAll(this.layouts.keySet())) {
+            throw new IllegalArgumentException("Layout requires a registered adapter identity");
+        }
     }
 
     /** Called only by generalCommonUniforms registration; never gate pipeline construction on its readiness. */
@@ -81,7 +109,7 @@ public final class AdapterRuntimeBinding {
             } catch (IOException | IllegalArgumentException exception) {
                 selection = Snapshot.unavailable(Reason.SOURCE_UNREADABLE);
             }
-            cache.add(new Validated(new WeakReference<>(pack.identity()), binding, selection));
+            cache.add(new Validated(pack.identity(), binding, selection));
         } catch (RuntimeException | LinkageError | ServiceConfigurationError exception) {
             // A missing/transitioning Iris runtime cannot enable work reduction.
         }
@@ -97,11 +125,21 @@ public final class AdapterRuntimeBinding {
             if (validated == null) return Snapshot.unavailable(Reason.UNVALIDATED_PACK);
             if (access.fallback()) return Snapshot.unavailable(Reason.FALLBACK);
             if (!access.pipelineAvailable()) return Snapshot.unavailable(Reason.PIPELINE_UNAVAILABLE);
-            if (validated.selection().reason() != Reason.AVAILABLE) return validated.selection();
-            if (!validated.binding().acceptsOptions(pack.effectiveOptions())) {
+            if (validated.selection.reason() != Reason.AVAILABLE) return validated.selection;
+            if (!validated.binding.acceptsOptions(pack.effectiveOptions())) {
                 return Snapshot.unavailable(Reason.REQUIRED_OPTION_MISSING_OR_UNSUPPORTED);
             }
-            return validated.selection();
+            var layout = layouts.get(validated.binding.adapter());
+            if (layout != null) {
+                var dimensions = access.renderedSurface().orElse(null);
+                if (dimensions == null) return Snapshot.unavailable(Reason.LAYOUT_DIMENSIONS_UNAVAILABLE);
+                if (!dimensions.equals(validated.layoutDimensions)) {
+                    validated.layoutAccepted = layout.accepts(dimensions);
+                    validated.layoutDimensions = dimensions;
+                }
+                if (!validated.layoutAccepted) return Snapshot.unavailable(Reason.LAYOUT_INCOMPATIBLE);
+            }
+            return validated.selection;
         } catch (RuntimeException | LinkageError | ServiceConfigurationError exception) {
             return Snapshot.unavailable(Reason.RUNTIME_UNAVAILABLE);
         }
@@ -126,7 +164,7 @@ public final class AdapterRuntimeBinding {
     }
 
     private Validated find(Object identity) {
-        cache.removeIf(entry -> entry.identity().get() == null);
-        return cache.stream().filter(entry -> entry.identity().get() == identity).findFirst().orElse(null);
+        cache.removeIf(entry -> entry.identity.get() == null);
+        return cache.stream().filter(entry -> entry.identity.get() == identity).findFirst().orElse(null);
     }
 }

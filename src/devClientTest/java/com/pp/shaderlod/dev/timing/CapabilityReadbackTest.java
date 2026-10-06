@@ -13,6 +13,7 @@ public final class CapabilityReadbackTest {
     private static final int PROGRAM = 29;
     private static final String VERSION = "shaderlodCapabilitiesVersion";
     private static final String AVAILABLE = "shaderlodVolumeIntegrationAvailable";
+    private static final String SPATIAL = "shaderlodOpaqueSpatialAvailable";
     private static final String QUERIED = "queried_without_gl_error_consumption";
 
     private static final class Reader implements CloudSamplerStateProbe.UniformReader {
@@ -21,13 +22,14 @@ public final class CapabilityReadbackTest {
         private int locationReads;
         private int integerReads;
         private boolean locationFailure;
+        private String failedName;
         private Integer failedLocation;
 
         public int location(int program, String name) {
             check(program == PROGRAM, "Lookup must use the observed linked program");
-            check(Set.of(VERSION, AVAILABLE).contains(name), "Only exact capability names may be queried");
+            check(Set.of(VERSION, AVAILABLE, SPATIAL).contains(name), "Only exact capability names may be queried");
             locationReads++;
-            if (locationFailure) throw new IllegalStateException("fixture location failure");
+            if (locationFailure || name.equals(failedName)) throw new IllegalStateException("fixture location failure");
             return locations.getOrDefault(name, -1);
         }
 
@@ -53,8 +55,9 @@ public final class CapabilityReadbackTest {
         wrongTypesAndArraysNeverQuery();
         negativeLocationsNeverReadValues();
         lookupAndGetterFailuresStayUnknownAndIndependent();
+        spatialFailuresPreserveOtherCapabilities();
         legacyMapsRemainSeparate();
-        System.out.println("CapabilityReadbackTest: 8 fixture groups passed; no GL context or runtime capability claim");
+        System.out.println("CapabilityReadbackTest: 9 fixture groups passed; no GL context or runtime capability claim");
     }
 
     private static void disabledCallbacksRemainNoOp() throws Exception {
@@ -68,7 +71,7 @@ public final class CapabilityReadbackTest {
     private static void actualScalarIntsAndLocationZeroAreRead() {
         var reader = reader(1, 1);
         var result = read(inventory(GL11.GL_INT, 1, GL11.GL_INT, 1), reader);
-        check(result.keySet().equals(Set.of(VERSION, AVAILABLE)), "Separate two-field capability map");
+        check(result.keySet().equals(Set.of(VERSION, AVAILABLE, SPATIAL)), "Separate bounded three-field capability map");
         for (String name : result.keySet()) {
             var field = result.getAsJsonObject(name);
             check(QUERIED.equals(field.get("status").getAsString()), "Legal scalar is read");
@@ -82,15 +85,16 @@ public final class CapabilityReadbackTest {
         }
         check(result.getAsJsonObject(VERSION).get("uniform_location").getAsInt() == 0, "Location zero is legal");
         check(result.getAsJsonObject(VERSION).get("expected_protocol_version").getAsInt() == 1, "Expectation is separately schema 1");
-        check(reader.locationReads == 2 && reader.integerReads == 2, "Exactly two lookups and typed getters");
+        check(reader.locationReads == 3 && reader.integerReads == 3, "Exactly three lookups and typed getters");
     }
 
     private static void initialUnavailableAndUnexpectedValuesAreNotRewritten() {
         for (int available : new int[] {0, 1, -17}) {
-            var result = read(inventory(GL11.GL_INT, 1, GL11.GL_INT, 1), reader(73, available));
+            var result = read(inventory(GL11.GL_INT, 1, GL11.GL_INT, 1), reader(73, available, available));
             check(result.getAsJsonObject(VERSION).get("value").getAsInt() == 73, "Unexpected version remains actual value");
             check(result.getAsJsonObject(VERSION).get("expected_protocol_version").getAsInt() == 1, "Expectation cannot overwrite version");
             check(result.getAsJsonObject(AVAILABLE).get("value").getAsInt() == available, "Initial zero and unusual availability remain actual values");
+            check(result.getAsJsonObject(SPATIAL).get("value").getAsInt() == available, "Spatial zero/one/unexpected integers remain actual values");
         }
     }
 
@@ -112,6 +116,7 @@ public final class CapabilityReadbackTest {
             var result = read(inventory(bad[0], bad[1], bad[0], bad[1]), reader);
             unknown(result.getAsJsonObject(VERSION));
             unknown(result.getAsJsonObject(AVAILABLE));
+            unknown(result.getAsJsonObject(SPATIAL));
             check(reader.locationReads == 0 && reader.integerReads == 0, "Wrong type or non-scalar blocks all queries");
         }
     }
@@ -120,11 +125,13 @@ public final class CapabilityReadbackTest {
         var reader = reader(1, 1);
         reader.locations.put(VERSION, -1);
         reader.locations.put(AVAILABLE, -7);
+        reader.locations.put(SPATIAL, -9);
         var result = read(inventory(GL11.GL_INT, 1, GL11.GL_INT, 1), reader);
         unknown(result.getAsJsonObject(VERSION));
         unknown(result.getAsJsonObject(AVAILABLE));
+        unknown(result.getAsJsonObject(SPATIAL));
         check(result.getAsJsonObject(AVAILABLE).get("uniform_location").getAsInt() == -7, "Actual bad location retained");
-        check(reader.locationReads == 2 && reader.integerReads == 0, "Negative locations cannot reach value getters");
+        check(reader.locationReads == 3 && reader.integerReads == 0, "Negative locations cannot reach value getters");
     }
 
     private static void lookupAndGetterFailuresStayUnknownAndIndependent() {
@@ -133,8 +140,9 @@ public final class CapabilityReadbackTest {
         var failed = read(inventory(GL11.GL_INT, 1, GL11.GL_INT, 1), reader);
         unknown(failed.getAsJsonObject(VERSION));
         unknown(failed.getAsJsonObject(AVAILABLE));
+        unknown(failed.getAsJsonObject(SPATIAL));
         check(failed.getAsJsonObject(VERSION).get("reason").getAsString().contains("fixture location failure"), "Lookup failure reason retained");
-        check(reader.locationReads == 2 && reader.integerReads == 0, "Each field reports lookup failure independently");
+        check(reader.locationReads == 3 && reader.integerReads == 0, "Each field reports lookup failure independently");
         reader = reader(1, 0);
         reader.failedLocation = 0;
         failed = read(inventory(GL11.GL_INT, 1, GL11.GL_INT, 1), reader);
@@ -142,7 +150,32 @@ public final class CapabilityReadbackTest {
         check(failed.getAsJsonObject(VERSION).get("reason").getAsString().contains("fixture integer failure"), "Getter failure reason retained");
         check(QUERIED.equals(failed.getAsJsonObject(AVAILABLE).get("status").getAsString())
                 && failed.getAsJsonObject(AVAILABLE).get("value").getAsInt() == 0, "One failure cannot hide another actual unavailable value");
-        check(reader.integerReads == 2, "Other typed getter still executes");
+        check(reader.integerReads == 3, "Other typed getters still execute");
+    }
+
+    private static void spatialFailuresPreserveOtherCapabilities() {
+        for (int failure = 0; failure < 7; failure++) {
+            var reader = reader(1, 0, 1);
+            var inventory = new LinkedHashMap<>(inventory(GL11.GL_INT, 1, GL11.GL_INT, 1));
+            switch (failure) {
+                case 0 -> inventory.remove(SPATIAL);
+                case 1 -> inventory.put(SPATIAL, new CloudSamplerStateProbe.Uniform(SPATIAL, 1, GL11.GL_FLOAT));
+                case 2 -> inventory.put(SPATIAL, new CloudSamplerStateProbe.Uniform(SPATIAL, 1, GL20.GL_BOOL));
+                case 3 -> inventory.put(SPATIAL, new CloudSamplerStateProbe.Uniform(SPATIAL, 2, GL11.GL_INT));
+                case 4 -> reader.locations.put(SPATIAL, -1);
+                case 5 -> reader.failedName = SPATIAL;
+                case 6 -> reader.failedLocation = 8;
+                default -> throw new AssertionError("Unknown fixture");
+            }
+            var result = read(inventory, reader);
+            unknown(result.getAsJsonObject(SPATIAL));
+            check(result.getAsJsonObject(VERSION).get("value").getAsInt() == 1, "Spatial failure preserves actual schema value");
+            check(result.getAsJsonObject(AVAILABLE).get("value").getAsInt() == 0, "Spatial failure preserves actual volume zero");
+            check(QUERIED.equals(result.getAsJsonObject(VERSION).get("status").getAsString())
+                    && QUERIED.equals(result.getAsJsonObject(AVAILABLE).get("status").getAsString()), "Independent capabilities remain queried");
+            check(reader.integerReads == (failure == 6 ? 3 : 2), "Spatial getter runs only for legal shape/location");
+            check(reader.locationReads == (failure < 4 ? 2 : 3), "Missing/invalid spatial shape cannot query a location");
+        }
     }
 
     private static void legacyMapsRemainSeparate() {
@@ -151,23 +184,32 @@ public final class CapabilityReadbackTest {
         var core = CloudSamplerStateProbe.coreUniforms(PROGRAM, capabilities, "inactive", reader);
         var effects = CloudSamplerStateProbe.effectUniforms(PROGRAM, capabilities, "inactive", reader);
         check(core.size() == 7 && effects.size() == 13, "Legacy core7 and effect13 sizes preserved");
-        check(!core.has(VERSION) && !effects.has(AVAILABLE), "Capabilities do not alter legacy map selection");
+        for (String name : Set.of(VERSION, AVAILABLE, SPATIAL)) {
+            check(!core.has(name) && !effects.has(name), "Capabilities do not alter legacy map selection");
+        }
         check(effects.getAsJsonObject("shaderlodEffectsVersion").get("expected_protocol_version").getAsInt() == 2, "Legacy effect protocol remains 2");
         check(reader.locationReads == 0 && reader.integerReads == 0, "Capability inventory cannot imply legacy fields");
     }
 
     private static Reader reader(int version, int available) {
+        return reader(version, available, 1);
+    }
+
+    private static Reader reader(int version, int available, int spatial) {
         var reader = new Reader();
         reader.locations.put(VERSION, 0);
         reader.locations.put(AVAILABLE, 4);
+        reader.locations.put(SPATIAL, 8);
         reader.values.put(0, version);
         reader.values.put(4, available);
+        reader.values.put(8, spatial);
         return reader;
     }
 
     private static Map<String, CloudSamplerStateProbe.Uniform> inventory(int versionType, int versionSize, int availableType, int availableSize) {
         return Map.of(VERSION, new CloudSamplerStateProbe.Uniform(VERSION, versionSize, versionType),
-                AVAILABLE, new CloudSamplerStateProbe.Uniform(AVAILABLE, availableSize, availableType));
+                AVAILABLE, new CloudSamplerStateProbe.Uniform(AVAILABLE, availableSize, availableType),
+                SPATIAL, new CloudSamplerStateProbe.Uniform(SPATIAL, availableSize, availableType));
     }
 
     private static JsonObject read(Map<String, CloudSamplerStateProbe.Uniform> inventory, Reader reader) {

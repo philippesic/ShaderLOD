@@ -207,6 +207,7 @@ class AdapterExtensionTest {
             var probe = loader.loadClass("com.pp.shaderlod.AdapterExtensionTest$ProductionProbe");
             var values = (Map<?, ?>) probe.getMethod("run").invoke(null);
             assertEquals(Map.of("shaderlodCapabilitiesVersion", 1, "shaderlodVolumeIntegrationAvailable", 0,
+                    "shaderlodOpaqueSpatialAvailable", 0,
                     EXPORT.uniformName(), 0), values);
         }
     }

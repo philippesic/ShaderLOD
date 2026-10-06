@@ -304,3 +304,14 @@ compared all 75 main and 107 dev member hashes with the audit and disk; they wer
 identical. Future runtime handoffs use `development_fingerprints()` and record
 its exact inventory, rather than treating differently defined digests as a file
 change. This was a parent handoff mismatch, not a renderer or user failure.
+
+## Loaded option values do not prove version-gated activation
+
+The spatial adapter worker initially expected a loaded separate-entity option to
+remove a sampler. Actual pinned preprocessing showed its macro is inside a
+Minecraft-version condition that is false for the current runtime. The worker
+removed the forced test define, retained the sampler-limit failure and proposed
+an explicit pass decomposition preserving the original sky operation. Future
+adapter eligibility must verify actual version-conditioned shader source, rather
+than infer activation from an option map. This was corrected by agent source
+verification; no user feature was disabled to make the check pass.

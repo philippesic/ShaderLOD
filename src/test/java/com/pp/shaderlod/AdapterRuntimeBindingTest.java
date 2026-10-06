@@ -318,7 +318,7 @@ class AdapterRuntimeBindingTest {
         assertFullQuality(binding.snapshot(), Reason.UNVALIDATED_PACK);
     }
 
-    @Test void additiveMixinRegistersOnlyTwoTypedPerFrameCapabilityNamesWithSafeInitialValue() throws Exception {
+    @Test void additiveMixinRegistersReferenceTypedPerFrameCapabilitiesWithSafeInitialValue() throws Exception {
         var registered = new LinkedHashMap<String, IntSupplier>();
         var holder = (UniformHolder) Proxy.newProxyInstance(UniformHolder.class.getClassLoader(),
                 new Class<?>[]{UniformHolder.class}, (proxy, method, args) -> {
@@ -332,11 +332,14 @@ class AdapterRuntimeBindingTest {
                 UniformHolder.class, FrameUpdateNotifier.class, PackDirectives.class, CallbackInfo.class);
         callback.setAccessible(true);
         callback.invoke(null, holder, notifier, null, new CallbackInfo("generalCommonUniforms", false));
-        assertEquals(Set.of("shaderlodCapabilitiesVersion", "shaderlodVolumeIntegrationAvailable"), registered.keySet());
+        assertEquals(Set.of("shaderlodCapabilitiesVersion", "shaderlodVolumeIntegrationAvailable",
+                "shaderlodOpaqueSpatialAvailable"), registered.keySet());
         assertEquals(1, registered.get("shaderlodCapabilitiesVersion").getAsInt());
         assertEquals(0, registered.get("shaderlodVolumeIntegrationAvailable").getAsInt());
+        assertEquals(0, registered.get("shaderlodOpaqueSpatialAvailable").getAsInt());
         notifier.onNewFrame();
         assertEquals(0, registered.get("shaderlodVolumeIntegrationAvailable").getAsInt());
+        assertEquals(0, registered.get("shaderlodOpaqueSpatialAvailable").getAsInt());
     }
 
     @Test void pinnedIrisOptionsAdmitOnlyDiscoveredKeysAndReadActualDefaultsAndOverrides() throws Exception {

@@ -59,6 +59,16 @@ locations, lifetimes, units and decode remain explicit adapter obligations.
 Known formats are deliberately reviewed enum entries; unsupported formats need
 an explicit API extension and checks, rather than inference from shader text.
 
+`R11F_G11F_B10F` is a reviewed packed RGB floating format: stored component widths
+11/11/10, no sign bits, 5 exponent bits and 6/6/5 stored fraction bits.
+[`Khronos specification`](https://registry.khronos.org/DataFormat/specs/1.4/dataformat.1.4.inline.html)
+defines these unsigned mini-float encodings. `componentBits(channel)` exposes each
+width; scalar `componentBits()` returns the minimum width (10 for this format,
+unchanged for existing uniform-width formats). It permits a three-channel float
+quantity, has no stored alpha and cannot satisfy any exact metadata or binary32
+distance role. The adapter must separately prove the quantity's nonnegative range
+and acceptable rounding error; a linear declaration alone makes neither claim.
+
 - `GENERAL` checks channel capacity; `LINEAR_QUANTITY` also requires float storage.
   Neither validates that a shader expression is a linear basis.
 - `EXACT_SIGNED_INT32_METADATA` / `EXACT_UNSIGNED_INT32_METADATA` require matching
@@ -105,9 +115,9 @@ var cache = new TargetDeclaration("example:interleaved", full,
                 3, 1L << 24),
         new TargetDeclaration.Quantity("example:minimum_distance",
                 TargetDeclaration.Role.BINARY32_MINIMUM_DISTANCE, 1)));
-// A producer writes cache with DrawGroup(List.of(cache.id()), full).
+// The reference producer writes full-size sky + cache in one group.
 // A later consumer declares Read(cache.id(), Fetch.FLOAT_TEXEL_FETCH)
-// and draws a distinct full-size composition image.
+// and draws a completed/ping-ponged full-size composition image.
 var acceptance = declaredAdapterLayout.validate(new Dimensions(renderWidth, renderHeight));
 if (!acceptance.valid()) {
     // Retain the adapter's untouched full-resolution path; do not enable cache use.
@@ -131,20 +141,33 @@ stale certificate. Java storage validation cannot establish any of those facts.
 The source owner owns this bounded domain and kernel connection; the client/GPU
 owner alone verifies rendered allocations, effective controls and actual outputs.
 
+The revised source graph uses producer MRT **0/2** and consumer MRT **0/3** (or
+the original conditional target-0-only branch). Target 0 retains its actual
+`R11F_G11F_B10F` format and a three-channel quantity; target 2 is the interleaved
+RGBA32F cache. Every group keeps full dimensions and the full viewport. The
+declaration must keep target 0's format separate from the cache's exact metadata
+format. Logical target 0's reads/writes require
+`DISTINCT_IMAGES_EXTERNALLY_VERIFIED`: producer completion and Iris image flips
+must prove distinct physical read/write images before cache use. This contract
+does not create that proof. The shader owner supplies the exact active samplers,
+all preserved groups and target 3's reviewed format for root's registration.
+
 ## Bounded acceptance
 
-Isolated Java 21 `javac --release 21` and JUnit Platform execution passed **17/17
+Isolated Java 21 `javac --release 21` and JUnit Platform execution passed **20/20
 tests**, zero failures or skips, in 57 ms. Fixtures cover absolute/anisotropic
 rational resolution, odd/tiny dimensions, maximum products and overflow, unknown
 references, independent draw groups, the three-MRT/upstream-pair regressions,
 viewport coverage, separate lower-rate producer groups with a full consumer,
 full-size interleaved quantity/certificate views, exact signed/unsigned and
 bounded binary32 metadata, unfiltered fetch declarations, direct feedback,
-schema errors and defensive copies. Actual source hashes and the launcher are
+schema errors and defensive copies. Three added packed-format cases verify true
+channel/precision properties, three-channel mixed-format MRT acceptance and
+four-channel/exact-metadata rejection. Actual source hashes and the launcher are
 recorded in the raw log:
-`/var/folders/45/xr_x4hl921qg64tj4ln3jp_r0000gp/T/shaderlod-layout-contract-nzrwvkyn/acceptance-final.log`.
-An earlier 14-test run of the strict full-target API also passed; the final result
-adds explicit bounded-float/interleaved and independent-group fixtures.
+`/var/folders/45/xr_x4hl921qg64tj4ln3jp_r0000gp/T/shaderlod-layout-contract-nzrwvkyn/acceptance-packed-format.log`.
+Earlier 14-test and 17-test runs also passed; their prior logs are retained in
+that directory.
 
 No Gradle, production/dev class-resource output, Minecraft client, shader reload,
 driver, GPU, quality or performance check ran. No live process remains owned.
