@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Assemble the pinned, default-off primary volumetric integration experiment."""
+"""Assemble the pinned, default-off shared-work volumetric reference consumer."""
 from __future__ import annotations
 import argparse
 import json
@@ -19,7 +19,12 @@ SETTINGS = 'shaders/settings.glsl'
 MEMBERS = (CUMULUS, SETTINGS)
 ADDITIONS = (
     ('shaders/include/shaderlod/volume_budget.glsl', 'shaderpacks/common/shaders/include/shaderlod/volume_budget.glsl'),
-    ('shaders/include/shaderlod/photon_volume_adapter.glsl', 'shaderpacks/photon-volumetric-lod/shaders/include/shaderlod/photon_volume_adapter.glsl'))
+    ('shaders/include/shaderlod/photon_volume_adapter.glsl', 'shaderpacks/photon-volumetric-lod/shaders/include/shaderlod/photon_volume_adapter.glsl'),
+    ('shaders/include/shaderlod/effect_policy.glsl', 'shaderpacks/common/shaders/include/shaderlod/effect_policy.glsl'),
+    ('shaders/include/shaderlod/work_policy.glsl', 'shaderpacks/common/shaders/include/shaderlod/work_policy.glsl'))
+REFERENCE_MEMBERS = ('LICENSE', 'shaders/world0/deferred1.fsh', 'shaders/program/d1_clouds.fsh',
+    'shaders/include/sky/clouds.glsl', *MEMBERS, *(entry[0] for entry in ADDITIONS))
+REQUIRED_OPTIONS = {SWITCH: ['true'], 'CLOUDS_CUMULUS': ['true'], 'BLOCKY_CLOUDS': ['false']}
 ARMS = ('original', 'disabled', 'enabled')
 METADATA = 'shaderlod-volumetric-lod.json'
 
@@ -31,7 +36,12 @@ def patch_members(files: dict[str, bytes], manifest: dict, arm: str, root: Path 
         manifest.get('base_version') != 'v1.3b' or manifest.get('base_sha256') != BASE_SHA256 or
         manifest.get('switch') != SWITCH or manifest.get('core_version') != 2 or
         manifest.get('effect_versions') != [1, 2] or manifest.get('retained_minimum') != 8 or
-        manifest.get('inherit_retained_ratios') != [0.85, 0.75] or
+        manifest.get('inherit_retained_ratios') != [1.0, 1.0] or
+        manifest.get('capability_schema') != 1 or
+        manifest.get('capability_operation') != 'shaderlod:volume_integration' or
+        manifest.get('required_capability_fields') != ['shaderlodCapabilitiesVersion', 'shaderlodVolumeIntegrationAvailable'] or
+        manifest.get('required_effective_options') != REQUIRED_OPTIONS or
+        tuple(manifest.get('reference_members', ())) != REFERENCE_MEMBERS or
         manifest.get('sampler_constraints', {}).get('status') != 'controlled_profile_only'):
         raise ValueError('Unreviewed volumetric manifest contract')
     if tuple(e['path'] for e in manifest['members']) != MEMBERS:
@@ -100,9 +110,15 @@ def build(output: Path | None = None, base: Path | None = None, arm: str = 'disa
         'unchanged_upstream_member_count': len(original) - len(modified),
         'member_sha256': {name: sha256(files[name]) for name in (*MEMBERS, *added)},
         'license_sha256': sha256(files['LICENSE']), 'switch': SWITCH, 'option_default': arm == 'enabled',
-        'core_version': 2, 'effect_versions': [1, 2],
+        'core_version': 2, 'effect_versions': [1, 2], 'capability_schema': 1,
+        'capability_operation': 'shaderlod:volume_integration', 'retained_minimum': 8,
+        'inherit_retained_ratios': [1.0, 1.0],
+        'public_flags': {SWITCH: ['false', 'true']},
+        'required_effective_options': ({} if arm == 'original' else REQUIRED_OPTIONS),
+        'reference_member_sha256': ({} if arm == 'original' else
+            {name: sha256(files[name]) for name in REFERENCE_MEMBERS}),
         'linked_consumption': 'unverified',
-        'source_referenced_fields': ([] if arm == 'original' else ['shaderlodBridgeVersion', 'shaderlodEnabled', 'shaderlodNear', 'shaderlodFar',
+        'source_referenced_fields': ([] if arm == 'original' else ['shaderlodCapabilitiesVersion', 'shaderlodVolumeIntegrationAvailable', 'shaderlodBridgeVersion', 'shaderlodEnabled', 'shaderlodNear', 'shaderlodFar',
             'shaderlodTransition', 'shaderlodEffectsVersion', 'shaderlodVolumetricsMode',
             'shaderlodVolumetricsNear', 'shaderlodVolumetricsFar', 'shaderlodVolumetricsTransition',
             'shaderlodVolumetricsMediumWorkRatio', 'shaderlodVolumetricsFarWorkRatio']),

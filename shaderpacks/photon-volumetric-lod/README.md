@@ -1,12 +1,19 @@
-# Photon primary volumetric integration experiment
+# Photon shared-work volume reference
 
-Private, default-off source modules for the pinned Photon v1.3b reference adapter.
-Assemble a runnable derivative with
+Private, default-off consumer of the general ShaderLOD work policy, based on
+pinned Photon v1.3b. Build with
 `python3 scripts/build_photon_volumetric_lod.py --arm disabled`.
-The original Photon ZIP and LICENSE remain pinned; generated archives stay in
-ignored `build/`. The `enabled` arm turns on only the private shader option and
-still requires valid ShaderLOD core2 and effect extension1/2 controls.
+Generated archives remain under ignored `build/`; original Photon LICENSE and
+Benjamin Stott (SixthSurge) attribution are retained.
 
-See `docs/VOLUMETRIC_LOD_IMPLEMENTATION.md` for actual entry points, units,
-normalization, eligibility, fallback, static evidence and pending driver/quality/
-GPU acceptance. No measured performance claim is made.
+The existing march is unchanged. Shared policy supplies distance/work decisions;
+the explicit Photon adapter supplies physical entry/interval, count/floor and
+quality inputs. INHERIT resolves safe unity; ADAPTIVE consumes the six general
+Volumetrics controls. Exact capability schema1 and operation availability1,
+core2/effects1or2 and effective private-on/cumulus-on/blocky-off options are required.
+Missing/unknown/disabled inputs select the original function. The private option
+defaults off; configuration or registration alone cannot add LOD to a shader.
+
+See [implementation/evidence](../../docs/VOLUMETRIC_LOD_IMPLEMENTATION.md) for
+exact source/archive pins, static checks and required driver/quality/GPU evidence.
+No measured speed or accepted visual-quality claim is made.

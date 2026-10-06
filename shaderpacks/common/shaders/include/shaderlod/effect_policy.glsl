@@ -1,4 +1,4 @@
-#ifndef SHADERLOD_EFFECT_POLICY_INCLUDED
+#if !defined SHADERLOD_EFFECT_POLICY_INCLUDED
 #define SHADERLOD_EFFECT_POLICY_INCLUDED
 
 // Uniform-free work policy for explicit adapters. Camera-relative Euclidean blocks.

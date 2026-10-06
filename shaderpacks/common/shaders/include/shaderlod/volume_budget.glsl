@@ -1,48 +1,35 @@
 #if !defined SHADERLOD_VOLUME_BUDGET_INCLUDED
 #define SHADERLOD_VOLUME_BUDGET_INCLUDED
 
-// Uniform-free policy for explicit volumetric adapters. All distances are blocks.
-// The adapter supplies the real ray interval, native density and quality floor.
-// A work cap changes quadrature, never extinction, scattering or density strength.
+// Shared work_policy.glsl supplies distance, versions, modes and retained ratios.
+// This helper only validates volume inputs and refines its continuous request.
+// All physical distances/footprints are in blocks; no derivatives or texture work.
 bool shaderlod_volume_finite(float v) { return !isnan(v) && !isinf(v); }
 
-bool shaderlod_volume_bands_valid(vec3 bands, vec2 retained) {
-    return !any(isnan(bands)) && !any(isinf(bands)) &&
-        !any(isnan(retained)) && !any(isinf(retained)) &&
-        bands.x > 0.0 && bands.y > bands.x && bands.y <= 4096.0 &&
-        bands.z >= 0.0 && bands.z <= 512.0 &&
-        (bands.z == 0.0 || bands.z >= 0.0009765625) &&
-        bands.z <= min(2.0 * bands.x, bands.y - bands.x) &&
-        retained.y >= 0.0 && retained.y <= retained.x && retained.x <= 1.0;
-}
-
-float shaderlod_volume_blend(float distance_blocks, float boundary, float width) {
-    if (width == 0.0) return float(distance_blocks >= boundary);
-    return smoothstep(boundary - 0.5 * width, boundary + 0.5 * width, distance_blocks);
-}
-
 // footprint_blocks is the smallest final-pixel footprint at the volume entry;
-// resolved_feature_blocks is an adapter-proven spatial feature scale, not a derivative.
+// resolved_feature_blocks is an adapter-proven feature scale, not a derivative.
 // protected_weight smoothly restores overhead/other salient views to full work.
-// Invalid input, empty intervals and budgets below the floor retain original work.
-float shaderlod_volume_work_target(uint original, uint minimum, bool enabled,
-    float entry_blocks, float interval_blocks, float footprint_blocks,
-    float resolved_feature_blocks, float protected_weight, vec3 bands, vec2 retained) {
+// Original count and caller floor remain operation inputs, not quality presets.
+float shaderlod_volume_work_target(ShaderlodWorkPolicy policy, bool capability_valid,
+    uint original, uint minimum, float entry_blocks, float interval_blocks,
+    float footprint_blocks, float resolved_feature_blocks, float protected_weight) {
     float full = float(original);
-    if (!enabled || original < minimum || minimum < 1u || original > 65536u ||
-        !shaderlod_volume_bands_valid(bands, retained) ||
-        !shaderlod_volume_finite(entry_blocks) || entry_blocks < 0.0 || entry_blocks > 16777216.0 ||
-        !shaderlod_volume_finite(interval_blocks) || interval_blocks <= 0.0 || interval_blocks > 16777216.0 ||
-        !shaderlod_volume_finite(footprint_blocks) || footprint_blocks <= 0.0 ||
-        !shaderlod_volume_finite(resolved_feature_blocks) || resolved_feature_blocks <= 0.0 ||
-        !shaderlod_volume_finite(protected_weight) || protected_weight < 0.0 || protected_weight > 1.0)
-        return full;
-    float medium = shaderlod_volume_blend(entry_blocks, bands.x, bands.z);
-    float far_weight = shaderlod_volume_blend(entry_blocks, bands.y, bands.z);
-    float ratio = mix(mix(1.0, retained.x, medium), retained.y, far_weight);
+    // Preserve the existing volume count domain before any uint -> int cast.
+    if (original < minimum || minimum < 1u || original > 65536u) return full;
+    bool quality_valid =
+        shaderlod_volume_finite(interval_blocks) && interval_blocks > 0.0 && interval_blocks <= 16777216.0 &&
+        shaderlod_volume_finite(footprint_blocks) && footprint_blocks > 0.0 &&
+        shaderlod_volume_finite(resolved_feature_blocks) && resolved_feature_blocks > 0.0 &&
+        shaderlod_volume_finite(protected_weight) && protected_weight >= 0.0 && protected_weight <= 1.0;
+    ShaderlodWorkDecision work = shaderlod_work_decide(policy, capability_valid,
+        quality_valid, protected_weight == 1.0, entry_blocks, int(original), int(minimum));
+    if (work.reason != SHADERLOD_WORK_POLICY) return full;
     float footprint_weight = smoothstep(resolved_feature_blocks, 2.0 * resolved_feature_blocks, footprint_blocks);
-    ratio = mix(1.0, ratio, footprint_weight * (1.0 - protected_weight));
-    return clamp(full * ratio, float(minimum), full);
+    // Refine BEFORE applying the floor. Rounding to realized_work here would
+    // discard continuous transitions and the march's existing partial last cell.
+    float target = mix(full, work.continuous_requested_work,
+        footprint_weight * (1.0 - protected_weight));
+    return clamp(target, float(minimum), full);
 }
 
 // Continuous budget -> ceil(target) cells: all but the last have equal width;

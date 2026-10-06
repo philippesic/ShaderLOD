@@ -3,6 +3,8 @@ package com.pp.shaderlod.mixin;
 import com.pp.shaderlod.ShaderLodEffectConfig;
 import com.pp.shaderlod.EffectUniformFrame;
 import com.pp.shaderlod.lod.Effect;
+import com.pp.shaderlod.integration.AdapterRuntimeBinding;
+import com.pp.shaderlod.integration.IrisAdapterRuntime;
 import java.util.function.DoubleSupplier;
 import net.irisshaders.iris.gl.uniform.UniformHolder;
 import net.irisshaders.iris.gl.uniform.UniformUpdateFrequency;
@@ -17,9 +19,28 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 /** Additive extension; the existing seven-field core protocol remains version 2. */
 @Mixin(value = CommonUniforms.class, remap = false)
 public abstract class EffectUniformsMixin {
+    @Inject(method = "generalCommonUniforms", at = @At("HEAD"), remap = false)
+    private static void shaderlod$sealAdapters(UniformHolder uniforms, FrameUpdateNotifier notifier,
+                                               PackDirectives directives, CallbackInfo ci) {
+        IrisAdapterRuntime.registerCurrentPack();
+    }
+
+    @Inject(method = "generalCommonUniforms", at = @At("TAIL"), remap = false)
+    private static void shaderlod$registerCapabilities(UniformHolder uniforms, FrameUpdateNotifier notifier,
+                                                       PackDirectives directives, CallbackInfo ci) {
+        IrisAdapterRuntime.registerCurrentPack();
+        var state = EffectUniformFrame.forNotifier(notifier, notifier::addListener);
+        var frequency = UniformUpdateFrequency.PER_FRAME;
+        uniforms.uniform1i(frequency, "shaderlodCapabilitiesVersion", () -> AdapterRuntimeBinding.CAPABILITIES_VERSION);
+        for (var export : IrisAdapterRuntime.capabilityExports()) {
+            uniforms.uniform1i(frequency, export.uniformName(), export.supplier(state));
+        }
+    }
+
     @Inject(method = "generalCommonUniforms", at = @At("TAIL"), remap = false)
     private static void shaderlod$registerEffects(UniformHolder uniforms, FrameUpdateNotifier notifier,
                                                  PackDirectives directives, CallbackInfo ci) {
+        IrisAdapterRuntime.registerCurrentPack();
         var state = EffectUniformFrame.forNotifier(notifier, notifier::addListener);
         ShaderLodEffectConfig.observeIrisRegistration();
         var frequency = UniformUpdateFrequency.PER_FRAME;

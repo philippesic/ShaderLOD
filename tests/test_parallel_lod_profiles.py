@@ -27,7 +27,13 @@ class ParallelProfilesTests(unittest.TestCase):
             self.assertEqual(plan['original_sha256'],prep.ORIGINAL_SHA256); self.assertTrue(plan['manifest_sha256'])
         with self.assertRaisesRegex(ValueError,'ignored'): prep.plan('reflection',self.root/'tracked',root=self.root)
         with self.assertRaisesRegex(ValueError,'Unknown'): prep.plan('universal',self.output,root=self.root)
-        self.assertEqual(prep.FAMILIES['procedural'].manifest_sha256,'5849bc24c84f98b42a4ad7a85b013cdab6bb229a3f8c2d8e8c48d6097cd9e687')
+        self.assertEqual(prep.FAMILIES['procedural'].manifest_sha256,'b529fdb01aabef5670128e04a25224bfd4368c2a63641214023c352099d100e2')
+        family=prep.FAMILIES['volume']
+        self.assertEqual(family.manifest_sha256,'40efd7e702e41388033255d48a007c543e1055ccb4e2513c1908c2d82b8f2677')
+        self.assertEqual(family.archive_sha256,'5de7561dd24cdca80860a1d5f2c60400e74163a489cc163e916f3fd47feb27de')
+        self.assertEqual(family.metadata_sha256,'b7ce3bac5c13e35e13ce2e58a0bc1fb5bf6fc628d2a5f6b8cafc83f3107c0761')
+        self.assertEqual(family.helpers,prep.volume.ADDITIONS)
+        self.assertIn('capability schema1',prep.plan('volume',self.output,root=self.root)['policy_note'])
 
     def test_requested_effects_seven_defaults_and_conservative_volume_override(self):
         defaults=tomllib.loads(prep.effects_config())['effects']
@@ -50,6 +56,20 @@ class ParallelProfilesTests(unittest.TestCase):
             _,_,qualification=prep.qualify_archives(name,original,archive,runtime)
             self.assertTrue(qualification['qualified']); self.assertEqual(qualification['archive_sha256'],family.archive_sha256)
             self.assertEqual(set(qualification['helper_sha256']),{n for n,_ in family.helpers})
+            if name=='volume':
+                metadata=qualification['metadata']
+                self.assertEqual(qualification['capability_schema'],1)
+                self.assertEqual(qualification['capability_operation'],'shaderlod:volume_integration')
+                self.assertEqual(metadata['inherit_retained_ratios'],[1.0,1.0])
+                self.assertEqual(metadata['linked_consumption'],'unverified')
+                self.assertEqual(metadata['source_referenced_fields'][:2],['shaderlodCapabilitiesVersion','shaderlodVolumeIntegrationAvailable'])
+                self.assertEqual(metadata['required_effective_options'],prep.volume.REQUIRED_OPTIONS)
+                self.assertEqual(set(metadata['reference_member_sha256']),set(prep.volume.REFERENCE_MEMBERS))
+                self.assertEqual(set(qualification['helper_sha256']),{'shaders/include/shaderlod/'+name+'.glsl'
+                    for name in ('volume_budget','photon_volume_adapter','effect_policy','work_policy')})
+            if name=='procedural':
+                self.assertEqual(qualification['metadata']['consumed_core_fields'],[])
+                self.assertEqual(qualification['option_on_source_core_fields'],['shaderlodBridgeVersion','shaderlodEnabled'])
             for scene in ('coastalwater','forest'):
                 source=prep.copies.DEFAULT_SOURCES[scene]
                 if not (source/'workload-measurement.json').exists(): continue
@@ -72,6 +92,13 @@ class ParallelProfilesTests(unittest.TestCase):
         metadata=family.builder.METADATA; obj=json.loads(files[metadata]); obj['gpu_benefit']='promoted'
         write(files|{metadata:json.dumps(obj).encode()})
         with self.assertRaisesRegex(ValueError,'metadata'): prep.qualify_archives('reflection',original,fixture,runtime)
+        family=prep.FAMILIES['volume']; files=family.builder.archive_members(ROOT/'build'/family.archive_name)
+        helper='shaders/include/shaderlod/work_policy.glsl'; write(files|{helper:files[helper]+b'changed'})
+        with self.assertRaisesRegex(ValueError,'helper bytes'): prep.qualify_archives('volume',original,fixture,runtime)
+        metadata=family.builder.METADATA
+        for field,value in (('capability_schema',0),('inherit_retained_ratios',[.85,.75]),('source_referenced_fields',[])):
+            obj=json.loads(files[metadata]); obj[field]=value; write(files|{metadata:json.dumps(obj).encode()})
+            with self.assertRaisesRegex(ValueError,'metadata'): prep.qualify_archives('volume',original,fixture,runtime)
 
     def test_pending_assembly_lighting_contract_still_pins_all_members_and_full_metadata(self):
         original_path=ROOT/'dev/upstream/photon_v1.3b.zip'

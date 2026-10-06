@@ -40,12 +40,22 @@
     {
       "path": "shaders/include/shaderlod/volume_budget.glsl",
       "source_path": "shaderpacks/common/shaders/include/shaderlod/volume_budget.glsl",
-      "sha256": "ac1d7984264ffa6dfe5f525663cee69499511d15769d1f56d5497d491d9a8a84"
+      "sha256": "cf37ff0af1b3ebb6cc3f3f95ae83c708518a8e48d03545e8665962d14cf731ac"
     },
     {
       "path": "shaders/include/shaderlod/photon_volume_adapter.glsl",
       "source_path": "shaderpacks/photon-volumetric-lod/shaders/include/shaderlod/photon_volume_adapter.glsl",
-      "sha256": "e9ad858b3ab98f45118362e18e357f5e41a0193b23085f73992f5787c82938eb"
+      "sha256": "74349a36793081be528b34f9f047fc9ed195a8f2b12545caade0d4637af75905"
+    },
+    {
+      "path": "shaders/include/shaderlod/effect_policy.glsl",
+      "source_path": "shaderpacks/common/shaders/include/shaderlod/effect_policy.glsl",
+      "sha256": "5df5427a1cfa51e68446978040235061ab6db60ec3f5079d40ffa0c39bad6943"
+    },
+    {
+      "path": "shaders/include/shaderlod/work_policy.glsl",
+      "source_path": "shaderpacks/common/shaders/include/shaderlod/work_policy.glsl",
+      "sha256": "1b70d1b34959778ac34ae9316797c23d858531ff366b55373bae1c7ee55ee309"
     }
   ],
   "core_version": 2,
@@ -53,13 +63,13 @@
     1,
     2
   ],
-  "activation": "private compile option AND main PROGRAM_DEFERRED1 AND analytic transmittance path AND core2/global1 AND known extension1or2 AND valid Volumetrics policy",
+  "activation": "private option AND PROGRAM_DEFERRED1 AND analytic transmittance path AND capability schema1/volume operation1 AND shared core2/global1/effects1or2 policy; INHERIT resolved unity",
   "units": "camera-relative entry and interval converted from atmosphere meters to blocks via CLOUDS_SCALE; final pixel footprint in blocks",
   "integration": "ceil continuous work_target cells; final cell shortened; all cell optical depths use actual cell length; no density strength change",
   "retained_minimum": 8,
   "inherit_retained_ratios": [
-    0.85,
-    0.75
+    1.0,
+    1.0
   ],
   "inside_above": "radius >= inner_radius - 1 atmosphere unit remains original",
   "overhead": "smooth full-quality restore for abs(world ray y) 0.35..0.65; full above0.65",
@@ -83,5 +93,42 @@
     "parse_rule": "parseLine only enters declaration/ifdef/ifndef paths; parseIfdef accepts one word and line end; #if defined does not register boolean reference",
     "guard_contract": "outer #ifdef private switch; inner #if defined PROGRAM_DEFERRED1 && !defined ATMOSPHERE_TRANSMITTANCE_LUT",
     "acceptance": "actual OptionAnnotatedSource/getOptionSet fixture with stage entry; private gate sole added option, default/override validation; compilation/rendering pending"
-  }
+  },
+  "capability_schema": 1,
+  "capability_operation": "shaderlod:volume_integration",
+  "required_capability_fields": [
+    "shaderlodCapabilitiesVersion",
+    "shaderlodVolumeIntegrationAvailable"
+  ],
+  "unchanged_march_sha256": "94f07353d7daf4e63f1c438c6dc55edeceeb8aa2cbfeead5af8ab083b148fedb",
+  "glsl_parser_regression": {
+    "transformer_sha256": "b8ca5e61b41ae18ddd5d4d5d6785cb9acd8fd7ac0c5c0b0689b872b039c11b9f",
+    "class_path": "io/github/douira/glsl_transformer/parser/EnhancedParser.class",
+    "class_sha256": "11133ca7cbfbc89777b15f06a31323b26c1ab6448b1822f4086e9503f3527814",
+    "antlr_sha256": "54665d2838cc66458343468efc539e454fc95b46a8a04b13c6ac43fc9be63505",
+    "acceptance": "132 complete actual Iris Jcpp/EnhancedParser graphs: 43 affected entries original/off/on plus transmittance-LUT control; 44 off token parity; 43 stage/LUT isolation; broken shared-call delimiter rejected; source syntax only"
+  },
+  "required_effective_options": {
+    "SHADERLOD_VOLUMETRIC_INTEGRATION_LOD": [
+      "true"
+    ],
+    "CLOUDS_CUMULUS": [
+      "true"
+    ],
+    "BLOCKY_CLOUDS": [
+      "false"
+    ]
+  },
+  "reference_members": [
+    "LICENSE",
+    "shaders/world0/deferred1.fsh",
+    "shaders/program/d1_clouds.fsh",
+    "shaders/include/sky/clouds.glsl",
+    "shaders/include/sky/clouds/cumulus.glsl",
+    "shaders/settings.glsl",
+    "shaders/include/shaderlod/volume_budget.glsl",
+    "shaders/include/shaderlod/photon_volume_adapter.glsl",
+    "shaders/include/shaderlod/effect_policy.glsl",
+    "shaders/include/shaderlod/work_policy.glsl"
+  ]
 }

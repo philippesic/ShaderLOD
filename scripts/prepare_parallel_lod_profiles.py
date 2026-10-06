@@ -38,18 +38,22 @@ class Family:
 
 # Reviewed adapters only. No arbitrary patch registry or archive-hash acceptance.
 FAMILIES = MappingProxyType({
-    'reflection': Family(reflection, '0c20609c50ee65d98ec803eb96294a0d727bff82d81a6634abb1504518d89e1a',
-        'Photon-ReflectionFootprintLOD-disabled.zip', 'd11de4c94fb58520e9972a816e9739486fa8578b876fbd20c17aa933a4a82e16',
-        'ea95ed11bb2625720a7f81dc8a400f98df2b3aca992f15d4a16e4d83cdb00c85', reflection.EXPERIMENT,
+    'reflection': Family(reflection, '0c0905612ddacf358b92c2d112bb17f2d107de224551d418a6a67c8529ccf4ec',
+        'Photon-ReflectionFootprintLOD-disabled.zip', '485590fa1a70ce43e4fe271a8a19f869d0cbf69767f1bda435b5deed9e41aa35',
+        '7563f2cb96f5042df6ff101a7a2c34f058f2a9cdd62c67aa2bdaf2898bd28a6b', reflection.EXPERIMENT,
         (('shaders/include/shaderlod/reflection_depth_cache.glsl', 'shaderpacks/photon-reflection-lod/shaders/include/shaderlod/reflection_depth_cache.glsl'),),
         ('shaders/include/lighting/specular_lighting.glsl','shaders/settings.glsl')),
-    'volume': Family(volume, '08e1611a77a2f6d6364b91eda692ea2e300b1c3c2891c87d7abd6ecec98def9b',
-        'Photon-VolumetricLOD-disabled.zip', '3685e47e94cd08f3994053f300981bbdd92ae108a65f7fadb700bd6d9422a6b5',
-        '1a5c62b2a549d487591fbbf1d3d04de2298e8ee0aa90e798d26c406eb678b83e', volume.EXPERIMENT, volume.ADDITIONS,
+    'volume': Family(volume, '40efd7e702e41388033255d48a007c543e1055ccb4e2513c1908c2d82b8f2677',
+        'Photon-VolumetricLOD-disabled.zip', '5de7561dd24cdca80860a1d5f2c60400e74163a489cc163e916f3fd47feb27de',
+        'b7ce3bac5c13e35e13ce2e58a0bc1fb5bf6fc628d2a5f6b8cafc83f3107c0761', volume.EXPERIMENT,
+        (('shaders/include/shaderlod/volume_budget.glsl', 'shaderpacks/common/shaders/include/shaderlod/volume_budget.glsl'),
+         ('shaders/include/shaderlod/photon_volume_adapter.glsl', 'shaderpacks/photon-volumetric-lod/shaders/include/shaderlod/photon_volume_adapter.glsl'),
+         ('shaders/include/shaderlod/effect_policy.glsl', 'shaderpacks/common/shaders/include/shaderlod/effect_policy.glsl'),
+         ('shaders/include/shaderlod/work_policy.glsl', 'shaderpacks/common/shaders/include/shaderlod/work_policy.glsl')),
         ('shaders/include/sky/clouds/cumulus.glsl','shaders/settings.glsl')),
-    'procedural': Family(procedural, '5849bc24c84f98b42a4ad7a85b013cdab6bb229a3f8c2d8e8c48d6097cd9e687',
-        'Photon-ProceduralFootprint-disabled.zip', 'eb9fa7db90fffff1ee264b90098a2b14a8dd322d3e8a111b8460fc329eea0719',
-        'd32929341020c8497bf4d471c754e4eb80cc041444e9ffa45377a6d73981be4c', 'photon-procedural-projected-footprint',
+    'procedural': Family(procedural, 'b529fdb01aabef5670128e04a25224bfd4368c2a63641214023c352099d100e2',
+        'Photon-ProceduralFootprint-disabled.zip', '267f6358e87b8dd51e4e5a6fcf26f999344f8e1abf79fb36c5bd99fa0d7bd9ea',
+        '3d4d75e47541d80ad3850a511c9b72101741233efb8cb426eccb6ec79bfb11f7', 'photon-procedural-projected-footprint',
         tuple((name, str(procedural.HELPER_ROOT / name)) for name in (
             'shaders/include/shaderlod/procedural_footprint.glsl', 'shaders/include/shaderlod/procedural_parallax.glsl',
             'shaders/include/shaderlod/procedural_water.glsl')), ('shaders/settings.glsl','shaders/program/gbuffers_all_translucent.fsh')),
@@ -129,6 +133,17 @@ def qualify_archives(name, original_path, private_path, runtime, root=ROOT):
     require(metadata['arm'] == 'disabled' and metadata['base_sha256'] == ORIGINAL_SHA256
             and metadata['manifest_sha256'] == family.manifest_sha256 and metadata['switch'] == builder.SWITCH
             and metadata['modified_upstream_files'] == changed, 'Feature metadata source/arm identity differs')
+    if name=='procedural':
+        require(metadata['consumed_core_fields']==[] and metadata['consumed_extension_fields']==[], 'Default-off procedural metadata must not claim active consumption')
+    if name=='volume':
+        require(metadata['capability_schema']==1 and metadata['capability_operation']=='shaderlod:volume_integration'
+                and metadata['inherit_retained_ratios']==[1.0,1.0]
+                and metadata['source_referenced_fields'][:2]==['shaderlodCapabilitiesVersion','shaderlodVolumeIntegrationAvailable']
+                and metadata['required_effective_options']==volume.REQUIRED_OPTIONS,
+                'Shared volume capability/options/unity contract differs')
+        require(set(metadata['reference_member_sha256'])==set(volume.REFERENCE_MEMBERS)
+                and all(reflection.sha256(private[member])==pin for member,pin in metadata['reference_member_sha256'].items()),
+                'Shared volume registered reference member differs')
     with zipfile.ZipFile(private_path) as archive:
         require(archive_defaults(archive).get(builder.SWITCH) == 'false', 'Feature option must default off')
     digest = file_hash(private_path)
@@ -139,6 +154,9 @@ def qualify_archives(name, original_path, private_path, runtime, root=ROOT):
         archive_sha256=digest, metadata_sha256=reflection.sha256(metadata_bytes), metadata=metadata,
         actual_modified_upstream_members=changed, helper_sha256=helper_hashes, license_sha256=LICENSE_SHA256,
         validation='Complete pinned source/helper/license/metadata equality; driver, activation, quality and benefit unverified')
+    if name=='procedural': qualification['option_on_source_core_fields']=['shaderlodBridgeVersion','shaderlodEnabled']
+    if name=='volume': qualification.update(capability_schema=1,capability_operation='shaderlod:volume_integration',
+        inherit_retained_ratios=[1.0,1.0],runtime_evidence='New shared-system source; historical standalone volume runtime is not inherited')
     return original, candidate, qualification
 
 
@@ -217,7 +235,7 @@ def plan(family_name, output, scenes=('coastalwater',), sources=None, probe=None
     return result | dict(family=family_name,experiment=family.experiment,manifest=str(Path(root)/family.builder.MANIFEST),
         manifest_sha256=family.manifest_sha256,archive_sha256=family.archive_sha256,metadata_sha256=family.metadata_sha256,
         smoke_only=True,gpu_timing=False,volume_mode=volume_mode,debug_cue=debug_cue,producer_effects_version=2,
-        policy_note=('INHERIT volume adapter ratios .85/.75; requested file ratios unity' if volume_mode=='inherit' else
+        policy_note=('Shared volume INHERIT retains unity; exact capability schema1/availability1 required; historical runtime not inherited' if volume_mode=='inherit' else
                      'Requested ADAPTIVE volume .85/.75 at512/1536/128; live GPU values unobserved') if family_name=='volume' else
                     'All seven requested effects INHERIT/unity; family consumes only its declared fields')
 

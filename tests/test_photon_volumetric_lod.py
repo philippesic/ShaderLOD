@@ -1,9 +1,12 @@
 """Pinned source, actual Iris parser and independent integration math; no GPU result."""
 import copy
 import json
+import io
 import math
 import os
 from pathlib import Path
+import posixpath
+import re
 import shutil
 import struct
 import subprocess
@@ -16,8 +19,9 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'scripts'))
 import build_photon_volumetric_lod as probe
 MANIFEST = json.loads((ROOT / probe.MANIFEST).read_text())
-HELPER = (ROOT / probe.ADDITIONS[0][1]).read_text()
-ADAPTER = (ROOT / probe.ADDITIONS[1][1]).read_text()
+HELPERS = {name: (ROOT / source).read_text() for name, source in probe.ADDITIONS}
+HELPER = HELPERS['shaders/include/shaderlod/volume_budget.glsl']
+ADAPTER = HELPERS['shaders/include/shaderlod/photon_volume_adapter.glsl']
 
 
 def select(source, private, stage):
@@ -49,7 +53,8 @@ def smooth(a, b, x):
 
 
 def target(original=40, minimum=8, enabled=True, entry=1000., interval=100., footprint=1.,
-           feature=.3, overhead=0., bands=(32.,96.,16.), ratios=(.85,.75)):
+           feature=.3, overhead=0., bands=(32.,96.,16.), ratios=(.85,.75),
+           core=2, effects=2, mode=2, capability_schema=1, available=1):
     # Independent policy oracle, rather than executing/translating the GLSL.
     values = (entry, interval, footprint, feature, overhead, *bands, *ratios)
     n, f, w = bands
@@ -59,8 +64,10 @@ def target(original=40, minimum=8, enabled=True, entry=1000., interval=100., foo
              footprint > 0 and feature > 0 and 0 <= overhead <= 1 and
              0 < n < f <= 4096 and 0 <= w <= min(512, 2*n, f-n) and
              (w == 0 or w >= 1/1024) and 0 <= far <= medium <= 1)
-    if not enabled or not valid:
+    if (not enabled or not valid or core != 2 or effects not in (1,2) or
+        mode not in (0,2) or capability_schema != 1 or available != 1):
         return float(original)
+    if mode == 0: return float(original) # Explicit shared/default unity INHERIT.
     blend = lambda boundary: float(entry >= boundary) if w == 0 else smooth(boundary-w/2, boundary+w/2, entry)
     intermediate = (1-blend(n)) + medium*blend(n)
     ratio = intermediate*(1-blend(f)) + far*blend(f)
@@ -79,7 +86,74 @@ def f32(x):
     return struct.unpack('f', struct.pack('f', x))[0]
 
 
+class VolumeSourceFixture:
+    """Extend the maintained restricted scalar fixture with owned volume statements.
+
+    This executes source order in binary32, not GLSL driver arithmetic/contraction.
+    It rejects unsupported syntax instead of approximating a shader interpreter.
+    """
+    def __init__(self):
+        from test_shared_lod_policy import SharedSourceFixture
+        from test_effect_policy_glsl import F32
+        self.engine = SharedSourceFixture()
+        self.engine.environment['mix'] = lambda a,b,t: F32(a*(F32(1)-t)+b*t)
+        self.engine.environment['smoothstep'] = lambda a,b,x: F32(smooth(a,b,x))
+        clean = re.sub(r'//[^\n]*', '', HELPER)
+        clean = re.sub(r'\b(\d+)u\b', r'\1', clean)
+        # A bool assignment is represented as an opaque scalar fixture value.
+        clean = clean.replace('bool quality_valid =', 'ShaderlodVolumeBoolean quality_valid =')
+        for match in re.finditer(r'(bool|float) (shaderlod_volume_\w+)\((.*?)\)\s*\{', clean, re.S):
+            kind,name,params = match.groups()
+            end = self.engine.close(clean, match.end()-1, '{','}')
+            self.engine.functions[name] = (kind,[p.split() for p in params.split(',')],clean[match.end():end])
+            self.engine.environment[name] = lambda *args,name=name: self.engine.call(name,*args)
+        if len(self.engine.functions) != 8:
+            raise AssertionError('Expected shared four plus volume four functions')
+
+    def target(self, policy, original=40, minimum=8, entry=1000., interval=100.,
+               footprint=1., feature=.3, overhead=0., capability=True):
+        return self.engine.call('shaderlod_volume_work_target', policy, capability,
+                                original, minimum, entry, interval, footprint, feature, overhead)
+
+
 class VolumeMathTests(unittest.TestCase):
+    def test_shared_policy_source_order_continuous_refinement_and_exact_capability_fallback(self):
+        from test_shared_lod_policy import policy, vec
+        fixture = VolumeSourceFixture()
+        for count in (8,19,40,63):
+            for distance in (0.,28.,32.,36.,92.,96.,100.,1000.):
+                for ratios in ((1.,1.),(.85,.75),(.43,.17),(0.,0.)):
+                    for overhead in (0.,.25,.75,1.):
+                        p = policy(bands_blocks=vec(32,96,8),retained_ratios=vec(*ratios))
+                        actual = fixture.target(p,original=count,entry=distance,overhead=overhead)
+                        expected = target(original=count,entry=distance,overhead=overhead,
+                                          bands=(32,96,8),ratios=ratios)
+                        self.assertAlmostEqual(expected,actual,delta=2e-5)
+        # Blend the unrounded/unfloored request. ratio0 with half quality weight
+        # requests20 cells; using floor-clamped8 first would incorrectly request24.
+        p = policy(retained_ratios=vec(0,0))
+        self.assertAlmostEqual(20.,fixture.target(p,footprint=.45),delta=2e-5)
+        fractional = fixture.target(policy(retained_ratios=vec(.7,.63)))
+        self.assertAlmostEqual(25.2,fractional,delta=2e-5)
+        self.assertNotEqual(math.ceil(fractional),fractional)
+        for change in ({'core_version':0},{'core_version':3},{'effects_version':0},
+                       {'effects_version':3},{'mode':1},{'mode':3},{'global_enabled':False},
+                       {'mode':0,'inherited_policy_resolved':False}):
+            self.assertEqual(40.,fixture.target(policy(**change)))
+        self.assertEqual(40.,fixture.target(policy(),capability=False))
+        self.assertEqual(40.,fixture.target(policy(),interval=math.nan))
+        self.assertEqual(40.,fixture.target(policy(),overhead=1.))
+        self.assertEqual(40.,fixture.target(policy(mode=0,inherited_policy_resolved=True,
+                                                 retained_ratios=vec(1,1))))
+        for schema,available in ((0,0),(0,1),(1,0),(1,2),(2,1),(-1,1)):
+            self.assertEqual(40.,target(capability_schema=schema,available=available))
+        self.assertEqual(40.,target(mode=0))
+        self.assertEqual(30.,target(mode=2))
+        self.assertNotIn('shaderlod_volume_blend',HELPER)
+        self.assertNotIn('shaderlod_volume_bands_valid',HELPER)
+        self.assertIn('work.continuous_requested_work',HELPER)
+        self.assertNotIn('work.realized_work',HELPER)
+
     def test_interval_endpoints_weights_and_samples_for_partial_integer_and_floor(self):
         for length in (.001, 1., 719., 20000.):
             for work in (1., 8., 8.001, 15.999, 16., 16.001, 29.999, 40.):
@@ -171,10 +245,12 @@ class VolumeMathTests(unittest.TestCase):
         self.assertIn('half_pixel * forward * forward',ADAPTER)
 
     def test_activation_versions_unknown_mode_and_inside_overhead_guards_explicit(self):
-        self.assertIn('shaderlodBridgeVersion == 2 && shaderlodEnabled == 1',ADAPTER)
-        self.assertIn('(shaderlodEffectsVersion == 1 || shaderlodEffectsVersion == 2)',ADAPTER)
-        self.assertIn('shaderlodVolumetricsMode < 0 || shaderlodVolumetricsMode > 2',ADAPTER)
-        self.assertIn('shaderlodVolumetricsMode == 1',ADAPTER)
+        self.assertIn('shaderlodCapabilitiesVersion == 1 &&',ADAPTER)
+        self.assertIn('shaderlodVolumeIntegrationAvailable == 1',ADAPTER)
+        self.assertIn('ShaderlodWorkPolicy(shaderlodBridgeVersion',ADAPTER)
+        self.assertIn('shaderlodEffectsVersion, 1, shaderlodEnabled == 1, shaderlodVolumetricsMode',ADAPTER)
+        self.assertIn('preflight.reason != SHADERLOD_WORK_POLICY',ADAPTER)
+        self.assertIn('vec2 retained = vec2(1.0)',ADAPTER)
         self.assertIn('radius >= clouds_cumulus_radius - 1.0',ADAPTER)
         self.assertIn('smoothstep(0.35, 0.65, abs(direction.y))',ADAPTER)
         self.assertIn('shaderlod_original_draw_cumulus_clouds',ADAPTER)
@@ -196,7 +272,27 @@ class SourceTests(unittest.TestCase):
             self.assertEqual(self.files['LICENSE'],output['LICENSE'])
             for name in self.files.keys()-set(probe.MEMBERS):
                 self.assertEqual(self.files[name],output[name])
-            self.assertEqual(len(self.files)+(0 if arm=='original' else 2),len(output))
+            self.assertEqual(len(self.files)+(0 if arm=='original' else len(probe.ADDITIONS)),len(output))
+
+    def test_deterministic_archive_exact_shared_packaging_and_reference_pins(self):
+        with tempfile.TemporaryDirectory(prefix='volume-assembly-fixture-',dir=ROOT/'build') as tmp:
+            for arm in probe.ARMS:
+                path=Path(tmp)/(arm+'.zip');metadata=probe.build(path,arm=arm)
+                first=path.read_bytes();self.assertEqual(metadata,probe.build(path,arm=arm))
+                self.assertEqual(first,path.read_bytes())
+                files=probe.archive_members(path)
+                self.assertEqual(metadata,json.loads(files[probe.METADATA]))
+                self.assertEqual(self.files['LICENSE'],files['LICENSE'])
+                expected=[] if arm=='original' else [e[0] for e in probe.ADDITIONS]
+                self.assertEqual(sorted(expected),metadata['added_files'])
+                self.assertEqual(arm=='enabled',metadata['option_default'])
+                self.assertEqual(8,metadata['retained_minimum'])
+                self.assertEqual(1,metadata['capability_schema'])
+                pins=metadata['reference_member_sha256']
+                self.assertEqual(set() if arm=='original' else set(probe.REFERENCE_MEMBERS),set(pins))
+                for member,digest in pins.items():self.assertEqual(digest,probe.sha256(files[member]))
+                self.assertEqual({} if arm=='original' else probe.REQUIRED_OPTIONS,
+                                 metadata['required_effective_options'])
 
     def test_primary_work_selected_before_march_no_density_strength_or_secondary_extent_change(self):
         source=self.files[probe.CUMULUS].decode()
@@ -214,12 +310,24 @@ class SourceTests(unittest.TestCase):
         before_draw=ADAPTER[:ADAPTER.index('CloudsResult shaderlod_volume_draw_cumulus')]
         self.assertNotIn('texture(',before_draw)
         self.assertEqual(5,before_draw.count('textureLod('))
+        self.assertLess(ADAPTER.index('if (!capability_valid'),ADAPTER.index('textureSize('))
+        self.assertLess(ADAPTER.index('preflight.reason'),ADAPTER.index('intersect_spherical_shell(viewer'))
+        self.assertIn('length(camera_relative_entry_blocks)',ADAPTER)
+        self.assertIn('direction * (dists.x / CLOUDS_SCALE)',ADAPTER)
+        self.assertIn('full, 8u,',ADAPTER)
+        # Retain the upstream marcher body byte-for-byte across this connection:
+        # only transport/eligibility wrapper and shared decision helper changed.
+        body=ADAPTER[ADAPTER.index('float shaderlod_volume_local_coverage'):ADAPTER.index('CloudsResult draw_cumulus_clouds(vec3 viewer')]
+        self.assertEqual(MANIFEST['unchanged_march_sha256'],probe.sha256(body.encode()))
 
     def test_mutated_source_manifest_and_helper_fail_closed(self):
         for name in (*probe.MEMBERS,'LICENSE'):
             with self.assertRaises(ValueError):
                 probe.patch_members(self.files|{name:self.files[name]+b'\n'},MANIFEST,'disabled')
-        for change in (lambda m:m.update(base_sha256='bad'),lambda m:m.update(effect_versions=[1,3]),
+        for change in (lambda m:m.update(base_sha256='bad'),lambda m:m.update(effect_versions=[1,3]),lambda m:m.update(capability_schema=2),
+                       lambda m:m.update(inherit_retained_ratios=[.85,.75]),
+                       lambda m:m.update(required_effective_options={probe.SWITCH:['true']}),
+                       lambda m:m.update(reference_members=[]),
                        lambda m:m['members'][0].update(patched_sha256='bad'),
                        lambda m:m['additions'][0].update(sha256='bad'),
                        lambda m:m['additions'][0].update(source_path='../other'),
@@ -228,6 +336,109 @@ class SourceTests(unittest.TestCase):
             with self.assertRaises(ValueError):probe.patch_members(self.files,manifest,'disabled')
         with self.assertRaises(ValueError):probe.build(output=ROOT/'must-not-write.zip')
         with self.assertRaises(ValueError):probe.patch_members(self.files,MANIFEST,'other')
+
+    def test_actual_iris_complete_graph_grammar_off_and_stage_isolation(self):
+        """Real Jcpp/EnhancedParser syntax and token parity; no GL driver claims."""
+        pin=MANIFEST['glsl_parser_regression']
+        iris=ROOT/MANIFEST['iris_option_discovery']['jar_path']
+        self.assertEqual(MANIFEST['iris_option_discovery']['jar_sha256'],probe.sha256(iris.read_bytes()))
+        cache=Path.home()/'.gradle/caches/modules-2/files-2.1';dependencies=[]
+        for pattern in ('com.google.guava/guava/32.1.2-jre/*/guava-32.1.2-jre.jar',
+                        'it.unimi.dsi/fastutil/8.5.12/*/fastutil-8.5.12.jar',
+                        'org.slf4j/slf4j-api/2.0.9/*/slf4j-api-2.0.9.jar',
+                        'org.antlr/antlr4-runtime/4.13.1/*/antlr4-runtime-4.13.1.jar'):
+            matches=list(cache.glob(pattern));self.assertEqual(1,len(matches),pattern);dependencies.append(matches[0])
+        self.assertEqual(pin['antlr_sha256'],probe.sha256(dependencies[-1].read_bytes()))
+        def expand(files,name,stack=(),seen=None):
+            self.assertNotIn(name,stack,'Cyclic literal include')
+            self.assertIn(name,files,'Missing literal include')
+            if seen is not None:seen.add(name)
+            def include(match):
+                target=match.group(1)
+                path='shaders/'+target.lstrip('/') if target.startswith('/') else posixpath.normpath(posixpath.join(posixpath.dirname(name),target))
+                return expand(files,path,stack+(name,),seen)
+            return re.sub(r'^\s*#include\s+"([^"]+)"[^\n]*',include,files[name].decode(),flags=re.M)
+        originals={}
+        for name in sorted(self.files):
+            if '/world' in name and name.endswith(('.fsh','.vsh','.gsh','.csh')):
+                seen=set();source=expand(self.files,name,seen=seen)
+                if probe.CUMULUS in seen:originals[name]=source
+        self.assertEqual(43,len(originals))
+        patched=probe.patch_members(self.files,MANIFEST,'disabled')
+        helper='shaders/include/shaderlod/volume_budget.glsl'
+        self.assertEqual(1,patched[helper].count(b'int(minimum));'))
+        broken=patched|{helper:patched[helper].replace(b'int(minimum));',b'int(minimum);')}
+        java=r'''
+import java.nio.file.*;import java.util.*;
+import net.irisshaders.iris.shaderpack.option.*;
+import net.irisshaders.iris.shaderpack.option.values.MutableOptionValues;
+import net.irisshaders.iris.shaderpack.include.AbsolutePackPath;
+import net.irisshaders.iris.shaderpack.preprocessor.JcppProcessor;
+import net.irisshaders.iris.helpers.StringPair;
+import io.github.douira.glsl_transformer.parser.EnhancedParser;
+import org.antlr.v4.runtime.misc.ParseCancellationException;
+class VolumeGlslProof {
+ static String prepare(Path file,boolean gate,boolean lut)throws Exception{
+  var annotated=new OptionAnnotatedSource(Files.readString(file));
+  var options=annotated.getOptionSet(AbsolutePackPath.fromAbsolutePath("/source.fsh"),annotated.getBooleanDefineReferences().keySet());
+  if(Files.readString(file).contains("#define WORLD_OVERWORLD\n#define PROGRAM_DEFERRED1")&&!options.getBooleanOptions().keySet().containsAll(Set.of("CLOUDS_CUMULUS","BLOCKY_CLOUDS")))throw new AssertionError("required effective public flags absent in "+file+": "+options.getBooleanOptions().keySet());
+  if(file.toString().contains("candidate")&&!options.getBooleanOptions().containsKey("SHADERLOD_VOLUMETRIC_INTEGRATION_LOD"))throw new AssertionError("private flag absent");
+  var selected=new HashMap<String,String>();
+  for(String name:List.of("BORDER_FOG","CLOUD_SHADOWS","SHADOW_COLOR","SHADOW_VPS","SH_SKYLIGHT"))selected.put(name,"false");
+  selected.put("SHADERLOD_VOLUMETRIC_INTEGRATION_LOD",Boolean.toString(gate));
+  selected.put("CLOUDS_CUMULUS","true");selected.put("BLOCKY_CLOUDS","false");
+  String source=annotated.apply(new MutableOptionValues(options,selected));
+  var defines=new ArrayList<StringPair>(List.of(new StringPair("MC_VERSION","12101"),
+   new StringPair("MC_GL_VERSION","410"),new StringPair("MC_GLSL_VERSION","410"),new StringPair("IS_IRIS","1")));
+  if(lut)defines.add(new StringPair("ATMOSPHERE_TRANSMITTANCE_LUT","1"));
+  return JcppProcessor.glslPreprocessSource(source,defines);
+ }
+ static void parse(String source){var p=new EnhancedParser();p.setThrowParseErrors(true);p.parse(source);}
+ static String tokens(String source){return source.replaceAll("(?s)/\\*.*?\\*/|//[^\\n]*","").replaceAll("\\s+","");}
+ public static void main(String[] args)throws Exception{
+  Path folder=Path.of(args[0]);int count=0,off=0,isolation=0,active=0;
+  for(String row:Files.readAllLines(folder.resolve("graphs.list"))){
+   String[] fields=row.split("\\t");boolean lut=Boolean.parseBoolean(fields[2]);
+   String original=prepare(folder.resolve(fields[0]),false,lut);
+   String disabled=prepare(folder.resolve(fields[1]),false,lut);
+   String enabled=prepare(folder.resolve(fields[1]),true,lut);
+   for(String source:List.of(original,disabled,enabled)){try{parse(source);}catch(Throwable e){throw new AssertionError("full graph failed "+row,e);}count++;}
+   if(!tokens(original).equals(tokens(disabled)))throw new AssertionError("off parity "+row);off++;
+   if(!enabled.contains("struct ShaderlodWorkPolicy")){
+    if(!tokens(original).equals(tokens(enabled)))throw new AssertionError("stage/LUT isolation "+row);isolation++;
+   }else{
+    if(!enabled.contains("uniform int shaderlodCapabilitiesVersion")||!enabled.contains("work.continuous_requested_work"))throw new AssertionError("shared consumer absent");active++;
+   }
+  }
+  try{parse(prepare(folder.resolve("broken.fsh"),true,false));throw new AssertionError("broken shared call accepted");}
+  catch(ParseCancellationException expected){}
+  if(count!=132||off!=44||active!=1||isolation!=43)throw new AssertionError("unexpected counts "+count+"/"+off+"/"+active+"/"+isolation);
+  System.out.println("132 complete Iris grammar parses; 44 off parity; 43 stage/LUT isolation; 1 active shared consumer; broken-call regression rejected");
+ }
+}'''
+        with tempfile.TemporaryDirectory(prefix='shaderlod-volume-grammar-') as tmp:
+            folder=Path(tmp);embedded=[]
+            with zipfile.ZipFile(iris) as archive:
+                for name in ('glsl-transformer-2.0.1.jar','jcpp-1.4.14.jar'):
+                    data=archive.read('META-INF/jarjar/'+name)
+                    if name=='glsl-transformer-2.0.1.jar':
+                        self.assertEqual(pin['transformer_sha256'],probe.sha256(data))
+                        with zipfile.ZipFile(io.BytesIO(data)) as parser:
+                            self.assertEqual(pin['class_sha256'],probe.sha256(parser.read(pin['class_path'])))
+                    path=folder/name;path.write_bytes(data);embedded.append(path)
+            rows=[]
+            for i,(name,source) in enumerate(originals.items()):
+                original=f'{i}-original.fsh';candidate=f'{i}-candidate.fsh'
+                (folder/original).write_text(source);(folder/candidate).write_text(expand(patched,name))
+                rows.append('\t'.join((original,candidate,'false')))
+                if name=='shaders/world0/deferred1.fsh':rows.append('\t'.join((original,candidate,'true')))
+            (folder/'broken.fsh').write_text(expand(broken,'shaders/world0/deferred1.fsh'))
+            (folder/'graphs.list').write_text('\n'.join(rows))
+            harness=folder/'VolumeGlslProof.java';harness.write_text(java)
+            run=subprocess.run(['java','-Xmx1G','--class-path',os.pathsep.join(map(str,[iris,*dependencies,*embedded])),str(harness),str(folder)],capture_output=True,text=True,timeout=120)
+            self.assertEqual(0,run.returncode,run.stdout+run.stderr)
+            self.assertIn('132 complete Iris grammar parses',run.stdout)
+            print(run.stdout.strip())
 
     def test_actual_pinned_iris_parser_sole_new_boolean_option_and_both_overrides(self):
         evidence=MANIFEST['iris_option_discovery'];iris=ROOT/evidence['jar_path']
@@ -249,7 +460,7 @@ class SourceTests(unittest.TestCase):
             directory=Path(temporary);java_source=directory/'DensityIrisLexer.java'
             java_source.write_text(JAVA_HARNESS)
             inputs=[directory/name for name in ('active.glsl','disabled.glsl','enabled.glsl','original.glsl','original-settings.glsl','entry.fsh')]
-            active=disabled[probe.CUMULUS]+b'\n'+HELPER.encode()+b'\n'+ADAPTER.encode()
+            active=disabled[probe.CUMULUS]+b'\n'+b'\n'.join(value.encode() for value in HELPERS.values())
             payloads=(active,disabled[probe.SETTINGS],enabled[probe.SETTINGS],self.files[probe.CUMULUS],self.files[probe.SETTINGS],self.files['shaders/world0/deferred1.fsh'])
             for path,data in zip(inputs,payloads):path.write_bytes(data)
             command=['java','--class-path',os.pathsep.join(map(str,(iris,*dependencies))),str(java_source),probe.SWITCH,*map(str,inputs)]

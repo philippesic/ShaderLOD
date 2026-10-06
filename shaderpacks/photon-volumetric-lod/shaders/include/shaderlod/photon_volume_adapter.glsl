@@ -4,8 +4,11 @@
 // Explicit derivative of Photon v1.3b by Benjamin Stott (SixthSurge).
 // Density, secondary lighting, phase functions and upstream early exit retained.
 // Photon LICENSE is retained in each assembled archive; do not remove attribution.
+#include "/include/shaderlod/work_policy.glsl"
 #include "/include/shaderlod/volume_budget.glsl"
 
+uniform int shaderlodCapabilitiesVersion;
+uniform int shaderlodVolumeIntegrationAvailable;
 uniform int shaderlodBridgeVersion;
 uniform int shaderlodEnabled;
 uniform float shaderlodNear;
@@ -367,27 +370,40 @@ CloudsResult shaderlod_volume_draw_cumulus(
 
 CloudsResult draw_cumulus_clouds(vec3 viewer, vec3 direction, vec3 clear_sky,
     float terrain_distance, float dither) {
-    bool known = shaderlodBridgeVersion == 2 && shaderlodEnabled == 1 &&
-        (shaderlodEffectsVersion == 1 || shaderlodEffectsVersion == 2);
-    if (!known || shaderlodVolumetricsMode < 0 || shaderlodVolumetricsMode > 2 ||
-        shaderlodVolumetricsMode == 1 || any(isnan(viewer)) || any(isinf(viewer)) ||
+    bool capability_valid = shaderlodCapabilitiesVersion == 1 &&
+        shaderlodVolumeIntegrationAvailable == 1;
+    if (!capability_valid || any(isnan(viewer)) || any(isinf(viewer)) ||
         any(isnan(direction)) || any(isinf(direction)) ||
+        abs(dot(direction, direction) - 1.0) > 0.001 ||
         !shaderlod_volume_finite(terrain_distance) || !shaderlod_volume_finite(dither) ||
         dither < 0.0 || dither > 1.0 || !shaderlod_volume_finite(CLOUDS_SCALE) || CLOUDS_SCALE <= 0.0)
         return shaderlod_original_draw_cumulus_clouds(viewer, direction, clear_sky, terrain_distance, dither);
+    // INHERIT resolves the general system's safe default: unity retained work.
+    // Core bands provide units/transition semantics; there is no private ratio tuning.
     vec3 bands = vec3(shaderlodNear, shaderlodFar, shaderlodTransition);
-    vec2 retained = vec2(0.85, 0.75); // INHERIT: this adapter's conservative private policy.
+    vec2 retained = vec2(1.0);
     if (shaderlodVolumetricsMode == 2) {
         bands = vec3(shaderlodVolumetricsNear, shaderlodVolumetricsFar, shaderlodVolumetricsTransition);
         retained = vec2(shaderlodVolumetricsMediumWorkRatio, shaderlodVolumetricsFarWorkRatio);
     }
+    ShaderlodWorkPolicy policy = ShaderlodWorkPolicy(shaderlodBridgeVersion,
+        shaderlodEffectsVersion, 1, shaderlodEnabled == 1, shaderlodVolumetricsMode,
+        true, true, bands, retained);
+    uint full = uint(mix(float(CLOUDS_CUMULUS_PRIMARY_STEPS_H),
+        float(CLOUDS_CUMULUS_PRIMARY_STEPS_Z), abs(direction.y)));
+    if (full < 8u || full > 65536u)
+        return shaderlod_original_draw_cumulus_clouds(viewer, direction, clear_sky, terrain_distance, dither);
+    // Shared preflight rejects disabled/full/invalid controls before intersections,
+    // footprint calculations or textureSize. Final distance/quality are supplied below.
+    ShaderlodWorkDecision preflight = shaderlod_work_decide(policy, capability_valid,
+        true, false, 0.0, int(full), 8);
+    if (preflight.reason != SHADERLOD_WORK_POLICY || all(equal(retained, vec2(1.0))))
+        return shaderlod_original_draw_cumulus_clouds(viewer, direction, clear_sky, terrain_distance, dither);
     // Guard inside and above the physical cloud shell, including boundary rounding.
     float radius = length(viewer);
-    if (!shaderlod_volume_bands_valid(bands, retained) ||
-        !shaderlod_volume_finite(radius) || radius >= clouds_cumulus_radius - 1.0 ||
+    if (!shaderlod_volume_finite(radius) || radius >= clouds_cumulus_radius - 1.0 ||
         !shaderlod_volume_finite(clouds_cumulus_top_radius) ||
         clouds_cumulus_top_radius <= clouds_cumulus_radius ||
-        abs(dot(direction, direction) - 1.0) > 0.001 ||
         any(isnan(view_res)) || any(isinf(view_res)) || min(view_res.x, view_res.y) <= 0.0)
         return shaderlod_original_draw_cumulus_clouds(viewer, direction, clear_sky, terrain_distance, dither);
     // Full overhead sample density. Smoothly restore it before |direction.y|=0.65.
@@ -413,7 +429,10 @@ CloudsResult draw_cumulus_clouds(vec3 viewer, vec3 direction, vec3 clear_sky,
     if (any(isnan(view_direction)) || any(isinf(view_direction)) || forward <= 0.0 ||
         abs(dot(view_direction, view_direction) - 1.0) > 0.001)
         return shaderlod_original_draw_cumulus_clouds(viewer, direction, clear_sky, terrain_distance, dither);
-    float entry_blocks = dists.x / CLOUDS_SCALE;
+    // The atmosphere viewer includes a planet/origin shift. Subtract it
+    // analytically: ray displacement from that same viewer is camera-relative.
+    vec3 camera_relative_entry_blocks = direction * (dists.x / CLOUDS_SCALE);
+    float entry_blocks = length(camera_relative_entry_blocks);
     // Conservative finite-pixel cone bound, including off-axis foreshortening.
     // For a half-pixel screen displacement delta >= 1/focal, the sine of
     // its ray angle is >= delta * forward^2 / (1 + delta * forward).
@@ -424,9 +443,8 @@ CloudsResult draw_cumulus_clouds(vec3 viewer, vec3 direction, vec3 clear_sky,
     // Finest voxel of pinned fine-noise field; a conservative eligibility heuristic,
     // not proof of a band-limited density or perceptual parity.
     float feature_blocks = 1.0 / (0.005 * float(max(noise_size.x, max(noise_size.y, noise_size.z))) * CLOUDS_SCALE);
-    uint full = uint(mix(float(CLOUDS_CUMULUS_PRIMARY_STEPS_H), float(CLOUDS_CUMULUS_PRIMARY_STEPS_Z), abs(direction.y)));
-    float target = shaderlod_volume_work_target(full, 8u, true, entry_blocks,
-        ray_length / CLOUDS_SCALE, footprint_blocks, feature_blocks, overhead_weight, bands, retained);
+    float target = shaderlod_volume_work_target(policy, capability_valid, full, 8u,
+        entry_blocks, ray_length / CLOUDS_SCALE, footprint_blocks, feature_blocks, overhead_weight);
     if (target >= float(full))
         return shaderlod_original_draw_cumulus_clouds(viewer, direction, clear_sky, terrain_distance, dither);
     return shaderlod_volume_draw_cumulus(viewer, direction, clear_sky, terrain_distance, dither, target);

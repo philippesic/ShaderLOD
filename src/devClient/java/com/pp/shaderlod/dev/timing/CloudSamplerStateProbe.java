@@ -47,6 +47,8 @@ public final class CloudSamplerStateProbe {
             "shaderlodOpaqueLightingMode", "shaderlodOpaqueLightingNear", "shaderlodOpaqueLightingFar", "shaderlodOpaqueLightingTransition",
             "shaderlodOpaqueLightingMediumWorkRatio", "shaderlodOpaqueLightingFarWorkRatio"};
     private static final Set<String> EFFECT_INTEGER_UNIFORMS = Set.of("shaderlodEffectsVersion", "shaderlodVolumetricsMode", "shaderlodOpaqueLightingMode");
+    private static final String[] CAPABILITY_UNIFORMS = {"shaderlodCapabilitiesVersion", "shaderlodVolumeIntegrationAvailable"};
+    private static final Set<String> CAPABILITY_INTEGER_UNIFORMS = Set.of(CAPABILITY_UNIFORMS);
     private static final UniformReader GL_UNIFORM_READER = new UniformReader() {
         public int location(int program, String name) { return GL20.glGetUniformLocation(program, name); }
         public int integerValue(int program, int location) { return GL20.glGetUniformi(program, location); }
@@ -118,6 +120,8 @@ public final class CloudSamplerStateProbe {
         result.addProperty("core_uniform_selection", "Seven existing core fields: version/enable/preset/debug scalar int and near/far/transition scalar float linked-program readbacks; no source/supplier reevaluation; first observed draw is not a settled live-reload guarantee");
         result.addProperty("effect_uniform_schema", 2);
         result.addProperty("effect_uniform_selection", "Effects version plus six Volumetrics and six OpaqueLighting fields; version/mode scalar int, bands/retained ratios scalar float; actual linked readbacks, not mod suppliers or inferred consumption");
+        result.addProperty("capability_uniform_schema", 1);
+        result.addProperty("capability_uniform_selection", "Capabilities version and VolumeIntegration availability scalar int linked-program readbacks; actual sampled values, no source detection or supplier invocation; first observed draw may precede capability availability");
         result.addProperty("texture_allocation_scope", "Bound nonzero 2D/3D texture level 0 dimensions/internal format only; no other mip images, completeness, texture contents or physical fetch counts");
         result.addProperty("raster_hook", "Optional pinned Sodium native draw-site callback; availability/injection verified separately by hook owner");
         result.addProperty("scope", "First draw per numeric GL program ID in this JVM across enabled fullscreen/raster hooks; per-entry draw_origin is not a program-name or shader-stage proof");
@@ -130,12 +134,14 @@ public final class CloudSamplerStateProbe {
     private static void capture(int program, JsonObject entry, GLCapabilities capabilities) {
         entry.add("core_uniforms", coreUniforms(program, Map.of(), "not inspected; see capture_failure if present"));
         entry.add("effect_uniforms", effectUniforms(program, Map.of(), "not inspected; see capture_failure if present", GL_UNIFORM_READER));
+        entry.add("capability_uniforms", capabilityUniforms(program, Map.of(), "not inspected; see capture_failure if present", GL_UNIFORM_READER));
         int linked = GL20.glGetProgrami(program, GL20.GL_LINK_STATUS);
         entry.addProperty("linked", linked != GL11.GL_FALSE);
         if (linked == GL11.GL_FALSE) {
             entry.add("samplers", unknown("current program not linked"));
             entry.add("core_uniforms", coreUniforms(program, Map.of(), "current program not linked"));
             entry.add("effect_uniforms", effectUniforms(program, Map.of(), "current program not linked", GL_UNIFORM_READER));
+            entry.add("capability_uniforms", capabilityUniforms(program, Map.of(), "current program not linked", GL_UNIFORM_READER));
             return;
         }
         int count = GL20.glGetProgrami(program, GL20.GL_ACTIVE_UNIFORMS);
@@ -165,6 +171,9 @@ public final class CloudSamplerStateProbe {
                 ? "not found in truncated active-uniform scan"
                 : "inactive, optimized out, or undeclared; linked introspection cannot distinguish"));
         entry.add("effect_uniforms", effectUniforms(program, uniforms, count > UNIFORM_LIMIT || maxLength > UNIFORM_NAME_LIMIT
+                ? "not found in bounded/truncated active-uniform scan"
+                : "inactive, optimized out, or undeclared; linked introspection cannot distinguish", GL_UNIFORM_READER));
+        entry.add("capability_uniforms", capabilityUniforms(program, uniforms, count > UNIFORM_LIMIT || maxLength > UNIFORM_NAME_LIMIT
                 ? "not found in bounded/truncated active-uniform scan"
                 : "inactive, optimized out, or undeclared; linked introspection cannot distinguish", GL_UNIFORM_READER));
         JsonObject samplers = new JsonObject();
@@ -211,6 +220,12 @@ public final class CloudSamplerStateProbe {
     static JsonObject effectUniforms(int program, Map<String, Uniform> uniforms, String missingReason, UniformReader reader) {
         JsonObject result = uniformReadbacks(program, uniforms, missingReason, EFFECT_UNIFORMS, EFFECT_INTEGER_UNIFORMS, reader);
         result.getAsJsonObject("shaderlodEffectsVersion").addProperty("expected_protocol_version", 2);
+        return result;
+    }
+
+    static JsonObject capabilityUniforms(int program, Map<String, Uniform> uniforms, String missingReason, UniformReader reader) {
+        JsonObject result = uniformReadbacks(program, uniforms, missingReason, CAPABILITY_UNIFORMS, CAPABILITY_INTEGER_UNIFORMS, reader);
+        result.getAsJsonObject("shaderlodCapabilitiesVersion").addProperty("expected_protocol_version", 1);
         return result;
     }
 
