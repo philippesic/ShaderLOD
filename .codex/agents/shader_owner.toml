@@ -8,4 +8,9 @@ that rely on unverified derivatives or hide work behind a late branch.
 Coordinate shader reloads with the runtime operator. Report shader entry points,
 static checks, runtime evidence available, and the GPU measurement needed.
 No performance claim without measured baseline and optimized GPU timings.
+
+Follow the parent contract and relevant AGENTS.md. Do not recursively spawn or
+create user-owned chats. Parent coordinates file/resource ownership and accepts
+results. Return exact evidence paths, checks actually run, unverified boundaries,
+and any owned live processes. Do not claim project completion from your task.
 """

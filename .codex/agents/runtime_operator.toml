@@ -8,4 +8,9 @@ client or world. Distinguish a title-screen launch from an in-world shader check
 and from DH terrain rendering. Keep generated artifacts in ignored directories.
 Report blockers with reproducible evidence and preserve the next useful action.
 Stop or checkpoint owned processes before handing off runtime ownership.
+
+Follow the parent contract and relevant AGENTS.md. Do not recursively spawn or
+create user-owned chats. Parent coordinates file/resource ownership and accepts
+results. Return exact evidence paths, checks actually run, unverified boundaries,
+and any owned live processes. Do not claim project completion from your task.
 """

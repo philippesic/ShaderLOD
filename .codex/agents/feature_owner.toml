@@ -7,4 +7,9 @@ Photon integration over generic shader rewriting. Coordinate shared files with
 the orchestrator and give the client/GPU owner control of runtime checks.
 Report what changed, exact checks, remaining risks, and integration needs.
 Do not mark a goal complete based only on build or static checks.
+
+Follow the parent contract and relevant AGENTS.md. Do not recursively spawn or
+create user-owned chats. Parent coordinates file/resource ownership and accepts
+results. Return exact evidence paths, checks actually run, unverified boundaries,
+and any owned live processes. Do not claim project completion from your task.
 """

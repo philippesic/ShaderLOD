@@ -39,3 +39,23 @@ relevant guidance.
 - Record demonstrated coordination problems or corrected misunderstandings
   factually in `docs/USER_LESSONS.md`, including agent contributions. Do not
   turn disagreement or speculation into a confirmed user mistake.
+
+## Current acceptance and recurring failure modes
+
+- Resolve current direction from STATUS and the latest active-goal checkpoint.
+  The current general-LOD goal requires 1.5x total rendering throughput against
+  matched original Photon with little discernible quality loss. The older 15%
+  target is superseded. Do not treat these defaults as overriding later steering.
+- Parallelize independent implementation and source/quality analysis automatically
+  when permitted. Usually use at most four active workers; parent alone schedules
+  new tracks. Serialize client/GPU work. Quiet measurement windows also exclude
+  builds, tests, encoders, and unrelated CPU activity unless qualified by protocol.
+- Preserve distant lighting/shadow cues. Check representative still and motion
+  scenes for popping, flicker, foliage, water, and reflections. A small millisecond
+  saving with conspicuous visual loss does not satisfy the goal.
+- Verify loaded Iris options and actual consuming shader paths, temporal inputs,
+  camera/time synchronization, resolution and focus. Source switches, config bytes,
+  or mod-side readbacks alone do not prove effective shader behavior. Keep shader
+  compilation, effective option discovery, runtime linkage, quality, and speed
+  as distinct acceptance checks. Retain contaminated/failed captures as qualified
+  evidence; do not silently relabel or weaken fingerprint guards.
