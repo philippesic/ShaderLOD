@@ -67,13 +67,21 @@ both arms. Per 16-ray snapshot, original primary/density/secondary counts were
 these are observations rather than causal work savings or speed evidence.
 [Runtime evidence](WORK_TRACE_RUNTIME.md).
 
-The three bounded workers finished registration, readback and exact control
-preparation. Four fresh forest controls are ready: original, private OFF, private
-ON/FULL and private ON/ADAPTIVE. Nine preparer fixtures and copy/input audits
-pass. [Runtime handoff](SHARED_SPATIAL_RUNTIME.md). Root owns checkpoint and idle
-GPU; no Minecraft client is live. Next: assign one runtime owner to validate
-these frozen controls in the actual renderer before quality and repeated
-performance measurements. The 1.5 × throughput and quality target remains unmet.
+Four untimed spatial driver controls completed: original, private OFF, private
+ON/FULL and private ON/ADAPTIVE. Exact sources/options/window/inputs and empty
+timing guards pass. Actual first-draw linked readback exposes capability schema
+1/availability 1 and expected modes/bands/ratios. Frozen runtime inputs unchanged;
+all exact client/launcher PIDs are absent, root owns idle GPU. Fresh screenshots
+show no gross full-scene corruption; parity/motion/tier quality remains unaccepted.
+[Runtime evidence](SHARED_SPATIAL_RUNTIME.md).
+
+Parallel owners: spatial_quality_controls (new still/motion controls),
+spatial_performance_controls (new pilot/repeated measurement controls), and
+spatial_layout_evidence (new opt-in dev physical attachment/cache capture core).
+Runtime owner finishes its frozen report; no further client launch is authorized.
+Root owns integration/checkpoint. Next: integrate bounded physical cache/layout
+capture, verify it on the driver, then quality and repeated ordinary measurements.
+The 1.5 × throughput and quality target remains unmet.
 
 Retained first-wave experiments:
 AO pilot runner exec89240 exited0, all three normal WorkloadSession contracts

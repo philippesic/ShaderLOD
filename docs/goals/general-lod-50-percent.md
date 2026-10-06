@@ -1052,3 +1052,75 @@ No launch occurred; root owns idle GPU. Next runtime assignment must acquire the
 exclusive lock, freeze exact production/dev identities, record handles and pass
 original/OFF/FULL driver guards before ADAPTIVE. No timing claim from diagnostics;
 physical cache, sampler, parity and motion quality remain pending.
+
+
+### Driver validation team dispatch
+
+Previous goal turn classified as progress: commits 967d1f0/c716f68, integrated
+131-test build and four qualified actual control copies changed authoritative
+state. Continuation verified every prior worker terminal and no Minecraft client
+live. Exclusive client/GPU ownership is assigned to spatial_runtime_preparation:
+up to four sequential untimed controls, with exact handles, source/build freezes
+and original/OFF/FULL guards before ADAPTIVE. It owns SHARED_SPATIAL_RUNTIME.md
+and a new diagnostic runner only; no shader/Java/resource rebuilds permitted.
+
+Independent workers spatial_quality_controls and spatial_performance_controls
+own only new quality and benchmark preparation/fixtures/reports. They cannot
+launch clients or change frozen sources. Root owns integration/checkpoint.
+No runtime or performance check is marked complete by dispatch. Next milestone
+must record actual driver result, failure if any, file freezes and process return.
+
+
+### Four-arm actual spatial driver result
+
+All four untimed controls completed without fallback and passed exact source,
+366/367 effective options, forest pose/weather/time, native 2976 × 1672 window,
+focus/visibility, fixed wetness and empty CPU/GPU timing guards. Root independently
+read linked spatial values: FULL and ADAPTIVE programs 21/22 reported capabilities
+schema 1/availability 1, effects 2, modes 1/2, 32/96/8 blocks and 1/0.25 ratios.
+These are actual first-draw linked values; numeric IDs alone do not identify the
+producer/consumer stage or prove settled behavior/cached work. Raw audit:
+dev/logs/shared-spatial-driver-r1/shared-spatial-terminal-audit.json.
+
+Runner shell session 62693 / PID 61678 exited 0. Launchers 61692/62048/62268/62736
+and Java clients 61708/62062/62284/62754 ended; root verified all exact PIDs absent.
+Final runtime fingerprints unchanged true; no further client live. GPU returned
+to root. Apple M3 Max / OpenGL 4.1 Metal 91.7 / GLSL 4.10; exact dependency,
+request, source and host identities remain in raw reports. Four fresh screenshots
+preserved. Read-only full-scene inspection found no gross rendering corruption;
+HUD/moving entities/cloud/TAA and resized previews prevent parity/quality claims.
+No speed measurement occurred.
+
+Runtime owner finishes its scoped runner/report freeze. spatial_quality_controls
+prepares fresh STILL requests after verified lane release; spatial_performance_controls
+prepares strict pilot/repeated controls only. New spatial_layout_evidence owns new
+dev capture core/mock/doc files to prove actual physical attachments/image separation,
+completed producer and bounded quantity/certificate observations after integration.
+No existing source/classes/resources/GPU edits permitted to that worker yet.
+Root owns checkpoint/integration/idle GPU. Next decisive gate is actual cache and
+sampler/layout evidence, then matched still/motion quality and ordinary timing.
+Full 1.5 × throughput / little-discernible-quality target remains unachieved.
+
+
+Quality owner completed four actual fresh STILL profile copies at
+run-workloads/shared-spatial-quality-still-r1. Camera request SHA-256
+65d4fdd920d85c1588a4430e936ec944544e276a2592f0c12030338a3711e131;
+201 requested frames at 10 FPS over 20 s, 30 s warmup. Four scoped fixtures and
+independent copy audit pass; source/world/config/archive/registration preservation
+verified. Still/pan/approach requests do not certify actual tier coverage; captures
+remain HOLD pending physical cache/layout probe. SHARED_SPATIAL_QUALITY.md records
+four driver-image hashes, qualitative inspection and temporal/HUD limitations.
+
+Performance owner completed strict four-arm pilot and balanced 8-block/32-JVM
+measurement controls, exact source/options/dependency/class-resource qualification
+and 15 mutation fixtures. No timing-profile copies, prerequisite acceptance or
+launch occurred. SHARED_SPATIAL_PERFORMANCE.md records the metric/denominator,
+repeated schedule, spending/stability gates and evidence requirements. Current
+qualification includes 220 frozen class/resource members; any later dev capture
+integration must requalify that scope. No generated acceptance is inferred.
+
+Root accepted these frozen new files. Runtime runner review found global new-PID
+appearance insufficient to authorize cleanup of a client; owner now corrects
+tracking to require explicit profile/process ownership and preserves all raw
+completed evidence. No live clients. Raw capture-core worker remains active,
+new files only, no builds/hooks/client access yet. Root owns idle GPU/integration.
