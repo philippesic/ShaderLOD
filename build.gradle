@@ -138,6 +138,11 @@ neoForge {
             if (project.hasProperty('cpuLayerTiming')) {
                 systemProperty 'shaderlod.dev.cpuLayerTiming', project.property('cpuLayerTiming').toString()
             }
+            for (name in ['cpuTiming', 'workTrace', 'workTraceOnly', 'workTraceMetadata', 'workTraceOutput']) {
+                if (project.hasProperty(name)) {
+                    systemProperty "shaderlod.dev.${name}", project.property(name).toString()
+                }
+            }
             if (project.findProperty('smokeTest') == 'true') {
                 systemProperty 'shaderlod.dev.smoke', 'true'
             }

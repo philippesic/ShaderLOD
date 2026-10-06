@@ -27,6 +27,7 @@ public final class SmokeClient {
     private static final String WORLD = "ShaderLOD-Smoke";
 
     public SmokeClient() {
+        com.pp.shaderlod.dev.timing.WorkTraceEvidence.initialize();
         ComparisonClient.register();
         if (Boolean.getBoolean("shaderlod.dev.smoke")) {
             NeoForge.EVENT_BUS.addListener(this::tick);

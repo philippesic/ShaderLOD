@@ -84,6 +84,7 @@ final class WorkloadSession {
             VisibilityListPhaseObserver.beginMeasurement();
             ShadowCoherenceOracle.beginMeasurement();
             measuring = true; measurementStarted = now;
+            com.pp.shaderlod.dev.timing.WorkTraceEvidence.beginCapture();
             startFrames = (int) GpuTimers.snapshot().renderFrames();
             LogUtils.getLogger().info("ShaderLOD workload measurement started: {}", directory);
             return;
@@ -92,6 +93,7 @@ final class WorkloadSession {
         gpu.addAll(gpuSamples); cpu.addAll(cpuSamples);
         if ((now - measurementStarted) * 1e-9 >= duration) {
             done = true;
+            com.pp.shaderlod.dev.timing.WorkTraceEvidence.endCapture();
             write((now - measurementStarted) * 1e-9);
             VisibilityListPhaseObserver.endMeasurement();
             ShadowCoherenceOracle.endMeasurement();
@@ -108,6 +110,11 @@ final class WorkloadSession {
             JsonObject report = new JsonObject();
             report.addProperty("status", "complete");
             report.addProperty("schema", 2);
+            if (Boolean.getBoolean("shaderlod.dev.workTrace")) {
+                report.addProperty("performanceEvidence", false);
+                report.addProperty("diagnostic_only", true);
+                report.addProperty("diagnostic_reason", "Synchronous raw work-trace readbacks; frame rows and durations are not performance evidence");
+            }
             report.add("request", request.deepCopy());
             report.addProperty("measurement_started_at_utc", capturedAt);
             report.addProperty("written_at_utc", java.time.Instant.now().toString());
