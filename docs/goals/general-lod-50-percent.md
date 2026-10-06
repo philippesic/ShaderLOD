@@ -752,3 +752,141 @@ still audit, then stop and return GPU. No second launch/timing; other source wor
 continues. Next prospective run is an original forest true-fullscreen qualification
 to discover dimensions/focus/pacing once benchmark code is frozen and retry returns.
 50% throughput, repeated GPU/frame, motion quality and compatibility remain unmet.
+
+### Rendering repair accepted; performance loop prioritized
+
+Procedural r3 launcher26601/watcher57388 exited0; Java20626 and all clients stopped,
+classes unchanged. Exact267f6358... shader compiled/rendered without fallback,
+native/pose/options/config contracts pass. Raster program458 reads core GL_INT
+version2/location26 and enabled1/location27; other configured bands remain inactive.
+Actual noise unit6/object57 allocates512² RGBA8 LINEAR/base-max0/LOD0, active texture
+restored. Native water/glint crops show no obvious gross band/holes. No physical
+wave counts, off/on/motion quality or FPS/GPU gain claim. Formal audit and GPU
+return are in PARALLEL_LOD_RUNTIME_QUEUE.md and ignored procedural-r3-qa-audit.json.
+
+Combined r2 manifestdcbb31d5878387bd00bdb048703be9b6c22539b30844ee8054dcc455a533cf19,
+default-off87e12ac10401cf59c36d76eaabd1b7fdb9b8dc66365dfebdcfa2c7e7a329e41a.
+Eight fixtures pass including411 complete affected Iris Jcpp/GLSL parses across
+eight combinations, three old-syntax regressions and original/isolated parity.
+Main commits4c0f178/ebcf2f8 preserve these source changes. Driver/QoS not inherited
+from standalone sources. Lighting profile source preparer actual stopped copies
+completed: seven fixtures and five equal canonical forest worlds, fixed FCA1 ZIP,
+explicit OpaqueADAPTIVE/protectiontrue plus separate optionOFF and debugcue controls.
+No lighting driver or performance proof yet.
+
+Normal-error helper14tests and source-domain report committed5679cf2. The older
+22.115degree fixture is an over-range flowing-water stress case, not reachable
+flow settings; supported sampled domain/default maxima are retained in report,
+still unaccepted visually. Strict0.5degree budget allows no full octave skip for
+ordinary3wave settings. Variance helper12tests found no justified automatic water
+roughness compensation; mirror SSR directions and correlated moments prevent
+that claim. No consumer integration or performance credit; this track stopped.
+
+Fullscreen code committed2556b61 after nine new and19legacy tests passed. First
+actual master preflight found a str-versus-Path callback mismatch before any copy
+or client. A new real callback test also exposed all-archive include macros being
+miscounted as public settings options. Benchmark owner repairs normalization and
+exact settings-declaration check without weakening whole-source/metadata or actual
+option guards. Original master-r1 target remains absent; no fresh fullscreen
+result claimed. Sole operator may retry that unreserved operation after tested
+fix, then launch ONE original-only25warm/5capture query-free true-fullscreen forest
+qualification with natural stable foreground and observers/CPUlayers off.
+Record exact handles; no LOD performance batch yet. Other source work may continue.
+
+The user again explicitly asks whether work focuses on general LOD performance.
+Root confirms the reusable work-reduction direction but acknowledges excess helper/
+validation work before measured benefit. Prioritize actual shading-frequency and
+volumetric budget reductions, earlier matched feedback and rejecting costly micro
+optimizations on evidence. New parallel implementation ownership: lod_quality
+NEWcommon surface_region_continuity.glsl/fixtures/report (all up-to16members);
+lod_opportunities NEW4x4 irradiance adapter/builder/manifest/tests/report. One
+representative per16 far pixels, full-resolution materials/near/invalid preserved,
+explicit pinned Photon first reference; no universal rewriter/default quality cut.
+Existing2x2 code/controls frozen for separate QA. Normal variance owner finishes
+and stops, no more unused helper research. Goal target remains50% with little
+discernible difference; no new measured gain or reduced acceptance criterion.
+
+### Latest user clarification: the LOD system is the product
+
+The user explicitly rejects shader-specific optimization as the development
+objective. Build the general, extensible LOD system; Photon is the first explicit
+adapter and test case. Root acknowledges drift into Photon reflection-cache and
+projection tuning. Those experiments are set aside rather than promoted. The
+standalone 4 × 4 Photon task was stopped before any files were created. Its shared
+region continuity helper finished nine source/math/parser fixtures and remains
+unconsumed. No further pack-specific micro-optimization or helper expansion.
+
+Next bounded team implements reusable adapter/work-capability contracts and
+shared shader-side distance/work decisions, then integrates one existing Photon
+distance LOD consumer through that common contract. The mechanisms must live in
+the shared system; pack code supplies effect inputs and performs the declared
+operation. Preserve Iris/NeoForge, optional DH, explicit pinned adapters, actual
+consumption evidence, and the unchanged 1.5 × throughput target. No new native
+goal or automatic rewriting system. Latest working agreements limit normal
+parallelism to four useful workers, at most eight open workers, parent scheduling
+and one exclusive client/GPU owner; no recursive untracked teams.
+
+Original fullscreen qualification remains live and authorized for a general
+measurement baseline: runner 45970 / PID 29578, Java 29602, forest-high only,
+original Photon, no mod, no DH, query-free 25 s warmup / 5 s capture. Masters and
+independent stopped-world copy qualified after routine callback repairs. Logs:
+dev/logs/fullscreen-lod-original-smoke-r1. Operator ao_runtime owns this exact
+client and stop procedure; no focus watcher or capture focus changes. No candidate
+run follows without shared-system review and a new handoff. This is not a LOD
+performance result; classes and actual window conditions still require audit.
+
+### Shared system milestone: implementation and rendered connection
+
+Commit `000f355` implements the clarified direction: pure adapter/work-capability
+contracts, explicit source binding, public registration of descriptors/source
+pins/capability exports, immutable sealing before Iris pipeline binding, and
+common shader work decisions. Core 2/effects 2 semantics remain unchanged; the
+capability schema is separately versioned at 1. Photon is a separate reference
+registration, not a policy engine. Unknown sources/options/protocols and renderer
+fallback retain full work. No universal rewriting or additional shader support.
+
+The reference volume consumer delegates to shared policy and retains the exact
+prior march body, density, optical normalization and secondary work. INHERIT
+resolves unity; ADAPTIVE uses the six general controls. Default-off archive:
+`5de7561dd24cdca80860a1d5f2c60400e74163a489cc163e916f3fd47feb27de`;
+manifest `40efd7e702e41388033255d48a007c543e1055ccb4e2513c1908c2d82b8f2677`.
+Both reviewed archive variants have ten exact reference member pins and actual
+option requirements. Merely registering them is not rendering evidence.
+
+Checks completed: 103 Java tests, zero failures/errors/skips, integrated test/build/
+dev compilation; 15 volume source/math/grammar fixtures including 132 complete
+graphs; seven shared policy fixtures with 170 Java-oracle cases; eight capability
+and seven existing effect-readback fixture groups; six strict legacy-profile
+fixtures after explicit shared-volume pin refresh. The first plain-JUnit Iris
+ServiceLoader failure is retained and repaired with narrow unavailable-runtime
+fallback and regression. No gate or physical-work claim was relaxed.
+
+Current production JAR SHA-256:
+`aa65cf9157e0c5dac7db6ea65d38a42b3eec06a71838e394389063ead5b3e672`.
+Root verified no dev entries. Build log: `build/shared-lod-extension-build.log`.
+Public extension tests cover another adapter/custom export, collisions, late
+registration and coherent snapshots. See `LOD_EXTENSION_API.md` and
+`LOD_ADAPTER_BINDING.md` for the explicit integration contract.
+
+Current-revision r2 actual rendering passed: launcher 33338 / PID 43256, watcher
+81739 / PID 43240, Java 43270 all exited and are absent. Exact source/options/
+scene/config/class/resource/native-window guards pass. Program 18 sampled actual
+scalar GL_INT capability schema 1 and availability 1 at valid locations, plus
+core 2/enable 1 and effects 2/ADAPTIVE/512–1536 blocks/128-block transition/0.85–0.75
+ratios. Noise allocations and active-texture restoration pass. No capability-zero
+sample was observed. Native cloud still shows no gross holes/stripes; this does
+not establish parity, movement, physical sample counts, DH or speed.
+Evidence: `dev/logs/shared-lod-system-qa-r2/shared-lod-terminal-audit.json` and
+`SHARED_LOD_RUNTIME.md`. Main runtime digest `73568930…`, dev `2a1ce5aa…`;
+exact inventories are in the run. Earlier audit digests used a different
+serialization: root verified identical member hashes before accepting them.
+
+Original fullscreen attempt 45970 was rejected, not retried: capture focus,
+iconification, visibility and framebuffer dimensions changed. No cause or
+performance result inferred; raw evidence remains. All clients/builds stopped,
+root owns idle GPU, all scoped workers reached handoffs. Next decisive work is
+shared-system original/OFF/ON physical-work/parity/quality evidence and repeated
+quiet GPU plus frame measurements. Spatial-tier transition planning is still
+incomplete; exact-rate negotiation alone does not provide smooth transitions.
+The 1.5 × throughput and little-discernible-difference goal remains active and
+unachieved. No new performance gain is claimed.

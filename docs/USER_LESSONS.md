@@ -283,3 +283,24 @@ retain protection=true, explicitly request the lighting ratios, and distinguish
 requested settings from actual transport. AO/shadow designated salient effects
 retain their protection. This was an agent assumption corrected by source review,
 not a user error; it does not establish runtime lighting consumption.
+
+## Keep the LOD mechanism in the shared system
+
+The user clarified that the product is a general, extensible LOD system and
+questioned Photon-specific optimization work. Root had allowed reflection-cache
+and projection tuning, plus standalone pack prototypes, to dominate part of the
+implementation queue. Root stopped the planned standalone 4 × 4 pack before
+implementation and redirected the team to shared policies and adapter contracts.
+Photon must demonstrate those common mechanisms as a consumer. This is a
+coordination correction by the agent, not a user mistake. Source-tested unused
+helpers and pack micro-optimizations are not evidence of the system's performance.
+
+## Name the fingerprint algorithm at runtime handoff
+
+Root supplied the binding build's sorted class-tree digest to a fresh runtime
+worker, while the existing runtime utility hashes a differently serialized
+member map. The worker correctly held launch on the mismatch. Root independently
+compared all 75 main and 107 dev member hashes with the audit and disk; they were
+identical. Future runtime handoffs use `development_fingerprints()` and record
+its exact inventory, rather than treating differently defined digests as a file
+change. This was a parent handoff mismatch, not a renderer or user failure.

@@ -205,3 +205,70 @@ preserved. No client/build/GPU operation occurred; root retains resource ownersh
 The old standalone volume runtime is not inherited by the shared-source qualifier.
 Combined/fullscreen three-track experiments remain set aside without refresh or
 launch. This follow-up stops at tested pin maintenance.
+
+## Current public extension lifecycle verification, r2
+
+Root integrated the public runtime extension API in commit000f355 and reports
+`./gradlew test build compileDevClientJava` passed103 tests with no failures,
+errors or skips. That source change requires one fresh lifecycle check; the r1
+93-test revision remains historical evidence. Current production JAR SHA256
+`aa65cf9157e0c5dac7db6ea65d38a42b3eec06a71838e394389063ead5b3e672` was checked
+against actual disk bytes. Shader ZIP5de756…, manifest40efd7…, all helpers,
+options and marcher remain unchanged; no source/contract edits are part of r2.
+
+Fresh preparation at `run-workloads/shared-lod-system-qa-r2` completed with all
+original/off/on worlds equal to canonical89c962… and the same seven-effect
+controls. Preparation evidence is `dev/logs/shared-lod-runtime-r2-preparation.json`.
+`development_fingerprints()` inventory is frozen at
+`dev/logs/shared-lod-runtime-r2-prelaunch-inventory.json`:79 main class members,
+main tree `735689306c38ffef8f266fa1801cb41a01df639877ef8ef8f140be178ce8831e`;
+107 dev members, tree2a1ce5aa…; main/dev resourcesc508ff1f…/d0892e8d… unchanged.
+
+Root transferred sole GPU/client for one ON windowed25s/5s observer smoke with
+the identical canonical coast/native2976×1672/logical1488×836/minimalnoDH/wetness0
+setup. Watcher exec81739/PID43240 acknowledged before launcher
+exec33338/PID43256; Gradle wrapper PID43258 and client Java PID43270. Fresh request
+UUID `c19f5021-62b2-4558-9bdd-55332dda4f50`. Command is exactly the r1 command above
+with only its profile path changed to `shared-lod-system-qa-r2`; main/dev
+compilation/resource tasks remain excluded. Exact prelaunch command/request and
+handles are recorded in `dev/logs/shared-lod-system-qa-r2/smoke-manifest.json`
+and `runtime-handles.json`. Stop only launcher exec33338 via the existing
+child-group stop procedure, and watcher PID43240 if still live. Terminal r2
+readback/render/state validation was pending at this launch checkpoint.
+
+The single r2 audit completed with exit0. Watcher81739/PID43240,
+launcher33338/PID43256, Gradle wrapper43258 and client Java43270 are all stopped;
+exact PID queries and the exclusive-runtime utility report no live client.
+Sole GPU/client ownership formally returned to root. No preparer/test/source/
+contract change was needed, and no build or extra launch occurred.
+
+Current-revision first-draw program18 at00:59:23.363852Z read scalar GL_INT
+capability schema1/location37 and volume availability1/location5. All actual
+core/effect values, types and locations match the r1 table above:
+core2/enable1/32/96/8 and effects2/ADAPTIVE2/512/1536/128/.85/.75. Neither field
+had a typed actual0 observation; the other27 programs retain unknown/inactive
+capability fields. This verifies the current public-extension revision's built-in
+startup registration through actual rendered uniform values. Third-party addon
+runtime registration, later settled/reload state and physical work remain
+unverified; source tests for an extension do not establish its rendered behavior.
+
+Capture00:59:48.493526Z–00:59:53.498617Z passed all101 visible/non-iconified/
+unfocused observations with native2976×1672/logical1488×836, unchanged windowed
+pacing and no capture transitions. The warmup-only focus action occurred at
+00:59:23.978718Z. Source files/world, unlaunched original/off copies and all
+compiled class/resource inventories remain equal to prelaunch. Actual366upstream
+options plus sole integration=true, source ZIP, core/effect config semantics,
+pose/time/weather/wetness0/native24 and minimalnoDH guards all pass. The identical
+sampler allocations/parameters and active-texture restoration pass in all28
+captured programs. Driver renders in world with no fallback or shader/probe/GL
+error marker; retained warning qualifications match r1.
+
+The native still was inspected after terminal completion without gross cloud/
+terrain/water holes or stripes. PNG SHA256
+`9ec460417654253818bbae56ec1c53f83802a34ad1f1f8eb368251e824c70a94`.
+No comparison/motion/parity/physical-work/quality/performance result is claimed.
+The sole terminal audit command was
+`python3 dev/logs/shared-lod-system-qa-r2-audit.py`; its output and exact current
+revision/JAR/class provenance, maps, state, logs and PNG are retained in
+`dev/logs/shared-lod-system-qa-r2/shared-lod-terminal-audit.json` and the adjacent
+raw artifacts. The1.5× throughput goal remains unachieved.

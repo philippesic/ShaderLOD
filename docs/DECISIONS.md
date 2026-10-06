@@ -61,3 +61,20 @@ adapters. Photon remains first. ShaderLOD has not changed sunlight update cadenc
 or shadow-map refresh frequency. CPU/frustum research is an optional secondary
 path, justified by profiling but not the definition of the mod. Do not claim
 configuration alone adds distance-aware code to unmodified shaders.
+
+## LOD system scope clarified, 2026-10-05
+
+The user explicitly wants the general, extensible LOD system rather than
+shader-specific optimization. Shared distance/work policies, legal shading-rate
+tiers, quality guards and explicit adapter contracts define the product. Photon
+is only the first consumer used to prove that the system changes rendering work.
+Set aside exact fetch-cache/projection tuning and other standalone Photon
+optimizations. The existing experiments remain historical evidence, not accepted
+product components. A planned standalone 4 × 4 prototype was stopped before
+implementation; its reusable region guard may support the shared system.
+
+Continue the existing 50% throughput goal without changing its target or creating
+a replacement goal. Add the shared contracts and connect one already implemented
+LOD consumer to them. Do not invent universal GLSL rewriting or claim that
+registration/configuration alone adds LOD to an unmodified shader. Explicit
+adapter compile/render, quality and repeated performance checks remain required.

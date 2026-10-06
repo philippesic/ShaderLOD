@@ -11,10 +11,14 @@ time) against matched original Photon, with repeated GPU/total-frame and quality
 evidence. This target is unachieved. The previous 15% gate is superseded; historical
 evidence and unresolved checks below remain retained.
 
-Latest committed checkpoint: `525bda2` (volumetric V2 readback, procedural driver
-rejection and independent repairs), following lighting integration `24f4d3d`.
-Current milestone below integrates corrected water syntax and cheaper reflection
-guards; their new revisions need fresh driver checks. `0a4d7a9` preserves independent
+Latest implementation: `000f355` connects shared LOD policies, explicit adapter
+contracts, source binding and runtime extension registration. The current build
+passes 103 Java tests. A prior binding revision rendered the first shared volume
+consumer with actual capability and effect values; the latest registration
+lifecycle has one fresh verification queued. No measured new gain is accepted.
+Earlier commits `2556b61`, `5679cf2`, `ebcf2f8` and `4c0f178` preserve experimental
+benchmarks and source work; pack-specific micro-optimizations are set aside.
+`0a4d7a9` preserves independent
 parallel shader/quality implementations and protocol2/interface commands;60Java
 tests. Prior `67ef5ba` preserves
 corrected density runtime/core binding and the team direction. Earlier
@@ -24,39 +28,39 @@ remain retained; the latest operational checkpoint is at the end of the goal.
 
 ## Ownership and current work
 
-Root primarily orchestrates independent parallel implementation tracks, per the
-user's reiterated direction. `effect_api` implemented protocol2/43effect fields,
-OpaqueLighting controls/commands/coherent reload snapshots in an isolated worktree;
-root integrated it and main test/build/dev compilation passes all60tests. Core2
-stays unchanged; defaults INHERIT/unity with protection for designated salient
-effects. Actual Volumetrics extension linkage is demonstrated by typed driver
-readback; config reload and other consumers remain unverified.
+The user clarified the product: build the general, extensible LOD system. Photon
+is the first explicit adapter and test case. Pack-specific fetch-cache/projection
+optimization is set aside. A planned standalone 4 × 4 pack was stopped before any
+files were created; its shared region guard remains an unconsumed utility.
 
-`reflection_lod` implemented bounded footprint refinement (9tests),
-`procedural_lod` implemented displaced-footprint water/parallax (13tests),
-`volumetric_lod` implemented normalized primary integration (12tests), and
-`lod_quality` implemented reusable edge/near/plane guards (9tests). All are
-source-tested/default-off; driver/quality/performance acceptance pending.
-The 2x2 irradiance prepass/resolve is integrated from the lighting-rate worktree;
-eight source/parser/math/assembly fixtures pass. Driver checks remain pending.
-`lod_opportunities` now prepares its explicitly qualified forest controls;
-`lod_quality` independently reviews pass and transport correctness.
-`procedural_lod` develops a reusable normal-error bound; reflection cost revision
-r2 is integrated, with its conservative numerical checks passed. `feature_integration`
-updates the combined pack and complete parser coverage; `performance_audit`
-implements matched fullscreen batches and waits for new combined source pins.
-Procedural-r2's first coastal smoke failed Iris TransformPatcher parsing and
-fell back; no water driver/quality/performance acceptance. An isolated
-`procedural_parser_repair` fixed one missing parenthesis; root integrated r3.
-Fourteen tests pass, including75 complete actual-Iris/GLSL parser graphs and
-three broken-source regressions. `ao_runtime` owns updated explicit profile pins
-and one authorized untimed r3 retry; all previous clients stopped.
-Reflection and volumetric packs compiled/rendered without fallback. Volume actual
-readback proves effect2/mode2/bands512/1536/128/ratios.85/.75. Their inspected stills
-show no gross failures, but motion/parity/physical work and performance remain
-unverified. All preceding QA clients stopped. Source development stays parallel;
-GPU checks remain serial. Exact ownership and handles are in the active goal and
-PARALLEL_LOD_RUNTIME_QUEUE.md.
+Commit `000f355` implements immutable adapter capabilities, explicit source
+bindings, public extension registration and shared shader work decisions. New
+adapters register descriptors, source pins and capability exports before pipeline
+binding; late registration is rejected. Core 2 and effects 2 keep their meanings.
+Capability schema 1 is separate. Unknown sources/protocols/options and renderer
+fallback retain original work. No automatic rewriting or new pack support.
+
+The first volume consumer calls the common work policy. Its march body, density,
+optical normalization and secondary work are preserved; INHERIT is unity and
+ADAPTIVE uses the general effect controls. Current test/build/dev compilation
+passes 103 Java tests; shader acceptance includes 15 source/math/grammar fixtures.
+Production JAR SHA-256:
+`aa65cf9157e0c5dac7db6ea65d38a42b3eec06a71838e394389063ead5b3e672`.
+
+Current-revision runtime r2 rendered exact reference `5de756…27de` without fallback.
+Actual typed readback confirms capability schema 1, availability 1, core 2/global
+1 and effects 2/ADAPTIVE/512–1536 blocks/128-block transition/0.85–0.75 ratios.
+Native window/input and sampler-state guards pass. This proves the shared bridge,
+not physical iteration savings, motion quality or performance. Evidence:
+[Shared runtime](SHARED_LOD_RUNTIME.md), [extension API](LOD_EXTENSION_API.md).
+
+All workers reached their bounded handoffs. All clients/builds are stopped; root
+owns the idle GPU. Keep useful future work in scoped teams, normally up to four
+workers. Next: shared-system original/OFF/ON parity and work evidence, followed by
+quiet repeated GPU/frame measurements. First fullscreen baseline was rejected for
+focus, visibility and framebuffer transitions; no reference or gain was accepted.
+The 50% throughput target and little-discernible-difference requirement remain
+unmet. Prior experiments and failures below remain historical evidence.
 
 Retained first-wave experiments:
 AO pilot runner exec89240 exited0, all three normal WorkloadSession contracts
