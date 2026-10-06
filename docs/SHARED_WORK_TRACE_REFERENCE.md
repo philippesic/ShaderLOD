@@ -2,9 +2,10 @@
 
 2026-10-05. Owner: `work_trace_adapter`; parent owns the idle GPU. This is an
 explicit consumer of the [general work-trace API](WORK_TRACE_API.md), separate
-from the production Photon reference. Source and diagnostic archive freeze is
-complete. Driver compilation, device counts, quality and performance are
-unverified. No client, shader reload, GPU run or main/dev Gradle build was run.
+from the production Photon reference. The corrected r2 diagnostic archive freeze is
+complete. The r1 runtime failed downstream framebuffer size validation before
+capture. Corrected driver/pipeline acceptance, device counts, quality and
+performance remain unverified. No client, shader reload, GPU run or main/dev Gradle build was run.
 No live processes remain owned by this adapter task.
 
 ## Inputs and scope
@@ -20,7 +21,7 @@ Immutable inputs:
 complete file-member inventory, license and reviewed replacement/helper hashes.
 [Manifest](../patches/photon-experiments/shared-work-trace.json) defines the
 exact replacements and diagnostic contract; SHA-256:
-`d1cb03a71525f46299fd634b3ca1ca50be69a404252066d48f8a65d4e704d55b`.
+`23ae2d36851b71a4a8f60981a428a535f3687420da34b471c17b3a43c45a4a2f`.
 The frozen helper is `bbc6f94e14d9a25df4d4dee56d55551aa337604e06b6b523ff5a189712c40fa3`.
 
 Each derivative changes only settings, `program/d1_clouds.fsh`, cumulus,
@@ -108,7 +109,11 @@ The cloud draw uses three simultaneous MRT pages:
 Invalid/overflow/schema-mismatch output is all −1. Counters 0–16,777,215 are
 exact binary32 integers, never normalized. Format overrides use Photon-style
 commented const directives, private guarded and last in `buffers.glsl`.
-`colortex11` mirrors the existing 9/10 size in all four temporal-upscale branches.
+`colortex11`, `colortex12` and `colortex15` mirror the existing 9/10 size in all
+four temporal-upscale branches. This keeps downstream cloud resolve MRT 11/12
+and its optional LOD MRT 11/12/15 coherent; no upstream pass elsewhere writes
+12 or 15 together with a full-size target. These diagnostic history/combined-depth
+sizes do not change primary cloud projection, density or sampling positions.
 The actual pinned Iris directive parser confirms all three final format values
 are RGBA32F. Actual GL allocation, viewport/dimensions, draw-buffer mapping and
 absence of fallback still require device verification.
@@ -141,28 +146,37 @@ registration, member and option pins.
 
 | Archive | SHA-256 |
 | --- | --- |
-| `Photon-WorkTrace-original-off.zip` | `57e13d54feefe8e5b1aa8a8f0588c6524e3d47bbafb11ab6310419ff365919bd` |
-| `Photon-WorkTrace-original-on.zip` | `4683c68bf5aca1d9fec4ae049bf72548ff6e4d2553f7ea11ce077a2b9332a25a` |
-| `Photon-WorkTrace-shared-off.zip` | `b9f32eaf6b85486f72c1890ba23ff6313fe4224ecf03cb055936e00fa04cefe9` |
-| `Photon-WorkTrace-shared-on.zip` | `bd5c5a115a3aa62cb1c08af4b504ed29c1db88ed32d87b39eb3b7b39e535826c` |
+| `Photon-WorkTrace-original-off.zip` | `ac159c201aad81c87b2b41d28de59a6ecbeec49fbd5a5e819d20ed76cd2f78ac` |
+| `Photon-WorkTrace-original-on.zip` | `89e0a379b9b6a4eeda07fa564c209fdd8487420e114a1e3aa4ffa4620ddd1b70` |
+| `Photon-WorkTrace-shared-off.zip` | `b0f976fb485abbf84e10de4fc3406950659b73d0a2c0f0296180ea05fc95fdaa` |
+| `Photon-WorkTrace-shared-on.zip` | `e8519e91eb463379ec8ecc17658fb22f4130ae9ca72971b900f2ebb343970088` |
 
 Reproduce with `python3 scripts/build_photon_work_trace.py --source original`
 and `--source shared`; add `--trace` only for explicit trace-default-ON variants.
 
-[Five fixtures](../tests/test_photon_work_trace.py) passed, zero skips:
+[Six fixtures](../tests/test_photon_work_trace.py) passed, zero skips:
 `python3 -m unittest discover -s tests -p test_photon_work_trace.py -v`.
-[Raw log](../build/photon-work-trace-tests.log) records 270 complete pinned
+[Repair suite log](../build/photon-work-trace-repair-tests.log) records 270 complete pinned
 Iris Jcpp/EnhancedParser grammar parses, 90 ordinary-OFF token comparisons,
 nonselected-stage/LUT ON isolation, two actual Overworld trace-output graphs,
 Iris option discovery, final format-directive extraction, reached-site checks,
 exact copied-body restoration, frozen-input scope checks and deterministic
-archive/registration assembly. Scoped whitespace check passed.
+archive/registration assembly. The additional actual Iris layout regression
+checks 2,656 pass/profile cases and 528 multi-target groups across both source
+families, upscale 1–4 and no LOD/DH branches. It uses pinned
+`PropertiesPreprocessor`, `TextureScaleOverride` and `CommentDirectiveParser`,
+reproduces the old 427×240 versus 1708×960 MRT 11/12 mismatch, verifies every
+repaired MRT group, and requires ordinary-OFF dimensions to equal upstream.
+[Portable layout rerun](../build/photon-work-trace-repair-layout-tests.log)
+reconstructs the prior property recipe from the repaired source plus an exact
+old fingerprint. Scoped whitespace check passed.
 
 Capture owner separately accepted registration metadata with no-GL fixtures;
 see its [log](../build/work-trace-readback-tests.log). That is metadata/readback
 implementation evidence, not native device readback or driver compilation.
 
-Root/runtime operator must next establish actual linked options/capabilities,
+Root/runtime operator must next establish corrected pipeline creation, actual
+linked options/capabilities,
 three matching RGBA32F attachments and same-draw readback, then matched original,
 shared global OFF and shared ADAPTIVE count snapshots. Work evidence may show
 fewer or more operations because density occupancy and early exits change.
@@ -170,3 +184,30 @@ Production speed requires separate matched, quiet, repeated original/OFF/ON
 GPU and total-frame measurements with counters/readbacks absent, plus independent
 still/motion quality checks. No diagnostic timing row is performance evidence.
 The 1.5× throughput goal is not established by these artifacts.
+
+
+## Retained r1 failure and repair boundary
+
+The original diagnostic launch failed before work capture: Iris rejected later
+`deferred2` drawbuffers 11/12 because 11 was 427×240 and 12 remained 1708×960.
+See the preserved [console](../dev/logs/work-trace-runtime-r1/original-console.log)
+lines 173–176 and 265–268, [raw header](../dev/logs/work-trace-runtime-r1/original-raw-work-trace.json),
+and [terminal audit](../dev/logs/work-trace-runtime-r1/work-trace-terminal-audit.json).
+The adapter's initial source/grammar checks omitted downstream framebuffer
+layout validation; that omission is corrected by the new actual Iris layout
+fixture. No count or speed result is accepted from that launch.
+
+The exact held option sidecar is
+`run-workloads/work-trace-runtime-r1/coastalwater/original/shaderpacks/Photon-WorkTrace-original-on.zip.txt`:
+BORDER_FOG, CLOUD_SHADOWS, SHADOW_COLOR, SHADOW_VPS and SH_SKYLIGHT false;
+otherwise archive defaults, including CLOUDS_TEMPORAL_UPSCALING 4. The held
+control file is sibling `coastalwater/control.json`. Its camera/time/preset are
+retained provenance; this repair changes no preset, ray or density input.
+
+All four r1 archives/registrations, original manifest and ledger were preserved
+under [build/photon-work-trace-r1-failed](../build/photon-work-trace-r1-failed/photon-work-trace-freeze.json)
+before the r2 outputs were written. Failed runtime files and run-workload copies
+remain unchanged. The new pins supersede r1 only for future diagnostic launches;
+the r1 failure is retained. Capture marker, page codec and attachment 0/1/2
+mapping remain unchanged. No Java source/class, client or GPU operation was
+part of this bounded repair; root must accept the freeze before a runtime retry.

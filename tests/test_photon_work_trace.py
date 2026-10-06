@@ -90,7 +90,7 @@ class WorkTraceTests(unittest.TestCase):
                 self.assertIn(f'const int colortex{target}Format = RGBA32F;',files['shaders/include/buffers.glsl'].decode())
             properties=files['shaders/shaders.properties'].decode()
             for scale in ('1.0','0.5','0.333333','0.25'):
-                self.assertIn(f'size.buffer.colortex11 = {scale} {scale}',properties)
+                for target in (11,12,15):self.assertIn(f'size.buffer.colortex{target} = {scale} {scale}',properties)
             self.assertNotIn('SHADERLOD_WORK_TRACE_PAGE',program)
             self.assertNotIn('atomic',program)
 
@@ -109,6 +109,111 @@ class WorkTraceTests(unittest.TestCase):
                 self.assertEqual('VOLUMETRICS',registration['exports'][0]['effect'])
                 self.assertEqual('shaderlodWorkTraceSchema',registration['exports'][0]['uniformName'])
                 self.assertTrue(one['diagnostic_only'])
+
+    def test_actual_iris_layout_old_mismatch_and_all_affected_passes(self):
+        """Real Iris properties preprocessing, dimensions and MRT directive extraction."""
+        pins=json.loads((ROOT/volume.MANIFEST).read_text())
+        iris=ROOT/pins['iris_option_discovery']['jar_path']
+        self.assertEqual(pins['iris_option_discovery']['jar_sha256'],trace.sha256(iris.read_bytes()))
+        cache=Path.home()/'.gradle/caches/modules-2/files-2.1';dependencies=[]
+        for pattern in ('com.google.guava/guava/32.1.2-jre/*/guava-32.1.2-jre.jar','it.unimi.dsi/fastutil/8.5.12/*/fastutil-8.5.12.jar','org.slf4j/slf4j-api/2.0.9/*/slf4j-api-2.0.9.jar'):
+            matches=list(cache.glob(pattern));self.assertEqual(1,len(matches));dependencies+=matches
+        java=r'''
+import java.nio.file.*;import java.util.*;import java.io.*;
+import net.irisshaders.iris.shaderpack.option.*;
+import net.irisshaders.iris.shaderpack.option.values.MutableOptionValues;
+import net.irisshaders.iris.shaderpack.include.AbsolutePackPath;
+import net.irisshaders.iris.shaderpack.preprocessor.JcppProcessor;
+import net.irisshaders.iris.shaderpack.preprocessor.PropertiesPreprocessor;
+import net.irisshaders.iris.helpers.StringPair;
+import net.irisshaders.iris.gl.texture.TextureScaleOverride;
+import net.irisshaders.iris.shaderpack.parsing.CommentDirectiveParser;
+import net.irisshaders.iris.shaderpack.parsing.CommentDirective;
+class WorkTraceLayout {
+ static List<StringPair> defines(int scale,boolean trace,boolean dh){
+  var d=new ArrayList<StringPair>(List.of(new StringPair("MC_VERSION","12101"),new StringPair("MC_GL_VERSION","410"),new StringPair("MC_GLSL_VERSION","410"),new StringPair("IS_IRIS","1"),new StringPair("CLOUDS_TEMPORAL_UPSCALING",Integer.toString(scale))));
+  if(trace)d.add(new StringPair("SHADERLOD_WORK_TRACE","1"));
+  if(dh)d.add(new StringPair("DISTANT_HORIZONS","1"));return d;
+ }
+ static Map<Integer,List<Integer>> sizes(Path properties,int scale,boolean trace)throws Exception{
+  String pre=PropertiesPreprocessor.preprocessSource(Files.readString(properties),defines(scale,trace,false));
+  Properties p=new Properties();p.load(new StringReader(pre));var result=new TreeMap<Integer,List<Integer>>();
+  for(int i=0;i<16;i++){
+   String value=p.getProperty("size.buffer.colortex"+i);
+   if(value==null)result.put(i,List.of(1708,960));
+   else {String[] args=value.trim().split("\\s+");var actual=new TextureScaleOverride(args[0],args[1]);result.put(i,List.of(actual.getX(1708),actual.getY(960)));}
+  }return result;
+ }
+ static int[] group(Path path,int scale,boolean trace,boolean shared,boolean dh)throws Exception{
+  var annotated=new OptionAnnotatedSource(Files.readString(path));
+  var options=annotated.getOptionSet(AbsolutePackPath.fromAbsolutePath("/source.fsh"),annotated.getBooleanDefineReferences().keySet());
+  var values=new HashMap<String,String>();
+  for(String n:List.of("BORDER_FOG","CLOUD_SHADOWS","SHADOW_COLOR","SHADOW_VPS","SH_SKYLIGHT"))values.put(n,"false");
+  values.put("SHADERLOD_WORK_TRACE",Boolean.toString(trace));values.put("SHADERLOD_VOLUMETRIC_INTEGRATION_LOD",Boolean.toString(shared));
+  values.put("CLOUDS_CUMULUS","true");values.put("BLOCKY_CLOUDS","false");values.put("CLOUDS_TEMPORAL_UPSCALING",Integer.toString(scale));
+  String prepared=JcppProcessor.glslPreprocessSource(annotated.apply(new MutableOptionValues(options,values)),defines(scale,false,dh));
+  var directive=CommentDirectiveParser.findDirective(prepared,CommentDirective.Type.RENDERTARGETS);
+  if(directive.isEmpty())return new int[0];
+  return Arrays.stream(directive.get().getDirective().split(",")).map(String::trim).mapToInt(Integer::parseInt).toArray();
+ }
+ static void coherent(Map<Integer,List<Integer>> dimensions,int[] buffers,String name){
+  if(buffers.length<2)return;var original=dimensions.get(buffers[0]);
+  for(int b:buffers)if(!original.equals(dimensions.get(b)))throw new IllegalStateException("Pass sizes must match for drawbuffers "+Arrays.toString(buffers)+" original "+original+" new "+dimensions.get(b)+" in "+name);
+ }
+ public static void main(String[] args)throws Exception{
+  Path dir=Path.of(args[0]);int checks=0,groups=0;
+  // Reconstruct the prior reviewed diagnostic property bug from its exact source recipe.
+  var old=sizes(dir.resolve("old.properties"),4,true);
+  if(!old.get(11).equals(List.of(427,240))||!old.get(12).equals(List.of(1708,960)))throw new AssertionError("old failure extent absent "+old);
+  int[] oldGroup=group(dir.resolve("old-deferred2.fsh"),4,true,false,false);
+  if(!Arrays.equals(oldGroup,new int[]{11,12}))throw new AssertionError("old actual Iris MRT directive differs");
+  try{coherent(old,oldGroup,"old deferred2");throw new AssertionError("old failure accepted");}
+  catch(IllegalStateException expected){System.out.println("reproduced: "+expected.getMessage());}
+  var cache=new HashMap<String,int[]>();
+  for(String source:List.of("original","shared"))for(int scale:List.of(1,2,3,4)){
+   var before=sizes(dir.resolve(source+"-base.properties"),scale,false);
+   var off=sizes(dir.resolve(source+"-fixed.properties"),scale,false);
+   var on=sizes(dir.resolve(source+"-fixed.properties"),scale,true);
+   if(!before.equals(off))throw new AssertionError("ordinary OFF property layout changed");
+   for(int target:List.of(9,10,11,12,15))if(!on.get(target).equals(before.get(9)))throw new AssertionError("original cloud extent changed "+target);
+   for(boolean dh:List.of(false,true))for(String row:Files.readAllLines(dir.resolve(source+".list"))){
+    String[] fields=row.split("\\t");String key=source+"/"+dh+"/"+fields[0];
+    boolean cloud=fields[0].endsWith("/deferred1.fsh")||fields[0].endsWith("/deferred2.fsh");
+    int[] buffers=cloud?group(dir.resolve(fields[1]),scale,true,source.equals("shared"),dh):cache.get(key);
+    if(buffers==null){buffers=group(dir.resolve(fields[1]),4,true,source.equals("shared"),dh);cache.put(key,buffers);}
+    coherent(on,buffers,fields[0]);checks++;if(buffers.length>1)groups++;
+    if(fields[0].equals("shaders/world0/deferred1.fsh")&&!Arrays.equals(buffers,new int[]{9,10,11}))throw new AssertionError("same-draw pages absent");
+    if(fields[0].equals("shaders/world0/deferred2.fsh")&&!Arrays.equals(buffers,dh?new int[]{11,12,15}:new int[]{11,12}))throw new AssertionError("downstream MRT changed");
+   }
+  }
+  System.out.println("actual Iris layout: "+checks+" pass/profile checks, "+groups+" multi-target groups; ordinary OFF dimensions exact; fixed9/10/11/12/15 share original cloud extent");
+ }
+}'''
+        with tempfile.TemporaryDirectory(prefix='photon-trace-layout-') as temporary:
+            folder=Path(temporary)
+            with zipfile.ZipFile(iris) as archive:
+                jcpp=folder/'jcpp.jar';jcpp.write_bytes(archive.read('META-INF/jarjar/jcpp-1.4.14.jar'))
+            properties=self.patched['original']['shaders/shaders.properties'].decode()
+            properties=re.sub(r'^size.buffer.colortex(?:12|15) = [^\n]*\n','',properties,flags=re.M)
+            self.assertEqual(MANIFEST['layout_regression']['previous_properties_sha256']['original'],trace.sha256(properties.encode()))
+            settings=self.originals['original']['shaders/settings.glsl'].decode()
+            self.assertRegex(settings,r'#define CLOUDS_TEMPORAL_UPSCALING 4(?:\s|$)')
+            self.assertEqual({'BORDER_FOG':'false','CLOUD_SHADOWS':'false','SHADOW_COLOR':'false','SHADOW_VPS':'false','SH_SKYLIGHT':'false'},MANIFEST['layout_regression']['held_profile_options'])
+            (folder/'old.properties').write_text(properties)
+            (folder/'old-deferred2.fsh').write_text(expand(self.originals['original'],'shaders/world0/deferred2.fsh'))
+            for kind,files in self.originals.items():
+                (folder/(kind+'-base.properties')).write_bytes(files['shaders/shaders.properties'])
+                (folder/(kind+'-fixed.properties')).write_bytes(self.patched[kind]['shaders/shaders.properties'])
+                rows=[]
+                for i,name in enumerate(sorted(n for n in files if '/world' in n and n.endswith('.fsh'))):
+                    path=f'{kind}-{i}.fsh';(folder/path).write_text(expand(self.patched[kind],name));rows.append(name+'\t'+path)
+                (folder/(kind+'.list')).write_text('\n'.join(rows))
+            harness=folder/'WorkTraceLayout.java';harness.write_text(java)
+            run=subprocess.run(['java','-Xmx1G','--class-path',os.pathsep.join(map(str,[iris,*dependencies,jcpp])),str(harness),str(folder)],capture_output=True,text=True,timeout=120)
+            self.assertEqual(0,run.returncode,run.stdout+run.stderr)
+            self.assertIn('reproduced: Pass sizes must match for drawbuffers [11, 12] original [427, 240] new [1708, 960]',run.stdout)
+            self.assertIn('actual Iris layout:',run.stdout)
+            print(run.stdout.strip())
 
     def test_actual_iris_grammar_off_parity_and_option_discovery(self):
         pins=json.loads((ROOT/volume.MANIFEST).read_text())

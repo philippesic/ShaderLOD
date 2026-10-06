@@ -35,7 +35,8 @@ def patch_members(files: dict[str, bytes], manifest: dict, source: str,
     if (manifest['storage'].get('attachments') != [0,1,2] or
         manifest['storage'].get('colortexes') != [9,10,11] or
         manifest['storage'].get('format') != 'RGBA32F' or
-        manifest['storage'].get('exact_count_max') != 16777215):
+        manifest['storage'].get('exact_count_max') != 16777215 or
+        manifest.get('layout',{}).get('cloud_extent_targets') != [9,10,11,12,15]):
         raise ValueError('Unreviewed exact storage contract')
     contract = manifest['sources'][source]
     if contract['sha256'] != SOURCES[source] or contract['inventory_sha256'] != inventory(files):
@@ -102,7 +103,7 @@ def build(output: Path | None = None, source: str = 'original', trace: bool = Fa
         'modified_upstream_files':modified,'added_files':added,'trace_default':trace,
         'reference_member_sha256':{n:sha256(files[n]) for n in reference_members},
         'required_effective_options':required,'storage':manifest['storage'],'units':manifest['units'],
-        'phase':manifest['phase'],'path_tags':manifest['path_tags'],'reason_tags':manifest['reason_tags'],
+        'phase':manifest['phase'],'layout':manifest['layout'],'path_tags':manifest['path_tags'],'reason_tags':manifest['reason_tags'],
         'disabled_baseline':'Trace OFF preprocesses literal frozen source; original diagnostic and shared global OFF preserve original march; INHERIT/unity/protected/invalid paths retain original.',
         'quality_status':manifest['quality_status'],'runtime_compilation':'unverified',
         'gpu_benefit':'unmeasured; diagnostic work/timing cannot establish production performance',

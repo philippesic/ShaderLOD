@@ -94,23 +94,23 @@
         {
           "path": "shaders/shaders.properties",
           "source_sha256": "f8cc8df60f930612e8817e4176a34886c1a9de778c15427a5468ecbc4f71ee9a",
-          "patched_sha256": "829f159b5ad9c3e3db1d8a9e5080d2625458e0e67bcfb6a57cd3b56dbabe037a",
+          "patched_sha256": "032b8664af0322433d7cccac0eb2ac5b0ca6280b38f7b21c3dee09087ceeb509",
           "replacements": [
             {
               "before": "size.buffer.colortex10 = 1.0 1.0\n",
-              "after": "size.buffer.colortex10 = 1.0 1.0\n#ifdef SHADERLOD_WORK_TRACE\nsize.buffer.colortex11 = 1.0 1.0\n#endif // SHADERLOD_WORK_TRACE\n"
+              "after": "size.buffer.colortex10 = 1.0 1.0\n#ifdef SHADERLOD_WORK_TRACE\nsize.buffer.colortex11 = 1.0 1.0\nsize.buffer.colortex12 = 1.0 1.0\nsize.buffer.colortex15 = 1.0 1.0\n#endif // SHADERLOD_WORK_TRACE\n"
             },
             {
               "before": "size.buffer.colortex10 = 0.5 0.5\n",
-              "after": "size.buffer.colortex10 = 0.5 0.5\n#ifdef SHADERLOD_WORK_TRACE\nsize.buffer.colortex11 = 0.5 0.5\n#endif // SHADERLOD_WORK_TRACE\n"
+              "after": "size.buffer.colortex10 = 0.5 0.5\n#ifdef SHADERLOD_WORK_TRACE\nsize.buffer.colortex11 = 0.5 0.5\nsize.buffer.colortex12 = 0.5 0.5\nsize.buffer.colortex15 = 0.5 0.5\n#endif // SHADERLOD_WORK_TRACE\n"
             },
             {
               "before": "size.buffer.colortex10 = 0.333333 0.333333\n",
-              "after": "size.buffer.colortex10 = 0.333333 0.333333\n#ifdef SHADERLOD_WORK_TRACE\nsize.buffer.colortex11 = 0.333333 0.333333\n#endif // SHADERLOD_WORK_TRACE\n"
+              "after": "size.buffer.colortex10 = 0.333333 0.333333\n#ifdef SHADERLOD_WORK_TRACE\nsize.buffer.colortex11 = 0.333333 0.333333\nsize.buffer.colortex12 = 0.333333 0.333333\nsize.buffer.colortex15 = 0.333333 0.333333\n#endif // SHADERLOD_WORK_TRACE\n"
             },
             {
               "before": "size.buffer.colortex10 = 0.25 0.25\n",
-              "after": "size.buffer.colortex10 = 0.25 0.25\n#ifdef SHADERLOD_WORK_TRACE\nsize.buffer.colortex11 = 0.25 0.25\n#endif // SHADERLOD_WORK_TRACE\n"
+              "after": "size.buffer.colortex10 = 0.25 0.25\n#ifdef SHADERLOD_WORK_TRACE\nsize.buffer.colortex11 = 0.25 0.25\nsize.buffer.colortex12 = 0.25 0.25\nsize.buffer.colortex15 = 0.25 0.25\n#endif // SHADERLOD_WORK_TRACE\n"
             }
           ]
         }
@@ -206,23 +206,23 @@
         {
           "path": "shaders/shaders.properties",
           "source_sha256": "f8cc8df60f930612e8817e4176a34886c1a9de778c15427a5468ecbc4f71ee9a",
-          "patched_sha256": "829f159b5ad9c3e3db1d8a9e5080d2625458e0e67bcfb6a57cd3b56dbabe037a",
+          "patched_sha256": "032b8664af0322433d7cccac0eb2ac5b0ca6280b38f7b21c3dee09087ceeb509",
           "replacements": [
             {
               "before": "size.buffer.colortex10 = 1.0 1.0\n",
-              "after": "size.buffer.colortex10 = 1.0 1.0\n#ifdef SHADERLOD_WORK_TRACE\nsize.buffer.colortex11 = 1.0 1.0\n#endif // SHADERLOD_WORK_TRACE\n"
+              "after": "size.buffer.colortex10 = 1.0 1.0\n#ifdef SHADERLOD_WORK_TRACE\nsize.buffer.colortex11 = 1.0 1.0\nsize.buffer.colortex12 = 1.0 1.0\nsize.buffer.colortex15 = 1.0 1.0\n#endif // SHADERLOD_WORK_TRACE\n"
             },
             {
               "before": "size.buffer.colortex10 = 0.5 0.5\n",
-              "after": "size.buffer.colortex10 = 0.5 0.5\n#ifdef SHADERLOD_WORK_TRACE\nsize.buffer.colortex11 = 0.5 0.5\n#endif // SHADERLOD_WORK_TRACE\n"
+              "after": "size.buffer.colortex10 = 0.5 0.5\n#ifdef SHADERLOD_WORK_TRACE\nsize.buffer.colortex11 = 0.5 0.5\nsize.buffer.colortex12 = 0.5 0.5\nsize.buffer.colortex15 = 0.5 0.5\n#endif // SHADERLOD_WORK_TRACE\n"
             },
             {
               "before": "size.buffer.colortex10 = 0.333333 0.333333\n",
-              "after": "size.buffer.colortex10 = 0.333333 0.333333\n#ifdef SHADERLOD_WORK_TRACE\nsize.buffer.colortex11 = 0.333333 0.333333\n#endif // SHADERLOD_WORK_TRACE\n"
+              "after": "size.buffer.colortex10 = 0.333333 0.333333\n#ifdef SHADERLOD_WORK_TRACE\nsize.buffer.colortex11 = 0.333333 0.333333\nsize.buffer.colortex12 = 0.333333 0.333333\nsize.buffer.colortex15 = 0.333333 0.333333\n#endif // SHADERLOD_WORK_TRACE\n"
             },
             {
               "before": "size.buffer.colortex10 = 0.25 0.25\n",
-              "after": "size.buffer.colortex10 = 0.25 0.25\n#ifdef SHADERLOD_WORK_TRACE\nsize.buffer.colortex11 = 0.25 0.25\n#endif // SHADERLOD_WORK_TRACE\n"
+              "after": "size.buffer.colortex10 = 0.25 0.25\n#ifdef SHADERLOD_WORK_TRACE\nsize.buffer.colortex11 = 0.25 0.25\nsize.buffer.colortex12 = 0.25 0.25\nsize.buffer.colortex15 = 0.25 0.25\n#endif // SHADERLOD_WORK_TRACE\n"
             }
           ]
         }
@@ -296,5 +296,63 @@
     "3": "reserved full-target diagnostic, not implemented"
   },
   "quality_status": "diagnostic attachment destroys downstream cloud appearance; no visual/performance claim",
-  "attribution": "Photon v1.3b by Benjamin Stott (SixthSurge); original LICENSE retained"
+  "attribution": "Photon v1.3b by Benjamin Stott (SixthSurge); original LICENSE retained",
+  "layout": {
+    "cloud_extent_targets": [
+      9,
+      10,
+      11,
+      12,
+      15
+    ],
+    "trace_output_targets": [
+      9,
+      10,
+      11
+    ],
+    "reason": "Later deferred2 groups [11,12] and optional [11,12,15] require equal dimensions; diagnostic histories/combined depth match original cloud extent without changing primary projection or sampling",
+    "ordinary_off": "11/12/15 retain original full extent;9/10 original cloud extent",
+    "held_profile": {
+      "render_extent": [
+        1708,
+        960
+      ],
+      "CLOUDS_TEMPORAL_UPSCALING": 4,
+      "trace_extent": [
+        427,
+        240
+      ]
+    },
+    "failed_previous_manifest_sha256": "d1cb03a71525f46299fd634b3ca1ca50be69a404252066d48f8a65d4e704d55b"
+  },
+  "layout_regression": {
+    "previous_properties_sha256": {
+      "original": "829f159b5ad9c3e3db1d8a9e5080d2625458e0e67bcfb6a57cd3b56dbabe037a",
+      "shared": "829f159b5ad9c3e3db1d8a9e5080d2625458e0e67bcfb6a57cd3b56dbabe037a"
+    },
+    "held_profile_options": {
+      "BORDER_FOG": "false",
+      "CLOUD_SHADOWS": "false",
+      "SHADOW_COLOR": "false",
+      "SHADOW_VPS": "false",
+      "SH_SKYLIGHT": "false"
+    },
+    "held_profile_sidecar": "run-workloads/work-trace-runtime-r1/coastalwater/original/shaderpacks/Photon-WorkTrace-original-on.zip.txt",
+    "held_profile_control": "run-workloads/work-trace-runtime-r1/coastalwater/control.json",
+    "failed_console": "dev/logs/work-trace-runtime-r1/original-console.log",
+    "old_failed_drawbuffers": [
+      11,
+      12
+    ],
+    "old_failed_dimensions": [
+      [
+        427,
+        240
+      ],
+      [
+        1708,
+        960
+      ]
+    ]
+  }
 }
