@@ -276,3 +276,35 @@ manifest0c090561…f4ec/ZIP485590fa…aa35 and procedural r3 manifestb529fdb0…
 ZIP267f6358…bd9ea before any actual fullscreen copies. R1 combined pins
 238da80f…/b6eb562d… and the stale-source test rejection remain historical evidence.
 No actual fullscreen dimensions or performance result is claimed at this freeze.
+
+## Actual preparation preflight repair
+
+The operator's first actual command
+`python3 scripts/prepare_fullscreen_lod_batch.py --output run-workloads/fullscreen-lod-batch-master-r1 --scene both`
+failed before copies or client launch: the canonical inspector returned
+`record['original']['path']` as a string, and `file_hash` attempted `.open`.
+Direct-Path qualifier fixtures had missed the real callback contract. The failure
+is retained; no preparation success or shader result is inferred.
+
+`qualify_combined` now normalizes original/private archive paths at entry, and
+`inspect_scene` normalizes its private argument before subsequent hashes. The
+fixture now uses the actual canonical coastal inspector with string original/
+private/root paths, not a mocked Path-only qualifier. That fixture then found
+a second glue mismatch: archive_defaults inventories twelve added declarations,
+including helper guards, while only the three reviewed settings declarations
+are public options. Public declaration equality is now checked in the exact
+whole-member-qualified settings.glsl payload; all upstream archive defaults and
+complete source/member/helper/metadata/license pins remain enforced. Runtime
+comparison still requires precisely the three active public gates. No wildcard
+allowance or source qualification was removed.
+
+The intermediate callback fixture's declaration error is retained here. After
+both repairs, all nine new and nineteen legacy fixtures pass, and the actual
+string-path qualifier call returns the frozen87e12ac1…e41a archive qualification.
+The tool-output wrapper briefly had a printing-name error after awaiting the
+checks; the checks were rerun with visible successful output rather than treating
+the missing output as acceptance. Filesystem checks before and after testing
+confirmed master-r1 absent and not a symlink. The operator may retry that same
+unreserved target; an existing failed/partial reservation must never be reset.
+No canonical copy, client/GPU, build/compiler, shader-source or encoder work was
+performed by this audit owner during this repair.

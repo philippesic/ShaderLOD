@@ -17,7 +17,7 @@ import zipfile
 import build_photon_combined_lod as combined
 import prepare_parallel_lod_profiles as qa
 import prepare_photon_ao_reuse_profiles as copies
-from run_proof_matrix import archive_defaults, canonical_options_hash, normalize_requested_options
+from run_proof_matrix import archive_defaults, canonical_options_hash, declared_defaults, normalize_requested_options
 from setup_comparison import ROOT, WORLD, file_hash, world_fingerprint
 
 
@@ -61,6 +61,7 @@ def metadata_contract(original, expected, manifest, manifest_bytes):
 
 def qualify_combined(original_path, private_path, runtime, root=ROOT):
     root = Path(root)
+    original_path, private_path = Path(original_path), Path(private_path)
     require(file_hash(original_path) == combined.BASE_SHA256, 'Original Photon archive pin differs')
     require(file_hash(original_path, 'sha512') == runtime['artifacts']['photon']['hashes']['sha512'], 'Runtime Photon lock differs')
     manifest_path = root / combined.MANIFEST
@@ -92,6 +93,7 @@ def qualify_combined(original_path, private_path, runtime, root=ROOT):
 def inspect_scene(item, private_path, runtime, root=ROOT):
     """Canonical inspection reused from the pinned QA family; never accept its private qualification as combined proof."""
     root = Path(root)
+    private_path = Path(private_path)
     # Reuse the existing complete canonical scene/options/lock/jar inspection.
     # Its separate reflection qualification stays explicit in provenance.
     reflection_path = root / 'build' / qa.FAMILIES['reflection'].archive_name
@@ -99,10 +101,15 @@ def inspect_scene(item, private_path, runtime, root=ROOT):
     qualification = qualify_combined(record['original']['path'], private_path, runtime, root)
     with zipfile.ZipFile(record['original']['path']) as archive:
         original_defaults = archive_defaults(archive)
+        original_settings = declared_defaults(archive.read(combined.SETTINGS).decode())
     with zipfile.ZipFile(private_path) as archive:
         defaults = archive_defaults(archive)
+        private_settings = declared_defaults(archive.read(combined.SETTINGS).decode())
     require(all(defaults.get(key) == value for key, value in original_defaults.items()), 'Combined changes upstream defaults')
-    require(set(defaults) - set(original_defaults) == set(combined.SWITCHES), 'Unexpected combined option declaration')
+    # archive_defaults also inventories non-option helper include guards. Public
+    # declarations belong to this exact qualified settings member; actual Iris
+    # active-option union remains separately checked at runtime.
+    require(set(private_settings) - set(original_settings) == set(combined.SWITCHES), 'Unexpected combined settings option declaration')
     patched = record['native_options'] | feature_flags('patched-off')
     normalize_requested_options(defaults, patched)
     record['canonical_reflection_qualification'] = record['qualification']

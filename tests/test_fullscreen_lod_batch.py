@@ -54,6 +54,17 @@ class FullscreenBatchTest(unittest.TestCase):
         original = ROOT/'dev/upstream/photon_v1.3b.zip'
         self.assertTrue(private.exists() and original.exists(), 'Pinned local archive prerequisite missing')
         qualification = batch.qualify_combined(original, private, runtime)
+        string_qualification = batch.qualify_combined(str(original), str(private), runtime, str(ROOT))
+        self.assertEqual(string_qualification, qualification)
+        # Exercise the real canonical inspector callback, whose original path is
+        # deliberately serialized as a string. Direct Path qualification alone
+        # previously missed this integration contract.
+        record = batch.inspect_scene({'scene':'coastalwater',
+            'source_profile':str(batch.copies.DEFAULT_SOURCES['coastalwater'])}, str(private), runtime, str(ROOT))
+        self.assertIsInstance(record['original']['path'], str)
+        self.assertEqual(record['qualification'], qualification)
+        self.assertEqual(record['patched_options'], record['native_options'] | batch.feature_flags('patched-off'))
+        self.assertEqual(record['source_files_sha256'][str(private)], batch.ARCHIVE_SHA256)
         self.assertTrue(qualification['qualified'])
         self.assertEqual(qualification['archive_sha256'], batch.ARCHIVE_SHA256)
         self.assertEqual(len(qualification['runtime_option_subsets']), 8)
