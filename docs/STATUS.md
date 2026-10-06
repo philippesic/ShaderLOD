@@ -15,7 +15,7 @@ Latest implementation: `000f355` connects shared LOD policies, explicit adapter
 contracts, source binding and runtime extension registration. The current build
 passes 103 Java tests. A prior binding revision rendered the first shared volume
 consumer with actual capability and effect values; the latest registration
-lifecycle has one fresh verification queued. No measured new gain is accepted.
+lifecycle passed current-revision readback. No measured new gain is accepted.
 Earlier commits `2556b61`, `5679cf2`, `ebcf2f8` and `4c0f178` preserve experimental
 benchmarks and source work; pack-specific micro-optimizations are set aside.
 `0a4d7a9` preserves independent
@@ -54,11 +54,20 @@ Native window/input and sampler-state guards pass. This proves the shared bridge
 not physical iteration savings, motion quality or performance. Evidence:
 [Shared runtime](SHARED_LOD_RUNTIME.md), [extension API](LOD_EXTENSION_API.md).
 
-All workers reached their bounded handoffs. All clients/builds are stopped; root
-owns the idle GPU. Keep useful future work in scoped teams, normally up to four
-workers. Next: shared-system original/OFF/ON parity and work evidence, followed by
-quiet repeated GPU/frame measurements. First fullscreen baseline was rejected for
-focus, visibility and framebuffer transitions; no reference or gain was accepted.
+The first repeated-performance pilot stopped after three of nine planned runs on
+an artifact guard. Independent exact-registry qualification confirmed a known API
+Base metadata-only difference; failed raw status is retained. In that one block,
+adaptive GPU median increased 71.6% and frame median 64.8% versus original. This is
+an adverse diagnostic, not a repeated or causal conclusion. No useful gain.
+[Pilot](SHARED_LOD_PERFORMANCE.md), [work audit](SHARED_VOLUME_WORK_AUDIT.md).
+
+Shared spatial-tier transitions and a producer-certificate reconstruction kernel
+are implemented/source-tested in `137095d`; no adapter/driver/performance proof
+yet. Three bounded workers now implement a general executed-work counter API,
+its diagnostic reference adapter and raw GPU attachment capture. Smaller requested
+budgets can execute more work through resampling and changed early exits; measure
+actual operations before another performance batch. All clients/builds stopped;
+root owns idle GPU. First fullscreen baseline was rejected for window transitions.
 The 50% throughput target and little-discernible-difference requirement remain
 unmet. Prior experiments and failures below remain historical evidence.
 

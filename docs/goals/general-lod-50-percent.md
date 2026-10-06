@@ -890,3 +890,89 @@ quiet GPU plus frame measurements. Spatial-tier transition planning is still
 incomplete; exact-rate negotiation alone does not provide smooth transitions.
 The 1.5 × throughput and little-discernible-difference goal remains active and
 unachieved. No new performance gain is claimed.
+
+### Performance pilot and next decisive measurement
+
+Previous turn made concrete progress: shared system compiled, public extension
+registration passed 103 Java tests and current-revision shader capability readback
+passed. Continuation revalidated workers/processes and retained the full target.
+
+A nine-run native-windowed pilot was prepared with fresh canonical copies and
+position-balanced O/D/A, D/A/O, A/O/D blocks, 25 s warmup / 20 s capture, N5
+frame-only GPU queries, observer/detailed CPU instrumentation off. Spatial workers
+paused heavy checks during the batch. Runner 25403 / PID 46215 stopped on run 3's
+exact artifact guard; all clients ended and class/resources remained frozen.
+Only the first block ran; no retry or extra favorable-data search.
+
+Independent read-only extraction reproduced the existing exact API Base pair:
+17 classes/manifest/resources identical; only a compatible NeoForge minimum in
+mods.toml differs. Parent Iris/Sodium and runtime byte hashes match. Separate
+derived analysis cites every raw input and the exact equivalence registry; the
+raw manifest remains FAILED. One-block medians in ms:
+
+| Arm | GPU elapsed | Total-frame wall |
+| --- | ---: | ---: |
+| Original | 15.124459 | 16.222166 |
+| Global OFF | 15.736584 | 16.616917 |
+| ADAPTIVE | 25.949417 | 26.725875 |
+
+ADAPTIVE/original throughput ratio 0.593220; GPU time +71.6%, frame median +64.8%.
+These are qualified single-block diagnostics, not repeated/causal or quality
+acceptance. Coarse consumed-thread changes are smaller than wall changes; host
+load/app context varied and elapsed GPU can include starvation. Evidence:
+SHARED_LOD_PERFORMANCE.md and ignored shared-lod-benchmark-r1 reports/diagnosis/
+first-block-qualified-analysis.json. Future wrapper uses the established exact
+registry with seven positive/mutation rejection fixtures; no wildcard bypass.
+
+The work audit found no duplicate complete march, but resampling can change
+occupancy and early exits. Synthetic source-faithful examples increase actual
+density calls despite lower primary budgets; these are counterexamples, not
+observed GPU counts. The reference march/density body stayed unchanged during the
+shared refactor. Next decisive check is actual per-ray operation counts, not more
+ratio tuning or Photon caches. See SHARED_VOLUME_WORK_AUDIT.md.
+
+Shared spatial source in `137095d`: centered convex legal-tier plans and a
+reconstruction kernel with producer-certified all-member continuity. Resolve
+avoids repeated full-region classification under exact epoch/quantity/rate/tile
+and immutable-input contract. Ten plan fixtures and three kernel fixtures pass,
+including actual Java/GLSL/source execution. No live driver/quality/speed claim.
+
+Active bounded owners: work_trace_mechanism (new common counter/codec + fixtures,
+five test groups passed), work_trace_adapter (separate pinned diagnostic shader
+builder/patch/overlays; shipping source unchanged), work_trace_capture (opt-in
+dev registration/raw three-MRT readback + mock/bytecode tests, bounded scene-start
+hook). Capture is diagnostic-only with CPU/GPU timing disabled; counts and three
+exact pages belong to one draw. No universal instrumentation or shader rewrite.
+Root owns idle GPU and build window; no client or timed launch authorized yet.
+Preserve ordinary source erasure and all state restoration. Goal remains active;
+repeated gain, physical savings, little discernible quality loss and compatibility
+remain unproved.
+
+### Diagnostic source freeze and handoff
+
+`6794654` preserves the failed/derived pilot, its strict future wrapper and the
+general work-trace mechanism plus diagnostic consumer/readback. Five helper test
+groups, five diagnostic adapter fixtures (270 complete Iris graphs, 90 trace-OFF
+parity checks), six readback fixture groups and pinned bytecode acceptance pass.
+Production archive `5de756…27de` and JAR `aa65cf…e672` remain unchanged. Diagnostic
+counters compile out of ordinary shaders. Three simultaneous RGBA32F attachments
+capture actual work/budgets/schema from one draw after workload warmup, with state
+restoration. CPU/GPU timing disabled and every diagnostic row excluded from
+performance evidence. Source acceptance is not actual attachment/readback proof.
+
+Root dev compile/resource generation succeeded in
+`build/work-trace-dev-compile-retry.log`. An initial command named a nonexistent
+classpath task and failed before compilation; its log is retained. Only dev files
+and isolated workTrace/cpuTiming forwarding were integrated; unrelated fullscreen
+and other user changes remain unstaged.
+
+Fresh sole runtime owner `work_trace_runtime` prepares and may launch at most two
+matched diagnostic controls: original-body global OFF first, shared ADAPTIVE ON
+second only if first driver/raw capture succeeds. Both have mod present for
+pre-pipeline diagnostic registration. Exact source/options/member/registration
+ledger: `build/photon-work-trace-freeze.json`. No retry, tuning or performance claim.
+Its NEW preparer/fixtures/WORK_TRACE_RUNTIME report are owned separately. At this
+checkpoint no Minecraft process is live; owner will record exact handles before
+launch. No other worker builds or operates GPU. Remaining decisive evidence is
+actual synchronized counts/path validity, followed by a reviewed system change
+and repeated ordinary timing. Goal stays active with the full target unachieved.
