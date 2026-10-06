@@ -11,8 +11,8 @@ time) against matched original Photon, with repeated GPU/total-frame and quality
 evidence. This target is unachieved. The previous 15% gate is superseded; historical
 evidence and unresolved checks below remain retained.
 
-Latest integrated commit `800eca2` validates adapter layout declarations and
-same-draw executed-work diagnostics. The current coordinated build passed 131 Java
+Latest integrated commit `967d1f0` connects the shared spatial consumer, public
+layout gates and typed readback; `800eca2` retains executed-work diagnostics. The current coordinated build passed 131 Java
 tests, production assembly and dev compilation, including packed RGB formats
 and shared-spatial registration. No new performance gain is accepted. Photon-specific tuning
 is set aside; Photon supplies inputs and original operations to shared LOD code.
@@ -67,11 +67,13 @@ both arms. Per 16-ray snapshot, original primary/density/secondary counts were
 these are observations rather than causal work savings or speed evidence.
 [Runtime evidence](WORK_TRACE_RUNTIME.md).
 
-The binding and dev-readback workers finished their freezes; root integrated
-them. Active worker `spatial_runtime_preparation` owns exact matched untimed
-controls. Root owns checkpoint and idle GPU; no Minecraft client is live.
-Next: review the controls and validate the shared spatial adapter in the actual
-renderer before quality and repeated performance measurements. The 1.5 × throughput and quality target remains unmet.
+The three bounded workers finished registration, readback and exact control
+preparation. Four fresh forest controls are ready: original, private OFF, private
+ON/FULL and private ON/ADAPTIVE. Nine preparer fixtures and copy/input audits
+pass. [Runtime handoff](SHARED_SPATIAL_RUNTIME.md). Root owns checkpoint and idle
+GPU; no Minecraft client is live. Next: assign one runtime owner to validate
+these frozen controls in the actual renderer before quality and repeated
+performance measurements. The 1.5 × throughput and quality target remains unmet.
 
 Retained first-wave experiments:
 AO pilot runner exec89240 exited0, all three normal WorkloadSession contracts

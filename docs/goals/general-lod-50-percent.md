@@ -1037,3 +1037,18 @@ worker spatial_runtime_preparation owns only new controls/fixtures/report; no
 client launch authorized to it yet. GPU remains idle/root-owned. Next decisive
 check is actual shared spatial rendering and full-path parity, followed by cache/
 sampler/layout and motion-quality evidence. Source/build is not speed evidence.
+
+
+`967d1f0` commits the reviewed shared-spatial source/binding/readback integration.
+All three bounded workers finished. Four fresh forest controls are prepared in
+run-workloads/shared-spatial-driver-r1: original, private OFF, private ON/FULL,
+private ON/ADAPTIVE. Exactly held upstream maps contain 366/367 fields; diagnostic
+opaque policy 32/96 blocks, 8-block transition, 1/0.25 retained rates. These are
+private diagnostic values, not shipping quality changes. Nine preparer fixtures
+pass; final copy audit verifies world/config/source/registration hashes and no
+client processes. Source personal configs/world/DH are preserved. Evidence:
+SHARED_SPATIAL_RUNTIME.md and build/shared-spatial-runtime-copy-audit.json.
+No launch occurred; root owns idle GPU. Next runtime assignment must acquire the
+exclusive lock, freeze exact production/dev identities, record handles and pass
+original/OFF/FULL driver guards before ADAPTIVE. No timing claim from diagnostics;
+physical cache, sampler, parity and motion quality remain pending.
