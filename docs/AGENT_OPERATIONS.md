@@ -1,55 +1,97 @@
 # Agent operations
 
-## Goals and teams
+## Outcome-driven execution
 
-The native Codex Goal sustains work in a chat. `docs/STATUS.md` and its linked
-`docs/goals/` checkpoint preserve the project between sessions. The user requests
-new goals; the repository-local `$start-goal-team` skill supports that workflow.
-Do not silently replace an unfinished goal or create a new user-owned chat.
+Read the compact STATUS and latest goal tail, not historical assignments. Keep
+objective/acceptance, matched baseline/best result, selected hypothesis, stage,
+owner, next decisive observation and restrictions visible in the existing
+checkpoint. Do not create another task database. An app Goal label is not live
+process state. Native Goals/new user-owned chats require explicit human requests.
 
-Use native subagents for independent subtasks. Assign deliverables, files,
-acceptance evidence, and stopping boundaries before launch. The project has
-four optional profiles under `.codex/agents/`: `feature_owner`, `shader_owner`,
-`runtime_operator`, and `research_advisor`. They inherit the parent model and
-reasoning settings. Roles are responsibilities, not a required team size.
+Choose work that produces a runnable candidate, trustworthy measurement or a
+negative result that changes a decision. Plan the selected candidate through its
+actual producer/consumer and recovery path: pinned source → selected archive and
+options → exact launcher/profile → driver consumption → still/motion quality →
+early original/control/enabled/original-return cost → restoration. Verify a
+small complete slice using existing tools; a helper alone is not that outcome.
+Batch independent cheap defects in the actual saved plan before expensive work;
+see [offline preflight](EXPERIMENT_PREFLIGHT.md). Never claim it validated Java,
+rendering, loaded uniforms, resource availability or speed.
 
-For initial setup, explicit file partitions in a shared checkout are practical.
-For overlapping or larger edits, use isolated worktrees and integrate only
-reviewed work. A worker reports findings to the orchestrator; the orchestrator
-owns the final checkpoint and speaks to the user.
+Rank a few independent hypotheses by active cost, plausible total-frame gain,
+uncertainty reduction, preparation cost and quality risk. Charge setup, repair,
+worker replacement and handoffs to the same attempt. Record start/review time,
+next decision and positive/negative actions. Roughly 15 minutes without a
+useful auxiliary fix triggers a review: simplify, justify an extension, switch
+useful work or surface a real decision. It is not a kill switch for healthy
+jobs. After two same-cause failures inspect the whole affected contract before
+retrying. Do not build a proof/observer framework or revive closed fixed trials.
+A rejected candidate does not finish the project; choose the next authorized
+useful action unless the human stopped work or a genuine blocker prevents it.
 
-## Client and GPU ownership
+## Teams and integration
 
-One agent owns the interactive Minecraft client, shader reloads, world changes,
-and GPU capture at a time. Record the run command, process/session identifier,
-run directory, active shader pack, scene, and how to stop the owned process.
-Before handing off, verify whether the client is still running. Do not stop
-unrelated Java or game processes by broad process-name matching.
+Parent owns decomposition, scheduling, integration, durable state and user
+communication. Delegate independent substantial deliverables when permitted,
+usually up to four useful workers; no slot-filling quota. Keep the next useful
+independent outcome owned. Use native subagents; workers do not recursively
+spawn or message user-owned chats. Project roles under `.codex/agents/` inherit
+current settings unless the user/project contract explicitly selects otherwise.
 
-Build success establishes Java/build integration. A title screen establishes
-startup. In-world rendering establishes shader compilation and scene behavior.
-DH presence in a mod list does not establish DH terrain rendering. Use
-`docs/EVALUATION.md` to keep these evidence levels distinct.
+Every assignment names deliverable/decision, owned files or read-only scope,
+existing entry points and authentic input examples, dependencies/resource owner,
+acceptance/negative cases, total budget/stopping boundary and report destination.
+Partition shared files explicitly or isolate conflicting edits in worktrees.
+Workers preserve others' work and return actual evidence, unverified boundaries,
+integration needs and live processes. A worker's completion is not acceptance;
+parent integrates and checks the combined result. Use independent review where
+correctness, research or performance claims warrant it. Parent schedules the
+runtime_operator; source workers report opportunities rather than taking a lane.
 
-No remote GPU host is configured by this scaffold. If later authorized, record
-hardware and connection procedures explicitly rather than copying another
-project's host identities. A local Mac result does not validate Windows/Linux
-GPU behavior.
+When reusing a terminal worker, use the supported operation that starts a new
+turn and verify acknowledgment once. A queued message does not mean execution.
+Then wait on completion events, not repeated unchanged polling. Refresh bounded
+contexts at safe milestones; retain jobs/ownership before replacement.
 
-## Checkpoints and handoffs
+## Client, build and GPU ownership
 
-Update the active goal at milestones with completed work, exact checks and
-results, selected dependency revisions, relevant commits, active agents,
-worktrees, owned processes, unresolved decisions, and the next action. Keep
-full logs and captures in ignored runtime/output directories and link them from
-the checkpoint when needed.
+One acknowledged owner controls the interactive client, shader reloads, world
+changes, source/build inputs and GPU lane. Before launch record hardware,
+loader/Minecraft/Iris/Sodium/pack/DH pins, profile/scene, actual command, session,
+process PID/birth/argv and finite deadline/stop procedure. Use existing
+`scripts/dev_client.py` supervision and exact-client stop APIs. No broad Java
+kills. Verify availability before reserving or stopping anything. A receipt,
+queued message or written checkpoint does not transfer control.
 
-The `SessionStart` hook emits a checkpoint reminder on startup, resume, and
-compaction. It does not launch replacement chats, impose a context limit, or
-transfer process ownership. After compaction, re-read the checkpoint and verify
-live jobs; when a handoff is useful, finish or explicitly transfer live work
-within the user's authorized scope. Durable files remain useful if hooks are
-unavailable or their repository trust has not been enabled.
+Quiet timing excludes source edits, builds, tests, encoders and unrelated CPU
+work unless the chosen protocol allows them. Require owner acknowledgment of
+release; then resume useful work. Preserve healthy client/watch jobs through
+unrelated edits or context changes. On pause, stop only the requested owned work
+and verify absence/lock release before calling the resource free. This harness
+maintenance does not authorize launching or restarting clients.
+
+Build success, title screen, actual in-world shader rendering, DH terrain,
+consuming feature activity, quality and speed are distinct evidence levels.
+No remote GPU host is configured here. Current scope is Mac Iris/OpenGL;
+record actual hardware. Mac evidence does not validate Windows/Linux behavior.
+
+## Checkpoints, handoffs and communication
+
+Update STATUS/current goal at milestones with actual results, best baseline,
+next decision, source/artifact pins, owners/jobs, budgets, restrictions and
+remaining boundaries. Link ignored raw evidence; retain historical failures.
+Keep STATUS compact with lossless linked history. Before handoff/compaction
+record exact live ownership, stop procedure and next executable action. After
+resume verify live agents/jobs and artifacts before acting. The SessionStart
+hook is a reminder; it cannot launch work, transfer control, enforce a context
+limit or keep the app running. Files remain useful when hooks are unavailable.
+
+For returning users, lead with objective/baseline, what changed and what the
+result means; then give observed current state/time and the next decisive step.
+Explain ordinary names before IDs. Do not confuse lack of evidence with lack of
+permission. Answer steering directly and continue the authorized task. During
+interactive work give meaningful updates about once a minute; unattended
+monitoring reports only meaningful changes, failure, completion or decisions.
 
 ## Git and external actions
 

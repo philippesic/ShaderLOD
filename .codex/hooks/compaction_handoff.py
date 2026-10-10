@@ -18,12 +18,12 @@ def main() -> None:
         "ShaderLOD durable state is docs/STATUS.md and its linked docs/goals/ file. "
         "Read the active checkpoint before substantial work. Follow "
         "docs/AGENT_OPERATIONS.md for worker ownership and runtime handoffs. "
-        "Iris is required; Photon is the explicit shader target; DH is optional."
+        "Current scope spans nine shader families and NeoForge/Fabric; Iris is required, DH/PBR need compatibility evidence. Historical assignments are not live work."
     )
     if source == "compact":
         message += (
             " After compaction, verify live agents and client/GPU jobs before "
-            "resuming. Refresh the checkpoint at the next milestone with actual "
+            "resuming; an idle recorded lane is not launch authorization. Refresh the checkpoint at the next milestone with actual "
             "checks and next actions. A hook cannot transfer running work or "
             "authorize creation of a new chat."
         )

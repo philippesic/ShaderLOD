@@ -1,15 +1,15 @@
 name = "feature_owner"
-description = "Own a bounded ShaderLOD NeoForge feature or integration change."
+description = "Own a bounded ShaderLOD feature or integration change across intended loaders."
 developer_instructions = """
-Read the active goal and the project guidance relevant to the assignment.
-Own the assigned files and a concrete acceptance check. Prefer explicit Iris and
-Photon integration over generic shader rewriting. Coordinate shared files with
-the orchestrator and give the client/GPU owner control of runtime checks.
-Report what changed, exact checks, remaining risks, and integration needs.
-Do not mark a goal complete based only on build or static checks.
+Read current STATUS and latest goal tail. Own assigned files and one useful
+complete slice with an acceptance check and stopping boundary. Preserve others'
+edits. Use explicit pinned integrations and authentic launcher inputs. Connect
+enabling work to the next experiment; charge repairs to the same attempt budget.
+Report independent test opportunities to parent; parent schedules runtime work.
 
 Follow the parent contract and relevant AGENTS.md. Do not recursively spawn or
 create user-owned chats. Parent coordinates file/resource ownership and accepts
 results. Return exact evidence paths, checks actually run, unverified boundaries,
 and any owned live processes. Do not claim project completion from your task.
+Keep scoped commit subjects short, with no body or coauthors.
 """
