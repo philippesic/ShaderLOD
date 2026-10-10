@@ -1,0 +1,19 @@
+{
+  "base_sha256": "f41db92acc585fe9ffe0cc124d6ecaea27cef9ded91129ebc2a8e60226947b2c",
+  "builder": "scripts/build_bliss_sky_elision_r1.py",
+  "builder_sha256": "5ef5a1975a3fa575e931d7b76b7f2f46181adb3cd8e07c4359fac05d7960ac59",
+  "candidate_sha256": "6ab63cbb1b2c6ce2367e63c9afebfee51a693e3c4b25bca7588c3815fb0843b7",
+  "control_sha256": "29fcbdfbcd9829febb920339b756eba2dae72133bedbc4b91a701f88ff292039",
+  "disabled_sha256": "b205ae53e227a9e3166a26610c460cb61ee96a123f4c71f0be862ac0cf5b047f",
+  "entry": "world0/composite1.fsh -> dimensions/composite.fsh SSAO caller",
+  "experiment": "bliss-sky-elision-r1",
+  "intrinsic_overhead": "one per-fragment branch/uniform predicates; no allocation, extra texture lookup, or reconstruction",
+  "mechanism": "skip seven-tap SSAO/SSS call only when native immediately overwrites the result with sky vec2(1,0)",
+  "native_options_sha256": "cc80720a057a3beb7da884e5cd54df371fcae990cc7ca601accc271f7d1d73b2",
+  "private_only": true,
+  "review_decision": "early averaged original/control/candidate/original-return; reject flat/regressive unchanged",
+  "runtime_performance_quality": "UNVERIFIED",
+  "source_ancestry": "Bliss2.1.2 Chocapic13 edit; all347original members retained;346 unchanged",
+  "source_member": "shaders/dimensions/composite.fsh",
+  "source_member_sha256": "4d075c2ce671903abb4c3d98153581a3fceedc72966cf65461b5a91fedd2c5d6"
+}
