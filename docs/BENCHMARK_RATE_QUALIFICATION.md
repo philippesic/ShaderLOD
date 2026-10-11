@@ -76,9 +76,14 @@ python3 scripts/install_renderer_rate_patch.py --root /Users/pippo/github/shader
 ```
 
 The installer checks all five baseline hashes and `git apply --check` before any
-mutation, refuses a differing existing qualifier, requires zero-clients/free-lock/
-empty-error owner release evidence for apply, and verifies exact after hashes.
-A release file alone cannot prove a live lane census. It does not rebuild or
+mutation, refuses a differing existing qualifier, requires zero-clients/free-lock
+release evidence for apply, and verifies exact after hashes. The runner's `errors`
+are trial errors: a failed startup with successful resource release can receive
+the repair. Those errors and status are retained in the installation output;
+the release receipt stays unchanged. Explicit `releaseErrors`, if present, must
+be empty. Release booleans do not establish exact owner/process binding or a live
+lane census. Parent must verify current ownership release and a fresh census;
+the installer explicitly records both boundaries as unverified. It does not rebuild or
 rewrite old freezes: `requiresFreshDevBuildAndAdmissionFreeze=true` remains in
 its output. Installation was exercised on61,856bytes of isolated authentic
 five-file preimages, including failed release and wrong-preimage rejection;
@@ -86,4 +91,7 @@ main source was left untouched. Nine self-contained stdlib tests pass with zero
 skips. To repeat the authentic install check with admitted preimages, set
 `SHADER_RATE_SOURCE_FIXTURE=/tmp/autonomy-shader-source-fixture` when running
 `tests/test_renderer_rate_patch_install.py`; normal tests use a tiny synthetic
-patch fixture and make no Java/runtime claim.
+patch fixture and make no Java/runtime claim. The follow-up failed-but-released
+trial fixture and installer changes are source-only and await focused parent
+testing after the active BSL quiet window; the earlier nine-test result does not
+validate this later revision.

@@ -28,14 +28,22 @@ def install(root, artifact=ARTIFACT, qualifier=QUALIFIER, apply=False, release=N
     command = ['git', 'apply', str((artifact / 'consumer.patch').resolve())]
     subprocess.run(command[:2] + ['--check'] + command[2:], cwd=root, check=True, capture_output=True)
     result = {'patchCheckPassed': True, 'applied': False, 'requiresFreshDevBuildAndAdmissionFreeze': True,
+              'requiresFreshOwnerCensusAndRelease': True,
               'files': manifest, 'qualifierSha256': sha(qualifier),
-              'limits': 'Owner release receipt is historical evidence, not a live lane census. No build/client/driver or speed acceptance.'}
+              'limits': 'Release booleans are historical evidence, not exact owner/process binding or a live lane census. Parent must verify current ownership release and fresh census. No build/client/driver or speed acceptance.'}
     if apply:
         if release is None:
-            raise ValueError('Apply requires current exact owner release receipt')
+            raise ValueError('Apply requires release evidence plus parent-verified current ownership release and fresh census')
         receipt = json.loads(Path(release).read_text())
-        if receipt.get('zeroClients') is not True or receipt.get('runtimeLockFree') is not True or receipt.get('errors') != []:
-            raise ValueError('Owner release must establish zero exact clients, free lock and no release errors')
+        if receipt.get('zeroClients') is not True or receipt.get('runtimeLockFree') is not True:
+            raise ValueError('Release evidence must report zero clients and free runtime lock')
+        # The finite runner's errors describe the trial (including startup failure),
+        # not whether its exact-client stop and lock release succeeded.
+        trial_errors = receipt.get('errors')
+        if not isinstance(trial_errors, list) or not all(isinstance(error, str) for error in trial_errors):
+            raise ValueError('Missing or malformed retained trial errors')
+        if 'releaseErrors' in receipt and receipt['releaseErrors'] != []:
+            raise ValueError('Explicit resource release errors must be resolved')
         # Recheck immediately before mutation; no source/hash bypass and no freeze rewrite.
         for name, hashes in manifest.items():
             if sha(root / name) != hashes['beforeSha256']:
@@ -47,7 +55,10 @@ def install(root, artifact=ARTIFACT, qualifier=QUALIFIER, apply=False, release=N
         for name, hashes in manifest.items():
             if sha(root / name) != hashes['afterSha256']:
                 raise ValueError('Applied source differs: ' + name)
-        result.update(applied=True, releaseReceipt=str(Path(release).resolve()), releaseReceiptSha256=sha(Path(release)))
+        result.update(applied=True, releaseReceipt=str(Path(release).resolve()), releaseReceiptSha256=sha(Path(release)),
+                      priorTrialErrors=trial_errors, priorTrialOwnerStatus=receipt.get('ownerStatus'),
+                      priorTrialReportStatus=receipt.get('reportStatus'),
+                      exactOwnerProcessBindingVerified=False, liveCensusVerified=False)
     return result
 
 

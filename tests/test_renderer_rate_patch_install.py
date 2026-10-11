@@ -48,9 +48,25 @@ class PatchInstallTests(unittest.TestCase):
             release.write_text(json.dumps({'zeroClients': False, 'runtimeLockFree': True, 'errors': []}))
             with self.assertRaises(ValueError):
                 i.install(root, artifact=artifact, apply=True, release=release)
-            release.write_text(json.dumps({'zeroClients': True, 'runtimeLockFree': True, 'errors': []}))
+            release.write_text(json.dumps({'zeroClients': True, 'runtimeLockFree': True, 'errors': [],
+                                           'releaseErrors': ['Client stop failed']}))
+            with self.assertRaises(ValueError):
+                i.install(root, artifact=artifact, apply=True, release=release)
+            # Actual262 release contract: startup trial failed, exact stop/lock release succeeded.
+            failed_trial = {'observedUtc': '2026-10-11T03:35:01Z', 'zeroClients': True,
+                            'runtimeLockFree': True, 'ownerStatus': 'startup-failed',
+                            'errors': ['java.lang.IllegalStateException: Backup prompt native viewport/focus gate failed'],
+                            'reportStatus': 'failed'}
+            release.write_text(json.dumps(failed_trial))
+            retained_release = release.read_bytes()
             result = i.install(root, artifact=artifact, apply=True, release=release)
             self.assertTrue(result['applied'])
+            self.assertEqual(release.read_bytes(), retained_release)
+            self.assertEqual(result['priorTrialErrors'], failed_trial['errors'])
+            self.assertEqual(result['priorTrialReportStatus'], 'failed')
+            self.assertTrue(result['requiresFreshOwnerCensusAndRelease'])
+            self.assertFalse(result['exactOwnerProcessBindingVerified'])
+            self.assertFalse(result['liveCensusVerified'])
             for name, hashes in manifest.items():
                 self.assertEqual(i.sha(root / name), hashes['afterSha256'])
             self.assertEqual(i.sha(root / 'scripts/qualify_renderer_bracket.py'), i.sha(i.QUALIFIER))
