@@ -8,14 +8,21 @@ description: Start one explicitly requested ShaderLOD project goal with a durabl
 Read STATUS, the latest active goal and guidance relevant to the requested
 outcome. Preserve unfinished objectives and current authorization. Only an
 explicit new-goal request creates a native Goal; specify a token budget only
-if requested. Record objective, acceptance, baseline/best result, constraints,
+if requested. When a Goal is requested, call `get_goal`; if none exists, use
+`create_goal` with the agreed outcome, then verify active native state. A goal
+document, this skill, or a promise to continue is not a native Goal. If the tools
+are unavailable, report that boundary instead of claiming activation or adding
+another scheduler. One native Goal is the continuation owner for this chat.
+Record objective, acceptance, baseline/best result, constraints,
 current stage/owners, next decisive step and review trigger in docs/goals and
 link the compact current block from STATUS. Retain linked history.
 
 Plan the selected candidate's complete preparation/consumer/quality/cost/restore
-path and implement the smallest useful slice. Current scope includes nine
-shader families and NeoForge/Fabric; actual shader LOD cannot be replaced by
-renderer coalescing. Use actual saved launcher inputs and existing APIs.
+path and implement the smallest useful slice. Follow the current STATUS scope:
+practical renderer gains count toward the active version/loader port goal, while
+actual shader-work reduction remains a distinct claim. Use actual saved launcher
+inputs and existing APIs. Read the latest adoption/handoff record before selecting
+a consumer; a staged patch or successful build is not deployed runtime evidence.
 
 Delegate independent bounded deliverables, normally up to four useful native
 workers. Assign files, dependencies, exclusive resource owner, acceptance,

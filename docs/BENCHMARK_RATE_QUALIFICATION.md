@@ -1,5 +1,11 @@
 # Recorded renderer measurement qualification
 
+**Adopted October 11:** the four live 26.2 Fabric Java sources are now patched
+and compiled. Use the [finite caller](RENDERER_BRACKET_CONSUMER.md) and
+[adoption handoff](handoffs/autonomy-restart-20261011.md). The staging/install
+instructions below are historical; do not apply the old patch to a completed run.
+Actual driver behavior remains unverified.
+
 This source-only change unlocks the next distinct26.2 Fabric MakeUp private
 submission-copy comparison. It preserves the existing finite runner, immutable
 input/freezes, source ancestry, quality and Off restoration checks. It does not

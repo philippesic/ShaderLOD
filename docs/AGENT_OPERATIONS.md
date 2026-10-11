@@ -25,12 +25,12 @@ defaults off; explicit cleanup covers only newly recorded clones after exact
 release, while preserving canonical inputs and evidence. It does not clean old
 campaigns or authorize a repeat of a closed trial.
 
-For upcoming 26.2 measurements, use the [rate-window qualification and guarded
-source patch](BENCHMARK_RATE_QUALIFICATION.md). It checks the effective expected
-cap throughout measured frames and preserves whole-window failures and both
-baseline comparisons. Install only after the current frozen attempt's release;
-the actual owner rebuilds and creates a fresh admission freeze. This does not
-reopen a closed candidate or extrapolate support to other version APIs.
+For supported 26.2 speed measurements, the rate guard is now in the live dev
+source and compiled consumer. Use the [versioned finite caller](RENDERER_BRACKET_CONSUMER.md),
+which selects qualification automatically and validates fresh caller/qualifier
+source bindings before launch. Historical frozen run scripts are evidence, not
+new launch recipes. The [restart handoff](handoffs/autonomy-restart-20261011.md)
+records actual adoption and the distinct fresh-client diagnostic that comes first.
 
 Rank a few independent hypotheses by active cost, plausible total-frame gain,
 uncertainty reduction, preparation cost and quality risk. Charge setup, repair,
@@ -106,6 +106,11 @@ and the observed prior SHA; exact old bytes are archived beside STATUS. Do not
 append a second current block. A missed preparation milestone needs a fresh
 simplify/extend/switch decision, including workers and repairs in the same attempt.
 Hook advice is not a timer or a client/GPU observer.
+For a user-requested Goal, verify native active state with `get_goal` and create
+one only if absent and explicitly authorized. The document is not continuation.
+Use the adopted schema 2 for current state; do not downgrade or append another
+current block. A fresh chat must reconcile the actual source/build/caller receipt
+and resource owner before runtime work.
 
 For returning users, lead with objective/baseline, what changed and what the
 result means; then give observed current state/time and the next decisive step.

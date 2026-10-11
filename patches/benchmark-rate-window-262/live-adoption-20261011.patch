@@ -1,0 +1,189 @@
+diff --git a/ports/26.2/fabric/src/devClient/java/com/pp/shaderlod/fabric/dev/FabricRoundtrip.java b/ports/26.2/fabric/src/devClient/java/com/pp/shaderlod/fabric/dev/FabricRoundtrip.java
+--- a/ports/26.2/fabric/src/devClient/java/com/pp/shaderlod/fabric/dev/FabricRoundtrip.java
++++ b/ports/26.2/fabric/src/devClient/java/com/pp/shaderlod/fabric/dev/FabricRoundtrip.java
+@@ -120,7 +120,7 @@
+             if(rendererSpeed && !rendererProfileValidated) { validateRendererProfile(client);rendererProfileValidated=true; }
+             if(rendererSpeed && PortRendererFrames.firstRejectedRate()!=null) {
+                 report.add("rendererRejectedRate",GSON.toJsonTree(PortRendererFrames.firstRejectedRate()));
+-                throw new IllegalStateException("At least one completed measured frame was rate-throttled or lost native focus");
++                throw new IllegalStateException("At least one completed measured frame was rate-throttled, changed cap, unavailable or lost native focus");
+             }
+             if (!privateInputsValidated) { validatePrivateInputs(client); privateInputsValidated = true; }
+             if (System.nanoTime() - started > 300_000_000_000L) throw new IllegalStateException("300 s probe deadline exceeded");
+@@ -232,7 +232,7 @@
+                     throw new IllegalStateException("Renderer admission does not match " + stages[stage]);
+                 }
+                 if(measuredSince==0) {
+-                    PortRendererFrames.beginMeasuredWindow();
++                    PortRendererFrames.beginMeasuredWindow(client.options.framerateLimit().get());
+                     measuredSince=System.nanoTime();measuredProof=PortRendererFrames.snapshot();return;
+                 }
+                 if(System.nanoTime()-measuredSince<30_000_000_000L)return;
+@@ -380,6 +380,15 @@
+             if(frames<=0)throw new IllegalStateException("Completed-world render counter absent");
+             PortRendererFrames.stopMeasuredWindow();
+             state.addProperty("rejectedMeasuredFrames",proof[7]-measuredProof[7]);
++            state.addProperty("expectedConfiguredFramerateLimit",PortRendererFrames.expectedLimit());
++            state.addProperty("rateObservedFrames",PortRendererFrames.rateObservedFrames());
++            state.addProperty("rateUnavailableFrames",PortRendererFrames.rateUnavailableFrames());
++            state.addProperty("minimumConfiguredFramerateLimit",PortRendererFrames.minConfigured());
++            state.addProperty("maximumConfiguredFramerateLimit",PortRendererFrames.maxConfigured());
++            state.addProperty("minimumEffectiveFramerateLimit",PortRendererFrames.minEffective());
++            state.addProperty("maximumEffectiveFramerateLimit",PortRendererFrames.maxEffective());
++            if(PortRendererFrames.rateObservedFrames()!=frames || PortRendererFrames.rateUnavailableFrames()!=0)
++                throw new IllegalStateException("Missing required rate observations in whole completed-render window");
+             if(!PortRendererFrames.windowAccepted(frames,measuredProof[7],proof[7])) {
+                 report.add("rendererRejectedRate",GSON.toJsonTree(PortRendererFrames.firstRejectedRate()));
+                 throw new IllegalStateException("Completed measured window contains rejected effective rate-control frames");
+@@ -648,6 +657,27 @@
+ 
+     private void fail(Minecraft client, Exception failure) {
+         PortRendererFrames.stopMeasuredWindow();
++
++        if(rendererSpeed && measuredSince!=0 && measuredProof!=null) {
++            var rejectedWindow=new JsonObject();var proof=PortRendererFrames.snapshot();
++            rejectedWindow.addProperty("stage",stages[stage]);
++            rejectedWindow.addProperty("renderFrames",proof[0]-measuredProof[0]);
++            rejectedWindow.addProperty("expectedConfiguredFramerateLimit",PortRendererFrames.expectedLimit());
++            rejectedWindow.addProperty("rateObservedFrames",PortRendererFrames.rateObservedFrames());
++            rejectedWindow.addProperty("rateUnavailableFrames",PortRendererFrames.rateUnavailableFrames());
++            rejectedWindow.addProperty("rejectedMeasuredFrames",proof[7]-measuredProof[7]);
++            if(PortRendererFrames.rateObservedFrames()>0) {
++                rejectedWindow.addProperty("minimumConfiguredFramerateLimit",PortRendererFrames.minConfigured());
++                rejectedWindow.addProperty("maximumConfiguredFramerateLimit",PortRendererFrames.maxConfigured());
++                rejectedWindow.addProperty("minimumEffectiveFramerateLimit",PortRendererFrames.minEffective());
++                rejectedWindow.addProperty("maximumEffectiveFramerateLimit",PortRendererFrames.maxEffective());
++            }
++            rejectedWindow.addProperty("elapsedSeconds",(System.nanoTime()-measuredSince)/1_000_000_000.0);
++            rejectedWindow.addProperty("wholeMeasurementInvalid",true);
++            report.add("rendererRejectedWindow",rejectedWindow);
++            if(PortRendererFrames.firstRejectedRate()!=null)
++                report.add("rendererRejectedRate",GSON.toJsonTree(PortRendererFrames.firstRejectedRate()));
++        }
+         // Preserve the original failed outcome before any recovery attempt or diagnostic.
+         done=true;report.addProperty("status","failed");report.addProperty("failure",failure.toString());report.addProperty("failedStage",stages[stage]);
+         if(rendererSpeed && initial!=null) {
+diff --git a/ports/26.2/fabric/src/devClient/java/com/pp/shaderlod/fabric/dev/PortRendererFrames.java b/ports/26.2/fabric/src/devClient/java/com/pp/shaderlod/fabric/dev/PortRendererFrames.java
+--- a/ports/26.2/fabric/src/devClient/java/com/pp/shaderlod/fabric/dev/PortRendererFrames.java
++++ b/ports/26.2/fabric/src/devClient/java/com/pp/shaderlod/fabric/dev/PortRendererFrames.java
+@@ -6,6 +6,8 @@
+     private static boolean pendingCopy,activeCopy,measuring;
+     private static long rejectedMeasuredFrames;
+     private static RateFacts firstRejectedRate;
++    private static int expectedLimit,minConfigured,maxConfigured,minEffective,maxEffective;
++    private static long rateObservedFrames,rateUnavailableFrames;
+     private PortRendererFrames() {}
+     public static boolean requested() { return Boolean.getBoolean(PROPERTY); }
+     public record RateFacts(String inactivityPolicy,int configuredLimit,int effectiveLimit,String throttleReason,boolean focused,boolean iconified) {}
+@@ -17,14 +19,40 @@
+     public static boolean windowAccepted(long frames,long rejectedBefore,long rejectedAfter) {
+         return frames>0 && rejectedBefore>=0 && rejectedAfter==rejectedBefore;
+     }
+-    public static void beginMeasuredWindow() { measuring=true;firstRejectedRate=null; }
++    public static void beginMeasuredWindow(int configured) {
++        if(configured<=0)throw new IllegalArgumentException("Missing expected configured cap");
++        expectedLimit=configured;measuring=true;firstRejectedRate=null;rateObservedFrames=rateUnavailableFrames=0;
++        minConfigured=minEffective=Integer.MAX_VALUE;maxConfigured=maxEffective=0;
++    }
++    public static int expectedLimit() { return expectedLimit; }
++    public static long rateUnavailableFrames() { return rateUnavailableFrames; }
++    public static int minConfigured() { return minConfigured; }
++    public static int maxConfigured() { return maxConfigured; }
++    public static int minEffective() { return minEffective; }
++    public static int maxEffective() { return maxEffective; }
++    public static long rateObservedFrames() { return rateObservedFrames; }
++    /** Keep an unavailable observation in the completed-render denominator and poison the window. */
++    public static void unavailableCompleted(String reason) {
++        if(!requested())return;
++        completed++;
++        if(measuring) {
++            rateUnavailableFrames++;
++            rejectedMeasuredFrames++;
++            if(firstRejectedRate==null)firstRejectedRate=new RateFacts("UNAVAILABLE",-1,-1,"UNAVAILABLE: "+reason,false,false);
++        }
++    }
+     public static void stopMeasuredWindow() { measuring=false; }
+     public static RateFacts firstRejectedRate() { return firstRejectedRate; }
+     /** Invoked only by the actual completed-world hook with actual tracker/window facts. */
+     public static void completed(String policy,int configured,int effective,String reason,boolean focused,boolean iconified) {
+         if(!requested())return;
+         completed++;
+-        if(measuring && !rateAdmitted(policy,configured,effective,reason,focused,iconified)) {
++        if(measuring) {
++            rateObservedFrames++;
++            minConfigured=Math.min(minConfigured,configured);maxConfigured=Math.max(maxConfigured,configured);
++            minEffective=Math.min(minEffective,effective);maxEffective=Math.max(maxEffective,effective);
++        }
++        if(measuring && (configured!=expectedLimit || !rateAdmitted(policy,configured,effective,reason,focused,iconified))) {
+             rejectedMeasuredFrames++;
+             if(firstRejectedRate==null)firstRejectedRate=new RateFacts(policy,configured,effective,reason,focused,iconified);
+         }
+diff --git a/ports/26.2/fabric/src/devClient/java/com/pp/shaderlod/fabric/dev/PortRendererRateChecks.java b/ports/26.2/fabric/src/devClient/java/com/pp/shaderlod/fabric/dev/PortRendererRateChecks.java
+--- a/ports/26.2/fabric/src/devClient/java/com/pp/shaderlod/fabric/dev/PortRendererRateChecks.java
++++ b/ports/26.2/fabric/src/devClient/java/com/pp/shaderlod/fabric/dev/PortRendererRateChecks.java
+@@ -18,7 +18,7 @@
+         String previous=System.getProperty(PortRendererFrames.PROPERTY);
+         try {
+             System.setProperty(PortRendererFrames.PROPERTY,"true");
+-            long[] before=PortRendererFrames.snapshot();PortRendererFrames.beginMeasuredWindow();
++            long[] before=PortRendererFrames.snapshot();PortRendererFrames.beginMeasuredWindow(260);
+             PortRendererFrames.completed("MINIMIZED",260,260,"NONE",true,false);
+             PortRendererFrames.completed("MINIMIZED",260,30,"SHORT_AFK",true,false);
+             PortRendererFrames.completed("MINIMIZED",260,260,"NONE",true,false);
+@@ -27,6 +27,35 @@
+             check(!PortRendererFrames.windowAccepted(after[0]-before[0],before[7],after[7]),"counter rejection latched across good final completion");
+             check(PortRendererFrames.firstRejectedRate()!=null && PortRendererFrames.firstRejectedRate().effectiveLimit()==30,"first rejected facts retained");
+             PortRendererFrames.stopMeasuredWindow();
++            PortRendererFrames.beginMeasuredWindow(260);before=PortRendererFrames.snapshot();
++            PortRendererFrames.completed("MINIMIZED",260,260,"NONE",true,false);
++            PortRendererFrames.completed("MINIMIZED",120,120,"NONE",true,false);
++            PortRendererFrames.completed("MINIMIZED",260,260,"NONE",true,false);
++            after=PortRendererFrames.snapshot();
++            check(after[0]-before[0]==3 && after[7]-before[7]==1,"equal configured/effective transient drift rejected without cherry picking");
++            check(PortRendererFrames.minConfigured()==120 && PortRendererFrames.maxConfigured()==260
++                && PortRendererFrames.minEffective()==120 && PortRendererFrames.maxEffective()==260,"real callback bounds retain cap excursion");
++            check(PortRendererFrames.rateObservedFrames()==3,"all observed completions retained");
++            PortRendererFrames.unavailableCompleted("fixture");after=PortRendererFrames.snapshot();
++            check(after[0]-before[0]==4 && after[7]-before[7]==2
++                && PortRendererFrames.rateObservedFrames()==3 && PortRendererFrames.rateUnavailableFrames()==1,"unavailable observation retains frame and rejects whole window");
++
++            PortRendererFrames.stopMeasuredWindow();
++            PortRendererFrames.beginMeasuredWindow(260);before=PortRendererFrames.snapshot();
++            PortRendererFrames.unavailableCompleted("first observation missing");
++            PortRendererFrames.completed("MINIMIZED",260,260,"NONE",true,false);after=PortRendererFrames.snapshot();
++            check(after[0]-before[0]==2 && after[7]-before[7]==1
++                && PortRendererFrames.rateObservedFrames()==1 && PortRendererFrames.rateUnavailableFrames()==1,
++                "unavailable first frame remains in whole denominator");
++            check(PortRendererFrames.expectedLimit()==260 && PortRendererFrames.firstRejectedRate().configuredLimit()==-1,
++                "expected cap and unavailable failure retained across good completion");
++            PortRendererFrames.stopMeasuredWindow();
++            PortRendererFrames.beginMeasuredWindow(260);before=PortRendererFrames.snapshot();
++            PortRendererFrames.completed("MINIMIZED",260,260,"NONE",true,false);after=PortRendererFrames.snapshot();
++            check(PortRendererFrames.rateUnavailableFrames()==0 && PortRendererFrames.rateObservedFrames()==1
++                && PortRendererFrames.firstRejectedRate()==null && PortRendererFrames.windowAccepted(1,before[7],after[7]),
++                "fresh window resets statistics without erasing historical rejected count");
++            PortRendererFrames.stopMeasuredWindow();
+             long rejected=PortRendererFrames.snapshot()[7];
+             PortRendererFrames.completed("AFK",260,30,"SHORT_AFK",true,false);
+             check(PortRendererFrames.snapshot()[7]==rejected,"ordinary/unmeasured completion does not poison measured-window counter");
+diff --git a/ports/26.2/fabric/src/devClient/java/com/pp/shaderlod/fabric/dev/mixin/PortRendererFramesMixin.java b/ports/26.2/fabric/src/devClient/java/com/pp/shaderlod/fabric/dev/mixin/PortRendererFramesMixin.java
+--- a/ports/26.2/fabric/src/devClient/java/com/pp/shaderlod/fabric/dev/mixin/PortRendererFramesMixin.java
++++ b/ports/26.2/fabric/src/devClient/java/com/pp/shaderlod/fabric/dev/mixin/PortRendererFramesMixin.java
+@@ -13,9 +13,14 @@
+         if(!PortRendererFrames.requested())return;
+         var client=Minecraft.getInstance();
+         if(client.level!=null && client.player!=null) {
+-            var frameLimiter=client.getFramerateLimitTracker();var window=client.getWindow();
+-            PortRendererFrames.completed(client.options.inactivityFpsLimit().get().name(),client.options.framerateLimit().get(),
+-                frameLimiter.getFramerateLimit(),frameLimiter.getThrottleReason().name(),client.isWindowActive() && window.isFocused(),window.isIconified());
++            // Read facts before incrementing so unavailable APIs never silently remove a completed render.
++            try {
++                var frameLimiter=client.getFramerateLimitTracker();var window=client.getWindow();
++                PortRendererFrames.completed(client.options.inactivityFpsLimit().get().name(),client.options.framerateLimit().get(),
++                    frameLimiter.getFramerateLimit(),frameLimiter.getThrottleReason().name(),client.isWindowActive() && window.isFocused(),window.isIconified());
++            } catch(RuntimeException | LinkageError unavailable) {
++                PortRendererFrames.unavailableCompleted(unavailable.toString());
++            }
+         }
+     }
+ }
