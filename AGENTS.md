@@ -8,9 +8,10 @@ substantial work. Historical assignments are evidence, not current work. Use
 - Continue the authorized unfinished outcome: useful original-relative rendering
   gains and actual mod-controlled shader LOD across Photon, Complementary
   Reimagined/Unbound, BSL, MakeUp UltraFast, Sildur’s Vibrant, Solas, Bliss and
-  AstraLex. Follow current human scope in STATUS: practical renderer gains count
-  in the narrowed speed-replication iteration; broader shader-LOD and ports remain
-  deferred and unfinished.
+  AstraLex. Follow the current human scope in STATUS for active shader families,
+  versions and loaders; practical renderer gains and shader-work reduction remain
+  distinct evidence. A previously deferred port is active again when the human
+  restores it to scope.
 - Both NeoForge and Fabric across MC 1.21.1, 1.21.11, 26.1.2, 26.2 and 26.3
   are intended scope. Iris is required; DH is optional for users but required
   compatibility evidence, as is PBR. One working version does not prove others.
