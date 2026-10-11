@@ -18,6 +18,13 @@ Batch independent cheap defects in the actual saved plan before expensive work;
 see [offline preflight](EXPERIMENT_PREFLIGHT.md). Never claim it validated Java,
 rendering, loaded uniforms, resource availability or speed.
 
+For the existing Bliss renderer comparison, [benchmark storage](BENCHMARK_STORAGE.md)
+provides the actual pinned recipe's destination inventory, fresh preparation and
+finite runner. Check capacity on the destination before copying worlds. Cleanup
+defaults off; explicit cleanup covers only newly recorded clones after exact
+release, while preserving canonical inputs and evidence. It does not clean old
+campaigns or authorize a repeat of a closed trial.
+
 Rank a few independent hypotheses by active cost, plausible total-frame gain,
 uncertainty reduction, preparation cost and quality risk. Charge setup, repair,
 worker replacement and handoffs to the same attempt. Record start/review time,
@@ -85,6 +92,13 @@ record exact live ownership, stop procedure and next executable action. After
 resume verify live agents/jobs and artifacts before acting. The SessionStart
 hook is a reminder; it cannot launch work, transfer control, enforce a context
 limit or keep the app running. Files remain useful when hooks are unavailable.
+
+For the managed STATUS use the global setup skill's `scripts/checkpoint.py`
+show/lint/update commands and its `references/checkpoint.md`. Supply actual facts
+and the observed prior SHA; exact old bytes are archived beside STATUS. Do not
+append a second current block. A missed preparation milestone needs a fresh
+simplify/extend/switch decision, including workers and repairs in the same attempt.
+Hook advice is not a timer or a client/GPU observer.
 
 For returning users, lead with objective/baseline, what changed and what the
 result means; then give observed current state/time and the next decisive step.
