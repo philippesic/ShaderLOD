@@ -63,6 +63,8 @@ def inputs(template, world, profiles, output):
 
 
 def prepare(template, world, profiles, output, root=ROOT):
+    # Normalize once before any consumer receives paths or creates copies.
+    template, world, profiles, output, root = map(storage.safe_path, (template, world, profiles, output, root))
     client = load_client(root)
     with client.runtime_lock():
         storage.require(not client.clients(client.process_table()), 'Active client; preparation refused')
@@ -95,11 +97,15 @@ def prepare(template, world, profiles, output, root=ROOT):
                             'Copied world differs')
             for name in ('options.txt', 'expected-options.json', 'control.json', 'core.toml'):
                 shutil.copy2(source/name, stage/name)
-            plan = row['plan'] | dict(profile=str(profile), installed_pack=str(profile/'shaderpacks'/row['plan']['pack_name']),
+            original_plan = dict(row['plan'])
+            for name in ('pack', 'sourceReview'):
+                original_plan[name] = str(storage.safe_path(original_plan[name]))
+            plan = original_plan | dict(profile=str(profile), installed_pack=str(profile/'shaderpacks'/row['plan']['pack_name']),
                 pack_options=str(stage/'options.txt'), expected_options_source=str(stage/'expected-options.json'), stop_at_utc=None)
             plan['command'] = [('-PrunDirectory='+str(profile)) if x.startswith('-PrunDirectory=') else
                                ('-PcontrolCaptureReceipt='+str(stage/'captures')) if x.startswith('-PcontrolCaptureReceipt=') else x
                                for x in plan['command']]
+            plan['command'][0] = str(storage.safe_path(plan['command'][0]))
             client.prepare(plan, stage/'preparation-backups')
             shutil.copy2(stage/'core.toml', profile/'config/shaderlod-client.toml')
             shutil.copy2(stage/'control.json', profile.parent/'control.json')
@@ -159,6 +165,7 @@ def current_lock(path):
 
 
 def adapted_runner(source, root, output, cleanup_enabled):
+    root, output = map(storage.safe_path, (root, output))
     storage.require(hashlib.sha256(source.encode()).hexdigest() == RUNNER_SHA256, 'Frozen renderer runner changed; review adapter')
     old = "R=Path('/Users/pippo/github/shaderlod');Q=Path(__file__).resolve().parent/sys.argv[1]"
     storage.require(source.count(old) == 1 and source.count('shutil.rmtree(world)') == 1, 'Runner adapter boundary drift')
@@ -175,6 +182,10 @@ def main():
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--cleanup-world-clones', action='store_true')
     args = parser.parse_args()
+    for name in ('template', 'world', 'profiles', 'output'):
+        value = getattr(args, name)
+        if value is not None:
+            setattr(args, name, storage.safe_path(value))
     if args.action == 'run':
         recipe = json.loads(storage.safe_path(args.output/'storage-recipe.json').read_text())
         profiles = storage.safe_path(recipe['profiles'])

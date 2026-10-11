@@ -107,7 +107,8 @@ def create_manifest(root, canonical, admission):
 
 
 def register_clone(root, world):
-    marker = safe_path(root) / MARKER
+    root = safe_path(root)
+    marker = root / MARKER
     record = json.loads(marker.read_text())
     world = safe_path(world)
     require(world.is_relative_to(root) and world.parent.name == 'saves', 'Clone must be an owned saves/world path')
@@ -121,7 +122,14 @@ def processes():
     for line in result.stdout.splitlines():
         fields = line.strip().split(None, 2)
         require(len(fields) == 3 and fields[0].isdigit(), 'Malformed process inventory')
-        rows.append(dict(pid=int(fields[0]), session=fields[1], command=fields[2]))
+        pid = int(fields[0])
+        try:
+            session = os.getsid(pid)
+        except ProcessLookupError:
+            continue  # Confirmed exit between ps and the SID probe.
+        except OSError as error:
+            raise ValueError('Cannot verify actual process session: ' + str(pid)) from error
+        rows.append(dict(pid=pid, process_group=fields[1], session=session, command=fields[2]))
     return rows
 
 
@@ -168,7 +176,7 @@ def cleanup(root, owner, evidence, lock, launcher_sessions, dry_run=True):
     canonical = [safe_path(p) for p in record['canonical_inputs']]
     paths = [safe_path(c['path']) for c in clones]
     require(len(set(paths)) == len(paths) and all(a not in b.parents for a in paths for b in paths if a != b), 'Duplicate/nested clone path')
-    require(isinstance(launcher_sessions, list) and launcher_sessions and all(type(p) is int and p > 0 for p in launcher_sessions), 'Missing launcher group release')
+    require(isinstance(launcher_sessions, list) and launcher_sessions and all(type(p) is int and p > 0 for p in launcher_sessions), 'Missing launcher session release')
     with ExitStack() as locks:
         details = []
         for clone, path in zip(clones, paths):
@@ -184,7 +192,7 @@ def cleanup(root, owner, evidence, lock, launcher_sessions, dry_run=True):
                 except BlockingIOError as error: raise ValueError('World session lock active') from error
             details.append(inventory(path))
         receipt = dict(status='dry-run' if dry_run else 'deleting', owner=owner,
-                       clones=details, retained_evidence=preserved, process_absence=dict(checked_processes=len(live), active_clients=0, active_launcher_groups=0),
+                       clones=details, retained_evidence=preserved, process_absence=dict(checked_processes=len(live), active_clients=0, active_launcher_sessions=0),
                        launcher_sessions=launcher_sessions, lane_lock=release['lane_lock'])
         # Persist exact paths/bytes/evidence BEFORE any deletion; failure preserves clones.
         record['cleanup'] = receipt

@@ -1,4 +1,8 @@
+import contextlib
 import fcntl
+import hashlib
+import io
+import os
 import json
 from pathlib import Path
 import sys
@@ -25,6 +29,7 @@ class StorageTests(unittest.TestCase):
         self.manifest = storage.create_manifest(self.root, [self.source], {})
         storage.register_clone(self.root, self.world)
         self.mutate(release=dict(children_reaped=True, authorized_owner=self.manifest['owner'], lane_lock=self.lock.name))
+        self.process_inventory = storage.processes
         self.proc = mock.patch.object(storage, 'processes', return_value=[]); self.proc.start(); self.addCleanup(self.proc.stop)
 
     def mutate(self, **fields):
@@ -106,6 +111,82 @@ class StorageTests(unittest.TestCase):
         with mock.patch.object(storage, 'write', side_effect=OSError('no room for evidence')):
             with self.assertRaises(OSError): self.clean(dry_run=False)
         self.assertTrue(self.world.exists())
+
+    def test_actual_sid_catches_descendant_in_different_process_group(self):
+        output = mock.Mock(stdout='800 900 java descendant\n')
+        with mock.patch.object(storage.subprocess, 'run', return_value=output), \
+             mock.patch.object(storage.os, 'getsid', return_value=43210) as sid, \
+             mock.patch.object(storage, 'processes', side_effect=self.process_inventory):
+            with self.assertRaisesRegex(ValueError, 'Active launcher session'):
+                self.clean(dry_run=False)
+            sid.assert_called_once_with(800)
+        self.assertTrue(self.world.exists())
+
+    def test_session_probe_exit_race_and_access_failure(self):
+        output = mock.Mock(stdout='800 900 java descendant\n')
+        with mock.patch.object(storage.subprocess, 'run', return_value=output):
+            with mock.patch.object(storage.os, 'getsid', side_effect=ProcessLookupError):
+                self.assertEqual(self.process_inventory(), [])
+            with mock.patch.object(storage.os, 'getsid', side_effect=PermissionError):
+                with self.assertRaisesRegex(ValueError, 'Cannot verify actual process session'):
+                    self.process_inventory()
+
+    def test_documented_relative_prepare_cli_with_tiny_saved_plan_inputs(self):
+        # Three saved plans use the same fields/argv consumed by the authentic
+        # Bliss renderer recipe; payloads and dependency APIs are tiny fixtures.
+        template = self.base/'template'; template.mkdir()
+        pack = self.base/'Bliss_v2.1.2.zip'; pack.write_bytes(b'fixture-pack')
+        review = self.base/'source-review.md'; review.write_text('Fixture source evidence')
+        sha = lambda p: hashlib.sha256(p.read_bytes()).hexdigest()
+        worldmap = {'level.dat': sha(self.source/'level.dat')}
+        for arm in recipe.ARMS:
+            prior = self.base/'templates'/arm/'client'
+            (prior/'config').mkdir(parents=True); (prior/'mods').mkdir()
+            (prior/'config/shaderlod-client.toml').write_text('[lod]\nenabled=false\n')
+            (prior/'options.txt').write_text('renderDistance:24\n')
+            stage = template/arm; stage.mkdir()
+            for name, data in [('options.txt','QUALITY=3\n'), ('core.toml','[lod]\nenabled=false\n'),
+                               ('control.json','{"x":256.5,"time":7000}'), ('expected-options.json','{"QUALITY":"3"}')]:
+                (stage/name).write_text(data)
+            plan = dict(profile=str(prior), pack=pack.name, pack_name=pack.name, sourceReview=review.name,
+                        command=[str(self.base/'gradlew'), 'runClientLodOff', '-PrunDirectory='+str(prior),
+                                 '-PcontrolCaptureReceipt='+str(stage/'captures')])
+            storage.write(stage/'plan.json', plan)
+            storage.write(stage/'freeze.json', dict(build={}, canonicalWorld=worldmap,
+                          files={str(stage/'plan.json'):sha(stage/'plan.json')}))
+        client = mock.Mock()
+        client.runtime_lock.side_effect = contextlib.nullcontext
+        client.clients.return_value = {}; client.build_fingerprint.return_value = {}
+        observed = []
+        def consume(plan, backup):
+            observed.append(plan)
+            for key in ('profile', 'installed_pack', 'pack', 'pack_options', 'expected_options_source', 'sourceReview'):
+                self.assertTrue(Path(plan[key]).is_absolute(), key)
+            self.assertTrue(Path(backup).is_absolute())
+        client.prepare.side_effect = consume
+        prior_cwd = Path.cwd()
+        try:
+            os.chdir(self.base)
+            argv = ['renderer_average_storage.py', 'prepare', '--template', 'template', '--world', 'canonical',
+                    '--profiles', 'run-workloads/cli-next', '--output', 'reports/cli-next']
+            with mock.patch.object(recipe, 'load_client', return_value=client), \
+                 mock.patch.object(sys, 'argv', argv), contextlib.redirect_stdout(io.StringIO()):
+                recipe.main()
+        finally:
+            os.chdir(prior_cwd)
+        profiles = self.base/'run-workloads/cli-next'; output = self.base/'reports/cli-next'
+        manifest = json.loads((profiles/storage.MARKER).read_text())
+        self.assertEqual(len(manifest['disposable_world_clones']), 3)
+        self.assertEqual(manifest['root'], str(profiles))
+        self.assertEqual(len(observed), 3)
+        for arm in recipe.ARMS:
+            world = profiles/arm/'client/saves'/recipe.WORLD
+            self.assertEqual((world/'level.dat').read_bytes(), b'save')
+            generated = json.loads((output/arm/'plan.json').read_text())
+            self.assertIn('-PrunDirectory='+str(profiles/arm/'client'), generated['command'])
+            self.assertIn('-PcontrolCaptureReceipt='+str(output/arm/'captures'), generated['command'])
+            freeze = json.loads((output/arm/'freeze.json').read_text())
+            self.assertTrue(all(Path(name).is_absolute() for name in freeze['files']))
 
     def test_adapter_default_preserve_and_boundary_pin(self):
         recipe.dispose(None, None, None, False)
