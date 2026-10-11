@@ -1,0 +1,22 @@
+{
+  "ports/26.2/fabric/src/devClient/java/com/pp/shaderlod/fabric/dev/PortRendererFrames.java": {
+    "beforeSha256": "7f46fc394cc19164b9a14b78acce692c1cdd83eaf27999f5523a2ea43f9008fc",
+    "afterSha256": "e6e6c3140a0405ba15fba624df8cb12f92261fa7b5f363df5750de20204e20ff"
+  },
+  "ports/26.2/fabric/src/devClient/java/com/pp/shaderlod/fabric/dev/FabricRoundtrip.java": {
+    "beforeSha256": "7e5848c1d2afd880ed9ffa22f28cf0f0f149c888a35967eb48ba7fa8613b0864",
+    "afterSha256": "af9a2fbd8908ad508c82b66e38797f9f45e0a5a0b5c43d84c70b427b57cffa0e"
+  },
+  "ports/26.2/fabric/src/devClient/java/com/pp/shaderlod/fabric/dev/mixin/PortRendererFramesMixin.java": {
+    "beforeSha256": "7d806eaaf17ca8b9ffe5bf834c93be4ad6174f0713c9978b2ce378f20cb34ce4",
+    "afterSha256": "332b3d04f19027f4b99ec73901c75d1b6f752ba01b878ed7ec891c44bc11b55e"
+  },
+  "ports/26.2/fabric/src/devClient/java/com/pp/shaderlod/fabric/dev/PortRendererRateChecks.java": {
+    "beforeSha256": "2164e80c1d43249129f433e19ad4ccf24b208799d455f37521395bbd3df83c62",
+    "afterSha256": "59756e25e6ad9e318beee8635a7a93b4d18eb373ffd68ce4216142a1eabab6d9"
+  },
+  "dev/logs/speed-port-r1/262-fabric-makeup-r1/run.py": {
+    "beforeSha256": "fc67723abd25a1905dc0f23ffe12dded2cd59fb061c18f95d78d0a39d12f4a84",
+    "afterSha256": "c6c731ae42ad9208f3d8a85131df5cd77aa7bd5e68ca45bb20e5db73c3dd7efa"
+  }
+}
