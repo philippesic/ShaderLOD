@@ -4,8 +4,8 @@
     "afterSha256": "e6e6c3140a0405ba15fba624df8cb12f92261fa7b5f363df5750de20204e20ff"
   },
   "ports/26.2/fabric/src/devClient/java/com/pp/shaderlod/fabric/dev/FabricRoundtrip.java": {
-    "beforeSha256": "7e5848c1d2afd880ed9ffa22f28cf0f0f149c888a35967eb48ba7fa8613b0864",
-    "afterSha256": "af9a2fbd8908ad508c82b66e38797f9f45e0a5a0b5c43d84c70b427b57cffa0e"
+    "beforeSha256": "fcaf85f570964a3cdc49d1cd9b120331a8e7163e70a017c2c76f326f434a73cb",
+    "afterSha256": "bfe1ab647d196f0bd7cb5d64d242f45b43bcd8d7f4dacead8229185b3c4e85b8"
   },
   "ports/26.2/fabric/src/devClient/java/com/pp/shaderlod/fabric/dev/mixin/PortRendererFramesMixin.java": {
     "beforeSha256": "7d806eaaf17ca8b9ffe5bf834c93be4ad6174f0713c9978b2ce378f20cb34ce4",

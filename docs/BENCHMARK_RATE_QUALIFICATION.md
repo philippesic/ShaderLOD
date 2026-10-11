@@ -95,3 +95,14 @@ patch fixture and make no Java/runtime claim. The follow-up failed-but-released
 trial fixture and installer changes are source-only and await focused parent
 testing after the active BSL quiet window; the earlier nine-test result does not
 validate this later revision.
+
+Latest-owner rebase: complete five-file before bytes are preserved at
+`/tmp/autonomy-shader-preimages-owner-update-20261011` with a complete SHA/size
+manifest (62,812bytes). The owner added `GlfwStartup` pre-world viewport/focus
+setup and three startup fields in `FabricRoundtrip`; all remain byte-preserved
+in the rebased result. Only that file’s before/after hashes and three patch hunk
+positions changed. The live source stayed untouched. After a fresh idle-client
+census, nine focused tests and authentic five-copy installation passed, including
+the failed-but-released trial fixture. The qualifier and four other baseline
+source files are unchanged. For this revision use the new snapshot path as
+`SHADER_RATE_SOURCE_FIXTURE`; Java/driver and fresh admission remain unverified.

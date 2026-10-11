@@ -51,7 +51,7 @@
          }
 --- a/ports/26.2/fabric/src/devClient/java/com/pp/shaderlod/fabric/dev/FabricRoundtrip.java
 +++ b/ports/26.2/fabric/src/devClient/java/com/pp/shaderlod/fabric/dev/FabricRoundtrip.java
-@@ -118,7 +118,16 @@
+@@ -120,7 +120,16 @@
              if(rendererSpeed && !rendererProfileValidated) { validateRendererProfile(client);rendererProfileValidated=true; }
              if(rendererSpeed && PortRendererFrames.firstRejectedRate()!=null) {
                  report.add("rendererRejectedRate",GSON.toJsonTree(PortRendererFrames.firstRejectedRate()));
@@ -69,7 +69,7 @@
              }
              if (!privateInputsValidated) { validatePrivateInputs(client); privateInputsValidated = true; }
              if (System.nanoTime() - started > 300_000_000_000L) throw new IllegalStateException("300 s probe deadline exceeded");
-@@ -214,7 +223,7 @@
+@@ -229,7 +238,7 @@
                  if(com.pp.shaderlod.integration.makeupquad.MakeUpQuadRuntime.enabled() != stageEnabled())
                      throw new IllegalStateException("Renderer admission does not match " + stages[stage]);
                  if(measuredSince==0) {
@@ -78,7 +78,7 @@
                      measuredSince=System.nanoTime();measuredProof=PortRendererFrames.snapshot();return;
                  }
                  if(System.nanoTime()-measuredSince<30_000_000_000L)return;
-@@ -362,6 +371,13 @@
+@@ -377,6 +386,13 @@
              if(frames<=0)throw new IllegalStateException("Completed-world render counter absent");
              PortRendererFrames.stopMeasuredWindow();
              state.addProperty("rejectedMeasuredFrames",proof[7]-measuredProof[7]);
