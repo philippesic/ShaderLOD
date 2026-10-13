@@ -980,3 +980,20 @@ defaults and the Mac original blocker remain separate. Runtime_operator
 acknowledged a new prep-only turn; parent clearance/normal preview/new producer
 precede any client. Full90 and speed/work/motion/DHPBR remain unfinished, with
 old allocations and closed trials preserved.
+
+## Photon NeoForge26.2 optimization consumed and restored
+
+Normalpreviewefffdadd completed current configured366/369/366/366 original/on/
+Quality/off+Cancel with native AA,535de36 graph/196 native vertex files and MAIN
+Photon source/draw proof/DEV0. Root independently accepted options/origins/RD24/
+stills/recovery and exact release15:08:01UTC. Finite caller0; raw runClient143
+after exact completion stop is separate evidence.
+[Preview and full limits](../evaluation/optimization-ports-20261013.md).
+All-defaults, speed/work/motion/DHPBR/full90 remain unfinished.
+
+Next is current optimization consumption on genuine installed NeoForge26.3.
+Focused product check proves public Apply/recipes/uniforms already joined: no
+new production certificates/draw observer/descriptor mutation needed. An
+acknowledged isolated feature owner prepares only compact existing dev controls
+and authentic installed caller. Strict-dev InSampler and native-original blockers
+remain explicit. No build/client job; parent owns integration/Git/next runtime.

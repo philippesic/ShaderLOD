@@ -720,3 +720,33 @@ selection/restore/tamper checks and source/resource/caller refusals.
 [scoped dev/build patch](../../patches/consumer-ports/neoforge-262-photon-main.patch).
 Normal preview/new actual producer/rendering/recovery remain pending. Speed,
 work, motion, DH/PBR and other tuples are unknown; closed pixel/cost trials stay closed.
+
+## Photon configured NeoForge26.2 actual preview accepted
+
+The current primary/lighting/ambient optimization rendered and restored through
+a fresh normal NeoForge26.2 preview. Parent independently verified the535-member
+generated archive equals the accepted actual Fabric optical graph(de36), all196
+native vertex files, configured366/369/366/366 maps, native TAAtrue/TAAUfalse/
+latent1.00/SH_SKYLIGHTfalse, main origins and MAINPhoton/DEV0 with all9 positive
+ordinary/shadow draw-path deltas. Fixed scene/RD24/1920x1200 and Quality/Off/Cancel
+restoration passed. Original/enabled stills show no conspicuous new artifact.
+
+Finite supervision returned0/errors=[] and released15:08:01UTC; fresh owned
+PID absence/free-lock census passed. Raw Gradle runClient143 records exact
+supervisor SIGTERM after completed observations, separately from successful
+normal build/producer/caller.
+[Installable preview](../../dev/artifacts/neoforge-262-photon-main-compat-20261013/shaderlod-neoforge-26.2-main-preview.jar),
+[actual handback](../../dev/logs/optimization-porting-20261013/photon-neoforge-runtime/handback.json),
+[parent acceptance](../../dev/logs/optimization-porting-20261013/photon-neoforge-runtime/parent-acceptance.json).
+Preview SHA256 `efffdadd17cc1bd2be3990aee03c2ba3c7206f711227de1bcf02f00de60ddd2c`.
+All upstream defaults, actual rejected-read counts/GPU work, speed, motion,
+DH/PBR and other tuples remain unverified. Generic existing UI pixel-AA hint
+is retained; no pixel-budget or AA-change claim.
+
+The next supported version is NeoForge26.3. Focused actual API investigation
+found that Renderpearl captures layouts before draw execution, so NF262
+correction cannot be transplanted. The existing product already selects current
+recipes and supplies their uniforms; new production certificates or observers
+are unnecessary. Only the minimum existing dev public-control sequence and
+genuine installed caller will be prepared. Preserve strict-dev InSampler failure.
+[Corrected focused answer](../../dev/logs/optimization-porting-20261013/neoforge-263-join-question/REPORT.md).

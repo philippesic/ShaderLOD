@@ -338,3 +338,17 @@ operation PASS. A probe timeout is not evidence that the process stopped.
 Root also caught pre-existing checker edits in its local commit and narrowed the
 commit to the port's exact scoped patches, preserving the working bytes and other
 edits. Inspect both current preimages and the staged diff before committing.
+
+## October13: verify the missing product join before copying compatibility machinery
+
+Root initially framed NeoForge26.3 as a continuation of the NeoForge26.2 input
+compatibility port. The explorer proposed production source certificates and
+a draw observer after finding changed Renderpearl APIs. Root then required a
+focused check of the existing public Apply and uniform consumer; those already
+carry all current shader families. The explorer withdrew the unnecessary
+production proposal before any edits.
+
+Correction: trace the actual input-to-consumer-to-recovery path first. A working
+version's diagnostic or compatibility mechanism does not establish a missing
+product feature on another version. Reuse existing production joins and change
+only the acceptance boundary needed for the current optimization port.
