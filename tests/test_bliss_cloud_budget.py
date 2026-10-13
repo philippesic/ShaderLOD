@@ -54,119 +54,87 @@ class BlissCloudBudgetTest(unittest.TestCase):
         if not BASE.is_file(): raise unittest.SkipTest('Pinned Bliss original absent')
         cls.original = read_archive(BASE)
         cls.current = json.loads((ROOT / RECIPE).read_text())
-        cls.assembled = apply(cls.original, cls.current)
-        cls.candidate = candidate_manifest(cls.current)
-        cls.changed = apply(cls.original, cls.candidate)
+        cls.changed = apply(cls.original, cls.current)
         cls.native = json.loads(NATIVE.read_text())
 
-    def test_exact_pins_selected_route_and_body_recovery(self):
+    def test_actual_primary_consumer_native_body_and_march_recovery(self):
         self.assertEqual(sha256(BASE.read_bytes()), self.current['release_archive_sha256'])
         self.assertEqual(len(self.native), 463)
         self.assertEqual(self.native['HQ_CLOUDS'], 'true')
         self.assertEqual(self.native['VOLUMETRIC_CLOUDS'], 'true')
-        self.assertEqual((self.native['minRayMarchSteps'], self.native['maxRayMarchSteps']), ('15','15'))
-        self.assertEqual(self.native['CLOUDS_QUALITY'], '0.5')
-        self.assertEqual(set(self.assembled), set(self.changed))
-        self.assertEqual(sorted(n for n in self.changed if self.changed[n] != self.assembled[n]),
-                         [DIMENSION, VOLUME])
-        for name in (DIMENSION, VOLUME):
-            self.assertEqual(recover(name, self.changed[name]), self.assembled[name])
-        self.assertEqual(self.changed[ENTRY], self.original[ENTRY])
-        self.assertIn(b'#define OVERWORLD_SHADER', self.original[ENTRY])
+        self.assertEqual(self.native['cloud_LevelOfDetail'], '1')
         self.assertIn(b'#include "/dimensions/composite2.fsh"', self.original[ENTRY])
-        dimension = self.changed[DIMENSION]
-        self.assertLess(dimension.index(('\t#define ' + MARKER).encode()),
-                        dimension.index(b'#include "/lib/volumetricClouds.glsl"'))
-        self.assertLess(dimension.index(b'#include "/lib/volumetricClouds.glsl"'),
-                        dimension.index(('\t#undef ' + MARKER).encode()))
-        volume = self.changed[VOLUME]
-        self.assertLess(volume.index(b'int(clamp(maxIT_clouds / sqrt(exp2(viewPos.y))'),
-                        volume.index(b'maxIT_clouds = shaderlod_effect_budget(maxIT_clouds, 4);'))
-        self.assertLess(volume.index(b'maxIT_clouds = shaderlod_effect_budget(maxIT_clouds, 4);'),
-                        volume.index(b'90.0/abs(dV_view.y)/maxIT_clouds'))
-        self.assertEqual(self.candidate['additions'], self.current['additions'])
-        self.assertIn(b'bridge != 2 || enabled != 1 || preset < 0 || preset > 2',
-                      self.changed['shaders/lib/shaderlod/uniform_sample_budget.glsl'])
+        self.assertIn(b'renderClouds(viewPos0', self.original[DIMENSION])
+        body = self.changed[VOLUME]
+        for patch in reversed([p for p in self.current['patches'] if p['path'] == VOLUME]):
+            self.assertEqual(body.count(patch['after'].encode()), 1)
+            body = body.replace(patch['after'].encode(), patch['before'].encode(), 1)
+        self.assertEqual(body, self.original[VOLUME])
+        tail = b'#ifndef CLOUDSHADOWSONLY'
+        self.assertEqual(self.changed[VOLUME].split(tail, 1)[1],
+                         self.original[VOLUME].split(tail, 1)[1])
+        self.assertNotIn(b'dFdx(shaderlod', self.changed[VOLUME])
+        self.assertNotIn(b'dFdy(shaderlod', self.changed[VOLUME])
 
-    def test_actual_preprocessor_selected_and_excluded_routes(self):
+    def test_actual_selected_and_excluded_source_paths(self):
         if not shutil.which('clang'): self.skipTest('clang unavailable')
-        # Actual selected wrapper; value1 models the generated EFFECT_ADAPTER option.
-        on = dict(self.changed)
         helper = 'shaders/lib/shaderlod/adapter.glsl'
+        on = dict(self.changed)
         on[helper] = on[helper].replace(b'#define SHADERLOD_EFFECT_ADAPTER 0 // [0 1]',
                                        b'#define SHADERLOD_EFFECT_ADAPTER 1 // [0 1]')
-        self.assertNotEqual(on[helper], self.changed[helper])
-        entry = 'shaders/world0/composite3.fsh'
-        count = 'maxIT_clouds = shaderlod_effect_budget(maxIT_clouds, 4);'
-        self.assertIn(count, cpp(on, entry, self.native))
-        self.assertNotIn(count, cpp(self.changed, entry, self.native))
-        for wrapper in ('world-1', 'world1'):
-            self.assertNotIn(count, cpp(on, f'shaders/{wrapper}/composite3.fsh', self.native))
-        for key in ('DISTANT_HORIZONS', 'VOXY'):
+        # CPU positive capability case; no actual GL extension observation is claimed.
+        on[ENTRY] = b'#define GL_ARB_shader_texture_lod 1\n' + on[ENTRY]
+        self.assertIn('shaderlodDensityUpper', cpp(on, ENTRY, self.native))
+        off = dict(on); off[helper] = self.changed[helper]
+        self.assertNotIn('shaderlodDensityUpper', cpp(off, ENTRY, self.native))
+        no_extension = dict(on); no_extension[ENTRY] = self.changed[ENTRY]
+        self.assertNotIn('shaderlodDensityUpper', cpp(no_extension, ENTRY, self.native))
+        for entry in ('shaders/world-1/composite3.fsh', 'shaders/world1/composite3.fsh',
+                      'shaders/world0/deferred.fsh', 'shaders/world0/composite2.fsh'):
+            self.assertNotIn('shaderlodDensityUpper', cpp(on, entry, self.native))
+        for macro in ('DISTANT_HORIZONS', 'VOXY'):
             modified = dict(on)
-            modified[entry] = on[entry].replace(b'#define OVERWORLD_SHADER',
-                                                  ('#define OVERWORLD_SHADER\n#define ' + key).encode())
-            self.assertNotIn(count, cpp(modified, entry, self.native))
-        off = dict(self.native); off['VOLUMETRIC_CLOUDS'] = 'false'
-        self.assertNotIn(count, cpp(on, entry, off))
-        # No derivative, texture read, new attachment or pass appears in the inserted text.
-        self.assertNotRegex(COUNT_INSERT, r'\b(?:texture\w*|dFdx|dFdy|fwidth)\s*\(')
+            modified[ENTRY] = on[ENTRY].replace(b'#define OVERWORLD_SHADER',
+                                               ('#define OVERWORLD_SHADER\n#define ' + macro).encode())
+            self.assertNotIn('shaderlodDensityUpper', cpp(modified, ENTRY, self.native))
 
-    def test_count_and_homogeneous_full_layer_invariant(self):
-        expected_b = [9, 10, 11, 12, 13, 14]
-        expected_p = [8, 9, 9, 10, 11, 12]
-        for index, native in enumerate(range(10, 16)):
-            for retained, expected in ((.875, expected_b[index]), (.75, expected_p[index])):
-                count = max(4, math.ceil(native * retained))
-                self.assertEqual(count, expected)
-                self.assertLess(count, native)
-                for mu, light, direction_y in ((.01, 1.0, .25),(.5,2.0,.8)):
-                    # Native h=100/N and mult=90/(|v_y|N) for each full slab.
-                    nstep = 90.0 / (abs(direction_y) * native)
-                    cstep = 90.0 / (abs(direction_y) * count)
-                    self.assertAlmostEqual(native*(100.0/native), count*(100.0/count))
-                    self.assertAlmostEqual(native*nstep, count*cstep)
-                    native_t = math.exp(-mu*nstep)**native
-                    candidate_t = math.exp(-mu*cstep)**count
-                    self.assertAlmostEqual(native_t, candidate_t, places=12)
-                    self.assertAlmostEqual(light*(1-native_t), light*(1-candidate_t), places=12)
-        # A varying density or truncated prefix invalidates the homogeneous full-slab equality.
-        n, m = 15, 12
-        varying_n = sum((1 + i/n)**2 * 90/n for i in range(n))
-        varying_m = sum((1 + i/m)**2 * 90/m for i in range(m))
-        self.assertNotAlmostEqual(varying_n, varying_m, places=4)
-        self.assertNotAlmostEqual(3 * 90/n, 3 * 90/m, places=4)
+    def test_nonnegative_detail_cannot_restore_certified_empty_density(self):
+        # Independent monotonicity check over valid coverage/erosion, including extrema.
+        certified = 0
+        for cov in (.001, .01, .1, .25, .5, .999, 1.0):
+            for amount in (.02, .5, 1.0, 3.0):
+                for index in range(101):
+                    coarse = index / 100.0 * math.sqrt(1.0 - cov)
+                    upper = cov - coarse ** 4 * amount
+                    if upper < -.001:
+                        certified += 1
+                        for detail in (0.0, .01, .5, 1.0):
+                            noise = coarse + detail * .75 * (1.0 - cov)
+                            self.assertEqual(max(cov - noise ** 4 * amount, 0.0), 0.0)
+        self.assertGreater(certified, 0)
+        # Full ray interval, lighting and extinction stay native, not count-resampled.
+        self.assertNotIn(b'maxIT_clouds = shaderlod_effect_budget(maxIT_clouds', self.changed[VOLUME])
 
-    def test_real_overlay_and_refusals(self):
-        protected = {p: (ROOT / p).read_bytes() for p in (RECIPE, RESOURCE_ROOT + RECIPE, CATALOG)}
+    def test_installed_recipe_resource_identity_and_conflicting_count_port_refusal(self):
+        from build_supported_pack_adapters import build, shader_source_digest
+        self.assertEqual((ROOT / RECIPE).read_bytes(), (ROOT / (RESOURCE_ROOT + RECIPE)).read_bytes())
+        self.assertEqual((ROOT / 'patches/adapters/bliss-shader.glsl').read_bytes(),
+                         (ROOT / (RESOURCE_ROOT + 'patches/adapters/bliss-shader.glsl')).read_bytes())
+        self.assertIn(shader_source_digest(self.changed), (ROOT / CATALOG).read_text())
+        for member in (ENTRY, VOLUME, 'shaders/texture/noises.png', 'shaders/texture/noises.png.mcmeta'):
+            altered = dict(self.original); altered[member] += b'X'
+            with self.assertRaises(ValueError): apply(altered, self.current)
+        protected = {name: (ROOT / name).read_bytes() for name in (RECIPE, RESOURCE_ROOT + RECIPE, CATALOG)}
         with tempfile.TemporaryDirectory() as temp:
-            output = Path(temp) / 'candidate'
-            receipt = prepare(BASE, output)
-            self.assertTrue(receipt['native_current_body_recovered'])
-            self.assertEqual(receipt['changed_from_current_adapter'], [DIMENSION, VOLUME])
-            self.assertEqual(set(receipt['overlay']), set(protected))
-            self.assertEqual((output/'overlay'/RECIPE).read_bytes(),
-                             (output/'overlay'/(RESOURCE_ROOT+RECIPE)).read_bytes())
-            catalog = (output/'overlay'/CATALOG).read_text()
-            self.assertIn(receipt['candidate_digest'], catalog)
-            self.assertIn(receipt['current_adapter_digest'], catalog.split('LEGACY_ADAPTER_DIGESTS')[1])
-            self.assertTrue(all(v is False for v in receipt['validation'].values()))
-            self.assertTrue((output/'source.patch').is_file())
-            self.assertTrue((output/'integration.patch').is_file())
-            self.assertEqual(protected, {p: (ROOT / p).read_bytes() for p in protected})
-            saved = (output/'receipt.json').read_bytes()
-            with self.assertRaisesRegex(ValueError, 'already exists'): prepare(BASE, output)
-            self.assertEqual(saved, (output/'receipt.json').read_bytes())
-            bad = Path(temp)/'bad.zip'; bad.write_bytes(BASE.read_bytes()+b'wrong')
-            with self.assertRaisesRegex(ValueError, 'archive hash'): prepare(bad,Path(temp)/'refused')
-            self.assertFalse((Path(temp)/'refused').exists())
-        for member in (ENTRY, DIMENSION, VOLUME):
-            altered = dict(self.original); altered[member] += b'\n'
-            with self.assertRaisesRegex(ValueError, 'Pinned shader source identity changed'):
-                apply(altered, self.candidate)
-        with self.assertRaisesRegex(ValueError, 'already pinned'): candidate_manifest(self.candidate)
-        wrong = copy.deepcopy(self.current); wrong['version'] = '2.2.0'
-        with self.assertRaises(ValueError): candidate_manifest(wrong)
+            artifact = Path(temp) / 'installed.zip'
+            result = build(BASE, artifact, ROOT / RECIPE)
+            self.assertEqual(result['adapter_shader_source_digest'], shader_source_digest(self.changed))
+            self.assertTrue(all(value is False for value in result['validation'].values()))
+            count_candidate = Path(temp) / 'conflicting-count-port'
+            with self.assertRaisesRegex(ValueError, 'already pinned'):
+                prepare(BASE, count_candidate)
+            self.assertFalse(count_candidate.exists())
+        self.assertEqual(protected, {name: (ROOT / name).read_bytes() for name in protected})
 
 
 if __name__ == '__main__': unittest.main()

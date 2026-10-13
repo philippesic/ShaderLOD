@@ -1,0 +1,108 @@
+{
+  "schema": 1,
+  "kind": "volumetric-sample-budget",
+  "id": "bliss-shader",
+  "name": "Bliss",
+  "version": "2.1.2",
+  "version_id": "kC2Y8q1P",
+  "primary_page": "https://modrinth.com/shader/bliss-shader",
+  "release_url": "https://cdn.modrinth.com/data/ZvMtQlho/versions/kC2Y8q1P/Bliss_v2.1.2_%28Chocapic13_Shaders_edit%29.zip",
+  "release_archive_sha256": "f41db92acc585fe9ffe0cc124d6ecaea27cef9ded91129ebc2a8e60226947b2c",
+  "license_note": "Private personal local adaptation only. Original archive members, author banners and credits retained. No redistribution permission established; do not publish generated copies.",
+  "shader_source_digest": "dc7ef8dd62fb9db1ca500c1d300f206891035e5129dab81bf19c901f526ac2e4",
+  "source_members": {
+    "CREDITS.txt": "e8506c620499e3f69b9d2dc1714d0fd5c38fd1b14201ca4bda2375b0fad50aa0",
+    "LICENSE.md": "0a0e5b77277a737002f90a7dfb5bb9b0fa9f7aff0d0f86355a198bf7a4cc3b86",
+    "README.md": "45a8050418bf0f0625f9ab6d18cde2384d0183d7e3bd1d49dd29b9bc14848ac2",
+    "shaders/dimensions/composite2.fsh": "de7eb25909fb3296d59816d596ec27917d6bc353079ab977d25d2f367c6eafb3",
+    "shaders/dimensions/deferred.fsh": "480e041a41e24d638271f7fd8390f2c28e702cc82fec06a5243dc4fe1be17d12",
+    "shaders/dimensions/fogBehindTranslucent_pass.fsh": "31fac3a6bf43969057bad4d880b5e3b49b19ecbcd5f12c32d9a6894e41e390de",
+    "shaders/lib/overworld_fog.glsl": "aaad69eedf22d0bf5d439b13c2201abf6fd21dcdaa4050e241b67caeb4ed9e4c",
+    "shaders/lib/settings.glsl": "214782ddd37baa3f454bb78e0cc16bb83c3fa251f9bc0feeffa010f9f7d11106",
+    "shaders/shaders.properties": "6c1b92c65d27eaf55f0723e5bb85e9c213aa6603d9eb558a3803caa7d3621e2f",
+    "shaders/world-1/composite.fsh": "af0c2b86ef7a934dcd331e9df509d2874fd0f6dcb0513193ed0dffc6c5888616",
+    "shaders/world-1/composite2.fsh": "60225e0b0540d84df3384538e345ae55ea1dcb1eedd468cfb349ba6df98d9d93",
+    "shaders/world-1/deferred.fsh": "9a92c3f0d5b5d0cd6ebf4968375cf7034d96a73a44b57a25325b73fd4c264dd4",
+    "shaders/world0/composite.fsh": "a1066a920b574e53478c9498f848d6e403bd930dbaccc6d72679f374e6c45b16",
+    "shaders/world0/composite2.fsh": "fc275a0d11889faae434f6475d76c9518b286ee786b8761695aa434e6685cd64",
+    "shaders/world0/deferred.fsh": "e73c25730c12eea8cbe25277e6edfdff0ae58ab8368ec1e145415e810f4e4937",
+    "shaders/world1/composite.fsh": "1a1db4b661f3ddcf748ff442d8485d4f481e164955c264ddeb3b65e11e3e752c",
+    "shaders/world1/composite2.fsh": "40a8aedffb68659614b32a65c58dacadb99bc77ab28214def313f3ed6d75ae20",
+    "shaders/world1/deferred.fsh": "fd8379fdddeb058aca10b98f8338c9325bf553b8a9c9d3e6599da784df763d60",
+    "shaders/lib/volumetricClouds.glsl": "3750109b2f73a19c825ff886396edb6327f3da07ae389bc1358f53b937b7229a",
+    "shaders/world0/composite3.fsh": "fdf2e8be1c8b07c2f459298d690498a6f7e51f46075d49b7d07ffe6bca6dbb20",
+    "shaders/texture/noises.png": "77d1aa0c2195a4f644296b681295865cdb3c71bb6c380b69c2f43338f653acf5",
+    "shaders/texture/noises.png.mcmeta": "7f447458dce74ae0fe936ba8dd11f0cdb30e36d4e99ca93f82ce8966d25ed9d2"
+  },
+  "patches": [
+    {
+      "path": "shaders/lib/overworld_fog.glsl",
+      "before": "uniform float noPuddleAreas;",
+      "after": "#include \"/lib/shaderlod/adapter.glsl\"\r\n\r\nuniform float noPuddleAreas;"
+    },
+    {
+      "path": "shaders/lib/overworld_fog.glsl",
+      "before": "\r\n\tint SAMPLECOUNT = VL_SAMPLES;",
+      "after": "\r\n\tint SAMPLECOUNT = VL_SAMPLES;\r\n\t#if SHADERLOD_EFFECT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY\r\n\tSAMPLECOUNT = shaderlod_effect_budget(SAMPLECOUNT, 4);\r\n\t#endif"
+    },
+    {
+      "path": "shaders/shaders.properties",
+      "before": "[Misc_Settings] [Mod_support] \\",
+      "after": "[Misc_Settings] [Mod_support] [SHADERLOD] \\\r\n\r\nscreen.SHADERLOD = SHADERLOD_EFFECT_ADAPTER"
+    },
+    {
+      "path": "shaders/world0/composite3.fsh",
+      "before": "#version 120\r\n",
+      "after": "#version 120\r\n#ifdef GL_ARB_shader_texture_lod\r\n#extension GL_ARB_shader_texture_lod : enable\r\n#endif\r\n"
+    },
+    {
+      "path": "shaders/lib/volumetricClouds.glsl",
+      "before": "#ifdef HQ_CLOUDS",
+      "after": "#include \"/lib/shaderlod/adapter.glsl\"\r\n\r\n#ifdef HQ_CLOUDS"
+    },
+    {
+      "path": "shaders/lib/volumetricClouds.glsl",
+      "before": "\tnoise += (1.0-densityAtPos(samplePos * mix(100.0,200.0,upperPlane)) ) * sqrt(1.0-cov);",
+      "after": "\t#if SHADERLOD_EFFECT_ADAPTER == 1 && defined OVERWORLD_SHADER && defined EXCLUDE_WRITE_TO_LUT && !defined CLOUDSHADOWSONLY && !defined ReflectedFog && !defined DISTANT_HORIZONS && !defined VOXY && defined GL_ARB_shader_texture_lod\r\n\t\t// Uniform core/weather/layer controls; native fallbacks retain their implicit lookup.\r\n\t\tbool shaderlodCloudBound = shaderlodBridgeVersion == 2 && shaderlodEnabled == 1 &&\r\n\t\t\tshaderlodPreset == 0 && rainStrength == 0.0 && LoD == 1 && (layer == 0 || layer == 1);\r\n\t#endif\r\n\r\n\tnoise += (1.0-densityAtPos(samplePos * mix(100.0,200.0,upperPlane)) ) * sqrt(1.0-cov);\r\n\t#if SHADERLOD_EFFECT_ADAPTER == 1 && defined OVERWORLD_SHADER && defined EXCLUDE_WRITE_TO_LUT && !defined CLOUDSHADOWSONLY && !defined ReflectedFog && !defined DISTANT_HORIZONS && !defined VOXY && defined GL_ARB_shader_texture_lod\r\n\t\t// Later erosion adds only nonnegative detail for the native 0..1 coverage domain.\r\n\t\tif (shaderlodCloudBound && cov >= 0.001 && cov <= 1.0 &&\r\n\t\t\tfbmAmount > 0.0 && fbmAmount <= 3.0 && noise >= 0.0 && noise <= 1.00001 &&\r\n\t\t\tall(lessThan(abs(samplePos),vec3(1e6))) && all(lessThan(abs(pos),vec3(1e6)))) {\r\n\t\t\tfloat shaderlodErosion = noise * noise;\r\n\t\t\tfloat shaderlodDensityUpper = cov - shaderlodErosion * shaderlodErosion * fbmAmount;\r\n\t\t\t// Native max returns exactly zero below this conservative negative margin.\r\n\t\t\tif (shaderlodDensityUpper < -0.001) return 0.0;\r\n\t\t}\r\n\t#endif\r\n"
+    },
+    {
+      "path": "shaders/lib/volumetricClouds.glsl",
+      "before": "\t\tnoise += abs( densityAtPos(samplePos * mix(450.0,600.0,upperPlane) ) - (1.0-clamp(((maxHeight - pos.y) / 100.0),0.0,1.0))) * 0.75 * (1.0-cov);",
+      "after": "\t\t#if SHADERLOD_EFFECT_ADAPTER == 1 && defined OVERWORLD_SHADER && defined EXCLUDE_WRITE_TO_LUT && !defined CLOUDSHADOWSONLY && !defined ReflectedFog && !defined DISTANT_HORIZONS && !defined VOXY && defined GL_ARB_shader_texture_lod\r\n\t\tif (shaderlodCloudBound) {\r\n\t\t\t// Exact native detail coordinates/interpolation; pinned PNG noise uses one linear level.\r\n\t\t\t// Explicit LOD0 avoids adding implicit derivatives after the new divergent rejection.\r\n\t\t\tvec3 shaderlodDetailPos = samplePos * mix(450.0,600.0,upperPlane);\r\n\t\t\tshaderlodDetailPos /= 18.;\r\n\t\t\tshaderlodDetailPos.xz *= 0.5;\r\n\t\t\tvec3 shaderlodDetailP = floor(shaderlodDetailPos);\r\n\t\t\tvec3 shaderlodDetailF = fract(shaderlodDetailPos);\r\n\t\t\tvec2 shaderlodDetailCoord = (shaderlodDetailP.xz + shaderlodDetailF.xz + shaderlodDetailP.y * vec2(0.0,193.0)) / 512.0;\r\n\t\t\tvec2 shaderlodDetailXY = texture2DLod(noisetex,shaderlodDetailCoord,0.0).yx;\r\n\t\t\tfloat shaderlodDetail = mix(shaderlodDetailXY.r,shaderlodDetailXY.g,shaderlodDetailF.y);\r\n\t\t\tnoise += abs(shaderlodDetail - (1.0-clamp(((maxHeight - pos.y) / 100.0),0.0,1.0))) * 0.75 * (1.0-cov);\r\n\t\t} else {\r\n\t\tnoise += abs( densityAtPos(samplePos * mix(450.0,600.0,upperPlane) ) - (1.0-clamp(((maxHeight - pos.y) / 100.0),0.0,1.0))) * 0.75 * (1.0-cov);\r\n\t\t}\r\n\t\t#else\r\n\t\tnoise += abs( densityAtPos(samplePos * mix(450.0,600.0,upperPlane) ) - (1.0-clamp(((maxHeight - pos.y) / 100.0),0.0,1.0))) * 0.75 * (1.0-cov);\r\n\t\t#endif"
+    }
+  ],
+  "additions": {
+    "shaders/lib/shaderlod/adapter.glsl": {
+      "path": "patches/adapters/bliss-shader.glsl",
+      "sha256": "7ce4fa71b6da32b6ad6328ea000acb8d00e8fb202be5700c5af7d87e83e2091e"
+    },
+    "shaders/lib/shaderlod/uniform_sample_budget.glsl": {
+      "path": "patches/adapters/shared/uniform_sample_budget.glsl",
+      "sha256": "00ea6f6ec69da669a9a1727498ba9dd1b40839dce38af42afb26ea8b831d1aec"
+    }
+  },
+  "option_key": "SHADERLOD_EFFECT_ADAPTER",
+  "validation": {
+    "assembled": false,
+    "glsl_compiled": false,
+    "iris_rendered": false,
+    "dh_rendered": false,
+    "pbr_rendered": false,
+    "quality_checked": false,
+    "performance_measured": false
+  },
+  "ported_consumers": {
+    "primary_cloud_erosion_zero_bound": {
+      "reuse": "BSL/Unbound native-zero detail-read rejection, Bliss nonnegative erosion",
+      "entry": "shaders/world0/composite3.fsh",
+      "scope": "primary OVERWORLD EXCLUDE_WRITE_TO_LUT/no shadow-only/reflected/DH/VOXY; Balanced clear core; layer0/1 LoD1; original setting values retained",
+      "native_primary_density_reads": 4,
+      "certified_primary_density_reads": 3,
+      "detail_sampler": "exact native coordinates/interpolation; explicitLOD0 retained detail for pinned single-level LINEAR PNG; native uniform fallbacks",
+      "driver_sampler_parity_verified": false,
+      "runtime_verified": false,
+      "quality_verified": false,
+      "performance_verified": false
+    }
+  }
+}

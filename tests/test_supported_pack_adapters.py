@@ -309,6 +309,9 @@ class AdapterResourceSyncTests(unittest.TestCase):
     def test_new_legacy_entry_preserves_previous_current(self):
         source = (self.root / CATALOG).read_text()
         import re
+        # Exercise first insertion even after the maintained family has historical ports.
+        source = re.sub(r'^\s*Map\.entry\("bliss-shader", List\.of\([^\n]+\)\),\n',
+                        '', source, flags=re.M)
         match = re.search(r'new Pack\("bliss-shader",.*?"([0-9a-f]{64})", "([0-9a-f]{64})"\)', source, re.S)
         original, previous = match.groups()
         updated = catalog_update(source, 'bliss-shader', original, '1' * 64)

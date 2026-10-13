@@ -1,6 +1,6 @@
 # Direct optimization ports — October 13, 2026 Pacific
 
-Two optimization ports are integrated in maintained recipes, packaged resources
+Three optimization ports are integrated in maintained recipes, packaged resources
 and catalog recognition. Fresh previews reproduce the accepted source artifacts
 exactly. These are usable **source candidates**, not new rendering, visual-quality
 or speed results. The nine-family, five-version, two-loader scope remains active.
@@ -97,6 +97,55 @@ closed cost trials and the fixed BSL pending sampler/motion/cost experiment rema
 Two worker turns ended with explicit model-capacity errors after useful artifacts
 or acknowledgment. Parent inspected the actual terminal artifacts and completed
 Unbound public CPU consumption locally. No model substitution or game/GPU/Gradle
-launch occurred. Native Goal remains active; parent owns the next direct port:
-Bliss primary-cloud erosion can add only nonnegative detail after its first noise
-term, with implicit-sampler parity a distinct boundary to resolve in the candidate.
+launch occurred. Native Goal remains active; the later Bliss port is below.
+
+## Bliss 2.1.2: primary-cloud erosion
+
+The same native-zero/detail-rejection concept now reaches the default-active
+`world0/composite3.fsh → dimensions/composite2.fsh → renderClouds → renderLayer
+layers0/1 → GetCumulusDensity LoD1 → cloudVol` consumer. Coverage uses two reads;
+coarse erosion uses one; detail erosion uses one. Because valid detail adds only
+nonnegative erosion, a conservative negative upper density after the coarse read
+can omit the detail read. Nominal density work becomes four → three reads on a
+certified empty sample. Native ray count/positions, color/transmittance recurrence,
+lighting, shadows, depth, dither and AA are unchanged. Light/shadow LoD0 calls
+retain their native density path.
+
+The first isolated revision calculated explicit gradients below existing native
+nonuniform caller branches. Independent review identified that its comment
+overstated derivative validity. Revision two removes those derivatives and uses
+explicit level zero only for the retained eligible detail read, with exact native
+coordinate and interpolation arithmetic. Pinned PNG and mcmeta are unchanged and
+now fingerprinted. Independent Iris 1.8.12/1.11.4 bytecode inspection establishes
+nonmipped linear noise sampling; actual driver sampler parity remains unverified.
+Missing texture-LOD capability, Off/Quality, absent/unknown core, nonclear weather,
+reflection/shadow-only passes, other dimensions and DH/Voxy retain native paths.
+
+Independent source review accepts r2. Its 200,000 sampled binary32 contract states
+yielded 48,901 certificates and zero false rejections; this is not a reached GPU
+sample denominator or universal precision proof. Parent reproduced the accepted
+preview exactly, checked native body/tail recovery and noise-image tamper refusal,
+and parsed unchanged/current, candidate and full-work control through the same
+existing GLSL330 compatibility/legacy-name alias fixture. Eight excluded source
+paths omitted the bound. The initially incomplete parser alias and two check
+fixture defects are preserved in earlier receivers; no candidate gate was relaxed.
+
+Four installed Bliss source/math/control checks and fourteen adapter identity/
+resource/refusal checks pass. The legacy-entry fixture now explicitly removes
+its family entry to continue testing first insertion; the installed Bliss checks
+also verify that the older count-only preparer refuses the already-owned cloud
+consumer instead of stacking an unverified sample-count change. Actual current
+public CPU selection passes exact generated shader-source equality, restart,
+Quality/Off, native463 sidecar preservation, tamper refusal and native return.
+
+Source digest `e198a1d6a560ac1d131817ef5d84ac2163db7578a1f200bf26731e670d5491e4`;
+preview ZIP `6d63608119f81549a159c9abe862778a02a2d14e61d09f3a5d138de42048e814`.
+[Independent review](../../dev/logs/optimization-porting-20261013/bliss-independent-review/review.md),
+[selected source checks](../../dev/logs/optimization-porting-20261013/bliss-erosion-r2/checks-r5/receipt.json),
+[parent reproduction](../../dev/logs/optimization-porting-20261013/parent/bliss-erosion/receipt.json),
+[actual public CPU consumer](../../dev/logs/optimization-porting-20261013/parent/bliss-consumer/receipt.json).
+
+Reached rejection, branch cost, actual rendering, motion, original-relative speed,
+DH/PBR and other version/loader consumers remain unverified. Parent owns the next
+direct transfer: Sildur's default primary four-octave volumetric clouds, preserving
+every native march/color update while bounding the unused octave remainder.

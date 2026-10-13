@@ -35,7 +35,7 @@ public final class SupportedPackCatalog {
         new Pack("astralex", "AstraLex Shaders", "93.0", "https://modrinth.com/shader/astralex",
             "LicenseRef-All-Rights-Reserved", "e89fe2686d5a73d18ae9aae5104da24f6cb23ae79f1012f95b79aa78e655485a", "7a59f0be267d52c977371e9cf621e401a93030a7107f6b26410599e80ed4ae91"),
         new Pack("bliss-shader", "Bliss Shaders", "2.1.2", "https://modrinth.com/shader/bliss-shader",
-            "LicenseRef-All-Rights-Reserved", "dc7ef8dd62fb9db1ca500c1d300f206891035e5129dab81bf19c901f526ac2e4", "cd3e678a6ecb529f59e13421b1cd27bcdbb86012c4c482e570e2eb86abb2e9f4"),
+            "LicenseRef-All-Rights-Reserved", "dc7ef8dd62fb9db1ca500c1d300f206891035e5129dab81bf19c901f526ac2e4", "e198a1d6a560ac1d131817ef5d84ac2163db7578a1f200bf26731e670d5491e4"),
         new Pack("bsl-shaders", "BSL Shaders", "10.1.8", "https://modrinth.com/shader/bsl-shaders",
             "LicenseRef-All-Rights-Reserved", "198235a39479dee0964f272104844ff2ee32fd4438309a54d1421278986066bb", "5be3da36fc1812c220f5ecf00b904a783c0286fa629630038074abaf8073d4ba"),
         new Pack("complementary-reimagined", "Complementary Shaders - Reimagined", "r5.9.3", "https://modrinth.com/shader/complementary-reimagined",
@@ -63,6 +63,7 @@ public final class SupportedPackCatalog {
 
     // Retained exact historical derivatives remain recognizable; current recipe/state guards still apply.
     private static final Map<String,List<String>> LEGACY_ADAPTER_DIGESTS = Map.ofEntries(
+        Map.entry("bliss-shader", List.of("cd3e678a6ecb529f59e13421b1cd27bcdbb86012c4c482e570e2eb86abb2e9f4")),
         Map.entry("complementary-reimagined", List.of("18fcf18e20d753dac8e24309abe4b5e0f773b5c73c0bbe1bb18ae3b8f290f46b", "a342b424364b2b1d59185b584b6097648e3c11d9e499b2035012a345bdc3ed7f")),
         Map.entry("complementary-unbound", List.of("cd60c29d8d3f2e1437b965f9c32ec0e41c95df0f25f47d18e7fb7b45377476fc", "4e6cd8da53dfb1a31504b31a82027ccac4eb8b3c99449640b8f8ac77a173be8a", "9118b112be859fda810582c78dd1409d0273cbe8fa9ed72cc32a22c9ddc09ed6")),
         Map.entry("makeup-ultra-fast-shaders", List.of("ee4d9d08fc9e071cdffb1d63c920368cc7c5b1b05623d3f5a82c27505bdb4a51", "e62be2858dc69faf7a24dd5ebc3806e697302c3c8c8d46391051ba71c8ab7d9d", "52f14a1d31e0be6e24a3052578089305735f5c88cd9930fa6dd518839953ca58")),
