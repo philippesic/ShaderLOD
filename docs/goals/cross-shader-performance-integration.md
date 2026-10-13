@@ -787,3 +787,26 @@ actual NeoForge public consumer and build forwarding. It owns isolated code and
 a fresh private caller template; parent verifies current family recipe/source and
 integrates before any runtime launch. No new benchmark campaign, driver workaround
 or closed trial is introduced.
+
+
+## Unbound reaches NeoForge 26.2 — October 13, 2026 Pacific
+
+Separate named Unbound main source/input compatibility, public consumer and
+producer joins are integrated;37 authentic CPU checks and normalcb2fd0 JAR build
+pass. First producer passed but caught an omitted native-family checker tail
+before client launch; the narrow repair retains strict native398/style4/TAA/RP1.
+Fresh actual Original398/Balanced402/Quality398/Off398/Cancel observations match
+current shader source/all441 archive members/current main origins and positive
+ordinary/shadow MAIN deltas. Parent viewed coherent Original/On stills. The finite
+operation FAILED on a3sec lsof supervision timeout; actual completed rendering
+components were checked independently, without relabeling the operation PASS.
+Exact11:18:57UTC release and subsequent worker/parent absence/free-lock census
+accepted. No live client/build job or restart.
+
+[Actual port, evidence and limitations](../evaluation/optimization-ports-20261013.md).
+No GPU work/FPS/motion/DHPBR/full90 claim. Two pinned Iris implementations forward
+existing core suppliers to the new primary programs; no missing registration join.
+Parent owns continuation/Git/lane. Next direct shader candidate ports opacity-
+saturation termination into MakeUp primary clouds, retaining native count and
+first-contact output if the exact recurrence permits. Isolated shader owner
+assigned; no benchmark campaign or further process-probe framework work.

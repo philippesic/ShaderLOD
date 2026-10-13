@@ -1,0 +1,66 @@
+--- a/ports/26.2/neoforge/build.gradle
++++ b/ports/26.2/neoforge/build.gradle
+@@ -89 +89 @@
+-  if (['makeup-volume', 'bsl-volume', 'reimagined-volume'].contains(project.findProperty('portNativeFamily')?.toString()) &&
++  if (['makeup-volume', 'bsl-volume', 'reimagined-volume', 'unbound-volume'].contains(project.findProperty('portNativeFamily')?.toString()) &&
+--- a/ports/26.2/neoforge/src/devClient/java/com/pp/shaderlod/dev/NeoForgeRoundtrip.java
++++ b/ports/26.2/neoforge/src/devClient/java/com/pp/shaderlod/dev/NeoForgeRoundtrip.java
+@@ -53 +53,2 @@
+-    private final boolean volumeControl=makeupVolume||bslVolume||reimaginedVolume;
++    private final boolean unboundVolume="unbound-volume".equals(nativeFamilyMode);
++    private final boolean volumeControl=makeupVolume||bslVolume||reimaginedVolume||unboundVolume;
+@@ -133,0 +135 @@
++                if(probe.unboundVolume&&!probe.mainBindingCompat)throw new IllegalStateException("Unbound controls require MAIN compatibility; DEV MakeUp correction is not an Unbound certificate");
+@@ -138 +140 @@
+-                if(!archive.startsWith(dir)||archive.equals(dir)||Files.isSymbolicLink(archive)||(probe.reimaginedVolume?!com.pp.shaderlod.integration.reimaginedquad.ReimaginedQuadEligibility.validate(archive,com.pp.shaderlod.integration.reimaginedquad.ReimaginedQuadEligibility.nativeOptions()).eligible():(probe.bslVolume?!com.pp.shaderlod.integration.bslquad.BslQuadEligibility.validate(archive,com.pp.shaderlod.integration.bslquad.BslQuadEligibility.nativeOptions()).eligible():!com.pp.shaderlod.integration.makeupquad.MakeUpQuadEligibility.validate(archive,com.pp.shaderlod.integration.makeupquad.MakeUpQuadEligibility.nativeOptions()).eligible())))throw new IllegalStateException("Certified original family archive/native options/resources required");
++                if(!archive.startsWith(dir)||archive.equals(dir)||Files.isSymbolicLink(archive)||(probe.unboundVolume?!com.pp.shaderlod.integration.unboundquad.UnboundQuadEligibility.validate(archive,com.pp.shaderlod.integration.unboundquad.UnboundQuadEligibility.nativeOptions()).eligible():probe.reimaginedVolume?!com.pp.shaderlod.integration.reimaginedquad.ReimaginedQuadEligibility.validate(archive,com.pp.shaderlod.integration.reimaginedquad.ReimaginedQuadEligibility.nativeOptions()).eligible():(probe.bslVolume?!com.pp.shaderlod.integration.bslquad.BslQuadEligibility.validate(archive,com.pp.shaderlod.integration.bslquad.BslQuadEligibility.nativeOptions()).eligible():!com.pp.shaderlod.integration.makeupquad.MakeUpQuadEligibility.validate(archive,com.pp.shaderlod.integration.makeupquad.MakeUpQuadEligibility.nativeOptions()).eligible())))throw new IllegalStateException("Certified original family archive/native options/resources required");
+@@ -140 +142 @@
+-            probe.report.add("stageNames",GSON.toJsonTree(probe.stages));probe.report.addProperty("makeupVolumeControl",probe.makeupVolume);probe.report.addProperty("makeupVolumeMode",probe.makeupVolume?"makeup-volume":"");probe.report.addProperty("bslVolumeControl",probe.bslVolume);probe.report.addProperty("bslVolumeMode",probe.bslVolume?"bsl-volume":"");probe.report.addProperty("reimaginedVolumeControl",probe.reimaginedVolume);probe.report.addProperty("reimaginedVolumeMode",probe.reimaginedVolume?"reimagined-volume":"");probe.report.addProperty("productionApplyRequested",true);probe.report.addProperty("rendererWorkMeasurementRequested",false);probe.report.addProperty("devBindingCompatibilityRequired",!probe.mainBindingCompat);probe.report.addProperty("mainBindingCompatibilityRequired",probe.mainBindingCompat);probe.report.addProperty("bindingCompatibilityBackend",probe.mainBindingCompat?"MAIN":"DEV");
++            probe.report.add("stageNames",GSON.toJsonTree(probe.stages));probe.report.addProperty("makeupVolumeControl",probe.makeupVolume);probe.report.addProperty("makeupVolumeMode",probe.makeupVolume?"makeup-volume":"");probe.report.addProperty("bslVolumeControl",probe.bslVolume);probe.report.addProperty("bslVolumeMode",probe.bslVolume?"bsl-volume":"");probe.report.addProperty("unboundVolumeControl",probe.unboundVolume);probe.report.addProperty("unboundVolumeMode",probe.unboundVolume?"unbound-volume":"");probe.report.addProperty("reimaginedVolumeControl",probe.reimaginedVolume);probe.report.addProperty("reimaginedVolumeMode",probe.reimaginedVolume?"reimagined-volume":"");probe.report.addProperty("productionApplyRequested",true);probe.report.addProperty("rendererWorkMeasurementRequested",false);probe.report.addProperty("devBindingCompatibilityRequired",!probe.mainBindingCompat);probe.report.addProperty("mainBindingCompatibilityRequired",probe.mainBindingCompat);probe.report.addProperty("bindingCompatibilityBackend",probe.mainBindingCompat?"MAIN":"DEV");
+@@ -273,0 +276 @@
++            if(unboundVolume)validateUnboundVolumeState(client,options,null);
+@@ -330,0 +334 @@
++            if(unboundVolume)validateUnboundVolumeState(client,options,state);
+@@ -625 +629 @@
+-        boolean admitted=(!reimaginedVolume||(proof.has("sourceFamily")&&"reimagined".equals(proof.get("sourceFamily").getAsString())))&&(!bslVolume||(proof.has("sourceFamily")&&"bsl".equals(proof.get("sourceFamily").getAsString())))&&progressed&&devQueries==0&&!"unavailable".equals(origin)
++        boolean admitted=(!unboundVolume||(proof.has("sourceFamily")&&"unbound".equals(proof.get("sourceFamily").getAsString())))&&(!reimaginedVolume||(proof.has("sourceFamily")&&"reimagined".equals(proof.get("sourceFamily").getAsString())))&&(!bslVolume||(proof.has("sourceFamily")&&"bsl".equals(proof.get("sourceFamily").getAsString())))&&progressed&&devQueries==0&&!"unavailable".equals(origin)
+@@ -761,0 +766,39 @@
++    }
++
++    private void validateUnboundVolumeState(Minecraft client,Map<String,String> options,JsonObject state)throws Exception{
++        var cfg=coreState();var expectedPreset=stage==2?LodPreset.QUALITY:LodPreset.BALANCED;
++        if(initial==null||initial.enabled()||initial.settings().debug()||initial.preset()!=LodPreset.BALANCED||cfg.enabled()!=stageEnabled()||cfg.preset()!=expectedPreset||cfg.settings().debug()||!Iris.getShaderPackOptionQueue().isEmpty())throw new IllegalStateException("Unbound fallback Core/preset/nativequeue mismatch");
++        var expected=new TreeMap<>(com.pp.shaderlod.integration.unboundquad.UnboundQuadEligibility.nativeOptions());
++        if(stageGenerated()){
++            expected.put("SHADERLOD_REFINEMENT_ADAPTER","1");
++            // Exact hash-pinned helper #ifndef/#define guards also appear as Iris BooleanOptions.
++            expected.put("SHADERLOD_REFINEMENT_ADAPTER_INCLUDED","true");
++            expected.put("SHADERLOD_REFINEMENT_BUDGET_INCLUDED","true");
++            expected.put("SHADERLOD_UNIFORM_SAMPLE_BUDGET_INCLUDED","true");
++        }
++        if(!expected.equals(options))throw new IllegalStateException("Unbound fallback requires native398 unchanged plus owned flag and exact three parsed helper guards on generated stage");
++        if(!"true".equals(options.get("TAA"))||!"4".equals(options.get("SHADER_STYLE"))||!"1".equals(options.get("RP_MODE")))throw new IllegalStateException("Unbound native TAA/style4/RP1 changed");
++        if(state==null)return;
++        state.addProperty("nativeTaa",options.get("TAA"));state.addProperty("nativeShaderStyle",options.get("SHADER_STYLE"));state.addProperty("nativeRpMode",options.get("RP_MODE"));
++        var dir=Iris.getShaderpacksDirectory().toAbsolutePath().normalize();var originalPath=dir.resolve(original).normalize();
++        if(!com.pp.shaderlod.integration.unboundquad.UnboundQuadEligibility.validate(originalPath,com.pp.shaderlod.integration.unboundquad.UnboundQuadEligibility.nativeOptions()).eligible())throw new IllegalStateException("Unbound original source certificate changed");
++        if(stageGenerated()){
++            String selected=Iris.getCurrentPackName();var generated=dir.resolve(selected).normalize();
++            if(!generated.startsWith(dir)||generated.equals(dir)||Files.isSymbolicLink(generated))throw new IllegalStateException("Unsafe Unbound generated source path");
++            try(var zip=new java.util.zip.ZipFile(generated.toFile())){
++                var entry=zip.getEntry("shaderlod-selection.json");if(entry==null)throw new IllegalStateException("Generated Unbound selection marker absent");
++                JsonObject marker;try(var in=zip.getInputStream(entry)){marker=com.google.gson.JsonParser.parseString(new String(in.readAllBytes(),java.nio.charset.StandardCharsets.UTF_8)).getAsJsonObject();}
++                String recipeSha;try(var in=com.pp.shaderlod.packs.PackSelectionService.class.getResourceAsStream("/assets/shaderlod/adapters/patches/adapters/complementary-unbound.json")){
++                    if(in==null)throw new IllegalStateException("Actual packaged Unbound recipe absent");recipeSha=HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(in.readAllBytes()));
++                }
++                if(marker.get("schema").getAsInt()!=1||!"complementary-unbound".equals(marker.get("adapterId").getAsString())||!original.equals(marker.get("originalFile").getAsString())||!originalHash.equals(marker.get("originalSha256").getAsString())||!recipeSha.equals(marker.get("recipeSha256").getAsString()))throw new IllegalStateException("Generated Unbound source/recipe marker mismatch");
++                String stateFile=marker.get("stateFile").getAsString();var statePath=dir.resolve(stateFile).normalize();
++                if(!Path.of(stateFile).getFileName().toString().equals(stateFile)||!statePath.startsWith(dir)||statePath.equals(dir)||Files.isSymbolicLink(statePath))throw new IllegalStateException("Unsafe Unbound selection state reference");
++                var selection=com.google.gson.JsonParser.parseString(Files.readString(statePath)).getAsJsonObject();String generatedSha=hash(generated);
++                if(!selection.get("active").getAsBoolean()||!selected.equals(selection.get("generatedFile").getAsString())||!generatedSha.equals(selection.get("generatedSha256").getAsString())||!original.equals(selection.get("originalFile").getAsString())||!originalHash.equals(selection.get("originalSha256").getAsString())||!recipeSha.equals(selection.get("recipeSha256").getAsString()))throw new IllegalStateException("Generated Unbound archive differs from real public Apply selection state");
++                state.add("generatedSelectionMarker",marker);state.addProperty("generatedArchiveSha256",generatedSha);state.addProperty("generatedSelectionStateMatched",true);
++            }
++        }
++        state.addProperty("loadedOptionCount",options.size());
++        state.add("generatedDeclaredOptions",GSON.toJsonTree(stageGenerated()?Map.of("SHADERLOD_REFINEMENT_ADAPTER","1","SHADERLOD_REFINEMENT_ADAPTER_INCLUDED","true","SHADERLOD_REFINEMENT_BUDGET_INCLUDED","true","SHADERLOD_UNIFORM_SAMPLE_BUDGET_INCLUDED","true"):Map.of()));
++        state.addProperty("unboundVolumeControl",true);state.addProperty("expectedPreset",expectedPreset.name());state.addProperty("underlyingNative398Unchanged",true);state.addProperty("generatedUnboundRecipeSelected",stageGenerated());state.addProperty("ownedRefinementFlag",stageGenerated()?"1":"absent");state.addProperty("rendererEligible",com.pp.shaderlod.integration.makeupquad.MakeUpQuadRuntime.enabled());state.addProperty("linkedUniformReadbackPerformed",false);state.addProperty("avoidedWorkMeasured",false);

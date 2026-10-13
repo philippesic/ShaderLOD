@@ -390,3 +390,54 @@ has not been rendered; earlier fixed-package rendering evidence remains scoped
 to its unchanged shader paths.
 [Preview JAR](../../dev/artifacts/optimization-ports-20261013/fabric-26.1.2-eight-ports/shaderlod-fabric-26.1.2-eight-port-preview.jar),
 [package receipt](../../dev/artifacts/optimization-ports-20261013/fabric-26.1.2-eight-ports/package-receipt.json).
+
+## Unbound: actual NeoForge 26.2 consumer port
+
+The working Reimagined main input-compatibility route now admits separately
+pinned Unbound original/generated graphs. A named Unbound source certificate
+reconstructs the entire maintained recipe, verifies original/archive/options/
+state/helper identity and retains unchanged vertex entries. Main dispatch,
+cache invalidation, diagnostics, public four-stage consumer and producer/checker
+forwarding have explicit Unbound joins. Native guards for other families remain.
+This supplies the existing cloud optimization to another loader/version; it adds
+no renderer batching eligibility or shader quality reduction.
+
+Thirty-seven actual CPU selection/source/tamper/native-return checks pass, and
+the normal NeoForge JAR built successfully. Its exact current certificate,
+dispatcher, recipe and native398 resources are verified. The first real producer
+passed but preflight found a missed final native-family branch in the checker;
+it selected MakeUp's native100 tuple. Parent repaired only that branch using
+the authentic Unbound native398/style4/TAA/RP1 pins and tested wrong count/archive
+refusal. No game launched in that failed attempt; its stamp and records remain.
+
+The fresh operation then actually rendered Original398 → Balanced402 → Quality398
+→ Off398 and Cancel, with no fallback. Parent independently reconstructed all
+439 expected generated files plus the two public metadata entries, checked all
+native options, five current main class origins plus the compatibility origin,
+positive ordinary/shadow correction, GL-entry and native-body deltas in every
+stage, and viewed coherent Original/On stills. DEV correction stayed zero.
+Native AA/style/options and Quality/Off/Cancel restoration passed their observed
+component checks. These are compatibility/rendering controls, not executed cloud
+read reduction or speed evidence.
+
+**The finite operation failed:** a three-second process-directory `lsof` probe
+timed out during supervision. The completed public rendering report survives,
+and unchanged strict postflight assertions were replayed read-only against it.
+The nonzero exit, timeout and absent final-admission remain recorded; this is not
+a whole-operation PASS. Exact release11:18:57UTC, worker fresh11:22:02UTC and
+parent later absence/free-lock census are accepted. No restart followed.
+[Implementation and CPU checks](../../dev/logs/optimization-porting-20261013/unbound-neoforge-port/REPORT.md),
+[actual handback and failure](../../dev/logs/optimization-porting-20261013/unbound-neoforge-port/caller-r2/handback.json),
+[parent component acceptance](../../dev/logs/optimization-porting-20261013/unbound-neoforge-port/parent-acceptance/receipt.json),
+[scoped producer/dev-consumer patch](../../patches/consumer-ports/neoforge-262-unbound-main.patch).
+The normal main JAR is
+`cb2fd0fc083186804b175b4372681006fa2d5b2847d430c31a678998fcd84693`.
+
+A bounded check of the exact Iris1.11.4 NeoForge26.2 and Fabric26.1.2 bytecode
+also confirms that the existing core suppliers forward to deferred/composite
+and world/sky programs without custom-expression dependencies. No duplicate
+uniform-registration port is needed. This code-path evidence covers those two
+jars, not actual linked GPU values or the other eight implementations.
+[Pinned forwarding evidence](../../dev/logs/optimization-porting-20261013/primary-uniform-forwarding/receiver-6plssn29/receipt.json).
+Linked values, reached branches, sampler parity, motion, FPS, DH/PBR and full90
+acceptance remain unfinished.
