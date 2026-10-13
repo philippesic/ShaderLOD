@@ -9,11 +9,11 @@ import java.util.zip.ZipFile;
 import java.nio.charset.StandardCharsets;
 /** Pinned Reimagined NF26.2 source compatibility admission: exact original or actual maintained generated graph, no batching eligibility. */
 public final class ReimaginedSourceCertificate {
- public static final String RECIPE_SHA="4bfd9a197e269a7326acc902b7e2dcfd4a05a21ca9b983c7a5ed6b4bfe10b359";
+ public static final String RECIPE_SHA="8afb5b6dca9b5d980f5da278e932540d2b65c50b40c6ef476fca8bcec465a4e8";
  private static final String ID="complementary-reimagined",RECIPE="assets/shaderlod/adapters/patches/adapters/complementary-reimagined.json";
  private ReimaginedSourceCertificate(){}
  public record Result(boolean eligible,String reason,boolean generated){}
- public static Map<String,String> generatedOptions(){var m=new TreeMap<>(ReimaginedQuadEligibility.nativeOptions());m.put("SHADERLOD_REFINEMENT_ADAPTER","1");m.put("SHADERLOD_REFINEMENT_ADAPTER_INCLUDED","true");m.put("SHADERLOD_REFINEMENT_BUDGET_INCLUDED","true");m.put("SHADERLOD_UNIFORM_SAMPLE_BUDGET_INCLUDED","true");return Map.copyOf(m);}
+ public static Map<String,String> generatedOptions(){var m=new TreeMap<>(ReimaginedQuadEligibility.nativeOptions());m.put("SHADERLOD_REFINEMENT_ADAPTER","1");m.put("SHADERLOD_REFINEMENT_ADAPTER_INCLUDED","true");m.put("SHADERLOD_REFINEMENT_BUDGET_INCLUDED","true");m.put("SHADERLOD_UNIFORM_SAMPLE_BUDGET_INCLUDED","true");m.put("SHADERLOD_OPTIMIZATION_FLAGS_INCLUDED","true");m.put("SHADERLOD_PROJECTED_POM_ADAPTER_INCLUDED","true");m.put("SHADERLOD_PROJECTED_MATERIAL_BUDGET_INCLUDED","true");return Map.copyOf(m);}
  private static String sha(byte[] b)throws Exception{return HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(b));}
  private static Path child(Path dir,String name)throws Exception{Path p=dir.resolve(name).normalize();if(!Path.of(name).getFileName().toString().equals(name)||!p.startsWith(dir)||p.equals(dir)||Files.isSymbolicLink(p)||!Files.isRegularFile(p))throw new IllegalStateException("Unsafe/missing source/state child");return p;}
  private static byte[] resource(String path)throws Exception{try(var in=PackSelectionService.class.getClassLoader().getResourceAsStream(path)){if(in==null)throw new IllegalStateException("Missing packaged recipe/helper: "+path);return in.readAllBytes();}}
@@ -38,7 +38,7 @@ public final class ReimaginedSourceCertificate {
    Path dir=directory.toAbsolutePath().normalize();if(requested==null||requested.isBlank())throw new IllegalStateException("Certified original required");Path original=child(dir,requested);
    if(!ReimaginedQuadEligibility.validate(original,ReimaginedQuadEligibility.nativeOptions()).eligible())throw new IllegalStateException("Original native398/source/API resources refused");
    if(selected.equals(requested))return new Result(ReimaginedQuadEligibility.optionsMatch(options),"Original native398/TAA/style1/RP1",false);
-   if(!generatedOptions().equals(options))throw new IllegalStateException("Generated exact402 options refused");
+   if(!generatedOptions().equals(options))throw new IllegalStateException("Generated exact405 options refused");
    byte[] recipeBytes=resource(RECIPE);if(!sha(recipeBytes).equals(RECIPE_SHA))throw new IllegalStateException("Stale/tampered packaged recipe");var recipe=json(recipeBytes);
    var source=archive(original);var expected=new TreeMap<String,byte[]>(source);var actual=archive(child(dir,selected));var marker=json(actual.get("shaderlod-selection.json"));
    if(marker.get("schema").getAsInt()!=1)throw new IllegalStateException("Marker schema");equalsField(marker,"adapterId",ID);equalsField(marker,"originalFile",requested);equalsField(marker,"originalSha256",ReimaginedQuadEligibility.ARCHIVE_SHA);equalsField(marker,"recipeSha256",RECIPE_SHA);
@@ -51,11 +51,11 @@ public final class ReimaginedSourceCertificate {
    for(var e:source.entrySet())if(e.getKey().endsWith(".vsh")&&!Arrays.equals(e.getValue(),actual.get(e.getKey())))throw new IllegalStateException("Changed vertex entry");
    var state=json(Files.readAllBytes(child(dir,marker.get("stateFile").getAsString())));if(state.get("schema").getAsInt()!=1)throw new IllegalStateException("State schema");equalsField(state,"stateFile",marker.get("stateFile").getAsString());equalsField(state,"adapterId",ID);equalsField(state,"originalFile",requested);equalsField(state,"originalSha256",ReimaginedQuadEligibility.ARCHIVE_SHA);equalsField(state,"generatedFile",selected);equalsField(state,"generatedSha256",sha(Files.readAllBytes(child(dir,selected))));equalsField(state,"recipeSha256",RECIPE_SHA);
    var owned=state.getAsJsonObject("appliedOverrides");if(owned.size()!=1||!"1".equals(owned.get("SHADERLOD_REFINEMENT_ADAPTER").getAsString()))throw new IllegalStateException("State owned overrides changed");
-   for(var e:state.getAsJsonObject("baseOptions").entrySet())if(!e.getValue().getAsString().equals(ReimaginedQuadEligibility.nativeOptions().get(e.getKey())))throw new IllegalStateException("State original option choice changed");
+   for(var e:state.getAsJsonObject("baseOptions").entrySet())if(ReimaginedQuadEligibility.nativeOptions().containsKey(e.getKey())&&!e.getValue().getAsString().equals(ReimaginedQuadEligibility.nativeOptions().get(e.getKey())))throw new IllegalStateException("State original option choice changed");
    String note="Private local ShaderLOD adapter. Original: "+ID+". Upstream files and license retained. Do not redistribute this copy.\nRendering, quality, DH and PBR validation remain separate checks.\n";
    if(!Arrays.equals(note.getBytes(StandardCharsets.UTF_8),actual.get("SHADERLOD_PRIVATE_SELECTION.md")))throw new IllegalStateException("Generated provenance member changed");
    if(!state.get("active").getAsBoolean()&&!nativeReturnTransition)throw new IllegalStateException("Inactive generated state outside genuine native-return selection");
-   return new Result(true,"Exact maintained generated402 source/state/unchanged vertex entries; compatibility only",true);
+   return new Result(true,"Exact maintained generated405 source/state/unchanged vertex entries; compatibility only",true);
   }catch(Exception|LinkageError failure){return new Result(false,failure.toString(),false);}
  }
 }
