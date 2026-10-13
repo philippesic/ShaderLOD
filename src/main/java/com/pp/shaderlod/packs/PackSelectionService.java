@@ -357,6 +357,13 @@ public final class PackSelectionService {
                     JsonObject addition = manifest.getAsJsonObject(key);
                     add(result, string(addition, "path"), string(addition, "source_path"), string(addition, "sha256"));
                 }
+                if (manifest.has("additions")) {
+                    for (var entry : manifest.getAsJsonObject("additions").entrySet()) {
+                        JsonObject addition = entry.getValue().getAsJsonObject();
+                        validateMember(entry.getKey());
+                        add(result, entry.getKey(), string(addition, "path"), string(addition, "sha256"));
+                    }
+                }
             } else {
                 for (var patch : manifest.getAsJsonArray("patches")) {
                     JsonObject entry = patch.getAsJsonObject(); String name = string(entry, "path");

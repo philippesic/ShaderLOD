@@ -2,34 +2,10 @@
 
 <!-- codex-current-state:v1
 {
-  "authority": "Human explicitly authorized amended native Goal on October12 Pacific: spearhead optimization porting, correcting past diversion into harness/benchmark/trivial work. Native Goal created and verified ACTIVE in this chat. Parent owns selection, implementation/integration and continuation; no harness/benchmark perfection gate for previews. Preserve full scope/native quality/AA/recovery, strict pins, historical trials and EAGLE exclusion. Prior 16339-second runtime allocation exhausted; setting Goal starts source porting, with no new runtime launch or allocation. Human October13 explicitly requests an hourly follow-up in this chat: compare STATUS/native Goal, recover transient bugs/capacity and continue authorized ports, correct unrelated drift, respect pauses and preserve healthy jobs/full allocations; notify only meaningful progress/failures/decisions. No native automation capability available here; UI tool denied Codex, so no schedule created and no private scheduler bypass attempted. New Goal Unbound untimed rendering/recovery validation executed in fresh operation within explicit porting/rendering objective, not an extension of exhausted old16339-second campaign; no human overall new elapsed limit supplied. Same source/full90/nativequality/restoration controls remain. Parent accepted exact release and authorized fresh bounded Sildur consumer task.",
-  "baseline": "Matched Mac native shader settings and resolution. Keep separate NeoForge original/candidate/return and Fabric same-mod Off/On/Off protocols; no cross-protocol percentage aggregation.",
-  "event_at": "2026-10-13T15:26:36.976373+00:00",
+  "authority": "Philip explicitly replaced the prior goal on October13 Pacific and said set that goal and go. Native get_goal returned none, create_goal installed this agreed new objective and get_goal verified ACTIVE. New toggle and measurement infrastructure, full optimization inventory and one owning agent per shader are explicitly authorized. Prior closed/fixed trials, allocations, source ancestry/native quality/AA/recovery and no push/publication/Windows SSH/Vulkan/EAGLE limits remain. Selecting profitable combinations and settings is a later joint phase, not this goal completion requirement.",
+  "baseline": "Current committed nine-family source ports and ten normal previews; previous source/render/recovery and failed trials retained. Existing features are coupled by presets/routes and lack complete independent toggles and per-change timing. Genuine current source, optional executable implementations and pinned renderer APIs are the input baseline.",
+  "event_at": "2026-10-13T20:30:58.702543+00:00",
   "evidence": [
-    {
-      "event_at": "2026-10-13T10:40:51.339445+00:00",
-      "observed_at": "2026-10-13T10:40:51.339445+00:00",
-      "path": "evaluation/optimization-ports-20261013.md",
-      "summary": "15c0982 integrates Solas/Astra accepted sourceports; all9sourcefamily mechanisms retained. Current next actual consumer port UnboundNF262 acknowledged; hourly tool remains unavailable."
-    },
-    {
-      "event_at": null,
-      "observed_at": "2026-10-13T12:33:22.575444+00:00",
-      "path": "../dev/logs/optimization-porting-20261013/unbound-neoforge-port/parent-acceptance/receipt.json",
-      "summary": "Parentactual441source/native398402/options/origins/MAINdeltas/stills/restoration accepted ascomponents; FAILEDsupervision/timeout/no final-admission andfreshrelease retained."
-    },
-    {
-      "event_at": "2026-10-13T12:33:22.575444+00:00",
-      "observed_at": "2026-10-13T12:33:22.575444+00:00",
-      "path": "../dev/logs/optimization-porting-20261013/makeup-opacity-bound/parent-failclosed-consumer-lkpm30i4/receipt.json",
-      "summary": "MakeUp native-count OW+End saturation port source1978 adopted;5 installed/6 revised wrappers/currentpublicCPU restore/tamper pass, native100104AA2, old no-gain trial not reopened."
-    },
-    {
-      "event_at": "2026-10-13T12:33:22.575444+00:00",
-      "observed_at": "2026-10-13T12:33:22.575444+00:00",
-      "path": "evaluation/optimization-ports-20261013.md",
-      "summary": "CurrentUnboundconsumer61612c9 andMakeUpb82a9c5 sourcecode milestones. Nextactualshadercodejoin Photon optical-depth6/2call path acknowledged, no runtimejob."
-    },
     {
       "event_at": null,
       "observed_at": "2026-10-13T13:12:19.667905+00:00",
@@ -125,27 +101,51 @@
       "observed_at": "2026-10-13T15:26:36.976373+00:00",
       "path": "../dev/logs/optimization-porting-20261013/neoforge-263-join-question/REPORT.md",
       "summary": "Pinned Renderpearl contract differs; focused product follow-up proves production joins already present, unnecessary new certificates/probes proposal withdrawn. Minimum genuine installed consumer only."
+    },
+    {
+      "event_at": "2026-10-13T20:12:11.904284+00:00",
+      "observed_at": "2026-10-13T20:12:11.904284+00:00",
+      "path": "goals/optimization-union-and-measurement.md",
+      "summary": "Explicit replacement goal and full completion contract; native active verified, manual winner selection deferred."
+    },
+    {
+      "event_at": "2026-10-13T20:12:11.904284+00:00",
+      "observed_at": "2026-10-13T20:12:11.904284+00:00",
+      "path": "OPTIMIZATION_UNION.md",
+      "summary": "Initial current source union and shared individual integer-uniform contract; source owners discovering complete optional coverage."
+    },
+    {
+      "event_at": null,
+      "observed_at": "2026-10-13T20:12:11.904284+00:00",
+      "path": "../dev/logs/optimization-union-20261013/makeup/candidate/HANDBACK.md",
+      "summary": "Concrete isolated MakeUp firstslice source/control/public evidence:11shader consumers plus NA and shared CPU pending mapping, not full completion."
+    },
+    {
+      "event_at": "2026-10-13T20:30:58.702543+00:00",
+      "observed_at": "2026-10-13T20:30:58.702543+00:00",
+      "path": "OPTIMIZATION_SOURCE_MAP.json",
+      "summary": "Cross-family implementation origin map from actual owner inventories; registry/source variants and unresolved joins are explicit, no final runtime claim."
     }
   ],
-  "goal": "[Active goal](goals/cross-shader-performance-integration.md)",
-  "hypothesis": "NeoForge26.3 production already selects and drives current shader optimizations. The missing acceptance boundary is current generated-graph/native recovery consumption through the genuine installed entry; reuse native Renderpearl policy and existing observer rather than manufacture production joins.",
+  "goal": "[Active goal](goals/optimization-union-and-measurement.md)",
+  "hypothesis": "Existing algorithms and optional implementations can be adapted by dedicated shader owners, while shared coherent feature state and real backend timing isolate each change. Deliver source-backed applicability and real consumers rather than assume identical shader mathematics or timing availability.",
   "next_action": {
-    "action": "Carry current optimizations through the genuine installed NeoForge26.3 consumer. Production Apply/shared generation/core uniform hooks already support current nine-family resources: make no new production certificates/draw observer/descriptor changes. Acknowledged feature owner prepares only compact existing dev original -> Balanced -> Quality -> Off/Cancel controls and fresh private installed caller, using current normal preview and authentic producer. Select configured Photon366369 first, preserve strict-dev InSampler/default-original blockers and full90; no generic framework or benchmarks.",
-    "milestone": "Current Photon optimization and native recovery prepared for genuine installed NeoForge26.3 consumption with minimum observer changes",
-    "owner": "/root with /root/neoforge_263_optimization_consumer"
+    "action": "Integrate and independently review complete per-shader union slices; finish cross-family source coverage, normal generated-source CPU eligibility and actual compile-option/target/resource joins. Preserve separately measured predicates/variants and exact NA/API reasons. Bind current shared controls/timing, then run one owned authentic toggle/timing probe before building all ten usable previews. No combinatorial search or winning-set selection.",
+    "milestone": "Complete inventory coverage plus independently controllable source ports and a real timing comparison slice ready for user manual validation",
+    "owner": "/root with shader owners and union_controls_measurement"
   },
-  "objective": "Spearhead direct high-impact existing optimization ports across all nine shader families and full 90 version/loader scope. Usable integrated shader optimization code is the primary outcome; minimum necessary consumer/quality/recovery verification supports the port.",
-  "observed_at": "2026-10-13T15:26:36.976373+00:00",
-  "owner": "/root integration/Git/next consumer; neoforge_263_optimization_consumer acknowledged isolated minimal consumer/caller preparation; Photon runtime released/terminal",
+  "objective": "Port the complete union of currently implemented shader and CPU/rendering optimizations to all nine shader families, with one owner per shader, independent switches and real frame/CPU/GPU/FPS per-change measurement across both loaders and five Minecraft versions. Finish with usable ports and infrastructure; manual winner selection follows with Philip.",
+  "observed_at": "2026-10-13T20:30:58.702543+00:00",
+  "owner": "/root inventory/integration/Git/resource scheduling; shared controls/measurement owner and per-shader owners in roster",
   "process_health": "none",
   "progress": {
     "activity": "preparation",
     "allocation_seconds": null,
     "blocker": null,
-    "completed_updates": 24,
-    "execution_seconds": 31369.17024499999,
-    "last_progress_at": "2026-10-13T15:26:36.976373+00:00",
-    "limitations": "Photon NF262 configured366369 normal rendering/nativeAA/MAIN/controls accepted; no upstream-defaults/work/speed/motion/DHPBR. NF263 current production joins exist; installed current-graph consumption pending, strict-dev InSampler retained. Bliss/Sildur NF262 accepted; all10 previews not90 runtime/gains. Photon223.15% drift cost unknown. MakeUp1978 rounding unknown/oldB16 closed. NF1211 buildPID lost; UnboundNF262 failed supervision/components. Solas/Astra Mac blocked; old16339 allocation+overrun/hourly-uncreated retained.",
+    "completed_updates": 2,
+    "execution_seconds": 3374.7025430000003,
+    "last_progress_at": "2026-10-13T20:30:58.702543+00:00",
+    "limitations": "Union incomplete and optional inventory growing; source candidates/static checks are not final rendering/quality acceptance. Independent controls/timing code exists but live GPU/CPU/frame validity and full90 integration unverified. AstraLex owner queued by capacity. Native Solas/Astra Mac blockers remain. Older allocations/failed trials are preserved in prior checkpoint archives; no historical gain transfers or fake GPU timing.",
     "process": null
   },
   "resources": [
@@ -160,26 +160,26 @@
     "Completed separate deep offline operation05:00–05:30UTC within120-minute ceiling. Astra max analysis/alternatives/adversarial source acceptance and Sol implementation/Java recovery. New durable exact patches under patches/bsl-cloud-detail-bound-r2; adopted only into fresh ignored source copy. New full-workLOD0 control is separately pinned. Old runtime/source/product bytes and all735 pins unchanged. No client/GPU/Gradle/remote/Goal operation.",
     "Human explicit resume at October12 Pacific: execute Reimagined then BSL bound/control; root owns existing lane; preserve1200-second remaining allocation. No native Goal in this chat. Runtime released06:16:41UTC before06:17:23 allocation end. Parent closeout/commit and checkpoint validation repair exceeded allocation; actual elapsed accounting includes this overrun, allocation unchanged. No extra client/build/experiment ran.",
     "Human explicit resume at October12 Pacific: execute Reimagined then BSL bound/control; root owns existing lane; preserve1200-second remaining allocation. No native Goal in this chat. Actual total wall execution at closeout accounting observation: 16431 seconds; typed counter capped at16339 because helper forbids execution above allocation. Overrun is recorded here, not silently excluded.",
-    "Photon NF26205f492a normal efffdadd17cc1bd2be3990aee03c2ba3c7206f711227de1bcf02f00de60ddd2c actual configured366369366366/TAAtrue/TAAUfalse/latent1.00/SHfalse; current535de36 graph matches accepted Fabric and all196VSH unchanged. MAINsourcePhoton/DEV0/nine positive ordinary-shadow correction/GL/native-body deltas; exact main origins/QualityOffCancel/RD24/stills accepted by root. Finite caller0/errors=[]; raw runClient143 due exact SIGTERM after completion separately recorded. Released15:08:01.781UTC/fresh15:08:34 census/root later10841/11050/11092/11130 absent/free lock/zero clients. All7 runnable NF262 source/main/control joins now present; no speed/work/motion/DHPBR/default-original claim. NF263 focused actual API: Renderpearl snapshots List<VertexFormat> before frontend validation; NF262 draw wrapper not portable. Follow-up proved NO production edits needed: existing public Apply/shared recipes/core uniforms carry all9. Explorer withdrew unnecessary production certificates/draw observer proposal before code. Acknowledged feature owner prepares isolated compact existing NF263 observer original/Balanced/Quality/Off+Cancel and genuine installed107CP caller, no certificates/production edits, strict-dev InSampler retained. Parent integration/Git/runtime; no live lane. Full90/old16339 allocation+overrun/Mac blockers/closedcost/EAGLE/hourly-uncreated retained."
+    "New union goal supersedes prior execution objective without declaring its unfinished outcomes complete. Root owns registry/inventory integration, shared PackSelectionService additions/selector and generated CPU eligibility; shared worker owns config/UI/uniforms/timing. Shader-owner roster: Photon=union_photon; MakeUp=union_makeup (firstslice returned); BSL=union_bsl; Unbound=cloud_rejection_port; Reimagined=photon_bound_review; Sildur=sildur_cloud_port; Bliss=sildur_neoforge_port_review; Solas=union_solas; AstraLex pending native slot. Old worker names are historical identities with explicit supported NEW-turn ownership acknowledgments. No Gradle/client/GPU lane launched; source/javac/privateZIP checks allowed. One fresh BSL checker job was recorded/finite; no broad stopping. Shared registry/helper frozen38 snapshot with additive family-local flags strategy; actual optional inventory now includes shadow/receiver/AOscale/POMcache/zero-emission/water/atmosphere/spatial variants. Closed trials remain results, not profitability selection. Hardware unknown is not NA. Preserve existing canonical worlds/artifacts/unrelated work/old16339 allocation+overrun/no publication/Windows/Vulkan/EAGLE. AstraLex native slot became available after a terminal source handback; union_astralex spawned and acknowledged as ninth shader owner. All current owner source proposals and exact auxiliary jobs remain in their evidence directories; no exclusive runtime lane was launched. Source cross-reference is docs/OPTIMIZATION_SOURCE_MAP.json; optional predicates/variants require exact ancestry, not name-based aliasing."
   ],
-  "result": "Photon NF26205f492a now has usable normal previewefffdadd and actual configured366369366366/native AA/current MAINPhoton/DEV0 plus nine ordinary-shadow draw deltas/QualityOffCancel. Root accepted current535de36 archive matching Fabric,196 unchanged VSH/options/origins/fixedscene/RD24/stills/exact release15:08:01UTC; finite caller0, raw runClient143 expected owned SIGTERM separately retained. Focused NF263 check corrected unnecessary production-admission proposal: existing product already carries current optimizations; minimum installed consumer preparation acknowledged. Speed/work/motion/DHPBR/full90 unfinished.",
+  "result": "All nine shader owners assigned with acknowledgments (MakeUp first slice returned; others continuing). Shared independent registry now includes source-backed optional shader/CPU mechanisms; per-loader UI/uniform/timing and actual API compilation code exists. Parent source map publishes cross-family implementation paths and histories. Concrete family source slices with authentic wrapper/Iris/public-recovery evidence returned for Photon/MakeUp/BSL/Unbound/Reimagined/Sildur/Bliss/Solas/AstraLex; final full-union adoption not claimed. Root Photon extra-helper public join implemented; shared generated CPU eligibility/selector/compile-option resource qualifications remain integration work. Real GPU/frame timing still unverified.",
   "review": {
-    "attempt": "Direct optimization porting: MakeUp End-cloud adoption and compatible-family cloud rejection",
+    "attempt": "Optimization union ports, independent controls and measurement",
     "decision": {
       "addresses": [
         "preparation_overdue"
       ],
-      "change": "Photon NF262 integrated code/normal preview now actually rendered and restored with root acceptance. Next version question found existing NF263 production already carries current code; choose only the missing installed current-graph consumer boundary, acknowledged scoped owner.",
-      "choice": "switch",
-      "decided_at": "2026-10-13T15:26:36.976373+00:00",
-      "next_action": "Carry current optimizations through the genuine installed NeoForge26.3 consumer. Production Apply/shared generation/core uniform hooks already support current nine-family resources: make no new production certificates/draw observer/descriptor changes. Acknowledged feature owner prepares only compact existing dev original -> Balanced -> Quality -> Off/Cancel controls and fresh private installed caller, using current normal preview and authentic producer. Select configured Photon366369 first, preserve strict-dev InSampler/default-original blockers and full90; no generic framework or benchmarks.",
-      "rationale": "This advances full version scope without adding unused production machinery. Reuse working installed entry and current resources; preserve native Renderpearl policy and strict-dev original blocker.",
+      "change": "Nine acknowledged shader owners and concrete source/control slices now exist; shared timing/UI/API code and source-origin map are implemented. Continue integration of Optimization union ports, independent controls and measurement with real controls/measurement verification.",
+      "choice": "extend",
+      "decided_at": "2026-10-13T20:30:58.702543+00:00",
+      "next_action": "Integrate and independently review complete per-shader union slices; finish cross-family source coverage, normal generated-source CPU eligibility and actual compile-option/target/resource joins. Preserve separately measured predicates/variants and exact NA/API reasons. Bind current shared controls/timing, then run one owned authentic toggle/timing probe before building all ten usable previews. No combinatorial search or winning-set selection.",
+      "rationale": "Source-backed port code and functional common infrastructure are substantial progress; next work is actual consumer integration, not another planning pass or winner selection.",
       "remaining_blocker": "none recorded",
-      "review_at": "2026-10-13T15:41:36.976373+00:00"
+      "review_at": "2026-10-13T20:50:58.702543+00:00"
     },
     "failure_cause": null,
     "same_cause_failures": 0,
-    "trigger_at": "2026-10-13T15:41:36.976373+00:00"
+    "trigger_at": "2026-10-13T20:50:58.702543+00:00"
   },
   "schema_version": 2,
   "stage": "preparation",
@@ -189,20 +189,20 @@
 
 ## Current checkpoint
 
-**Objective:** Spearhead direct high-impact existing optimization ports across all nine shader families and full 90 version/loader scope. Usable integrated shader optimization code is the primary outcome; minimum necessary consumer/quality/recovery verification supports the port.
-**Matched baseline:** Matched Mac native shader settings and resolution. Keep separate NeoForge original/candidate/return and Fabric same-mod Off/On/Off protocols; no cross-protocol percentage aggregation.
-**Outcome:** Photon NF26205f492a now has usable normal previewefffdadd and actual configured366369366366/native AA/current MAINPhoton/DEV0 plus nine ordinary-shadow draw deltas/QualityOffCancel. Root accepted current535de36 archive matching Fabric,196 unchanged VSH/options/origins/fixedscene/RD24/stills/exact release15:08:01UTC; finite caller0, raw runClient143 expected owned SIGTERM separately retained. Focused NF263 check corrected unnecessary production-admission proposal: existing product already carries current optimizations; minimum installed consumer preparation acknowledged. Speed/work/motion/DHPBR/full90 unfinished.
-**Execution (last observation):** preparation; process health none; cumulative 24 updates; 31,369.1702 execution seconds
-**Owner:** /root integration/Git/next consumer; neoforge_263_optimization_consumer acknowledged isolated minimal consumer/caller preparation; Photon runtime released/terminal
-**Authority:** Human explicitly authorized amended native Goal on October12 Pacific: spearhead optimization porting, correcting past diversion into harness/benchmark/trivial work. Native Goal created and verified ACTIVE in this chat. Parent owns selection, implementation/integration and continuation; no harness/benchmark perfection gate for previews. Preserve fu… [detail omitted; use --json]
-**Goal:** [Active goal](goals/cross-shader-performance-integration.md)
-**Next action:** Carry current optimizations through the genuine installed NeoForge26.3 consumer. Production Apply/shared generation/core uniform hooks already support current nine-family resources: make no new production certificates/draw observer/descriptor changes. Acknowledged feature owner prepares only compact existing dev original -> Balanced -> Quality -> Off/Cancel controls and fresh private installed caller, using current normal preview and authentic producer. Select configured Photon366369 first, pre… [detail omitted; use --json]
-**Next owner / milestone:** /root with /root/neoforge_263_optimization_consumer / Current Photon optimization and native recovery prepared for genuine installed NeoForge26.3 consumption with minimum observer changes
-**Observed:** 2026-10-13T15:26:36.976373+00:00; event 2026-10-13T15:26:36.976373+00:00
-**Chosen hypothesis (authored):** NeoForge26.3 production already selects and drives current shader optimizations. The missing acceptance boundary is current generated-graph/native recovery consumption through the genuine installed entry; reuse native Renderpearl policy and existing observer rather than manufacture production joins.
+**Objective:** Port the complete union of currently implemented shader and CPU/rendering optimizations to all nine shader families, with one owner per shader, independent switches and real frame/CPU/GPU/FPS per-change measurement across both loaders and five Minecraft versions. Finish with usable ports and infrastructure; manual winner selection follows with Philip.
+**Matched baseline:** Current committed nine-family source ports and ten normal previews; previous source/render/recovery and failed trials retained. Existing features are coupled by presets/routes and lack complete independent toggles and per-change timing. Genuine current source, optional executable implementations and pinned renderer APIs are the input baseline.
+**Outcome:** All nine shader owners assigned with acknowledgments (MakeUp first slice returned; others continuing). Shared independent registry now includes source-backed optional shader/CPU mechanisms; per-loader UI/uniform/timing and actual API compilation code exists. Parent source map publishes cross-family implementation paths and histories. Concrete family source slices with authentic wrapper/Iris/public-recovery evidence returned for Photon/MakeUp/BSL/Unbound/Reimagined/Sildur/Bliss/Solas/AstraLex; final full-union adoption not claimed. Root Photon extra-helper public join implemented; shared generated CPU eligibility/selector/compile-option resource qualifications remain integration work. Real GPU/frame timing still unverified.
+**Execution (last observation):** preparation; process health none; cumulative 2 updates; 3,374.7025 execution seconds
+**Owner:** /root inventory/integration/Git/resource scheduling; shared controls/measurement owner and per-shader owners in roster
+**Authority:** Philip explicitly replaced the prior goal on October13 Pacific and said set that goal and go. Native get_goal returned none, create_goal installed this agreed new objective and get_goal verified ACTIVE. New toggle and measurement infrastructure, full optimization inventory and one owning agent per shader are explicitly authorized. Prior closed/fix… [detail omitted; use --json]
+**Goal:** [Active goal](goals/optimization-union-and-measurement.md)
+**Next action:** Integrate and independently review complete per-shader union slices; finish cross-family source coverage, normal generated-source CPU eligibility and actual compile-option/target/resource joins. Preserve separately measured predicates/variants and exact NA/API reasons. Bind current shared controls/timing, then run one owned authentic toggle/timing probe before building all ten usable previews. No combinatorial search or winning-set selection.
+**Next owner / milestone:** /root with shader owners and union_controls_measurement / Complete inventory coverage plus independently controllable source ports and a real timing comparison slice ready for user manual validation
+**Observed:** 2026-10-13T20:30:58.702543+00:00; event 2026-10-13T20:30:58.702543+00:00
+**Chosen hypothesis (authored):** Existing algorithms and optional implementations can be adapted by dedicated shader owners, while shared coherent feature state and real backend timing isolate each change. Deliver source-backed applicability and real consumers rather than assume identical shader mathematics or timing availability.
 **Blocker:** none recorded
-**Limitations:** Photon NF262 configured366369 normal rendering/nativeAA/MAIN/controls accepted; no upstream-defaults/work/speed/motion/DHPBR. NF263 current production joins exist; installed current-graph consumption pending, strict-dev InSampler retained. Bliss/Sildur NF262 accepted; all10 previews not90 runtime/gains. Photon223.15% drift cost unknown. MakeUp1978 rounding unknown/oldB16 closed. NF1211 buildPID lost; UnboundNF262 failed supervision/components. Solas/Astra Mac blocked; old16339 allocation+overrun/hourly-uncreated retained.
-**Review:** 2026-10-13T15:41:36.976373+00:00; 0 same-cause failures; cause none recorded
-**Evidence:** ../dev/logs/optimization-porting-20261013/photon-neoforge-runtime/parent-acceptance.json; ../dev/logs/optimization-porting-20261013/neoforge-263-join-question/REPORT.md; ../dev/logs/optimization-porting-20261013/photon-neoforge-port/parent-adoption.json; earlier receipts in --json and exact history
+**Limitations:** Union incomplete and optional inventory growing; source candidates/static checks are not final rendering/quality acceptance. Independent controls/timing code exists but live GPU/CPU/frame validity and full90 integration unverified. AstraLex owner queued by capacity. Native Solas/Astra Mac blockers remain. Older allocations/failed trials are preserved in prior checkpoint archives; no historical gain transfers or fake GPU timing.
+**Review:** 2026-10-13T20:50:58.702543+00:00; 0 same-cause failures; cause none recorded
+**Evidence:** OPTIMIZATION_SOURCE_MAP.json; goals/optimization-union-and-measurement.md; OPTIMIZATION_UNION.md; earlier receipts in --json and exact history
 
-[Exact previous checkpoint](STATUS.history.16efb54a651785d0e73d74757d049d28fb5a33d9dbaf1d99993e433886e8deda.md) (SHA-256 `16efb54a651785d0e73d74757d049d28fb5a33d9dbaf1d99993e433886e8deda`).
+[Exact previous checkpoint](STATUS.history.90bd607ad647c28443c5fe188d4ff748b771ac992fcff9f516e5f30125693949.md) (SHA-256 `90bd607ad647c28443c5fe188d4ff748b771ac992fcff9f516e5f30125693949`).

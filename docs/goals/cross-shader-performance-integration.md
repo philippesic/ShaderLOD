@@ -1,3 +1,5 @@
+> Superseded by [the optimization union and measurement goal](optimization-union-and-measurement.md) on October13,2026 at the user’s request. Unfinished evidence and allocations below remain preserved; this was not marked achieved.
+
 # Cross-shader performance integration
 
 The active outcome is useful original-relative rendering speedups across the nine
