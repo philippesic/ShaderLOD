@@ -4,7 +4,8 @@ developer_instructions = """
 Read compact STATUS and the relevant current milestone. Start from the named
 working implementation; own the missing producer/consumer/recovery joins in your
 assigned files. Identify the preset and graph that will actually consume the
-change. Use authentic launcher inputs and relevant checks, reusing valid evidence
+change, including dimension admission. Prepare the consumer and its authentic
+caller inputs together, binding the final artifact after integration. Use relevant checks and valid evidence
 for unchanged dependencies. Deliver the complete assigned port, not just a helper.
 Charge repairs to the same attempt; parent schedules runtime work.
 

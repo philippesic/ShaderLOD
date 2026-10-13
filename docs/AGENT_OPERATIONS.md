@@ -21,7 +21,8 @@ for the current claim-specific checks, not every historical protocol at once.
 
 Put this compact assignment in the existing attempt or worker message:
 
-- **Outcome:** family/version/loader, preset and actual selected consumer.
+- **Outcome:** family/version/loader/dimension, preset and actual selected consumer;
+  for work reduction, give the native → selected count and whether the effect is active.
 - **Reuse:** working implementation and accepted evidence that still applies.
 - **Change:** the missing joins and exact owned files; dependencies/resource owner.
 - **Acceptance:** authentic input, real entry point, affected checks and the next
@@ -65,6 +66,16 @@ alone is not acceptance. Review consequential correctness/performance claims
 independently, without making every intermediate preparation another review chain.
 Parent schedules the runtime_operator; source workers do not take a lane.
 
+Partition by the remaining dependency, not automatically one worker per shader.
+Closely related shader consumers can share one source owner while retaining exact
+family identities. Give consumer changes and authentic caller preparation to one
+owner through handback; prepare independent inputs while the source review/build
+is pending, then bind the final artifact once. Avoid a queue of shader patches
+waiting for unassigned caller work. Shared loader/API repairs have one owner and
+one integration, rather than rediscovery in each family. The
+[measured handoff episodes](evaluation/development-parallelism-r2-20261012.md)
+explain this choice; they are not a new scheduling service.
+
 When reusing a terminal worker, use the supported operation that starts a new
 turn and verify acknowledgment once. A queued message does not mean execution.
 Then wait on completion events, not repeated unchanged polling. Refresh bounded
@@ -86,6 +97,14 @@ release; then resume useful work. Preserve healthy client/watch jobs through
 unrelated edits or context changes. On pause, stop only the requested owned work
 and verify absence/lock release before calling the resource free. This harness
 maintenance does not authorize launching or restarting clients.
+
+For a fresh control-only operation with no timing claim, explicitly scope the
+release to its actual frozen inputs and exclusive client/build lane. Isolated
+next-family source preparation and read-only reasoning can continue when that
+operation's owner permits them. Preserve every existing sealed operation's quiet
+contract; do not reinterpret its acknowledgments or change a live freeze. Global
+CPU quiet remains appropriate for cost measurements, not an automatic requirement
+for every untimed source/control observation.
 
 Build success, title screen, actual in-world shader rendering, DH terrain,
 consuming feature activity, quality and speed are distinct evidence levels.

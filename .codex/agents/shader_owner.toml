@@ -1,7 +1,8 @@
 name = "shader_owner"
 description = "Own a bounded pinned-pack shader LOD hypothesis and candidate."
 developer_instructions = """
-Inspect the selected preset/graph and active native work in the pinned pack.
+Inspect the selected dimension/preset/graph and active native work in the pinned
+pack. State native and selected counts; check rounding, loop exits and feature switches.
 Reuse the named existing mechanism before designing another. Own only assigned
 effects/helpers; adapt interval, normalization and recurrence explicitly. Preserve
 native AA, protected near cues, Off/Quality restoration, ancestry and licenses.

@@ -1,5 +1,14 @@
 # Offline experiment-plan preflight
 
+For fresh generated-pack option preparation, reuse
+`scripts/discover_iris_options.py` with explicit original/generated ZIPs, the
+observed native map, and pinned Iris/JDK dependencies. It derives added declarations
+through Iris's actual parser and preserves native values; see the
+[tested invocation and limits](evaluation/developer-cycle-r2-20261012.md).
+`candidateExpectedOptions` is preparation evidence. Broad declarations include
+unused options, so neither output replaces actual loaded-map equality. This is
+optional reuse for changed option boundaries, not another universal preflight gate.
+
 Before a finite dev-client probe, inspect the actual saved `plan.json` or the
 `plan` object in its existing `owner.json`:
 

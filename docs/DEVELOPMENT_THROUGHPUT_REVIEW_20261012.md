@@ -1,5 +1,9 @@
 # ShaderLOD development throughput review
 
+The [second investigation](#second-investigation-parallelism-and-useful-work)
+adds reconstructed critical paths, concrete zero-work cases, a direct End-cloud
+port, reusable Iris option preparation and a measured Java allocation improvement.
+
 October 12, 2026, Pacific time. Human-authorized investigation and improvements,
 with a 60-minute elapsed budget and four GPT-6 Astra workers. The existing shader
 runtime goal remains paused; this maintenance does not spend or reset its remaining
@@ -131,3 +135,128 @@ existing implementation/evidence was reused. Keep compatibility completion,
 executed work and measured speed separate. Fewer launch attempts caused by stale
 inputs, no expiry across handoffs, and fewer manual mirror/catalog edits are the
 concrete improvement criteria. Do not promise a speedup factor without those data.
+
+## Second investigation: parallelism and useful work
+
+The follow-up asked why one worker per shader had not produced proportionate
+progress over the user's roughly 72-hour experience. A fresh four-Astra team
+investigated the actual dependency chain and optimization yield. Together with
+the parent, it delivered two reproducible candidates and an immediately usable
+developer tool. This is a second authorized
+offline operation; Minecraft/GPU execution and the existing shader allocation
+remain paused. The sampled records explain mechanisms of delay, not a complete
+accounting of those 72 hours.
+
+### Why source parallelism did not become delivery parallelism
+
+In the BSL NeoForge26.2 episode, source work finished at 05:45:29 UTC. Caller
+preparation was assigned at 05:56:38 and sealed at 06:06:58; launch followed at
+06:07:10. Its owner had been terminal between assignments for 14m53s. The whole
+source-to-runtime episode took about 35 minutes, with 21m42s between source
+handback and launch. The parent was integrating/reviewing during that interval;
+it is not all idle or recoverable time. But assigning preparation only after those
+steps put an otherwise partly independent 10m20s task on the critical path.
+
+In the ten-JAR preview episode, real parallel source work still left a 23m20s
+integration/repair/package tail after the last initial source handback. Repeated
+short repair turns and parent-mediated handoffs added dependency latency. The
+shared loader, selection, producer and single client did not become independent
+merely because shader files were assigned to different workers.
+
+The operation instructions now assign consumer changes **and** authentic caller
+preparation together, with late binding of the final artifact. They distinguish
+exclusive frozen-input ownership from global quiet timing. Fresh untimed control
+operations can permit isolated next-family preparation; existing sealed quiet
+contracts remain intact. These changes target the observed queue rather than
+increasing the number of unfinished shader branches.
+[Timestamped critical paths](evaluation/development-parallelism-r2-20261012.md).
+
+### Several apparent ports had no useful selected work
+
+| Consumer | What the second audit established | Meaning |
+| --- | --- | --- |
+| MakeUp's older reflection budget | Native loop has ten total iterations, starts in coarse search, and can have at most nine refinements. Balanced's limit of nine cannot end the loop early. | This particular Balanced port removes no iterations; the later cloud budget is a different mechanism. |
+| Sildur volume | Recorded native option `Volumetric_Lighting=false`; independently, `ceil(6 × .875)=6`. | The actual reference has no such work, and Balanced would retain all six samples anyway. |
+| BSL Aurora | Native reference has Aurora disabled. | Source/control coverage does not improve that reference scene's speed. |
+| BSL AO / shafts proposed count copies | Four AO groups and seven shaft positions both round back to their native counts under Balanced. Shafts also need proper domain resampling. | An easy count substitution is either a no-op or incomplete mathematics. |
+| Qualified Overworld Performance | It can choose native renderer batching, bypassing generated shader budgets. End has a different route because all ten native renderer gates require Overworld. | A useful source edit must be connected to the actual dimension/preset consumer. |
+
+Earlier MakeUp/Sildur wins came from renderer work with different removable work
+and implementation costs. They were not a large universal shader optimization
+waiting to be copied nine times. The current cloud/near-volume additions also
+**postdate** the six-family FPS table: that older table cannot establish whether
+the newer additions help. Independent native-driver blockers for Solas/Astra and
+newer-loader bring-up are additional serial work, not shader-loop porting.
+[Nine-family applicability and evidence](evaluation/optimization-yield-r2-20261012.md).
+
+For future assignments, the decisive short question is: which selected native
+operation goes from N to N′, over which active pixels/passes, and what stays the
+same? Answer it from the existing source/options before investing in the full
+validation chain. This is especially useful for conservative integer budgets;
+more agents cannot turn a rounded-back count into a speedup.
+
+### Direct work completed in this pass
+
+**1. MakeUp End clouds: actual concept transfer.**
+[Preparation script](../scripts/prepare_makeup_end_cloud_budget.py) reuses the
+unchanged Overworld sample-budget helper at the native End-cloud integration site.
+It preserves the slab endpoints and step-length weighting; eligible native ten
+iterations become nine Balanced or eight Performance when Apply occurs in End.
+Only one shader member changes. The output includes a separate candidate ZIP and
+the complete recipe/resource/catalog integration patch, retaining the prior
+recognized identity. Six offline tests and independent source review passed.
+
+Use [candidate-r2](../dev/logs/makeup-end-cloud-budget-r2-20261012/candidate-r2/receipt.json)
+and its [unapplied patch](../dev/logs/makeup-end-cloud-budget-r2-20261012/candidate-r2/integration.patch).
+The initial metadata wrongly generalized the Overworld route to End; parent found
+the dimension gate and author/reviewer corrected their analysis in a fresh receipt.
+Native End rendering on the chosen tuple must be established first. The existing
+NeoForge26.2 binding correction is Overworld-only, and portal reselection remains
+unverified. Ten-to-nine iterations is not a ten-percent whole-frame FPS gain.
+[Shader mathematics, checks and next consumer](evaluation/shader-transfer-methods-r2-20261012.md).
+
+**2. Real Iris option preparation, reusable across family inputs.**
+[Discovery utility](../scripts/discover_iris_options.py) replaces six private
+Java/JShell copies and manual guesses about new option declarations. It consumes
+actual original/generated archives, the observed native map and explicit pinned
+Iris/JDK dependencies. BSL's 384→388 and Reimagined's 398→402 candidate maps match
+saved evidence; an independent comparison also matched BSL's actual runtime map.
+Five tests passed after review exposed and fixed acceptance of a native string
+value removed from the generated declaration's allowed range. It emits a proposed
+map, preserving strict runtime equality and distinguishing unused broad declarations.
+[Usage, actual commands and boundaries](evaluation/developer-cycle-r2-20261012.md).
+
+**3. Production hash allocation: a general performance candidate.**
+The NeoForge26.2 compatibility path hashes whole shader archives every 50ms, even
+without diagnostic counters. Existing BSL evidence records 2,437 source-stamp
+reads; its original archive is 1,134,153 bytes. These are logical reads/allocations,
+not evidence of physical disk traffic or the cause of earlier Fabric FPS results.
+
+[The staged streaming change](../scripts/prepare_binding_digest_streaming.py)
+keeps the same full-byte SHA-256, cadence, state checks and source refusal rules,
+but uses a 64KiB buffer. It changes three exact certificate call sites and adds one
+small helper. On the actual BSL archive, standalone JVM allocation fell from
+**1,135,080 to 66,376 bytes per full hash**, independently reproduced over ten
+warmed calls. Four tests compile the actual three certificate classes and exercise
+hash equality, chunk boundaries, same-size/restored-mtime tampering, read/provider
+failures, precise patch scope and overwrite refusal. Reviewer caught an exception
+type change in the first helper; it was corrected to preserve the existing caught
+failure path. No frame-time improvement is claimed.
+
+[Exact unapplied overlay](../dev/logs/binding-digest-streaming-r2-20261012/candidate/integration.patch),
+[independent receipt](../dev/logs/binding-digest-streaming-r2-20261012/independent-review/receipt.json).
+This reduces repeated temporary allocation; it does not reduce hash cadence or
+file bytes read. The generated marker/state branch is source-preserved rather
+than newly executed in these standalone tests.
+
+### Adoption boundary
+
+The Iris preparation utility and revised assignments are usable now. The End-cloud
+and streaming-hash product changes are reviewed, reproducible **unapplied source
+candidates**; no updated mod JAR or game result is claimed. Keeping them isolated
+preserves the sealed Reimagined next operation. Actual integration/build/runtime
+verification belongs after explicit resume, without changing the current chosen
+next shader action or its remaining allocation. Complementary's redundant prior
+volume-weight evaluation is a further concrete arithmetic hypothesis in the source
+report; compiler elimination and benefit remain unmeasured, so it was not expanded
+into another experiment here.
