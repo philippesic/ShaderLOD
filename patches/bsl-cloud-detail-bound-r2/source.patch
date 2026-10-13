@@ -1,0 +1,84 @@
+--- a/shaders/lib/atmospherics/clouds.glsl
++++ b/shaders/lib/atmospherics/clouds.glsl
+@@ -132,6 +132,40 @@
+ 	return noise;
+ 	#endif
+ }
++
++#if defined(SHADERLOD_BSL_PRIMARY_CLOUD_CONTEXT) && SHADERLOD_BSL_PRIMARY_CLOUD_CONTEXT == 1 && defined OVERWORLD && defined FSH && CLOUDS == 2 && CLOUD_BASE == 0 && SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY && !defined ADVANCED_MATERIALS
++// Same two blue-channel detail lookups and height interpolation at explicit LOD0.
++// The pinned native 512x512 noise PNG and runtime sampler level/filter parity remain admission gates.
++float ShaderLodCloudDetailLod0(vec2 coord, float cloudGradient) {
++    float detailZ = floor(cloudGradient * float(CLOUD_THICKNESS)) * 0.04;
++    float detailFrac = fract(cloudGradient * float(CLOUD_THICKNESS));
++    float noiseDetailLow = texture2DLod(noisetex, coord.xy + detailZ, 0.0).b;
++    float noiseDetailHigh = texture2DLod(noisetex, coord.xy + detailZ + 0.04, 0.0).b;
++    return mix(noiseDetailLow, noiseDetailHigh, detailFrac);
++}
++float ShaderLodCloudPrimaryClearBound(vec2 coord, vec2 wind, float cloudGradient, float sunCoverage, float dither) {
++    if (shaderlodBridgeVersion != 2 || shaderlodEnabled != 1 || shaderlodPreset != 0 || rainStrength != 0.0)
++        return CloudSample(coord, wind, cloudGradient, sunCoverage, dither);
++    vec2 nativeCoord = coord;
++    coord *= 0.004 * CLOUD_STRETCH;
++    vec2 baseCoord = coord * 0.25 + wind;
++    vec2 detailCoord = coord.xy * 0.5 - wind * 2.0;
++    float noiseBase = CloudSampleBasePerlin(baseCoord);
++    float noiseCoverage = CloudCoverageDefault(cloudGradient);
++    float detailWeight = 0.0476 * CLOUD_DETAIL;
++    if (!(noiseBase >= 0.0 && noiseBase <= 1.0 && cloudGradient >= 0.0 && cloudGradient <= 1.0 &&
++          sunCoverage >= 0.0 && sunCoverage <= 1.0 && noiseCoverage >= 0.0 && noiseCoverage <= 6.0 &&
++          detailWeight >= 0.0 && detailWeight <= 1.0 && all(lessThan(abs(detailCoord), vec2(1e20)))))
++        return CloudSample(nativeCoord, wind, cloudGradient, sunCoverage, dither);
++    // Detail blue is normalized to [0,1]. Preserve native ordered clear-weather pre-max arithmetic.
++    float upper = mix(noiseBase, 1.0, detailWeight) * 21.0;
++    upper = upper - noiseCoverage;
++    upper = upper - (sunCoverage * 3.0 + CLOUD_AMOUNT);
++    if (upper < -0.001) return 0.0;
++    float noiseDetail = ShaderLodCloudDetailLod0(detailCoord, cloudGradient);
++    return CloudCombineDefault(noiseBase, noiseDetail, noiseCoverage, sunCoverage);
++}
++#endif
+ 
+ float InvLerp(float v, float l, float h) {
+ 	return clamp((v - l) / (h - l), 0.0, 1.0);
+@@ -407,7 +441,13 @@
+ 		float xzNormalizedDistance = length(samplePos.xz - cameraPos.xz) * xzNormalizeFactor;
+ 		vec2 cloudCoord = samplePos.xz / CLOUD_SCALE;
+ 
++#if defined(SHADERLOD_BSL_PRIMARY_CLOUD_CONTEXT) && SHADERLOD_BSL_PRIMARY_CLOUD_CONTEXT == 1 && defined OVERWORLD && defined FSH && CLOUDS == 2 && CLOUD_BASE == 0 && SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY && !defined ADVANCED_MATERIALS
++        float noise;
++        if (fadeFaster) noise = CloudSample(cloudCoord, wind, cloudGradient, sunCoverage, dither);
++        else noise = ShaderLodCloudPrimaryClearBound(cloudCoord, wind, cloudGradient, sunCoverage, dither);
++#else
+ 		float noise = CloudSample(cloudCoord, wind, cloudGradient, sunCoverage, dither);
++#endif
+ 		noise *= step(lowerY, samplePos.y) * step(samplePos.y, upperY);
+ 
+ 		float sampleLighting = pow(cloudGradient, 1.125 * halfVoLSqr + 0.875) * 0.8 + 0.2;
+--- a/shaders/lib/shaderlod/adapter.glsl
++++ b/shaders/lib/shaderlod/adapter.glsl
+@@ -5,7 +5,7 @@
+ #if SHADERLOD_REFINEMENT_ADAPTER == 1
+ uniform int shaderlodBridgeVersion;
+ uniform int shaderlodEnabled;
+-uniform int shaderlodPreset;
++uniform int shaderlodPreset = -1;
+ uniform float shaderlodNear;
+ uniform float shaderlodFar;
+ uniform float shaderlodTransition;
+--- a/shaders/program/deferred1.glsl
++++ b/shaders/program/deferred1.glsl
+@@ -257,7 +257,13 @@
+ #include "/lib/atmospherics/weatherDensity.glsl"
+ #include "/lib/atmospherics/sky.glsl"
+ #include "/lib/atmospherics/fog.glsl"
++#if defined OVERWORLD && defined FSH && !defined DISTANT_HORIZONS && !defined VOXY && !defined ADVANCED_MATERIALS
++#define SHADERLOD_BSL_PRIMARY_CLOUD_CONTEXT 1
++#endif
+ #include "/lib/atmospherics/clouds.glsl"
++#ifdef SHADERLOD_BSL_PRIMARY_CLOUD_CONTEXT
++#undef SHADERLOD_BSL_PRIMARY_CLOUD_CONTEXT
++#endif
+ #include "/lib/atmospherics/sunmoon.glsl"
+ 
+ #ifdef OUTLINE_ENABLED

@@ -1,0 +1,65 @@
+{
+  "schema": 1,
+  "kind": "FULL_WORK_LOD0_CONTROL_NO_OPTIMIZATION",
+  "original_archive_sha256": "36b0a50ff7918bf10e9422c401d93779f9d0088a26acea975b435243f96930b5",
+  "candidate_r2_zip_sha256": "eb0fb12588da87411e8215f9797e6e65c4154e78e8929944eeb5e91b78226143",
+  "control_zip_sha256": "53746ed5c55023c16383a5b64cc8ee5017f891ff4784ffea12afc4f98f1b352c",
+  "candidate_r2_shader_digest": "5be3da36fc1812c220f5ecf00b904a783c0286fa629630038074abaf8073d4ba",
+  "control_shader_digest": "937ab0eced0f04fbbe3fc4430c9fd703c5fe36ed6ce3544335256acc28520f4a",
+  "shader_member_delta_from_candidate_r2": [
+    "shaders/lib/atmospherics/clouds.glsl"
+  ],
+  "cutoff_removed": "if (upper < -0.001) return 0.0;",
+  "replacement_comment": "// Full-work LOD0 control: retain both native detail reads.",
+  "positions_counts_weights_lighting_feedback_aa_unchanged": true,
+  "full_work_lod0_detail_reads": true,
+  "sample_avoidance_enabled": false,
+  "option_or_preset_added": false,
+  "sampler_changed_from_candidate_r2": false,
+  "overlay": {
+    "patches/adapters/bsl-shaders.json": {
+      "before": "e91fa77cbd912ae133ec1d23bb43db55cdcb250352e24728be544fa2cb3bfe34",
+      "after": "3063409f5a5bd2c4850d8ea81e8a430083158cb6e3aa413400d55aa0d9c22b71"
+    },
+    "patches/adapters/bsl-shaders.glsl": {
+      "before": "8e7eeefd7af5e14068cab73ec875d86b377b32bb143a80152fb01186c066ccd0",
+      "after": "e62b420edfb4c2c28214b8f368b5b677a728c94950017090c4fa11bdc5e1a0a5"
+    },
+    "src/main/resources/assets/shaderlod/adapters/patches/adapters/bsl-shaders.json": {
+      "before": "e91fa77cbd912ae133ec1d23bb43db55cdcb250352e24728be544fa2cb3bfe34",
+      "after": "3063409f5a5bd2c4850d8ea81e8a430083158cb6e3aa413400d55aa0d9c22b71"
+    },
+    "src/main/resources/assets/shaderlod/adapters/patches/adapters/bsl-shaders.glsl": {
+      "before": "8e7eeefd7af5e14068cab73ec875d86b377b32bb143a80152fb01186c066ccd0",
+      "after": "e62b420edfb4c2c28214b8f368b5b677a728c94950017090c4fa11bdc5e1a0a5"
+    },
+    "src/main/java/com/pp/shaderlod/packs/SupportedPackCatalog.java": {
+      "before": "f5012efabe95386e6dccbe73008052c51e86f87cabd0425cd3906b278ae315ca",
+      "after": "643e94688232fb49cf7eb5776a7323bc795c64a865f0f998941730b9227d4512"
+    },
+    "ports/26.2/neoforge/src/main/java/com/pp/shaderlod/integration/bindingcompat/BslSourceCertificate.java": {
+      "before": "05f75596b651ad1a27dfef362ccd63c35d2d874ad14dae016f479abd848520e6",
+      "after": "20d83e051848d08b4418475680ed6d4e8ad047fc6b93acde6d0ac99c883ec84c"
+    }
+  },
+  "sync": {
+    "adapter": "bsl-shaders",
+    "adapter_shader_source_digest": "937ab0eced0f04fbbe3fc4430c9fd703c5fe36ed6ce3544335256acc28520f4a",
+    "applied": true,
+    "changed_files": [
+      "src/main/resources/assets/shaderlod/adapters/patches/adapters/bsl-shaders.json",
+      "src/main/resources/assets/shaderlod/adapters/patches/adapters/bsl-shaders.glsl",
+      "src/main/java/com/pp/shaderlod/packs/SupportedPackCatalog.java"
+    ]
+  },
+  "admission": "Offline control artifact only; parent integration/runtime adoption pending",
+  "limitations": [
+    "Iris loaded map",
+    "native LOD0 sampler parity",
+    "driver rendering",
+    "still/motion quality",
+    "early matched GPU cost",
+    "DH/PBR",
+    "other tuples"
+  ]
+}

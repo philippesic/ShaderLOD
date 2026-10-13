@@ -1,0 +1,3 @@
+# Preserve exact upstream CRLF context in authenticated shader diffs.
+/source.patch -text
+/control/source.patch -text

@@ -1,0 +1,11 @@
+--- a/shaders/lib/atmospherics/clouds.glsl
++++ b/shaders/lib/atmospherics/clouds.glsl
+@@ -161,7 +161,7 @@
+     float upper = mix(noiseBase, 1.0, detailWeight) * 21.0;
+     upper = upper - noiseCoverage;
+     upper = upper - (sunCoverage * 3.0 + CLOUD_AMOUNT);
+-    if (upper < -0.001) return 0.0;
++    // Full-work LOD0 control: retain both native detail reads.
+     float noiseDetail = ShaderLodCloudDetailLod0(detailCoord, cloudGradient);
+     return CloudCombineDefault(noiseBase, noiseDetail, noiseCoverage, sunCoverage);
+ }

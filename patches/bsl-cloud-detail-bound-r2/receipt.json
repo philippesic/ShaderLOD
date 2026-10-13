@@ -1,0 +1,68 @@
+{
+  "schema": 1,
+  "source_only": true,
+  "original_archive_sha256": "36b0a50ff7918bf10e9422c401d93779f9d0088a26acea975b435243f96930b5",
+  "original_source_digest": "198235a39479dee0964f272104844ff2ee32fd4438309a54d1421278986066bb",
+  "current_adapter_digest": "f386c864e7a8e39752982a332f963af8093dbb326094255a8428ae663bc728e1",
+  "candidate_digest": "5be3da36fc1812c220f5ecf00b904a783c0286fa629630038074abaf8073d4ba",
+  "candidate_zip_sha256": "eb0fb12588da87411e8215f9797e6e65c4154e78e8929944eeb5e91b78226143",
+  "changed_from_current_adapter": [
+    "shaders/lib/atmospherics/clouds.glsl",
+    "shaders/lib/shaderlod/adapter.glsl",
+    "shaders/program/deferred1.glsl"
+  ],
+  "exact_body_recovered": true,
+  "pins": {
+    "shaders/lib/atmospherics/clouds.glsl": "c0e21ee39082d8154f6aa8792a77f8a60c7fd3967614d56b1abaa06887256750",
+    "shaders/program/deferred1.glsl": "6d4cd8420e085d9254957f396a3aeca6f8bc0c9b1116c231eabd6c0f1541742e",
+    "shaders/world0/deferred1.fsh": "3095370970d6ced710c8d859f44908b7c12a3f946fddcb53a274aee3660579d3",
+    "shaders/tex/noise.png": "5ff93225ed7018e90822824a599e4e080e985fb882fdc15ac9e117dd8ba22a34",
+    "shaders/tex/noise.png.mcmeta": "e9c800d49d941e58d1c9f114b4564886b0c984369fab42515935497948ea8440"
+  },
+  "overlay": {
+    "patches/adapters/bsl-shaders.json": {
+      "before": "e91fa77cbd912ae133ec1d23bb43db55cdcb250352e24728be544fa2cb3bfe34",
+      "after": "0f7b05b5feb7ce7631ac86b13b6e6a7691cc11d26d34a39b1b137828be8180f7"
+    },
+    "patches/adapters/bsl-shaders.glsl": {
+      "before": "8e7eeefd7af5e14068cab73ec875d86b377b32bb143a80152fb01186c066ccd0",
+      "after": "e62b420edfb4c2c28214b8f368b5b677a728c94950017090c4fa11bdc5e1a0a5"
+    },
+    "src/main/resources/assets/shaderlod/adapters/patches/adapters/bsl-shaders.json": {
+      "before": "e91fa77cbd912ae133ec1d23bb43db55cdcb250352e24728be544fa2cb3bfe34",
+      "after": "0f7b05b5feb7ce7631ac86b13b6e6a7691cc11d26d34a39b1b137828be8180f7"
+    },
+    "src/main/resources/assets/shaderlod/adapters/patches/adapters/bsl-shaders.glsl": {
+      "before": "8e7eeefd7af5e14068cab73ec875d86b377b32bb143a80152fb01186c066ccd0",
+      "after": "e62b420edfb4c2c28214b8f368b5b677a728c94950017090c4fa11bdc5e1a0a5"
+    },
+    "src/main/java/com/pp/shaderlod/packs/SupportedPackCatalog.java": {
+      "before": "f5012efabe95386e6dccbe73008052c51e86f87cabd0425cd3906b278ae315ca",
+      "after": "ac896f4025e68743de2ed692c0d3453322ec41be0fcfe8162a8a004c71bef5a5"
+    },
+    "ports/26.2/neoforge/src/main/java/com/pp/shaderlod/integration/bindingcompat/BslSourceCertificate.java": {
+      "before": "05f75596b651ad1a27dfef362ccd63c35d2d874ad14dae016f479abd848520e6",
+      "after": "0fed62ae71948f447e501b4482e927e35ab31eee4a70e94803fecafc83d70b49"
+    }
+  },
+  "sync": {
+    "adapter": "bsl-shaders",
+    "adapter_shader_source_digest": "5be3da36fc1812c220f5ecf00b904a783c0286fa629630038074abaf8073d4ba",
+    "applied": true,
+    "changed_files": [
+      "src/main/resources/assets/shaderlod/adapters/patches/adapters/bsl-shaders.json",
+      "src/main/resources/assets/shaderlod/adapters/patches/adapters/bsl-shaders.glsl",
+      "src/main/java/com/pp/shaderlod/packs/SupportedPackCatalog.java"
+    ]
+  },
+  "validation": {
+    "glsl_compiled": false,
+    "iris_rendered": false,
+    "dh_rendered": false,
+    "pbr_rendered": false,
+    "quality_checked": false,
+    "performance_measured": false
+  },
+  "runtime_claim": false,
+  "source_limit": "Clear Balanced exact-zero detail read bound with 0.001 float margin; dynamic sampler LOD0 parity, linked Core/selected primary route and actual density frequency remain unverified"
+}
