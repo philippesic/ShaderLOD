@@ -830,3 +830,22 @@ FPS claim. Current/End sampler/driver rounding, motion, speed and DHPBR remain
 unverified. All workers handed back; parent owns integration/Git/next decisive
 source consumer. Keep full90 scope and exact negative evidence; do not drift into
 process-probe or benchmarking framework work.
+
+
+## Photon lighting/ambient density port integrated — October13, 2026 Pacific
+
+The existing certified second-detail rejection now reaches Photon optical-depth
+calls inside primary Overworld deferred1. Native6lighting+2ambient steps, stride
+growth, weighting, extinction/scattering/history/AA remain exact. Parent verified
+the only shader delta is the guarded call substitution and all helper/math/pins
+are unchanged;8 installed checks and exact sealed preview reproduction pass.
+Worker full wrappers/exclusions/publicCPU source and AA restoration pass.
+Sourcea65bfda5/previewe06f7d64 are current; no new runtime/work/FPS/DHPBR claim.
+
+[Current port and evidence](../evaluation/optimization-ports-20261013.md).
+Parent owns integration/Git. Acknowledged runtime_operator owns exclusive BUILD
+lane to package these current sources across all10 MC/loader targets, without
+client/GPU or source changes. Main inputs are frozen consistently; no other
+builds/tests. Source preparation outside frozen inputs may proceed, but accepted
+changes wait for the build handback. Full90 original scope/negative trials/native
+hardware blockers remain intact.

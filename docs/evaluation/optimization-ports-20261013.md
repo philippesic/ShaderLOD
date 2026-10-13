@@ -259,6 +259,9 @@ recorded exact preimages. Their original full-context diffs remain in handbacks.
 
 ## Photon v1.3b: primary-cumulus second-detail rejection
 
+The final Photon update below also joins the optical-depth calls within this
+same primary pass; the initial primary-only source hashes remain historical.
+
 The BSL/Bliss native-zero premise is ported into the currently adopted Photon
 live-pixel recipe. Native coarse rejection already exists and is not new. The
 selected primary deferred1 density body delays its second 3D Worley fetch until
@@ -482,3 +485,33 @@ preview `5415724cd47b0516ea85954e0a97b307dd397f68d91c6628c107bf4ad90a6ef7`.
 [final wrapper checks](../../dev/logs/optimization-porting-20261013/makeup-opacity-bound/parent-failclosed-wrappers-45rhfx7p/receipt.json).
 The original handback/review hashes predate the parent fail-closed initializer;
 the final preview and current recipe supersede those helper identities.
+
+## Photon update: lighting and ambient density calls
+
+The accepted density helper now also serves `clouds_cumulus_optical_depth` inside
+the permitted Overworld deferred1 pass. The source change is one guarded call
+substitution. Reversing it restores the previous full shader body exactly; the
+helper, native function, dependencies and sampled textures are unchanged.
+The proof is density-local, so it does not depend on primary ray direction or
+step length. Certified reached lighting/ambient samples use one rather than two
+detail fetches and retain the native density tail.
+
+Native six lighting and two ambient steps, their doubling stride, dither,
+weights, integration, extinction, scattering, history and AA remain exact.
+For K optical samples reaching detail and C certificates, detail source reads
+are 2K-C rather than 2K. Shell, coverage and earlier native exits still apply;
+these formulas are not scene frequencies, GPU instruction counts or FPS gains.
+Balanced controls are required. Other presets and excluded DH/Voxy/PBR/blocky/
+prepare/deferred0/dimension contexts retain the native function.
+
+Parent checked exact five postimages and unchanged helper/dependency ancestry,
+ran eight installed Photon checks and reproduced the sealed preview exactly.
+The worker's six full wrappers, ten exclusions and authentic public CPU
+AA/TAAU/source selection/restart/Quality/Off/tamper checks pass. Current source
+digest `a65bfda59e34d2d6bfb972ff6c241736eb741aa6156ca3ad9f6f75d7fbc870ea`;
+preview `e06f7d641302baceb66bcf7ecf90e81c36e81e7636ff056650c1c5ce4c31f1d1`.
+[Source and consumer checks](../../dev/logs/optimization-porting-20261013/photon-optical-depth-port/REPORT.md),
+[parent adoption](../../dev/logs/optimization-porting-20261013/photon-optical-depth-port/parent-adoption.json).
+New graph rendering, linked uniforms, actual skipped work, motion, compiled
+overhead, speed, DH/PBR and full90 acceptance remain unverified. Closed earlier
+pixel-budget/cost trials remain unchanged.

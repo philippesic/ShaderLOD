@@ -120,6 +120,14 @@ class LivePixelBudgetTests(unittest.TestCase):
         self.assertIn('if (!shaderlodNativeZero)',cloud)
         self.assertEqual(1,cloud.count('float density = shaderlod_cumulus_primary_density(ray_pos);'))
         self.assertIn('clouds_cumulus_density(ray_pos + ray_step.xyz * dither)',cloud)
+        self.assertEqual(1,cloud.count('shaderlod_cumulus_primary_density(ray_pos + ray_step.xyz * dither)'))
+        # The optical-depth recurrence and all remaining ray/scattering work stay exact.
+        joined='#if defined SHADERLOD_LIVE_PIXEL_BUDGET && defined WORLD_OVERWORLD && defined PROGRAM_DEFERRED1 && !defined DISTANT_HORIZONS && !defined VOXY && !defined NORMAL_MAPPING && !defined SPECULAR_MAPPING && !defined BLOCKY_CLOUDS\n            shaderlod_cumulus_primary_density(ray_pos + ray_step.xyz * dither) *\n#else\n            clouds_cumulus_density(ray_pos + ray_step.xyz * dither) *\n#endif\n'
+        native_call='            clouds_cumulus_density(ray_pos + ray_step.xyz * dither) *\n'
+        self.assertEqual(native.split('float clouds_cumulus_optical_depth(',1)[1],
+            cloud.split('float clouds_cumulus_optical_depth(',1)[1].replace(joined,native_call,1).replace(
+                '#if defined SHADERLOD_LIVE_PIXEL_BUDGET && defined WORLD_OVERWORLD && defined PROGRAM_DEFERRED1 && !defined DISTANT_HORIZONS && !defined VOXY && !defined NORMAL_MAPPING && !defined SPECULAR_MAPPING && !defined BLOCKY_CLOUDS\n        float density = shaderlod_cumulus_primary_density(ray_pos);\n#else\n        float density = clouds_cumulus_density(ray_pos);\n#endif',
+                '        float density = clouds_cumulus_density(ray_pos);'))
         # Exact native source is retained when no selected primary context exists.
         for defines in ['', '#define SHADERLOD_LIVE_PIXEL_BUDGET\n',
                 '#define WORLD_OVERWORLD\n#define PROGRAM_DEFERRED1\n']:
