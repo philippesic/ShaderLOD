@@ -918,3 +918,20 @@ Parent owns Git/integration. Runtime_operator prepared a fresh normal preview
 build but has not reserved a lane or launched. A private copied-caller source
 check missed Sildur's final family branch; bounded repair is acknowledged before
 runtime. Full90 scope, historical allocations and closed trials remain intact.
+
+## Sildur NeoForge26.2 optimization actually consumed and restored
+
+The new normal preview7ecbca52 completed actual original/on/Quality/off+Cancel
+with native115/118/115/115, exact141 archive/63native vertex files, current main
+origins, MAIN Sildur source/draw proof and DEV0. Parent independently verified
+all archive members, native options, scene/RD24, restoration and stills. Finite
+operation returned0 and released14:15:43UTC; fresh14:16:44UTC census and parent
+PID absence/free lock accepted. This is usable scopedotherloader optimization
+delivery; speed/GPU work/motion/DHPBR/full90 remain unknown.
+[Preview and complete evidence](../evaluation/optimization-ports-20261013.md).
+
+Next direct port: BlissNeoForge26.2 separate native463/generated466 source/recipe/
+state admission, six-family MAIN dispatch and public controls. Acknowledged
+isolated feature_owner prepares that complete bounded slice against the actual
+Sildur producer; parent owns integration/Git/next runtime. No live build/client
+job. Preserve all90 scope, historical allocations and closed cost trials.

@@ -620,3 +620,30 @@ checks; review reproduced this prelaunch defect, and its bounded repair is
 assigned separately. Normal preview compilation can proceed; runtime awaits
 that correction and an authentic new producer/freeze. Rendering, Cancel/failed
 Apply UI, actual avoided work, speed, motion, DH/PBR and other tuples are unknown.
+
+## Sildur NeoForge26.2 actual normal preview and public controls accepted
+
+The integrated optimization port built as a normal preview and completed one
+fresh finite actual client operation on NeoForge26.2. Parent independently
+reconstructed all141 generated archive members, verified all63 native vertex
+files, current recipe/source hashes and the actual main JAR origins. Native
+115/generated118/Quality115/Off115 maps preserve TAAtrue, Clouds3 and cloudsIT8.
+The renderer selected Sildur's main certificate in every stage; the development
+descriptor correction remained0 and all9 ordinary/shadow correction, OpenGL
+entry and native draw-body counter deltas were positive. These are draw-path
+observations, not GPU completion or skipped cloud-read measurements.
+
+Quality/Off restoration and Cancel preserving config/options/selection passed.
+Parent inspected original/enabled stills without a conspicuous new artifact;
+fixed scene,1920x1200 and actual RD24 readback matched. The finite operation
+returned0, released14:15:43UTC, and a fresh14:16:44UTC census plus parent exact
+PID absence confirmed no client/launcher and free lock. Existing strict lsof
+checks passed; no supervision failure or repeated trial here.
+[Installable preview](../../dev/artifacts/neoforge-262-sildur-main-compat-20261013/shaderlod-neoforge-26.2-main-preview.jar),
+[actual handback](../../dev/logs/optimization-porting-20261013/sildur-neoforge-runtime/handback.json),
+[parent acceptance](../../dev/logs/optimization-porting-20261013/sildur-neoforge-runtime/parent-acceptance.json).
+Preview SHA256 `7ecbca524c3282ede75d55b61e5410099678c55adfba738b28315743817be2c0`.
+Speed, reached rejection rates/avoided GPU work, linked uniform readback, motion,
+DH/PBR, failed-Apply/mismatch runtime and other tuples remain unverified.
+Next direct implementation carries Bliss's accepted current density rejection
+through the same NeoForge main source/control path, with its own exact identity.
