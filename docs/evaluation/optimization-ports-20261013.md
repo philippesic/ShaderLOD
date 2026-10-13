@@ -595,3 +595,28 @@ release and fresh free-lock census at13:55:26UTC passed.
 [parent denominator/consumer acceptance](../../dev/logs/optimization-porting-20261013/photon-optical-cost-runtime/parent-acceptance.json).
 Next concrete code port is Sildur's missing NeoForge26.2 main compatibility and
 public-control join; existing accepted shader math is reused.
+
+## Sildur primary-cloud optimization port to NeoForge26.2
+
+The accepted defaultClouds3 density rejection now has an explicit NeoForge26.2
+main source admission and public control consumer. Sildur's original115 and
+generated118 option maps, current recipe, every archive member and public state
+are certified separately. All63 original vertex members remain exact; the
+existing Overworld/API/OpenGL/resource/stack/native-draw gates are unchanged.
+This joins the already-reviewed source8->2 noise reads for certified primary
+empty samples, retaining native8 ray steps and all color/history/AA tails.
+No batching eligibility is added.
+
+Parent adopted exact four postimages. Independent compilation against installed
+NF262 dependencies and authentic public CPU selection/recovery/tamper replay
+pass41 checks. [Source and controls](../../dev/logs/optimization-porting-20261013/sildur-neoforge-port/REPORT.md),
+[independent review](../../dev/logs/optimization-porting-20261013/sildur-neoforge-review/REPORT.md),
+[parent adoption](../../dev/logs/optimization-porting-20261013/sildur-neoforge-port/parent-adoption.json).
+The two maintained main files are integrated; untracked development/build
+consumer changes are preserved as a scoped
+[patch](../../patches/consumer-ports/neoforge-262-sildur-main.patch).
+A copied private caller still selected MakeUp native100 in its final source
+checks; review reproduced this prelaunch defect, and its bounded repair is
+assigned separately. Normal preview compilation can proceed; runtime awaits
+that correction and an authentic new producer/freeze. Rendering, Cancel/failed
+Apply UI, actual avoided work, speed, motion, DH/PBR and other tuples are unknown.

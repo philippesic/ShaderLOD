@@ -904,3 +904,17 @@ Acknowledged isolated feature_owner owns this bounded code/CPU/caller slice;
 parent owns integration/Git and any later fresh runtime reservation. No live
 client/build job or benchmark framework work. Full90 scope and prior allocations
 remain unchanged; the native Goal stays active.
+
+## Sildur NeoForge26.2 code and public controls integrated
+
+Separate exact Sildur source/recipe/state/native115/generated118 admission and
+main dispatcher now join the accepted defaultClouds3 optimization on NeoForge.
+The public consumer preserves nativeTAA/Clouds3/cloudsIT8 and uses original/on/
+Quality/off with MAIN draw proof and DEV0. Existing source/API/resource/native
+draw guards remain unchanged. Independent actual dependency compilation and
+public CPU replay pass41 checks; parent adopted sealed postimages.
+[Code, evidence and remaining limits](../evaluation/optimization-ports-20261013.md).
+Parent owns Git/integration. Runtime_operator prepared a fresh normal preview
+build but has not reserved a lane or launched. A private copied-caller source
+check missed Sildur's final family branch; bounded repair is acknowledged before
+runtime. Full90 scope, historical allocations and closed trials remain intact.
