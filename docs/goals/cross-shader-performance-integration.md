@@ -948,3 +948,21 @@ Runtime_operator acknowledged a new prep-only turn; parent clearance and fresh
 normal preview/producer/freeze precede any client. No live build/client yet.
 Speed, motion, DH/PBR and full90 remain unverified; prior allocations and closed
 trials stay intact. Parent owns integration/Git and subsequent runtime outcome.
+
+## Bliss NeoForge26.2 optimization consumed and restored
+
+Fresh normalpreview9f3aeeca completed actual original/on/Quality/off+Cancel:
+463/466/463/463 maps/nativeAA, exact351 archive/143 native vertex files, current
+MAIN origins/sourcefamily/draw proof and DEV0. Parent independently accepted
+all source members, options, scene/RD24, restoration and stills. Finiteexit0;
+released14:36:00UTC, fresh PID absence/free-lock census accepted.
+[Preview and evidence](../evaluation/optimization-ports-20261013.md).
+Speed/work/motion/DHPBR/full90 remain unverified; no cost retry.
+
+Next direct implementation is PhotonNeoForge26.2 main source/configured-native
+366/generated369 admission/publiccontrols. Sealed isolated candidate passes46
+CPU checks and matches the accepted Fabric535 graph with196 native vertex
+files unchanged. Independent reviewer acknowledged; root integration and later
+normal build/actual rendering remain pending. Selected native TAAtrue/TAAUfalse/
+SH_SKYLIGHTfalse is explicit; no inferred all-defaults support. No live client
+or build, no pause; full90/old allocations/closed trial evidence retained.

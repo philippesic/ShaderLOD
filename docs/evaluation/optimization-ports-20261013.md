@@ -669,3 +669,28 @@ Untracked build/dev changes are retained in a scoped
 [patch](../../patches/consumer-ports/neoforge-262-bliss-main.patch).
 Normal preview/build, actual rendering/Cancel recovery, avoided work, speed,
 motion and DH/PBR remain pending; source/control checks are not those claims.
+
+## Bliss NeoForge26.2 actual preview and public controls accepted
+
+The integrated Bliss optimization port now renders through a fresh normal main
+preview on NeoForge26.2. Parent independently reconstructed all351 generated
+members(349 source+2 public metadata), verified all143 native vertex files and
+current recipe/state/archive identity. Every stage loaded native463/generated466/
+Quality463/Off463 with TAA/HQclouds/cloudLoD/upscaling values unchanged. All
+normal main origins match the new preview; MAIN sourcefamilyBliss/DEV0 and all9
+ordinary/shadow correction, GL-entry and native-body deltas were positive.
+These establish the consumed draw path, not GPU completion or skipped reads.
+
+Quality/Off restored original maps/core; Cancel preserved configuration/options/
+selection and returned to world. Parent verified fixed scene/RD24,1920x1200 and
+inspected original/enabled stills without a conspicuous new artifact. One finite
+operation returned0 and released14:36:00UTC; exact owned PID absence/free-lock
+census passed. No retry or cost experiment.
+[Installable preview](../../dev/artifacts/neoforge-262-bliss-main-compat-20261013/shaderlod-neoforge-26.2-main-preview.jar),
+[actual handback](../../dev/logs/optimization-porting-20261013/bliss-neoforge-runtime/handback.json),
+[parent acceptance](../../dev/logs/optimization-porting-20261013/bliss-neoforge-runtime/parent-acceptance.json).
+Preview SHA256 `9f3aeeca817f1d00ea74146c20cc720025a3a16964dfb26623fa043c63af63f7`.
+Speed, reached rejection/avoided GPU work, linked uniform readbacks, motion,
+DH/PBR, failed-Apply/mismatch runtime and other tuples remain unverified.
+The next scoped code join is current Photon primary/lighting/ambient optimization
+on the explicit configured native-AA/TAAUoff NeoForge tuple; defaults stay separate.
