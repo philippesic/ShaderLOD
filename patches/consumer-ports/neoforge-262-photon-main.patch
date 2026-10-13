@@ -1,0 +1,114 @@
+--- a/ports/26.2/neoforge/build.gradle
++++ b/ports/26.2/neoforge/build.gradle
+@@ -86,7 +86,7 @@
+       project.findProperty('portBindingInputFix')?.toString() == 'true') {
+    systemProperty 'shaderlod.dev.portBindingInputFix', 'true'
+   }
+-  if (['makeup-volume', 'bsl-volume', 'reimagined-volume', 'unbound-volume', 'sildur-volume', 'bliss-volume'].contains(project.findProperty('portNativeFamily')?.toString()) &&
++  if (['makeup-volume', 'bsl-volume', 'reimagined-volume', 'unbound-volume', 'sildur-volume', 'bliss-volume', 'photon-volume'].contains(project.findProperty('portNativeFamily')?.toString()) &&
+       project.findProperty('portMainBindingCompat')?.toString() == 'true') {
+    systemProperty 'shaderlod.dev.portMainBindingCompat', 'true'
+    systemProperty 'shaderlod.bindingCompatibilityProbe', 'true'
+--- a/ports/26.2/neoforge/src/devClient/java/com/pp/shaderlod/dev/NeoForgeRoundtrip.java
++++ b/ports/26.2/neoforge/src/devClient/java/com/pp/shaderlod/dev/NeoForgeRoundtrip.java
+@@ -53,7 +53,8 @@
+     private final boolean unboundVolume="unbound-volume".equals(nativeFamilyMode);
+     private final boolean sildurVolume="sildur-volume".equals(nativeFamilyMode);
+     private final boolean blissVolume="bliss-volume".equals(nativeFamilyMode);
+-    private final boolean volumeControl=makeupVolume||bslVolume||reimaginedVolume||unboundVolume||sildurVolume||blissVolume;
++    private final boolean photonVolume="photon-volume".equals(nativeFamilyMode);
++    private final boolean volumeControl=makeupVolume||bslVolume||reimaginedVolume||unboundVolume||sildurVolume||blissVolume||photonVolume;
+     private final boolean mainBindingCompat=Boolean.getBoolean("shaderlod.dev.portMainBindingCompat");
+     private final Map<String,JsonObject> mainBindingStageProofs=new java.util.HashMap<>();
+     private final boolean qualityRoundtrip = Boolean.getBoolean("shaderlod.dev.portQualityRoundtrip");
+@@ -134,6 +135,7 @@
+                     ||Boolean.parseBoolean(mainProbeFlag)!=probe.mainBindingCompat)
+                     throw new IllegalStateException("MakeUp controls require exactly one MAIN+probe or DEV binding correction; mixed correction paths refused");
+                 if(probe.bslVolume&&!probe.mainBindingCompat)throw new IllegalStateException("BSL controls require MAIN compatibility; DEV MakeUp correction is not a BSL certificate");
++                if(probe.photonVolume&&!probe.mainBindingCompat)throw new IllegalStateException("Photon controls require MAIN compatibility");
+                 if(probe.blissVolume&&!probe.mainBindingCompat)throw new IllegalStateException("Bliss controls require MAIN compatibility");
+                 if(probe.sildurVolume&&!probe.mainBindingCompat)throw new IllegalStateException("Sildur controls require MAIN compatibility");
+                 if(probe.unboundVolume&&!probe.mainBindingCompat)throw new IllegalStateException("Unbound controls require MAIN compatibility; DEV MakeUp correction is not an Unbound certificate");
+@@ -141,9 +143,9 @@
+                 if(probe.originalOnly||probe.rendererSpeed||probe.qualityRoundtrip||Boolean.getBoolean("shaderlod.dev.portRoundtripDh")||!Boolean.getBoolean("shaderlod.dev.portRoundtripUi"))throw new IllegalStateException("MakeUp volume controls require explicit binding compatibility and UI, no original/speed/Photon/DH modes");
+                 for(String flag:new String[]{com.pp.shaderlod.integration.makeupquad.MakeUpQuadRuntime.RESEARCH_OPT_IN,com.pp.shaderlod.integration.makeupquad.RendererRolloutPolicy.RESEARCH_ROUTES})if(!"false".equals(System.getProperty(flag,"false")))throw new IllegalStateException("MakeUp volume controls conflict with "+flag);
+                 var dir=Iris.getShaderpacksDirectory().toAbsolutePath().normalize();var archive=dir.resolve(probe.original).normalize();
+-                if(!archive.startsWith(dir)||archive.equals(dir)||Files.isSymbolicLink(archive)||(probe.blissVolume?!com.pp.shaderlod.integration.blissquad.BlissQuadEligibility.validate(archive,com.pp.shaderlod.integration.blissquad.BlissQuadEligibility.nativeOptions()).eligible():probe.sildurVolume?!com.pp.shaderlod.integration.sildurquad.SildurQuadEligibility.validate(archive,com.pp.shaderlod.integration.sildurquad.SildurQuadEligibility.nativeOptions()).eligible():probe.unboundVolume?!com.pp.shaderlod.integration.unboundquad.UnboundQuadEligibility.validate(archive,com.pp.shaderlod.integration.unboundquad.UnboundQuadEligibility.nativeOptions()).eligible():probe.reimaginedVolume?!com.pp.shaderlod.integration.reimaginedquad.ReimaginedQuadEligibility.validate(archive,com.pp.shaderlod.integration.reimaginedquad.ReimaginedQuadEligibility.nativeOptions()).eligible():(probe.bslVolume?!com.pp.shaderlod.integration.bslquad.BslQuadEligibility.validate(archive,com.pp.shaderlod.integration.bslquad.BslQuadEligibility.nativeOptions()).eligible():!com.pp.shaderlod.integration.makeupquad.MakeUpQuadEligibility.validate(archive,com.pp.shaderlod.integration.makeupquad.MakeUpQuadEligibility.nativeOptions()).eligible())))throw new IllegalStateException("Certified original family archive/native options/resources required");
++                if(!archive.startsWith(dir)||archive.equals(dir)||Files.isSymbolicLink(archive)||(probe.photonVolume?!com.pp.shaderlod.integration.bindingcompat.PhotonSourceCertificate.originalSource(archive):probe.blissVolume?!com.pp.shaderlod.integration.blissquad.BlissQuadEligibility.validate(archive,com.pp.shaderlod.integration.blissquad.BlissQuadEligibility.nativeOptions()).eligible():probe.sildurVolume?!com.pp.shaderlod.integration.sildurquad.SildurQuadEligibility.validate(archive,com.pp.shaderlod.integration.sildurquad.SildurQuadEligibility.nativeOptions()).eligible():probe.unboundVolume?!com.pp.shaderlod.integration.unboundquad.UnboundQuadEligibility.validate(archive,com.pp.shaderlod.integration.unboundquad.UnboundQuadEligibility.nativeOptions()).eligible():probe.reimaginedVolume?!com.pp.shaderlod.integration.reimaginedquad.ReimaginedQuadEligibility.validate(archive,com.pp.shaderlod.integration.reimaginedquad.ReimaginedQuadEligibility.nativeOptions()).eligible():(probe.bslVolume?!com.pp.shaderlod.integration.bslquad.BslQuadEligibility.validate(archive,com.pp.shaderlod.integration.bslquad.BslQuadEligibility.nativeOptions()).eligible():!com.pp.shaderlod.integration.makeupquad.MakeUpQuadEligibility.validate(archive,com.pp.shaderlod.integration.makeupquad.MakeUpQuadEligibility.nativeOptions()).eligible())))throw new IllegalStateException("Certified original family archive/native options/resources required");
+             }catch(Exception failure){LOGGER.error("MakeUp NeoForge26.2 volume controls refused before registration",failure);return;}
+-            probe.report.add("stageNames",GSON.toJsonTree(probe.stages));probe.report.addProperty("makeupVolumeControl",probe.makeupVolume);probe.report.addProperty("makeupVolumeMode",probe.makeupVolume?"makeup-volume":"");probe.report.addProperty("bslVolumeControl",probe.bslVolume);probe.report.addProperty("bslVolumeMode",probe.bslVolume?"bsl-volume":"");probe.report.addProperty("blissVolumeControl",probe.blissVolume);probe.report.addProperty("blissVolumeMode",probe.blissVolume?"bliss-volume":"");probe.report.addProperty("sildurVolumeControl",probe.sildurVolume);probe.report.addProperty("sildurVolumeMode",probe.sildurVolume?"sildur-volume":"");probe.report.addProperty("unboundVolumeControl",probe.unboundVolume);probe.report.addProperty("unboundVolumeMode",probe.unboundVolume?"unbound-volume":"");probe.report.addProperty("reimaginedVolumeControl",probe.reimaginedVolume);probe.report.addProperty("reimaginedVolumeMode",probe.reimaginedVolume?"reimagined-volume":"");probe.report.addProperty("productionApplyRequested",true);probe.report.addProperty("rendererWorkMeasurementRequested",false);probe.report.addProperty("devBindingCompatibilityRequired",!probe.mainBindingCompat);probe.report.addProperty("mainBindingCompatibilityRequired",probe.mainBindingCompat);probe.report.addProperty("bindingCompatibilityBackend",probe.mainBindingCompat?"MAIN":"DEV");
++            probe.report.add("stageNames",GSON.toJsonTree(probe.stages));probe.report.addProperty("makeupVolumeControl",probe.makeupVolume);probe.report.addProperty("makeupVolumeMode",probe.makeupVolume?"makeup-volume":"");probe.report.addProperty("bslVolumeControl",probe.bslVolume);probe.report.addProperty("bslVolumeMode",probe.bslVolume?"bsl-volume":"");probe.report.addProperty("photonVolumeControl",probe.photonVolume);probe.report.addProperty("photonVolumeMode",probe.photonVolume?"photon-volume":"");probe.report.addProperty("blissVolumeControl",probe.blissVolume);probe.report.addProperty("blissVolumeMode",probe.blissVolume?"bliss-volume":"");probe.report.addProperty("sildurVolumeControl",probe.sildurVolume);probe.report.addProperty("sildurVolumeMode",probe.sildurVolume?"sildur-volume":"");probe.report.addProperty("unboundVolumeControl",probe.unboundVolume);probe.report.addProperty("unboundVolumeMode",probe.unboundVolume?"unbound-volume":"");probe.report.addProperty("reimaginedVolumeControl",probe.reimaginedVolume);probe.report.addProperty("reimaginedVolumeMode",probe.reimaginedVolume?"reimagined-volume":"");probe.report.addProperty("productionApplyRequested",true);probe.report.addProperty("rendererWorkMeasurementRequested",false);probe.report.addProperty("devBindingCompatibilityRequired",!probe.mainBindingCompat);probe.report.addProperty("mainBindingCompatibilityRequired",probe.mainBindingCompat);probe.report.addProperty("bindingCompatibilityBackend",probe.mainBindingCompat?"MAIN":"DEV");
+         }
+         probe.report.addProperty("qualityRoundtrip", probe.qualityRoundtrip);
+         probe.report.addProperty("originalOnly",probe.originalOnly);
+@@ -277,6 +279,7 @@
+             Map<String, String> options = loadedOptions();
+             if(makeupVolume)validateMakeupVolumeState(client,options,null);
+             if(bslVolume)validateBslVolumeState(client,options,null);
++            if(photonVolume)validatePhotonVolumeState(client,options,null);
+             if(blissVolume)validateBlissVolumeState(client,options,null);
+             if(sildurVolume)validateSildurVolumeState(client,options,null);
+             if(unboundVolume)validateUnboundVolumeState(client,options,null);
+@@ -337,6 +340,7 @@
+             }
+             if(makeupVolume)validateMakeupVolumeState(client,options,state);
+             if(bslVolume)validateBslVolumeState(client,options,state);
++            if(photonVolume)validatePhotonVolumeState(client,options,state);
+             if(blissVolume)validateBlissVolumeState(client,options,state);
+             if(sildurVolume)validateSildurVolumeState(client,options,state);
+             if(unboundVolume)validateUnboundVolumeState(client,options,state);
+@@ -634,7 +638,7 @@
+         state.add("mainBindingStageCounterDeltas",deltas);
+         state.addProperty("mainBindingCounterBaseline",stage==0?"zero before observation":stages[stage-1]);
+         if(previous!=null)state.add("mainBindingPreviousStageCounters",previous.deepCopy());
+-        boolean admitted=(!blissVolume||(proof.has("sourceFamily")&&"bliss".equals(proof.get("sourceFamily").getAsString())))&&(!sildurVolume||(proof.has("sourceFamily")&&"sildur".equals(proof.get("sourceFamily").getAsString())))&&(!unboundVolume||(proof.has("sourceFamily")&&"unbound".equals(proof.get("sourceFamily").getAsString())))&&(!reimaginedVolume||(proof.has("sourceFamily")&&"reimagined".equals(proof.get("sourceFamily").getAsString())))&&(!bslVolume||(proof.has("sourceFamily")&&"bsl".equals(proof.get("sourceFamily").getAsString())))&&progressed&&devQueries==0&&!"unavailable".equals(origin)
++        boolean admitted=(!photonVolume||(proof.has("sourceFamily")&&"photon".equals(proof.get("sourceFamily").getAsString())))&&(!blissVolume||(proof.has("sourceFamily")&&"bliss".equals(proof.get("sourceFamily").getAsString())))&&(!sildurVolume||(proof.has("sourceFamily")&&"sildur".equals(proof.get("sourceFamily").getAsString())))&&(!unboundVolume||(proof.has("sourceFamily")&&"unbound".equals(proof.get("sourceFamily").getAsString())))&&(!reimaginedVolume||(proof.has("sourceFamily")&&"reimagined".equals(proof.get("sourceFamily").getAsString())))&&(!bslVolume||(proof.has("sourceFamily")&&"bsl".equals(proof.get("sourceFamily").getAsString())))&&progressed&&devQueries==0&&!"unavailable".equals(origin)
+             &&mainArtifactOrigins().entrySet().stream().allMatch(entry->origin.equals(entry.getValue().getAsString()))
+             &&proof.get("probeEnabled").getAsBoolean()&&!proof.get("validationPolicyMutated").getAsBoolean()
+             &&proof.get("correctedQueries").getAsLong()>0
+@@ -886,6 +890,45 @@
+         state.addProperty("loadedOptionCount",options.size());
+         state.add("generatedDeclaredOptions",GSON.toJsonTree(stageGenerated()?Map.of("SHADERLOD_EFFECT_ADAPTER","1","SHADERLOD_EFFECT_ADAPTER_INCLUDED","true","SHADERLOD_UNIFORM_SAMPLE_BUDGET_INCLUDED","true"):Map.of()));
+         state.addProperty("blissVolumeControl",true);state.addProperty("expectedPreset",expectedPreset.name());state.addProperty("underlyingNative463Unchanged",true);state.addProperty("generatedBlissRecipeSelected",stageGenerated());state.addProperty("ownedEffectFlag",stageGenerated()?"1":"absent");state.addProperty("rendererEligible",com.pp.shaderlod.integration.makeupquad.MakeUpQuadRuntime.enabled());state.addProperty("linkedUniformReadbackPerformed",false);state.addProperty("avoidedWorkMeasured",false);
++    }
++
++    private void validatePhotonVolumeState(Minecraft client,Map<String,String> options,JsonObject state)throws Exception{
++        var cfg=coreState();var expectedPreset=stage==2?LodPreset.QUALITY:LodPreset.BALANCED;
++        if(initial==null||initial.enabled()||initial.settings().debug()||initial.preset()!=LodPreset.BALANCED||cfg.enabled()!=stageEnabled()||cfg.preset()!=expectedPreset||cfg.settings().debug()||!Iris.getShaderPackOptionQueue().isEmpty())throw new IllegalStateException("Photon fallback Core/preset/nativequeue mismatch");
++        var expected=new TreeMap<>(com.pp.shaderlod.integration.bindingcompat.PhotonSourceCertificate.configuredOptions());
++        if(stageGenerated()){
++            expected.put("SHADERLOD_LIVE_PIXEL_BUDGET","true");
++            // Exact hash-pinned helper #ifndef/#define guards also appear as Iris BooleanOptions.
++            expected.put("SHADERLOD_LIVE_PIXEL_BUDGET_INCLUDED","true");
++            expected.put("SHADERLOD_RENDER_BUDGET_INCLUDED","true");
++        }
++        if(!expected.equals(options))throw new IllegalStateException("Photon fallback requires configured366 unchanged plus owned flag and exact two parsed helper guards on generated stage");
++        if(!"true".equals(options.get("TAA"))||!"false".equals(options.get("TAAU"))||!"1.00".equals(options.get("TAAU_RENDER_SCALE"))||!"false".equals(options.get("SH_SKYLIGHT")))throw new IllegalStateException("Photon configured TAA/TAAU/latent scale/skylight changed");
++        if(client.level.dimension()!=net.minecraft.world.level.Level.OVERWORLD)throw new IllegalStateException("Photon configured control requires Overworld");
++        if(state==null)return;
++        state.addProperty("nativeTaa",options.get("TAA"));state.addProperty("nativeTaau",options.get("TAAU"));state.addProperty("nativeTaauRenderScale",options.get("TAAU_RENDER_SCALE"));state.addProperty("configuredShSkylight",options.get("SH_SKYLIGHT"));
++        var dir=Iris.getShaderpacksDirectory().toAbsolutePath().normalize();var originalPath=dir.resolve(original).normalize();
++        if(!com.pp.shaderlod.integration.photonquad.PhotonQuadEligibility.validate(originalPath,com.pp.shaderlod.integration.photonquad.PhotonQuadEligibility.nativeOptions()).eligible())throw new IllegalStateException("Photon original source certificate changed");
++        if(stageGenerated()){
++            String selected=Iris.getCurrentPackName();var generated=dir.resolve(selected).normalize();
++            if(!generated.startsWith(dir)||generated.equals(dir)||Files.isSymbolicLink(generated))throw new IllegalStateException("Unsafe Photon generated source path");
++            try(var zip=new java.util.zip.ZipFile(generated.toFile())){
++                var entry=zip.getEntry("shaderlod-selection.json");if(entry==null)throw new IllegalStateException("Generated Photon selection marker absent");
++                JsonObject marker;try(var in=zip.getInputStream(entry)){marker=com.google.gson.JsonParser.parseString(new String(in.readAllBytes(),java.nio.charset.StandardCharsets.UTF_8)).getAsJsonObject();}
++                String recipeSha;try(var in=com.pp.shaderlod.packs.PackSelectionService.class.getResourceAsStream("/assets/shaderlod/adapters/patches/photon-experiments/live-pixel-budget.json")){
++                    if(in==null)throw new IllegalStateException("Actual packaged Photon recipe absent");recipeSha=HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(in.readAllBytes()));
++                }
++                if(marker.get("schema").getAsInt()!=1||!"photon".equals(marker.get("adapterId").getAsString())||!original.equals(marker.get("originalFile").getAsString())||!originalHash.equals(marker.get("originalSha256").getAsString())||!recipeSha.equals(marker.get("recipeSha256").getAsString()))throw new IllegalStateException("Generated Photon source/recipe marker mismatch");
++                String stateFile=marker.get("stateFile").getAsString();var statePath=dir.resolve(stateFile).normalize();
++                if(!Path.of(stateFile).getFileName().toString().equals(stateFile)||!statePath.startsWith(dir)||statePath.equals(dir)||Files.isSymbolicLink(statePath))throw new IllegalStateException("Unsafe Photon selection state reference");
++                var selection=com.google.gson.JsonParser.parseString(Files.readString(statePath)).getAsJsonObject();String generatedSha=hash(generated);
++                if(!selection.get("active").getAsBoolean()||!selected.equals(selection.get("generatedFile").getAsString())||!generatedSha.equals(selection.get("generatedSha256").getAsString())||!original.equals(selection.get("originalFile").getAsString())||!originalHash.equals(selection.get("originalSha256").getAsString())||!recipeSha.equals(selection.get("recipeSha256").getAsString()))throw new IllegalStateException("Generated Photon archive differs from real public Apply selection state");
++                state.add("generatedSelectionMarker",marker);state.addProperty("generatedArchiveSha256",generatedSha);state.addProperty("generatedSelectionStateMatched",true);
++            }
++        }
++        state.addProperty("loadedOptionCount",options.size());
++        state.add("generatedDeclaredOptions",GSON.toJsonTree(stageGenerated()?Map.of("SHADERLOD_LIVE_PIXEL_BUDGET","true","SHADERLOD_LIVE_PIXEL_BUDGET_INCLUDED","true","SHADERLOD_RENDER_BUDGET_INCLUDED","true"):Map.of()));
++        state.addProperty("photonVolumeControl",true);state.addProperty("expectedPreset",expectedPreset.name());state.addProperty("underlyingConfigured366Unchanged",true);state.addProperty("generatedPhotonRecipeSelected",stageGenerated());state.addProperty("ownedEffectFlag",stageGenerated()?"true":"absent");state.addProperty("rendererEligible",com.pp.shaderlod.integration.makeupquad.MakeUpQuadRuntime.enabled());state.addProperty("linkedUniformReadbackPerformed",false);state.addProperty("avoidedWorkMeasured",false);
+     }
+ 
+     private boolean stageEnabled() { return volumeControl ? stage==1||stage==2 : qualityRoundtrip ? stage > 0 && stage < stages.length - 1 : stage == 1; }

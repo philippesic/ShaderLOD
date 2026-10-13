@@ -966,3 +966,17 @@ files unchanged. Independent reviewer acknowledged; root integration and later
 normal build/actual rendering remain pending. Selected native TAAtrue/TAAUfalse/
 SH_SKYLIGHTfalse is explicit; no inferred all-defaults support. No live client
 or build, no pause; full90/old allocations/closed trial evidence retained.
+
+## Photon NeoForge26.2 main source and controls integrated
+
+Separate configured366/generated369 Photon source/state admission and seven
+MAIN-family dispatch now join the accepted primary/lighting/ambient optimization.
+Parent adopted four sealed postimages after independent javac/public46/source/
+resource/caller refusals; exact535 graph equals the actual Fabric optical archive,
+with196 native vertex members unchanged.
+[Code and evidence](../evaluation/optimization-ports-20261013.md).
+Selected TAAtrue/TAAUfalse/latent1.00/SH_SKYLIGHTfalse is explicit; all upstream
+defaults and the Mac original blocker remain separate. Runtime_operator
+acknowledged a new prep-only turn; parent clearance/normal preview/new producer
+precede any client. Full90 and speed/work/motion/DHPBR remain unfinished, with
+old allocations and closed trials preserved.

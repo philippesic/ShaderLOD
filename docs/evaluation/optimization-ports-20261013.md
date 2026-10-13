@@ -694,3 +694,29 @@ Speed, reached rejection/avoided GPU work, linked uniform readbacks, motion,
 DH/PBR, failed-Apply/mismatch runtime and other tuples remain unverified.
 The next scoped code join is current Photon primary/lighting/ambient optimization
 on the explicit configured native-AA/TAAUoff NeoForge tuple; defaults stay separate.
+
+## Photon optimization consumer port to NeoForge26.2
+
+Photon's current primary plus lighting/ambient density rejection now joins
+NeoForge26.2 through an explicit source certificate, seven-family MAIN dispatch
+and public controls. The pinned special Photon recipe is reconstructed exactly
+with both helpers, dependencies, license ancestry and public state. Its535-member
+graph matches the actual Fabric optical archive byte-for-byte; all196 native
+vertex members are unchanged. Existing API/resource/Overworld/native-draw
+guards remain unchanged, and no batching eligibility is added.
+
+The admitted known runnable tuple is configured366/generated369 with native
+TAAtrue, TAAUfalse, latent1.00 and SH_SKYLIGHTfalse. Source admission separates
+that configured map from the static original certificate; unknown/default map
+changes refuse. No AA or upscaling choice is forced, and the upstream-default
+Mac skylight blocker remains explicit. Native6lighting/2ambient recurrence and
+accepted helper math are unchanged; actual skipped work is not measured.
+
+Parent adopted four exact postimages after independent javac,46 public CPU
+selection/restore/tamper checks and source/resource/caller refusals.
+[Handback](../../dev/logs/optimization-porting-20261013/photon-neoforge-port/handback.json),
+[independent review](../../dev/logs/optimization-porting-20261013/photon-neoforge-review/receipt.json),
+[parent adoption](../../dev/logs/optimization-porting-20261013/photon-neoforge-port/parent-adoption.json),
+[scoped dev/build patch](../../patches/consumer-ports/neoforge-262-photon-main.patch).
+Normal preview/new actual producer/rendering/recovery remain pending. Speed,
+work, motion, DH/PBR and other tuples are unknown; closed pixel/cost trials stay closed.
