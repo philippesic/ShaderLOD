@@ -537,3 +537,34 @@ process provenance is unverified. Other nine build identities were retained.
 The lane is released and fresh absence/free-lock evidence is accepted. No client
 was launched. These previews establish delivery/build coverage, not runtime,
 quality, FPS, DH/PBR or full90-cell acceptance.
+
+## Current Photon optical-depth graph consumed
+
+On October13 at13:19–13:23UTC, the delivered current Fabric26.1.2 main preview
+rendered the optical-depth graph with the configured native AA tuple: TAAtrue,
+TAAUfalse, latent scale1.00 and SH_SKYLIGHTfalse. This is the known runnable
+configuration, not all upstream defaults. Parent independently reconstructed
+all535 generated members from the packaged recipe, accepted current main origins
+and native366/generated369 options, and verified Quality366/Off366 plus Cancel.
+Original/enabled stills show coherent clouds, terrain and water without a
+conspicuous artifact; this is not motion or image-equivalence evidence.
+[Actual observation](../../dev/logs/optimization-porting-20261013/photon-optical-runtime/handback.json),
+[parent acceptance](../../dev/logs/optimization-porting-20261013/photon-optical-runtime/parent-acceptance.json).
+The client and launcher were released; fresh13:27UTC absence/free-lock census
+passed. Successful producer export remains, but its original PID identity was
+lost before census. Linked values, reached branches, avoided GPU work, frame
+cost, motion, failed-Apply/mismatch runtime and DH/PBR remain unverified.
+
+The existing photon-cloud consumer had no frame windows. A minimal opt-in join
+now reuses the existing GameRenderer.render RETURN counter and roundtrip: fixed
+original/on/off, Balanced throughout,30s warmup and15s measurement each, public
+Apply and restoration. Only two dev-consumer files change; main/shader sources
+and old closed FPS/pixel modes remain exact. Parent accepted recorded preimages,
+postimages, actual dependency compilation and27 compiled-class contract checks.
+[Scoped consumer patch](../../patches/consumer-ports/fabric-2612-photon-optical-cost.patch),
+[adoption and exact pins](../../dev/logs/optimization-porting-20261013/photon-cost-join/parent-adoption.json).
+A fresh integrated producer/runtime observation is pending. Full-work control
+is explicitly absent: public Quality selects the original graph, and adding a
+private same-graph override would exceed this join. Any measured result is the
+whole selected bundle's frame cost, not optical-depth attribution. No new
+benchmark framework or reopening of closed trials is authorized by this join.

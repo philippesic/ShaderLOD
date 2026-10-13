@@ -1,0 +1,176 @@
+--- a/ports/26.1.2/fabric/src/devClient/java/com/pp/shaderlod/fabric/dev/FabricRoundtrip.java
++++ b/ports/26.1.2/fabric/src/devClient/java/com/pp/shaderlod/fabric/dev/FabricRoundtrip.java
+@@ -45,6 +45,8 @@
+     private final boolean bslFallback = "bsl-fallback".equals(nativeFamilyMode);
+     private final boolean bslVolume = "bsl-volume".equals(nativeFamilyMode);
+     private final boolean photonCloud = "photon-cloud".equals(nativeFamilyMode);
++    private final boolean photonCost = PortFpsPolicy.opticalCostRequested();
++    private final boolean frameProbe = fpsProbe || photonCost;
+     private final boolean blissCloud = "bliss-cloud".equals(nativeFamilyMode);
+     private final boolean sildurCloud = "sildur-cloud".equals(nativeFamilyMode);
+     private final boolean makeupVolume = "makeup-volume".equals(nativeFamilyMode);
+@@ -57,7 +59,7 @@
+     private long nativeCertificateValidations;
+     private JsonObject nativeOriginalStageSidecar;
+     private final boolean qualityRoundtrip = Boolean.getBoolean("shaderlod.dev.portQualityRoundtrip");
+-    private final String[] stages = fpsProbe ? new String[]{"original","performance","balanced","quality","off"} : bslFallback || bslVolume || makeupVolume || sildurCloud || blissCloud || photonCloud || complementaryVolume ? new String[]{"original","on","quality","off"} : nativeFamily ? ReimaginedNativeControlChecks.stages() : qualityRoundtrip
++    private final String[] stages = photonCost ? new String[]{"original","on","off"} : fpsProbe ? new String[]{"original","performance","balanced","quality","off"} : bslFallback || bslVolume || makeupVolume || sildurCloud || blissCloud || photonCloud || complementaryVolume ? new String[]{"original","on","quality","off"} : nativeFamily ? ReimaginedNativeControlChecks.stages() : qualityRoundtrip
+             ? new String[]{"original", "quality", "native-info-edit", "native-info-restored", "native-upscaled",
+                     "native-aa-restored", "performance", "quality-return", "off"}
+             : new String[]{"original", "on", "off"};
+@@ -106,6 +108,9 @@
+             LOGGER.error("Fabric roundtrip disabled: explicit original ZIP basename required");
+             return;
+         }
++        if (Boolean.getBoolean("shaderlod.dev.portPhotonOpticalCost") && (!probe.photonCost || Boolean.getBoolean("shaderlod.dev.portRoundtripUi"))) {
++            LOGGER.error("Photon optical cost requires photon-cloud roundtrip and no UI roundtrip"); return;
++        }
+         if(probe.fpsProbe){
+             try{
+                 for(String flag:new String[]{"shaderlod.dev.portRendererSpeedProbe","shaderlod.dev.portQualityRoundtrip","shaderlod.rendererSpeedPortR1",com.pp.shaderlod.integration.makeupquad.RendererRolloutPolicy.RESEARCH_ROUTES})if(!"false".equals(System.getProperty(flag,"false")))throw new IllegalStateException("FPS mode conflict: "+flag);
+@@ -190,6 +195,8 @@
+             LOGGER.error("Renderer speed probe requires candidate opt-in and no Quality/UI roundtrip");
+             return;
+         }
++        probe.report.addProperty("photonOpticalCostProbe",probe.photonCost);
++        if(probe.photonCost){probe.report.add("stageNames",GSON.toJsonTree(probe.stages));probe.report.addProperty("settleSeconds",30);probe.report.addProperty("measurementSeconds",15);probe.report.addProperty("fullWorkControlPerformed",false);probe.report.addProperty("costEvidenceBoundary","Completed render frames per wall-clock window; no GPU timing or optical-depth attribution");}
+         probe.report.addProperty("fpsMeasurementProbe",probe.fpsProbe);
+         if(probe.fpsProbe){probe.report.addProperty("fpsFamily",probe.fpsFamily);probe.report.add("stageNames",GSON.toJsonTree(probe.stages));probe.report.addProperty("settleSeconds",40);probe.report.addProperty("measurementSeconds",30);probe.report.addProperty("internalDeadlineSeconds",600);}
+         probe.report.addProperty("rendererSpeedProbe", probe.rendererSpeed);
+@@ -226,7 +233,7 @@
+     private void tick(Minecraft client) {
+         if (done) return;
+         try {
+-            if ((rendererSpeed || fpsProbe&&measuredSince!=0) && com.pp.shaderlod.port.dev.PortRendererFrames.invalidMeasuredFrames() != 0)
++            if ((rendererSpeed || frameProbe&&measuredSince!=0) && com.pp.shaderlod.port.dev.PortRendererFrames.invalidMeasuredFrames() != 0)
+                 throw new IllegalStateException("Measured frame limiter violation: "
+                         + com.pp.shaderlod.port.dev.PortRendererFrames.firstLimiterViolation());
+             if (System.nanoTime() - started > (fpsProbe?600_000_000_000L:300_000_000_000L)) throw new IllegalStateException("Finite "+(fpsProbe?600:300)+" s probe deadline exceeded");
+@@ -321,19 +328,20 @@
+             if(sildurCloud)validateSildurCloudState(client,options,null);
+             if(blissCloud)validateBlissCloudState(client,options,null);
+             if(photonCloud)validatePhotonCloudState(client,options,null);
++            if(photonCost)validatePhotonCostState(client);
+             if(bslVolume)validateBslVolumeState(client,options,null);
+             if(bslFallback)validateBslFallbackState(client,options,null);
+             if (nativeFamily) validateNativeFamilyState(client,options,null);
+             if (rendererSpeed) validateSpeedState(client, options);
+             if (System.nanoTime() - settledSince < (rendererSpeed || fpsProbe ? 40_000_000_000L
+                     : qualityRoundtrip && stage > 0 ? 3_000_000_000L : SETTLE)) return;
+-            if(fpsProbe&&!fpsWindowComplete){
++            if(frameProbe&&!fpsWindowComplete){
+                 if(measuredSince==0){
+-                    var source=new JsonObject();validateFpsState(client,options,source);report.add(stages[stage]+"SourceBeforeMeasurement",source);
++                    var source=new JsonObject();if(photonCost)validatePhotonCloudState(client,options,source);else validateFpsState(client,options,source);report.add(stages[stage]+"SourceBeforeMeasurement",source);
+                     measuredFrames=com.pp.shaderlod.port.dev.PortRendererFrames.frames();measuredCommands=com.pp.shaderlod.port.dev.PortRendererFrames.commands();
+                     com.pp.shaderlod.port.dev.PortRendererFrames.beginFpsWindow();measuredSince=System.nanoTime();return;
+                 }
+-                if(System.nanoTime()-measuredSince<30_000_000_000L)return;
++                if(System.nanoTime()-measuredSince<(photonCost?15_000_000_000L:30_000_000_000L))return;
+                 finishFpsWindow();
+             }
+             if (rendererSpeed) {
+@@ -372,6 +380,10 @@
+             if (stage == stages.length - 1) {
+                 state.addProperty("originalLoadedOptionsRestored", originalOptions.equals(options));
+                 state.addProperty("originalCoreConfigRestored", initial.equals(FabricLodConfig.snapshot()));
++            }
++            if(photonCost&&stage==stages.length-1){
++                double baseline=report.getAsJsonObject("original").getAsJsonObject("fpsWindow").get("meanElapsedFrameMs").getAsDouble();
++                state.addProperty("originalReturnMeanFrameMsDriftPercent",100*(fpsEvidence.get("meanElapsedFrameMs").getAsDouble()/baseline-1));
+             }
+             report.add(stages[stage], state);
+             report.addProperty("status", "capturing-" + stages[stage]);
+@@ -463,7 +475,7 @@
+         state.addProperty("capturedAtUtc", Instant.now().toString());
+         state.add("mainArtifactOrigins",mainArtifactOrigins());
+         state.addProperty("stage", stages[stage]);
+-        if(fpsProbe&&fpsEvidence!=null)state.add("fpsWindow",fpsEvidence.deepCopy());
++        if(frameProbe&&fpsEvidence!=null)state.add("fpsWindow",fpsEvidence.deepCopy());
+         state.addProperty("stableWorldSeconds", (System.nanoTime() - settledSince) / 1_000_000_000.0);
+         if(nativeFamily && nativeStageCommandBaseline!=null && settledSince!=0 && !done){
+             long[] commands=com.pp.shaderlod.port.dev.PortRendererFrames.commands();
+@@ -575,7 +587,7 @@
+     private void finishFpsWindow(){
+         long now=System.nanoTime(),count=com.pp.shaderlod.port.dev.PortRendererFrames.frames()-measuredFrames;double seconds=(now-measuredSince)/1_000_000_000.0;
+         com.pp.shaderlod.port.dev.PortRendererFrames.endWindow();
+-        if(count<=0||seconds<30||com.pp.shaderlod.port.dev.PortRendererFrames.invalidMeasuredFrames()!=0)throw new IllegalStateException("Missing/invalid completed FPS window");
++        if(count<=0||seconds<(photonCost?15:30)||com.pp.shaderlod.port.dev.PortRendererFrames.invalidMeasuredFrames()!=0)throw new IllegalStateException("Missing/invalid completed FPS window");
+         long[] commands=com.pp.shaderlod.port.dev.PortRendererFrames.commands();var rate=new JsonObject();
+         rate.addProperty("windowStartNanoTime",measuredSince);rate.addProperty("windowEndNanoTime",now);rate.addProperty("frameCounterStart",measuredFrames);rate.addProperty("frameCounterEnd",measuredFrames+count);rate.addProperty("counterBoundary","GameRenderer.render RETURN with renderLevel/currentworld/loadfinished");rate.addProperty("completedRenderFrames",count);rate.addProperty("elapsedSeconds",seconds);rate.addProperty("fps",count/seconds);rate.addProperty("meanElapsedFrameMs",1000*seconds/count);
+         rate.addProperty("configuredFramerateLimit",260);rate.addProperty("minimumEffectiveFramerateLimit",com.pp.shaderlod.port.dev.PortRendererFrames.minEffective());rate.addProperty("maximumEffectiveFramerateLimit",com.pp.shaderlod.port.dev.PortRendererFrames.maxEffective());rate.addProperty("invalidMeasuredFrames",com.pp.shaderlod.port.dev.PortRendererFrames.invalidMeasuredFrames());
+@@ -836,13 +848,23 @@
+         return Map.copyOf(configured);
+     }
+ 
++    private void validatePhotonCostState(Minecraft client) {
++        if(client.level.dimension()!=net.minecraft.world.level.Level.OVERWORLD)throw new IllegalStateException("Photon optical cost requires Overworld");
++        var tracker=client.getFramerateLimitTracker();
++        if(client.options.renderDistance().get()!=24||client.options.enableVsync().get()||client.options.framerateLimit().get()!=260||!com.pp.shaderlod.port.dev.PortRendererFrames.limiterAllows(260,tracker.getFramerateLimit(),tracker.getThrottleReason().name(),client.options.inactivityFpsLimit().get()==net.minecraft.client.InactivityFpsLimit.MINIMIZED,client.isWindowActive(),client.getWindow().isIconified()))throw new IllegalStateException("Photon optical cost RD24/vsyncOff/effective260/focus mismatch");
++        var pose=speedPose(client);if(speedPose==null)speedPose=pose.deepCopy();
++        if(!speedPose.equals(pose))throw new IllegalStateException("Photon optical cost camera/time/weather changed");
++        var cfg=FabricLodConfig.snapshot();
++        if(cfg.near()!=initial.near()||cfg.far()!=initial.far()||cfg.transition()!=initial.transition())throw new IllegalStateException("Photon optical cost distance settings changed");
++    }
++
+     private boolean applyPhotonCloudStage(){
+-        boolean applied=FabricLodSettings.apply(stageEnabled(),stage==2?LodPreset.QUALITY:LodPreset.BALANCED);
++        boolean applied=FabricLodSettings.apply(stageEnabled(),!photonCost&&stage==2?LodPreset.QUALITY:LodPreset.BALANCED);
+         if(!Iris.getShaderPackOptionQueue().isEmpty())throw new IllegalStateException("Photon public Apply left pending native options");
+         return applied;
+     }
+     private void validatePhotonCloudState(Minecraft client,Map<String,String> options,JsonObject state)throws Exception{
+-        var cfg=FabricLodConfig.snapshot();var expectedPreset=stage==2?LodPreset.QUALITY:LodPreset.BALANCED;
++        var cfg=FabricLodConfig.snapshot();var expectedPreset=!photonCost&&stage==2?LodPreset.QUALITY:LodPreset.BALANCED;
+         if(initial==null||initial.enabled()||initial.debug()||initial.preset()!=LodPreset.BALANCED||!FabricLodConfig.loaded()||cfg.enabled()!=stageEnabled()||cfg.preset()!=expectedPreset||cfg.debug()||!Iris.getShaderPackOptionQueue().isEmpty())throw new IllegalStateException("Photon fallback Core/preset/nativequeue mismatch");
+         var expected=new TreeMap<>(photonCloudOptions());
+         if(stageGenerated()){
+@@ -919,8 +941,8 @@
+         state.addProperty("complementaryVolumeControl",true);state.addProperty("complementaryVolumeFamily",complementaryVolumeFamily);state.addProperty("expectedPreset",expectedPreset.name());state.addProperty("underlyingNative398Unchanged",true);state.addProperty("generatedComplementaryRecipeSelected",stageGenerated());state.addProperty("ownedRefinementFlag",stageGenerated()?"1":"absent");state.addProperty("rendererEligible",com.pp.shaderlod.integration.makeupquad.MakeUpQuadRuntime.enabled());state.addProperty("linkedUniformReadbackPerformed",false);state.addProperty("avoidedWorkMeasured",false);
+     }
+ 
+-    private boolean stageEnabled() { return fpsProbe ? stage>0&&stage<4 : bslFallback || bslVolume || makeupVolume || sildurCloud || blissCloud || photonCloud || complementaryVolume ? stage==1||stage==2 : nativeFamily ? ReimaginedNativeControlChecks.stageEnabled(stage) : qualityRoundtrip ? stage > 0 && stage < stages.length - 1 : stage == 1; }
+-    private boolean stageGenerated() { return fpsProbe ? stage>0&&stage<3&&!original.equals(Iris.getCurrentPackName()) : bslFallback || bslVolume || makeupVolume || sildurCloud || blissCloud || photonCloud || complementaryVolume ? stage==1 : !nativeFamily && !rendererSpeed && (qualityRoundtrip ? stage == 6 : stage == 1); }
++    private boolean stageEnabled() { return photonCost ? stage==1 : fpsProbe ? stage>0&&stage<4 : bslFallback || bslVolume || makeupVolume || sildurCloud || blissCloud || photonCloud || complementaryVolume ? stage==1||stage==2 : nativeFamily ? ReimaginedNativeControlChecks.stageEnabled(stage) : qualityRoundtrip ? stage > 0 && stage < stages.length - 1 : stage == 1; }
++    private boolean stageGenerated() { return photonCost ? stage==1 : fpsProbe ? stage>0&&stage<3&&!original.equals(Iris.getCurrentPackName()) : bslFallback || bslVolume || makeupVolume || sildurCloud || blissCloud || photonCloud || complementaryVolume ? stage==1 : !nativeFamily && !rendererSpeed && (qualityRoundtrip ? stage == 6 : stage == 1); }
+ 
+     private boolean applyNativeFamilyStage(Minecraft client) throws Exception {
+         if(!Iris.getShaderPackOptionQueue().isEmpty())throw new IllegalStateException("Preexisting native option queue");
+@@ -1100,7 +1122,7 @@
+         state.addProperty("programEnabledTAAURelationEvidence", "Pinned source relation only; not executed draws, linked uniform delivery or FPS");
+     }
+ 
+-    private void resetWindow() { if(fpsProbe&&measuredSince!=0&&!fpsWindowComplete)throw new IllegalStateException("FPS readiness/signature changed during measured window"); if (rendererSpeed||fpsProbe) com.pp.shaderlod.port.dev.PortRendererFrames.endWindow(); fpsWindowComplete=false;fpsEvidence=null; settledSince = 0; measuredSince = 0; measuredFrames = 0; measuredCommands = null; nativeStageCommandBaseline = null; }
++    private void resetWindow() { if(frameProbe&&measuredSince!=0&&!fpsWindowComplete)throw new IllegalStateException("FPS readiness/signature changed during measured window"); if (rendererSpeed||frameProbe) com.pp.shaderlod.port.dev.PortRendererFrames.endWindow(); fpsWindowComplete=false;fpsEvidence=null; settledSince = 0; measuredSince = 0; measuredFrames = 0; measuredCommands = null; nativeStageCommandBaseline = null; }
+     private void validateSpeedState(Minecraft client, Map<String,String> options) throws Exception {
+         var tracker = client.getFramerateLimitTracker();
+         if (!com.pp.shaderlod.port.dev.PortRendererFrames.limiterAllows(client.options.framerateLimit().get(),
+@@ -1211,6 +1233,16 @@
+ 
+     private void fail(Minecraft client, Exception failure) {
+         done = true;
++        if(photonCost){
++            com.pp.shaderlod.port.dev.PortRendererFrames.endWindow();
++            try {
++                boolean restored=initial!=null&&FabricLodSettings.apply(initial.enabled(),initial.preset());
++                report.addProperty("failurePublicRestoreReturned",restored);
++                report.addProperty("failureOriginalSelectionRestored",restored&&original.equals(Iris.getCurrentPackName())&&original.equals(Iris.getIrisConfig().getShaderPackName().orElse("")));
++                report.addProperty("failureCoreRestored",initial!=null&&initial.equals(FabricLodConfig.snapshot()));
++                report.addProperty("failureNativeOptionsRestored",originalOptions!=null&&originalOptions.equals(loadedOptions()));
++            } catch(Exception restoreFailure){report.addProperty("failurePublicRestoreFailure",restoreFailure.toString());}
++        }
+         report.addProperty("status", "failed");
+         report.addProperty("failure", failure.toString());
+         report.addProperty("failedStage", stages[stage]);
+--- a/ports/26.1.2/fabric/src/devClient/java/com/pp/shaderlod/fabric/dev/PortFpsPolicy.java
++++ b/ports/26.1.2/fabric/src/devClient/java/com/pp/shaderlod/fabric/dev/PortFpsPolicy.java
+@@ -5,7 +5,8 @@
+ public final class PortFpsPolicy {
+  private PortFpsPolicy(){}
+  public static String family(String mode){return switch(mode){case "measure-makeup" -> "makeup";case "measure-sildur" -> "sildur";case "measure-bsl" -> "bsl";case "measure-reimagined" -> "reimagined";case "measure-unbound" -> "unbound";case "measure-photon" -> "photon";case "measure-bliss" -> "bliss";default -> "";};}
+- public static boolean requested(){return Boolean.getBoolean("shaderlod.dev.portRoundtrip")&&!family(System.getProperty("shaderlod.dev.portNativeFamily","")).isEmpty();}
++ public static boolean opticalCostRequested(){return Boolean.getBoolean("shaderlod.dev.portRoundtrip")&&Boolean.getBoolean("shaderlod.dev.portPhotonOpticalCost")&&"photon-cloud".equals(System.getProperty("shaderlod.dev.portNativeFamily",""));}
++ public static boolean requested(){return opticalCostRequested()||Boolean.getBoolean("shaderlod.dev.portRoundtrip")&&!family(System.getProperty("shaderlod.dev.portNativeFamily","")).isEmpty();}
+  public static String adapter(String family){return switch(family){case "makeup" -> "makeup-ultra-fast-shaders";case "sildur" -> "sildurs-vibrant-shaders";case "bsl" -> "bsl-shaders";case "reimagined" -> "complementary-reimagined";case "unbound" -> "complementary-unbound";case "photon" -> "photon";case "bliss" -> "bliss-shader";default -> throw new IllegalArgumentException("Unknown FPS family");};}
+  public static Map<String,String> nativeOptions(String family){return switch(family){case "makeup" -> com.pp.shaderlod.integration.makeupquad.MakeUpQuadEligibility.nativeOptions();case "sildur" -> com.pp.shaderlod.integration.sildurquad.SildurQuadEligibility.nativeOptions();case "bsl" -> com.pp.shaderlod.integration.bslquad.BslQuadEligibility.nativeOptions();case "reimagined" -> com.pp.shaderlod.integration.reimaginedquad.ReimaginedQuadEligibility.nativeOptions();case "unbound" -> com.pp.shaderlod.integration.unboundquad.UnboundQuadEligibility.nativeOptions();case "photon" -> com.pp.shaderlod.integration.photonquad.PhotonQuadEligibility.nativeOptions();case "bliss" -> com.pp.shaderlod.integration.blissquad.BlissQuadEligibility.nativeOptions();default -> Map.of();};}
+  public static boolean sourceMatches(String family,Path archive){return switch(family){case "makeup" -> com.pp.shaderlod.integration.makeupquad.MakeUpQuadEligibility.validate(archive,nativeOptions(family)).eligible();case "sildur" -> com.pp.shaderlod.integration.sildurquad.SildurQuadEligibility.validate(archive,nativeOptions(family)).eligible();case "bsl" -> com.pp.shaderlod.integration.bslquad.BslQuadEligibility.validate(archive,nativeOptions(family)).eligible();case "reimagined" -> com.pp.shaderlod.integration.reimaginedquad.ReimaginedQuadEligibility.validate(archive,nativeOptions(family)).eligible();case "unbound" -> com.pp.shaderlod.integration.unboundquad.UnboundQuadEligibility.validate(archive,nativeOptions(family)).eligible();case "photon" -> com.pp.shaderlod.integration.photonquad.PhotonQuadEligibility.validate(archive,nativeOptions(family)).eligible();case "bliss" -> com.pp.shaderlod.integration.blissquad.BlissQuadEligibility.validate(archive,nativeOptions(family)).eligible();default -> false;};}

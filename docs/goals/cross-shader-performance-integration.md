@@ -869,3 +869,21 @@ Next direct consumer milestone is bounded actual Photon lighting/ambient graph
 consumption and early original/control/enabled/return cost/quality observation
 with the existing consumer, preserving native AA and closed earlier pixel trials.
 Do not replace this outcome with a general observer/benchmark framework.
+
+## Photon current graph rendered; bounded cost consumer adopted — October13,2026
+
+Current optical-depth Photon rendered on the configured native-AA/TAAUoff
+Fabric26.1.2 tuple. Parent accepted all535 generated members/current main origins,
+native366/generated369, Quality/Off/Cancel recovery and still inspection. Lane
+released13:23UTC with fresh13:27UTC absence/free lock. No GPU-work, motion, cost
+or DH/PBR claim. [Evidence and limits](../evaluation/optimization-ports-20261013.md).
+
+The minimum missing consumer join is adopted: existing frame counter and public
+roundtrip, original/on/off, native options and Balanced,30s warmup+15s windows.
+Actual compilation and27 offline contracts pass. Full-workcontrol is absent;
+this diagnostic cannot attribute optical savings. Acknowledged runtime_operator
+photon_optical_cost_runtime prepares one fresh finite operation, reserving the
+exclusive lane only after verifying live availability. Parent owns integration,
+Git and continuation. After this bounded cost decision resume concrete missing
+optimization family/consumer joins, preserving full90 scope and closed trials.
+Hourly same-chat scheduling remains uncreated because its tool is unavailable.
