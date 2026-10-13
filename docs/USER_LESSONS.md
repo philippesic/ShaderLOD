@@ -315,3 +315,26 @@ an explicit pass decomposition preserving the original sky operation. Future
 adapter eligibility must verify actual version-conditioned shader source, rather
 than infer activation from an option map. This was corrected by agent source
 verification; no user feature was disabled to make the check pass.
+
+
+## Complete family joins before accepting a copied consumer — October13, 2026
+
+The Unbound NeoForge26.2 feature owner ported the checker command/artifact branches
+but omitted the final native-path/hash/count/style branches. Root reviewed and
+adopted that partial copy; real producer preflight then selected MakeUp native100
+and correctly refused before client launch. Root also supplied a stale archive
+path, and the owner initially assumed style3 rather than the recorded style4.
+The actual archive/map and failed receipts are retained. The repaired native
+tuple block was exercised against actual producer inputs with wrong count/archive
+negatives, and a fresh producer plus whole preflight passed. Keep field identity
+through the actual consumer tail, not only the early selector; no fabricated
+exports or weakened native gates.
+
+The subsequent consumer completed four rendering/control stages but its watcher
+failed a3sec lsof directory probe. Exact stop/release and the raw complete report
+are retained. Read-only strict postflight supports component claims, not a whole
+operation PASS. A probe timeout is not evidence that the process stopped.
+
+Root also caught pre-existing checker edits in its local commit and narrowed the
+commit to the port's exact scoped patches, preserving the working bytes and other
+edits. Inspect both current preimages and the staged diff before committing.
