@@ -1,0 +1,79 @@
+--- a/ports/26.1.2/fabric/src/devClient/java/com/pp/shaderlod/fabric/dev/FabricRoundtrip.java
++++ b/ports/26.1.2/fabric/src/devClient/java/com/pp/shaderlod/fabric/dev/FabricRoundtrip.java
+@@ -46,0 +47 @@
++    private final boolean blissCloud = "bliss-cloud".equals(nativeFamilyMode);
+@@ -51 +52 @@
+-    private final boolean nativeFamily = !nativeFamilyMode.isBlank() && !bslFallback && !bslVolume && !makeupVolume && !sildurCloud && !complementaryVolume && !fpsProbe;
++    private final boolean nativeFamily = !nativeFamilyMode.isBlank() && !bslFallback && !bslVolume && !makeupVolume && !sildurCloud && !blissCloud && !complementaryVolume && !fpsProbe;
+@@ -58 +59 @@
+-    private final String[] stages = fpsProbe ? new String[]{"original","performance","balanced","quality","off"} : bslFallback || bslVolume || makeupVolume || sildurCloud || complementaryVolume ? new String[]{"original","on","quality","off"} : nativeFamily ? ReimaginedNativeControlChecks.stages() : qualityRoundtrip
++    private final String[] stages = fpsProbe ? new String[]{"original","performance","balanced","quality","off"} : bslFallback || bslVolume || makeupVolume || sildurCloud || blissCloud || complementaryVolume ? new String[]{"original","on","quality","off"} : nativeFamily ? ReimaginedNativeControlChecks.stages() : qualityRoundtrip
+@@ -145,0 +147,8 @@
++        if(probe.blissCloud){
++            try{
++                for(String flag:new String[]{"shaderlod.dev.portRendererSpeedProbe","shaderlod.dev.portQualityRoundtrip","shaderlod.rendererSpeedPortR1",com.pp.shaderlod.integration.makeupquad.RendererRolloutPolicy.RESEARCH_ROUTES})
++                    if(!"false".equals(System.getProperty(flag,"false")))throw new IllegalStateException("Bliss cloud conflicts with "+flag);
++                var dir=Iris.getShaderpacksDirectory().toAbsolutePath().normalize();var archive=dir.resolve(probe.original).normalize();
++                if(!archive.startsWith(dir)||archive.equals(dir)||Files.isSymbolicLink(archive)||!com.pp.shaderlod.integration.blissquad.BlissQuadEligibility.validate(archive,com.pp.shaderlod.integration.blissquad.BlissQuadEligibility.nativeOptions()).eligible())throw new IllegalStateException("Certified original Bliss2.1.2/native463/resources required");
++            }catch(Exception failure){LOGGER.error("Bliss cloud control refused before registration",failure);return;}
++        }
+@@ -184,0 +194,2 @@
++        probe.report.addProperty("blissCloudControl",probe.blissCloud);
++        if(probe.blissCloud){probe.report.addProperty("blissCloudMode","bliss-cloud");probe.report.add("stageNames",GSON.toJsonTree(probe.stages));probe.report.addProperty("rendererWorkMeasurementRequested",false);}
+@@ -230 +241 @@
+-                if((bslFallback||bslVolume||makeupVolume||sildurCloud||complementaryVolume)&&(initial.debug()||initial.preset()!=LodPreset.BALANCED))throw new IllegalStateException("BSL fallback baseline requires native Off/Balanced/debugfalse");
++                if((bslFallback||bslVolume||makeupVolume||sildurCloud||blissCloud||complementaryVolume)&&(initial.debug()||initial.preset()!=LodPreset.BALANCED))throw new IllegalStateException("BSL fallback baseline requires native Off/Balanced/debugfalse");
+@@ -262 +273 @@
+-                boolean applied = fpsProbe ? applyFpsStage() : bslVolume ? applyBslVolumeStage() : complementaryVolume ? applyComplementaryVolumeStage() : sildurCloud ? applySildurCloudStage() : makeupVolume ? applyMakeupVolumeStage() : bslFallback ? applyBslFallbackStage() : nativeFamily ? applyNativeFamilyStage(client) : qualityRoundtrip ? applyQualityStage(client) : FabricLodSettings.apply(enabled, rendererSpeed ? LodPreset.PERFORMANCE : initial.preset());
++                boolean applied = fpsProbe ? applyFpsStage() : bslVolume ? applyBslVolumeStage() : complementaryVolume ? applyComplementaryVolumeStage() : blissCloud ? applyBlissCloudStage() : sildurCloud ? applySildurCloudStage() : makeupVolume ? applyMakeupVolumeStage() : bslFallback ? applyBslFallbackStage() : nativeFamily ? applyNativeFamilyStage(client) : qualityRoundtrip ? applyQualityStage(client) : FabricLodSettings.apply(enabled, rendererSpeed ? LodPreset.PERFORMANCE : initial.preset());
+@@ -299,0 +311 @@
++            if(blissCloud)validateBlissCloudState(client,options,null);
+@@ -341,0 +354 @@
++            if(blissCloud)validateBlissCloudState(client,options,state);
+@@ -763,0 +777,41 @@
++    private boolean applyBlissCloudStage(){
++        boolean applied=FabricLodSettings.apply(stageEnabled(),stage==2?LodPreset.QUALITY:LodPreset.BALANCED);
++        if(!Iris.getShaderPackOptionQueue().isEmpty())throw new IllegalStateException("Bliss public Apply left pending native options");
++        return applied;
++    }
++    private void validateBlissCloudState(Minecraft client,Map<String,String> options,JsonObject state)throws Exception{
++        var cfg=FabricLodConfig.snapshot();var expectedPreset=stage==2?LodPreset.QUALITY:LodPreset.BALANCED;
++        if(initial==null||initial.enabled()||initial.debug()||initial.preset()!=LodPreset.BALANCED||!FabricLodConfig.loaded()||cfg.enabled()!=stageEnabled()||cfg.preset()!=expectedPreset||cfg.debug()||!Iris.getShaderPackOptionQueue().isEmpty())throw new IllegalStateException("Bliss fallback Core/preset/nativequeue mismatch");
++        var expected=new TreeMap<>(com.pp.shaderlod.integration.blissquad.BlissQuadEligibility.nativeOptions());
++        if(stageGenerated()){
++            expected.put("SHADERLOD_EFFECT_ADAPTER","1");
++            // Exact hash-pinned helper #ifndef/#define guards also appear as Iris BooleanOptions.
++            expected.put("SHADERLOD_EFFECT_ADAPTER_INCLUDED","true");
++            expected.put("SHADERLOD_UNIFORM_SAMPLE_BUDGET_INCLUDED","true");
++        }
++        if(!expected.equals(options))throw new IllegalStateException("Bliss fallback requires native463 unchanged plus owned flag and exact two parsed helper guards on generated stage");
++        if(state==null)return;
++        var dir=Iris.getShaderpacksDirectory().toAbsolutePath().normalize();var originalPath=dir.resolve(original).normalize();
++        if(!com.pp.shaderlod.integration.blissquad.BlissQuadEligibility.validate(originalPath,com.pp.shaderlod.integration.blissquad.BlissQuadEligibility.nativeOptions()).eligible())throw new IllegalStateException("Bliss original source certificate changed");
++        if(stageGenerated()){
++            String selected=Iris.getCurrentPackName();var generated=dir.resolve(selected).normalize();
++            if(!generated.startsWith(dir)||generated.equals(dir)||Files.isSymbolicLink(generated))throw new IllegalStateException("Unsafe Bliss generated source path");
++            try(var zip=new java.util.zip.ZipFile(generated.toFile())){
++                var entry=zip.getEntry("shaderlod-selection.json");if(entry==null)throw new IllegalStateException("Generated Bliss selection marker absent");
++                JsonObject marker;try(var in=zip.getInputStream(entry)){marker=com.google.gson.JsonParser.parseString(new String(in.readAllBytes(),java.nio.charset.StandardCharsets.UTF_8)).getAsJsonObject();}
++                String recipeSha;try(var in=com.pp.shaderlod.packs.PackSelectionService.class.getResourceAsStream("/assets/shaderlod/adapters/patches/adapters/bliss-shader.json")){
++                    if(in==null)throw new IllegalStateException("Actual packaged Bliss recipe absent");recipeSha=HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(in.readAllBytes()));
++                }
++                if(marker.get("schema").getAsInt()!=1||!"bliss-shader".equals(marker.get("adapterId").getAsString())||!original.equals(marker.get("originalFile").getAsString())||!originalHash.equals(marker.get("originalSha256").getAsString())||!recipeSha.equals(marker.get("recipeSha256").getAsString()))throw new IllegalStateException("Generated Bliss source/recipe marker mismatch");
++                String stateFile=marker.get("stateFile").getAsString();var statePath=dir.resolve(stateFile).normalize();
++                if(!Path.of(stateFile).getFileName().toString().equals(stateFile)||!statePath.startsWith(dir)||statePath.equals(dir)||Files.isSymbolicLink(statePath))throw new IllegalStateException("Unsafe Bliss selection state reference");
++                var selection=com.google.gson.JsonParser.parseString(Files.readString(statePath)).getAsJsonObject();String generatedSha=hash(generated);
++                if(!selection.get("active").getAsBoolean()||!selected.equals(selection.get("generatedFile").getAsString())||!generatedSha.equals(selection.get("generatedSha256").getAsString())||!original.equals(selection.get("originalFile").getAsString())||!originalHash.equals(selection.get("originalSha256").getAsString())||!recipeSha.equals(selection.get("recipeSha256").getAsString()))throw new IllegalStateException("Generated Bliss archive differs from real public Apply selection state");
++                state.add("generatedSelectionMarker",marker);state.addProperty("generatedArchiveSha256",generatedSha);state.addProperty("generatedSelectionStateMatched",true);
++            }
++        }
++        state.addProperty("loadedOptionCount",options.size());
++        state.add("generatedDeclaredOptions",GSON.toJsonTree(stageGenerated()?Map.of("SHADERLOD_EFFECT_ADAPTER","1","SHADERLOD_EFFECT_ADAPTER_INCLUDED","true","SHADERLOD_UNIFORM_SAMPLE_BUDGET_INCLUDED","true"):Map.of()));
++        state.addProperty("blissCloudControl",true);state.addProperty("expectedPreset",expectedPreset.name());state.addProperty("underlyingNative463Unchanged",true);state.addProperty("generatedBlissRecipeSelected",stageGenerated());state.addProperty("ownedEffectFlag",stageGenerated()?"1":"absent");state.addProperty("rendererEligible",com.pp.shaderlod.integration.makeupquad.MakeUpQuadRuntime.enabled());state.addProperty("linkedUniformReadbackPerformed",false);state.addProperty("avoidedWorkMeasured",false);
++    }
++
+@@ -806,2 +860,2 @@
+-    private boolean stageEnabled() { return fpsProbe ? stage>0&&stage<4 : bslFallback || bslVolume || makeupVolume || sildurCloud || complementaryVolume ? stage==1||stage==2 : nativeFamily ? ReimaginedNativeControlChecks.stageEnabled(stage) : qualityRoundtrip ? stage > 0 && stage < stages.length - 1 : stage == 1; }
+-    private boolean stageGenerated() { return fpsProbe ? stage>0&&stage<3&&!original.equals(Iris.getCurrentPackName()) : bslFallback || bslVolume || makeupVolume || sildurCloud || complementaryVolume ? stage==1 : !nativeFamily && !rendererSpeed && (qualityRoundtrip ? stage == 6 : stage == 1); }
++    private boolean stageEnabled() { return fpsProbe ? stage>0&&stage<4 : bslFallback || bslVolume || makeupVolume || sildurCloud || blissCloud || complementaryVolume ? stage==1||stage==2 : nativeFamily ? ReimaginedNativeControlChecks.stageEnabled(stage) : qualityRoundtrip ? stage > 0 && stage < stages.length - 1 : stage == 1; }
++    private boolean stageGenerated() { return fpsProbe ? stage>0&&stage<3&&!original.equals(Iris.getCurrentPackName()) : bslFallback || bslVolume || makeupVolume || sildurCloud || blissCloud || complementaryVolume ? stage==1 : !nativeFamily && !rendererSpeed && (qualityRoundtrip ? stage == 6 : stage == 1); }

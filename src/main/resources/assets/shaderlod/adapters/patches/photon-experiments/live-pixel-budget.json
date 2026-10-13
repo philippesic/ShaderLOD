@@ -1,0 +1,359 @@
+{
+  "schema": 1,
+  "experiment": "photon-live-pixel-budget",
+  "base_version": "v1.3b",
+  "base_sha256": "120897768eaa8cb1f14a3e98f88dff009ae3204ee3b96904a4fe8586edfc1ead",
+  "license_sha256": "514402d18eedb0afe374344ca9f0fe87b7399779518184b8fc64e31674555fc5",
+  "switch": "SHADERLOD_LIVE_PIXEL_BUDGET",
+  "members": [
+    {
+      "path": "shaders/settings.glsl",
+      "source_sha256": "93401d268fe859cc1df81929ad41156757a98db80f80cf32af80d9cdca96c394",
+      "patched_sha256": "1841484b11bb36d52f5802e0b7121b9ebe351841c408de0c5027d8d38b7db58d",
+      "replacements": [
+        {
+          "before": "#define SETTINGS_INCLUDED\n",
+          "after": "#define SETTINGS_INCLUDED\n// ShaderLOD private live pixel-budget diagnostic; default off.\n//#define SHADERLOD_LIVE_PIXEL_BUDGET\n"
+        }
+      ],
+      "enabled_sha256": "e6b1f78497ea66a0a8f23af4ca34ce94d1b6bca9986163b48233c66b0870e821"
+    },
+    {
+      "path": "shaders/include/global.glsl",
+      "source_sha256": "6235933d0045282ba9d7822d55a40aaff6b76ac862c550e33f9b8a4229d63c3d",
+      "patched_sha256": "4200e4ef828e1ebf81823b23a630a195adffd917642d53c7c1122ce9217a41da",
+      "replacements": [
+        {
+          "before": "#if defined TAA && defined TAAU\nconst float taau_render_scale = TAAU_RENDER_SCALE;\n#else\nconst float taau_render_scale = 1.0;\n#endif",
+          "after": "#ifdef SHADERLOD_LIVE_PIXEL_BUDGET\n#if defined TAA && defined TAAU && !defined VOXY\n#include \"/include/shaderlod/live_pixel_budget.glsl\"\n#else // SHADERLOD_LIVE_PIXEL_STAGE\n#if defined TAA && defined TAAU\nconst float taau_render_scale = TAAU_RENDER_SCALE;\n#else\nconst float taau_render_scale = 1.0;\n#endif\n#endif // SHADERLOD_LIVE_PIXEL_STAGE\n#else // SHADERLOD_LIVE_PIXEL_BUDGET\n#if defined TAA && defined TAAU\nconst float taau_render_scale = TAAU_RENDER_SCALE;\n#else\nconst float taau_render_scale = 1.0;\n#endif\n#endif // SHADERLOD_LIVE_PIXEL_BUDGET"
+        }
+      ]
+    },
+    {
+      "path": "shaders/program/gbuffers_all_solid.fsh",
+      "source_sha256": "9ff3f873baf0d651b15aad100af3275b1a745d11fe6aeb37aad6aa94b97285da",
+      "patched_sha256": "33fdf18fb45cf639bb551b14a68d3d605025de378c01a5b30b282aff47832c2b",
+      "replacements": [
+        {
+          "before": "const float lod_bias = log2(taau_render_scale);",
+          "after": "#ifdef SHADERLOD_LIVE_PIXEL_BUDGET\n#if defined TAA && defined TAAU && !defined VOXY\n#define lod_bias log2(taau_render_scale)\n#else // SHADERLOD_LIVE_PIXEL_STAGE\nconst float lod_bias = log2(taau_render_scale);\n#endif // SHADERLOD_LIVE_PIXEL_STAGE\n#else // SHADERLOD_LIVE_PIXEL_BUDGET\nconst float lod_bias = log2(taau_render_scale);\n#endif // SHADERLOD_LIVE_PIXEL_BUDGET"
+        }
+      ]
+    },
+    {
+      "path": "shaders/program/gbuffers_all_translucent.fsh",
+      "source_sha256": "01c04bc017069cf19c319a0a0875ca706554575dd01e291e17cad8565645b82f",
+      "patched_sha256": "fefde9a047982ac3de75d23cc1b80ac2048e72e82d7058b9ac7b03dd0d086356",
+      "replacements": [
+        {
+          "before": "const float lod_bias = log2(taau_render_scale);",
+          "after": "#ifdef SHADERLOD_LIVE_PIXEL_BUDGET\n#if defined TAA && defined TAAU && !defined VOXY\n#define lod_bias log2(taau_render_scale)\n#else // SHADERLOD_LIVE_PIXEL_STAGE\nconst float lod_bias = log2(taau_render_scale);\n#endif // SHADERLOD_LIVE_PIXEL_STAGE\n#else // SHADERLOD_LIVE_PIXEL_BUDGET\nconst float lod_bias = log2(taau_render_scale);\n#endif // SHADERLOD_LIVE_PIXEL_BUDGET"
+        }
+      ]
+    },
+    {
+      "path": "shaders/program/gbuffers_damagedblock.fsh",
+      "source_sha256": "23aee94f94712a1d17bc227c776258a736e915cac8f605f29827d61c9cc64cc3",
+      "patched_sha256": "60036985ed0ed1856a22d7e4cdbecb2c0e74e9fee5c30e9b30bc24bb8c9573e0",
+      "replacements": [
+        {
+          "before": "const float lod_bias = log2(taau_render_scale);",
+          "after": "#ifdef SHADERLOD_LIVE_PIXEL_BUDGET\n#if defined TAA && defined TAAU && !defined VOXY\n#define lod_bias log2(taau_render_scale)\n#else // SHADERLOD_LIVE_PIXEL_STAGE\nconst float lod_bias = log2(taau_render_scale);\n#endif // SHADERLOD_LIVE_PIXEL_STAGE\n#else // SHADERLOD_LIVE_PIXEL_BUDGET\nconst float lod_bias = log2(taau_render_scale);\n#endif // SHADERLOD_LIVE_PIXEL_BUDGET"
+        }
+      ]
+    },
+    {
+      "path": "shaders/program/gbuffers_armor_glint.fsh",
+      "source_sha256": "0c2d7e3fdd167477ce4980cadd55cbaaf49675a98197bb708a73a56ad100ce24",
+      "patched_sha256": "57906c24b130e0b191df6920e4e076026462c21921a0598b2c0ddb4bc9f9c815",
+      "replacements": [
+        {
+          "before": "const float lod_bias = log2(taau_render_scale);",
+          "after": "#ifdef SHADERLOD_LIVE_PIXEL_BUDGET\n#if defined TAA && defined TAAU && !defined VOXY\n#define lod_bias log2(taau_render_scale)\n#else // SHADERLOD_LIVE_PIXEL_STAGE\nconst float lod_bias = log2(taau_render_scale);\n#endif // SHADERLOD_LIVE_PIXEL_STAGE\n#else // SHADERLOD_LIVE_PIXEL_BUDGET\nconst float lod_bias = log2(taau_render_scale);\n#endif // SHADERLOD_LIVE_PIXEL_BUDGET"
+        }
+      ]
+    },
+    {
+      "path": "shaders/include/sky/clouds/cumulus.glsl",
+      "source_sha256": "1923542cd9ad862a6166a542dbdcb1597fd70316e4338b236deefc2ccb932ba5",
+      "patched_sha256": "7cfcff645b949e9e1da5ad53289b463a249c22f0f54e320013a0c126063bc021",
+      "replacements": [
+        {
+          "before": "#if !defined INCLUDE_SKY_CLOUDS_CUMULUS\n#define INCLUDE_SKY_CLOUDS_CUMULUS\n\n// 1st layer: volumetric cumulus/stratocumulus/stratus clouds\n\n#include \"common.glsl\"\n#include \"coverage_map.glsl\"\n\n// altitude_fraction := 0 at the bottom of the cloud layer and 1 at the top\nfloat clouds_cumulus_altitude_shaping(float density, float altitude_fraction) {\n    // Stratus shapes\n    if (clouds_params.l0_cumulus_stratus_blend > eps) {\n        density =\n            mix(density,\n                clamp01(\n                    density *\n                    dampen(\n                        clamp01(2.0 * altitude_fraction) *\n                        linear_step(0.0, 0.1, altitude_fraction) *\n                        linear_step(0.0, 0.6, 1.0 - altitude_fraction)\n                    )\n                ),\n                clouds_params.l0_cumulus_stratus_blend);\n    }\n\n    // Carve egg shape\n    density -= smoothstep(0.2, 1.0, altitude_fraction) *\n        (0.6 - 0.3 * clouds_params.l0_cumulus_stratus_blend);\n\n    // Reduce density at the bottom of the cloud\n    density *= smoothstep(0.0, 0.2, altitude_fraction);\n\n    return density;\n}\n\nfloat clouds_cumulus_density(vec3 pos) {\n    float r = length(pos);\n\n#if defined CLOUDS_USE_LOCAL_COVERAGE_MAP\n    // Get local coverage from precomputed coverage map - saves 1 sample and\n    // some maths\n    vec2 coverage_map_uv = project_clouds_cumulus_coverage_map(pos);\n\n    if (r < clouds_cumulus_radius || r > clouds_cumulus_top_radius ||\n        clamp01(coverage_map_uv) != coverage_map_uv) {\n        return 0.0;\n    }\n\n    float density = texture(colortex8, coverage_map_uv).z;\n#else\n    if (r < clouds_cumulus_radius || r > clouds_cumulus_top_radius) {\n        return 0.0;\n    }\n\n    float density = clouds_cumulus_local_coverage(pos.xz);\n#endif\n\n    // Altitude shaping\n\n    float altitude_fraction =\n        (r - clouds_cumulus_radius) * clouds_params.l0_altitude_scale;\n\n    density = clouds_cumulus_altitude_shaping(density, altitude_fraction);\n\n    if (density < eps) {\n        return 0.0;\n    }\n\n#if !defined PROGRAM_PREPARE\n    const float wind_angle = CLOUDS_CUMULUS_WIND_ANGLE * degree;\n    const vec2 wind_velocity =\n        CLOUDS_CUMULUS_WIND_SPEED * vec2(cos(wind_angle), sin(wind_angle));\n\n    vec3 wind = vec3(wind_velocity * world_age, 0.0).xzy;\n\n    pos.xz += cameraPosition.xz * CLOUDS_SCALE + wind.xz;\n\n    // 3D worley noise for detail\n    float worley_0 =\n        texture(SAMPLER_WORLEY_BUBBLY, (pos + 0.2 * wind) * 0.0009).x;\n    float worley_1 =\n        texture(SAMPLER_WORLEY_SWIRLEY, (pos + 0.4 * wind) * 0.005).x;\n#else\n    const float worley_0 = 0.5;\n    const float worley_1 = 0.5;\n#endif\n\n    float detail_fade = 0.20 * smoothstep(0.85, 1.0, 1.0 - altitude_fraction) -\n        0.35 * smoothstep(0.05, 0.5, altitude_fraction) + 0.6;\n\n    density -= clouds_params.l0_detail_weights.x * sqr(worley_0) *\n        dampen(clamp01(1.0 - density));\n    density -= clouds_params.l0_detail_weights.y * sqr(worley_1) *\n        dampen(clamp01(1.0 - density)) * detail_fade;\n\n    // Adjust density so that the clouds are wispy at the bottom and hard at the\n    // top\n    density = max0(density);\n    density = lift(\n        density,\n        mix(clouds_params.l0_edge_sharpening.x,\n            clouds_params.l0_edge_sharpening.y,\n            altitude_fraction)\n    );\n    density *= 0.1 + 0.9 * smoothstep(0.2, 0.7, altitude_fraction);\n\n    return density;\n}\n\nfloat clouds_cumulus_optical_depth(\n    vec3 ray_origin,\n    vec3 ray_dir,\n    float dither,\n    const uint step_count\n) {\n    const float step_growth = 2.0;\n\n    float step_length = 0.1 * clouds_cumulus_thickness / float(step_count); // m\n\n    vec3 ray_pos = ray_origin;\n    vec4 ray_step = vec4(ray_dir, 1.0) * step_length;\n\n    float optical_depth = 0.0;\n\n    for (uint i = 0u; i < step_count; ++i, ray_pos += ray_step.xyz) {\n        ray_step *= step_growth;\n        optical_depth +=\n            clouds_cumulus_density(ray_pos + ray_step.xyz * dither) *\n            ray_step.w;\n    }\n\n    return optical_depth;\n}\n\nvec2 clouds_cumulus_scattering(\n    float density,\n    float light_optical_depth,\n    float sky_optical_depth,\n    float ground_optical_depth,\n    float step_transmittance,\n    float cos_theta,\n    float bounced_light\n) {\n    vec2 scattering = vec2(0.0);\n\n    float scatter_amount = clouds_params.l0_scattering_coeff;\n    float extinct_amount = clouds_params.l0_extinction_coeff;\n\n    float scattering_integral_times_density =\n        (1.0 - step_transmittance) / clouds_params.l0_extinction_coeff;\n\n    float powder_effect = clouds_powder_effect(\n        density + density * clouds_params.l0_cumulus_stratus_blend,\n        cos_theta\n    );\n    float scattering_falloff = 0.55 *\n        mix(lift(clamp01(clouds_params.l0_scattering_coeff / 0.1), 0.33),\n            1.0,\n            cos_theta * 0.5 + 0.5);\n\n    float phase = clouds_phase_single(cos_theta);\n    vec3 phase_g = pow(vec3(0.6, 0.9, 0.3), vec3(1.0 + light_optical_depth));\n\n    for (uint i = 0u; i < 8u; ++i) {\n        scattering.x += scatter_amount *\n            exp(-extinct_amount * light_optical_depth) * phase *\n            (1.0 - 0.5 * clouds_params.l0_shadow);\n        scattering.x += scatter_amount *\n            exp(-extinct_amount * ground_optical_depth) * isotropic_phase *\n            bounced_light;\n        scattering.x += scatter_amount *\n            exp(-extinct_amount * sky_optical_depth) * isotropic_phase *\n            clouds_params.l0_shadow *\n            0.5; // fake bounced lighting from the layer above\n        scattering.y += scatter_amount *\n            exp(-extinct_amount * sky_optical_depth) * isotropic_phase;\n\n        scatter_amount *= scattering_falloff * powder_effect;\n        extinct_amount *= 0.4;\n        phase_g *= 0.8;\n\n        powder_effect = mix(powder_effect, sqrt(powder_effect), 0.5);\n\n        phase = clouds_phase_multi(cos_theta, phase_g);\n    }\n\n    return scattering * scattering_integral_times_density;\n}\n\nCloudsResult draw_cumulus_clouds(\n    vec3 air_viewer_pos,\n    vec3 ray_dir,\n    vec3 clear_sky,\n    float distance_to_terrain,\n    float dither\n) {\n    // ---------------------\n    //   Raymarching Setup\n    // ---------------------\n\n#if defined PROGRAM_DEFERRED0\n    const uint primary_steps_horizon = CLOUDS_CUMULUS_PRIMARY_STEPS_H / 2;\n    const uint primary_steps_zenith = CLOUDS_CUMULUS_PRIMARY_STEPS_Z / 2;\n#else\n    const uint primary_steps_horizon = CLOUDS_CUMULUS_PRIMARY_STEPS_H;\n    const uint primary_steps_zenith = CLOUDS_CUMULUS_PRIMARY_STEPS_Z;\n#endif\n    const uint lighting_steps = CLOUDS_CUMULUS_LIGHTING_STEPS;\n    const uint ambient_steps = CLOUDS_CUMULUS_AMBIENT_STEPS;\n    const float max_ray_length = 2e4;\n    const float min_transmittance = 0.075;\n    const float planet_albedo = 0.4;\n    const vec3 sky_dir = vec3(0.0, 1.0, 0.0);\n\n    // Early exit if coverage is 0\n    if (clouds_params.l0_coverage.y < eps) {\n        return clouds_not_hit;\n    }\n\n    uint primary_steps =\n        uint(mix(primary_steps_horizon, primary_steps_zenith, abs(ray_dir.y)));\n\n    float r = length(air_viewer_pos);\n\n    vec2 dists = intersect_spherical_shell(\n        air_viewer_pos,\n        ray_dir,\n        clouds_cumulus_radius,\n        clouds_cumulus_top_radius\n    );\n    bool planet_intersected =\n        intersect_sphere(air_viewer_pos, ray_dir, min(r - 10.0, planet_radius))\n            .y >= 0.0;\n    bool terrain_intersected = distance_to_terrain >= 0.0 &&\n        r < clouds_cumulus_radius && distance_to_terrain < dists.x;\n\n    if (\n        dists.y < 0.0 // volume not intersected\n        || planet_intersected &&\n            r < clouds_cumulus_radius // planet blocking clouds\n        || terrain_intersected // terrain blocking clouds\n    ) {\n        return clouds_not_hit;\n    }\n\n    float ray_length =\n        (distance_to_terrain >= 0.0) ? distance_to_terrain : dists.y;\n    ray_length = clamp(ray_length - dists.x, 0.0, max_ray_length);\n    float step_length = ray_length * rcp(float(primary_steps));\n\n    vec3 ray_step = ray_dir * step_length;\n    vec3 ray_origin =\n        air_viewer_pos + ray_dir * (dists.x + step_length * dither);\n\n    vec2 scattering = vec2(0.0); // x: direct light, y: skylight\n    float transmittance = 1.0;\n\n    float distance_sum = 0.0;\n    float distance_weight_sum = 0.0;\n\n    // ------------------\n    //   Lighting Setup\n    // ------------------\n\n    bool moonlit = sun_dir.y < -0.04;\n    vec3 light_dir = moonlit ? moon_dir : sun_dir;\n    float cos_theta = dot(ray_dir, light_dir);\n    float bounced_light = planet_albedo * light_dir.y * rcp_pi;\n\n    // --------------------\n    //   Raymarching Loop\n    // --------------------\n\n    for (uint i = 0u; i < primary_steps; ++i) {\n        if (transmittance < min_transmittance) {\n            break;\n        }\n\n        vec3 ray_pos = ray_origin + ray_step * i;\n\n        float altitude_fraction = (length(ray_pos) - clouds_cumulus_radius) *\n            rcp(clouds_cumulus_thickness);\n\n        float density = clouds_cumulus_density(ray_pos);\n\n        if (density < eps) {\n            continue;\n        }\n\n        // Fade away in the distance to hide the max ray length cutoff\n        float distance_to_sample = distance(ray_origin, ray_pos);\n        density *=\n            smoothstep(1.0, 0.95, distance_to_sample * rcp(max_ray_length));\n\n#if defined CLOUDS_USE_LOCAL_COVERAGE_MAP\n        // Fade away at the edges of the local coverage map\n        density *= smoothstep(\n            1.0,\n            0.9,\n            length(ray_pos.xz) * rcp(0.5 * clouds_cumulus_coverage_map_scale)\n        );\n#endif\n\n        float step_optical_depth =\n            density * clouds_params.l0_extinction_coeff * step_length;\n        float step_transmittance = exp(-step_optical_depth);\n\n#if defined PROGRAM_DEFERRED0\n        vec2 hash = vec2(0.0);\n#else\n        vec2 hash = hash2(fract(ray_pos)); // used to dither the light rays\n#endif\n\n        float light_optical_depth = clouds_cumulus_optical_depth(\n            ray_pos,\n            light_dir,\n            hash.x,\n            lighting_steps\n        );\n        float sky_optical_depth = clouds_cumulus_optical_depth(\n            ray_pos,\n            sky_dir,\n            hash.y,\n            ambient_steps\n        );\n        // guess optical depth to the ground using altitude fraction and density\n        // from this sample\n        float ground_optical_depth =\n            mix(density, 1.0, clamp01(altitude_fraction * 2.0 - 1.0)) *\n            altitude_fraction * clouds_cumulus_thickness;\n\n        scattering +=\n            clouds_cumulus_scattering(\n                density,\n                light_optical_depth,\n                sky_optical_depth,\n                ground_optical_depth,\n                step_transmittance,\n                cos_theta,\n                bounced_light\n            ) *\n            transmittance;\n\n        transmittance *= step_transmittance;\n\n        // Update distance to cloud\n        distance_sum += distance_to_sample * density;\n        distance_weight_sum += density;\n    }\n\n    // Get main light color for this layer\n    vec3 light_color =\n        sunlight_color * atmosphere_transmittance(ray_origin, light_dir);\n    light_color = atmosphere_post_processing(light_color);\n    light_color *= moonlit ? moon_color : sun_color;\n\n    // Remap the transmittance so that min_transmittance is 0\n    float clouds_transmittance =\n        linear_step(min_transmittance, 1.0, transmittance);\n\n    vec3 clouds_scattering =\n        scattering.x * light_color + scattering.y * sky_color;\n    clouds_scattering = clouds_aerial_perspective(\n        clouds_scattering,\n        clouds_transmittance,\n        air_viewer_pos,\n        ray_origin,\n        ray_dir,\n        clear_sky\n    );\n\n    float apparent_distance = (distance_weight_sum == 0.0)\n        ? 1e6\n        : (distance_sum / distance_weight_sum) +\n            distance(air_viewer_pos, ray_origin);\n\n    return CloudsResult(\n        vec4(clouds_scattering, scattering.y),\n        clouds_transmittance,\n        apparent_distance\n    );\n}\n\n#endif\n",
+          "after": "#if !defined INCLUDE_SKY_CLOUDS_CUMULUS\n#define INCLUDE_SKY_CLOUDS_CUMULUS\n\n// 1st layer: volumetric cumulus/stratocumulus/stratus clouds\n\n#include \"common.glsl\"\n#include \"coverage_map.glsl\"\n\n// altitude_fraction := 0 at the bottom of the cloud layer and 1 at the top\nfloat clouds_cumulus_altitude_shaping(float density, float altitude_fraction) {\n    // Stratus shapes\n    if (clouds_params.l0_cumulus_stratus_blend > eps) {\n        density =\n            mix(density,\n                clamp01(\n                    density *\n                    dampen(\n                        clamp01(2.0 * altitude_fraction) *\n                        linear_step(0.0, 0.1, altitude_fraction) *\n                        linear_step(0.0, 0.6, 1.0 - altitude_fraction)\n                    )\n                ),\n                clouds_params.l0_cumulus_stratus_blend);\n    }\n\n    // Carve egg shape\n    density -= smoothstep(0.2, 1.0, altitude_fraction) *\n        (0.6 - 0.3 * clouds_params.l0_cumulus_stratus_blend);\n\n    // Reduce density at the bottom of the cloud\n    density *= smoothstep(0.0, 0.2, altitude_fraction);\n\n    return density;\n}\n\nfloat clouds_cumulus_density(vec3 pos) {\n    float r = length(pos);\n\n#if defined CLOUDS_USE_LOCAL_COVERAGE_MAP\n    // Get local coverage from precomputed coverage map - saves 1 sample and\n    // some maths\n    vec2 coverage_map_uv = project_clouds_cumulus_coverage_map(pos);\n\n    if (r < clouds_cumulus_radius || r > clouds_cumulus_top_radius ||\n        clamp01(coverage_map_uv) != coverage_map_uv) {\n        return 0.0;\n    }\n\n    float density = texture(colortex8, coverage_map_uv).z;\n#else\n    if (r < clouds_cumulus_radius || r > clouds_cumulus_top_radius) {\n        return 0.0;\n    }\n\n    float density = clouds_cumulus_local_coverage(pos.xz);\n#endif\n\n    // Altitude shaping\n\n    float altitude_fraction =\n        (r - clouds_cumulus_radius) * clouds_params.l0_altitude_scale;\n\n    density = clouds_cumulus_altitude_shaping(density, altitude_fraction);\n\n    if (density < eps) {\n        return 0.0;\n    }\n\n#if !defined PROGRAM_PREPARE\n    const float wind_angle = CLOUDS_CUMULUS_WIND_ANGLE * degree;\n    const vec2 wind_velocity =\n        CLOUDS_CUMULUS_WIND_SPEED * vec2(cos(wind_angle), sin(wind_angle));\n\n    vec3 wind = vec3(wind_velocity * world_age, 0.0).xzy;\n\n    pos.xz += cameraPosition.xz * CLOUDS_SCALE + wind.xz;\n\n    // 3D worley noise for detail\n    float worley_0 =\n        texture(SAMPLER_WORLEY_BUBBLY, (pos + 0.2 * wind) * 0.0009).x;\n    float worley_1 =\n        texture(SAMPLER_WORLEY_SWIRLEY, (pos + 0.4 * wind) * 0.005).x;\n#else\n    const float worley_0 = 0.5;\n    const float worley_1 = 0.5;\n#endif\n\n    float detail_fade = 0.20 * smoothstep(0.85, 1.0, 1.0 - altitude_fraction) -\n        0.35 * smoothstep(0.05, 0.5, altitude_fraction) + 0.6;\n\n    density -= clouds_params.l0_detail_weights.x * sqr(worley_0) *\n        dampen(clamp01(1.0 - density));\n    density -= clouds_params.l0_detail_weights.y * sqr(worley_1) *\n        dampen(clamp01(1.0 - density)) * detail_fade;\n\n    // Adjust density so that the clouds are wispy at the bottom and hard at the\n    // top\n    density = max0(density);\n    density = lift(\n        density,\n        mix(clouds_params.l0_edge_sharpening.x,\n            clouds_params.l0_edge_sharpening.y,\n            altitude_fraction)\n    );\n    density *= 0.1 + 0.9 * smoothstep(0.2, 0.7, altitude_fraction);\n\n    return density;\n}\n\n#if defined SHADERLOD_LIVE_PIXEL_BUDGET && defined WORLD_OVERWORLD && defined PROGRAM_DEFERRED1 && !defined DISTANT_HORIZONS && !defined VOXY && !defined NORMAL_MAPPING && !defined SPECULAR_MAPPING && !defined BLOCKY_CLOUDS\n// Exact selected default-graph join; the existing raster helper declares these\n// only under TAA+TAAU. Reuse those declarations when already included.\n#ifndef SHADERLOD_LIVE_PIXEL_BUDGET_INCLUDED\nuniform int shaderlodBridgeVersion;\nuniform int shaderlodEnabled;\nuniform int shaderlodPreset;\n#endif\nfloat shaderlod_cumulus_primary_density(vec3 pos) {\n    if (shaderlodBridgeVersion != 2 || shaderlodEnabled != 1 || shaderlodPreset != 0)\n        return clouds_cumulus_density(pos);\n\n    float r = length(pos);\n\n#if defined CLOUDS_USE_LOCAL_COVERAGE_MAP\n    // Get local coverage from precomputed coverage map - saves 1 sample and\n    // some maths\n    vec2 coverage_map_uv = project_clouds_cumulus_coverage_map(pos);\n\n    if (r < clouds_cumulus_radius || r > clouds_cumulus_top_radius ||\n        clamp01(coverage_map_uv) != coverage_map_uv) {\n        return 0.0;\n    }\n\n    float density = texture(colortex8, coverage_map_uv).z;\n#else\n    if (r < clouds_cumulus_radius || r > clouds_cumulus_top_radius) {\n        return 0.0;\n    }\n\n    float density = clouds_cumulus_local_coverage(pos.xz);\n#endif\n\n    // Altitude shaping\n\n    float altitude_fraction =\n        (r - clouds_cumulus_radius) * clouds_params.l0_altitude_scale;\n\n    density = clouds_cumulus_altitude_shaping(density, altitude_fraction);\n\n    if (density < eps) {\n        return 0.0;\n    }\n\n#if !defined PROGRAM_PREPARE\n    const float wind_angle = CLOUDS_CUMULUS_WIND_ANGLE * degree;\n    const vec2 wind_velocity =\n        CLOUDS_CUMULUS_WIND_SPEED * vec2(cos(wind_angle), sin(wind_angle));\n\n    vec3 wind = vec3(wind_velocity * world_age, 0.0).xzy;\n\n    pos.xz += cameraPosition.xz * CLOUDS_SCALE + wind.xz;\n\n    // 3D worley noise for detail\n    float worley_0 =\n        texture(SAMPLER_WORLEY_BUBBLY, (pos + 0.2 * wind) * 0.0009).x;\n#else\n    const float worley_0 = 0.5;\n    const float worley_1 = 0.5;\n#endif\n\n    float detail_fade = 0.20 * smoothstep(0.85, 1.0, 1.0 - altitude_fraction) -\n        0.35 * smoothstep(0.05, 0.5, altitude_fraction) + 0.6;\n\n    density -= clouds_params.l0_detail_weights.x * sqr(worley_0) *\n        dampen(clamp01(1.0 - density));\n    // Reuse BSL/Bliss native-zero detail rejection, adapted to Photon erosion.\n    // R8 raw 3D swirley is normalized; its squared erosion cannot add density.\n    // Keep max0/lift/end shaping, and all primary/lighting ray updates unchanged.\n    bool shaderlodNativeZero = density < -0.001 && density >= -1e6 &&\n        worley_0 >= 0.0 && worley_0 <= 1.0 &&\n        clouds_params.l0_detail_weights.y >= 0.0 && clouds_params.l0_detail_weights.y <= 1.2 &&\n        detail_fade >= 0.25 && detail_fade <= 0.8001 &&\n        altitude_fraction >= 0.0 && altitude_fraction <= 2.0 &&\n        all(greaterThanEqual(clouds_params.l0_edge_sharpening, vec2(2.0))) &&\n        all(lessThanEqual(clouds_params.l0_edge_sharpening, vec2(12.0))) &&\n        all(lessThan(abs(pos), vec3(1e9)));\n    float worley_1 = 0.0;\n    if (!shaderlodNativeZero) {\n        worley_1 = texture(SAMPLER_WORLEY_SWIRLEY, (pos + 0.4 * wind) * 0.005).x;\n    }\n    density -= clouds_params.l0_detail_weights.y * sqr(worley_1) *\n        dampen(clamp01(1.0 - density)) * detail_fade;\n\n    // Adjust density so that the clouds are wispy at the bottom and hard at the\n    // top\n    density = max0(density);\n    density = lift(\n        density,\n        mix(clouds_params.l0_edge_sharpening.x,\n            clouds_params.l0_edge_sharpening.y,\n            altitude_fraction)\n    );\n    density *= 0.1 + 0.9 * smoothstep(0.2, 0.7, altitude_fraction);\n\n    return density;\n}\n\n#endif\n\nfloat clouds_cumulus_optical_depth(\n    vec3 ray_origin,\n    vec3 ray_dir,\n    float dither,\n    const uint step_count\n) {\n    const float step_growth = 2.0;\n\n    float step_length = 0.1 * clouds_cumulus_thickness / float(step_count); // m\n\n    vec3 ray_pos = ray_origin;\n    vec4 ray_step = vec4(ray_dir, 1.0) * step_length;\n\n    float optical_depth = 0.0;\n\n    for (uint i = 0u; i < step_count; ++i, ray_pos += ray_step.xyz) {\n        ray_step *= step_growth;\n        optical_depth +=\n            clouds_cumulus_density(ray_pos + ray_step.xyz * dither) *\n            ray_step.w;\n    }\n\n    return optical_depth;\n}\n\nvec2 clouds_cumulus_scattering(\n    float density,\n    float light_optical_depth,\n    float sky_optical_depth,\n    float ground_optical_depth,\n    float step_transmittance,\n    float cos_theta,\n    float bounced_light\n) {\n    vec2 scattering = vec2(0.0);\n\n    float scatter_amount = clouds_params.l0_scattering_coeff;\n    float extinct_amount = clouds_params.l0_extinction_coeff;\n\n    float scattering_integral_times_density =\n        (1.0 - step_transmittance) / clouds_params.l0_extinction_coeff;\n\n    float powder_effect = clouds_powder_effect(\n        density + density * clouds_params.l0_cumulus_stratus_blend,\n        cos_theta\n    );\n    float scattering_falloff = 0.55 *\n        mix(lift(clamp01(clouds_params.l0_scattering_coeff / 0.1), 0.33),\n            1.0,\n            cos_theta * 0.5 + 0.5);\n\n    float phase = clouds_phase_single(cos_theta);\n    vec3 phase_g = pow(vec3(0.6, 0.9, 0.3), vec3(1.0 + light_optical_depth));\n\n    for (uint i = 0u; i < 8u; ++i) {\n        scattering.x += scatter_amount *\n            exp(-extinct_amount * light_optical_depth) * phase *\n            (1.0 - 0.5 * clouds_params.l0_shadow);\n        scattering.x += scatter_amount *\n            exp(-extinct_amount * ground_optical_depth) * isotropic_phase *\n            bounced_light;\n        scattering.x += scatter_amount *\n            exp(-extinct_amount * sky_optical_depth) * isotropic_phase *\n            clouds_params.l0_shadow *\n            0.5; // fake bounced lighting from the layer above\n        scattering.y += scatter_amount *\n            exp(-extinct_amount * sky_optical_depth) * isotropic_phase;\n\n        scatter_amount *= scattering_falloff * powder_effect;\n        extinct_amount *= 0.4;\n        phase_g *= 0.8;\n\n        powder_effect = mix(powder_effect, sqrt(powder_effect), 0.5);\n\n        phase = clouds_phase_multi(cos_theta, phase_g);\n    }\n\n    return scattering * scattering_integral_times_density;\n}\n\nCloudsResult draw_cumulus_clouds(\n    vec3 air_viewer_pos,\n    vec3 ray_dir,\n    vec3 clear_sky,\n    float distance_to_terrain,\n    float dither\n) {\n    // ---------------------\n    //   Raymarching Setup\n    // ---------------------\n\n#if defined PROGRAM_DEFERRED0\n    const uint primary_steps_horizon = CLOUDS_CUMULUS_PRIMARY_STEPS_H / 2;\n    const uint primary_steps_zenith = CLOUDS_CUMULUS_PRIMARY_STEPS_Z / 2;\n#else\n    const uint primary_steps_horizon = CLOUDS_CUMULUS_PRIMARY_STEPS_H;\n    const uint primary_steps_zenith = CLOUDS_CUMULUS_PRIMARY_STEPS_Z;\n#endif\n    const uint lighting_steps = CLOUDS_CUMULUS_LIGHTING_STEPS;\n    const uint ambient_steps = CLOUDS_CUMULUS_AMBIENT_STEPS;\n    const float max_ray_length = 2e4;\n    const float min_transmittance = 0.075;\n    const float planet_albedo = 0.4;\n    const vec3 sky_dir = vec3(0.0, 1.0, 0.0);\n\n    // Early exit if coverage is 0\n    if (clouds_params.l0_coverage.y < eps) {\n        return clouds_not_hit;\n    }\n\n    uint primary_steps =\n        uint(mix(primary_steps_horizon, primary_steps_zenith, abs(ray_dir.y)));\n\n    float r = length(air_viewer_pos);\n\n    vec2 dists = intersect_spherical_shell(\n        air_viewer_pos,\n        ray_dir,\n        clouds_cumulus_radius,\n        clouds_cumulus_top_radius\n    );\n    bool planet_intersected =\n        intersect_sphere(air_viewer_pos, ray_dir, min(r - 10.0, planet_radius))\n            .y >= 0.0;\n    bool terrain_intersected = distance_to_terrain >= 0.0 &&\n        r < clouds_cumulus_radius && distance_to_terrain < dists.x;\n\n    if (\n        dists.y < 0.0 // volume not intersected\n        || planet_intersected &&\n            r < clouds_cumulus_radius // planet blocking clouds\n        || terrain_intersected // terrain blocking clouds\n    ) {\n        return clouds_not_hit;\n    }\n\n    float ray_length =\n        (distance_to_terrain >= 0.0) ? distance_to_terrain : dists.y;\n    ray_length = clamp(ray_length - dists.x, 0.0, max_ray_length);\n    float step_length = ray_length * rcp(float(primary_steps));\n\n    vec3 ray_step = ray_dir * step_length;\n    vec3 ray_origin =\n        air_viewer_pos + ray_dir * (dists.x + step_length * dither);\n\n    vec2 scattering = vec2(0.0); // x: direct light, y: skylight\n    float transmittance = 1.0;\n\n    float distance_sum = 0.0;\n    float distance_weight_sum = 0.0;\n\n    // ------------------\n    //   Lighting Setup\n    // ------------------\n\n    bool moonlit = sun_dir.y < -0.04;\n    vec3 light_dir = moonlit ? moon_dir : sun_dir;\n    float cos_theta = dot(ray_dir, light_dir);\n    float bounced_light = planet_albedo * light_dir.y * rcp_pi;\n\n    // --------------------\n    //   Raymarching Loop\n    // --------------------\n\n    for (uint i = 0u; i < primary_steps; ++i) {\n        if (transmittance < min_transmittance) {\n            break;\n        }\n\n        vec3 ray_pos = ray_origin + ray_step * i;\n\n        float altitude_fraction = (length(ray_pos) - clouds_cumulus_radius) *\n            rcp(clouds_cumulus_thickness);\n\n#if defined SHADERLOD_LIVE_PIXEL_BUDGET && defined WORLD_OVERWORLD && defined PROGRAM_DEFERRED1 && !defined DISTANT_HORIZONS && !defined VOXY && !defined NORMAL_MAPPING && !defined SPECULAR_MAPPING && !defined BLOCKY_CLOUDS\n        float density = shaderlod_cumulus_primary_density(ray_pos);\n#else\n        float density = clouds_cumulus_density(ray_pos);\n#endif\n\n        if (density < eps) {\n            continue;\n        }\n\n        // Fade away in the distance to hide the max ray length cutoff\n        float distance_to_sample = distance(ray_origin, ray_pos);\n        density *=\n            smoothstep(1.0, 0.95, distance_to_sample * rcp(max_ray_length));\n\n#if defined CLOUDS_USE_LOCAL_COVERAGE_MAP\n        // Fade away at the edges of the local coverage map\n        density *= smoothstep(\n            1.0,\n            0.9,\n            length(ray_pos.xz) * rcp(0.5 * clouds_cumulus_coverage_map_scale)\n        );\n#endif\n\n        float step_optical_depth =\n            density * clouds_params.l0_extinction_coeff * step_length;\n        float step_transmittance = exp(-step_optical_depth);\n\n#if defined PROGRAM_DEFERRED0\n        vec2 hash = vec2(0.0);\n#else\n        vec2 hash = hash2(fract(ray_pos)); // used to dither the light rays\n#endif\n\n        float light_optical_depth = clouds_cumulus_optical_depth(\n            ray_pos,\n            light_dir,\n            hash.x,\n            lighting_steps\n        );\n        float sky_optical_depth = clouds_cumulus_optical_depth(\n            ray_pos,\n            sky_dir,\n            hash.y,\n            ambient_steps\n        );\n        // guess optical depth to the ground using altitude fraction and density\n        // from this sample\n        float ground_optical_depth =\n            mix(density, 1.0, clamp01(altitude_fraction * 2.0 - 1.0)) *\n            altitude_fraction * clouds_cumulus_thickness;\n\n        scattering +=\n            clouds_cumulus_scattering(\n                density,\n                light_optical_depth,\n                sky_optical_depth,\n                ground_optical_depth,\n                step_transmittance,\n                cos_theta,\n                bounced_light\n            ) *\n            transmittance;\n\n        transmittance *= step_transmittance;\n\n        // Update distance to cloud\n        distance_sum += distance_to_sample * density;\n        distance_weight_sum += density;\n    }\n\n    // Get main light color for this layer\n    vec3 light_color =\n        sunlight_color * atmosphere_transmittance(ray_origin, light_dir);\n    light_color = atmosphere_post_processing(light_color);\n    light_color *= moonlit ? moon_color : sun_color;\n\n    // Remap the transmittance so that min_transmittance is 0\n    float clouds_transmittance =\n        linear_step(min_transmittance, 1.0, transmittance);\n\n    vec3 clouds_scattering =\n        scattering.x * light_color + scattering.y * sky_color;\n    clouds_scattering = clouds_aerial_perspective(\n        clouds_scattering,\n        clouds_transmittance,\n        air_viewer_pos,\n        ray_origin,\n        ray_dir,\n        clear_sky\n    );\n\n    float apparent_distance = (distance_weight_sum == 0.0)\n        ? 1e6\n        : (distance_sum / distance_weight_sum) +\n            distance(air_viewer_pos, ray_origin);\n\n    return CloudsResult(\n        vec4(clouds_scattering, scattering.y),\n        clouds_transmittance,\n        apparent_distance\n    );\n}\n\n#endif\n"
+        }
+      ]
+    }
+  ],
+  "addition": {
+    "path": "shaders/include/shaderlod/live_pixel_budget.glsl",
+    "source_path": "shaderpacks/photon-live-pixel-budget/shaders/include/shaderlod/live_pixel_budget.glsl",
+    "sha256": "b8d06a5bd2e199e529fe0c32739284e85b32d378b8e52cc6860bd0cde97411d9"
+  },
+  "source_dependencies": {
+    "shaders/shaders.properties": "f8cc8df60f930612e8817e4176a34886c1a9de778c15427a5468ecbc4f71ee9a",
+    "shaders/include/surface/edge_highlight.glsl": "7b5d60f5333943ed5c5fdb9760ab2d34e0b208ddc3a47e8a03062241534dc51f",
+    "shaders/include/utility/space_conversion.glsl": "7285b08819737ea31eff7867bae4e5dee76f7e7f1b0d6c5abc5d3746fa38aa0c",
+    "shaders/include/lighting/ao/ssao.glsl": "e6107912799a850a49c2c62138d2f2daf542c3dcd3ca7b0e2de15cfc85e04a0c",
+    "shaders/include/lighting/ao/gtao.glsl": "0889647aa827357ba9e5101431b4294299a078055f7f3537468a94fb6430b0d3",
+    "shaders/include/lighting/shadows/ssrt.glsl": "ffb29cc8892ebcf9bfd697467a5adc8239030a3913fac8a8315a4ab39db674b8",
+    "shaders/include/sky/clouds/sampling.glsl": "66ce14d260db584e36dfc028a09a6234251713f0882718eb64a1f4548f6607d2",
+    "shaders/include/buffers.glsl": "203cd05b25adec942bce5ab36fd0b7a9719a4f7790e3fe6983b59a8644124f9f",
+    "shaders/include/misc/lod_mod_support.glsl": "90609391732c88933e73d4b01dd5be957d22f10bd8485085b2c60c32a4525239",
+    "shaders/include/misc/raytracer.glsl": "10aecc98cec4db7828787423000730bb2b16b06bd4730fd72fe72cb46c0d6aba",
+    "shaders/program/d3_ao.vsh": "1469e046de453a13c5521f9b278e0c4f70b69ca2acbf9bd83280d165ad279e1c",
+    "shaders/program/dh_water.vsh": "d02d460da3dd0263ae05abb81a0605b211322f4db7f3e696f1670e6dd703b315",
+    "shaders/program/gbuffers_weather.vsh": "18a50172495c463572594c6f148050452c5343535e0f06b9cd7f8bb829b0bd35",
+    "shaders/program/gbuffers_weather.fsh": "0dce41ae68ba8a608e9ca7a62165c411b849aed835e96a88d37d62a2cd41a57e",
+    "shaders/program/d4_deferred_shading.vsh": "787f03ad720b84af642fd4772e2ae397b6ced1425650be65f860e0a41dcc8d40",
+    "shaders/program/voxy.json": "6e8ed63a9eea9139facbad19b4796ae6b726c179f49be26f714de19f4de9d62a",
+    "shaders/program/gbuffers_basic.vsh": "8ee0a3e6a87fe73459af4c56bf8a8e1b26e6dbef530a1eb2d9e4c63c8bc22fdb",
+    "shaders/program/dh_terrain.fsh": "6ec3a966d897003bae99c411daa549144f21f899899a1a33e3130b4942868a60",
+    "shaders/program/gbuffers_armor_glint.vsh": "0e8a17d358709e43657b9af86d0f4e5d58b0d25436c05aa3deedefeb2a15aeef",
+    "shaders/program/c2_dof.vsh": "d4baca7bc6ea44836f4c64d28ae430b8299d73a252808c87518c0908dce425cb",
+    "shaders/program/c3_taau_prep.vsh": "9cc614ca02514e280808f7c2b54556413484464de94f8881d99c7343480d3cad",
+    "shaders/program/d3_ao.fsh": "5a47a1a64788105b5d197db8bc1a9aff1cdf17727c3c1804c01573c76863c266",
+    "shaders/program/gbuffers_all_translucent.vsh": "c6cce2a1e0d926ababece12880ff368ee824d22f71a4e1aa10d2202fbae3fb71",
+    "shaders/program/dh_terrain.vsh": "90cdc2735593018158bdc789e535f2da4666f64e4714ae888a846fc4567f538d",
+    "shaders/program/gbuffers_damagedblock.vsh": "09cf2d28a983687daf630bc340e8a9e27a73fc2be67c219a04c7909397ef68f2",
+    "shaders/program/gbuffers_basic.fsh": "9774e5bfbee0c1387f831a7dda3f30c3abd1874b6ccd3d41d4a98cee75b6f5af",
+    "shaders/program/c4_taa_exposure.fsh": "4d6eae868403a472776a1c393b98a9161fb5aae781bbd3cc1e843f836fd1cba6",
+    "shaders/program/d1_clouds.vsh": "d2ace6e9c00f07fac94c8854b56a014c34c15147f36ec094a56c73e4e9af9f56",
+    "shaders/program/d2_clouds_upscaling.vsh": "47ea32c3508076f549afcbdbd23b8f5c4989b289ec17c8060668d4570069b34e",
+    "shaders/program/d1_clouds.fsh": "1f0dd330b837becff393380283eb767e3a55fe48e9b04705bf825fde535d0cae",
+    "shaders/program/final.fsh": "073489c9aa7efc625b4c0f0033dceb37614bcd55580826b9517b54d5dcc7dbbc",
+    "shaders/program/c1_blend_layers.fsh": "9a22e67280a57927c9dc8ca7ef194abb64b636de6a736651aa5b743035052cad",
+    "shaders/program/c16_motion_blur.fsh": "f31f56640e9c98c1f0f8209ceb2e4c7ba49918cf9efbecaf5b5e61af1e9231a4",
+    "shaders/program/c14_color_grading.fsh": "622ca89a3986f7f8fae4072cac1b9cc7be70308675fa28803f1ad8c3d509379f",
+    "shaders/program/c3_taau_prep.fsh": "e9d6a3be996021968478d0ce2e6ff93673ffc3dc6113cd2895c355a3c24e8e9a",
+    "shaders/program/c0_vl.fsh": "1a5335ee12e04e74b4f8b2ba62437f3ee27137cf9d2ccf7985f0fbf32bf48729",
+    "shaders/program/d4_deferred_shading.fsh": "212081e707c20c78e17cbfd3380b2f22eb696cc1aa14bdf006c07d59f53f67e0",
+    "shaders/program/gbuffers_skytextured.vsh": "2eb3093d7d972058ecc64f1d12cb89c5d853f8112588330c8e2cdfadbab6ed57",
+    "shaders/program/voxy_translucent.glsl": "839689aad9889a0bb5dc3ca17be5c7cb8ae3e73a7106741ea9a223d5902f7f9a",
+    "shaders/program/c4_taa_exposure.vsh": "229d2ed1139ee91db6b645ec69e098a535a336c82c2cffad7a806b9a23401ff4",
+    "shaders/program/gbuffers_all_solid.vsh": "7e83813943d9b1fdc35af8abf1e1d6956db2913d35a30168516facdadef7d41b",
+    "shaders/program/dh_water.fsh": "e447178fa74d0cb74b5fbc8fe8c8fbb4b1539ef98ac024f030df1df17e312ffb",
+    "shaders/program/d2_clouds_upscaling.fsh": "2b026e4bf367527213264b333b267c649a1ac85ba3105155b71085878c3c204a",
+    "shaders/program/c1_blend_layers.vsh": "0d2d3c37a5f7bf1950922e7ad5c75ff5560b19f43ac7a1f32c4e037f278dd761",
+    "shaders/program/c2_dof.fsh": "0ea66768ef295db197f2210efc9c423369518471ee1810ec681be6a8a0202dbf",
+    "shaders/include/weather/clouds.glsl": "96682d4c6179c23f57fd24d5fa8aa87d327d39b1357da002022a2b7518a94a7a",
+    "shaders/include/sky/clouds/parameters.glsl": "4e6d92554e2e381c232d8f22e6a3f172033c9d6123cbd35abeae402f64e411a6",
+    "shaders/include/sky/clouds/common.glsl": "4762892447e8251e0351ed413ca35f2aebd318e23b2933e5e9c5f872c1ff7f7f",
+    "shaders/include/sky/clouds/coverage_map.glsl": "bd2a920f270ae11e45babc1c237d100f0912be0ea6a17d5d17d98a637a7468b2",
+    "shaders/include/sky/clouds/constants.glsl": "770818e79d107049886e91e3ae1030b87c4799144a48a34ec874c7f8764efcdd",
+    "shaders/include/sky/clouds.glsl": "07bac05a93b29cff55841d6f7425fe46d1555fe1e6b2cfc037d9fb9fee992972",
+    "shaders/world0/deferred1.fsh": "23fc8e1c4a3bad9bf11b68b9d73ffb71db922b9f0438c5991f048e51635edee8",
+    "shaders/image/worley_bubbly.dat": "39f2d27cfe0dbbb2222cc9e2f7c37f3b93a0c7dd2567e6f6685b60dc16cefdf9",
+    "shaders/image/worley_swirley.dat": "6e13f05304287ae28efbcf73a44903a1dea77104617a8e591e4617a4bb1b0d8d",
+    "shaders/image/worley_bubbly.dat.mcmeta": "a74d9e0d21ac66b314df62542a1b8750cc16412da6148089fb0c007ab6e9685d",
+    "shaders/image/worley_swirley.dat.mcmeta": "a74d9e0d21ac66b314df62542a1b8750cc16412da6148089fb0c007ab6e9685d"
+  },
+  "consumer_lines": {
+    "shaders/shaders.properties": [
+      16,
+      115
+    ],
+    "shaders/settings.glsl": [
+      473
+    ],
+    "shaders/include/surface/edge_highlight.glsl": [
+      28
+    ],
+    "shaders/include/utility/space_conversion.glsl": [
+      41,
+      63
+    ],
+    "shaders/include/lighting/ao/ssao.glsl": [
+      59
+    ],
+    "shaders/include/lighting/ao/gtao.glsl": [
+      41
+    ],
+    "shaders/include/lighting/shadows/ssrt.glsl": [
+      70
+    ],
+    "shaders/include/global.glsl": [
+      81,
+      83
+    ],
+    "shaders/include/sky/clouds/sampling.glsl": [
+      9,
+      13,
+      14,
+      18
+    ],
+    "shaders/include/misc/lod_mod_support.glsl": [
+      42
+    ],
+    "shaders/include/misc/raytracer.glsl": [
+      68,
+      93
+    ],
+    "shaders/program/dh_water.vsh": [
+      120,
+      121
+    ],
+    "shaders/program/gbuffers_weather.vsh": [
+      58,
+      59
+    ],
+    "shaders/program/gbuffers_weather.fsh": [
+      46
+    ],
+    "shaders/program/gbuffers_all_solid.fsh": [
+      148,
+      225,
+      229
+    ],
+    "shaders/program/d4_deferred_shading.vsh": [
+      129
+    ],
+    "shaders/program/voxy.json": [
+      35
+    ],
+    "shaders/program/gbuffers_basic.vsh": [
+      104,
+      105
+    ],
+    "shaders/program/dh_terrain.fsh": [
+      62
+    ],
+    "shaders/program/gbuffers_armor_glint.vsh": [
+      53,
+      54
+    ],
+    "shaders/program/c2_dof.vsh": [
+      19
+    ],
+    "shaders/program/c3_taau_prep.vsh": [
+      19
+    ],
+    "shaders/program/d3_ao.fsh": [
+      89
+    ],
+    "shaders/program/gbuffers_damagedblock.fsh": [
+      33,
+      39
+    ],
+    "shaders/program/gbuffers_all_translucent.vsh": [
+      210,
+      211
+    ],
+    "shaders/program/dh_terrain.vsh": [
+      100,
+      101
+    ],
+    "shaders/program/gbuffers_damagedblock.vsh": [
+      27,
+      28
+    ],
+    "shaders/program/gbuffers_basic.fsh": [
+      54
+    ],
+    "shaders/program/c4_taa_exposure.fsh": [
+      122,
+      271,
+      331,
+      332
+    ],
+    "shaders/program/gbuffers_armor_glint.fsh": [
+      33,
+      39
+    ],
+    "shaders/program/d1_clouds.vsh": [
+      117
+    ],
+    "shaders/program/d2_clouds_upscaling.vsh": [
+      20
+    ],
+    "shaders/program/d1_clouds.fsh": [
+      165,
+      168
+    ],
+    "shaders/program/final.fsh": [
+      299
+    ],
+    "shaders/program/c1_blend_layers.fsh": [
+      308
+    ],
+    "shaders/program/c16_motion_blur.fsh": [
+      54,
+      74
+    ],
+    "shaders/program/c14_color_grading.fsh": [
+      201
+    ],
+    "shaders/program/c0_vl.fsh": [
+      129
+    ],
+    "shaders/program/d4_deferred_shading.fsh": [
+      317
+    ],
+    "shaders/program/gbuffers_skytextured.vsh": [
+      67,
+      68
+    ],
+    "shaders/program/voxy_translucent.glsl": [
+      129
+    ],
+    "shaders/program/c4_taa_exposure.vsh": [
+      100,
+      149
+    ],
+    "shaders/program/gbuffers_all_solid.vsh": [
+      162,
+      163
+    ],
+    "shaders/program/dh_water.fsh": [
+      170
+    ],
+    "shaders/program/d2_clouds_upscaling.fsh": [
+      190,
+      254,
+      276,
+      284,
+      288
+    ],
+    "shaders/program/gbuffers_all_translucent.fsh": [
+      182,
+      357,
+      635
+    ],
+    "shaders/program/c1_blend_layers.vsh": [
+      79
+    ],
+    "shaders/program/c2_dof.fsh": [
+      93,
+      94
+    ]
+  },
+  "iris_option_discovery": {
+    "jar_path": "dev/runtime/iris-neoforge-1.8.12+mc1.21.1.jar",
+    "jar_sha256": "3e3f94d2d5cdcb8145c4385d521974aa2d8669b2cc212351f70cf06488182e83"
+  },
+  "active_scale": 0.75,
+  "disabled_scale": 1.0,
+  "unknown_bridge_fallback": "configured stock TAAU_RENDER_SCALE when TAA+TAAU, otherwise stock 1.0; unknown enabled preset also retains stock scale",
+  "fixed_graph": "TAA=true,TAAU=true selected externally; never reload or alter options inside timing",
+  "transition_status": "UNACCEPTED live changes: prior cloud history is addressed using current scale; pipeline reload required on enabled/preset changes",
+  "voxy_status": "excluded: voxy.json renderScale uses compile-time TAAU_RENDER_SCALE",
+  "performance_status": "unmeasured; fixed-graph OFF is not original native denominator",
+  "common_addition": {
+    "path": "shaders/include/shaderlod/render_budget.glsl",
+    "source_path": "shaderpacks/common/shaders/include/shaderlod/render_budget.glsl",
+    "sha256": "a2af30ee2f152f7cb7855c40972be7bfe3906363acab6ba37b4c2214b7cb6b8f"
+  },
+  "preset_ids": {
+    "BALANCED": 0,
+    "PERFORMANCE": 1,
+    "AGGRESSIVE": 2,
+    "QUALITY": 3
+  },
+  "preset_scales": {
+    "BALANCED": 0.875,
+    "PERFORMANCE": 0.75,
+    "AGGRESSIVE": 0.667,
+    "QUALITY": 1.0
+  },
+  "preset_policy": "Off/QUALITY retain selected stock scale; On clamps stock scale down to preset cap; AGGRESSIVE .667 is private experimental/uninspected, excluded from UI; default PERFORMANCE .75"
+}

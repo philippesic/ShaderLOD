@@ -1,6 +1,6 @@
 # Direct optimization ports — October 13, 2026 Pacific
 
-Four optimization ports are integrated in maintained recipes, packaged resources
+Five optimization ports are integrated in maintained recipes, packaged resources
 and catalog recognition. Fresh previews reproduce the accepted source artifacts
 exactly. These are usable **source candidates**, not new rendering, visual-quality
 or speed results. The nine-family, five-version, two-loader scope remains active.
@@ -234,3 +234,62 @@ The next-source check ruled out a default Reimagined copy of the existing paired
 AO budget: native four samples give only two even groups, and the existing policy
 retains both. Native high quality twelve similarly retains twelve in Balanced.
 No new AO optimization or default work reduction is claimed from that coverage.
+
+## Bliss actual source consumption accepted
+
+Bliss's new erosion graph actually rendered on the same Fabric26.1.2 main JAR:
+native463 → generated466 → Quality463 → Off463 and Cancel, no fallback. Parent
+independently reconstructed all 349 expected original/recipe/helper members plus
+the two public metadata entries, verified native/full-generated option maps,
+and inspected coherent original/On sky, clouds, terrain and water. Noise PNG and
+metadata remain exact. Release09:20:18UTC and fresh09:22:56UTC absence/lock census
+are accepted. Linked uniforms, actual rejection, sampler parity, motion, speed
+and DH/PBR remain unverified. The launcher's nonzero status followed the accepted
+terminal receipt and intentional exact-client teardown; no extra trial was run.
+[Runtime evidence](../../dev/logs/optimization-porting-20261013/bliss-render/handback.json),
+[parent acceptance](../../dev/logs/optimization-porting-20261013/parent/bliss-runtime-acceptance/receipt.json),
+[actual consumer change](../../patches/consumer-ports/fabric-2612-bliss-cloud.patch).
+Consumer patches have zero context; use `git apply --unidiff-zero` against their
+recorded exact preimages. Their original full-context diffs remain in handbacks.
+
+## Photon v1.3b: primary-cumulus second-detail rejection
+
+The BSL/Bliss native-zero premise is ported into the currently adopted Photon
+live-pixel recipe. Native coarse rejection already exists and is not new. The
+selected primary deferred1 density body delays its second 3D Worley fetch until
+after first erosion; only a conservative negative certificate with nonnegative
+remaining erosion can omit it. Native detail reads become two → one on those
+calls. Original density remains exact for optical-depth/lighting/other callers;
+ray count, extinction, scattering, history, native AA and parameters remain.
+The pinned R8 raw3D textures and loader's linear/nonmipped contract support the
+source proof. Actual filtering, driver precision and reached certificates remain
+unobserved. Cost benefit may be modest: the primary cloud pass is already reduced
+and all secondary lighting/ambient work remains.
+
+Independent source review accepts the exact isolated candidate/control and
+selected wrappers. Source checks cover native TAAU-off and TAAU-on, AA-off,
+private Off and excluded DH/Voxy/PBR/blocky/secondary/other-dimension paths.
+120,000 binary32 states yielded 17,180 synthetic zero certificates; this is not
+a scene rejection rate. Native body/tail restoration and raw-texture/metadata/
+producer tamper refusals pass. Candidate/control differ only in the fetch guard.
+
+Review caught a real public adoption gap: the selection service previously
+forced native TAAU-off to on with scale1.00. Public Apply now owns only the private
+switch, preserving native TAA/TAAU/scale after the unchanged strict option/Voxy/
+scale guards. Existing pixel scaling runs only when native TAA+TAAU is already
+selected; the new cloud path also works with native upscaling or AA off. Original,
+Quality, Off, restart, user edits and legacy owned-option recovery are covered by
+29 actual selection JVM tests, zero skips/failures. Eight Photon source tests
+cover 29 real expanded Iris/parser wrappers. The one stale six-member assertion
+was replaced with the exact seven changed-member set, preserving all others.
+
+The adopted source digests are enabled
+`5bd3e75d890eee470a1aecd35999689d9b774d6768807c5aee074f626efc775a`
+and disabled `1bd149e25c0dfde93f0c2cb46825509b3db01d43529b0e50baa391cd0b5a8b3a`;
+the prior exact derivative remains recognized. Recipe/mirror/catalog and strict
+builder agree. This fifth source port still needs new main packaging and actual
+driver rendering/controls; the previous four-port04ac JAR stays preserved.
+[Source candidate](../../dev/logs/optimization-porting-20261013/photon-cloud-bound/REPORT.md),
+[independent review](../../dev/logs/optimization-porting-20261013/photon-independent-review/review.md),
+[adoption checks](../../dev/logs/optimization-porting-20261013/photon-cloud-bound/adoption-joins/receipt.json).
+The review's earlier TAAU adoption finding is corrected by the tested service join.

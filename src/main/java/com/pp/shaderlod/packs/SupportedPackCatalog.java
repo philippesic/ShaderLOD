@@ -31,7 +31,7 @@ public final class SupportedPackCatalog {
     public record Recognition(Pack pack, Stage stage) {}
     private static final List<Pack> PACKS = List.of(
         new Pack("photon", "Photon", "v1.3b", "https://modrinth.com/shader/photon-shader",
-            "LicenseRef-Photon", "ff61637361dbac1430c56d183276a1f343787b1517c7fb6487dc07be367221d9", "d351a22f2766f0297206df478e5ec190172a4ce673423970b6b813ec7f3dd3c6"),
+            "LicenseRef-Photon", "ff61637361dbac1430c56d183276a1f343787b1517c7fb6487dc07be367221d9", "5bd3e75d890eee470a1aecd35999689d9b774d6768807c5aee074f626efc775a"),
         new Pack("astralex", "AstraLex Shaders", "93.0", "https://modrinth.com/shader/astralex",
             "LicenseRef-All-Rights-Reserved", "e89fe2686d5a73d18ae9aae5104da24f6cb23ae79f1012f95b79aa78e655485a", "7a59f0be267d52c977371e9cf621e401a93030a7107f6b26410599e80ed4ae91"),
         new Pack("bliss-shader", "Bliss Shaders", "2.1.2", "https://modrinth.com/shader/bliss-shader",
@@ -63,6 +63,7 @@ public final class SupportedPackCatalog {
 
     // Retained exact historical derivatives remain recognizable; current recipe/state guards still apply.
     private static final Map<String,List<String>> LEGACY_ADAPTER_DIGESTS = Map.ofEntries(
+        Map.entry("photon", List.of("d351a22f2766f0297206df478e5ec190172a4ce673423970b6b813ec7f3dd3c6")),
         Map.entry("sildurs-vibrant-shaders", List.of("b4d5964d0f019f1c64b80523c87ea2d6cab9d64ef4a7e1e3bd02539b53b7c777")),
         Map.entry("bliss-shader", List.of("cd3e678a6ecb529f59e13421b1cd27bcdbb86012c4c482e570e2eb86abb2e9f4")),
         Map.entry("complementary-reimagined", List.of("18fcf18e20d753dac8e24309abe4b5e0f773b5c73c0bbe1bb18ae3b8f290f46b", "a342b424364b2b1d59185b584b6097648e3c11d9e499b2035012a345bdc3ed7f")),
