@@ -4,14 +4,8 @@
 {
   "authority": "Human prioritizes direct reuse of existing optimization/control/recovery mechanisms across all nine families and the full90 version/loader scope. Normal preview candidates are authorized; human may inspect FPS/quality manually. Preserve native AA, quality, Off/recovery and EAGLE exclusion. Extra benchmark/provenance perfection is not a preview delivery prerequisite. Current shader next action is normal family porting, not restarting closed FPS trials or the prepared Bliss retry. Shader execution remains explicitly paused; the historical native Goal was observed PAUSED on2026-10-12T21:13UTC. This audit chat get_goal returned null on2026-10-13T02:12:59UTC; no native Goal was created/resumed. Human separately requested two Astra-team investigations with implementation of useful improvements. Both offline maintenance passes are complete, including standalone Java parser/certificate tests and isolated source candidates. They authorize no Minecraft/GPU/Gradle launch and do not reset the paused allocation. Reimagined sealed inputs/next operation remain preserved. Earlier authority chronology is retained in exact checkpoint history. Human separately authorized this90-minute offline source/CPU delivery sprint with Sol implementation/integration and Astra reasoning/correctness review. No Minecraft/GPU/Gradle/remote/Goal resume. Source candidates stay isolated; sealed Reimagined inputs, runtime ownership, allocation and chosen next action remain preserved. Human separately authorized up to120 minutes deep offline shader optimization/port investigation beginning2026-10-13T05:00UTC, Astra max difficult analysis/alternative/adversarial review and Sol routine isolated implementation/local CPU checks. No Minecraft/GPU execution or native Goal resume; prior runtime pause, allocation and chosen next operation remain preserved. The separate deep offline investigation is complete with BSLr2/control source artifacts; no runtime resume or product adoption.",
   "baseline": "Matched Mac native shader settings and resolution. Keep separate NeoForge original/candidate/return and Fabric same-mod Off/On/Off protocols; no cross-protocol percentage aggregation.",
-  "event_at": "2026-10-13T06:12:42.544864+00:00",
+  "event_at": "2026-10-13T06:18:27.328601+00:00",
   "evidence": [
-    {
-      "event_at": "2026-10-12T05:20:05.450689+00:00",
-      "observed_at": "2026-10-12T05:26:22.538800+00:00",
-      "path": "[Actual MAIN MakeUpNeoForge262 runtime](evaluation/neoforge-262-makeup-main-control-runtime-20261011.md)",
-      "summary": "New4d4mainfacade+5origins/DEV0/9positiveperstagecorrectionGLnativebodydeltas/100104AA2/QualityOffCancel/no fallback/caller0/exactrelease168s; no FPSqualitypromotion."
-    },
     {
       "event_at": "2026-10-12T05:20:05.450689+00:00",
       "observed_at": "2026-10-12T05:39:29.209913+00:00",
@@ -125,28 +119,34 @@
       "observed_at": "2026-10-13T06:12:42.544864+00:00",
       "path": "evaluation/bsl-cloud-bound-runtime-20261012.md",
       "summary": "BSL exact candidate actual Fabric2612 rendering/current JAR recipe and independent parent297-member/map validation"
+    },
+    {
+      "event_at": "2026-10-13T06:16:41+00:00",
+      "observed_at": "2026-10-13T06:18:09.332233+00:00",
+      "path": "../dev/logs/bsl-cloud-bound-runtime-20261013/handback.json",
+      "summary": "Final BSL lane handback with usable rendering/recovery and retained negative cost attempts, zero timing samples"
     }
   ],
   "goal": "[Active goal](goals/cross-shader-performance-integration.md)",
   "hypothesis": "Directly extend the same working guarded MakeUp/BSL NeoForge26.2 compatibility concept to Reimagined, using own fed6 original/96bb current recipe/native398/generated402 and explicit three-family dispatch. Its default-qualified volume budget is active source work; preserve all native quality/restoration guards and verify actual main rendering, separately from FPS.",
   "next_action": {
-    "action": "Use existing manual FPS consumer for early native/full-workLOD0 control and native/candidate/return comparisons, preserving exact scene/options/current388 guards. Stop/release by remaining-allocation deadline06:17:23UTC; report missing sampler/work/motion evidence separately.",
-    "milestone": "Short control/candidate original-relative cost and exact lane release",
-    "owner": "/root/bsl_runtime then /root"
+    "action": "Fixed BSL candidate remains pending sampler/rejection activity, actual full-work control, motion and early matched cost. No jobs; remaining allocation cannot fit an authentic finite operation. Preserve candidate and negative launch evidence; obtain renewed allocation before another runtime launch.",
+    "milestone": "BSL consuming rejection/sampler, full-work-control/motion and matched original-relative cost decision",
+    "owner": "/root after renewed runtime allocation"
   },
   "objective": "Continue usable existing optimization/control/recovery ports across all nine shader families, five Minecraft versions and NeoForge/Fabric90-cell scope; preserve native quality and pursue useful original-relative gains with authentic runtime evidence.",
-  "observed_at": "2026-10-13T06:12:42.544864+00:00",
-  "owner": "/root integration/checkpoint/Git; bsl_runtime exclusive Fabric build/client/GPU lane",
-  "process_health": "healthy",
+  "observed_at": "2026-10-13T06:18:27.328601+00:00",
+  "owner": "/root closeout; all workers/lane released, no native Goal",
+  "process_health": "none",
   "progress": {
-    "activity": "preparation",
+    "activity": "idle",
     "allocation_seconds": 16339,
     "blocker": null,
-    "completed_updates": 75,
-    "execution_seconds": 16058,
-    "last_progress_at": "2026-10-13T06:12:42.544864+00:00",
-    "limitations": "Both new tuple rendering/public native recovery increments proven, no new original-relative gain. BSL actual297 members/currentJAR/native384→388 verified. Sampler parity, linked Core, reached rejection frequency, full-work control runtime, motion and cost pending; failed-Apply driver/DH/PBR/other90 cells unverified.",
-    "process": "bsl_runtime owns Fabric build/client lane; completed finite admission/exact release, preparing existing manual FPS adaptation. Reimagined reviewer finished accepted report; no reviewer jobs."
+    "completed_updates": 76,
+    "execution_seconds": 16339,
+    "last_progress_at": "2026-10-13T06:18:27.328601+00:00",
+    "limitations": "No FPS samples: owned focus failure before world, fresh candidate finite-time/readiness refusal before launch. BSL full-work control artifact only; real sampler/linked Core/rejection frequency/motion pending. Held-view clouds/terrain coherent but no quality equivalence. DH/PBR/other90 cells remain unverified. No new shader experiment rejection; budget insufficient for next finite runtime.",
+    "process": "Final runtime handback/release06:16:41UTC verifies all owned clients/launchers absent, runtime lock free; native reviewer completed; runtime worker handed back."
   },
   "resources": [
     "Actual audit census2026-10-13T02:41:21UTC: zero clients/runtime lock acquired and released. All735 sealed Reimagined preparation pins matched after second-pass changes; producer/client receipts absent and final330 stamp unstarted. Standalone test JVMs exited. All second-team workers completed. Shader allocation unchanged; EAGLE untouched.",
@@ -162,7 +162,7 @@
     "New consumer fixed-receiver evidence writer introduced by Sol and rerun by parent overwrote priorr2 receipts; originalr1/independentAstra receiver preserved. Repaired mkdtemp receivers pass two consecutive actual consumer runs with unchanged first/history hashes; factual ownership/correction recorded in USER_LESSONS. No source/runtime acceptance weakened.",
     "Human explicit resume at October12 Pacific: execute Reimagined then BSL bound/control; root owns existing lane; preserve1200-second remaining allocation. No native Goal in this chat."
   ],
-  "result": "Reimagined NeoForge26.2 main-mod rendering/Quality/Off/Cancel independently accepted. Reviewed BSL bound source adopted and committed82c631b; actual Fabric26.1.2 mainJAR39cd renders384→388→384→384 with native options/no fallback and successful Cancel/restoration. Parent independently verifies packaged0f7b recipe/all297 generated members and views coherent active volumetric clouds. Exact client release06:10:52UTC. No sampler/rejection/FPS/motion claim yet.",
+  "result": "Two usable rendering/recovery increments: independently accepted Reimagined NeoForge26.2 MAIN398/402/398/398 and reviewed BSL bound actual Fabric26.1.2 MAIN384/388/384/384 plus Cancel. Exact reviewed source integrated commit82c631b; parent297-member/map verification and ordinary still inspected. Full-work control cost launch failed owned focus before world; fresh candidate finite preflight refused before launch. Zero FPS windows; no gain/regression decision. Final exact release06:16:41UTC, no owned jobs.",
   "review": {
     "attempt": "BSL clear-cloud bound rendering and early full-work-control cost",
     "decision": {
@@ -170,20 +170,20 @@
         "review_overdue",
         "preparation_overdue"
       ],
-      "change": "Switch to BSL clear-cloud bound rendering and early full-work-control cost; retain cumulative execution/allocation, no reset. Actual Fabric384/388/384/384 and297-member verification change the evidence.",
-      "choice": "switch",
-      "decided_at": "2026-10-13T06:12:42.544864+00:00",
-      "next_action": "Use existing manual FPS consumer for early native/full-workLOD0 control and native/candidate/return comparisons, preserving exact scene/options/current388 guards. Stop/release by remaining-allocation deadline06:17:23UTC; report missing sampler/work/motion evidence separately.",
-      "rationale": "Reimagined actual delivery completed and independently accepted. BSL exact source adoption and actual currentJAR rendering/recovery now completed; remaining fixed experiment proceeds to early cost, no extra observer gate.",
+      "change": "Closeout bookkeeping only after real terminal handback and retained negative launch evidence; no runtime allocation extension. Existing16339 seconds exhausted; no jobs or launches authorized under this allocation. Preserve pending fixed candidate, source integration and actual rendering/recovery results.",
+      "choice": "extend",
+      "decided_at": "2026-10-13T06:18:27.328601+00:00",
+      "next_action": "Fixed BSL candidate remains pending sampler/rejection activity, actual full-work control, motion and early matched cost. No jobs; remaining allocation cannot fit an authentic finite operation. Preserve candidate and negative launch evidence; obtain renewed allocation before another runtime launch.",
+      "rationale": "Successful rendering/recovery delivered; cost launches provided infrastructure/time negatives. Remaining allocation cannot fit authentic measurement windows; terminate launch preparation, release all jobs and retain fixed pending candidate without claiming gain or rejection.",
       "remaining_blocker": "none recorded",
-      "review_at": "2026-10-13T06:17:23+00:00"
+      "review_at": "2026-10-13T06:19:27.328601+00:00"
     },
     "failure_cause": null,
     "same_cause_failures": 0,
-    "trigger_at": "2026-10-13T06:17:23+00:00"
+    "trigger_at": "2026-10-13T06:19:27.328601+00:00"
   },
   "schema_version": 2,
-  "stage": "evaluation",
+  "stage": "idle",
   "status": "active"
 }
 -->
@@ -192,18 +192,18 @@
 
 **Objective:** Continue usable existing optimization/control/recovery ports across all nine shader families, five Minecraft versions and NeoForge/Fabric90-cell scope; preserve native quality and pursue useful original-relative gains with authentic runtime evidence.
 **Matched baseline:** Matched Mac native shader settings and resolution. Keep separate NeoForge original/candidate/return and Fabric same-mod Off/On/Off protocols; no cross-protocol percentage aggregation.
-**Outcome:** Reimagined NeoForge26.2 main-mod rendering/Quality/Off/Cancel independently accepted. Reviewed BSL bound source adopted and committed82c631b; actual Fabric26.1.2 mainJAR39cd renders384→388→384→384 with native options/no fallback and successful Cancel/restoration. Parent independently verifies packaged0f7b recipe/all297 generated members and views coherent active volumetric clouds. Exact client release06:10:52UTC. No sampler/rejection/FPS/motion claim yet.
-**Execution (last observation):** preparation; process health healthy; cumulative 75 updates; 16,058 execution seconds / 16,339 allocated; 281 seconds remaining
-**Owner:** /root integration/checkpoint/Git; bsl_runtime exclusive Fabric build/client/GPU lane
+**Outcome:** Two usable rendering/recovery increments: independently accepted Reimagined NeoForge26.2 MAIN398/402/398/398 and reviewed BSL bound actual Fabric26.1.2 MAIN384/388/384/384 plus Cancel. Exact reviewed source integrated commit82c631b; parent297-member/map verification and ordinary still inspected. Full-work control cost launch failed owned focus before world; fresh candidate finite preflight refused before launch. Zero FPS windows; no gain/regression decision. Final exact release06:16:41UTC, no owned jobs.
+**Execution (last observation):** idle; process health none; cumulative 76 updates; 16,339 execution seconds / 16,339 allocated; 0 seconds remaining
+**Owner:** /root closeout; all workers/lane released, no native Goal
 **Authority:** Human prioritizes direct reuse of existing optimization/control/recovery mechanisms across all nine families and the full90 version/loader scope. Normal preview candidates are authorized; human may inspect FPS/quality manually. Preserve native AA, quality, Off/recovery and EAGLE exclusion. Extra benchmark/provenance perfection is not a preview del… [detail omitted; use --json]
 **Goal:** [Active goal](goals/cross-shader-performance-integration.md)
-**Next action:** Use existing manual FPS consumer for early native/full-workLOD0 control and native/candidate/return comparisons, preserving exact scene/options/current388 guards. Stop/release by remaining-allocation deadline06:17:23UTC; report missing sampler/work/motion evidence separately.
-**Next owner / milestone:** /root/bsl_runtime then /root / Short control/candidate original-relative cost and exact lane release
-**Observed:** 2026-10-13T06:12:42.544864+00:00; event 2026-10-13T06:12:42.544864+00:00
+**Next action:** Fixed BSL candidate remains pending sampler/rejection activity, actual full-work control, motion and early matched cost. No jobs; remaining allocation cannot fit an authentic finite operation. Preserve candidate and negative launch evidence; obtain renewed allocation before another runtime launch.
+**Next owner / milestone:** /root after renewed runtime allocation / BSL consuming rejection/sampler, full-work-control/motion and matched original-relative cost decision
+**Observed:** 2026-10-13T06:18:27.328601+00:00; event 2026-10-13T06:18:27.328601+00:00
 **Chosen hypothesis (authored):** Directly extend the same working guarded MakeUp/BSL NeoForge26.2 compatibility concept to Reimagined, using own fed6 original/96bb current recipe/native398/generated402 and explicit three-family dispatch. Its default-qualified volume budget is active source work; preserve all native quality/restoration guards and verify actual main rendering, sepa… [detail omitted; use --json]
 **Blocker:** none recorded
-**Limitations:** Both new tuple rendering/public native recovery increments proven, no new original-relative gain. BSL actual297 members/currentJAR/native384→388 verified. Sampler parity, linked Core, reached rejection frequency, full-work control runtime, motion and cost pending; failed-Apply driver/DH/PBR/other90 cells unverified.
-**Review:** 2026-10-13T06:17:23+00:00; 0 same-cause failures; cause none recorded
-**Evidence:** evaluation/bsl-cloud-bound-runtime-20261012.md; ../dev/logs/concept-transfer-r1/reimagined-neoforge-main/runtime-r1/runtime-report.json; [Deep active-work candidate](evaluation/deep-shader-investigation-20261012.md); earlier receipts in --json and exact history
+**Limitations:** No FPS samples: owned focus failure before world, fresh candidate finite-time/readiness refusal before launch. BSL full-work control artifact only; real sampler/linked Core/rejection frequency/motion pending. Held-view clouds/terrain coherent but no quality equivalence. DH/PBR/other90 cells remain unverified. No new shader experiment rejection; budget insufficient for next finite runtime.
+**Review:** 2026-10-13T06:19:27.328601+00:00; 0 same-cause failures; cause none recorded
+**Evidence:** ../dev/logs/bsl-cloud-bound-runtime-20261013/handback.json; evaluation/bsl-cloud-bound-runtime-20261012.md; ../dev/logs/concept-transfer-r1/reimagined-neoforge-main/runtime-r1/runtime-report.json; earlier receipts in --json and exact history
 
-[Exact previous checkpoint](STATUS.history.7f7c94652a58d8654b3349931721c71f3c1638974683fb49975378b71c90ed21.md) (SHA-256 `7f7c94652a58d8654b3349931721c71f3c1638974683fb49975378b71c90ed21`).
+[Exact previous checkpoint](STATUS.history.43fd42c35cbb28fceb5aee067bfb87fea47a5652963625af716fa75cad220ff2.md) (SHA-256 `43fd42c35cbb28fceb5aee067bfb87fea47a5652963625af716fa75cad220ff2`).
