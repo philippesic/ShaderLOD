@@ -31,7 +31,13 @@
     "shaders/common/deferred_fragment.glsl": "6d6dbf4e7ca8a1818776a25fcc6bd0fc9597d0724e933642741f7cdd705ca5ac",
     "shaders/world0/deferred.fsh": "2e6c131506665f08745df2825070f7eb5529a4804882d56fb192568c8d00d661",
     "shaders/lib/volumetric_clouds_end.glsl": "c238e158ebb61c32fa7e52553b5381abaf8e7c7603b9e9ff35417959eac50835",
-    "shaders/world1/deferred.fsh": "11e66dbbccf974c4445a31dbac79fc9aea717dd5654664a5f8f12c5d0a9de21e"
+    "shaders/world1/deferred.fsh": "11e66dbbccf974c4445a31dbac79fc9aea717dd5654664a5f8f12c5d0a9de21e",
+    "shaders/textures/clouds_natural_512_R_8bit.png": "15464859fad1cc5871b9fec2ae289d727cee75b48f881182f47e9f3c33da4d59",
+    "shaders/textures/clouds_natural_512_R_8bit.png.mcmeta": "2bb76dc58e77f0d484d91f9133db6351e4a43db087834ec5c5d3cf67c7750a14",
+    "shaders/textures/clouds_blocky_512_R_8bit.png": "c5e15ea9ab47134e8c62629a4352eb286d7f5e338730b004b19c449e223a1592",
+    "shaders/textures/clouds_blocky_512_R_8bit.png.mcmeta": "2bb76dc58e77f0d484d91f9133db6351e4a43db087834ec5c5d3cf67c7750a14",
+    "shaders/world0/deferred.vsh": "d5e9fa072676bfcc9c55134813b02780e922350a192aa040de1d5103c1ee9626",
+    "shaders/world1/deferred.vsh": "e46401e7a146e5831be77ae19d397015da41916fbf10d9e59ca5f7c469ec3b24"
   },
   "patches": [
     {
@@ -55,25 +61,55 @@
       "after": "#include \"/lib/shaderlod/adapter.glsl\"\n\nvec3 get_cloud(vec3 eyeDirection, vec3 blockColor, float bright, float dither, vec3 base_pos, int samples, float umbral, vec3 cloudColor, vec3 darkCloudColor) {"
     },
     {
-      "path": "shaders/lib/volumetric_clouds.glsl",
-      "before": "        vec3 increment = (intersection_pos_sup - intersection_pos) / samples;",
-      "after": "        // Same native slab endpoints: sample count changes before native step/opacity weight.\n        #if SHADERLOD_REFINEMENT_ADAPTER == 1 && defined DEFERRED_SHADER && !defined NETHER && !defined THE_END && !defined UNKNOWN_DIM && !defined DISTANT_HORIZONS && !defined VOXY\n        samples = shaderlod_makeup_volume_budget(samples);\n        #endif\n        vec3 increment = (intersection_pos_sup - intersection_pos) / samples;"
-    },
-    {
       "path": "shaders/lib/volumetric_clouds_end.glsl",
       "before": "vec3 get_end_cloud(vec3 eyeDirection, vec3 blockColor, float bright, float dither, vec3 base_pos, int samples) {",
       "after": "#include \"/lib/shaderlod/adapter.glsl\"\n\nvec3 get_end_cloud(vec3 eyeDirection, vec3 blockColor, float bright, float dither, vec3 base_pos, int samples) {"
     },
     {
+      "path": "shaders/lib/volumetric_clouds.glsl",
+      "before": "        intersection_pos += (increment * dither);",
+      "after": "        intersection_pos += (increment * dither);\n\n        #if SHADERLOD_REFINEMENT_ADAPTER == 1 && defined DEFERRED_SHADER && !defined THE_END && !defined NETHER && !defined UNKNOWN_DIM && !defined DISTANT_HORIZONS && !defined VOXY && !defined VOXY_PATCH && V_CLOUDS == 1 && CLOUD_VOL_STYLE == 0\n        // Native single-level linear cloud PNG: explicit LOD avoids undefined\n        // implicit derivatives after per-ray exits. No gradients are hoisted.\n        bool shaderlodOpacityActive = shaderlod_makeup_opacity_enabled() &&\n            samples > 0 && samples <= 65536 &&\n            opacity_dist > 0.0 && opacity_dist < 1.0e30 &&\n            increment_dist > 0.0 && increment_dist < 1.0e30 &&\n            umbral >= 0.0 && umbral < 1.0 &&\n            abs(dither) < 1.0e30 && abs(frameTimeCounter) < 1.0e30 &&\n            all(lessThan(abs(intersection_pos), vec3(1.0e30))) &&\n            all(lessThan(abs(intersection_pos_sup), vec3(1.0e30)));\n        #endif"
+    },
+    {
+      "path": "shaders/lib/volumetric_clouds.glsl",
+      "before": "            float current_value = texture2D(gaux2, (intersection_pos.xz * 0.0002777777777777778) + (frameTimeCounter * CLOUD_HI_FACTOR)).r;",
+      "after": "            #if SHADERLOD_REFINEMENT_ADAPTER == 1 && defined DEFERRED_SHADER && !defined THE_END && !defined NETHER && !defined UNKNOWN_DIM && !defined DISTANT_HORIZONS && !defined VOXY && !defined VOXY_PATCH && V_CLOUDS == 1 && CLOUD_VOL_STYLE == 0\n            float current_value = texture2DLod(gaux2, (intersection_pos.xz * 0.0002777777777777778) + (frameTimeCounter * CLOUD_HI_FACTOR), 0.0).r;\n            #else\n            float current_value = texture2D(gaux2, (intersection_pos.xz * 0.0002777777777777778) + (frameTimeCounter * CLOUD_HI_FACTOR)).r;\n            #endif"
+    },
+    {
+      "path": "shaders/lib/volumetric_clouds.glsl",
+      "before": "                current_value += texture2D(gaux2, (intersection_pos.zx * 0.0002777777777777778) + (frameTimeCounter * CLOUD_LOW_FACTOR)).r;",
+      "after": "            #if SHADERLOD_REFINEMENT_ADAPTER == 1 && defined DEFERRED_SHADER && !defined THE_END && !defined NETHER && !defined UNKNOWN_DIM && !defined DISTANT_HORIZONS && !defined VOXY && !defined VOXY_PATCH && V_CLOUDS == 1 && CLOUD_VOL_STYLE == 0\n                current_value += texture2DLod(gaux2, (intersection_pos.zx * 0.0002777777777777778) + (frameTimeCounter * CLOUD_LOW_FACTOR), 0.0).r;\n            #else\n                current_value += texture2D(gaux2, (intersection_pos.zx * 0.0002777777777777778) + (frameTimeCounter * CLOUD_LOW_FACTOR)).r;\n            #endif"
+    },
+    {
+      "path": "shaders/lib/volumetric_clouds.glsl",
+      "before": "            intersection_pos += increment;",
+      "after": "            #if SHADERLOD_REFINEMENT_ADAPTER == 1 && defined DEFERRED_SHADER && !defined THE_END && !defined NETHER && !defined UNKNOWN_DIM && !defined DISTANT_HORIZONS && !defined VOXY && !defined VOXY_PATCH && V_CLOUDS == 1 && CLOUD_VOL_STYLE == 0\n            // First-contact density is fixed; remaining positive adds cannot\n            // change the native clamp(value / opacity_dist, 0, 1) or color tail.\n            if (shaderlodOpacityActive && !first_contact &&\n                abs(density) < 1.0e30 && cloud_value < 1.0e30 &&\n                cloud_value >= opacity_dist) break;\n            #endif\n            intersection_pos += increment;"
+    },
+    {
       "path": "shaders/lib/volumetric_clouds_end.glsl",
-      "before": "        vec3 increment = (intersection_pos_sup - intersection_pos) / samples;",
-      "after": "        // Same native End slab and opacity weights; change count before stride.\n        #if SHADERLOD_REFINEMENT_ADAPTER == 1 && defined DEFERRED_SHADER && defined THE_END && !defined NETHER && !defined UNKNOWN_DIM && !defined DISTANT_HORIZONS && !defined VOXY\n        samples = shaderlod_makeup_volume_budget(samples);\n        #endif\n        vec3 increment = (intersection_pos_sup - intersection_pos) / samples;"
+      "before": "        intersection_pos += (increment * dither);",
+      "after": "        intersection_pos += (increment * dither);\n\n        #if SHADERLOD_REFINEMENT_ADAPTER == 1 && defined DEFERRED_SHADER && defined THE_END && !defined NETHER && !defined UNKNOWN_DIM && !defined DISTANT_HORIZONS && !defined VOXY && !defined VOXY_PATCH && V_CLOUDS == 1 && CLOUD_VOL_STYLE == 0\n        // Native single-level linear cloud PNG: explicit LOD avoids undefined\n        // implicit derivatives after per-ray exits. No gradients are hoisted.\n        bool shaderlodOpacityActive = shaderlod_makeup_opacity_enabled() &&\n            samples > 0 && samples <= 65536 &&\n            opacity_dist > 0.0 && opacity_dist < 1.0e30 &&\n            increment_dist > 0.0 && increment_dist < 1.0e30 &&\n            umbral >= 0.0 && umbral < 1.0 &&\n            abs(dither) < 1.0e30 && abs(frameTimeCounter) < 1.0e30 &&\n            all(lessThan(abs(intersection_pos), vec3(1.0e30))) &&\n            all(lessThan(abs(intersection_pos_sup), vec3(1.0e30)));\n        #endif"
+    },
+    {
+      "path": "shaders/lib/volumetric_clouds_end.glsl",
+      "before": "            float current_value = texture2D(gaux2, (intersection_pos.xz * .0008) + (frameTimeCounter * CLOUD_HI_FACTOR * 3.0)).r;",
+      "after": "            #if SHADERLOD_REFINEMENT_ADAPTER == 1 && defined DEFERRED_SHADER && defined THE_END && !defined NETHER && !defined UNKNOWN_DIM && !defined DISTANT_HORIZONS && !defined VOXY && !defined VOXY_PATCH && V_CLOUDS == 1 && CLOUD_VOL_STYLE == 0\n            float current_value = texture2DLod(gaux2, (intersection_pos.xz * .0008) + (frameTimeCounter * CLOUD_HI_FACTOR * 3.0), 0.0).r;\n            #else\n            float current_value = texture2D(gaux2, (intersection_pos.xz * .0008) + (frameTimeCounter * CLOUD_HI_FACTOR * 3.0)).r;\n            #endif"
+    },
+    {
+      "path": "shaders/lib/volumetric_clouds_end.glsl",
+      "before": "                current_value += texture2D(gaux2, (intersection_pos.zx * .0008) + (frameTimeCounter * CLOUD_LOW_FACTOR * 3.0)).r;",
+      "after": "            #if SHADERLOD_REFINEMENT_ADAPTER == 1 && defined DEFERRED_SHADER && defined THE_END && !defined NETHER && !defined UNKNOWN_DIM && !defined DISTANT_HORIZONS && !defined VOXY && !defined VOXY_PATCH && V_CLOUDS == 1 && CLOUD_VOL_STYLE == 0\n                current_value += texture2DLod(gaux2, (intersection_pos.zx * .0008) + (frameTimeCounter * CLOUD_LOW_FACTOR * 3.0), 0.0).r;\n            #else\n                current_value += texture2D(gaux2, (intersection_pos.zx * .0008) + (frameTimeCounter * CLOUD_LOW_FACTOR * 3.0)).r;\n            #endif"
+    },
+    {
+      "path": "shaders/lib/volumetric_clouds_end.glsl",
+      "before": "            intersection_pos += increment;",
+      "after": "            #if SHADERLOD_REFINEMENT_ADAPTER == 1 && defined DEFERRED_SHADER && defined THE_END && !defined NETHER && !defined UNKNOWN_DIM && !defined DISTANT_HORIZONS && !defined VOXY && !defined VOXY_PATCH && V_CLOUDS == 1 && CLOUD_VOL_STYLE == 0\n            // First-contact density is fixed; remaining positive adds cannot\n            // change the native clamp(value / opacity_dist, 0, 1) or color tail.\n            if (shaderlodOpacityActive && !first_contact &&\n                abs(density) < 1.0e30 && cloud_value < 1.0e30 &&\n                cloud_value >= opacity_dist) break;\n            #endif\n            intersection_pos += increment;"
     }
   ],
   "additions": {
     "shaders/lib/shaderlod/adapter.glsl": {
       "path": "patches/adapters/makeup-ultra-fast-shaders.glsl",
-      "sha256": "b0f7bf8011eaac8bf2b07f98f06d6c0214ac9c7bffd4937c03d17974da4c1ba5"
+      "sha256": "d272153e3e733ac03a513edfe8663ee61e5b45d7a674080ae7e5f2eaa6ad93fc"
     },
     "shaders/lib/shaderlod/refinement_budget.glsl": {
       "path": "patches/adapters/shared/refinement_budget.glsl",
@@ -94,31 +130,32 @@
   "shader_source_digest": "5077d90851e1f07aa9bc2551eadcc1d9b270694c9f3761924fd800188bebbf32",
   "ported_consumers": {
     "volumetrics": {
-      "mechanism": "Existing uniform_sample_budget; full native cloud slab / recomputed per-step distance opacity",
-      "scope": "DEFERRED_SHADER, Overworld sky; no DH/VOXY/unknown/Nether/End; native water reflection unchanged",
-      "original_native_samples": 10,
-      "minimum": 4,
-      "balanced_samples": 9,
-      "performance_samples": 8,
-      "distance_controls": false,
+      "mechanism": "Existing native opacity saturation exit; replaces approximate count budget on primary route",
+      "scope": "Overworld DEFERRED_SHADER; V_CLOUDS1/style0; no Nether/unknown/DH/VOXY/VOXY_PATCH; native reflection callers unchanged",
+      "original_native_samples": "N = selected CLOUD_STEPS_AVG (native default10)",
+      "selected_samples": "min(N, first positive finite saturation index+1); N when no certificate",
+      "native_count_and_interval_preserved": true,
+      "default_native_samples": 10,
+      "default_effect_active": true,
+      "source_preview_only": true,
       "runtime_verified": false,
       "quality_verified": false,
       "performance_verified": false,
-      "closed_saturation_trial_reopened": false
+      "historical_closed_saturation_trial_reopened": false
     },
     "end_clouds": {
-      "mechanism": "Existing uniform_sample_budget; native End slab and length-weighted opacity",
-      "scope": "THE_END DEFERRED_SHADER, no Nether/unknown/DH/VOXY; other callers unchanged",
-      "original_native_samples": 10,
-      "balanced_samples": 9,
-      "performance_samples": 8,
-      "performance_native_renderer_bypasses_shader_budget": false,
-      "route_scope": "Public Apply while already in The End; inspected native renderer gates require Overworld",
-      "dimension_transition_reselection_verified": false,
-      "distance_controls": false,
+      "mechanism": "Existing native opacity saturation exit; replaces approximate count budget on primary route",
+      "scope": "End DEFERRED_SHADER; V_CLOUDS1/style0; no Nether/unknown/DH/VOXY/VOXY_PATCH; native reflection callers unchanged",
+      "original_native_samples": "N = selected CLOUD_STEPS_AVG (native default10)",
+      "selected_samples": "min(N, first positive finite saturation index+1); N when no certificate",
+      "native_count_and_interval_preserved": true,
+      "default_native_samples": 10,
+      "default_effect_active": true,
+      "source_preview_only": true,
       "runtime_verified": false,
       "quality_verified": false,
-      "performance_verified": false
+      "performance_verified": false,
+      "historical_closed_saturation_trial_reopened": false
     }
   }
 }

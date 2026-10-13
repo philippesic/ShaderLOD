@@ -43,7 +43,7 @@ public final class SupportedPackCatalog {
         new Pack("complementary-unbound", "Complementary Shaders - Unbound", "r5.9.3", "https://modrinth.com/shader/complementary-unbound",
             "LicenseRef-Custom", "2212a1f3d796c70a337eabae6cd7e0309917f95434a5aaa31d8e77ebe6a5dc39", "c0d104b0f7b5094292e67bd693e625d8aa8b936a815695715044f2a6cb0f4930"),
         new Pack("makeup-ultra-fast-shaders", "MakeUp - Ultra Fast", "9.5g", "https://modrinth.com/shader/makeup-ultra-fast-shaders",
-            "LGPL-3.0-or-later", "5077d90851e1f07aa9bc2551eadcc1d9b270694c9f3761924fd800188bebbf32", "956e3ab528c0ee9504bbc307306f269c9a85d3613a0dc5b49cfb80472ea4e5c4"),
+            "LGPL-3.0-or-later", "5077d90851e1f07aa9bc2551eadcc1d9b270694c9f3761924fd800188bebbf32", "1978eed85ffdbc53d65c687253295e3c200016a75c84045a2f5240d3443ff0b5"),
         new Pack("sildurs-vibrant-shaders", "Sildur's Vibrant Shaders", "2.02", "https://modrinth.com/shader/sildurs-vibrant-shaders",
             "LicenseRef-All-Rights-Reserved", "bcd7fa0121e9b6184d4613ffced7c634f09c6b33e25e7bcfa0088eb06cb275ea", "81ac02a283d074496e6dee3110f9d873197cf1d588e8fe3da03a9e523520d80d"),
         new Pack("solas-shader", "Solas Shader", "3.7b", "https://modrinth.com/shader/solas-shader",
@@ -68,7 +68,7 @@ public final class SupportedPackCatalog {
         Map.entry("bliss-shader", List.of("cd3e678a6ecb529f59e13421b1cd27bcdbb86012c4c482e570e2eb86abb2e9f4")),
         Map.entry("complementary-reimagined", List.of("18fcf18e20d753dac8e24309abe4b5e0f773b5c73c0bbe1bb18ae3b8f290f46b", "a342b424364b2b1d59185b584b6097648e3c11d9e499b2035012a345bdc3ed7f", "920212803e992b80ba58da1e00a54bc45b4ad5ddac1edae1b392002c90ee2cc7")),
         Map.entry("complementary-unbound", List.of("cd60c29d8d3f2e1437b965f9c32ec0e41c95df0f25f47d18e7fb7b45377476fc", "4e6cd8da53dfb1a31504b31a82027ccac4eb8b3c99449640b8f8ac77a173be8a", "9118b112be859fda810582c78dd1409d0273cbe8fa9ed72cc32a22c9ddc09ed6")),
-        Map.entry("makeup-ultra-fast-shaders", List.of("ee4d9d08fc9e071cdffb1d63c920368cc7c5b1b05623d3f5a82c27505bdb4a51", "e62be2858dc69faf7a24dd5ebc3806e697302c3c8c8d46391051ba71c8ab7d9d", "52f14a1d31e0be6e24a3052578089305735f5c88cd9930fa6dd518839953ca58")),
+        Map.entry("makeup-ultra-fast-shaders", List.of("ee4d9d08fc9e071cdffb1d63c920368cc7c5b1b05623d3f5a82c27505bdb4a51", "e62be2858dc69faf7a24dd5ebc3806e697302c3c8c8d46391051ba71c8ab7d9d", "52f14a1d31e0be6e24a3052578089305735f5c88cd9930fa6dd518839953ca58", "956e3ab528c0ee9504bbc307306f269c9a85d3613a0dc5b49cfb80472ea4e5c4", "9a6c5ebb5dc6ab2b99c4fd8ea75fdcd19af468a75ee0a81ee99516a7886bb38a")),
         Map.entry("bsl-shaders", List.of("37aa37afaea8fbcbdf4adbc49dba3681280f66a94f25296f9be90546ef9e4ae8", "80dfa11232b5c04cd075fb36ff4dffc8b55fbe1cd64d4cdb707ad8bff254f140", "f386c864e7a8e39752982a332f963af8093dbb326094255a8428ae663bc728e1")),
         Map.entry("solas-shader", List.of("7e5171e0c1e780bc33e57401a8561d296d73b826d3bfd0d0d21965080e213a6d", "469a65f1654793dd5e9dca70c91746e98aef2df240a601f8da3d5cc5934f6cf5", "8b96d3a6b8cfc4580ae47604ad8fd114de802e79ac75206374d2f5c97b129480")),
         Map.entry("astralex", List.of("5512a3f003fcb881903d5d1db6d230903c4259967962423de745d49bb75f6c7e", "64074489150514b0e4b180f1ff59986712dd9984a0d5978051e88677d371944f", "7a59f0be267d52c977371e9cf621e401a93030a7107f6b26410599e80ed4ae91")));

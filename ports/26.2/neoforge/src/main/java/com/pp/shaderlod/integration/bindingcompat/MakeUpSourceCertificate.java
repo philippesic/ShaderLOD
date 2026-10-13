@@ -9,7 +9,7 @@ import java.util.zip.ZipFile;
 import java.nio.charset.StandardCharsets;
 /** DEV compatibility admission only: exact original or actual maintained generated graph, no batching eligibility. */
 public final class MakeUpSourceCertificate {
- public static final String RECIPE_SHA="06cd6464450b03613b5a980899f8b056228a31c70396275ee70b728ddd71a8f9";
+ public static final String RECIPE_SHA="8971805407816a65290e536b70587089bea9c6f239a0d59aad643ffd6d0a8e54";
  private static final String ID="makeup-ultra-fast-shaders",RECIPE="assets/shaderlod/adapters/patches/adapters/makeup-ultra-fast-shaders.json";
  private MakeUpSourceCertificate(){}
  public record Result(boolean eligible,String reason,boolean generated){}

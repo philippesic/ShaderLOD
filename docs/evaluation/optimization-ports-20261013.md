@@ -8,6 +8,10 @@ remain unverified. The nine-family, five-version, two-loader scope remains activ
 
 ## MakeUp UltraFast 9.5g: End clouds
 
+The 9/8 count-budget candidate below is historical. The current recipe now
+retains the native count and ports opacity-saturation termination to Overworld
+and End, as described under the final MakeUp update below.
+
 The existing Overworld sample-budget mechanism now also reaches the default-active
 End sky-cloud consumer: `world1/deferred.fsh → common/deferred_fragment.glsl →
 volumetric_clouds_end.glsl:get_end_cloud`. Native ten iterations become nine with
@@ -441,3 +445,40 @@ jars, not actual linked GPU values or the other eight implementations.
 [Pinned forwarding evidence](../../dev/logs/optimization-porting-20261013/primary-uniform-forwarding/receiver-6plssn29/receipt.json).
 Linked values, reached branches, sampler parity, motion, FPS, DH/PBR and full90
 acceptance remain unfinished.
+
+## MakeUp update: native-count opacity termination
+
+The current Overworld and End primary cloud consumers retain the native selected
+ray count, slab interval, positions, first-contact density and color tail. They
+stop only when positive finite accumulated opacity reaches the native final
+clamp limit and density is already fixed. Further nonnegative additions cannot
+change the final opacity or first-contact color. If no saturation is reached,
+all N samples run; otherwise the reached count is the first saturated index+1.
+This replaces the earlier approximate 9/8 count budgets rather than claiming
+their changed sampling preserves exact native output.
+
+Independent review accepts native-body/tail/count restoration and 9,375
+threshold-edge cases with zero parity errors. Original PNG/metadata and AA
+remain pinned. Explicit level-zero sampling has the inspected single-level
+source contract; current/End driver sampler behavior and division remain
+unverified. The older Overworld B16 saturation trial showed no useful whole-frame
+gain and stays closed. Maintained core-control and new End coverage are source
+ports, not recovered FPS gains.
+
+Parent's installed-source check caught a missing preset initializer. The final
+helper now initializes it to -1, retaining native execution if the preset is not
+supplied. Five focused installed checks, six revised authentic GLSL wrappers and
+the actual public CPU Apply/restart/Quality/Off/native100/generated104/AA2/source/
+archive/recipe-tamper consumer pass. Resource sync is clean; NeoForge26.2 changes
+only the recipe identity and retains its original Overworld-only admission.
+No new End renderer admission or runtime result is claimed.
+
+Final source digest
+`1978eed85ffdbc53d65c687253295e3c200016a75c84045a2f5240d3443ff0b5`;
+preview `5415724cd47b0516ea85954e0a97b307dd397f68d91c6628c107bf4ad90a6ef7`.
+[Original source handback](../../dev/logs/optimization-porting-20261013/makeup-opacity-bound/handback.md),
+[independent recurrence review](../../dev/logs/optimization-porting-20261013/makeup-opacity-review/review.md),
+[final installed CPU checks](../../dev/logs/optimization-porting-20261013/makeup-opacity-bound/parent-failclosed-consumer-lkpm30i4/receipt.json),
+[final wrapper checks](../../dev/logs/optimization-porting-20261013/makeup-opacity-bound/parent-failclosed-wrappers-45rhfx7p/receipt.json).
+The original handback/review hashes predate the parent fail-closed initializer;
+the final preview and current recipe supersede those helper identities.

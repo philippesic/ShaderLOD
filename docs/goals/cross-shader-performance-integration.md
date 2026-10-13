@@ -810,3 +810,23 @@ Parent owns continuation/Git/lane. Next direct shader candidate ports opacity-
 saturation termination into MakeUp primary clouds, retaining native count and
 first-contact output if the exact recurrence permits. Isolated shader owner
 assigned; no benchmark campaign or further process-probe framework work.
+
+
+## MakeUp native-count opacity exit adopted — October 13, 2026 Pacific
+
+The existing saturation premise now reaches maintained core controls and End
+clouds while retaining native N, first-contact density, interval and color tail.
+The old primary9/8 count reduction is replaced; native sampling continues until
+output is saturated, with no shortened count otherwise. Source/mathematical
+review accepts this conditional exact-output premise. Parent installed checks
+found and fixed a missing preset initializer(-1); updated six full wrappers and
+actual public CPU source/AA/options/restart/Quality/Off/tamper checks pass.
+Current source1978eed8/preview5415724c and NF262 recipe-only identity are adopted;
+no new game/build was required for these source checks.
+
+[Current behavior and limits](../evaluation/optimization-ports-20261013.md).
+Historical Overworld B16 no-useful-gain trial remains closed; no cost retuning or
+FPS claim. Current/End sampler/driver rounding, motion, speed and DHPBR remain
+unverified. All workers handed back; parent owns integration/Git/next decisive
+source consumer. Keep full90 scope and exact negative evidence; do not drift into
+process-probe or benchmarking framework work.
