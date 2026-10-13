@@ -849,3 +849,23 @@ client/GPU or source changes. Main inputs are frozen consistently; no other
 builds/tests. Source preparation outside frozen inputs may proceed, but accepted
 changes wait for the build handback. Full90 original scope/negative trials/native
 hardware blockers remain intact.
+
+
+## Current optimization ports packaged across all ten targets — October13, 2026 Pacific
+
+Both loaders × MC1.21.1/1.21.11/26.1.2/26.2/26.3 normal previews compiled and
+packaged successfully with current Photon optical-depth and MakeUp native-count
+saturation sources. Parent independently verified every artifact/hash/shared
+resource/current9family catalog and no dev classes. Source inputs stayed fixed.
+Three wrong-Gradle configuration failures were repaired using installed exact
+consumers; firstNF1211 originalprocess record was overwritten during receiver
+recovery, explicitly unverified, while its successful build and artifact remain.
+
+[All ten artifacts, commands and limits](../evaluation/optimization-ports-20261013.md).
+Actual build lane release12:50:05UTC plus parent laterfree-lock/no-client census
+accepted; all workers handed back, no jobs. Parent owns continuation. This is
+all-target code delivery, not full90 rendering/quality/FPS/DHPBR acceptance.
+Next direct consumer milestone is bounded actual Photon lighting/ambient graph
+consumption and early original/control/enabled/return cost/quality observation
+with the existing consumer, preserving native AA and closed earlier pixel trials.
+Do not replace this outcome with a general observer/benchmark framework.

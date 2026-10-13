@@ -515,3 +515,25 @@ preview `e06f7d641302baceb66bcf7ecf90e81c36e81e7636ff056650c1c5ce4c31f1d1`.
 New graph rendering, linked uniforms, actual skipped work, motion, compiled
 overhead, speed, DH/PBR and full90 acceptance remain unverified. Closed earlier
 pixel-budget/cost trials remain unchanged.
+
+## Current previews for all ten targets
+
+Current Photon optical-depth and MakeUp native-count opacity code, together with
+all nine shader-family mechanisms, is now packaged for both loaders on all five
+Minecraft versions. Every target compiled and packaged successfully. Parent
+independently checked all ten artifact hashes, all 21 shared adapter resources,
+the nine current original/adapter catalog identities, loader metadata and absence
+of dev-only classes. Source inputs remained unchanged throughout the operation.
+[Artifact list with exact commands](../../dev/artifacts/optimization-ports-20261013/all-target-current/artifact-list.json),
+[parent verification](../../dev/logs/optimization-porting-20261013/all-target-preview-builds/parent-acceptance.json).
+
+Three newer Fabric attempts used the wrong root Gradle wrapper and failed during
+configuration; only those targets were retried with their installed version's
+consumer. The failures remain recorded. First NeoForge1.21.1 compilation passed,
+but its original PID/birth record was overwritten during artifact-receiver
+recovery; its successful build log and verified artifact remain, while that
+process provenance is unverified. Other nine build identities were retained.
+[Build report and limitations](../../dev/logs/optimization-porting-20261013/all-target-preview-builds/REPORT.md).
+The lane is released and fresh absence/free-lock evidence is accepted. No client
+was launched. These previews establish delivery/build coverage, not runtime,
+quality, FPS, DH/PBR or full90-cell acceptance.
