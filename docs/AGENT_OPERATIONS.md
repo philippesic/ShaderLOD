@@ -1,47 +1,53 @@
 # Agent operations
 
-## Outcome-driven execution
+## Choose the current deliverable
 
-Read the compact STATUS and latest goal tail, not historical assignments. Keep
-objective/acceptance, matched baseline/best result, selected hypothesis, stage,
-owner, next decisive observation and restrictions visible in the existing
-checkpoint. Do not create another task database. An app Goal label is not live
-process state. Native Goals/new user-owned chats require explicit human requests.
+Read compact STATUS and the latest relevant goal milestone. Current human
+steering determines the immediate deliverable; historical assignments do not.
+Preserve the full goal, allocation and pauses in the existing checkpoint. An
+authorized audit or tooling repair does not resume paused shader execution.
 
-Choose work that produces a runnable candidate, trustworthy measurement or a
-negative result that changes a decision. Plan the selected candidate through its
-actual producer/consumer and recovery path: pinned source → selected archive and
-options → exact launcher/profile → driver consumption → still/motion quality →
-early original/control/enabled/original-return cost → restoration. Verify a
-small complete slice using existing tools; a helper alone is not that outcome.
-Batch independent cheap defects in the actual saved plan before expensive work;
-see [offline preflight](EXPERIMENT_PREFLIGHT.md). Never claim it validated Java,
-rendering, loaded uniforms, resource availability or speed.
+For an existing-concept port, start with the working family implementation and
+change its missing source, loader or recovery joins. Deliver the requested
+candidate and test its actual public consumer. A fresh FPS campaign or a new
+provenance observer is not a prerequisite for a manual preview or a scoped
+rendering/control increment. Report unverified speed, motion quality, DH and PBR
+explicitly; they remain required for their corresponding acceptance claims.
+For an optimization experiment, identify the selected preset/graph and active
+native work first, then take an early matched original/control/enabled/return
+cost and quality observation. Optional inactive effects are coverage work, not
+evidence of useful default-scene optimization. Use [EVALUATION](EVALUATION.md)
+for the current claim-specific checks, not every historical protocol at once.
 
-For the existing Bliss renderer comparison, [benchmark storage](BENCHMARK_STORAGE.md)
-provides the actual pinned recipe's destination inventory, fresh preparation and
-finite runner. Check capacity on the destination before copying worlds. Cleanup
-defaults off; explicit cleanup covers only newly recorded clones after exact
-release, while preserving canonical inputs and evidence. It does not clean old
-campaigns or authorize a repeat of a closed trial.
+Put this compact assignment in the existing attempt or worker message:
 
-For supported 26.2 speed measurements, the rate guard is now in the live dev
-source and compiled consumer. Use the [versioned finite caller](RENDERER_BRACKET_CONSUMER.md),
-which selects qualification automatically and validates fresh caller/qualifier
-source bindings before launch. Historical frozen run scripts are evidence, not
-new launch recipes. The [restart handoff](handoffs/autonomy-restart-20261011.md)
-records actual adoption and the distinct fresh-client diagnostic that comes first.
+- **Outcome:** family/version/loader, preset and actual selected consumer.
+- **Reuse:** working implementation and accepted evidence that still applies.
+- **Change:** the missing joins and exact owned files; dependencies/resource owner.
+- **Acceptance:** authentic input, real entry point, affected checks and the next
+  user-visible result; name remaining evidence boundaries.
+- **Budget:** total attempt/review boundary and return destination, including repairs.
 
-Rank a few independent hypotheses by active cost, plausible total-frame gain,
-uncertainty reduction, preparation cost and quality risk. Charge setup, repair,
-worker replacement and handoffs to the same attempt. Record start/review time,
-next decision and positive/negative actions. Roughly 15 minutes without a
-useful auxiliary fix triggers a review: simplify, justify an extension, switch
-useful work or surface a real decision. It is not a kill switch for healthy
-jobs. After two same-cause failures inspect the whole affected contract before
-retrying. Do not build a proof/observer framework or revive closed fixed trials.
-A rejected candidate does not finish the project; choose the next authorized
-useful action unless the human stopped work or a genuine blocker prevents it.
+This is an assignment aid, not another required document or launch gate. Search
+the existing implementation and closed results before proposing another mechanism.
+Rank candidates by active removable work, likely total benefit, uncertainty,
+effort and visual risk. Sample reduction must preserve the native integration
+interval/normalization or account for its recurrence; matching loop names is
+insufficient. Never transfer an old FPS percentage to a new tuple.
+
+Batch cheap defects using actual saved producer output and the existing
+[preflight](EXPERIMENT_PREFLIGHT.md). Exercise changed boundaries; reuse valid
+unchanged dependencies instead of repeating the full suite per family. Stop
+adding diagnostics once the current consumer answers the assigned question.
+After two same-cause failures inspect the affected contract before retrying.
+The roughly 15-minute auxiliary review covers setup, workers, repairs and
+handoffs: simplify, justify extension or switch; preserve healthy allocated jobs.
+A failed candidate closes that experiment, not the unfinished project.
+
+For the eight maintained non-Photon adapters, use the existing builder's
+`--sync-resources` preview and explicit `--apply` to propagate a pinned recipe,
+helpers and catalog identity through the shared resources. Do not hand-copy
+these into ten builds. [Commands and verified limits](DEVELOPMENT_THROUGHPUT_REVIEW_20261012.md).
 
 ## Teams and integration
 
@@ -52,15 +58,12 @@ independent outcome owned. Use native subagents; workers do not recursively
 spawn or message user-owned chats. Project roles under `.codex/agents/` inherit
 current settings unless the user/project contract explicitly selects otherwise.
 
-Every assignment names deliverable/decision, owned files or read-only scope,
-existing entry points and authentic input examples, dependencies/resource owner,
-acceptance/negative cases, total budget/stopping boundary and report destination.
-Partition shared files explicitly or isolate conflicting edits in worktrees.
-Workers preserve others' work and return actual evidence, unverified boundaries,
-integration needs and live processes. A worker's completion is not acceptance;
-parent integrates and checks the combined result. Use independent review where
-correctness, research or performance claims warrant it. Parent schedules the
-runtime_operator; source workers report opportunities rather than taking a lane.
+Partition shared files or isolate conflicting edits. Workers preserve others'
+work and return the patch, checks, remaining boundaries and live processes in one
+handback. Parent checks and integrates the combined result; worker completion
+alone is not acceptance. Review consequential correctness/performance claims
+independently, without making every intermediate preparation another review chain.
+Parent schedules the runtime_operator; source workers do not take a lane.
 
 When reusing a terminal worker, use the supported operation that starts a new
 turn and verify acknowledgment once. A queued message does not mean execution.
@@ -89,6 +92,20 @@ consuming feature activity, quality and speed are distinct evidence levels.
 No remote GPU host is configured here. Current scope is Mac Iris/OpenGL;
 record actual hardware. Mac evidence does not validate Windows/Linux behavior.
 
+Use [benchmark storage](BENCHMARK_STORAGE.md) for destination capacity and scoped
+clone retention; preserve canonical inputs and old trials. Use the
+[finite speed caller](RENDERER_BRACKET_CONSUMER.md) for its supported tuples.
+Frozen historical callers are evidence. A new fix must reach the actual normal
+producer/compiled resource/caller before it is described as adopted; see the
+[adoption handoff](handoffs/autonomy-restart-20261011.md). Keep final deadline
+stamping, producer, freeze, preflight and launch in one local operation after
+preparation, with no model handoff consuming the startup allowance.
+Fresh BSL/Reimagined NeoForge26.2 MAIN control preparation can use
+`scripts/run_neoforge_control.py --session <absolute session>` for read-only
+inspection and `--execute` for the owned final operation. Freeze the maintained
+script during fresh preparation. The existing sealed Reimagined operation stays
+unchanged; the new entry has offline verification, pending actual runtime adoption.
+
 ## Checkpoints, handoffs and communication
 
 Update STATUS/current goal at milestones with actual results, best baseline,
@@ -99,6 +116,8 @@ record exact live ownership, stop procedure and next executable action. After
 resume verify live agents/jobs and artifacts before acting. The SessionStart
 hook is a reminder; it cannot launch work, transfer control, enforce a context
 limit or keep the app running. Files remain useful when hooks are unavailable.
+Record an outcome once and link it; do not copy its full narrative into several
+reports. Preparation and test counts are not delivered optimization counts.
 
 For the managed STATUS use the global setup skill's `scripts/checkpoint.py`
 show/lint/update commands and its `references/checkpoint.md`. Supply actual facts

@@ -1,12 +1,13 @@
 name = "shader_owner"
 description = "Own a bounded pinned-pack shader LOD hypothesis and candidate."
 developer_instructions = """
-Inspect the assigned pinned pack and active expensive work. Own only assigned
-effects/helpers. Preserve native AA, protected near cues, disabled/Quality
-restoration, source ancestry and licenses. State expected total-frame benefit,
-quality risk and intrinsic overhead. Deliver one candidate and authentic
-source/control evidence within the attempt budget. Coordinate source/reload
-changes with parent. Source checks are not rendering or measured performance.
+Inspect the selected preset/graph and active native work in the pinned pack.
+Reuse the named existing mechanism before designing another. Own only assigned
+effects/helpers; adapt interval, normalization and recurrence explicitly. Preserve
+native AA, protected near cues, Off/Quality restoration, ancestry and licenses.
+State likely whole-frame benefit, overhead and quality risk; label inactive
+optional effects as coverage. Deliver one candidate with authentic source/control
+evidence. Parent coordinates reloads; source checks do not establish rendering.
 
 Follow the parent contract and relevant AGENTS.md. Do not recursively spawn or
 create user-owned chats. Parent coordinates file/resource ownership and accepts

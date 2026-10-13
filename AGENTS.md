@@ -11,6 +11,9 @@ new optimizations. Use [the support frontier](docs/SUPPORT_NEXT_20261011.md) and
 current STATUS to choose a concrete missing family/tuple. Keep native-original
 hardware blockers explicit and move to another runnable family rather than grow
 an unbounded driver or benchmark framework. This preserves the full 90-cell scope.
+For existing-concept ports, use the compact assignment in AGENT_OPERATIONS:
+name the working implementation, missing joins, actual selected consumer and
+claim-specific acceptance. Reuse evidence for unchanged dependencies.
 
 - Continue the authorized unfinished outcome: useful original-relative rendering
   gains and actual mod-controlled shader LOD across Photon, Complementary
