@@ -935,3 +935,16 @@ state admission, six-family MAIN dispatch and public controls. Acknowledged
 isolated feature_owner prepares that complete bounded slice against the actual
 Sildur producer; parent owns integration/Git/next runtime. No live build/client
 job. Preserve all90 scope, historical allocations and closed cost trials.
+
+## Bliss NeoForge26.2 optimization code and controls integrated
+
+Separate native463/generated466 Bliss source/state/currentrecipe admission and
+six-family main dispatch now join the accepted primary-cloud optimization on
+NeoForge. Parent adopted exact four postimages after independent installed
+javac/public43/refusal/caller checks; all349 source and143 native vertex members
+match the accepted shader implementation, and all entry gates remain unchanged.
+[Code and evidence](../evaluation/optimization-ports-20261013.md).
+Runtime_operator acknowledged a new prep-only turn; parent clearance and fresh
+normal preview/producer/freeze precede any client. No live build/client yet.
+Speed, motion, DH/PBR and full90 remain unverified; prior allocations and closed
+trials stay intact. Parent owns integration/Git and subsequent runtime outcome.

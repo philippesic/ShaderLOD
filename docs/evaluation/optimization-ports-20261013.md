@@ -647,3 +647,25 @@ Speed, reached rejection rates/avoided GPU work, linked uniform readback, motion
 DH/PBR, failed-Apply/mismatch runtime and other tuples remain unverified.
 Next direct implementation carries Bliss's accepted current density rejection
 through the same NeoForge main source/control path, with its own exact identity.
+
+## Bliss optimization consumer port to NeoForge26.2
+
+Bliss's accepted primary cloud-density rejection now has its own NeoForge26.2
+source/recipe/state admission, six-family main dispatch and public-control join.
+Native463/generated466 options, including TAA/HQclouds/cloudLoD and native
+upscaling, remain exact. The shader sources are unchanged from the accepted
+explicitLOD0 implementation: all349 source members match that preview, all143
+native vertex files remain exact, and the public archive adds2 metadata members.
+Existing Overworld/API/OpenGL/resources/native draw guards remain unchanged.
+
+Parent adopted four sealed postimages. Independent installed-dependency javac,
+43 public selection/restore/tamper checks, recipe/helper tamper refusal and
+actual native463 caller-boundary checks pass. No stale MakeUp or Sildur branch
+remains in the copied private caller.
+[Source/control handback](../../dev/logs/optimization-porting-20261013/bliss-neoforge-port/handback.json),
+[independent review](../../dev/logs/optimization-porting-20261013/bliss-neoforge-review/receipt.json),
+[parent adoption](../../dev/logs/optimization-porting-20261013/bliss-neoforge-port/parent-adoption.json).
+Untracked build/dev changes are retained in a scoped
+[patch](../../patches/consumer-ports/neoforge-262-bliss-main.patch).
+Normal preview/build, actual rendering/Cancel recovery, avoided work, speed,
+motion and DH/PBR remain pending; source/control checks are not those claims.
