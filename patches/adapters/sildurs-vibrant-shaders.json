@@ -1,0 +1,111 @@
+{
+  "schema": 1,
+  "kind": "volumetric-sample-budget",
+  "id": "sildurs-vibrant-shaders",
+  "name": "Sildur\u2019s Vibrant Shaders Extreme",
+  "version": "2.02",
+  "version_id": "J4RlzpKF",
+  "primary_page": "https://modrinth.com/shader/sildurs-vibrant-shaders",
+  "release_url": "https://cdn.modrinth.com/data/z8EjLYqN/versions/J4RlzpKF/Sildur%27s%20Vibrant%20Shaders%20v2.02%20Extreme.zip",
+  "release_archive_sha256": "824504bc937f9570277c0a809f5059ae4a5fe70c413cf4459b6ccff4dfed7ebe",
+  "license_note": "Private personal local adaptation only. Original archive members, author banners and credits retained. No redistribution permission established; do not publish generated copies.",
+  "shader_source_digest": "bcd7fa0121e9b6184d4613ffced7c634f09c6b33e25e7bcfa0088eb06cb275ea",
+  "source_members": {
+    "shaders/composite.fsh": "aced975bf52ee38e9d04190286e969c6be885169c4a6f7adca133882fd08156e",
+    "shaders/composite.vsh": "7170a5cfebf87862d6d605a5166a603b568ba872235ef8100e0e8f0ec45559f7",
+    "shaders/deferred1.fsh": "23ac4be7922725cf9bb3fa09f9d07489ad86e1853cea347d85ca25eee8fc0c44",
+    "shaders/shaders.properties": "770ecfdd520373789771ab0176268336c66045ca806d15e0ceb1a0889ee09d9c",
+    "shaders/shaders.settings": "cacf013321aa8c1786e6d15050c014329fd90098db379a736992f68440e118fd",
+    "shaders/world-1/composite.fsh": "6a35d02cd1cf11503fdc95c31f325c800b78bf36575af94eb64006def095ebb2",
+    "shaders/world1/composite.fsh": "6a35d02cd1cf11503fdc95c31f325c800b78bf36575af94eb64006def095ebb2",
+    "shaders/deferred.fsh": "377379d56b9d2a4bdf1da63a91ee89fc05a803c002fa54e445520a3bed73b5f3"
+  },
+  "patches": [
+    {
+      "path": "shaders/composite.fsh",
+      "before": "#include \"shaders.settings\"",
+      "after": "#include \"shaders.settings\"\n#include \"/lib/shaderlod/adapter.glsl\""
+    },
+    {
+      "path": "shaders/composite.fsh",
+      "before": "    vec3 dV = (end.xyz - start.xyz) * 0.16666667; //1.0 / 6.0",
+      "after": "    #if SHADERLOD_EFFECT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY\n    int shaderlodSampleCount = shaderlod_effect_budget(6, 5);\n    // Preserve exact native spacing for full work; otherwise cover the same interval.\n    vec3 dV = (end.xyz - start.xyz) * (shaderlodSampleCount == 6 ? 0.16666667 : 1.0 / float(shaderlodSampleCount));\n    #else\n    vec3 dV = (end.xyz - start.xyz) * 0.16666667; //1.0 / 6.0\n    #endif"
+    },
+    {
+      "path": "shaders/composite.fsh",
+      "before": "    for (int i = 0; i < 6; i++) {",
+      "after": "    #if SHADERLOD_EFFECT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY\n    for (int i = 0; i < shaderlodSampleCount; i++) {\n    #else\n    for (int i = 0; i < 6; i++) {\n    #endif"
+    },
+    {
+      "path": "shaders/composite.fsh",
+      "before": "    return vL * (-fragpos.z * 0.00083333); //final scalar reduction (1 / 1200)",
+      "after": "    #if SHADERLOD_EFFECT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY\n    vL *= 6.0 / float(shaderlodSampleCount);\n    #endif\n    return vL * (-fragpos.z * 0.00083333); //final scalar reduction (1 / 1200)"
+    },
+    {
+      "path": "shaders/shaders.properties",
+      "before": "screen=SSDO ao_strength Shadows shadowMapResolution PCSS shadowDistance waterRefl Clouds TAA TAA_sharpness Bloom bloom_strength Motionblur MB_strength Fog wFogDensity <empty> [ADVANCED_SCREEN]",
+      "after": "screen=SSDO ao_strength Shadows shadowMapResolution PCSS shadowDistance waterRefl Clouds TAA TAA_sharpness Bloom bloom_strength Motionblur MB_strength Fog wFogDensity <empty> [ADVANCED_SCREEN] [SHADERLOD]\r\nscreen.SHADERLOD = SHADERLOD_EFFECT_ADAPTER"
+    },
+    {
+      "path": "shaders/deferred.fsh",
+      "before": "#version 120\n",
+      "after": "#version 120\n#ifdef GL_ARB_shader_texture_lod\n#extension GL_ARB_shader_texture_lod : enable\n#endif\n"
+    },
+    {
+      "path": "shaders/deferred.fsh",
+      "before": "#include \"shaders.settings\"",
+      "after": "#include \"shaders.settings\"\n#include \"/lib/shaderlod/adapter.glsl\""
+    },
+    {
+      "path": "shaders/deferred.fsh",
+      "before": "    for (int i = 0; i < cloudIT; i++) {",
+      "after": "    #if SHADERLOD_EFFECT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY && defined GL_ARB_shader_texture_lod\n    bool shaderlodCloudBound = !isReflection && rainStrength == 0.0 &&\n        shaderlodBridgeVersion == 2 && shaderlodEnabled == 1 && shaderlodPreset == 0;\n    #endif\n\n    for (int i = 0; i < cloudIT; i++) {"
+    },
+    {
+      "path": "shaders/deferred.fsh",
+      "before": "            float xy1 = texture2D(noisetex, uv * 0.015625).x; \n            float xy2 = texture2D(noisetex, (uv * 0.015625) + 0.265625).x; ",
+      "after": "            #if SHADERLOD_EFFECT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY && defined GL_ARB_shader_texture_lod\n            float xy1;\n            float xy2;\n            if (shaderlodCloudBound) {\n                // Pinned generated noisetex uses nonmipped LINEAR_REPEAT in Iris 1.11.4.\n                // LOD0 removes implicit derivatives across both this and later ray iterations.\n                xy1 = texture2DLod(noisetex, uv * 0.015625, 0.0).x;\n                xy2 = texture2DLod(noisetex, (uv * 0.015625) + 0.265625, 0.0).x;\n            } else {\n                xy1 = texture2D(noisetex, uv * 0.015625).x;\n                xy2 = texture2D(noisetex, (uv * 0.015625) + 0.265625).x;\n            }\n            #else\n            float xy1 = texture2D(noisetex, uv * 0.015625).x; \n            float xy2 = texture2D(noisetex, (uv * 0.015625) + 0.265625).x; \n            #endif"
+    },
+    {
+      "path": "shaders/deferred.fsh",
+      "before": "            noise += mix(xy1, xy2, f.y) * w;",
+      "after": "            noise += mix(xy1, xy2, f.y) * w;\n            #if SHADERLOD_EFFECT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY && defined GL_ARB_shader_texture_lod\n            // Reuse BSL/Unbound positive-remainder native-zero rejection.\n            // First weight is 1.0; remaining .4493 + .2019 + .0907 <= .74191.\n            // Keep normalization .57408 and the native height/rain expression exact.\n            if (shaderlodCloudBound && j == 0 &&\n                xy1 >= 0.0 && xy1 <= 1.0 && xy2 >= 0.0 && xy2 <= 1.0 &&\n                f.y >= 0.0 && f.y <= 1.0 && noise >= 0.0 && noise <= 1.0 &&\n                all(lessThan(abs(uv), vec2(1e6))) &&\n                heightMult >= -16.0 && heightMult <= 16.0 && mult >= 0.0 && mult <= 1e6) {\n                float shaderlodUpper = ((noise + 0.74191) * 0.57408) - 0.56\n                    - heightMult * heightMult * 0.3 + rainStrength * 0.2;\n                if (shaderlodUpper < -0.001) {\n                    // Negative noise forces exact native cloud=0; retain the entire native tail.\n                    noise = -1.0;\n                    break; // INNER octave loop only; no ray, color, lighting or progress skip.\n                }\n            }\n            #endif\n"
+    }
+  ],
+  "additions": {
+    "shaders/lib/shaderlod/adapter.glsl": {
+      "path": "patches/adapters/sildurs-vibrant-shaders.glsl",
+      "sha256": "7ce4fa71b6da32b6ad6328ea000acb8d00e8fb202be5700c5af7d87e83e2091e"
+    },
+    "shaders/lib/shaderlod/uniform_sample_budget.glsl": {
+      "path": "patches/adapters/shared/uniform_sample_budget.glsl",
+      "sha256": "00ea6f6ec69da669a9a1727498ba9dd1b40839dce38af42afb26ea8b831d1aec"
+    }
+  },
+  "option_key": "SHADERLOD_EFFECT_ADAPTER",
+  "validation": {
+    "assembled": false,
+    "glsl_compiled": false,
+    "iris_rendered": false,
+    "dh_rendered": false,
+    "pbr_rendered": false,
+    "quality_checked": false,
+    "performance_measured": false
+  },
+  "ported_consumers": {
+    "primary_cloud_fbm_zero_bound": {
+      "reuse": "BSL/Unbound positive-remainder native-zero rejection",
+      "entry": "shaders/deferred.fsh",
+      "native_default": "Clouds=3 cloudsIT=8 TAA=on",
+      "native_density_reads_per_primary_step": 8,
+      "certified_density_reads_per_primary_step": 2,
+      "ray_steps": "native cloudsIT unchanged; no rounded sample count",
+      "normalization": ".57408 exact; native .7419 positive remainder padded .00001, strict negative margin .001",
+      "scope": "Balanced0/core2/enabled1, primary !isReflection, rain0, no DH/VOXY, explicitLOD extension; finite domains",
+      "sampling": "all eligible primary reads explicitLOD0, pinned Iris1.11.4 generated normalized noise/nonmipped LINEAR_REPEAT; full-work control required",
+      "runtime_verified": false,
+      "quality_verified": false,
+      "performance_verified": false
+    }
+  }
+}

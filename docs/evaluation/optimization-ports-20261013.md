@@ -1,6 +1,6 @@
 # Direct optimization ports — October 13, 2026 Pacific
 
-Three optimization ports are integrated in maintained recipes, packaged resources
+Four optimization ports are integrated in maintained recipes, packaged resources
 and catalog recognition. Fresh previews reproduce the accepted source artifacts
 exactly. These are usable **source candidates**, not new rendering, visual-quality
 or speed results. The nine-family, five-version, two-loader scope remains active.
@@ -149,3 +149,63 @@ Reached rejection, branch cost, actual rendering, motion, original-relative spee
 DH/PBR and other version/loader consumers remain unverified. Parent owns the next
 direct transfer: Sildur's default primary four-octave volumetric clouds, preserving
 every native march/color update while bounding the unused octave remainder.
+
+## Sildur's Vibrant 2.02: primary volumetric clouds
+
+The positive-remainder bound is integrated at the default `Clouds3` primary
+`deferred.fsh:funClouds3D` consumer. Four native octaves use eight noise reads per
+step. After octave zero, remaining weights .4493+.2019+.0907 are bounded with
+.74191 and a strict negative .001 margin. A certificate ends only the inner
+octave loop and forces native cloud density zero; all eight native ray steps,
+normalization, color/lighting/progress updates and AA remain. Certified density
+reads become eight → two. Reflections and uniform invalid/core/weather fallbacks
+retain native work. Selected primary reads use explicit level zero; pinned Iris
+generated RGBA noise and nonmipped linear-repeat sampling support the source
+contract, with original/control driver sampler parity still unverified.
+
+Independent review accepts the source candidate: 100,000 nonlinear binary32
+states, 46,082 certificates, 400,000 density comparisons and zero false rejections,
+including two-ulp remainder overshoot. The implementation separately checked
+200,000 states and 11,011 threshold cases. Ten promoted GLSL330 wrapper scopes
+passed. Raw120 shared-helper syntax failure remains recorded separately; actual
+Iris transformation is a runtime boundary. The reported 800 control combinations
+are a CPU predicate matrix, not runtime control observations.
+
+Parent adopted the source/helper, synchronized resources/catalog, reproduced the
+accepted preview exactly, and ran fourteen adapter checks plus actual public CPU
+source selection/restart/Quality/Off/native115 preservation/tamper/native-return.
+Source digest `81ac02a283d074496e6dee3110f9d873197cf1d588e8fe3da03a9e523520d80d`;
+preview ZIP `64b0d3746146c2ca205865c5816b5a79418bdfed9c5731291e9c6ed6ef750db2`.
+[Independent review](../../dev/logs/optimization-porting-20261013/sildur-independent-review/review.md),
+[source/check handback](../../dev/logs/optimization-porting-20261013/sildur-cloud-bound/HANDBACK.md),
+[parent reproduction](../../dev/logs/optimization-porting-20261013/parent/sildur-cloud/receipt.json),
+[public CPU consumer](../../dev/logs/optimization-porting-20261013/parent/sildur-consumer/receipt.json).
+
+## Actual main-mod package and Unbound rendering
+
+Fabric26.1.2 `compileJava/processResources/jar` succeeded and its fresh normal
+main JAR contains the exact four recipe/helper pairs and compiled catalog source
+identities. The first `remapJar` invocation found no such task; normal `jar` was
+the correct consumer. No build framework or dependency repair was introduced.
+[Usable local main-mod preview](../../dev/artifacts/optimization-ports-20261013/fabric-26.1.2/shaderlod-fabric-26.1.2-optimization-preview.jar),
+[package proof](../../dev/artifacts/optimization-ports-20261013/fabric-26.1.2/package-receipt.json).
+
+This JAR actually rendered Unbound's current cloud-bound graph on Fabric26.1.2,
+Iris1.11.4, Apple M3 Max/OpenGL: native398 → generated402 → Quality398 → Off398,
+with no fallback, native AA/options and five exact normal-main class origins.
+Parent independently reconstructed all 439 expected generated members from the
+actual packaged recipe/helpers; every byte matches. The only extra entries are
+the real public selection marker/note. Parent inspected coherent original/On
+clouds, sky, water and terrain. Actual Quality/Off and Cancel restoration pass.
+Release08:39:03UTC and fresh08:42:42UTC census show no owned client/launcher and
+free lock. The Java app was unavailable to CUA, but the real client was already
+focused/fullscreen; no forbidden focus workaround ran. Historical callers and
+profiles remained untouched; only fresh exact producer/caller inputs adapted.
+
+[Runtime and release](../../dev/logs/optimization-porting-20261013/unbound-render/handback.json),
+[parent acceptance](../../dev/logs/optimization-porting-20261013/parent/unbound-runtime-acceptance/receipt.json).
+This proves new-graph rendering/control on one tuple, not linked uniforms,
+executed certificates, GPU read reduction, motion, speed or DH/PBR. Prompt stills
+may show a prior frame; full image equivalence is unproven. The next Sildur actual
+consumer has one bounded explicit family join in the existing public controller;
+no source port is replaced by a benchmark/harness deliverable.

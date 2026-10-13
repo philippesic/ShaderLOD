@@ -45,7 +45,7 @@ public final class SupportedPackCatalog {
         new Pack("makeup-ultra-fast-shaders", "MakeUp - Ultra Fast", "9.5g", "https://modrinth.com/shader/makeup-ultra-fast-shaders",
             "LGPL-3.0-or-later", "5077d90851e1f07aa9bc2551eadcc1d9b270694c9f3761924fd800188bebbf32", "956e3ab528c0ee9504bbc307306f269c9a85d3613a0dc5b49cfb80472ea4e5c4"),
         new Pack("sildurs-vibrant-shaders", "Sildur's Vibrant Shaders", "2.02", "https://modrinth.com/shader/sildurs-vibrant-shaders",
-            "LicenseRef-All-Rights-Reserved", "bcd7fa0121e9b6184d4613ffced7c634f09c6b33e25e7bcfa0088eb06cb275ea", "b4d5964d0f019f1c64b80523c87ea2d6cab9d64ef4a7e1e3bd02539b53b7c777"),
+            "LicenseRef-All-Rights-Reserved", "bcd7fa0121e9b6184d4613ffced7c634f09c6b33e25e7bcfa0088eb06cb275ea", "81ac02a283d074496e6dee3110f9d873197cf1d588e8fe3da03a9e523520d80d"),
         new Pack("solas-shader", "Solas Shader", "3.7b", "https://modrinth.com/shader/solas-shader",
             "LicenseRef-All-Rights-Reserved", "f38d0fb61e858690ce3b40b0dfc8a0bd3212b4f3dbd42d0aa1c354dcdda35640", "8b96d3a6b8cfc4580ae47604ad8fd114de802e79ac75206374d2f5c97b129480")
     );
@@ -63,6 +63,7 @@ public final class SupportedPackCatalog {
 
     // Retained exact historical derivatives remain recognizable; current recipe/state guards still apply.
     private static final Map<String,List<String>> LEGACY_ADAPTER_DIGESTS = Map.ofEntries(
+        Map.entry("sildurs-vibrant-shaders", List.of("b4d5964d0f019f1c64b80523c87ea2d6cab9d64ef4a7e1e3bd02539b53b7c777")),
         Map.entry("bliss-shader", List.of("cd3e678a6ecb529f59e13421b1cd27bcdbb86012c4c482e570e2eb86abb2e9f4")),
         Map.entry("complementary-reimagined", List.of("18fcf18e20d753dac8e24309abe4b5e0f773b5c73c0bbe1bb18ae3b8f290f46b", "a342b424364b2b1d59185b584b6097648e3c11d9e499b2035012a345bdc3ed7f")),
         Map.entry("complementary-unbound", List.of("cd60c29d8d3f2e1437b965f9c32ec0e41c95df0f25f47d18e7fb7b45377476fc", "4e6cd8da53dfb1a31504b31a82027ccac4eb8b3c99449640b8f8ac77a173be8a", "9118b112be859fda810582c78dd1409d0273cbe8fa9ed72cc32a22c9ddc09ed6")),
