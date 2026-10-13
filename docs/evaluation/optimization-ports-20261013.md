@@ -209,3 +209,28 @@ executed certificates, GPU read reduction, motion, speed or DH/PBR. Prompt still
 may show a prior frame; full image equivalence is unproven. The next Sildur actual
 consumer has one bounded explicit family join in the existing public controller;
 no source port is replaced by a benchmark/harness deliverable.
+
+## Sildur actual source consumption accepted
+
+The bounded Sildur join is compiled and actually exercised on the same normal
+Fabric26.1.2 main JAR/Iris1.11.4/M3 Max: original115 → generated118 → Quality115
+→ Off115 and Cancel. All stages render without fallback and use exact normal-main
+origins. Parent independently reconstructed all 139 expected archive members,
+verified the exact two public marker/note extras and all native/generated option
+values, and inspected coherent original/On stills. Native cloud dithering occurs
+in both images. Exact release09:03:21UTC and fresh09:03:52UTC absence/lock census
+are accepted. The actual consumer change is preserved as a scoped
+[Sildur consumer patch](../../patches/consumer-ports/fabric-2612-sildur-cloud.patch).
+
+[Runtime, images and release](../../dev/logs/optimization-porting-20261013/sildur-render/handback.json),
+[parent acceptance](../../dev/logs/optimization-porting-20261013/parent/sildur-runtime-acceptance/receipt.json).
+This adds rendering/control/recovery evidence for the new port on one tuple;
+executed rejection, GPU work, speed, motion, sampler parity and DH/PBR remain
+unverified. The same current main artifact is next consumed by Bliss through its
+own exact native463/generated466 join. Photon primary-cumulus second-detail
+rejection is independently being prepared outside all frozen runtime inputs.
+
+The next-source check ruled out a default Reimagined copy of the existing paired
+AO budget: native four samples give only two even groups, and the existing policy
+retains both. Native high quality twelve similarly retains twelve in Balanced.
+No new AO optimization or default work reduction is claimed from that coverage.
