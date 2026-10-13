@@ -763,3 +763,27 @@ is authorized by these source assignments. Next milestone is authentic pinned
 source candidates with exact native tails/options and focused consumer recovery.
 The hourly follow-up request remains unfulfilled because no native automation
 tool is exposed; Codex computer-use access was previously denied.
+
+
+## All nine source families now have the ported mechanisms — October 13, 2026 Pacific
+
+Solas primary cloud4→2 and AstraLex primary cloud11→3 certified-empty source
+ports passed independent review and are integrated through the existing shared
+resource/catalog builder. Parent reproduced both sealed previews;14 maintained
+adapter checks pass, and the normal Fabric26.1.2 eight-port preview builds with
+exact packaged resources/current catalog. Eight new source ports plus existing
+BSL cover all nine source families; this does not complete full90/runtime/gain
+acceptance. Solas/AstraLex native Mac blockers remain unchanged. No new GPU work,
+FPS, motion or DHPBR result. Control compiler-overhead comparability limitation
+is recorded, superseding worker wording.
+
+[Code, preview and claim-specific evidence](../evaluation/optimization-ports-20261013.md).
+All source/review workers handed back with no jobs. Parent owns continuation and
+resource lane after the normal build finished. Next direct consumer port extends
+the working NeoForge26.2 Reimagined main binding/source/recovery path to separate
+Unbound, so its current cloud optimization can reach that loader/version. Isolated
+feature owner acknowledged the missing named certificate/main dispatch plus
+actual NeoForge public consumer and build forwarding. It owns isolated code and
+a fresh private caller template; parent verifies current family recipe/source and
+integrates before any runtime launch. No new benchmark campaign, driver workaround
+or closed trial is introduced.

@@ -1,0 +1,126 @@
+{
+  "schema": 1,
+  "kind": "ssr-hit-refinement",
+  "id": "solas-shader",
+  "name": "Solas Shader",
+  "version": "3.7b",
+  "version_id": "KcfQaN5J",
+  "primary_page": "https://modrinth.com/shader/solas-shader",
+  "release_url": "https://cdn.modrinth.com/data/EpQFjzrQ/versions/KcfQaN5J/Solas%20Shader%20V3.7b.zip",
+  "release_archive_sha256": "b7dfe4c7353d677a92cc4c86b87bc0633f1014305d927ca6a482c303427bf825",
+  "license": {
+    "id": "LicenseRef-All-Rights-Reserved"
+  },
+  "license_note": "Personal local adaptation only. All original author credits and archive members retained. No redistribution permission established; do not publish generated copies.",
+  "source_members": {
+    "drm/drm.readme": "141fcc55175786f57180f32edbe856c5c159a12e54aa46695986c0bedbd0fc47",
+    "shaders/gbuffers_water.fsh": "5c02fbdca3b653abb128fa7b4cca800f8f7c6e448d4ebed6ac6433b991665666",
+    "shaders/lib/common.glsl": "d146ee3e8ad140104a9e2ca7369360a2849cb919ae5734ea5f944c05ef4cddfb",
+    "shaders/lib/pbr/raytracer.glsl": "86511aa1fd4616c2f850ac98f9648ae60dd1bec988c58ed1bcb759a386d469f2",
+    "shaders/lib/pbr/waterReflection.glsl": "9083fe6519ed6a3207622f6ea926ee9a33bcbb9d3942c94a9d1ef2f53adb9b69",
+    "shaders/programs/gbuffers_water.glsl": "4b4d8f7b7d5da334dfc88c8236a2d9095520aa2e2e84cc0ffa027e7d4786ebbf",
+    "shaders/shaders.properties": "9fed287e7da2d1bb7bb4c76e7397a5e0d1b7989b43a147d7d8f5508ffdb4a362",
+    "shaders/world-1/gbuffers_water.fsh": "61da1c9d73511a678b55c8ddda94ee84c4db7fe9dc737035ae06eb18fdfc6fb1",
+    "shaders/world1/gbuffers_water.fsh": "94b21e36dc976cc1c8000f3de7186c7b699796fc44bc82e5e7736403c0c56f4a",
+    "shaders/lib/atmosphere/aurora.glsl": "dc0708bbe82e5c91f19b94ddecb8f5af443ac6323669479bb556dfb4175d2c39",
+    "shaders/programs/deferred1.glsl": "47f31d07ef3d78ca079f22ca2c635a789ab2d1c5f75a81dfc4df21f94c7a16bb",
+    "shaders/deferred1.fsh": "2caf57f2c743ba25965b909f01947deae3d1b7f849ff7be47f91f54490c8a4d0",
+    "shaders/lib/atmosphere/skyEffects.glsl": "aa5cf1b152932a6984b9938251d1290e804fe1bbd55b4f4ced1d882c6dab2999",
+    "shaders/lib/atmosphere/volumetricClouds.glsl": "18e19170e8cf7f7f40e601ca7940a0b28c8311015ae2aa82b7f8cc7b2ed3232f",
+    "shaders/tex/noise.png": "912e47e64b5b5ec63f8abd9413f77caf077967e2caa01a3b9d4b850e97e5ecd2",
+    "shaders/tex/noise.png.mcmeta": "7f447458dce74ae0fe936ba8dd11f0cdb30e36d4e99ca93f82ce8966d25ed9d2"
+  },
+  "patches": [
+    {
+      "path": "shaders/lib/pbr/waterReflection.glsl",
+      "before": "void getReflection(inout vec4 albedo, in vec3 viewPos, in vec3 newNormal, in float fresnel, in float skyLightMap) {",
+      "after": "#include \"/lib/shaderlod/adapter.glsl\"\n\nvoid getReflection(inout vec4 albedo, in vec3 viewPos, in vec3 newNormal, in float fresnel, in float skyLightMap) {"
+    },
+    {
+      "path": "shaders/lib/pbr/waterReflection.glsl",
+      "before": "    vec3 reflectPos = Raytrace(depthtex1, viewPos, newNormal, dither, 6, 1.0, 0.1, 1.6, border, cdist);",
+      "after": "    // Only valid-crossing termination count; coarse traversal and fallback stay upstream.\n    #if SHADERLOD_REFINEMENT_ADAPTER == 1 && defined GBUFFERS_WATER && !defined GBUFFERS_WATER_COLORWHEEL && !defined DISTANT_HORIZONS && !defined VOXY\n    int shaderlodRefinementCount = 6;\n    shaderlodRefinementCount = shaderlod_refinement_budget(shaderlodBridgeVersion,\n        shaderlodEnabled, shaderlodPreset, length(viewPos), shaderlodRefinementCount, 4);\n    vec3 reflectPos = Raytrace(depthtex1, viewPos, newNormal, dither, shaderlodRefinementCount, 1.0, 0.1, 1.6, border, cdist);\n    #else\n    vec3 reflectPos = Raytrace(depthtex1, viewPos, newNormal, dither, 6, 1.0, 0.1, 1.6, border, cdist);\n    #endif"
+    },
+    {
+      "path": "shaders/shaders.properties",
+      "before": "screen=SOLAS_BY_SEPTONIOUS <profile> <empty> [ATMOSPHERICS] [WATER] [PBR] [LIGHTING] [COLOR] [POST] [OTHER]",
+      "after": "screen=SOLAS_BY_SEPTONIOUS <profile> <empty> [ATMOSPHERICS] [WATER] [PBR] [LIGHTING] [COLOR] [POST] [OTHER] [SHADERLOD]\nscreen.SHADERLOD = SHADERLOD_REFINEMENT_ADAPTER"
+    },
+    {
+      "path": "shaders/lib/atmosphere/aurora.glsl",
+      "before": "float getAuroraSample(",
+      "after": "#include \"/lib/shaderlod/adapter.glsl\"\n\nfloat getAuroraSample("
+    },
+    {
+      "path": "shaders/programs/deferred1.glsl",
+      "before": "#include \"/lib/atmosphere/skyEffects.glsl\"",
+      "after": "#define SHADERLOD_SOLAS_AURORA\n#include \"/lib/atmosphere/skyEffects.glsl\""
+    },
+    {
+      "path": "shaders/lib/atmosphere/aurora.glsl",
+      "before": "\t\tvec3 rayIncrement = nWorldPos * rayLength;\n\t\tvec3 startPos = auroraCameraPos * auroraAltitudeMult + nearestPlane * nWorldPos;\n\t\tvec3 rayPos = startPos + rayIncrement * dither;\n\t\tfloat sampleTotalLength = nearestPlane + rayLength * dither;\n\t\tint sampleCount = int(min(planeDifference / rayLength, float(samples * 4)) + 4.0);",
+      "after": "\t\tint sampleCount = int(min(planeDifference / rayLength, float(samples * 4)) + 4.0);\n        #if SHADERLOD_REFINEMENT_ADAPTER == 1 && defined SHADERLOD_SOLAS_AURORA && defined OVERWORLD && !defined DISTANT_HORIZONS && !defined VOXY && !defined ADVANCED_MATERIALS && !defined PBR\n        int shaderlodSolasNativeCount = sampleCount;\n        sampleCount = shaderlod_solas_volume_budget(sampleCount, 4);\n        // Same native count-defined physical span, fewer strata. Keep native vertical fade.\n        float shaderlodSolasStride = 1.0;\n        if (sampleCount < shaderlodSolasNativeCount) {\n            shaderlodSolasStride = float(shaderlodSolasNativeCount) / float(sampleCount);\n            rayLength *= shaderlodSolasStride;\n        }\n        #endif\n\t\tvec3 rayIncrement = nWorldPos * rayLength;\n\t\tvec3 startPos = auroraCameraPos * auroraAltitudeMult + nearestPlane * nWorldPos;\n\t\tvec3 rayPos = startPos + rayIncrement * dither;\n\t\tfloat sampleTotalLength = nearestPlane + rayLength * dither;"
+    },
+    {
+      "path": "shaders/lib/atmosphere/aurora.glsl",
+      "before": "\t\tauroraVolume *= visibility * sampleStep;",
+      "after": "        #if SHADERLOD_REFINEMENT_ADAPTER == 1 && defined SHADERLOD_SOLAS_AURORA && defined OVERWORLD && !defined DISTANT_HORIZONS && !defined VOXY && !defined ADVANCED_MATERIALS && !defined PBR\n        if (sampleCount < shaderlodSolasNativeCount)\n            auroraVolume *= visibility * sampleStep * shaderlodSolasStride;\n        else\n        #endif\n\t\tauroraVolume *= visibility * sampleStep;"
+    },
+    {
+      "path": "shaders/programs/deferred1.glsl",
+      "before": "#include \"/lib/atmosphere/volumetricClouds.glsl\"",
+      "after": "#if defined OVERWORLD && defined FSH\n#define SHADERLOD_SOLAS_PRIMARY_CLOUD 1\n#include \"/lib/shaderlod/adapter.glsl\"\n#endif\n#include \"/lib/atmosphere/volumetricClouds.glsl\"\n#ifdef SHADERLOD_SOLAS_PRIMARY_CLOUD\n#undef SHADERLOD_SOLAS_PRIMARY_CLOUD\n#endif"
+    },
+    {
+      "path": "shaders/lib/atmosphere/volumetricClouds.glsl",
+      "before": "\tfloat noiseBase = cloudSampleBase(baseCoord);\n\tfloat noiseDetail = CloudSampleDetail(detailCoord, sampleAltitude, thickness);\n\tfloat noiseCoverage = CloudCoverageDefault(sampleAltitude, amount);\n\t      noiseCoverage += CloudVerticalCoverage(sampleAltitude, noiseBase);",
+      "after": "    #if defined SHADERLOD_SOLAS_PRIMARY_CLOUD && SHADERLOD_SOLAS_PRIMARY_CLOUD == 1 && defined OVERWORLD && defined FSH && defined VOLUMETRIC_CLOUDS && SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY && !defined PBR && !defined ADVANCED_MATERIALS\n    bool shaderlodCloudBound = shaderlodBridgeVersion == 2 && shaderlodEnabled == 1 && shaderlodPreset == 0;\n    float noiseBase;\n    if (shaderlodCloudBound) {\n        // Exact native base operations. Pinned normalized single-level linear noise.\n        // Explicit LOD0 keeps sampling defined after earlier ray iterations diverge.\n        float perlinBase = texture2DLod(noisetex, baseCoord * 0.5 + vec2(0.17, -0.11), 0.0).r * 0.6;\n        perlinBase += texture2DLod(noisetex, baseCoord * 1.5 + vec2(-0.07, 0.19), 0.0).r * 0.4;\n        perlinBase = perlinBase * 0.9 + pow3(perlinBase) * 0.4;\n        noiseBase = clamp((perlinBase - 0.35) * 1.4 + 0.5, 0.0, 1.0);\n    } else noiseBase = cloudSampleBase(baseCoord);\n    float noiseCoverage = CloudCoverageDefault(sampleAltitude, amount);\n    noiseCoverage += CloudVerticalCoverage(sampleAltitude, noiseBase);\n    // Reuse BSL native-zero detail rejection, adapted to Solas's clamped fmix/wetness.\n    // VC_DETAIL .25..2; dynamic weather modifies amount/density, not this macro.\n    if (shaderlodCloudBound && noiseBase >= 0.0 && noiseBase <= 1.0 &&\n        sampleAltitude >= 0.0 && sampleAltitude <= 1.0 && thickness >= 0.0 && thickness <= 32.0 &&\n        amount >= 0.0 && amount <= 32.0 && density >= 0.0 && density <= 64.0 &&\n        wetness >= 0.0 && wetness <= 1.0 && VC_DETAIL >= 0.25 && VC_DETAIL <= 2.0 &&\n        noiseCoverage >= 0.0 && noiseCoverage <= 32.0 &&\n        all(lessThan(abs(baseCoord), vec2(1e6))) && all(lessThan(abs(detailCoord), vec2(1e6)))) {\n        float shaderlodUpper = fmix(noiseBase, 1.0, 0.0476 * VC_DETAIL) * 21.0;\n        shaderlodUpper = fmix(shaderlodUpper - noiseCoverage, 21.0 - noiseCoverage * 2.5, 0.2 * wetness);\n        shaderlodUpper -= amount;\n        // Bound includes native wetness fill and both vertical penalties. Margin covers float association.\n        if (shaderlodUpper < -0.001) return 0.0;\n    }\n    float noiseDetail;\n    if (shaderlodCloudBound) {\n        float detailZ = floor(sampleAltitude * float(thickness)) * 0.04;\n        float detailFrac = fract(sampleAltitude * float(thickness));\n        float noiseDetailLow = texture2DLod(noisetex, detailCoord.xy + detailZ, 0.0).g;\n        float noiseDetailHigh = texture2DLod(noisetex, detailCoord.xy + detailZ + 0.04, 0.0).g;\n        noiseDetail = fmix(noiseDetailLow, noiseDetailHigh, detailFrac);\n    } else noiseDetail = CloudSampleDetail(detailCoord, sampleAltitude, thickness);\n    #else\n\tfloat noiseBase = cloudSampleBase(baseCoord);\n\tfloat noiseDetail = CloudSampleDetail(detailCoord, sampleAltitude, thickness);\n\tfloat noiseCoverage = CloudCoverageDefault(sampleAltitude, amount);\n\t      noiseCoverage += CloudVerticalCoverage(sampleAltitude, noiseBase);\n    #endif"
+    }
+  ],
+  "additions": {
+    "shaders/lib/shaderlod/adapter.glsl": {
+      "path": "patches/adapters/solas-shader.glsl",
+      "sha256": "80f58db0204605667f43dba612123325a5580f59640df98a3aa5e32e4ecfbe88"
+    },
+    "shaders/lib/shaderlod/refinement_budget.glsl": {
+      "path": "patches/adapters/shared/refinement_budget.glsl",
+      "sha256": "ff6c55047a903de1183597a05915714d70261659b8b1496c794e139f654f9665"
+    },
+    "shaders/lib/shaderlod/uniform_sample_budget.glsl": {
+      "path": "patches/adapters/shared/uniform_sample_budget.glsl",
+      "sha256": "00ea6f6ec69da669a9a1727498ba9dd1b40839dce38af42afb26ea8b831d1aec"
+    }
+  },
+  "validation": {
+    "assembled": false,
+    "glsl_compiled": false,
+    "iris_rendered": false,
+    "dh_rendered": false,
+    "pbr_rendered": false,
+    "aurora_sample_budget": {
+      "source_assembled": true,
+      "driver_consumed": false,
+      "quality_checked": false,
+      "performance_measured": false,
+      "scope": "Overworld deferred1 Aurora/no DH-Voxy/custom PBR; source-only originalMacblocked",
+      "policy": "existing uniform_sample_budget min4; native count/sampleStep verticalfade preserved; whole interval striding/mean compensation"
+    }
+  },
+  "shader_source_digest": "f38d0fb61e858690ce3b40b0dfc8a0bd3212b4f3dbd42d0aa1c354dcdda35640",
+  "ported_consumers": {
+    "primary_cloud_native_zero_detail_bound": {
+      "reuse": "BSL/Bliss native-zero detail rejection",
+      "entry": "shaders/deferred1.fsh",
+      "default_active": "native VOLUMETRIC_CLOUDS true, VC_DYNAMIC_WEATHER true, TAA true; HIGH/ULTRA enable, LOW/MEDIUM disable (coverage only)",
+      "native_primary_reads": 4,
+      "certified_primary_reads": 2,
+      "mode": "Balanced0/core2/enabled1 primary Overworld/no DH/VOXY/PBR/ADVANCED_MATERIALS",
+      "native_count": "int(min(planeDifference / rayLength,24)+4), unchanged (4..28), loop exits and <=.0001 continue exact",
+      "interval_normalization_recurrence": "unchanged; exactzero sample only",
+      "sampling": "exact base/detail coordinates arithmetic; explicitLOD0 on uniform eligible primary route; pinned PNG blur true clamp false. Actual driver sampler parity required",
+      "runtime_verified": false,
+      "quality_verified": false,
+      "performance_verified": false
+    }
+  }
+}

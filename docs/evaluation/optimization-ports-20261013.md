@@ -1,6 +1,6 @@
 # Direct optimization ports — October 13, 2026 Pacific
 
-Six optimization ports are integrated in maintained recipes, packaged resources
+Eight optimization ports are integrated in maintained recipes, packaged resources
 and catalog recognition. Fresh previews reproduce the accepted source artifacts
 exactly. Unbound, Sildur, Bliss and Photon also have bounded actual rendering and
 public restoration evidence below. Executed GPU savings, motion quality and FPS
@@ -332,3 +332,61 @@ style3 renderer compatibility. Runtime rendering, motion, speed, DH/PBR and full
 tuple acceptance remain unverified.
 [Candidate and checks](../../dev/logs/optimization-porting-20261013/reimagined-cloud-bound/report.md),
 [parent adoption](../../dev/logs/optimization-porting-20261013/parent/reimagined-consumer/receipt.json).
+
+## Solas 3.7b: primary cloud detail rejection
+
+The same native-zero premise now reaches the default-active HIGH/ULTRA Overworld
+`deferred1 → computeVolumetricClouds → CloudSample` path. Two base noise reads stay;
+two detail reads can be omitted when the native final density must be zero.
+The upper bound uses detail=1 through the exact clamped native blends, both
+coverage penalties, wetness fill and runtime weather amount, with a negative
+margin. Native ray count, interval, lighting, opacity/depth recurrence, End,
+secondary density, AA and options stay exact. LOW/MEDIUM clouds are inactive.
+
+Independent review reconstructed the sealed archive, checked sampler/native-tail
+contracts and 45,750 adversarial native arithmetic evaluations with zero false
+certificates. Native-version full wrappers and actual public CPU Apply/restart/
+Quality/Off/tamper/restoration checks pass. Parent adopted exact recipe/helper,
+used the existing builder to propagate resources/catalog, reproduced preview
+`65c458e5d7cf9fecd5a84b637febced132b9ce1c25a0b6ee928e0d999f74f77d`
+and verified clean sync. The original Mac image/link blockers remain; there is
+no new rendering, driver sampler, motion, FPS or DH/PBR result.
+[Source and checks](../../dev/logs/optimization-porting-20261013/solas-cloud-bound/report.md),
+[parent adoption](../../dev/logs/optimization-porting-20261013/parent/solas-consumer/receipt.json).
+
+## AstraLex 93.0: primary cloud positive-remainder rejection
+
+Default Overworld skybasic calls the native cloud marcher with nine iterations.
+The primary-only copy retains all native recurrence and lighting but bounds the
+remaining positive noise weights after the first three reads. Certified empty
+steps use three of eleven source reads. Reflections retain the original function;
+ADVANCED_MATERIALS stays on by default. Unknown controls, changed options,
+rain, DH/Voxy and material-format exclusions retain native execution.
+
+The first wrapper check found an invalid float preprocessor comparison. Final r2
+moves exact coverage admission into a runtime predicate; the failed r1 is retained.
+Independent review reconstructed final source, checked maximal unread bounds and
+authentic selected/excluded paths. Twelve full wrapper checks, 200,000 binary32
+states plus boundary checks, tamper refusal and actual public CPU Apply/restart/
+Quality/Off/native-AA restoration pass. Parent synchronized the exact source while
+preserving Solas/Reimagined catalog edits and reproduced preview
+`cbf35ec3c2827a6037e6eca46e40d7610dad3a7f5f57db56cee8c9b2916e7e7b`.
+The original Mac linker failure remains; rendering, executed reads, motion,
+speed, custom PBR/DH and full-tuple acceptance remain unverified.
+[Source and checks](../../dev/logs/optimization-porting-20261013/astralex-cloud-bound/report.md),
+[parent adoption](../../dev/logs/optimization-porting-20261013/parent/astralex-consumer/receipt.json).
+
+Both new source ports passed [independent review](../../dev/logs/optimization-porting-20261013/cloud-port-review/review.md).
+Their full-work controls retain reads and explicit sampling, but unused bound
+computations may be removed by the compiler. They do **not** establish matched
+certificate-overhead cost; the earlier worker descriptions claiming this are
+superseded by the review. No benchmark framework or performance claim was added.
+
+The normal Fabric26.1.2 eight-port preview builds successfully and contains every
+current adapter resource and compiled catalog identity. It includes these eight
+new source ports plus the existing BSL mechanism, covering all nine source
+families. That does not establish all90 tuples or useful frame gains. The new JAR
+has not been rendered; earlier fixed-package rendering evidence remains scoped
+to its unchanged shader paths.
+[Preview JAR](../../dev/artifacts/optimization-ports-20261013/fabric-26.1.2-eight-ports/shaderlod-fabric-26.1.2-eight-port-preview.jar),
+[package receipt](../../dev/artifacts/optimization-ports-20261013/fabric-26.1.2-eight-ports/package-receipt.json).
