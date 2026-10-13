@@ -1,0 +1,124 @@
+{
+  "schema": 1,
+  "kind": "ssr-hit-refinement",
+  "id": "makeup-ultra-fast-shaders",
+  "name": "MakeUp - Ultra Fast",
+  "version": "9.5g",
+  "version_id": "pgb0JjoN",
+  "primary_page": "https://modrinth.com/shader/makeup-ultra-fast-shaders",
+  "release_url": "https://cdn.modrinth.com/data/izsIPI7a/versions/pgb0JjoN/MakeUp-UltraFast-9.5g.zip",
+  "release_archive_sha256": "0036da17e0c7158e1c669593e6322d53fce3f5a42fb5124b935e9e21a5719db8",
+  "license": {
+    "id": "LGPL-3.0-or-later",
+    "name": "GNU Lesser General Public License v3.0 or later",
+    "url": null
+  },
+  "license_note": "Preserves original LGPL-3.0-or-later source and license; added helper LGPL-3.0-or-later. Local generated copy only.",
+  "source_members": {
+    "LICENSE": "e3a994d82e644b03a792a930f574002658412f62407f5fee083f2555c5f23118",
+    "shaders/gbuffers_hand_water.fsh": "af866aeee3db3bc503beb015efde26667685a5ce827730573d3a323030107909",
+    "shaders/gbuffers_water.fsh": "6be1dd2486993e2c10015610ff033e1b73e6b83d14e84a1753a092894b460ab9",
+    "shaders/lib/config.glsl": "1290769f3932378760770a4b13e21563988e67b8457de73e3e9677583136f9f2",
+    "shaders/lib/water.glsl": "c20a450723aa1a604ddfc724d7c70e138b071c1bfe6d7b3282ea2e3ab7f0740f",
+    "shaders/shaders.properties": "4788ee3bc2ee467a4dfc8aa3c6afe3190b00e5151462d9edb909ffae7b609261",
+    "shaders/world-1/gbuffers_hand_water.fsh": "98adac5f04b3125b34e36b9f61160d77cb2113d0fbd2d4522eb9bd43885ce1ee",
+    "shaders/world-1/gbuffers_water.fsh": "27affdb9aaf161b4559e28b810ff911b1c10b451b67fa3913c6951128bd87904",
+    "shaders/world0/gbuffers_hand_water.fsh": "3845f130f9c655cf0f14cf594d6e55b59cb7945db4d9bcfc4308cecec280e6e1",
+    "shaders/world0/gbuffers_water.fsh": "99306483d2a734a63ae1a1b3a0e7ca600b602be075a7a65be975971ffb13e805",
+    "shaders/world1/gbuffers_hand_water.fsh": "7a5d1ded74c53e10bf8cbbecf740550bcd5fd5a91b1094e0a937f652af3ddd54",
+    "shaders/world1/gbuffers_water.fsh": "bdedcd14a2dc2a0a4c99492216f9e4fed5beb7a329d35722fbe38c51cdde1f47",
+    "shaders/lib/volumetric_clouds.glsl": "b280a4aeec467c4c6f67692b77dc4244f54e29dedf307eed0269bb3599f75783",
+    "shaders/common/deferred_fragment.glsl": "6d6dbf4e7ca8a1818776a25fcc6bd0fc9597d0724e933642741f7cdd705ca5ac",
+    "shaders/world0/deferred.fsh": "2e6c131506665f08745df2825070f7eb5529a4804882d56fb192568c8d00d661",
+    "shaders/lib/volumetric_clouds_end.glsl": "c238e158ebb61c32fa7e52553b5381abaf8e7c7603b9e9ff35417959eac50835",
+    "shaders/world1/deferred.fsh": "11e66dbbccf974c4445a31dbac79fc9aea717dd5654664a5f8f12c5d0a9de21e"
+  },
+  "patches": [
+    {
+      "path": "shaders/lib/water.glsl",
+      "before": "float linearizeDepth(float depth) {",
+      "after": "#include \"/lib/shaderlod/adapter.glsl\"\n\nfloat linearizeDepth(float depth) {"
+    },
+    {
+      "path": "shaders/lib/water.glsl",
+      "before": "    // Ray marching\n    for (int i = 0; i < RAYMARCH_STEPS; i++) {\n        if (searchFlag) {",
+      "after": "    // Budget only existing post-crossing refinements; coarse search remains original.\n    #if SHADERLOD_REFINEMENT_ADAPTER == 1 && defined WATER_F && !defined DISTANT_HORIZONS && !defined VOXY\n        int shaderlodRefinements = 0;\n        int shaderlodRefinementLimit = shaderlod_refinement_budget(shaderlodBridgeVersion,\n            shaderlodEnabled, shaderlodPreset, length(hitPoint), RAYMARCH_STEPS, 4);\n    #endif\n    // Ray marching\n    for (int i = 0; i < RAYMARCH_STEPS; i++) {\n        #if SHADERLOD_REFINEMENT_ADAPTER == 1 && defined WATER_F && !defined DISTANT_HORIZONS && !defined VOXY\n            if (searchFlag && shaderlodRefinements >= shaderlodRefinementLimit) break;\n            if (searchFlag) shaderlodRefinements++;\n        #endif\n        if (searchFlag) {"
+    },
+    {
+      "path": "shaders/shaders.properties",
+      "before": "screen = <profile> <empty> ACERCADE <empty> WAVING <empty> COLOR_SCHEME BLOOM REFLECTION_SLIDER <empty> AO SUN_REFLECTION SHADOW_CASTING V_CLOUDS CLOUD_REFLECTION COLORED_SHADOW AA_TYPE REFRACTION SHADOW_LOCK DOF MATERIAL_GLOSS VOL_LIGHT CHROMA_ABER <empty> <empty> MOTION_BLUR [ADVANCED_SCREEN]",
+      "after": "screen = <profile> <empty> ACERCADE <empty> WAVING <empty> COLOR_SCHEME BLOOM REFLECTION_SLIDER <empty> AO SUN_REFLECTION SHADOW_CASTING V_CLOUDS CLOUD_REFLECTION COLORED_SHADOW AA_TYPE REFRACTION SHADOW_LOCK DOF MATERIAL_GLOSS VOL_LIGHT CHROMA_ABER <empty> <empty> MOTION_BLUR [ADVANCED_SCREEN] [SHADERLOD]\nscreen.SHADERLOD = SHADERLOD_REFINEMENT_ADAPTER"
+    },
+    {
+      "path": "shaders/lib/volumetric_clouds.glsl",
+      "before": "vec3 get_cloud(vec3 eyeDirection, vec3 blockColor, float bright, float dither, vec3 base_pos, int samples, float umbral, vec3 cloudColor, vec3 darkCloudColor) {",
+      "after": "#include \"/lib/shaderlod/adapter.glsl\"\n\nvec3 get_cloud(vec3 eyeDirection, vec3 blockColor, float bright, float dither, vec3 base_pos, int samples, float umbral, vec3 cloudColor, vec3 darkCloudColor) {"
+    },
+    {
+      "path": "shaders/lib/volumetric_clouds.glsl",
+      "before": "        vec3 increment = (intersection_pos_sup - intersection_pos) / samples;",
+      "after": "        // Same native slab endpoints: sample count changes before native step/opacity weight.\n        #if SHADERLOD_REFINEMENT_ADAPTER == 1 && defined DEFERRED_SHADER && !defined NETHER && !defined THE_END && !defined UNKNOWN_DIM && !defined DISTANT_HORIZONS && !defined VOXY\n        samples = shaderlod_makeup_volume_budget(samples);\n        #endif\n        vec3 increment = (intersection_pos_sup - intersection_pos) / samples;"
+    },
+    {
+      "path": "shaders/lib/volumetric_clouds_end.glsl",
+      "before": "vec3 get_end_cloud(vec3 eyeDirection, vec3 blockColor, float bright, float dither, vec3 base_pos, int samples) {",
+      "after": "#include \"/lib/shaderlod/adapter.glsl\"\n\nvec3 get_end_cloud(vec3 eyeDirection, vec3 blockColor, float bright, float dither, vec3 base_pos, int samples) {"
+    },
+    {
+      "path": "shaders/lib/volumetric_clouds_end.glsl",
+      "before": "        vec3 increment = (intersection_pos_sup - intersection_pos) / samples;",
+      "after": "        // Same native End slab and opacity weights; change count before stride.\n        #if SHADERLOD_REFINEMENT_ADAPTER == 1 && defined DEFERRED_SHADER && defined THE_END && !defined NETHER && !defined UNKNOWN_DIM && !defined DISTANT_HORIZONS && !defined VOXY\n        samples = shaderlod_makeup_volume_budget(samples);\n        #endif\n        vec3 increment = (intersection_pos_sup - intersection_pos) / samples;"
+    }
+  ],
+  "additions": {
+    "shaders/lib/shaderlod/adapter.glsl": {
+      "path": "patches/adapters/makeup-ultra-fast-shaders.glsl",
+      "sha256": "b0f7bf8011eaac8bf2b07f98f06d6c0214ac9c7bffd4937c03d17974da4c1ba5"
+    },
+    "shaders/lib/shaderlod/refinement_budget.glsl": {
+      "path": "patches/adapters/shared/refinement_budget.glsl",
+      "sha256": "ff6c55047a903de1183597a05915714d70261659b8b1496c794e139f654f9665"
+    },
+    "shaders/lib/shaderlod/uniform_sample_budget.glsl": {
+      "path": "patches/adapters/shared/uniform_sample_budget.glsl",
+      "sha256": "00ea6f6ec69da669a9a1727498ba9dd1b40839dce38af42afb26ea8b831d1aec"
+    }
+  },
+  "validation": {
+    "assembled": false,
+    "glsl_compiled": false,
+    "iris_rendered": false,
+    "dh_rendered": false,
+    "pbr_rendered": false
+  },
+  "shader_source_digest": "5077d90851e1f07aa9bc2551eadcc1d9b270694c9f3761924fd800188bebbf32",
+  "ported_consumers": {
+    "volumetrics": {
+      "mechanism": "Existing uniform_sample_budget; full native cloud slab / recomputed per-step distance opacity",
+      "scope": "DEFERRED_SHADER, Overworld sky; no DH/VOXY/unknown/Nether/End; native water reflection unchanged",
+      "original_native_samples": 10,
+      "minimum": 4,
+      "balanced_samples": 9,
+      "performance_samples": 8,
+      "distance_controls": false,
+      "runtime_verified": false,
+      "quality_verified": false,
+      "performance_verified": false,
+      "closed_saturation_trial_reopened": false
+    },
+    "end_clouds": {
+      "mechanism": "Existing uniform_sample_budget; native End slab and length-weighted opacity",
+      "scope": "THE_END DEFERRED_SHADER, no Nether/unknown/DH/VOXY; other callers unchanged",
+      "original_native_samples": 10,
+      "balanced_samples": 9,
+      "performance_samples": 8,
+      "performance_native_renderer_bypasses_shader_budget": false,
+      "route_scope": "Public Apply while already in The End; inspected native renderer gates require Overworld",
+      "dimension_transition_reselection_verified": false,
+      "distance_controls": false,
+      "runtime_verified": false,
+      "quality_verified": false,
+      "performance_verified": false
+    }
+  }
+}

@@ -16,7 +16,7 @@ from prepare_makeup_end_cloud_budget import (
     ADAPTER, RECIPE, END_MEMBER, ENTRY_MEMBER, COUNT_INSERT, GUARD,
     candidate_manifest, prepare,
 )
-from build_supported_pack_adapters import apply, read_archive, sha256, CATALOG, RESOURCE_ROOT
+from build_supported_pack_adapters import apply, build, read_archive, sha256, shader_source_digest, CATALOG, RESOURCE_ROOT
 
 BASE = ROOT / 'dev/upstream/other-pack-research/MakeUp-UltraFast-9.5g.zip'
 
@@ -28,8 +28,18 @@ class MakeUpEndCloudTests(unittest.TestCase):
             raise unittest.SkipTest('Authentic pinned MakeUp archive unavailable')
         cls.current = json.loads((ROOT / RECIPE).read_bytes())
         cls.original = read_archive(BASE)
+        cls.installed = END_MEMBER in cls.current['source_members']
+        if cls.installed:
+            # Exercise the actual installed recipe and compare it to its unchanged
+            # Overworld predecessor; do not prepare a second End port.
+            cls.candidate = copy.deepcopy(cls.current)
+            cls.current['source_members'].pop(END_MEMBER)
+            cls.current['source_members'].pop(ENTRY_MEMBER)
+            cls.current['patches'] = [p for p in cls.current['patches'] if p['path'] != END_MEMBER]
+            cls.current['ported_consumers'].pop('end_clouds')
+        else:
+            cls.candidate = candidate_manifest(cls.current)
         cls.assembled = apply(cls.original, cls.current)
-        cls.candidate = candidate_manifest(cls.current)
         cls.changed = apply(cls.original, cls.candidate)
 
     def test_exact_consumer_scope_and_native_body_recovery(self):
@@ -137,6 +147,23 @@ class MakeUpEndCloudTests(unittest.TestCase):
         protected = {p: (ROOT / p).read_bytes() for p in (RECIPE, RESOURCE_ROOT + RECIPE, CATALOG)}
         with tempfile.TemporaryDirectory() as temporary:
             output = Path(temporary) / 'candidate'
+            if self.installed:
+                # Installed source uses the real builder and packaged/catalog joins.
+                self.assertEqual(protected[RECIPE], protected[RESOURCE_ROOT + RECIPE])
+                catalog = protected[CATALOG].decode()
+                self.assertIn(shader_source_digest(self.changed), catalog)
+                self.assertIn(shader_source_digest(self.assembled), catalog.split('LEGACY_ADAPTER_DIGESTS')[1])
+                certificate = (ROOT / 'ports/26.2/neoforge/src/main/java/com/pp/shaderlod/integration/bindingcompat/MakeUpSourceCertificate.java').read_text()
+                self.assertIn('RECIPE_SHA="' + sha256(protected[RECIPE]) + '"', certificate)
+                metadata = build(BASE, Path(temporary) / 'installed.zip', ROOT / RECIPE)
+                self.assertEqual(metadata['adapter_shader_source_digest'], shader_source_digest(self.changed))
+                self.assertTrue(all(value is False for value in metadata['validation'].values()))
+                with self.assertRaisesRegex(ValueError, 'already pinned'):
+                    prepare(BASE, output)
+                self.assertFalse(output.exists())
+                for name, value in protected.items():
+                    self.assertEqual((ROOT / name).read_bytes(), value)
+                return
             receipt = prepare(BASE, output)
             self.assertTrue(receipt['source_only'])
             self.assertEqual(receipt['changed_from_current_adapter'], [END_MEMBER])
