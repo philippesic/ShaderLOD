@@ -887,3 +887,20 @@ exclusive lane only after verifying live availability. Parent owns integration,
 Git and continuation. After this bounded cost decision resume concrete missing
 optimization family/consumer joins, preserving full90 scope and closed trials.
 Hourly same-chat scheduling remains uncreated because its tool is unavailable.
+
+## Photon early cost closed; Sildur NeoForge consumer port selected
+
+The fixed current Photon original/on/off observation completed and restored
+native controls, but original-return frame cost drifted+223.15%. Parent verified
+real frame/time denominators, exact graph/options/origins/scene and stills; no
+useful speed direction can be attributed. No repeat or retuning. Client/launcher
+released13:55:26UTC; parent fresh absence accepted.
+[Result and limits](../evaluation/optimization-ports-20261013.md).
+
+Next direct implementation: carry Sildur's accepted defaultClouds3 rejection
+through NeoForge26.2 main draw compatibility and public controls with its own
+original115/generated118 source/recipe/state and unchanged-vertex certificate.
+Acknowledged isolated feature_owner owns this bounded code/CPU/caller slice;
+parent owns integration/Git and any later fresh runtime reservation. No live
+client/build job or benchmark framework work. Full90 scope and prior allocations
+remain unchanged; the native Goal stays active.

@@ -568,3 +568,30 @@ is explicitly absent: public Quality selects the original graph, and adding a
 private same-graph override would exceed this join. Any measured result is the
 whole selected bundle's frame cost, not optical-depth attribution. No new
 benchmark framework or reopening of closed trials is authorized by this join.
+
+## Photon early cost observation: inconclusive, no gain claim
+
+The single fresh native-AA original/enabled/original-return observation completed
+with30s warmup and15s render RETURN windows on each stage. Integrated Gradle dev
+build and18 preflight predicates passed; exact current535 graph,366/369 option
+maps, main origins, fixed scene, effective260 limiter and Off restoration match
+the prior accepted consumer. Parent recomputed all counter/nanoclock denominators
+and inspected original/enabled stills. No invalid measured frames.
+
+| Stage | Completed frames / seconds | FPS | Elapsed ms/frame |
+| --- | ---: | ---: | ---: |
+| Original | 1750 /15.0032 |116.64 |8.573 |
+| Enabled |1321 /15.0449 |87.80 |11.389 |
+| Original-return |543 /15.0435 |36.10 |27.705 |
+
+Original-return mean frame cost drifted+223.15% from the initial baseline. The
+raw enabled comparison is not an attributable gain or regression. Whole-frame
+benefit remains unknown; no same-graph full-work control or GPU-work attribution.
+The observation closes without repeated runs, scene changes or preset tuning.
+Two private prelaunch task/DLI argument failures were retained and repaired using
+authentic producer inputs within the same final deadline. Exact client/launcher
+release and fresh free-lock census at13:55:26UTC passed.
+[Handback and raw receipts](../../dev/logs/optimization-porting-20261013/photon-optical-cost-runtime/handback.json),
+[parent denominator/consumer acceptance](../../dev/logs/optimization-porting-20261013/photon-optical-cost-runtime/parent-acceptance.json).
+Next concrete code port is Sildur's missing NeoForge26.2 main compatibility and
+public-control join; existing accepted shader math is reused.

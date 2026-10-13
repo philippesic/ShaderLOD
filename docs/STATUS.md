@@ -4,14 +4,8 @@
 {
   "authority": "Human explicitly authorized amended native Goal on October12 Pacific: spearhead optimization porting, correcting past diversion into harness/benchmark/trivial work. Native Goal created and verified ACTIVE in this chat. Parent owns selection, implementation/integration and continuation; no harness/benchmark perfection gate for previews. Preserve full scope/native quality/AA/recovery, strict pins, historical trials and EAGLE exclusion. Prior 16339-second runtime allocation exhausted; setting Goal starts source porting, with no new runtime launch or allocation. Human October13 explicitly requests an hourly follow-up in this chat: compare STATUS/native Goal, recover transient bugs/capacity and continue authorized ports, correct unrelated drift, respect pauses and preserve healthy jobs/full allocations; notify only meaningful progress/failures/decisions. No native automation capability available here; UI tool denied Codex, so no schedule created and no private scheduler bypass attempted. New Goal Unbound untimed rendering/recovery validation executed in fresh operation within explicit porting/rendering objective, not an extension of exhausted old16339-second campaign; no human overall new elapsed limit supplied. Same source/full90/nativequality/restoration controls remain. Parent accepted exact release and authorized fresh bounded Sildur consumer task.",
   "baseline": "Matched Mac native shader settings and resolution. Keep separate NeoForge original/candidate/return and Fabric same-mod Off/On/Off protocols; no cross-protocol percentage aggregation.",
-  "event_at": "2026-10-13T13:48:08.236108+00:00",
+  "event_at": "2026-10-13T14:00:17.583790+00:00",
   "evidence": [
-    {
-      "event_at": "2026-10-13T08:08:03.759302+00:00",
-      "observed_at": "2026-10-13T08:08:03.759302+00:00",
-      "path": "../dev/logs/optimization-porting-20261013/parent/bliss-consumer/receipt.json",
-      "summary": "Maintained-source Bliss preview reproduced exactly and public CPU selection/source/native recovery/tamper pass;18 focused checks pass."
-    },
     {
       "event_at": "2026-10-13T08:59:23.871942+00:00",
       "observed_at": "2026-10-13T08:59:23.871942+00:00",
@@ -125,27 +119,33 @@
       "observed_at": "2026-10-13T13:48:08.236108+00:00",
       "path": "../dev/logs/optimization-porting-20261013/photon-cost-join/parent-adoption.json",
       "summary": "Minimal2devconsumer files exactpins/review/actualjavac+27contract reuse accepted; existingframeconsumer reused, runtime and fullworkcontrol absent."
+    },
+    {
+      "event_at": "2026-10-13T13:55:26.258811+00:00",
+      "observed_at": "2026-10-13T14:00:17.583790+00:00",
+      "path": "../dev/logs/optimization-porting-20261013/photon-optical-cost-runtime/parent-acceptance.json",
+      "summary": "Parent actualcounter/nanoclock/limiter/nativeoptions/scene/origins/archive/release/stillacceptance. +223.15%return drift; no gainacceptance, no repeat."
     }
   ],
   "goal": "[Active goal](goals/cross-shader-performance-integration.md)",
-  "hypothesis": "Accepted Photon primary+lighting/ambient density rejection is consumed by current generated graph. One fixed-tuple early total-frame observation can reveal cost direction; no same-graph full-work control or GPU attribution is available. Do not expand validation into a new framework.",
+  "hypothesis": "Sildur existing certifieddefaultClouds3 rejection already renders via Fabric publiccontrols; port explicit NF262 main source/descriptor and recovery joins to make that same graph consumable on the otherloader, retaining nativework/drawvalidation/sourcefingerprints.",
   "next_action": {
-    "action": "Take one early original/enabled/original-return Photon optical-depth cost observation through the adopted existing Fabric26.1.2 consumer, Balanced and unchanged native-AA/TAAUoff fixed tuple; 30s warmup+15s render-frame windows. Fresh dev producer/freeze/finite caller only. Full-work control omitted explicitly; no optical attribution, general benchmark framework or closed pixel-trial retuning. After this decision continue concrete missing optimization consumer/family joins across full90.",
-    "milestone": "One bounded current Photon cost/quality/restoration decision, then resume direct missing optimization joins",
-    "owner": "/root with /root/photon_optical_cost_runtime"
+    "action": "Port accepted Sildur defaultClouds3 density rejection to actual NeoForge26.2 main draw compatibility and public control consumer: separate original115/generated118/currentrecipe/state/unchangedvertex certificate and exact dispatch, authentic CPU/refusal/AA/recovery checks, normal producer/privatecaller preparation. Root integrates scoped code then schedules existing bounded runtime. No benchmarkgrowth; Photon costtrial drift preserved without repeat/retuning. Full90 remains.",
+    "milestone": "Scoped SildurNF262 optimization/control code accepted and prepared for actual normalmain consumer",
+    "owner": "/root with /root/sildur_neoforge_optimization_port"
   },
   "objective": "Spearhead direct high-impact existing optimization ports across all nine shader families and full 90 version/loader scope. Usable integrated shader optimization code is the primary outcome; minimum necessary consumer/quality/recovery verification supports the port.",
-  "observed_at": "2026-10-13T13:48:08.236108+00:00",
-  "owner": "/root integration/Git; photon_optical_cost_runtime acknowledged fresh bounded prep, exclusive lane pending verified reservation",
+  "observed_at": "2026-10-13T14:00:17.583790+00:00",
+  "owner": "/root integration/Git/nextconsumer; sildur_neoforge_optimization_port acknowledged isolated code/CPU prep; client/build lane released",
   "process_health": "none",
   "progress": {
     "activity": "preparation",
     "allocation_seconds": null,
     "blocker": null,
-    "completed_updates": 17,
-    "execution_seconds": 25460.429979999997,
-    "last_progress_at": "2026-10-13T13:48:08.236108+00:00",
-    "limitations": "All10 compiled previews not90 runtime/gains. Current Photon optical graph rendering/native-AA/recovery passes; reachedGPUwork/motion/cost/DHPBR unknown. Cost join full-workcontrol absent: total bundle diagnostic only. MakeUp1978 nativecount proof, current/End sampler rounding unknown; oldB16 no-gain closed. NF1211 originalbuildPID lost; UnboundNF262 supervision FAILED/components retained. Solas/Astra nativeMac blocked. Old16339 allocation+overrun preserved. Hourly automation unavailable/uncreated.",
+    "completed_updates": 18,
+    "execution_seconds": 26189.777661999997,
+    "last_progress_at": "2026-10-13T14:00:17.583790+00:00",
+    "limitations": "All10 compiled previews not90runtime/gains. Photon currentgraph render/nativeAA/recovery and actualframewindows pass; +223.15%return drift prevents gain/regression attribution; fullworkcontrol/GPUwork/motion/DHPBR absent. SildurNF262 sourcejoin only underway. MakeUp1978 sampler rounding unknown/oldB16 nogain closed. NF1211 originalbuildPID lost; UnboundNF262 failedsupervision/components retained. Solas/Astra Macblocked. Old16339allocation+overrun preserved. Hourly automation unavailable/uncreated.",
     "process": null
   },
   "resources": [
@@ -160,26 +160,26 @@
     "Completed separate deep offline operation05:00–05:30UTC within120-minute ceiling. Astra max analysis/alternatives/adversarial source acceptance and Sol implementation/Java recovery. New durable exact patches under patches/bsl-cloud-detail-bound-r2; adopted only into fresh ignored source copy. New full-workLOD0 control is separately pinned. Old runtime/source/product bytes and all735 pins unchanged. No client/GPU/Gradle/remote/Goal operation.",
     "Human explicit resume at October12 Pacific: execute Reimagined then BSL bound/control; root owns existing lane; preserve1200-second remaining allocation. No native Goal in this chat. Runtime released06:16:41UTC before06:17:23 allocation end. Parent closeout/commit and checkpoint validation repair exceeded allocation; actual elapsed accounting includes this overrun, allocation unchanged. No extra client/build/experiment ran.",
     "Human explicit resume at October12 Pacific: execute Reimagined then BSL bound/control; root owns existing lane; preserve1200-second remaining allocation. No native Goal in this chat. Actual total wall execution at closeout accounting observation: 16431 seconds; typed counter capped at16339 because helper forbids execution above allocation. Overrun is recorded here, not silently excluded.",
-    "Current main e29d4877 Fabric2612/currentPhotonrecipe192a6317/cumulusca9e0cd6 consumed actual configurednative366/generated369/535archive, QualityOffCancel restore, released13:23UTC/fresh13:27census. Root exactparent acceptance saved. Source port5492da3 unchanged/all10 normalpreviews delivered. Minimum twofile FabricRoundtrip/PortFpsPolicy opticalcost join adopted exact9e4521ef/b550f432, source preimagepins/27compiledcontracts retained at photon-cost-join/parent-adoption.json; persistent scoped patch. New runtime_operator acknowledged13:47UTC, freshlane inspection pending, nojob. Parent owns checkpoint/Git before worker quiet finite producer+original/on/off observation; full-workcontrol absent/noGPUattribution. Full90/nativeAA/closedtrials/16339historicalallocations/Macblockers/EAGLE restrictions retained. No general benchmarkgrowth. Hourlynative automation capability unavailable; request durable, no schedule created."
+    "Photonfinite costoperation main e29/currentrecipe192/currentcloudca9 completedexit0, exact535archive/native366369/mainorigins/stills/fixedscene/Offrestore; raw1750/1321/543 completedrenderframes over15.003/15.045/15.044s, original8.573/enabled11.389/return27.705ms. Return drift223.15%; costinconclusive, samegraphcontrol/GPUattribution absent. Root recomputeddenominators/matchedacceptedpriorarchive/options/origins/scene/release and viewed actualoriginal/enabledstills. Ownedclient87060/launcher87028 exactabsent,13:55:26UTC lockfree/nojobs; parent13:58absence verified. Two privateprelaunch failures retained/repairedusingactualtaskargs/jvmargswithinunchanged13:56:50deadline; produceridentity retained. SildurNF262 featureowner acknowledged isolated newsourcecertificate+exactdispatch/publiccontrol/callerprep, noGPU/Gradle/lane. Parent integrates/Git/runtimeownership. Nativequality/all90/old16339allocation+overrun/closedcost/Macblockers/EAGLE retained. No hourlyschedule tool, no schedulercreated."
   ],
-  "result": "All10 normal current9family previews remain accepted. Current Photon optical-depth graph actually rendered on configured Fabric2612: exact535archive/recipe, native366->generated369->Quality366->Off366+Cancel, nativeTAA/TAAUoff preserved; parent acceptance and exactrelease. Minimum existing two-file cost consumer adopted with authentic compilation/27contracts, 30+15s original/on/off; runtime pending, full-workcontrol omitted. No reachedGPUwork/motion/FPS/DHPBR proof yet.",
+  "result": "Photon currentgraph exact535/nativeAA/mainorigins/publicoffrestore accepted. Realrenderwindows1750/1321/543frames over15.003/15.045/15.044s: original8.573/enabled11.389/return27.705ms, +223.15% originalreturn drift. Cost gain/regression attribution unknown; no repeats. All10 normalcurrent9family previews retained. Next direct SildurNF262 optimizationconsumer port acknowledged; isolated maincertificate/dispatch/publiccontrols underway, no runtimejob.",
   "review": {
     "attempt": "Direct optimization porting: MakeUp End-cloud adoption and compatible-family cloud rejection",
     "decision": {
       "addresses": [
         "preparation_overdue"
       ],
-      "change": "Current optical graph actualrendering/recovery accepted; missing consumer frame-window join isolated/adopted using existing actualcounter, no main/source/framework change. One fresh finite diagnostic is next decision.",
-      "choice": "extend",
-      "decided_at": "2026-10-13T13:48:08.236108+00:00",
-      "next_action": "Take one early original/enabled/original-return Photon optical-depth cost observation through the adopted existing Fabric26.1.2 consumer, Balanced and unchanged native-AA/TAAUoff fixed tuple; 30s warmup+15s render-frame windows. Fresh dev producer/freeze/finite caller only. Full-work control omitted explicitly; no optical attribution, general benchmark framework or closed pixel-trial retuning. After this decision continue concrete missing optimization consumer/family joins across full90.",
-      "rationale": "New actualdriver milestone and concrete minimum consumer join resolve prior source-only uncertainty; keep all90scope and resume directporting after bounded costdecision.",
+      "change": "Finite actualPhoton windows complete with severe original-return drift; close costobservation without retuning. Switch to missingSildurNF262 optimization consumer/source/control joins, acknowledged isolatedowner.",
+      "choice": "switch",
+      "decided_at": "2026-10-13T14:00:17.583790+00:00",
+      "next_action": "Port accepted Sildur defaultClouds3 density rejection to actual NeoForge26.2 main draw compatibility and public control consumer: separate original115/generated118/currentrecipe/state/unchangedvertex certificate and exact dispatch, authentic CPU/refusal/AA/recovery checks, normal producer/privatecaller preparation. Root integrates scoped code then schedules existing bounded runtime. No benchmarkgrowth; Photon costtrial drift preserved without repeat/retuning. Full90 remains.",
+      "rationale": "Measuring under unstablebaseline cannot deliver attributedbenefit. Existing source/renderedSildur mechanism has concrete missingotherloaderjoin; directcodeporting bestmatcheshumanpriority.",
       "remaining_blocker": "none recorded",
-      "review_at": "2026-10-13T14:03:08.236108+00:00"
+      "review_at": "2026-10-13T14:15:17.583790+00:00"
     },
     "failure_cause": null,
     "same_cause_failures": 0,
-    "trigger_at": "2026-10-13T14:03:08.236108+00:00"
+    "trigger_at": "2026-10-13T14:15:17.583790+00:00"
   },
   "schema_version": 2,
   "stage": "preparation",
@@ -191,18 +191,18 @@
 
 **Objective:** Spearhead direct high-impact existing optimization ports across all nine shader families and full 90 version/loader scope. Usable integrated shader optimization code is the primary outcome; minimum necessary consumer/quality/recovery verification supports the port.
 **Matched baseline:** Matched Mac native shader settings and resolution. Keep separate NeoForge original/candidate/return and Fabric same-mod Off/On/Off protocols; no cross-protocol percentage aggregation.
-**Outcome:** All10 normal current9family previews remain accepted. Current Photon optical-depth graph actually rendered on configured Fabric2612: exact535archive/recipe, native366->generated369->Quality366->Off366+Cancel, nativeTAA/TAAUoff preserved; parent acceptance and exactrelease. Minimum existing two-file cost consumer adopted with authentic compilation/27contracts, 30+15s original/on/off; runtime pending, full-workcontrol omitted. No reachedGPUwork/motion/FPS/DHPBR proof yet.
-**Execution (last observation):** preparation; process health none; cumulative 17 updates; 25,460.43 execution seconds
-**Owner:** /root integration/Git; photon_optical_cost_runtime acknowledged fresh bounded prep, exclusive lane pending verified reservation
+**Outcome:** Photon currentgraph exact535/nativeAA/mainorigins/publicoffrestore accepted. Realrenderwindows1750/1321/543frames over15.003/15.045/15.044s: original8.573/enabled11.389/return27.705ms, +223.15% originalreturn drift. Cost gain/regression attribution unknown; no repeats. All10 normalcurrent9family previews retained. Next direct SildurNF262 optimizationconsumer port acknowledged; isolated maincertificate/dispatch/publiccontrols underway, no runtimejob.
+**Execution (last observation):** preparation; process health none; cumulative 18 updates; 26,189.7777 execution seconds
+**Owner:** /root integration/Git/nextconsumer; sildur_neoforge_optimization_port acknowledged isolated code/CPU prep; client/build lane released
 **Authority:** Human explicitly authorized amended native Goal on October12 Pacific: spearhead optimization porting, correcting past diversion into harness/benchmark/trivial work. Native Goal created and verified ACTIVE in this chat. Parent owns selection, implementation/integration and continuation; no harness/benchmark perfection gate for previews. Preserve fu… [detail omitted; use --json]
 **Goal:** [Active goal](goals/cross-shader-performance-integration.md)
-**Next action:** Take one early original/enabled/original-return Photon optical-depth cost observation through the adopted existing Fabric26.1.2 consumer, Balanced and unchanged native-AA/TAAUoff fixed tuple; 30s warmup+15s render-frame windows. Fresh dev producer/freeze/finite caller only. Full-work control omitted explicitly; no optical attribution, general benchmark framework or closed pixel-trial retuning. After this decision continue concrete missing optimization consumer/family joins across full90.
-**Next owner / milestone:** /root with /root/photon_optical_cost_runtime / One bounded current Photon cost/quality/restoration decision, then resume direct missing optimization joins
-**Observed:** 2026-10-13T13:48:08.236108+00:00; event 2026-10-13T13:48:08.236108+00:00
-**Chosen hypothesis (authored):** Accepted Photon primary+lighting/ambient density rejection is consumed by current generated graph. One fixed-tuple early total-frame observation can reveal cost direction; no same-graph full-work control or GPU attribution is available. Do not expand validation into a new framework.
+**Next action:** Port accepted Sildur defaultClouds3 density rejection to actual NeoForge26.2 main draw compatibility and public control consumer: separate original115/generated118/currentrecipe/state/unchangedvertex certificate and exact dispatch, authentic CPU/refusal/AA/recovery checks, normal producer/privatecaller preparation. Root integrates scoped code then schedules existing bounded runtime. No benchmarkgrowth; Photon costtrial drift preserved without repeat/retuning. Full90 remains.
+**Next owner / milestone:** /root with /root/sildur_neoforge_optimization_port / Scoped SildurNF262 optimization/control code accepted and prepared for actual normalmain consumer
+**Observed:** 2026-10-13T14:00:17.583790+00:00; event 2026-10-13T14:00:17.583790+00:00
+**Chosen hypothesis (authored):** Sildur existing certifieddefaultClouds3 rejection already renders via Fabric publiccontrols; port explicit NF262 main source/descriptor and recovery joins to make that same graph consumable on the otherloader, retaining nativework/drawvalidation/sourcefingerprints.
 **Blocker:** none recorded
-**Limitations:** All10 compiled previews not90 runtime/gains. Current Photon optical graph rendering/native-AA/recovery passes; reachedGPUwork/motion/cost/DHPBR unknown. Cost join full-workcontrol absent: total bundle diagnostic only. MakeUp1978 nativecount proof, current/End sampler rounding unknown; oldB16 no-gain closed. NF1211 originalbuildPID lost; UnboundNF262 supervision FAILED/components retained. Solas/Astra nativeMac blocked. Old16339 allocation+overrun preserved. Hourly automation unavailable/uncreated.
-**Review:** 2026-10-13T14:03:08.236108+00:00; 0 same-cause failures; cause none recorded
-**Evidence:** ../dev/logs/optimization-porting-20261013/photon-optical-runtime/parent-acceptance.json; ../dev/logs/optimization-porting-20261013/photon-cost-join/parent-adoption.json; ../dev/logs/optimization-porting-20261013/photon-optical-depth-port/parent-adoption.json; earlier receipts in --json and exact history
+**Limitations:** All10 compiled previews not90runtime/gains. Photon currentgraph render/nativeAA/recovery and actualframewindows pass; +223.15%return drift prevents gain/regression attribution; fullworkcontrol/GPUwork/motion/DHPBR absent. SildurNF262 sourcejoin only underway. MakeUp1978 sampler rounding unknown/oldB16 nogain closed. NF1211 originalbuildPID lost; UnboundNF262 failedsupervision/components retained. Solas/Astra Macblocked. Old16339allocation+overrun preserved. Hourly automation unavailable/uncreated.
+**Review:** 2026-10-13T14:15:17.583790+00:00; 0 same-cause failures; cause none recorded
+**Evidence:** ../dev/logs/optimization-porting-20261013/photon-optical-cost-runtime/parent-acceptance.json; ../dev/logs/optimization-porting-20261013/photon-optical-runtime/parent-acceptance.json; ../dev/logs/optimization-porting-20261013/photon-cost-join/parent-adoption.json; earlier receipts in --json and exact history
 
-[Exact previous checkpoint](STATUS.history.7225547031bfa76117a5534983578b13e88205b12d509216a8b5d236574a9662.md) (SHA-256 `7225547031bfa76117a5534983578b13e88205b12d509216a8b5d236574a9662`).
+[Exact previous checkpoint](STATUS.history.20cd5bf4b6726232861039aa9c16df763c3aed48569ba35c822208078b66d5f2.md) (SHA-256 `20cd5bf4b6726232861039aa9c16df763c3aed48569ba35c822208078b66d5f2`).
