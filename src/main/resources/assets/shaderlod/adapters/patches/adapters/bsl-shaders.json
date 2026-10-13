@@ -1,0 +1,128 @@
+{
+  "schema": 1,
+  "kind": "ssr-hit-refinement",
+  "id": "bsl-shaders",
+  "name": "BSL Shaders",
+  "version": "10.1.8",
+  "version_id": "Y68yiql9",
+  "primary_page": "https://modrinth.com/shader/bsl-shaders",
+  "release_url": "https://cdn.modrinth.com/data/Q1vvjJYV/versions/Y68yiql9/BSL_v10.1.8.zip",
+  "release_archive_sha256": "36b0a50ff7918bf10e9422c401d93779f9d0088a26acea975b435243f96930b5",
+  "license": {
+    "id": "LicenseRef-All-Rights-Reserved"
+  },
+  "license_note": "Personal local adaptation only. All original author credits and archive members retained. No redistribution permission established; do not publish generated copies.",
+  "source_members": {
+    "shaders/lib/reflections/raytrace.glsl": "7e12a6a6472ea4cbff731e4b1e93698b9e21a391600facfd483c3e0211c5342a",
+    "shaders/lib/reflections/simpleReflections.glsl": "285309246242dee0e33b9837839bc71d86db5a74adf326296e1bf135d42c634b",
+    "shaders/lib/settings.glsl": "5617a7a13c37373c27e742d2dffb777a1437bae83cf25693451c104915050285",
+    "shaders/program/gbuffers_water.glsl": "637f7135c810f33d8c0ea1f5b87096486417ed85a623c65e5d96de4227c2fb5f",
+    "shaders/shaders.properties": "8856162fcf6846e1b56f5c092e6eaee04af687875f85e87cde87e1bd0a0d3169",
+    "shaders/world-1/gbuffers_water.fsh": "c49c4b081da2272fe27060126cd46ef372d69ef9f71f1f84309cbc9a91d9a980",
+    "shaders/world0/gbuffers_water.fsh": "39606a8d5c852168dc670580eeda8a62637d0019bb0c4ff2d9097f12e6448412",
+    "shaders/world1/gbuffers_water.fsh": "8d85621e7515f8176d44945a74463252e2981d1b568e1051a17ae585d345c6a1",
+    "shaders/program/deferred1.glsl": "6d4cd8420e085d9254957f396a3aeca6f8bc0c9b1116c231eabd6c0f1541742e",
+    "shaders/lib/atmospherics/clouds.glsl": "c0e21ee39082d8154f6aa8792a77f8a60c7fd3967614d56b1abaa06887256750",
+    "shaders/world0/deferred1.fsh": "3095370970d6ced710c8d859f44908b7c12a3f946fddcb53a274aee3660579d3",
+    "shaders/tex/noise.png": "5ff93225ed7018e90822824a599e4e080e985fb882fdc15ac9e117dd8ba22a34",
+    "shaders/tex/noise.png.mcmeta": "e9c800d49d941e58d1c9f114b4564886b0c984369fab42515935497948ea8440"
+  },
+  "patches": [
+    {
+      "path": "shaders/lib/reflections/simpleReflections.glsl",
+      "before": "vec4 SimpleReflection(vec3 viewPos, vec3 normal, float dither, out float reflectionMask) {",
+      "after": "#include \"/lib/shaderlod/adapter.glsl\"\r\n\r\nvec4 SimpleReflection(vec3 viewPos, vec3 normal, float dither, out float reflectionMask) {"
+    },
+    {
+      "path": "shaders/program/gbuffers_water.glsl",
+      "before": "#ifdef FSH",
+      "after": "#ifdef FSH\r\n#define SHADERLOD_BSL_WATER"
+    },
+    {
+      "path": "shaders/lib/reflections/simpleReflections.glsl",
+      "before": "    vec4 pos = Raytrace(depthtex1, viewPos, normal, dither, border, maxf, 1.0, 0.1, inc);",
+      "after": "    // Only valid-crossing termination count; coarse traversal and fallback stay upstream.\r\n    #if SHADERLOD_REFINEMENT_ADAPTER == 1 && defined SHADERLOD_BSL_WATER && !defined DISTANT_HORIZONS && !defined VOXY\r\n    maxf = shaderlod_refinement_budget(shaderlodBridgeVersion, shaderlodEnabled,\r\n        shaderlodPreset, length(viewPos), maxf, 3);\r\n    #endif\r\n    vec4 pos = Raytrace(depthtex1, viewPos, normal, dither, border, maxf, 1.0, 0.1, inc);"
+    },
+    {
+      "path": "shaders/shaders.properties",
+      "before": "screen=<empty> <empty> ABOUT <profile> <empty> <empty> [LIGHTING] [MATERIAL] [ENVIRONMENT] [CAMERA] [COLOR] [CGT] [ANTIALIASING] [EXTRAS]",
+      "after": "screen=<empty> <empty> ABOUT <profile> <empty> <empty> [LIGHTING] [MATERIAL] [ENVIRONMENT] [CAMERA] [COLOR] [CGT] [ANTIALIASING] [EXTRAS] [SHADERLOD]\r\nscreen.SHADERLOD = SHADERLOD_REFINEMENT_ADAPTER"
+    },
+    {
+      "path": "shaders/program/deferred1.glsl",
+      "before": "#ifdef FSH",
+      "after": "#ifdef FSH\n#include \"/lib/shaderlod/adapter.glsl\""
+    },
+    {
+      "path": "shaders/program/deferred1.glsl",
+      "before": "\t\tcolor.rgb += DrawAurora(viewPos.xyz, dither, 24);",
+      "after": "        int shaderlodAuroraSamples = 24;\n        #if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY && !defined ADVANCED_MATERIALS\n        shaderlodAuroraSamples = shaderlod_bsl_volume_budget(shaderlodAuroraSamples);\n        #endif\n        color.rgb += DrawAurora(viewPos.xyz, dither, shaderlodAuroraSamples);"
+    },
+    {
+      "path": "shaders/program/deferred1.glsl",
+      "before": "#include \"/lib/atmospherics/clouds.glsl\"\r\n",
+      "after": "#if defined OVERWORLD && defined FSH && !defined DISTANT_HORIZONS && !defined VOXY && !defined ADVANCED_MATERIALS\r\n#define SHADERLOD_BSL_PRIMARY_CLOUD_CONTEXT 1\r\n#endif\r\n#include \"/lib/atmospherics/clouds.glsl\"\r\n#ifdef SHADERLOD_BSL_PRIMARY_CLOUD_CONTEXT\r\n#undef SHADERLOD_BSL_PRIMARY_CLOUD_CONTEXT\r\n#endif\r\n"
+    },
+    {
+      "path": "shaders/lib/atmospherics/clouds.glsl",
+      "before": "float InvLerp(float v, float l, float h) {",
+      "after": "#if defined(SHADERLOD_BSL_PRIMARY_CLOUD_CONTEXT) && SHADERLOD_BSL_PRIMARY_CLOUD_CONTEXT == 1 && defined OVERWORLD && defined FSH && CLOUDS == 2 && CLOUD_BASE == 0 && SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY && !defined ADVANCED_MATERIALS\r\n// Same two blue-channel detail lookups and height interpolation at explicit LOD0.\r\n// The pinned native 512x512 noise PNG and runtime sampler level/filter parity remain admission gates.\r\nfloat ShaderLodCloudDetailLod0(vec2 coord, float cloudGradient) {\r\n    float detailZ = floor(cloudGradient * float(CLOUD_THICKNESS)) * 0.04;\r\n    float detailFrac = fract(cloudGradient * float(CLOUD_THICKNESS));\r\n    float noiseDetailLow = texture2DLod(noisetex, coord.xy + detailZ, 0.0).b;\r\n    float noiseDetailHigh = texture2DLod(noisetex, coord.xy + detailZ + 0.04, 0.0).b;\r\n    return mix(noiseDetailLow, noiseDetailHigh, detailFrac);\r\n}\r\nfloat ShaderLodCloudPrimaryClearBound(vec2 coord, vec2 wind, float cloudGradient, float sunCoverage, float dither) {\r\n    if (shaderlodBridgeVersion != 2 || shaderlodEnabled != 1 || shaderlodPreset != 0 || rainStrength != 0.0)\r\n        return CloudSample(coord, wind, cloudGradient, sunCoverage, dither);\r\n    vec2 nativeCoord = coord;\r\n    coord *= 0.004 * CLOUD_STRETCH;\r\n    vec2 baseCoord = coord * 0.25 + wind;\r\n    vec2 detailCoord = coord.xy * 0.5 - wind * 2.0;\r\n    float noiseBase = CloudSampleBasePerlin(baseCoord);\r\n    float noiseCoverage = CloudCoverageDefault(cloudGradient);\r\n    float detailWeight = 0.0476 * CLOUD_DETAIL;\r\n    if (!(noiseBase >= 0.0 && noiseBase <= 1.0 && cloudGradient >= 0.0 && cloudGradient <= 1.0 &&\r\n          sunCoverage >= 0.0 && sunCoverage <= 1.0 && noiseCoverage >= 0.0 && noiseCoverage <= 6.0 &&\r\n          detailWeight >= 0.0 && detailWeight <= 1.0 && all(lessThan(abs(detailCoord), vec2(1e20)))))\r\n        return CloudSample(nativeCoord, wind, cloudGradient, sunCoverage, dither);\r\n    // Detail blue is normalized to [0,1]. Preserve native ordered clear-weather pre-max arithmetic.\r\n    float upper = mix(noiseBase, 1.0, detailWeight) * 21.0;\r\n    upper = upper - noiseCoverage;\r\n    upper = upper - (sunCoverage * 3.0 + CLOUD_AMOUNT);\r\n    if (upper < -0.001) return 0.0;\r\n    float noiseDetail = ShaderLodCloudDetailLod0(detailCoord, cloudGradient);\r\n    return CloudCombineDefault(noiseBase, noiseDetail, noiseCoverage, sunCoverage);\r\n}\r\n#endif\r\n\r\nfloat InvLerp(float v, float l, float h) {"
+    },
+    {
+      "path": "shaders/lib/atmospherics/clouds.glsl",
+      "before": "\t\tfloat noise = CloudSample(cloudCoord, wind, cloudGradient, sunCoverage, dither);",
+      "after": "#if defined(SHADERLOD_BSL_PRIMARY_CLOUD_CONTEXT) && SHADERLOD_BSL_PRIMARY_CLOUD_CONTEXT == 1 && defined OVERWORLD && defined FSH && CLOUDS == 2 && CLOUD_BASE == 0 && SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY && !defined ADVANCED_MATERIALS\r\n        float noise;\r\n        if (fadeFaster) noise = CloudSample(cloudCoord, wind, cloudGradient, sunCoverage, dither);\r\n        else noise = ShaderLodCloudPrimaryClearBound(cloudCoord, wind, cloudGradient, sunCoverage, dither);\r\n#else\r\n\t\tfloat noise = CloudSample(cloudCoord, wind, cloudGradient, sunCoverage, dither);\r\n#endif"
+    }
+  ],
+  "additions": {
+    "shaders/lib/shaderlod/adapter.glsl": {
+      "path": "patches/adapters/bsl-shaders.glsl",
+      "sha256": "e62b420edfb4c2c28214b8f368b5b677a728c94950017090c4fa11bdc5e1a0a5"
+    },
+    "shaders/lib/shaderlod/refinement_budget.glsl": {
+      "path": "patches/adapters/shared/refinement_budget.glsl",
+      "sha256": "ff6c55047a903de1183597a05915714d70261659b8b1496c794e139f654f9665"
+    },
+    "shaders/lib/shaderlod/uniform_sample_budget.glsl": {
+      "path": "patches/adapters/shared/uniform_sample_budget.glsl",
+      "sha256": "00ea6f6ec69da669a9a1727498ba9dd1b40839dce38af42afb26ea8b831d1aec"
+    }
+  },
+  "validation": {
+    "assembled": false,
+    "glsl_compiled": false,
+    "iris_rendered": false,
+    "dh_rendered": false,
+    "pbr_rendered": false
+  },
+  "shader_source_digest": "198235a39479dee0964f272104844ff2ee32fd4438309a54d1421278986066bb",
+  "ported_consumers": {
+    "volumetrics": {
+      "mechanism": "Existing uniform_sample_budget; native aurora unit interval/step weighting",
+      "scope": "Overworld deferred1 sky Aurora enabled; no advanced materials/DH/VOXY; 12-sample sky-reflection caller unchanged",
+      "original_native_samples": 24,
+      "minimum": 4,
+      "balanced_samples": 21,
+      "performance_samples": 18,
+      "reference_native_AURORA": "0 (inactive)",
+      "distance_controls": false,
+      "runtime_verified": false,
+      "quality_verified": false,
+      "performance_verified": false,
+      "cloud_absorption_or_7_step_shafts_rewritten": false
+    },
+    "primary_clear_cloud_detail_bound": {
+      "entry": "shaders/world0/deferred1.fsh",
+      "path": "world0/deferred1 primary DrawCloudVolumetric false",
+      "mode": "Balanced only, Core bridge2 enabled1; clear rainStrength 0; native for every unknown",
+      "member": "shaders/lib/atmospherics/clouds.glsl",
+      "noise_png_sha256": "5ff93225ed7018e90822824a599e4e080e985fb882fdc15ac9e117dd8ba22a34",
+      "noise_mcmeta_sha256": "e9c800d49d941e58d1c9f114b4564886b0c984369fab42515935497948ea8440",
+      "runtime_sampler_parity_required": true,
+      "dh_pbr_voxy": "native fallback",
+      "runtime_verified": false,
+      "quality_verified": false,
+      "performance_verified": false
+    }
+  }
+}
