@@ -37,7 +37,7 @@ public final class SupportedPackCatalog {
         new Pack("bliss-shader", "Bliss Shaders", "2.1.2", "https://modrinth.com/shader/bliss-shader",
             "LicenseRef-All-Rights-Reserved", "dc7ef8dd62fb9db1ca500c1d300f206891035e5129dab81bf19c901f526ac2e4", "e198a1d6a560ac1d131817ef5d84ac2163db7578a1f200bf26731e670d5491e4"),
         new Pack("bsl-shaders", "BSL Shaders", "10.1.8", "https://modrinth.com/shader/bsl-shaders",
-            "LicenseRef-All-Rights-Reserved", "198235a39479dee0964f272104844ff2ee32fd4438309a54d1421278986066bb", "5be3da36fc1812c220f5ecf00b904a783c0286fa629630038074abaf8073d4ba"),
+            "LicenseRef-All-Rights-Reserved", "198235a39479dee0964f272104844ff2ee32fd4438309a54d1421278986066bb", "c9bc559a7f2455d7ea5c316d36f92919821cfd614d27d00f9478de93d64eef72"),
         new Pack("complementary-reimagined", "Complementary Shaders - Reimagined", "r5.9.3", "https://modrinth.com/shader/complementary-reimagined",
             "LicenseRef-Custom", "95e2a1eabb73a72b01422d06a6f636de85d4ee136358e16a1c762a55633cfef0", "94a04324f6a93cba53889df0638be00768ad7c5d87f11f2c23e535ed0f0894cb"),
         new Pack("complementary-unbound", "Complementary Shaders - Unbound", "r5.9.3", "https://modrinth.com/shader/complementary-unbound",
@@ -69,7 +69,7 @@ public final class SupportedPackCatalog {
         Map.entry("complementary-reimagined", List.of("18fcf18e20d753dac8e24309abe4b5e0f773b5c73c0bbe1bb18ae3b8f290f46b", "a342b424364b2b1d59185b584b6097648e3c11d9e499b2035012a345bdc3ed7f", "920212803e992b80ba58da1e00a54bc45b4ad5ddac1edae1b392002c90ee2cc7")),
         Map.entry("complementary-unbound", List.of("cd60c29d8d3f2e1437b965f9c32ec0e41c95df0f25f47d18e7fb7b45377476fc", "4e6cd8da53dfb1a31504b31a82027ccac4eb8b3c99449640b8f8ac77a173be8a", "9118b112be859fda810582c78dd1409d0273cbe8fa9ed72cc32a22c9ddc09ed6")),
         Map.entry("makeup-ultra-fast-shaders", List.of("ee4d9d08fc9e071cdffb1d63c920368cc7c5b1b05623d3f5a82c27505bdb4a51", "e62be2858dc69faf7a24dd5ebc3806e697302c3c8c8d46391051ba71c8ab7d9d", "52f14a1d31e0be6e24a3052578089305735f5c88cd9930fa6dd518839953ca58", "956e3ab528c0ee9504bbc307306f269c9a85d3613a0dc5b49cfb80472ea4e5c4", "9a6c5ebb5dc6ab2b99c4fd8ea75fdcd19af468a75ee0a81ee99516a7886bb38a", "1978eed85ffdbc53d65c687253295e3c200016a75c84045a2f5240d3443ff0b5")),
-        Map.entry("bsl-shaders", List.of("37aa37afaea8fbcbdf4adbc49dba3681280f66a94f25296f9be90546ef9e4ae8", "80dfa11232b5c04cd075fb36ff4dffc8b55fbe1cd64d4cdb707ad8bff254f140", "f386c864e7a8e39752982a332f963af8093dbb326094255a8428ae663bc728e1")),
+        Map.entry("bsl-shaders", List.of("37aa37afaea8fbcbdf4adbc49dba3681280f66a94f25296f9be90546ef9e4ae8", "80dfa11232b5c04cd075fb36ff4dffc8b55fbe1cd64d4cdb707ad8bff254f140", "f386c864e7a8e39752982a332f963af8093dbb326094255a8428ae663bc728e1", "5be3da36fc1812c220f5ecf00b904a783c0286fa629630038074abaf8073d4ba")),
         Map.entry("solas-shader", List.of("7e5171e0c1e780bc33e57401a8561d296d73b826d3bfd0d0d21965080e213a6d", "469a65f1654793dd5e9dca70c91746e98aef2df240a601f8da3d5cc5934f6cf5", "8b96d3a6b8cfc4580ae47604ad8fd114de802e79ac75206374d2f5c97b129480")),
         Map.entry("astralex", List.of("5512a3f003fcb881903d5d1db6d230903c4259967962423de745d49bb75f6c7e", "64074489150514b0e4b180f1ff59986712dd9984a0d5978051e88677d371944f", "7a59f0be267d52c977371e9cf621e401a93030a7107f6b26410599e80ed4ae91", "06ddd92b746a100e417ee98b690e4dedc104b4395c614fc951da80912eb40197")));
 
