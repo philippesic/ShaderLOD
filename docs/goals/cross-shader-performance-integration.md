@@ -384,6 +384,272 @@ reuse unchanged valid evidence, no newframework/closedtrial rescue. EAGLE untouc
 [independentreview](../evaluation/12111-fabric-bsl-zero-emission-cost-review-20261011.md),
 [nextconsumer](../evaluation/manual-depth-gather-opportunity-20261011.md).
 
+
+## Photon26.1.2 actual controls and restoration — 2026-10-11 19:18 UTC
+
+Corrected full portable366 input completed all nine actual public Apply/native
+AA/option/Performance/Quality-return/Off stages on Fabric26.1.2/OpenGL4.1.
+All eight Apply returnedtrue, queues cleared, original/native options and
+initial CoreOff/Performance restored. Original and native-return archive is
+unchanged; generated369 graph rendered. Performance/upscale stills are visibly
+softer at distance: no fullnativequality, motion, linked-work/GPU or gain claim.
+All exact ownedjobs absent and runtime lock available at19:18:14UTC.
+
+R1expectedmap versus four-line actual sidecar mismatch preserved; native compute
+was correctly refused. R2actual Iris option/parser/program-mask join supplies
+all adopted portable366 values, with no newquality trim or shader changes.
+Portable preferences differ from upstream defaults and retain their historical
+fivefalse baseline. Actualprivatebackup and3955→4790upgrade verified, canonical237
+unchanged. Byte/UI/Cancel/failedApply/mismatch/DH/PBR remain separate.
+
+Follow the human support-first frontier: integrate/test/compile staged explicit
+Reimagined26.1.2 five-stage native control consumer, then one actualnative398
+Apply/return run and separateUnbound afterhandback. Stagedpatch remains isolated
+untilparent reviews finalpreimages/applycheck; no concurrentclient/build. Broader
+90-cell native Goal active and EAGLE untouched.
+
+[Actual runtime](../evaluation/2612-fabric-photon-roundtrip-runtime-20261011.md),
+[independent review](../evaluation/2612-fabric-photon-roundtrip-review-20261011.md),
+[family frontier](../SUPPORT_NEXT_20261011.md).
+
+
+## Reimagined actualnative controls/Cancel — 2026-10-11 19:50 UTC
+
+Five actualReimaginedFabric26.1.2 original/Quality/Performance/Qualityreturn/Off
+stages retainednative398/fed6 archive, allfourpublicApplyreturnedtrue, queues
+empty andinitialcore/options restored. Actualloaded398 resolvesbroad403helper
+uncertaintythisselectedtuple. RealsettingsscreenstagedOnQuality/Cancel returned
+world andpreservedconfig/options/selection; imagescoherent, exactjobsreleased
+19:50:29UTC. RendererresearchOFF/eligiblefalse allstages: nativefallbackcontrols,
+notactiveShaderLOD/avoidedwork/speedorcompletefamily support.
+
+Prelaunchfull398 sidecar isnowABSENT; effectiveOffpass isnotbytefile restoration.
+Timing/causewerenotrecorded, so preserve mismatchwithoutattributingit toApply.
+SeparateUnbound sourceextension reusesexistingmode/publicApply butjoinsitsown
+archive/native398/source/API proofs. Minimalperstage/before-afterApply sidecar
+observations resolve startup-vs-Apply/file recovery, notpoststopmasking. Parent
+reviews exactpreimages/patch/tests/compile/currentproducer/oneactualUrun; no
+source/build result substitutesactualruntime. Fullscope/EAGLE exclusion retained.
+
+[Runtime](../evaluation/reimagined-2612-native-control-runtime-20261011.md),
+[independentreview](../evaluation/reimagined-2612-native-control-runtime-review-20261011.md),
+[separateU preparation](../evaluation/unbound-2612-native-control-preparation-20261011.md).
+
+## Unbound actual native controls/Cancel — 2026-10-11 20:20 UTC
+
+Separate Fabric26.1.2 Unbound original/Quality/Performance/Qualityreturn/Off retained its own archive/native398, allfourpublicApply and effectiveOff/core/options/selection restored; staged settings OnQuality/Cancel passed. Caller96723 exited0, exactjobs absent/lockfree20:20:10UTC. Renderer inactive/researchOFF: no gain or fullsupport inferred. Read-only file observations show prelaunch sidecar present→firstoriginalstage absent BEFOREApply, then absent across allApply/stages/Off/Cancel/poststop. Original-stage recoverytrue versus prelaunch file MISMATCH; causeunassigned/no rewriting. Independentreview accepted scoped controls/images/backup/freeze/exactrelease. Full90scope/EAGLE exclusion retained.
+
+Next concreteimplementation: finish isolated BSL26.2 Fabric original-only/source consumer against real Iris ShaderMap/ShaderKey/nativeGlProgram APIs, then integrate/compile/currentproducer/onefinite actualoriginaldiagnostic. No newoptimization/cost trial or admission without freshterrain program/source joins.
+
+[Actual runtime](../evaluation/unbound-2612-native-control-runtime-20261011.md), [inputs](../evaluation/unbound-2612-native-control-inputs-20261011.md).
+
+## BSL26.2 original-source consumer integrated — 2026-10-11 20:27 UTC
+
+Parent integrated explicit original-only consumer against actual Iris ShaderMap/ShaderKey/GlProgram API. Dev compile/resources passed6s; produced-class authentic archive/native384/flags checks passed. Three BSL ancestry proofs are dev-only; main output/renderer routes/resource gates unchanged. This is source/build completion, not rendering or optimization support. fresh_baseline acknowledged fresh native384/fullsidecar/canonical237/currenttuple producer/finite caller preparation; parent retains client/build and oneactualoriginal diagnostic. Fullsource-to-program/draw/quality/controls/DH/PBR/gain claims still require authentic evidence.
+
+[Integrated preparation/build](../evaluation/bsl-262-original-source-preparation-20261011.md), [Unbound independent acceptance](../evaluation/unbound-2612-native-control-runtime-review-20261011.md).
+
+## BSL26.2 actual original/source passed — 2026-10-11 20:43 UTC
+
+ActualFabric26.2 originalBSLnative384/currenttuple/GL0flags1/native1920/focused PNG passed, two linked currentShaderMap terrainroles and fresh062/063 vsh/fsh pairs observed. Exactclient/launcher/supervisor released20:43:08/caller11056exit0. No actualOn/optimizer/avoidedwork/gain/fullquality/compatibility promotion; attachedsource/draw mapping stillunproved. Independent reviewrequested. Next_ports acknowledged8min isolatedexistingrenderer extension using actualsources/index/attributes andnamedresearch+certificate+freshsource/tuple, immutableproofsmain onlyafteradmission anddevduplicatesremoved; parentintegration/build/finiteOnbracket aftersourcehandback. Full90Goal/nativequality/EAGLE exclusion preserved.
+
+[Actual original rendering/source](../evaluation/bsl-262-original-source-runtime-20261011.md).
+
+## Nine-family manual optimization coverage delivered — 2026-10-11
+
+Human prioritizes porting existing big hitters to allnine FIRST and will manuallyinspectFPS/quality. Candidate nowroutesnormalPerformance to7exactcertifiedbatching paths whenavailable, otherwise9pinnedshaderwork recipes; Balancedrecipes/QualitynativeALL9/Offrestoration. SixSSR helpers consumeNearFarTransition; globalPhoton/Bliss/Sildur limits explicit. Source/defaults/queue/writer/mismatch recovery fixedwithactualIrisdefaults, legacyrecipe mismatchretained. 123focusedtests0fail0skip, all10compile/package0, JAR42exactresources/nodev/APIaudit0. TenhashedmanualJARs+bundle+guide delivered; no newruntime/performance/fullquality/all90claim. Solas/Astra nativeMac blockers remain, no inventedbatchingcertificate. NativeGoalcontinues fullscope/EAGLEuntouched.
+
+[Manual builds and instructions](../MANUAL_SHADER_COVERAGE_20261011.md).
+
+## Delivered manual JAR actualReimagined control verification — 2026-10-11 22:45 UTC
+
+Fiveactualnative398/publicApply/Quality-Performance-Qualityreturn-Off/realCancel passed usingsolemain65832...9790bd deliveredJAR. Allfive mainCodeSource URLs matchartifact, Performanceeligibletrue only/QualityOfffalse/core+options restored. Exact18733/18737/18796 absent/lockfree/caller18739exit0 release22:45:31UTC. No compactorwork/FPS/motion/DH/PBR/full90 inference; prelaunchsidecar absent-beforeApply mismatch retained, observedoriginalStageOff/Cancel equalitytrue. ParentviewednativePerformance PNG coherent.
+
+Next separateUnbound artifact/control+actualwork verification reuses existingproductioncompactor RETURN observer withperstage counts, no newbenchmark orGLsourceframework. DEVcounter73df...b5757 integrated/compiled5s, allmainmanualJARs unchanged. WorkeracknowledgedfreshU398/archive/proofs/JARproducer/caller withtruthfulNoWork status possible; parentonefiniteclient afterreleasedpreflight.
+
+[Actual artifact runtime](../evaluation/manual-coverage-reimagined-2612-runtime-20261011.md).
+
 ## Preserved full contract and history
 
 [Exact pre-handoff goal history](cross-shader-performance-integration.history.aa0b4adba312c68b939371390dec4b8f7e3aeb3da86f69d9d942366c22935bfe.md) (SHA-256 `aa0b4adba312c68b939371390dec4b8f7e3aeb3da86f69d9d942366c22935bfe`).
+
+
+## Delivered Unbound actual command work — 2026-10-11 23:02 UTC
+
+Actual Fabric26.1.2 native398 original/Quality/Performance/Quality-return/Off and staged Cancel completed using delivered manual JAR. Performance compact RETURN observed 7,118 calls, 246,105 input and 245,880 output commands: 225 removed (0.0914%) in30.0019s. Settled Quality/Off windows zero calls. Five main class origins resolve to delivered JAR; native options/core/selection recovery passes. No FPS, GL-submission, material gain or full quality claim. Original caller exit1 from stale requested-observer assertion retained; separate current-contract validator exit0. Exact release23:02:03UTC and parent independently checked no clients/free lock. Prelaunch sidecar byte mismatch remains explicit.
+
+Next existing BSL Balanced shader-work fallback on delivered JAR; worker owns bounded authentic consumer/input preparation, parent owns integration/build/client and full90 native Goal.
+
+[Actual post-run validation](../evaluation/manual-coverage-unbound-2612-caller-review-20261011.md).
+
+
+## BSL fallback recovered; human directs all-shader FPS — 2026-10-11 23:28 UTC
+
+DeliveredFabric26.1.2 actualBalanced generated/current387/native384QualityOff/Cancel/JARorigins/pinnedsource/currentrecipe passed, caller0/exactrelease23:28:08UTC. Failedr1strictobserver contract retained; r2corrects only actualIrisinclude-guard enumeration. NoFPS measured incontroltrial. Human nowdirects measuring allnewpreview shader paths. Parent assignedbounded existingGameRenderer RETURN counter/FRT five-stage FPS extension +sevenauthentic currentartifact profiles/caller. Full90scope/nativequality/recovery unchanged; Solas/Astra nativeMac blockers explicit, EAGLE untouched.
+
+[Actual BSL support](../evaluation/manual-coverage-bsl-fallback-2612-runtime-20261011.md).
+
+
+## Fresh preview FPS: BSL no-gain bracket; MakeUp next — 2026-10-12 00:08 UTC
+
+Actual currentFabric26.1.2JAR BSL same-modOff110.7/Performance72.0/Balanced49.3/Quality73.0/returnOff85.4 FPS, native-return drift-22.86%. Independent rawframe/clock/map/JAR/restoration/release review accepted observedratesonly; no demonstratedgain or reliablecausalpercentage. Fixedbracket closed, no tuning. FirstFPSr1wrongenumstartup failure retained, actualMCcodecquotedminimized repair verified/batchedoffline.
+
+NextMakeUp exactnative100/AA2/currentartifact five-window comparison running; remainingSildur/R/U/Photon/Bliss use unchangedcompiledconsumer and adoptedexactseven saved-record producer aftereachrelease. TwoSolas/Astra originals stillhardwareblocked, no unchangedretry. Full90scope/nativequality/recovery andEAGLE exclusion preserved.
+
+[Current FPS table](../evaluation/manual-preview-fps-20261011.md), [independent BSL review](../evaluation/manual-preview-bsl-fps-review-20261011.md).
+
+
+## Human returns priority to all-pack porting — 2026-10-12 01:08 UTC
+
+CurrentartifactFPSreported independently: sixcompletefive-stage rows, BlissvalidOff99.8/Perf95.8 thenpitch9→7.2guard failure. No demonstratedgain; original-return drift20–32%, no precisecausalpercentages. Same-viewBlissr2freshinputs/producer0/currentfreeze/preflight retainedbutNOT launchedafterhumansteeringback to normalports. NativeGoal staysactive/full90; no liveclient/build/producer, EAGLE untouched.
+
+Parentassigned two bounded sharedCORE/generated-consumer andall10loaderuniform audits withpartitionedownership. Firstactualtrace CORE uniformsindependentof EFFECTsource registration, so UNKNOWN_SOURCEeffect doesnotproveCOREhelperdisabled. Next concreteintegrationgap/actualuniform delivery observation, no benchmarkframework or certificateweakening.
+
+[Current FPS table](../evaluation/manual-preview-fps-20261011.md), [aggregate review](../evaluation/manual-preview-fps-review-20261011.md).
+
+
+## Direct volumetric concept transfer: four source ports and ten builds
+
+ExistingSildur/Bliss uniformsamplebudget nowconsumedbyR/U native near-volume integration, MakeUp sky-cloud integration, BSL optionalAurora skyintegration. Nativefullinterval/weight/feedback/AA andguardedunsupportedfallback retained; actualfouroriginals assemble/membertamper-refusal/helperdedup/mirrors/sourceindependentreview passed. Catalogcurrentexact4sourceidentities andallprior exactderivatives preserved. Focusedpublicselection/Quality/recovery/catalog checks pass; all10versions/loadersJava+resource+packageandperJARaudit pass. Newbundle separatepreviouscandidate. Thisis source/build progress, no newruntime/quality/gainclaim.
+
+NextactualMakeUp104-option/cloud publicBalanced/nativeQuality/Off/Cancel finite renderingconsumer, boundedexistingDEV/callerextension. Full90nativeGoalactive, currentMac2originalblockers/closednegatives preserved/EAGLEuntouched.
+
+[Complementary sourceport](../evaluation/complementary-volumetric-budget-port-20261011.md), [BSL/MakeUp sourceports](../evaluation/bsl-makeup-volumetric-budget-port-20261011.md), [independentreview](../evaluation/volumetric-concept-transfer-review-20261011.md).
+
+
+## Direct concept transfer: three runtime increments and Solas source delivery
+
+Reimagined and Unbound new composite1 volume+SSR derivatives actually rendered Fabric26.1.2 currentpreview with native398→generated402→Quality398→Off398 and Cancel, separate source identities/options and exact releases. Independent exact-archive/JAR/options/recovery reviews accepted. Together with MakeUp cloud runtime this is three actual rendering/control increments; no new executed-count/FPS/native-equivalence/DH/PBR claims.
+
+Solas optionalAurora now consumes unchanged sample-budget policy, nominal span and additive-weight compensation; actualcanonicalsource8b96… and previousexactrecognition/nativeMac refusal identities retained across root/eightports. All ten fresh packages and resource/catalog/currentnativeguard audits pass; this is source/build evidence, not Solas runtime. Astra simple-count recurrence obstruction retained without unsafe edits. Currentnext BSL-volume actualoptions/control consumer. Full90nativeGoal active; EAGLE untouched.
+
+[Updated frontier](../SUPPORT_NEXT_20261011.md), [Unbound runtime](../evaluation/complementary-unbound-volumetric-runtime-review-20261011.md), [Solas review](../evaluation/solas-aurora-transfer-review-20261011.md).
+
+
+## BSL Fabric26.2 current graph control increment — 2026-10-12 03:13 UTC
+
+Distinct currentartifact source-only producer and actualinstalledIris384/388 maps/caller passed; four public stages original/Balancedgenerated/Qualityoriginal/Offoriginal plus Cancel completed nofallback/nativeAA. Finitecaller43453exit0/exactrelease03:13:40UTC. This adds real rendering/native restoration on one tuple; optionalnativeAurora0 inactive/no avoidedwork or speedclaim. Old one-stage source observer/closedcost trials remain separate.
+
+Next sourcefamily increment authorized: AstraLex defaultAO12 normalized paired-depth loops, unchangedexistingbudget on even groups givesPerformance10 whileBalancednative12; preservesnative radius/dither/mean/no-reduction arithmetic/defaultmaterials. Sourceonly until compatibleoriginaldriver andquality/work evidence; originalMaclinkblock remains, no retry.
+
+[BSL262 actualcontrols](../evaluation/bsl-volume-262-control-runtime-20261011.md), [Astra source opportunity](../evaluation/remaining-family-common-budget-opportunity-20261011.md).
+
+
+## Existing MakeUp compatibility concept extended to BSL — 2026-10-12 05:57 UTC
+
+MakeUp main-mod compatibility and native100/generated104/Quality/Off/Cancel rendering on NeoForge26.2 independently accepted; no new FPS or native-equivalence claim. BSL own native384/currentgenerated388 source certificate and explicit two-family dispatch are now integrated, compiled and packaged in a separate preview. Independent source review and actual original/generated/family/AA/state/archive mutation/restoration checks pass. BSL main runtime remains pending; source-only caller/profile preparation is owned by fresh_baseline, parent retains the client/build lane. No clients/builds at the observed census, EAGLE untouched.
+
+Current human emphasis is direct reuse of successful concepts across packs. Existing all-nine adapter/all-ten package work is retained; all90 runtime/quality/DH/PBR/performance cells remain unfinished. Next decisive observation is BSL main-JAR rendering and native recovery on NeoForge26.2 through the same working correction.
+
+[BSL source review](../evaluation/bsl-neoforge-262-main-source-review-20261011.md), [MakeUp runtime review](../evaluation/neoforge-262-makeup-main-control-runtime-review-20261011.md).
+
+
+## BSL NeoForge26.2 main runtime completed — 2026-10-12 06:10 UTC
+
+Current main preview actually rendered native384→generated388→Quality384→Off384 and Cancel, with sourceFamily=bsl, main JAR origins, zero development correction and all36 positive per-stage correction/GL-entry/native-body deltas. Exact generated bytes/current recipe/native maps, canonical237 and clean release passed; parent viewed coherent Balanced terrain. Parent accepts rendering/control/recovery; independent runtime review pending. Aurora0 remains inactive, no new FPS/work/native-equivalent quality/PBRDH claim.
+
+Next direct reuse is Reimagined NeoForge26.2 native398/generated402: separate source certificate and explicit family dispatch plus native public controller assigned to acknowledged staged-only owners. Parent retains integration/client/build. Native Goal and full90 scope remain active; EAGLE untouched.
+
+[BSL runtime](../evaluation/bsl-neoforge-262-main-control-runtime-20261011.md), [next-family scout](../evaluation/neoforge-262-next-family-transfer-20261011.md).
+
+
+## Development-throughput audit completed — 2026-10-12 Pacific
+
+Human separately authorized a 60-minute Astra-team investigation and offline improvements while shader execution stayed paused. Git and six selected transcripts plus source/raw runtime evidence establish recurring producer/consumer mismatches and delivery-ordering costs, with counterevidence retained. Adapter resource/catalog synchronization and a shared BSL/Reimagined final control operation are implemented; 29 focused tests and independent reviews passed. All 735 pending Reimagined input pins still match; no client/producer deadline started. Existing runtime allocation/counters/next action are unchanged, and no new shader performance/quality/compatibility result is claimed. Current audit chat has no native Goal; none was created.
+
+[Audit, actual changes and verification](../DEVELOPMENT_THROUGHPUT_REVIEW_20261012.md).
+
+
+## Second development audit: parallelism and direct methods — 2026-10-12 Pacific
+
+Human requested another Astra team for the slow per-shader parallel workflow and direct improvements. Timestamped handoffs show late caller preparation on the critical path; source/options prove several selected budgets remove no work. Reusable real-Iris option discovery is implemented and matches actual BSL/Reimagined evidence. MakeUp End cloud 10→9/8 and three-family NF26.2 full-byte streaming hash changes are prepared as separate unapplied product overlays. Fifteen new focused tests and independent reviews pass; standalone BSL allocation 1,135,080→66,376 bytes per hash is not an FPS claim. Native End rendering, visual quality and real-client adoption remain unverified. All 735 sealed Reimagined inputs and the unstarted deadline are preserved; no Minecraft/Gradle/GPU launch, native Goal or shader allocation change.
+
+[Second investigation, methods and exact evidence](../DEVELOPMENT_THROUGHPUT_REVIEW_20261012.md#second-investigation-parallelism-and-useful-work).
+
+
+## Offline delivery sprint — October12, 2026 (runtime remains paused)
+
+Human separately authorized90 minutes of isolated source changes and focused CPU
+verification, including20 minutes of final parent review/integration; no Minecraft,
+GPU, Gradle, remote access or Goal resume. Reviewed NeoForge26.2 settings r5
+labels actual source/control routes and fixes availability-before-suspension;
+lazy Balanced Reimagined carry r2 includes the strict certificate recipe join.
+Parent integrated all9 accepted paths only in a fresh source copy, matching the
+executed final Java/recipe hashes.43 settings JVM cases and7 joined consumers
+passed; source/model checks remain distinct from driver/quality/FPS evidence.
+The related old R1 no-gain trial stays closed.
+
+[Delivery, reviews and exact evidence](../evaluation/offline-delivery-sprint-20261012.md).
+The read-only04:34UTC census found no Minecraft clients;735/735 sealed pins match,
+producer/client receipts remain absent and final330 stamp is unstarted. Native
+Goal in this offline chat is null; no Goal was created or resumed. Existing paused
+owner,15139/16339 accounting,1200-second remainder and chosen next action remain
+unchanged: after explicit resume, verify nativeGoal ACTIVE/exact ownership/current
+sealed inputs, then run the adopted producer/freeze/preflight/finite client for
+Reimagined main-JAR402 rendering and native398 Quality/Off/Cancel recovery.
+New product overlays remain unapplied and require separate later adoption.
+
+## Deep active-work investigation — October12, 2026 (offline)
+
+The separately authorized two-hour-ceiling Astra-max/Sol investigation selected
+BSL10.1.8 clear Balanced primary-cloud detail rejection. Exact native density0
+certificates omit two of three noise reads while retaining every native march,
+lighting, opacity, first-hit and temporal update. Independent adversarial review
+accepted r2; parent applied its six-path recipe/helper/mirror/catalog/certificate
+overlay only in a fresh source copy and reproduced the ZIP exactly. A separately
+pinned full-work LOD0 control and weaker Bliss quadrature alternative are ready.
+
+Twelve combined local tests passed; actual Iris384→388, authentic Java admission,
+stale/tamper refusals, Quality/Off, Cancel and injected reload-failure restoration
+passed. Sampler parity, reached rejection frequency, driver/image/motion/cost and
+DH/PBR remain unverified. A fixed-path receipt writer was corrected and two fresh
+receiver runs verified preservation; the earlier overwrite is recorded in
+USER_LESSONS. No game/GPU/Gradle/Goal operation or main-source adoption occurred.
+Full90 scope, sealed Reimagined next action and15139/16339 runtime accounting stay
+unchanged. After explicit runtime resume, retain the existing Reimagined operation;
+the new BSL experiment uses fresh later inputs on the existing Fabric26.1.2 scene.
+
+[Recommendation, exact patch, equations and experiment](../evaluation/deep-shader-investigation-20261012.md).
+
+
+## Resumed Reimagined main-mod delivery — October12, 2026 Pacific
+
+The human explicitly resumed the prepared Reimagined → BSL delivery path. Parent
+verified all735 sealed pins, root-only native ownership and no Java/client/build
+jobs, then executed the unchanged source-only producer/freeze/preflight/finite
+consumer. The actual packaged main mod rendered native398 → Balanced402 →
+Quality398 → Off398 with no fallback, native TAA/style/RP, exact main-JAR origins,
+recipe/member verification, public Apply/restoration and Cancel. The caller exited0
+and verified exact client/launcher absence and lock release at06:01:35UTC. Parent
+viewed coherent Balanced terrain. No speed, executed-volume count, motion, DH or
+PBR claim follows from this operation.
+
+The six reviewed BSL clear-cloud bound postimages were then applied exactly to
+maintained source. Its accepted source/CPU evidence is reused. The runtime worker
+owns the Fabric26.1.2 build/client lane and fresh inputs; the parent owns integration,
+current state and Git. Next observation is actual candidate/full-work control
+rendering, primary sampler/rejection activity, still/motion and a short matched
+original/control/candidate/original-return cost decision. The existing16339-second
+allocation remains unchanged and charges this entire resumed delivery path.
+
+[Actual Reimagined report](../../dev/logs/concept-transfer-r1/reimagined-neoforge-main/runtime-r1/runtime-report.json),
+[exact release](../../dev/logs/concept-transfer-r1/reimagined-neoforge-main/runtime-r1/release.json),
+[BSL reviewed candidate and fixed experiment](../evaluation/deep-shader-investigation-20261012.md).
+
+
+## BSL candidate runtime handback — October12, 2026 Pacific
+
+Exact reviewed bound is integrated and committed82c631b. Actual Fabric26.1.2
+main-mod native384→generated388→Quality384→Off384 and Cancel passed; parent
+independently checked all297 generated members/current recipe and native maps,
+and inspected coherent active cloud rendering. Two new tuple rendering/recovery
+increments are usable, including independently accepted Reimagined NeoForge26.2.
+There is no new optimization gain: full-work-control cost launch failed at owned
+window activation, fresh candidate cost refused finite time/readiness before
+launch. No FPS samples, sampler/rejection or motion proof. Exact final release
+06:16:41UTC has no owned jobs and free lock. Remaining allocation is insufficient
+for another finite operation. Keep fixed BSL candidate pending; next decisive
+work is sampler/rejection plus full-work control/motion and matched cost, within
+a renewed allocation. Full90 scope and native guards remain intact.
+
+[Actual BSL result and limitations](../evaluation/bsl-cloud-bound-runtime-20261012.md).
