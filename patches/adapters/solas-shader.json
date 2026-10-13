@@ -28,7 +28,14 @@
     "shaders/lib/atmosphere/skyEffects.glsl": "aa5cf1b152932a6984b9938251d1290e804fe1bbd55b4f4ced1d882c6dab2999",
     "shaders/lib/atmosphere/volumetricClouds.glsl": "18e19170e8cf7f7f40e601ca7940a0b28c8311015ae2aa82b7f8cc7b2ed3232f",
     "shaders/tex/noise.png": "912e47e64b5b5ec63f8abd9413f77caf077967e2caa01a3b9d4b850e97e5ecd2",
-    "shaders/tex/noise.png.mcmeta": "7f447458dce74ae0fe936ba8dd11f0cdb30e36d4e99ca93f82ce8966d25ed9d2"
+    "shaders/tex/noise.png.mcmeta": "7f447458dce74ae0fe936ba8dd11f0cdb30e36d4e99ca93f82ce8966d25ed9d2",
+    "shaders/lib/lighting/ambientOcclusion.glsl": "ee07cafd2b98d9b17b928dce01c2f9dc82fe05e0e76f73be4a9040a4c1c081f7",
+    "shaders/lib/pbr/parallax.glsl": "ab8052c636bcca0c2afe082d6f0085e58fe0b06408f7f7531712723a9a72d8f8",
+    "shaders/lib/water/waterNormals.glsl": "8d3e34752d6e182edf328eea2c35c3cfbba77afd078450d1912e138a10b57867",
+    "shaders/lib/atmosphere/volumetrics.glsl": "5b13c1e9cad3251bb5e7f36dd78093a3890949bff677900651086ca4f2028e18",
+    "shaders/lib/pbr/simpleReflection.glsl": "aecf80835f89b3781fb7ab422d7942543aa0511e051e8bd4cf03dd4f13a21348",
+    "shaders/lib/lighting/shadows.glsl": "c1b2e631a0b7fb3fea375e01defeb89a80cfaf01ac5ed6ebd87a9c8924ceffe5",
+    "shaders/lib/lighting/gbuffersLighting.glsl": "ea576f6cfe29e710aebc7125719e8764d3dd2dfeea29cbb4540af0328c8505b8"
   },
   "patches": [
     {
@@ -39,7 +46,7 @@
     {
       "path": "shaders/lib/pbr/waterReflection.glsl",
       "before": "    vec3 reflectPos = Raytrace(depthtex1, viewPos, newNormal, dither, 6, 1.0, 0.1, 1.6, border, cdist);",
-      "after": "    // Only valid-crossing termination count; coarse traversal and fallback stay upstream.\n    #if SHADERLOD_REFINEMENT_ADAPTER == 1 && defined GBUFFERS_WATER && !defined GBUFFERS_WATER_COLORWHEEL && !defined DISTANT_HORIZONS && !defined VOXY\n    int shaderlodRefinementCount = 6;\n    shaderlodRefinementCount = shaderlod_refinement_budget(shaderlodBridgeVersion,\n        shaderlodEnabled, shaderlodPreset, length(viewPos), shaderlodRefinementCount, 4);\n    vec3 reflectPos = Raytrace(depthtex1, viewPos, newNormal, dither, shaderlodRefinementCount, 1.0, 0.1, 1.6, border, cdist);\n    #else\n    vec3 reflectPos = Raytrace(depthtex1, viewPos, newNormal, dither, 6, 1.0, 0.1, 1.6, border, cdist);\n    #endif"
+      "after": "    // Only valid-crossing termination count; coarse traversal and fallback stay upstream.\n    #if SHADERLOD_REFINEMENT_ADAPTER == 1 && defined GBUFFERS_WATER && !defined GBUFFERS_WATER_COLORWHEEL && !defined DISTANT_HORIZONS && !defined VOXY\n    int shaderlodRefinementCount = 6;\n    shaderlodRefinementCount = shaderlod_solas_distance_budget(shaderlodOptReflectionRefinement, length(viewPos), shaderlodRefinementCount, 4);\n    vec3 reflectPos = Raytrace(depthtex1, viewPos, newNormal, dither, shaderlodRefinementCount, 1.0, 0.1, 1.6, border, cdist);\n    #else\n    vec3 reflectPos = Raytrace(depthtex1, viewPos, newNormal, dither, 6, 1.0, 0.1, 1.6, border, cdist);\n    #endif"
     },
     {
       "path": "shaders/shaders.properties",
@@ -59,7 +66,7 @@
     {
       "path": "shaders/lib/atmosphere/aurora.glsl",
       "before": "\t\tvec3 rayIncrement = nWorldPos * rayLength;\n\t\tvec3 startPos = auroraCameraPos * auroraAltitudeMult + nearestPlane * nWorldPos;\n\t\tvec3 rayPos = startPos + rayIncrement * dither;\n\t\tfloat sampleTotalLength = nearestPlane + rayLength * dither;\n\t\tint sampleCount = int(min(planeDifference / rayLength, float(samples * 4)) + 4.0);",
-      "after": "\t\tint sampleCount = int(min(planeDifference / rayLength, float(samples * 4)) + 4.0);\n        #if SHADERLOD_REFINEMENT_ADAPTER == 1 && defined SHADERLOD_SOLAS_AURORA && defined OVERWORLD && !defined DISTANT_HORIZONS && !defined VOXY && !defined ADVANCED_MATERIALS && !defined PBR\n        int shaderlodSolasNativeCount = sampleCount;\n        sampleCount = shaderlod_solas_volume_budget(sampleCount, 4);\n        // Same native count-defined physical span, fewer strata. Keep native vertical fade.\n        float shaderlodSolasStride = 1.0;\n        if (sampleCount < shaderlodSolasNativeCount) {\n            shaderlodSolasStride = float(shaderlodSolasNativeCount) / float(sampleCount);\n            rayLength *= shaderlodSolasStride;\n        }\n        #endif\n\t\tvec3 rayIncrement = nWorldPos * rayLength;\n\t\tvec3 startPos = auroraCameraPos * auroraAltitudeMult + nearestPlane * nWorldPos;\n\t\tvec3 rayPos = startPos + rayIncrement * dither;\n\t\tfloat sampleTotalLength = nearestPlane + rayLength * dither;"
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && defined SHADERLOD_SOLAS_AURORA && defined OVERWORLD && !defined DISTANT_HORIZONS && !defined VOXY && !defined ADVANCED_MATERIALS && !defined PBR\n\t\tint sampleCount = int(min(planeDifference / rayLength, float(samples * 4)) + 4.0);\n        #if SHADERLOD_REFINEMENT_ADAPTER == 1 && defined SHADERLOD_SOLAS_AURORA && defined OVERWORLD && !defined DISTANT_HORIZONS && !defined VOXY && !defined ADVANCED_MATERIALS && !defined PBR\n        int shaderlodSolasNativeCount = sampleCount;\n        sampleCount = shaderlod_solas_volume_budget(sampleCount, 4);\n        // Same native count-defined physical span, fewer strata. Keep native vertical fade.\n        float shaderlodSolasStride = 1.0;\n        if (sampleCount < shaderlodSolasNativeCount) {\n            shaderlodSolasStride = float(shaderlodSolasNativeCount) / float(sampleCount);\n            rayLength *= shaderlodSolasStride;\n        }\n        #endif\n\t\tvec3 rayIncrement = nWorldPos * rayLength;\n\t\tvec3 startPos = auroraCameraPos * auroraAltitudeMult + nearestPlane * nWorldPos;\n\t\tvec3 rayPos = startPos + rayIncrement * dither;\n\t\tfloat sampleTotalLength = nearestPlane + rayLength * dither;\n#else\n\t\tvec3 rayIncrement = nWorldPos * rayLength;\n\t\tvec3 startPos = auroraCameraPos * auroraAltitudeMult + nearestPlane * nWorldPos;\n\t\tvec3 rayPos = startPos + rayIncrement * dither;\n\t\tfloat sampleTotalLength = nearestPlane + rayLength * dither;\n\t\tint sampleCount = int(min(planeDifference / rayLength, float(samples * 4)) + 4.0);\n#endif"
     },
     {
       "path": "shaders/lib/atmosphere/aurora.glsl",
@@ -74,13 +81,348 @@
     {
       "path": "shaders/lib/atmosphere/volumetricClouds.glsl",
       "before": "\tfloat noiseBase = cloudSampleBase(baseCoord);\n\tfloat noiseDetail = CloudSampleDetail(detailCoord, sampleAltitude, thickness);\n\tfloat noiseCoverage = CloudCoverageDefault(sampleAltitude, amount);\n\t      noiseCoverage += CloudVerticalCoverage(sampleAltitude, noiseBase);",
-      "after": "    #if defined SHADERLOD_SOLAS_PRIMARY_CLOUD && SHADERLOD_SOLAS_PRIMARY_CLOUD == 1 && defined OVERWORLD && defined FSH && defined VOLUMETRIC_CLOUDS && SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY && !defined PBR && !defined ADVANCED_MATERIALS\n    bool shaderlodCloudBound = shaderlodBridgeVersion == 2 && shaderlodEnabled == 1 && shaderlodPreset == 0;\n    float noiseBase;\n    if (shaderlodCloudBound) {\n        // Exact native base operations. Pinned normalized single-level linear noise.\n        // Explicit LOD0 keeps sampling defined after earlier ray iterations diverge.\n        float perlinBase = texture2DLod(noisetex, baseCoord * 0.5 + vec2(0.17, -0.11), 0.0).r * 0.6;\n        perlinBase += texture2DLod(noisetex, baseCoord * 1.5 + vec2(-0.07, 0.19), 0.0).r * 0.4;\n        perlinBase = perlinBase * 0.9 + pow3(perlinBase) * 0.4;\n        noiseBase = clamp((perlinBase - 0.35) * 1.4 + 0.5, 0.0, 1.0);\n    } else noiseBase = cloudSampleBase(baseCoord);\n    float noiseCoverage = CloudCoverageDefault(sampleAltitude, amount);\n    noiseCoverage += CloudVerticalCoverage(sampleAltitude, noiseBase);\n    // Reuse BSL native-zero detail rejection, adapted to Solas's clamped fmix/wetness.\n    // VC_DETAIL .25..2; dynamic weather modifies amount/density, not this macro.\n    if (shaderlodCloudBound && noiseBase >= 0.0 && noiseBase <= 1.0 &&\n        sampleAltitude >= 0.0 && sampleAltitude <= 1.0 && thickness >= 0.0 && thickness <= 32.0 &&\n        amount >= 0.0 && amount <= 32.0 && density >= 0.0 && density <= 64.0 &&\n        wetness >= 0.0 && wetness <= 1.0 && VC_DETAIL >= 0.25 && VC_DETAIL <= 2.0 &&\n        noiseCoverage >= 0.0 && noiseCoverage <= 32.0 &&\n        all(lessThan(abs(baseCoord), vec2(1e6))) && all(lessThan(abs(detailCoord), vec2(1e6)))) {\n        float shaderlodUpper = fmix(noiseBase, 1.0, 0.0476 * VC_DETAIL) * 21.0;\n        shaderlodUpper = fmix(shaderlodUpper - noiseCoverage, 21.0 - noiseCoverage * 2.5, 0.2 * wetness);\n        shaderlodUpper -= amount;\n        // Bound includes native wetness fill and both vertical penalties. Margin covers float association.\n        if (shaderlodUpper < -0.001) return 0.0;\n    }\n    float noiseDetail;\n    if (shaderlodCloudBound) {\n        float detailZ = floor(sampleAltitude * float(thickness)) * 0.04;\n        float detailFrac = fract(sampleAltitude * float(thickness));\n        float noiseDetailLow = texture2DLod(noisetex, detailCoord.xy + detailZ, 0.0).g;\n        float noiseDetailHigh = texture2DLod(noisetex, detailCoord.xy + detailZ + 0.04, 0.0).g;\n        noiseDetail = fmix(noiseDetailLow, noiseDetailHigh, detailFrac);\n    } else noiseDetail = CloudSampleDetail(detailCoord, sampleAltitude, thickness);\n    #else\n\tfloat noiseBase = cloudSampleBase(baseCoord);\n\tfloat noiseDetail = CloudSampleDetail(detailCoord, sampleAltitude, thickness);\n\tfloat noiseCoverage = CloudCoverageDefault(sampleAltitude, amount);\n\t      noiseCoverage += CloudVerticalCoverage(sampleAltitude, noiseBase);\n    #endif"
+      "after": "    #if defined SHADERLOD_SOLAS_PRIMARY_CLOUD && SHADERLOD_SOLAS_PRIMARY_CLOUD == 1 && defined OVERWORLD && defined FSH && defined VOLUMETRIC_CLOUDS && SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY && !defined PBR && !defined ADVANCED_MATERIALS\n    bool shaderlodCloudBound = shaderlod_optimization_enabled(shaderlodOptCloudPrimaryDetail) && shaderlodPreset == 0;\n    bool shaderlodCloudSampling = shaderlodCloudBound || shaderlod_optimization_enabled(shaderlodOptCloudPrimaryBudget);\n    float noiseBase;\n    if (shaderlodCloudSampling) {\n        // Exact native base operations. Pinned normalized single-level linear noise.\n        // Explicit LOD0 keeps sampling defined after earlier ray iterations diverge.\n        float perlinBase = texture2DLod(noisetex, baseCoord * 0.5 + vec2(0.17, -0.11), 0.0).r * 0.6;\n        perlinBase += texture2DLod(noisetex, baseCoord * 1.5 + vec2(-0.07, 0.19), 0.0).r * 0.4;\n        perlinBase = perlinBase * 0.9 + pow3(perlinBase) * 0.4;\n        noiseBase = clamp((perlinBase - 0.35) * 1.4 + 0.5, 0.0, 1.0);\n    } else noiseBase = cloudSampleBase(baseCoord);\n    float noiseCoverage = CloudCoverageDefault(sampleAltitude, amount);\n    noiseCoverage += CloudVerticalCoverage(sampleAltitude, noiseBase);\n    // Reuse BSL native-zero detail rejection, adapted to Solas's clamped fmix/wetness.\n    // VC_DETAIL .25..2; dynamic weather modifies amount/density, not this macro.\n    if (shaderlodCloudBound && noiseBase >= 0.0 && noiseBase <= 1.0 &&\n        sampleAltitude >= 0.0 && sampleAltitude <= 1.0 && thickness >= 0.0 && thickness <= 32.0 &&\n        amount >= 0.0 && amount <= 32.0 && density >= 0.0 && density <= 64.0 &&\n        wetness >= 0.0 && wetness <= 1.0 && VC_DETAIL >= 0.25 && VC_DETAIL <= 2.0 &&\n        noiseCoverage >= 0.0 && noiseCoverage <= 32.0 &&\n        all(lessThan(abs(baseCoord), vec2(1e6))) && all(lessThan(abs(detailCoord), vec2(1e6)))) {\n        float shaderlodUpper = fmix(noiseBase, 1.0, 0.0476 * VC_DETAIL) * 21.0;\n        shaderlodUpper = fmix(shaderlodUpper - noiseCoverage, 21.0 - noiseCoverage * 2.5, 0.2 * wetness);\n        shaderlodUpper -= amount;\n        // Bound includes native wetness fill and both vertical penalties. Margin covers float association.\n        if (shaderlodUpper < -0.001) return 0.0;\n    }\n    float noiseDetail;\n    if (shaderlodCloudSampling) {\n        float detailZ = floor(sampleAltitude * float(thickness)) * 0.04;\n        float detailFrac = fract(sampleAltitude * float(thickness));\n        float noiseDetailLow = texture2DLod(noisetex, detailCoord.xy + detailZ, 0.0).g;\n        float noiseDetailHigh = texture2DLod(noisetex, detailCoord.xy + detailZ + 0.04, 0.0).g;\n        noiseDetail = fmix(noiseDetailLow, noiseDetailHigh, detailFrac);\n    } else noiseDetail = CloudSampleDetail(detailCoord, sampleAltitude, thickness);\n    #else\n\tfloat noiseBase = cloudSampleBase(baseCoord);\n\tfloat noiseDetail = CloudSampleDetail(detailCoord, sampleAltitude, thickness);\n\tfloat noiseCoverage = CloudCoverageDefault(sampleAltitude, amount);\n\t      noiseCoverage += CloudVerticalCoverage(sampleAltitude, noiseBase);\n    #endif"
+    },
+    {
+      "path": "shaders/lib/lighting/ambientOcclusion.glsl",
+      "before": "float GetLinearDepth(float depth, mat4 invProjMatrix) {",
+      "after": "#include \"/lib/shaderlod/adapter.glsl\"\nfloat GetLinearDepth(float depth, mat4 invProjMatrix) {"
+    },
+    {
+      "path": "shaders/lib/lighting/ambientOcclusion.glsl",
+      "before": "\tfor (int i = 0; i < 4; i++) {",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY\n    int shaderlodAoCount = 4;\n    if (!isLod && hand < 0.5)\n        shaderlodAoCount = shaderlod_solas_distance_budget(shaderlodOptAoBudget, length(viewPos), 4, 2);\n    for (int i = 0; i < shaderlodAoCount; i++) {\n        int shaderlodAoIndex = shaderlodAoCount == 4 ? i : int(floor((float(i) + 0.5) * 4.0 / float(shaderlodAoCount)));\n        if (shaderlodAoCount < 4) {\n            currentStep = 0.2475 * (dither / 6.28 + float(shaderlodAoIndex)) + 0.01;\n            baseOffset = vec2(cos(dither), sin(dither));\n            for (int shaderlodRotation = 0; shaderlodRotation < shaderlodAoIndex; shaderlodRotation++)\n                baseOffset = vec2(baseOffset.x - baseOffset.y, baseOffset.x + baseOffset.y) * 0.7071;\n        }\n#else\n\tfor (int i = 0; i < 4; i++) {\n#endif"
+    },
+    {
+      "path": "shaders/lib/lighting/ambientOcclusion.glsl",
+      "before": "\tao *= 0.25;\n\tpointiness *= 0.25;",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY\n\tao /= float(shaderlodAoCount);\n\tpointiness /= float(shaderlodAoCount);\n#else\n\tao *= 0.25;\n\tpointiness *= 0.25;\n#endif"
+    },
+    {
+      "path": "shaders/lib/pbr/parallax.glsl",
+      "before": "vec4 readNormal(vec2 coord) {",
+      "after": "#include \"/lib/shaderlod/adapter.glsl\"\nvec4 readNormal(vec2 coord) {"
+    },
+    {
+      "path": "shaders/lib/pbr/parallax.glsl",
+      "before": "#include \"/lib/shaderlod/adapter.glsl\"",
+      "after": "#include \"/lib/shaderlod/adapter.glsl\"\n#if SHADERLOD_REFINEMENT_ADAPTER == 1\n#include \"/include/shaderlod/projected_material_budget.glsl\"\n#endif"
+    },
+    {
+      "path": "shaders/lib/pbr/parallax.glsl",
+      "before": "    float sampleStep = (dither * 0.4 + 0.6) / PARALLAX_QUALITY;",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY && defined GBUFFERS_TERRAIN && !defined GBUFFERS_TERRAIN_COLORWHEEL\n    int shaderlodPomCount = PARALLAX_QUALITY;\n    float shaderlodView2 = dot(viewVector, viewVector);\n    if (parallaxFade >= 0.5 && parallaxFade < 1.0 && shaderlodView2 > 1e-8 && shaderlodView2 < 1e12 &&\n        viewVector.z < 0.0 && viewVector.z * viewVector.z > 0.0625 * shaderlodView2 &&\n        all(greaterThan(vTexCoordAM.pq, vec2(0.0))) && all(lessThanEqual(vTexCoordAM.pq, vec2(1.0))))\n        if (shaderlod_optimization_enabled(shaderlodOptProjectedPom)) {\n            float shaderlodRatio = shaderlodPreset == 0 ? 0.75 : 0.5;\n            ShaderlodWorkPolicy shaderlodPolicy = ShaderlodWorkPolicy(shaderlodBridgeVersion, 2, 1, true, 2, true, true,\n                vec3(float(PARALLAX_DISTANCE) + 16.0, float(PARALLAX_DISTANCE) + 28.0, 4.0), vec2(shaderlodRatio));\n            vec2 shaderlodRay = viewVector.xy * PARALLAX_DEPTH * (1.0 - parallaxFade) / -viewVector.z;\n            shaderlodPomCount = shaderlod_projected_material_budget(shaderlodPolicy, true, true, false, dist,\n                PARALLAX_QUALITY, shaderlodRay, dcdx / vTexCoordAM.pq, dcdy / vTexCoordAM.pq,\n                vec2(atlasSize) * vTexCoordAM.pq, 1.0);\n        }\n    float sampleStep = (dither * 0.4 + 0.6) / float(shaderlodPomCount);\n#else\n    float sampleStep = (dither * 0.4 + 0.6) / PARALLAX_QUALITY;\n#endif"
+    },
+    {
+      "path": "shaders/lib/pbr/parallax.glsl",
+      "before": "    for (int i = 0; i < PARALLAX_QUALITY; i++){",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY && defined GBUFFERS_TERRAIN && !defined GBUFFERS_TERRAIN_COLORWHEEL\n    for (int i = 0; i < shaderlodPomCount; i++){\n#else\n    for (int i = 0; i < PARALLAX_QUALITY; i++){\n#endif"
+    },
+    {
+      "path": "shaders/lib/pbr/raytracer.glsl",
+      "before": "vec3 nvec3(vec4 pos) {",
+      "after": "#include \"/lib/shaderlod/adapter.glsl\"\nvec3 nvec3(vec4 pos) {"
+    },
+    {
+      "path": "shaders/lib/pbr/raytracer.glsl",
+      "before": "    for (int i = 0; i < 30; i++) {",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY\n    int shaderlodTraceCount = 30;\n    #if defined GBUFFERS_WATER\n    shaderlodTraceCount = shaderlod_solas_distance_budget(shaderlodOptReflectionTraceBudget, length(viewPos), 30, 24);\n    #endif\n    for (int i = 0; i < shaderlodTraceCount; i++) {\n#else\n    for (int i = 0; i < 30; i++) {\n#endif"
+    },
+    {
+      "path": "shaders/lib/water/waterNormals.glsl",
+      "before": "float getWaterHeightMap(vec3 worldPos, vec2 offset) {",
+      "after": "#include \"/lib/shaderlod/adapter.glsl\"\nfloat getWaterHeightMap(vec3 worldPos, vec2 offset) {"
+    },
+    {
+      "path": "shaders/lib/water/waterNormals.glsl",
+      "before": "\tfor(int i = 0; i < 4; i++) {",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY && defined GBUFFERS_WATER\n    int shaderlodParallaxCount = shaderlod_solas_distance_budget(shaderlodOptWaterParallaxBudget, viewDistance, 4, 3);\n    for(int i = 0; i < shaderlodParallaxCount; i++) {\n#else\n\tfor(int i = 0; i < 4; i++) {\n#endif"
+    },
+    {
+      "path": "shaders/lib/atmosphere/volumetricClouds.glsl",
+      "before": "            for (int i = 0; i < sampleCount; i++, rayPos += rayIncrement, sampleTotalLength += rayLength) {",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY && defined SHADERLOD_SOLAS_PRIMARY_CLOUD\n            int shaderlodDensityBudget = shaderlod_solas_budget(shaderlodOptCloudPrimaryBudget, sampleCount, 4);\n            int shaderlodDensityKey = -1;\n            float shaderlodDensityValue = 0.0;\n            float shaderlodPreviousDensityAltitude = -1.0;\n            int shaderlodLightBudget = shaderlod_solas_budget(shaderlodOptCloudSecondaryBudget, sampleCount, 4);\n            int shaderlodLightKey = -1;\n            bool shaderlodRateValid = false, shaderlodRateSmooth = false;\n            float shaderlodRateValue = 0.0, shaderlodRateDensity = 0.0, shaderlodRateAltitude = 0.0;\n            float shaderlodRateLightAltitude = -1.0;\n            float shaderlodRatePixelScale = 0.5 * max(abs(gbufferProjection[0].x) * viewWidth, abs(gbufferProjection[1].y) * viewHeight);\n            float shaderlodRateViewCosine = -nViewPos.z;\n            float shaderlodRateRank = fract(dot(floor(gl_FragCoord.xy), vec2(0.754877666, 0.569840296)));\n            float shaderlodRateExtinction = 4.0 - timeBrightness;\n            vec3 shaderlodRateSunWorld = normalize(ToWorld(sunVec * 100000000.0));\n            bool shaderlodRateRayAllowed = (timeAngle < 0.5325 || timeAngle > 0.9675) && shaderlodRateSunWorld.y > 0.2 && VoL < 0.8 &&\n                shaderlodRatePixelScale > 0.0 && shaderlodRatePixelScale < 1e8 && shaderlodRateViewCosine > 0.0 && shaderlodRateViewCosine <= 1.0 &&\n                rayLength > 0.0 && rayLength < 1e8 && shaderlodRateExtinction > 0.0 && shaderlodRateExtinction < 1e8;\n            float shaderlodLightValue = 0.0;\n            for (int i = 0; i < sampleCount; i++, rayPos += rayIncrement, sampleTotalLength += rayLength) {\n#else\n            for (int i = 0; i < sampleCount; i++, rayPos += rayIncrement, sampleTotalLength += rayLength) {\n#endif"
+    },
+    {
+      "path": "shaders/lib/atmosphere/volumetricClouds.glsl",
+      "before": "                float noise = CloudSample(cloudCoord, wind, sampleAltitude, thickness, amount, density);",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY && defined SHADERLOD_SOLAS_PRIMARY_CLOUD\n                int shaderlodCellKey = int(floor(float(i) * float(shaderlodDensityBudget) / float(sampleCount)));\n                bool shaderlodDensityReuse = shaderlodDensityBudget < sampleCount && shaderlodNear > 0.0 && shaderlodNear < shaderlodFar && shaderlodFar <= 4096.0 && shaderlodTransition >= 0.0 && shaderlodTransition <= shaderlodFar - shaderlodNear && shaderlodTransition * 0.5 <= shaderlodNear && sampleTotalLength > shaderlodFar + shaderlodTransition * 0.5 &&\n                    sampleAltitude > 0.1 && sampleAltitude < 0.9 && shaderlodPreviousDensityAltitude > 0.1 && shaderlodPreviousDensityAltitude < 0.9 && shaderlodCellKey == shaderlodDensityKey;\n                float noise;\n                if (shaderlodDensityReuse) noise = shaderlodDensityValue;\n                else noise = CloudSample(cloudCoord, wind, sampleAltitude, thickness, amount, density);\n                shaderlodDensityKey = shaderlodCellKey;\n                shaderlodDensityValue = noise;\n                shaderlodPreviousDensityAltitude = sampleAltitude;\n#else\n                float noise = CloudSample(cloudCoord, wind, sampleAltitude, thickness, amount, density);\n#endif"
+    },
+    {
+      "path": "shaders/lib/atmosphere/volumetricClouds.glsl",
+      "before": "                float lightingNoise = CloudSampleLowDetail(cloudCoord + worldLightVec.xy, wind, sampleAltitudeL, thickness, amount, density);",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY && defined SHADERLOD_SOLAS_PRIMARY_CLOUD\n                int shaderlodLightingKey = int(floor(float(i) * float(shaderlodLightBudget) / float(sampleCount)));\n                bool shaderlodLightingReuse = shaderlodLightBudget < sampleCount && shaderlodNear > 0.0 && shaderlodNear < shaderlodFar && shaderlodFar <= 4096.0 && shaderlodTransition >= 0.0 && shaderlodTransition <= shaderlodFar - shaderlodNear && shaderlodTransition * 0.5 <= shaderlodNear && sampleTotalLength > shaderlodFar + shaderlodTransition * 0.5 &&\n                    sampleAltitudeL > 0.1 && sampleAltitudeL < 0.9 && shaderlodLightingKey == shaderlodLightKey;\n                float shaderlodCellPixels = rayLength * shaderlodRatePixelScale / max(sampleTotalLength * shaderlodRateViewCosine, 0.0001);\n                bool shaderlodRateReuse = shaderlod_optimization_enabled(shaderlodOptVolumeLightReuse) && shaderlodRateRayAllowed &&\n                    (i - (i / 2) * 2) == 1 && shaderlodRateValid && shaderlodRateSmooth && sampleTotalLength > 512.0 &&\n                    shaderlodCellPixels >= 0.0 && shaderlodCellPixels < 48.0 && noise >= 0.08 && shaderlodRateDensity >= 0.08 &&\n                    noise < 1e8 && shaderlodRateDensity < 1e8 &&\n                    sampleAltitude > 0.1 && sampleAltitude < 0.9 && shaderlodRateAltitude > 0.1 && shaderlodRateAltitude < 0.9 &&\n                    sampleAltitudeL > 0.1 && sampleAltitudeL < 0.9 && shaderlodRateLightAltitude > 0.1 && shaderlodRateLightAltitude < 0.9 &&\n                    abs(sampleAltitude - shaderlodRateAltitude) <= 0.05 && abs(sampleAltitudeL - shaderlodRateLightAltitude) <= 0.05 &&\n                    abs(noise - shaderlodRateDensity) <= 0.1 * max(noise, shaderlodRateDensity) &&\n                    shaderlodRateRank < clamp((sampleTotalLength - 512.0) / 1024.0, 0.0, 1.0) * clamp((48.0 - shaderlodCellPixels) / 16.0, 0.0, 1.0);\n                bool shaderlodSecondaryFresh = !shaderlodLightingReuse && !shaderlodRateReuse;\n                float lightingNoise;\n                if (shaderlodLightingReuse) lightingNoise = shaderlodLightValue;\n                else if (shaderlodRateReuse) lightingNoise = shaderlodRateValue;\n                else lightingNoise = CloudSampleLowDetail(cloudCoord + worldLightVec.xy, wind, sampleAltitudeL, thickness, amount, density);\n                shaderlodLightKey = shaderlodLightingKey;\n                shaderlodLightValue = lightingNoise;\n#else\n                float lightingNoise = CloudSampleLowDetail(cloudCoord + worldLightVec.xy, wind, sampleAltitudeL, thickness, amount, density);\n#endif"
+    },
+    {
+      "path": "shaders/lib/atmosphere/volumetrics.glsl",
+      "before": "float getNetherFogSample(vec3 fogPos) {",
+      "after": "#include \"/lib/shaderlod/adapter.glsl\"\nfloat getNetherFogSample(vec3 fogPos) {"
+    },
+    {
+      "path": "shaders/lib/atmosphere/volumetrics.glsl",
+      "before": "        for (int i = 0; i < sampleCount; i++, currentDist *= 2.0) {",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY\n        int shaderlodVlCount = sampleCount;\n        if (sampleCount >= 5 && sampleCount <= 32)\n            shaderlodVlCount = shaderlod_solas_budget(shaderlodOptVolumetricLightBudget, sampleCount, 5);\n        if (translucent != vec3(1.0) && linearZ0 != linearZ1) shaderlodVlCount = sampleCount;\n        #ifdef VL\n        if (!(vlSamplePersistence >= 0.1 && vlSamplePersistence <= 1.0)) shaderlodVlCount = sampleCount;\n        #endif\n        // First four native strata protect near fog/water cues. Tail selects centers in native log-distance domain.\n        for (int i = 0; i < shaderlodVlCount; i++) {\n            int shaderlodVlIndex = i;\n            float shaderlodVlWeight = 1.0;\n            int shaderlodVlFirst = i;\n            int shaderlodVlLast = i + 1;\n            if (shaderlodVlCount < sampleCount && i >= 4) {\n                shaderlodVlWeight = float(sampleCount - 4) / float(shaderlodVlCount - 4);\n                shaderlodVlFirst = 4 + int(floor(float(i - 4) * shaderlodVlWeight));\n                shaderlodVlLast = 4 + int(floor(float(i - 3) * shaderlodVlWeight));\n                shaderlodVlIndex = shaderlodVlLast - 1;\n            }\n            if (shaderlodVlCount < sampleCount) {\n                int shaderlodValidLast = shaderlodVlFirst;\n                for (int shaderlodVirtual = shaderlodVlFirst; shaderlodVirtual < shaderlodVlLast; shaderlodVirtual++) {\n                    float shaderlodVirtualDist = exp2(dither) * exp2(float(shaderlodVirtual));\n                    if (isRayMarcherHit(shaderlodVirtualDist, maxDist, linearZ0, linearZ1, translucent) ||\n                        length(nWorldPos * shaderlodVirtualDist) > maxDist) break;\n                    shaderlodValidLast = shaderlodVirtual + 1;\n                }\n                if (shaderlodValidLast == shaderlodVlFirst) break;\n                shaderlodVlLast = shaderlodValidLast;\n                shaderlodVlIndex = shaderlodVlLast - 1;\n                currentDist = exp2(dither) * exp2(float(shaderlodVlIndex));\n            }\n            else if (i > 0) currentDist *= 2.0;\n#else\n        for (int i = 0; i < sampleCount; i++, currentDist *= 2.0) {\n#endif"
+    },
+    {
+      "path": "shaders/lib/atmosphere/volumetrics.glsl",
+      "before": "            vl += vlSample * currentSampleIntensityVL * vlIntensity;\n            vl += lpvFogSample * currentSampleIntensityLPV * lpvFogIntensity;",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY\n            vl += vlSample * currentSampleIntensityVL * vlIntensity;\n            vl += lpvFogSample * currentSampleIntensityLPV * lpvFogIntensity;\n#else\n            vl += vlSample * currentSampleIntensityVL * vlIntensity;\n            vl += lpvFogSample * currentSampleIntensityLPV * lpvFogIntensity;\n#endif"
+    },
+    {
+      "path": "shaders/lib/pbr/raytracer.glsl",
+      "before": "    float dist = 0.0;",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY\n    float dist = 0.0;\n    bool shaderlodDeferMetric = shaderlod_optimization_enabled(shaderlodOptReflectionDeferredMetric);\n    bool shaderlodSampledHit = false;\n    vec3 shaderlodLastHit = vec3(0.0);\n#else\n    float dist = 0.0;\n#endif"
+    },
+    {
+      "path": "shaders/lib/pbr/raytracer.glsl",
+      "before": "        dist = abs(dot(normalize(start - hitViewPos), normal));",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY\n        if (shaderlodDeferMetric) {\n            shaderlodLastHit = hitViewPos;\n            shaderlodSampledHit = true;\n        } else dist = abs(dot(normalize(start - hitViewPos), normal));\n#else\n        dist = abs(dot(normalize(start - hitViewPos), normal));\n#endif"
+    },
+    {
+      "path": "shaders/lib/pbr/raytracer.glsl",
+      "before": "    return vec4(pos, dist);",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY\n    if (shaderlodDeferMetric && shaderlodSampledHit)\n        dist = abs(dot(normalize(start - shaderlodLastHit), normal));\n    return vec4(pos, dist);\n#else\n    return vec4(pos, dist);\n#endif"
+    },
+    {
+      "path": "shaders/lib/water/waterNormals.glsl",
+      "before": "float getWaterHeightMap(vec3 worldPos, vec2 offset) {",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && defined GBUFFERS_WATER && !defined DISTANT_HORIZONS && !defined VOXY\nvec3 shaderlodSolasWaterPos = vec3(0.0);\nfloat shaderlodSolasWaterHighWeight = 1.0;\nbool shaderlodSolasWaterCache = false;\nbool shaderlodSolasNormalPhase = false;\n#endif\nfloat getWaterHeightMap(vec3 worldPos, vec2 offset) {"
+    },
+    {
+      "path": "shaders/lib/water/waterNormals.glsl",
+      "before": "float noiseB = texture(noisetex, (worldPos.xz + wind) / 48.0 + offset).g;",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY && defined GBUFFERS_WATER\nfloat noiseB;\n    if (shaderlodSolasNormalPhase && shaderlodSolasWaterHighWeight < 1.0) {\n        noiseB = 0.5;\n        if (shaderlodSolasWaterHighWeight > 0.0)\n            noiseB = mix(0.5, texture2DLod(noisetex, (worldPos.xz + wind) / 48.0 + offset, 0.0).g, shaderlodSolasWaterHighWeight);\n    } else noiseB = texture(noisetex, (worldPos.xz + wind) / 48.0 + offset).g;\n#else\nfloat noiseB = texture(noisetex, (worldPos.xz + wind) / 48.0 + offset).g;\n#endif"
+    },
+    {
+      "path": "shaders/lib/water/waterNormals.glsl",
+      "before": "float noiseB = texture(noisetex, (worldPos.xz + wind) / 96.0 + offset).r;",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY && defined GBUFFERS_WATER\nfloat noiseB;\n    if (shaderlodSolasNormalPhase && shaderlodSolasWaterHighWeight < 1.0) {\n        noiseB = 0.5;\n        if (shaderlodSolasWaterHighWeight > 0.0)\n            noiseB = mix(0.5, texture2DLod(noisetex, (worldPos.xz + wind) / 96.0 + offset, 0.0).r, shaderlodSolasWaterHighWeight);\n    } else noiseB = texture(noisetex, (worldPos.xz + wind) / 96.0 + offset).r;\n#else\nfloat noiseB = texture(noisetex, (worldPos.xz + wind) / 96.0 + offset).r;\n#endif"
+    },
+    {
+      "path": "shaders/lib/water/waterNormals.glsl",
+      "before": "float noiseB = texture(noisetex, (worldPos.xz + wind) / 48.0 + offset).r;",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY && defined GBUFFERS_WATER\nfloat noiseB;\n    if (shaderlodSolasNormalPhase && shaderlodSolasWaterHighWeight < 1.0) {\n        noiseB = 0.5;\n        if (shaderlodSolasWaterHighWeight > 0.0)\n            noiseB = mix(0.5, texture2DLod(noisetex, (worldPos.xz + wind) / 48.0 + offset, 0.0).r, shaderlodSolasWaterHighWeight);\n    } else noiseB = texture(noisetex, (worldPos.xz + wind) / 48.0 + offset).r;\n#else\nfloat noiseB = texture(noisetex, (worldPos.xz + wind) / 48.0 + offset).r;\n#endif"
+    },
+    {
+      "path": "shaders/lib/water/waterNormals.glsl",
+      "before": "\tvec3 waterPos = getParallaxWaves(worldPos + cameraPosition, viewVector, viewDistance);",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY && defined GBUFFERS_WATER\n    vec3 waterPos;\n    if (shaderlodSolasWaterCache) waterPos = shaderlodSolasWaterPos;\n    else waterPos = getParallaxWaves(worldPos + cameraPosition, viewVector, viewDistance);\n    shaderlodSolasNormalPhase = shaderlodSolasWaterCache;\n#else\n\tvec3 waterPos = getParallaxWaves(worldPos + cameraPosition, viewVector, viewDistance);\n#endif"
+    },
+    {
+      "path": "shaders/lib/water/waterNormals.glsl",
+      "before": "\tfloat xDelta = (h1 - h0) / WATER_NORMAL_OFFSET;",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY && defined GBUFFERS_WATER\n    shaderlodSolasNormalPhase = false;\n    float xDelta = (h1 - h0) / WATER_NORMAL_OFFSET;\n#else\n\tfloat xDelta = (h1 - h0) / WATER_NORMAL_OFFSET;\n#endif"
+    },
+    {
+      "path": "shaders/programs/gbuffers_water.glsl",
+      "before": "    vec3 worldPos = ToWorld(viewPos);",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY && defined GBUFFERS_WATER\n    vec3 worldPos = ToWorld(viewPos);\n    #if WATER_NORMALS > 0 && !defined GBUFFERS_WATER_COLORWHEEL\n    // Frame-uniform selection; all lanes execute full displaced-coordinate derivatives before material/discard.\n    if (shaderlod_optimization_enabled(shaderlodOptProceduralWater)) {\n        shaderlodSolasWaterPos = getParallaxWaves(worldPos + cameraPosition, viewVector, viewDistance);\n        vec2 shaderlodWaterCoord = shaderlodSolasWaterPos.xz - shaderlodSolasWaterPos.y * 0.2;\n        vec2 shaderlodWaterDx = dFdx(shaderlodWaterCoord);\n        vec2 shaderlodWaterDy = dFdy(shaderlodWaterCoord);\n        float shaderlodWaterFreq = max(length(shaderlodWaterDx), length(shaderlodWaterDy)) *\n            (WATER_NORMALS == 2 ? 512.0 / 96.0 : 512.0 / 48.0);\n        float shaderlodWaterExpansion = max(length(shaderlodWaterDx), length(shaderlodWaterDy)) /\n            max(max(length(dFdx(worldPos.xz - worldPos.y * 0.2)), length(dFdy(worldPos.xz - worldPos.y * 0.2))), 1e-6);\n        if (shaderlodWaterFreq >= 0.0 && shaderlodWaterFreq < 1e6 && shaderlodWaterExpansion >= 0.0 && shaderlodWaterExpansion < 4.0) {\n            float shaderlodWaterFar = smoothstep(32.0, 48.0, viewDistance);\n            float shaderlodWaterConfidence = 1.0 - smoothstep(2.0, 4.0, shaderlodWaterExpansion);\n            shaderlodSolasWaterHighWeight = 1.0 - shaderlodWaterFar * shaderlodWaterConfidence * smoothstep(0.125, 0.25, shaderlodWaterFreq);\n            shaderlodSolasWaterCache = true;\n        }\n    }\n    #endif\n#else\n    vec3 worldPos = ToWorld(viewPos);\n#endif"
+    },
+    {
+      "path": "shaders/lib/atmosphere/volumetricClouds.glsl",
+      "before": "\tfloat noiseBase = cloudSampleBase(baseCoord);\n\tfloat noiseCoverage = CloudCoverageDefault(sampleAltitude, amount);",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY && defined SHADERLOD_SOLAS_PRIMARY_CLOUD\n    float noiseBase;\n    if (shaderlod_optimization_enabled(shaderlodOptCloudSecondaryBudget) || shaderlod_optimization_enabled(shaderlodOptVolumeLightReuse)) {\n        float perlinBase = texture2DLod(noisetex, baseCoord * 0.5 + vec2(0.17, -0.11), 0.0).r * 0.6;\n        perlinBase += texture2DLod(noisetex, baseCoord * 1.5 + vec2(-0.07, 0.19), 0.0).r * 0.4;\n        perlinBase = perlinBase * 0.9 + pow3(perlinBase) * 0.4;\n        noiseBase = clamp((perlinBase - 0.35) * 1.4 + 0.5, 0.0, 1.0);\n    } else noiseBase = cloudSampleBase(baseCoord);\n    float noiseCoverage = CloudCoverageDefault(sampleAltitude, amount);\n#else\n\tfloat noiseBase = cloudSampleBase(baseCoord);\n\tfloat noiseCoverage = CloudCoverageDefault(sampleAltitude, amount);\n#endif"
+    },
+    {
+      "path": "shaders/lib/atmosphere/volumetricClouds.glsl",
+      "before": "                      lightingNoise *= attenuationL;",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY && defined SHADERLOD_SOLAS_PRIMARY_CLOUD\n                      lightingNoise *= attenuationL;\n                if (shaderlodSecondaryFresh) {\n                    float shaderlodRateDelta = abs(lightingNoise - shaderlodRateValue) * shaderlodRateExtinction;\n                    shaderlodRateSmooth = shaderlodRateValid && shaderlodRateDelta >= 0.0 && shaderlodRateDelta <= 0.1;\n                    shaderlodRateValue = lightingNoise;\n                    shaderlodRateDensity = noise;\n                    shaderlodRateAltitude = sampleAltitude;\n                    shaderlodRateLightAltitude = sampleAltitudeL;\n                    shaderlodRateValid = lightingNoise >= 0.0 && lightingNoise < 1e8;\n                } else if (shaderlodLightingReuse) {\n                    // A separate approximate budget is not fresh coherence evidence for the lighting-rate cache.\n                    shaderlodRateValid = false; shaderlodRateSmooth = false;\n                }\n#else\n                      lightingNoise *= attenuationL;\n#endif"
+    },
+    {
+      "path": "shaders/lib/atmosphere/volumetrics.glsl",
+      "before": "            vec3 rayPos = sampleWorldPos + cameraPosition;",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY\n            if (shaderlodVlCount < sampleCount && shaderlodVlLast - shaderlodVlFirst > 1) {\n                // Native intensities are powers of the doubled distance. Sum exactly those log-domain weights,\n                // rather than multiply a linear sample stride after the persistence power.\n                float shaderlodGroupWidth = float(shaderlodVlLast - shaderlodVlFirst);\n                float shaderlodFirstIntensity = exp2(dither) * exp2(float(shaderlodVlFirst)) / maxDist / sampleCount;\n                currentSampleIntensityLPV = shaderlodFirstIntensity * (exp2(shaderlodGroupWidth) - 1.0);\n                #ifdef VL\n                currentSampleIntensityVL = pow(shaderlodFirstIntensity, vlSamplePersistence) *\n                    (exp2(vlSamplePersistence * shaderlodGroupWidth) - 1.0) / (exp2(vlSamplePersistence) - 1.0);\n                #else\n                currentSampleIntensityVL = currentSampleIntensityLPV;\n                #endif\n            }\n            vec3 rayPos = sampleWorldPos + cameraPosition;\n#else\n            vec3 rayPos = sampleWorldPos + cameraPosition;\n#endif"
+    },
+    {
+      "path": "shaders/lib/atmosphere/volumetricClouds.glsl",
+      "before": "                if (noise <= 0.0001) continue;",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY && defined SHADERLOD_SOLAS_PRIMARY_CLOUD\n                if (noise <= 0.0001) { shaderlodLightKey = -1; shaderlodRateValid = false; shaderlodRateSmooth = false; continue; }\n#else\n                if (noise <= 0.0001) continue;\n#endif"
+    },
+    {
+      "path": "shaders/lib/atmosphere/volumetricClouds.glsl",
+      "before": "float texture2DShadow(sampler2D shadowtex, vec3 shadowPos) {",
+      "after": "#include \"/lib/shaderlod/adapter.glsl\"\nfloat texture2DShadow(sampler2D shadowtex, vec3 shadowPos) {"
+    },
+    {
+      "path": "shaders/lib/atmosphere/volumetricClouds.glsl",
+      "before": "void getEndCloudSample(vec2 rayPos, vec2 wind, float attenuation, inout float noise) {",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY\nvoid getEndCloudSample(vec2 rayPos, vec2 wind, float attenuation, inout float noise, bool shaderlodSecondary) {\n#else\nvoid getEndCloudSample(vec2 rayPos, vec2 wind, float attenuation, inout float noise) {\n#endif"
+    },
+    {
+      "path": "shaders/lib/atmosphere/volumetricClouds.glsl",
+      "before": "\tfloat detailZ = floor(attenuation * END_DISK_THICKNESS) * 0.05;",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY\n    bool shaderlodEndBound = shaderlod_optimization_enabled(shaderlodSecondary ? shaderlodOptCloudSecondaryDetail : shaderlodOptCloudPrimaryDetail);\n    float shaderlodEndCoverage = abs(attenuation - 0.125) * (attenuation > 0.125 ? 1.14 : 7.0);\n    shaderlodEndCoverage *= shaderlodEndCoverage * 7.0;\n    float shaderlodEndSpiral = getProtoplanetaryDisk(rayPos);\n    if (shaderlodEndBound && noiseBase >= 0.0 && noiseBase <= 1.0 && attenuation >= 0.0 && attenuation <= 1.0 &&\n        END_DISK_AMOUNT >= 0.0 && END_DISK_AMOUNT <= 32.0 &&\n        all(lessThan(abs(rayPos),vec2(1e6)))) {\n        float shaderlodEndUpper = mix(noiseBase, 1.0, 0.025 * int(0 < noiseBase)) * 22.0 - shaderlodEndCoverage;\n        if (shaderlodEndUpper - END_DISK_AMOUNT - 1.0 + shaderlodEndSpiral * 2.0 < -0.001) { noise = 0.0; return; }\n    }\n    float detailZ = floor(attenuation * END_DISK_THICKNESS) * 0.05;\n#else\n\tfloat detailZ = floor(attenuation * END_DISK_THICKNESS) * 0.05;\n#endif"
+    },
+    {
+      "path": "shaders/lib/atmosphere/volumetricClouds.glsl",
+      "before": "getEndCloudSample(rayPos.xz, wind, attenuation, noise);",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY\nint shaderlodEndPrimaryCell = int(floor(float(i) * float(shaderlodEndPrimaryBudget) / float(sampleCount)));\n                if (shaderlodEndPrimaryBudget < sampleCount && shaderlodEndPrimaryCell == shaderlodEndPrimaryKey &&\n                    attenuation > 0.1 && attenuation < 0.9 && shaderlodNear > 0.0 && shaderlodNear < shaderlodFar && shaderlodFar <= 4096.0 &&\n                    shaderlodTransition >= 0.0 && shaderlodTransition <= shaderlodFar - shaderlodNear && shaderlodTransition * 0.5 <= shaderlodNear && sampleTotalLength > shaderlodFar + shaderlodTransition * 0.5)\n                    noise = shaderlodEndPrimaryValue;\n                else getEndCloudSample(rayPos.xz, wind, attenuation, noise, false);\n                shaderlodEndPrimaryKey = shaderlodEndPrimaryCell;\n                shaderlodEndPrimaryValue = noise;\n#else\ngetEndCloudSample(rayPos.xz, wind, attenuation, noise);\n#endif"
+    },
+    {
+      "path": "shaders/lib/atmosphere/volumetricClouds.glsl",
+      "before": "getEndCloudSample(rayPos.xz + worldLightVec.xz, wind, attenuation , lightingNoise);",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY\nint shaderlodEndSecondaryCell = int(floor(float(i) * float(shaderlodEndSecondaryBudget) / float(sampleCount)));\n                if (shaderlodEndSecondaryBudget < sampleCount && shaderlodEndSecondaryCell == shaderlodEndSecondaryKey &&\n                    attenuation > 0.1 && attenuation < 0.9 && shaderlodNear > 0.0 && shaderlodNear < shaderlodFar && shaderlodFar <= 4096.0 &&\n                    shaderlodTransition >= 0.0 && shaderlodTransition <= shaderlodFar - shaderlodNear && shaderlodTransition * 0.5 <= shaderlodNear && sampleTotalLength > shaderlodFar + shaderlodTransition * 0.5)\n                    lightingNoise = shaderlodEndSecondaryValue;\n                else getEndCloudSample(rayPos.xz + worldLightVec.xz, wind, attenuation , lightingNoise, true);\n                shaderlodEndSecondaryKey = shaderlodEndSecondaryCell;\n                shaderlodEndSecondaryValue = lightingNoise;\n#else\ngetEndCloudSample(rayPos.xz + worldLightVec.xz, wind, attenuation , lightingNoise);\n#endif"
+    },
+    {
+      "path": "shaders/lib/atmosphere/volumetricClouds.glsl",
+      "before": "\t\t\tfor (int i = 0; i < sampleCount; i++, rayPos += sampleStep, sampleTotalLength += rayLength) {",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY\n            int shaderlodEndPrimaryBudget = shaderlod_solas_budget(shaderlodOptCloudPrimaryBudget, sampleCount, 1);\n            int shaderlodEndSecondaryBudget = shaderlod_solas_budget(shaderlodOptCloudSecondaryBudget, sampleCount, 1);\n            int shaderlodEndPrimaryKey = -1, shaderlodEndSecondaryKey = -1;\n            float shaderlodEndPrimaryValue = 0.0, shaderlodEndSecondaryValue = 0.0;\n\t\t\tfor (int i = 0; i < sampleCount; i++, rayPos += sampleStep, sampleTotalLength += rayLength) {\n#else\n\t\t\tfor (int i = 0; i < sampleCount; i++, rayPos += sampleStep, sampleTotalLength += rayLength) {\n#endif"
+    },
+    {
+      "path": "shaders/lib/pbr/parallax.glsl",
+      "before": "    vec3 normalMap = readNormal(coord).xyz * 2.0 - 1.0;",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY\n    bool shaderlodPomCache = shaderlod_optimization_enabled(shaderlodOptPomHeightCache);\n    vec4 shaderlodPomFirst = vec4(0.0);\n    vec3 normalMap;\n    if (shaderlodPomCache) { shaderlodPomFirst = readNormal(coord); normalMap = shaderlodPomFirst.xyz * 2.0 - 1.0; }\n    else normalMap = readNormal(coord).xyz * 2.0 - 1.0;\n#else\n    vec3 normalMap = readNormal(coord).xyz * 2.0 - 1.0;\n#endif"
+    },
+    {
+      "path": "shaders/lib/pbr/parallax.glsl",
+      "before": "    float depth = readNormal(coord).a;",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY\n    float depth;\n    if (shaderlodPomCache) depth = shaderlodPomFirst.a;\n    else depth = readNormal(coord).a;\n#else\n    float depth = readNormal(coord).a;\n#endif"
+    },
+    {
+      "path": "shaders/lib/pbr/simpleReflection.glsl",
+      "before": "void getReflection(inout vec3 color, in vec3 viewPos, in vec3 newNormal, in vec3 fresnel3, in float smoothness, in float skyLightMap) {",
+      "after": "#include \"/lib/shaderlod/adapter.glsl\"\nvoid getReflection(inout vec3 color, in vec3 viewPos, in vec3 newNormal, in vec3 fresnel3, in float smoothness, in float skyLightMap) {"
+    },
+    {
+      "path": "shaders/lib/pbr/simpleReflection.glsl",
+      "before": "                for (int i = -2; i <= 2; i++) {\n                    for (int j = -2; j <= 2; j++) {",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY && defined OVERWORLD && !defined PBR\n                int shaderlodGatherStep = 1;\n                float shaderlodGatherCount = 25.0;\n                if (shaderlod_optimization_enabled(shaderlodOptRoughReflectionGather) && isEyeInWater == 0 &&\n                    shaderlodNear > 0.0 && shaderlodNear < shaderlodFar && shaderlodFar <= 4096.0 &&\n                    shaderlodTransition >= 0.0 && shaderlodTransition <= shaderlodFar - shaderlodNear && shaderlodTransition * 0.5 <= shaderlodNear &&\n                    all(lessThanEqual(abs(viewPos), vec3(65536.0))) &&\n                    dot(viewPos, viewPos) > (shaderlodFar + shaderlodTransition) * (shaderlodFar + shaderlodTransition)) {\n                    shaderlodGatherStep = 2; shaderlodGatherCount = 9.0;\n                }\n                for (int i = -2; i <= 2; i += shaderlodGatherStep) {\n                    for (int j = -2; j <= 2; j += shaderlodGatherStep) {\n#else\n                for (int i = -2; i <= 2; i++) {\n                    for (int j = -2; j <= 2; j++) {\n#endif"
+    },
+    {
+      "path": "shaders/lib/pbr/simpleReflection.glsl",
+      "before": "                reflection /= 25.0;",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY && defined OVERWORLD && !defined PBR\n                reflection /= shaderlodGatherCount;\n#else\n                reflection /= 25.0;\n#endif"
+    },
+    {
+      "path": "shaders/lib/pbr/raytracer.glsl",
+      "before": "vec3 nvec3(vec4 pos) {",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY\n// Centered shape and finite guards adapted from pinned BSL10.1.8 private projectionR1.\nbool shaderlod_solas_projection_shape() {\n    mat4 p = gbufferProjection;\n    mat4 q = gbufferProjectionInverse;\n    return all(lessThanEqual(abs(p[0]), vec4(1e10))) && all(lessThanEqual(abs(p[1]), vec4(1e10)))\n        && all(lessThanEqual(abs(p[2]), vec4(1e10))) && all(lessThanEqual(abs(p[3]), vec4(1e10)))\n        && all(lessThanEqual(abs(q[0]), vec4(1e10))) && all(lessThanEqual(abs(q[1]), vec4(1e10)))\n        && all(lessThanEqual(abs(q[2]), vec4(1e10))) && all(lessThanEqual(abs(q[3]), vec4(1e10)))\n        && all(equal(p[0].yzw, vec3(0.0))) && all(equal(p[1].xzw, vec3(0.0)))\n        && all(equal(p[2].xy, vec2(0.0))) && p[2].w == -1.0 && all(equal(p[3].xyw, vec3(0.0)))\n        && all(equal(q[0].yzw, vec3(0.0))) && all(equal(q[1].xzw, vec3(0.0)))\n        && all(equal(q[2].xyz, vec3(0.0))) && all(equal(q[3].xy, vec2(0.0)))\n        && p[0].x != 0.0 && p[1].y != 0.0 && p[3].z != 0.0\n        && q[0].x != 0.0 && q[1].y != 0.0 && q[2].w != 0.0 && q[3].z != 0.0;\n}\n#endif\nvec3 nvec3(vec4 pos) {"
+    },
+    {
+      "path": "shaders/lib/pbr/raytracer.glsl",
+      "before": "    int refinedSamples = 0;",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY\n    int refinedSamples = 0;\n    bool shaderlodProjectionFast = false;\n    if (shaderlod_optimization_enabled(shaderlodOptSsrProjectionArithmetic))\n        shaderlodProjectionFast = shaderlod_solas_projection_shape() && all(lessThanEqual(abs(start), vec3(1e6))) &&\n            all(lessThanEqual(abs(viewPos), vec3(1e6))) && all(lessThanEqual(abs(rayStep), vec3(1e6))) &&\n            stepMult >= 0.0 && stepMult <= 2.0 && refinementMult >= 0.0 && refinementMult <= 1.0;\n#else\n    int refinedSamples = 0;\n#endif"
+    },
+    {
+      "path": "shaders/lib/pbr/raytracer.glsl",
+      "before": "        pos = nvec3(gbufferProjection * nvec4(viewPos)) * 0.5 + 0.5;",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY\n        bool shaderlodProjectedFast = shaderlodProjectionFast && abs(viewPos.z) > 1e-10;\n        if (shaderlodProjectedFast) {\n            vec3 shaderlodClip = vec3(gbufferProjection[0].x * viewPos.x, gbufferProjection[1].y * viewPos.y,\n                gbufferProjection[2].z * viewPos.z + gbufferProjection[3].z);\n            pos = (shaderlodClip / -viewPos.z) * 0.5 + 0.5;\n        } else pos = nvec3(gbufferProjection * nvec4(viewPos)) * 0.5 + 0.5;\n#else\n        pos = nvec3(gbufferProjection * nvec4(viewPos)) * 0.5 + 0.5;\n#endif"
+    },
+    {
+      "path": "shaders/lib/pbr/raytracer.glsl",
+      "before": "        vec3 hitViewPos = nvec3(gbufferProjectionInverse * nvec4(vec3(pos.xy, sampleDepth) * 2.0 - 1.0));",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY\n        vec3 hitViewPos;\n        vec3 shaderlodNdc = vec3(pos.xy, sampleDepth) * 2.0 - 1.0;\n        float shaderlodInverseW = gbufferProjectionInverse[2].w * shaderlodNdc.z + gbufferProjectionInverse[3].w;\n        if (shaderlodProjectedFast && sampleDepth >= 0.0 && sampleDepth <= 1.0 && abs(shaderlodInverseW) > 1e-10)\n            hitViewPos = vec3(gbufferProjectionInverse[0].x * shaderlodNdc.x,\n                gbufferProjectionInverse[1].y * shaderlodNdc.y, gbufferProjectionInverse[3].z) / shaderlodInverseW;\n        else hitViewPos = nvec3(gbufferProjectionInverse * nvec4(vec3(pos.xy, sampleDepth) * 2.0 - 1.0));\n#else\n        vec3 hitViewPos = nvec3(gbufferProjectionInverse * nvec4(vec3(pos.xy, sampleDepth) * 2.0 - 1.0));\n#endif"
+    },
+    {
+      "path": "shaders/lib/pbr/simpleReflection.glsl",
+      "before": "        int maxf = 6;",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY\n        int maxf = shaderlod_solas_distance_budget(shaderlodOptReflectionRefinement, length(viewPos), 6, 4);\n#else\n        int maxf = 6;\n#endif"
+    },
+    {
+      "path": "shaders/lib/pbr/raytracer.glsl",
+      "before": "    vec3 rayOffset = rayStep;",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY\n    vec3 rayOffset = rayStep;\n    bool shaderlodFootprintActive = shaderlod_optimization_enabled(shaderlodOptSsrProjectedFootprintExit) &&\n        shaderlod_solas_distance_budget(shaderlodOptSsrProjectedFootprintExit, length(viewPos), 30, 24) < 30 &&\n        viewWidth >= 1.0 && viewWidth <= 16384.0 && viewHeight >= 1.0 && viewHeight <= 16384.0;\n    #if !defined TAA\n    shaderlodFootprintActive = false;\n    #endif\n    vec2 shaderlodPreviousHit = vec2(0.0);\n    float shaderlodPreviousDepth = 0.0;\n    bool shaderlodPreviousWasHit = false;\n#else\n    vec3 rayOffset = rayStep;\n#endif"
+    },
+    {
+      "path": "shaders/lib/pbr/raytracer.glsl",
+      "before": "        float sampleDepth = texture2D(depthtex, pos.xy).r;",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY\n        float sampleDepth;\n        if (shaderlodFootprintActive || shaderlodEndpointActive) sampleDepth = texture2DLod(depthtex, pos.xy, 0.0).r;\n        else sampleDepth = texture2D(depthtex, pos.xy).r;\n#else\n        float sampleDepth = texture2D(depthtex, pos.xy).r;\n#endif"
+    },
+    {
+      "path": "shaders/lib/pbr/raytracer.glsl",
+      "before": "            if (refinedSamples >= refinementSteps) break;",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY\n            if (refinedSamples >= refinementSteps) break;\n            if (shaderlodEndpointActive && refinedSamples >= 3 && shaderlodEndpointThreshold > 0.0 && sampleDepth >= 0.0 && sampleDepth < 1.0 - 1e-5) {\n                vec3 shaderlodExactNext = start + (rayOffset - rayStep) + (rayStep * refinementMult) * stepMult;\n                vec4 shaderlodNextClip = gbufferProjection * nvec4(shaderlodExactNext);\n                if (shaderlodNextClip.w > 1e-5) {\n                    vec2 shaderlodNextPixels = shaderlodNextClip.xy / shaderlodNextClip.w * 0.5 + 0.5;\n                    if (all(lessThanEqual(abs(shaderlodNextPixels - pos.xy) * vec2(viewWidth, viewHeight), vec2(shaderlodEndpointThreshold)))) break;\n                }\n            }\n            // Existing BSL full-current-step footprint classifier, not Photon projected-ray recurrence.\n            if (shaderlodFootprintActive && refinedSamples >= 2 && shaderlodPreviousWasHit && sampleDepth >= 0.0 && sampleDepth < 1.0 - 1e-5) {\n                vec4 shaderlodFootprintClip = gbufferProjection * nvec4(viewPos);\n                vec4 shaderlodStepClip = gbufferProjection * vec4(rayStep, 0.0);\n                float shaderlodStepW = shaderlodFootprintClip.w + shaderlodStepClip.w;\n                if (shaderlodFootprintClip.w > 1e-5 && shaderlodStepW > 1e-5) {\n                    vec2 shaderlodNext = (shaderlodFootprintClip.xy + shaderlodStepClip.xy) / shaderlodStepW * 0.5 + 0.5;\n                    vec2 shaderlodExtent = vec2(viewWidth, viewHeight);\n                    if (all(lessThanEqual(abs(shaderlodNext - pos.xy) * shaderlodExtent, vec2(0.25))) &&\n                        all(lessThanEqual(abs(pos.xy - shaderlodPreviousHit) * shaderlodExtent, vec2(0.25))) &&\n                        all(equal(floor(pos.xy * shaderlodExtent), floor(shaderlodPreviousHit * shaderlodExtent))) &&\n                        abs(sampleDepth - shaderlodPreviousDepth) <= 0.00000095367431640625 &&\n                        all(greaterThan(pos.xy * shaderlodExtent, vec2(2.0))) && all(lessThan(pos.xy * shaderlodExtent, shaderlodExtent - vec2(2.0)))) break;\n                }\n            }\n            shaderlodPreviousHit = pos.xy;\n            shaderlodPreviousDepth = sampleDepth;\n            shaderlodPreviousWasHit = true;\n#else\n            if (refinedSamples >= refinementSteps) break;\n#endif"
+    },
+    {
+      "path": "shaders/lib/pbr/raytracer.glsl",
+      "before": "            rayStep *= refinementMult;\n        }",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY\n            rayStep *= refinementMult;\n        } else { shaderlodPreviousWasHit = false; }\n#else\n            rayStep *= refinementMult;\n        }\n#endif"
+    },
+    {
+      "path": "shaders/lib/pbr/simpleReflection.glsl",
+      "before": "        vec4 reflectPos = Raytrace(depthtex0, viewPos, newNormal, blueNoiseDither, border, maxf, 0.5, 0.1, inc);",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY && defined OVERWORLD && defined REFLECTION_ROUGH\n        shaderlodSolasOpaqueRough = smoothness >= 0.0 && smoothness <= 0.8;\n        vec4 reflectPos = Raytrace(depthtex0, viewPos, newNormal, blueNoiseDither, border, maxf, 0.5, 0.1, inc);\n        shaderlodSolasOpaqueRough = false;\n#else\n        vec4 reflectPos = Raytrace(depthtex0, viewPos, newNormal, blueNoiseDither, border, maxf, 0.5, 0.1, inc);\n#endif"
+    },
+    {
+      "path": "shaders/lib/pbr/raytracer.glsl",
+      "before": "    vec3 start = viewPos + normal * 0.075;",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY\n    bool shaderlodEndpointActive = shaderlodSolasOpaqueRough && shaderlod_optimization_enabled(shaderlodOptReflectionNextEventRefinement) &&\n        shaderlodNear > 0.0 && shaderlodNear < shaderlodFar && shaderlodFar <= 4096.0 &&\n        shaderlodTransition >= 0.0 && shaderlodTransition <= shaderlodFar - shaderlodNear && shaderlodTransition * 0.5 <= shaderlodNear &&\n        all(lessThanEqual(abs(viewPos), vec3(1e6))) && viewWidth >= 1.0 && viewWidth <= 16384.0 && viewHeight >= 1.0 && viewHeight <= 16384.0;\n    float shaderlodEndpointThreshold = shaderlodEndpointActive ? 0.25 * smoothstep(shaderlodNear, shaderlodFar + shaderlodTransition, length(viewPos)) : 0.0;\n    vec3 start = viewPos + normal * 0.075;\n#else\n    vec3 start = viewPos + normal * 0.075;\n#endif"
+    },
+    {
+      "path": "shaders/lib/lighting/ambientOcclusion.glsl",
+      "before": "\tfloat angleThreshold = isLod ? 0.15 : (0.15 + linZ * 0.01);",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY\n    float angleThreshold = isLod ? 0.15 : (0.15 + linZ * 0.01);\n    bool shaderlodAoDepthCache = shaderlod_optimization_enabled(shaderlodOptAoDepthReuse);\n    bool shaderlodAoCacheValid = false;\n    vec2 shaderlodAoCacheCoord = vec2(0.0);\n    float shaderlodAoCacheValue = 0.0;\n#else\n\tfloat angleThreshold = isLod ? 0.15 : (0.15 + linZ * 0.01);\n#endif"
+    },
+    {
+      "path": "shaders/lib/lighting/ambientOcclusion.glsl",
+      "before": "\t\t\tfloat sampleZ = texture2D(depthtex, sampleCoord).r;",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY\n            bool shaderlodAoCacheable = all(greaterThanEqual(sampleCoord, vec2(0.0))) && all(lessThanEqual(sampleCoord, vec2(1.0)));\n            float sampleZ;\n            if (shaderlodAoDepthCache && shaderlodAoCacheable && shaderlodAoCacheValid && all(equal(sampleCoord, shaderlodAoCacheCoord))) sampleZ = shaderlodAoCacheValue;\n            else if (shaderlodAoDepthCache) sampleZ = texture2DLod(depthtex, sampleCoord, 0.0).r;\n            else sampleZ = texture2D(depthtex, sampleCoord).r;\n            shaderlodAoCacheValid = shaderlodAoCacheable;\n            shaderlodAoCacheCoord = sampleCoord;\n            shaderlodAoCacheValue = sampleZ;\n#else\n\t\t\tfloat sampleZ = texture2D(depthtex, sampleCoord).r;\n#endif"
+    },
+    {
+      "path": "shaders/lib/lighting/shadows.glsl",
+      "before": "float texture2DShadow(sampler2D shadowtex, vec3 shadowPos) {",
+      "after": "#include \"/lib/shaderlod/adapter.glsl\"\nfloat texture2DShadow(sampler2D shadowtex, vec3 shadowPos) {"
+    },
+    {
+      "path": "shaders/lib/lighting/shadows.glsl",
+      "before": "void computeShadow(inout vec3 shadow, vec3 shadowPos, float offset, float subsurface, float skyLightMap) {",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY\nvoid computeShadow(inout vec3 shadow, vec3 shadowPos, float offset, float subsurface, float skyLightMap, float shaderlodReceiverDistance) {\n#else\nvoid computeShadow(inout vec3 shadow, vec3 shadowPos, float offset, float subsurface, float skyLightMap) {\n#endif"
+    },
+    {
+      "path": "shaders/lib/lighting/shadows.glsl",
+      "before": "    int shadowSamples = 2;",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY\n    int shadowSamples = 2;\n    bool shaderlodTemporalPair = false;\n    #if defined TAA && defined GBUFFERS_TERRAIN && defined OVERWORLD && SHADOW_PIXEL == 0 && !defined PBR\n    if (shaderlod_optimization_enabled(shaderlodOptTemporalShadowFilter) && shaderlodPreset == 1 &&\n        subsurface == 0.0 && shaderlodNear > 0.0 && shaderlodNear < shaderlodFar && shaderlodFar <= 4096.0 &&\n        shaderlodReceiverDistance > shaderlodNear && shaderlodReceiverDistance < 65536.0)\n        shaderlodTemporalPair = smoothstep(shaderlodNear, shaderlodFar, shaderlodReceiverDistance) > Bayer8(gl_FragCoord.xy);\n    #endif\n    if (shaderlodTemporalPair) shadowSamples = 1;\n#else\n    int shadowSamples = 2;\n#endif"
+    },
+    {
+      "path": "shaders/lib/lighting/shadows.glsl",
+      "before": "        vec2 shadowOffset = offsetDist(blueNoiseDither + i, shadowSamples) * offset;",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY\n        int shaderlodShadowIndex = shaderlodTemporalPair ? int(mod(float(frameCounter), 2.0)) : i;\n        vec2 shadowOffset = offsetDist(blueNoiseDither + shaderlodShadowIndex, 2) * offset;\n#else\n        vec2 shadowOffset = offsetDist(blueNoiseDither + i, shadowSamples) * offset;\n#endif"
+    },
+    {
+      "path": "shaders/lib/lighting/shadows.glsl",
+      "before": "    float shadow = texture2D(shadowtex, shadowPos.xy).r;",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY\n    float shadow;\n    if (shaderlod_optimization_enabled(shaderlodOptTemporalShadowFilter)) shadow = texture2DLod(shadowtex, shadowPos.xy, 0.0).r;\n    else shadow = texture2D(shadowtex, shadowPos.xy).r;\n#else\n    float shadow = texture2D(shadowtex, shadowPos.xy).r;\n#endif"
+    },
+    {
+      "path": "shaders/lib/lighting/gbuffersLighting.glsl",
+      "before": "        computeShadow(shadow, shadowPos, offset, subsurface, lightmap.y);",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY\n        computeShadow(shadow, shadowPos, offset, subsurface, lightmap.y, length(worldPos));\n#else\n        computeShadow(shadow, shadowPos, offset, subsurface, lightmap.y);\n#endif"
+    },
+    {
+      "path": "shaders/lib/atmosphere/volumetricClouds.glsl",
+      "before": "\trayPos *= 0.00025;",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY\n    bool shaderlodEndSampling = shaderlodSecondary ?\n        (shaderlod_optimization_enabled(shaderlodOptCloudSecondaryDetail) || shaderlod_optimization_enabled(shaderlodOptCloudSecondaryBudget)) :\n        (shaderlod_optimization_enabled(shaderlodOptCloudPrimaryDetail) || shaderlod_optimization_enabled(shaderlodOptCloudPrimaryBudget));\n    rayPos *= 0.00025;\n#else\n\trayPos *= 0.00025;\n#endif"
+    },
+    {
+      "path": "shaders/lib/atmosphere/volumetricClouds.glsl",
+      "before": "\tfloat worleyNoise = (1.0 - texture2D(noisetex, rayPos.xy + wind * 0.5).g) * 0.5 + 0.25;",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY\n    float worleyNoise;\n    if (shaderlodEndSampling) worleyNoise = (1.0 - texture2DLod(noisetex, rayPos.xy + wind * 0.5, 0.0).g) * 0.5 + 0.25;\n    else worleyNoise = (1.0 - texture2D(noisetex, rayPos.xy + wind * 0.5).g) * 0.5 + 0.25;\n#else\n\tfloat worleyNoise = (1.0 - texture2D(noisetex, rayPos.xy + wind * 0.5).g) * 0.5 + 0.25;\n#endif"
+    },
+    {
+      "path": "shaders/lib/atmosphere/volumetricClouds.glsl",
+      "before": "\tfloat perlinNoise = texture2D(noisetex, rayPos.xy + wind * 0.5).r;",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY\n    float perlinNoise;\n    if (shaderlodEndSampling) perlinNoise = texture2DLod(noisetex, rayPos.xy + wind * 0.5, 0.0).r;\n    else perlinNoise = texture2D(noisetex, rayPos.xy + wind * 0.5).r;\n#else\n\tfloat perlinNoise = texture2D(noisetex, rayPos.xy + wind * 0.5).r;\n#endif"
+    },
+    {
+      "path": "shaders/lib/atmosphere/volumetricClouds.glsl",
+      "before": "\tfloat noiseDetailA = texture2D(noisetex, rayPos  - wind + detailZ).b;",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY\n    float noiseDetailA;\n    if (shaderlodEndSampling) noiseDetailA = texture2DLod(noisetex, rayPos  - wind + detailZ, 0.0).b;\n    else noiseDetailA = texture2D(noisetex, rayPos  - wind + detailZ).b;\n#else\n\tfloat noiseDetailA = texture2D(noisetex, rayPos  - wind + detailZ).b;\n#endif"
+    },
+    {
+      "path": "shaders/lib/atmosphere/volumetricClouds.glsl",
+      "before": "\tfloat noiseDetailB = texture2D(noisetex, rayPos  - wind + detailZ + 0.05).b;",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY\n    float noiseDetailB;\n    if (shaderlodEndSampling) noiseDetailB = texture2DLod(noisetex, rayPos  - wind + detailZ + 0.05, 0.0).b;\n    else noiseDetailB = texture2D(noisetex, rayPos  - wind + detailZ + 0.05).b;\n#else\n\tfloat noiseDetailB = texture2D(noisetex, rayPos  - wind + detailZ + 0.05).b;\n#endif"
+    },
+    {
+      "path": "shaders/lib/lighting/shadows.glsl",
+      "before": "            shadowColor = texture2D(shadowcolor0, shadowPos.st).rgb * shadow1;",
+      "after": "#if SHADERLOD_REFINEMENT_ADAPTER == 1 && !defined DISTANT_HORIZONS && !defined VOXY\n            if (shaderlod_optimization_enabled(shaderlodOptTemporalShadowFilter)) shadowColor = texture2DLod(shadowcolor0, shadowPos.st, 0.0).rgb * shadow1;\n            else shadowColor = texture2D(shadowcolor0, shadowPos.st).rgb * shadow1;\n#else\n            shadowColor = texture2D(shadowcolor0, shadowPos.st).rgb * shadow1;\n#endif"
     }
   ],
   "additions": {
     "shaders/lib/shaderlod/adapter.glsl": {
       "path": "patches/adapters/solas-shader.glsl",
-      "sha256": "80f58db0204605667f43dba612123325a5580f59640df98a3aa5e32e4ecfbe88"
+      "sha256": "e880f9c7457ecbf7ae949fde4787387083d1ce208b84fab7bc4eee4575eb82d4"
     },
     "shaders/lib/shaderlod/refinement_budget.glsl": {
       "path": "patches/adapters/shared/refinement_budget.glsl",
@@ -89,6 +431,22 @@
     "shaders/lib/shaderlod/uniform_sample_budget.glsl": {
       "path": "patches/adapters/shared/uniform_sample_budget.glsl",
       "sha256": "00ea6f6ec69da669a9a1727498ba9dd1b40839dce38af42afb26ea8b831d1aec"
+    },
+    "shaders/include/shaderlod/projected_material_budget.glsl": {
+      "path": "patches/adapters/solas-union/projected_material_budget.glsl",
+      "sha256": "7985f3fe1f6a0aa4c61bbf0a8f0bb4003613ad169f2944226d331fbf7a552309"
+    },
+    "shaders/include/shaderlod/work_policy.glsl": {
+      "path": "patches/adapters/solas-union/work_policy.glsl",
+      "sha256": "1b70d1b34959778ac34ae9316797c23d858531ff366b55373bae1c7ee55ee309"
+    },
+    "shaders/include/shaderlod/effect_policy.glsl": {
+      "path": "patches/adapters/solas-union/effect_policy.glsl",
+      "sha256": "5df5427a1cfa51e68446978040235061ab6db60ec3f5079d40ffa0c39bad6943"
+    },
+    "shaders/include/shaderlod/optimization_flags.glsl": {
+      "path": "patches/adapters/shared/optimization_flags-v1-38659c61.glsl",
+      "sha256": "38659c61318c582cd84f1d459a7f382f63414d90a5a86137fb4ca5cea3ebc8b5"
     }
   },
   "validation": {
@@ -104,6 +462,12 @@
       "performance_measured": false,
       "scope": "Overworld deferred1 Aurora/no DH-Voxy/custom PBR; source-only originalMacblocked",
       "policy": "existing uniform_sample_budget min4; native count/sampleStep verticalfade preserved; whole interval striding/mean compensation"
+    },
+    "union_source_ports": {
+      "source_assembled": false,
+      "runtime_verified": false,
+      "quality_verified": false,
+      "performance_verified": false
     }
   },
   "shader_source_digest": "f38d0fb61e858690ce3b40b0dfc8a0bd3212b4f3dbd42d0aa1c354dcdda35640",
