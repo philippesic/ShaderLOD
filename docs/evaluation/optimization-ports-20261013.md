@@ -1,9 +1,10 @@
 # Direct optimization ports — October 13, 2026 Pacific
 
-Five optimization ports are integrated in maintained recipes, packaged resources
+Six optimization ports are integrated in maintained recipes, packaged resources
 and catalog recognition. Fresh previews reproduce the accepted source artifacts
-exactly. These are usable **source candidates**, not new rendering, visual-quality
-or speed results. The nine-family, five-version, two-loader scope remains active.
+exactly. Unbound, Sildur, Bliss and Photon also have bounded actual rendering and
+public restoration evidence below. Executed GPU savings, motion quality and FPS
+remain unverified. The nine-family, five-version, two-loader scope remains active.
 
 ## MakeUp UltraFast 9.5g: End clouds
 
@@ -287,9 +288,47 @@ The adopted source digests are enabled
 `5bd3e75d890eee470a1aecd35999689d9b774d6768807c5aee074f626efc775a`
 and disabled `1bd149e25c0dfde93f0c2cb46825509b3db01d43529b0e50baa391cd0b5a8b3a`;
 the prior exact derivative remains recognized. Recipe/mirror/catalog and strict
-builder agree. This fifth source port still needs new main packaging and actual
-driver rendering/controls; the previous four-port04ac JAR stays preserved.
+builder agree. The previous four-port04ac JAR stays preserved.
 [Source candidate](../../dev/logs/optimization-porting-20261013/photon-cloud-bound/REPORT.md),
 [independent review](../../dev/logs/optimization-porting-20261013/photon-independent-review/review.md),
 [adoption checks](../../dev/logs/optimization-porting-20261013/photon-cloud-bound/adoption-joins/receipt.json).
 The review's earlier TAAU adoption finding is corrected by the tested service join.
+
+The normal five-port Fabric26.1.2 JAR
+`2b13551c956d6ecf3eb568b86cd15e1f5c06f2084405eb3780102df055288c8a`
+actually rendered Photon through the public consumer with Original366 →
+Balanced369 → Quality366 → Off366 and Cancel. The known Mac-compatible configured
+baseline retains TAA=true, TAAU=false, latent scale1.00 and SH_SKYLIGHT=false;
+this is not an all-upstream-defaults claim. Parent independently reconstructed all
+533 expected source/helper members plus the two public metadata files, verified
+five current main-JAR class origins and native AA settings, and viewed coherent
+Original/On stills. Exact release10:08:53UTC and parent fresh absence/lock census
+are accepted. No reached-rejection, linked-uniform, sampler-parity, motion, FPS,
+DH/PBR or other-version/loader claim follows.
+[Runtime handback](../../dev/logs/optimization-porting-20261013/photon-render/handback.json),
+[parent acceptance](../../dev/logs/optimization-porting-20261013/parent/photon-runtime-acceptance/receipt.json),
+[scoped consumer patch](../../patches/consumer-ports/fabric-2612-photon-cloud.patch).
+
+## Complementary Reimagined r5.9.3: selected native cloud style 3
+
+The accepted Unbound positive-remainder bound now also reaches Reimagined's
+identical bundled cloud implementation when the user selects native cloud style3.
+Primary Overworld deferred1 qualities2/3 use eight noise reads per density call;
+certified empty calls use two. The three source patches have the same arithmetic
+as the independently accepted Unbound port, with an additional CLOUD_STYLE==3
+restriction. Native sampler, marching, lighting, AA and defaults remain exact.
+Reimagined defaults to style1 with one density read: this port supplies optional
+style coverage and makes no default-frame benefit claim.
+
+Parent verified sealed pre/postimages, arithmetic equivalence, clean shared
+resource sync and exact reproduced preview
+`f31dcaea31ee721e6db9e9e918886bc0264eaa333597eae22855166760f02821`.
+Four selected native style3 wrapper compilations and twelve source/helper tamper
+refusals pass. Actual isolated JVM Apply/Quality/Off preserves selected style3,
+native TAA and original options. The NeoForge26.2 certificate changes only its
+recipe identity: original398/generated402 default admission still passes, and
+style3 remains explicitly refused there. This is shader-adapter coverage, not new
+style3 renderer compatibility. Runtime rendering, motion, speed, DH/PBR and full
+tuple acceptance remain unverified.
+[Candidate and checks](../../dev/logs/optimization-porting-20261013/reimagined-cloud-bound/report.md),
+[parent adoption](../../dev/logs/optimization-porting-20261013/parent/reimagined-consumer/receipt.json).

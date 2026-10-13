@@ -1,0 +1,127 @@
+{
+  "schema": 1,
+  "kind": "ssr-hit-refinement",
+  "id": "complementary-reimagined",
+  "name": "Complementary Shaders - Reimagined",
+  "version": "r5.9.3",
+  "version_id": "Bqen1mJX",
+  "primary_page": "https://modrinth.com/shader/complementary-reimagined",
+  "release_url": "https://cdn.modrinth.com/data/HVnmMxH1/versions/Bqen1mJX/ComplementaryReimagined_r5.9.3.zip",
+  "release_archive_sha256": "fed6c879e732cf7fc7bc6570ebb1def43235aa7e96f62859fbdbdbfa0b484b38",
+  "license": {
+    "id": "LicenseRef-Custom",
+    "name": "",
+    "url": "https://github.com/ComplementaryDevelopment/ComplementaryReimagined/blob/main/License.txt"
+  },
+  "license_note": "Private local research copy only. Complementary License Agreement 1.7 retains restrictive modification/redistribution conditions; this visually conservative adapter does not establish compliance for redistribution. Original credit: https://www.complementary.dev/",
+  "source_members": {
+    "License.txt": "e8d4ee004e2a706303e89651e5cafa2f06af4d04f373fa17fc8251880a995add",
+    "shaders/lib/common.glsl": "fccb97c8ff5094996ea073d1d1c732fb841e3c6baf1f160b066e73e29d6e7dbe",
+    "shaders/lib/materials/materialMethods/reflections.glsl": "3b6d3b6477680a89ab56a2c0ae053b56b7b6b8cb39dabfba3d688772dac005ec",
+    "shaders/shaders.properties": "b29be050d6296bc5df769a66e351adbaaa9108eec801eb0442137a7a81266ab7",
+    "shaders/world-1/gbuffers_water.fsh": "5b909d77aafd314a42f2a3b5150cbdfbdf618c7ffa86238c078af0da5fd65913",
+    "shaders/world0/gbuffers_water.fsh": "2e60f0b681bf75f8f70b70c403aa3ae4f2cdf67c06c8d0a462e3fce239dddb2c",
+    "shaders/world1/gbuffers_water.fsh": "021e99fd03bea76c2bafea00384d755418382d4fac0f5a9e4c6a7525fdafad15",
+    "shaders/lib/atmospherics/volumetricLight/volumetricLight.glsl": "d380c3243df73b390433c015fcb5b9182cf98a511b49f7a98d5ccac1313ae8ff",
+    "shaders/program/composite1.glsl": "439477bfb5ece0817006ea7edbed4b0238954cd9d7c31e424b8b825d31e67756",
+    "shaders/world0/composite1.fsh": "caf4237c9f3a53d78b18c5ae73650a301e3fd2ba5220d8458614c370156b4c8f",
+    "shaders/lib/atmospherics/clouds/unboundClouds.glsl": "e8e45bfa8699453117814d5458c839402c364639bbe26048c5e53f6700005aaf",
+    "shaders/lib/util/commonFunctions.glsl": "bda1bc99e55c8ba2e8871454861d24e8cafa507a7c776ac09d85daaae10b891e",
+    "shaders/world0/deferred1.fsh": "0a16c4a2252ff3c8d9cfdb45d04b5050553d3a708bd8221d953c9a87bd733154",
+    "shaders/program/deferred1.glsl": "3a41c0e07b0cecee6407cc40dc71e86f11ecbe1f408284aada3a19a002792362",
+    "shaders/lib/atmospherics/clouds/mainClouds.glsl": "55919c7833b7e7630710d1716a078f04c508789936c26350d5e3fcf2560c96bf",
+    "shaders/lib/atmospherics/clouds/reimaginedClouds.glsl": "e1dea0e3ac673c0f32ad3cc97922391e3de2e2d981c925745366b6caaa4ff467",
+    "shaders/lib/textures/noise.png": "c810be7b1154640ec514f34f61cece2882514e6f5887101f20a1c57386cc15a1"
+  },
+  "patches": [
+    {
+      "path": "shaders/lib/materials/materialMethods/reflections.glsl",
+      "before": "#include \"/lib/misc/reprojection.glsl\"",
+      "after": "#include \"/lib/shaderlod/adapter.glsl\"\r\n\r\n#include \"/lib/misc/reprojection.glsl\""
+    },
+    {
+      "path": "shaders/lib/materials/materialMethods/reflections.glsl",
+      "before": "            int sr = 0;",
+      "after": "            #if SHADERLOD_REFINEMENT_ADAPTER == 1 && defined GBUFFERS_WATER && !defined DISTANT_HORIZONS && !defined VOXY\r\n                refinementCount = shaderlod_refinement_budget(shaderlodBridgeVersion,\r\n                    shaderlodEnabled, shaderlodPreset, lViewPos, refinementCount, 4);\r\n            #endif\r\n\r\n            int sr = 0;"
+    },
+    {
+      "path": "shaders/shaders.properties",
+      "before": "    screen=<empty> <empty> [INFORMATION] SHADER_STYLE <profile> RP_MODE <empty> <empty> [PERFORMANCE_SETTINGS] [CAMERA_SETTINGS] [LIGHTING_SETTINGS] [ATMOSPHERE_SETTINGS] [MATERIAL_SETTINGS] [OTHER_SETTINGS]",
+      "after": "    screen=<empty> <empty> [INFORMATION] SHADER_STYLE <profile> RP_MODE <empty> <empty> [PERFORMANCE_SETTINGS] [CAMERA_SETTINGS] [LIGHTING_SETTINGS] [ATMOSPHERE_SETTINGS] [MATERIAL_SETTINGS] [OTHER_SETTINGS] [SHADERLOD]\r\nscreen.SHADERLOD = SHADERLOD_REFINEMENT_ADAPTER"
+    },
+    {
+      "path": "shaders/lib/atmospherics/volumetricLight/volumetricLight.glsl",
+      "before": "vec4 DistortShadow(vec4 shadowpos, float distortFactor) {",
+      "after": "#include \"/lib/shaderlod/adapter.glsl\"\r\n\r\nvec4 DistortShadow(vec4 shadowpos, float distortFactor) {"
+    },
+    {
+      "path": "shaders/lib/atmospherics/volumetricLight/volumetricLight.glsl",
+      "before": "    vec3 nViewPosInSceneSpace = normalize(mat3(gbufferModelViewInverse) * nViewPos);",
+      "after": "    // Keep native interval limits, distribution, slice-weight normalization and feedback math.\r\n    #if SHADERLOD_REFINEMENT_ADAPTER == 1 && defined COMPOSITE1 && defined OVERWORLD && !defined DISTANT_HORIZONS && !defined VOXY && RP_MODE == 1 && !defined GENERATED_NORMALS && !defined COATED_TEXTURES\r\n    if (isEyeInWater == 0 && translucentMult == vec3(1.0) &&\r\n        viewWidth + viewHeight - gl_FragCoord.x - gl_FragCoord.y >= 1.5) {\r\n        nearSamples = shaderlod_complementary_volume_budget(nearSamples, 4);\r\n    }\r\n    #endif\r\n\r\n    vec3 nViewPosInSceneSpace = normalize(mat3(gbufferModelViewInverse) * nViewPos);"
+    },
+    {
+      "path": "shaders/lib/atmospherics/clouds/unboundClouds.glsl",
+      "before": "#if CLOUD_QUALITY == 1 || !defined DEFERRED1",
+      "after": "#include \"/lib/shaderlod/adapter.glsl\"\r\n\r\n#if CLOUD_QUALITY == 1 || !defined DEFERRED1"
+    },
+    {
+      "path": "shaders/lib/atmospherics/clouds/unboundClouds.glsl",
+      "before": "    for (int i = 0; i < sampleCount; i++) {\r\n        #if CLOUD_QUALITY >= 2",
+      "after": "    #if SHADERLOD_REFINEMENT_ADAPTER == 1 && defined DEFERRED1 && defined OVERWORLD && defined FRAGMENT_SHADER && CLOUD_STYLE == 3 && CLOUD_QUALITY >= 2 && CLOUD_QUALITY <= 3 && !defined DISTANT_HORIZONS && !defined VOXY && RP_MODE == 1 && !defined GENERATED_NORMALS && !defined COATED_TEXTURES\r\n        // BSL zero-density rejection, adapted to this family's positive four-octave fBm.\r\n        // Off/Quality/unknown core and nonclear weather retain the native full function.\r\n        bool shaderlodCloudBound = shaderlodBridgeVersion == 2 && shaderlodEnabled == 1 &&\r\n            shaderlodPreset == 0 && rainFactor == 0.0 &&\r\n            all(lessThan(abs(tracePosM), vec3(1e6))) && abs(wind) < 1e6 &&\r\n            cloudPlayerPosY > -1e6 && cloudPlayerPosY < 1e6;\r\n    #endif\r\n\r\n    for (int i = 0; i < sampleCount; i++) {\r\n        #if CLOUD_QUALITY >= 2"
+    },
+    {
+      "path": "shaders/lib/atmospherics/clouds/unboundClouds.glsl",
+      "before": "        total += currentPersist;",
+      "after": "        #if SHADERLOD_REFINEMENT_ADAPTER == 1 && defined DEFERRED1 && defined OVERWORLD && defined FRAGMENT_SHADER && CLOUD_STYLE == 3 && CLOUD_QUALITY >= 2 && CLOUD_QUALITY <= 3 && !defined DISTANT_HORIZONS && !defined VOXY && RP_MODE == 1 && !defined GENERATED_NORMALS && !defined COATED_TEXTURES\r\n            if (i == 0 && shaderlodCloudBound && noise >= 0.0 && noise <= 1.00001) {\r\n                // Native weights: 1 + .5 + .25 + .125 = 1.875 (binary exact).\r\n                // Each unsampled Noise3D mixes normalized red values at native explicit LOD0.\r\n                // Remaining weighted sum <= .875; 1e-5 sampler/rounding headroom is conservative.\r\n                float shaderlodUpper = pow2((noise + 0.87501) / 1.875);\r\n                float shaderlodNoiseMult = noiseMult;\r\n                shaderlodNoiseMult *= 0.8 + 0.1 * clamp01(-cloudPlayerPosY / cloudTallness)\r\n                                    + CLOUD_UNBOUND_RAIN_ADD * rainFactor;\r\n                shaderlodUpper *= shaderlodNoiseMult * CLOUD_UNBOUND_AMOUNT;\r\n                float shaderlodThreshold = clamp(abs(cloudAltitude - tracePos.y) / cloudStretch, 0.001, 0.999);\r\n                shaderlodThreshold = pow2(pow2(pow2(shaderlodThreshold)));\r\n                shaderlodUpper -= shaderlodThreshold * 0.2 + 0.25;\r\n                // Negative certificate only. Positive/ambiguous values execute all native octaves.\r\n                if (shaderlodUpper < -0.001) return 0.0;\r\n            }\r\n        #endif\r\n\r\n        total += currentPersist;"
+    }
+  ],
+  "additions": {
+    "shaders/lib/shaderlod/adapter.glsl": {
+      "path": "patches/adapters/complementary-reimagined.glsl",
+      "sha256": "04a17002b10ead4f77bc99f125ebc5e9f6e146f1ccb769c9d5968511e6dc5b3d"
+    },
+    "shaders/lib/shaderlod/refinement_budget.glsl": {
+      "path": "patches/adapters/shared/refinement_budget.glsl",
+      "sha256": "ff6c55047a903de1183597a05915714d70261659b8b1496c794e139f654f9665"
+    },
+    "shaders/lib/shaderlod/uniform_sample_budget.glsl": {
+      "path": "patches/adapters/shared/uniform_sample_budget.glsl",
+      "sha256": "00ea6f6ec69da669a9a1727498ba9dd1b40839dce38af42afb26ea8b831d1aec"
+    }
+  },
+  "validation": {
+    "assembled": false,
+    "glsl_compiled": false,
+    "iris_rendered": false,
+    "dh_rendered": false,
+    "pbr_rendered": false,
+    "volumetric_sample_budget": {
+      "source_assembled": true,
+      "driver_consumed": false,
+      "quality_checked": false,
+      "fps_measured": false,
+      "scope": "native Overworld composite1/RP1/no generated normals/coating/no DH/Voxy; above water/unit translucency; singleton native",
+      "minimum_near_intervals": 4,
+      "policy": "existing uniform_sample_budget bridge2 presets0/1/2, nativeOff/Quality"
+    }
+  },
+  "shader_source_digest": "95e2a1eabb73a72b01422d06a6f636de85d4ee136358e16a1c762a55633cfef0",
+  "ported_consumers": {
+    "primary_cloud_fbm_zero_bound": {
+      "reuse": "Accepted current Complementary Unbound r5.9.3 positive-remainder zero-density bound; identical native bundled cloud/sampler",
+      "entry": "shaders/world0/deferred1.fsh",
+      "scope": "Explicit native CLOUD_STYLE_DEFINE=3 -> CLOUD_STYLE3 only; Balanced bridge2/enabled1; primary Overworld deferred1 CLOUD_QUALITY2/3 RP1 clear rainFactor0; no DH/VOXY/generated normals/coating",
+      "native_density_reads": 8,
+      "certified_density_reads": 2,
+      "remaining_octave_weight": 0.875,
+      "native_normalization": 1.875,
+      "native_sampler": "Noise3D two texture2DLod level0 reads per octave, unchanged",
+      "runtime_verified": false,
+      "quality_verified": false,
+      "performance_verified": false,
+      "dh_pbr": "native fallback; compatibility remains unverified",
+      "default_style": "Native SHADER_STYLE1 / CLOUD_STYLE_DEFINE-1 -> CLOUD_STYLE1; untouched, bound inactive optional coverage",
+      "native_option_changed": false
+    }
+  }
+}

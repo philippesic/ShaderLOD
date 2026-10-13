@@ -8,19 +8,36 @@ shader-work reduction. Builds, source inventories and rejected candidates do not
 complete this 90-combination campaign. Current state and next ownership are in
 [STATUS](../STATUS.md).
 
-## Current human priority — October 11, 2026
+## Current human priority — October 12, 2026 Pacific
 
-The human has explicitly asked for direct progress through extending existing
-support to all currently supported shader families. Preserve the full version/loader
-scope, quality and restoration contract. Finish the already-preflighted Photon
-26.1.2 support check under its current owner, then take the concrete existing-family
-[assignment frontier](../SUPPORT_NEXT_20261011.md): Reimagined26.1.2 control/recovery,
-then BSL26.2 route/resource/consumer coverage. Do not start unrelated novel shader
-optimizations or another benchmark framework. Support, runtime acceptance and
-profitable speedup remain distinct; do not revive closed performance trials or
-manufacture support through an allowlist. The existing native Goal remains owner.
+The human asked the parent to **spearhead high-impact optimization porting** and
+explicitly authorized setting the amended native Goal. Its active state was
+verified in this chat on October 12 at 23:41 Pacific. Parent owns selecting,
+implementing, reviewing and integrating usable optimization ports across all nine
+families and all 90 version/loader combinations. Prioritize substantial removable
+work in active rendering paths, adapting existing mechanisms to each target's
+actual mathematics and selected consumer.
 
-## Current authority and continuation
+Usable integrated optimization code is the primary deliverable. Harnesses,
+benchmarks, diagnostics, audits, settings polish and support bookkeeping cannot
+become the main work. Limit enabling changes to those essential to the current
+port; benchmark or provenance perfection is not a preview-delivery gate. Focused
+authentic checks, bounded rendering/quality/cost observations and honest evidence
+boundaries still apply. Preserve native AA/quality, Off/Quality/Cancel/failed-Apply
+recovery, strict identities, DH/PBR scope, closed experiments and EAGLE exclusion.
+Inactive optional effects and compilation alone do not establish high impact.
+
+The first bounded source operation adopts the existing MakeUp End-cloud sample
+budget into a current-source candidate and implements a compatible-family transfer
+of the existing BSL native-zero cloud detail rejection. Native Goal is the sole
+continuation owner; the parent owns integration, Git and any future client/build
+lane. Native workers own isolated candidates only. The fixed BSL runtime candidate
+and pending sampler/motion/cost evidence remain intact. The prior 16,339-second
+runtime allocation is exhausted and is preserved as historical accounting; no
+runtime launch or new runtime allocation occurred when setting this Goal.
+Current ownership, chosen next action and review are in [STATUS](../STATUS.md).
+
+## Historical authority and continuation — October 11, 2026
 
 At 2026-10-11 08:43 UTC the human resumed this outcome in the existing checkout.
 `get_goal` verified this chat's native Goal **active**. Parent owns integration,
@@ -653,3 +670,96 @@ work is sampler/rejection plus full-work control/motion and matched cost, within
 a renewed allocation. Full90 scope and native guards remain intact.
 
 [Actual BSL result and limitations](../evaluation/bsl-cloud-bound-runtime-20261012.md).
+
+
+## Direct optimization ports adopted — October 13, 2026 Pacific
+
+Parent integrated and committed MakeUp End-cloud budget reuse and Unbound
+primary-cloud native-zero detail rejection in `c10f680`. Fresh previews reproduce
+accepted source bytes, two resource syncs are clean, twenty focused maintained
+checks pass and actual public CPU selection/native-return checks pass. Unbound
+independent source review accepts the family-specific bound; runtime, motion,
+speed and DH/PBR remain unverified. Full scope remains unfinished.
+
+[Port behavior, acceptance and limits](../evaluation/optimization-ports-20261013.md).
+Next direct source candidate is Bliss primary-cloud detail erosion, preserving
+native recurrence and resolving added divergent sampling in the shader. Parent
+owns continuation; all workers are terminal and no game/build job was launched.
+The human also requested hourly follow-up in this chat, quiet except meaningful
+progress/failure/decisions, recovering transient interruptions while preserving
+pauses, healthy jobs and allocations. The automation tool is unavailable and
+computer-use access to Codex was denied; **no schedule has been created**.
+
+
+## Four direct ports and actual Unbound consumption — October 13, 2026 Pacific
+
+MakeUp End, Unbound primary density, Bliss primary erosion and Sildur primary
+density ports are integrated. Scoped source commits c10f680/c45f75b/094bd84 retain
+independent mathematical reviews, native fallback/AA/tail invariants and honest
+runtime boundaries. The normal Fabric26.1.2 preview compiles and packages all four.
+Its actual Unbound Original/Balanced/Quality/Off/Cancel operation rendered
+398/402/398/398 with exact generated439-member reconstruction and native restoration;
+parent viewed coherent original/On stills. Exact release08:39:03UTC and fresh
+08:42:42UTC absence/lock census accepted. No executed-rejection/FPS/motion/DHPBR
+or broad90-cell claim.
+
+[Current preview, port evidence and limitations](../evaluation/optimization-ports-20261013.md).
+Parent accepted lane handback, then acknowledged the runtime operator for a fresh
+Sildur source-consumption operation. Its08:56:31UTC census found no clients/free
+lock. Owner has only the missing explicit Sildur join in the existing Fabric
+public controller plus fresh producer/caller/profile evidence; main JAR04ac5965
+remains fixed. Current next decisive step is native/generated Sildur rendering
+and Quality/Off/Cancel return through that bounded consumer. The native Goal
+remains active and full scope intact; no old runtime allocation/trial is resumed.
+
+
+## Five direct ports and three current rendered graphs — October 13, 2026 Pacific
+
+Photon primary second-detail rejection is now integrated in1eefe01 alongside the
+four previous source ports. Independent source review accepted its ordered erosion
+proof; parent fixed public native-AA/TAAU preservation, synchronized exact recipe
+and catalog, and ran8 Python source checks plus29 actual JVM selection/recovery
+cases (zero skips). Photon packaging and rendering remain pending.
+
+The fixed04ac main JAR also actually rendered new Sildur115/118/115/115 and
+Bliss463/466/463/463 with Quality/Off/Cancel. Parent reconstructed exact generated
+archives/options and inspected coherent original/On stills. Sildur released
+09:03:21UTC/fresh09:03:52 census; Bliss09:20:18UTC/fresh09:22:56 census. Source
+consumer joins are preserved in scoped patches. No executed-work/FPS/motion/
+sampler-parity/DHPBR claim; full90 scope remains unfinished.
+
+[Current results and limitations](../evaluation/optimization-ports-20261013.md).
+Next decisive operation packages Photon with the corrected native-AA public
+consumer and validates default-native-TAAU-off cloud rendering/restoration on the
+known runnable configured Photon tuple. Reuse existing native configured settings
+and actual producer rather than forcing AA or restarting closed pixel-budget
+cost trials. All workers/jobs are terminal at the last handbacks; parent owns
+continuation and must recheck resources before the next launch.
+
+
+## Six source ports and Photon native-AA rendering — October 13, 2026 Pacific
+
+Photon new normal five-port2b1355 JAR actually rendered Original366/Balanced369/
+Quality366/Off366 and Cancel on Fabric26.1.2 with configured native TAA=true,
+TAAU=false and scale1.00 intact. Parent independently reconstructed all535
+generated members, all366 native options and five current main class origins,
+viewed coherent Original/On stills, and verified fresh zero clients/free lock
+after release10:08:53UTC. No GPU-work/FPS/motion/DHPBR claim.
+
+Reimagined now reuses the independently accepted Unbound cloud bound in its
+selected native style3 only. Default style1 remains unchanged, so this is optional
+coverage. Parent adopted exact six postimages, checked unchanged arithmetic plus
+style restriction, reproduced the source preview and ran14 maintained adapter
+checks. Actual JVM default398/generated402 certificate admission remains intact;
+style3 is refused by that NeoForge26.2 certificate. Six source ports and four
+current rendering/recovery graphs are now delivered; full90 scope remains active.
+
+[Port evidence and limits](../evaluation/optimization-ports-20261013.md).
+Parent owns continuation/Git/lane; runtime worker handed back with no jobs.
+Acknowledged isolated source owners now port the same zero-density premise to
+Solas default primary4→2 detail reads and AstraLex primary11→3 reads when
+certified. Native Mac original blockers remain named; no same-tuple driver retry
+is authorized by these source assignments. Next milestone is authentic pinned
+source candidates with exact native tails/options and focused consumer recovery.
+The hourly follow-up request remains unfulfilled because no native automation
+tool is exposed; Codex computer-use access was previously denied.
