@@ -9,11 +9,11 @@ import java.util.zip.ZipFile;
 import java.nio.charset.StandardCharsets;
 /** DEV compatibility admission only: exact original or actual maintained generated graph, no batching eligibility. */
 public final class MakeUpSourceCertificate {
- public static final String RECIPE_SHA="8971805407816a65290e536b70587089bea9c6f239a0d59aad643ffd6d0a8e54";
+ public static final String RECIPE_SHA="afa6b30f5ff2c5425815eea7e38379eb9842f754097100826d3469e3e2f1edae";
  private static final String ID="makeup-ultra-fast-shaders",RECIPE="assets/shaderlod/adapters/patches/adapters/makeup-ultra-fast-shaders.json";
  private MakeUpSourceCertificate(){}
  public record Result(boolean eligible,String reason,boolean generated){}
- public static Map<String,String> generatedOptions(){var m=new TreeMap<>(MakeUpQuadEligibility.nativeOptions());m.put("SHADERLOD_REFINEMENT_ADAPTER","1");m.put("SHADERLOD_REFINEMENT_ADAPTER_INCLUDED","true");m.put("SHADERLOD_REFINEMENT_BUDGET_INCLUDED","true");m.put("SHADERLOD_UNIFORM_SAMPLE_BUDGET_INCLUDED","true");return Map.copyOf(m);}
+ public static Map<String,String> generatedOptions(){var m=new TreeMap<>(MakeUpQuadEligibility.nativeOptions());m.put("SHADERLOD_REFINEMENT_ADAPTER","1");m.put("SHADERLOD_REFINEMENT_ADAPTER_INCLUDED","true");m.put("SHADERLOD_REFINEMENT_BUDGET_INCLUDED","true");m.put("SHADERLOD_UNIFORM_SAMPLE_BUDGET_INCLUDED","true");m.put("SHADERLOD_OPTIMIZATION_FLAGS_INCLUDED","true");return Map.copyOf(m);}
  private static String sha(byte[] b)throws Exception{return HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(b));}
  private static Path child(Path dir,String name)throws Exception{Path p=dir.resolve(name).normalize();if(!Path.of(name).getFileName().toString().equals(name)||!p.startsWith(dir)||p.equals(dir)||Files.isSymbolicLink(p)||!Files.isRegularFile(p))throw new IllegalStateException("Unsafe/missing source/state child");return p;}
  private static byte[] resource(String path)throws Exception{try(var in=PackSelectionService.class.getClassLoader().getResourceAsStream(path)){if(in==null)throw new IllegalStateException("Missing packaged recipe/helper: "+path);return in.readAllBytes();}}
@@ -38,7 +38,7 @@ public final class MakeUpSourceCertificate {
    Path dir=directory.toAbsolutePath().normalize();if(requested==null||requested.isBlank())throw new IllegalStateException("Certified original required");Path original=child(dir,requested);
    if(!MakeUpQuadEligibility.validate(original,MakeUpQuadEligibility.nativeOptions()).eligible())throw new IllegalStateException("Original native100/source/API resources refused");
    if(selected.equals(requested))return new Result(MakeUpQuadEligibility.optionsMatch(options),"Original native100/AA2",false);
-   if(!generatedOptions().equals(options))throw new IllegalStateException("Generated exact104 options refused");
+   if(!generatedOptions().equals(options))throw new IllegalStateException("Generated exact105 options refused");
    byte[] recipeBytes=resource(RECIPE);if(!sha(recipeBytes).equals(RECIPE_SHA))throw new IllegalStateException("Stale/tampered packaged recipe");var recipe=json(recipeBytes);
    var source=archive(original);var expected=new TreeMap<String,byte[]>(source);var actual=archive(child(dir,selected));var marker=json(actual.get("shaderlod-selection.json"));
    if(marker.get("schema").getAsInt()!=1)throw new IllegalStateException("Marker schema");equalsField(marker,"adapterId",ID);equalsField(marker,"originalFile",requested);equalsField(marker,"originalSha256",MakeUpQuadEligibility.ARCHIVE_SHA);equalsField(marker,"recipeSha256",RECIPE_SHA);
@@ -55,7 +55,7 @@ public final class MakeUpSourceCertificate {
    String note="Private local ShaderLOD adapter. Original: "+ID+". Upstream files and license retained. Do not redistribute this copy.\nRendering, quality, DH and PBR validation remain separate checks.\n";
    if(!Arrays.equals(note.getBytes(StandardCharsets.UTF_8),actual.get("SHADERLOD_PRIVATE_SELECTION.md")))throw new IllegalStateException("Generated provenance member changed");
    if(!state.get("active").getAsBoolean()&&!nativeReturnTransition)throw new IllegalStateException("Inactive generated state outside genuine native-return selection");
-   return new Result(true,"Exact maintained generated104 source/state/unchanged vertex entries; compatibility only",true);
+   return new Result(true,"Exact maintained generated105 source/state/unchanged vertex entries; compatibility only",true);
   }catch(Exception|LinkageError failure){return new Result(false,failure.toString(),false);}
  }
 }
