@@ -1,0 +1,37 @@
+{
+  "$schema": "https://t3.codes/schema/t3.json",
+  "defaultThreadEnvMode": "local",
+  "scripts": [
+    {
+      "name": "Prepare worktree",
+      "command": "python3 \"$T3CODE_PROJECT_ROOT/scripts/setup_agent_worktree.py\" --root \"${T3CODE_WORKTREE_PATH:-$PWD}\"",
+      "icon": "configure",
+      "runOnWorktreeCreate": true,
+      "async": false
+    },
+    {
+      "name": "Project checkpoint",
+      "command": "python3 scripts/project_checkpoint.py show docs/STATUS.md",
+      "icon": "play",
+      "runOnWorktreeCreate": false
+    },
+    {
+      "name": "Python tests",
+      "command": "python3 -m unittest discover -s tests",
+      "icon": "test",
+      "runOnWorktreeCreate": false
+    },
+    {
+      "name": "Java tests",
+      "command": "./gradlew test",
+      "icon": "test",
+      "runOnWorktreeCreate": false
+    },
+    {
+      "name": "Build mod",
+      "command": "./gradlew build",
+      "icon": "build",
+      "runOnWorktreeCreate": false
+    }
+  ]
+}

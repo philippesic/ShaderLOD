@@ -1,16 +1,46 @@
-# ShaderLOD autonomous research defaults; preserve user limits and permissions.
+# ShaderLOD provider defaults. T3 owns its thread selection and orchestration.
 model = "gpt-6.1-sol"
 model_reasoning_effort = "high"
+# Notifications are host/user settings; project-local notify is ignored.
 [features]
 hooks = true
 goals = true
 
 [[hooks.SessionStart]]
-matcher = "^(startup|resume|compact)$"
+matcher = "^(startup|resume|compact|fork)$"
 
 [[hooks.SessionStart.hooks]]
 type = "command"
 command = '/usr/bin/python3 "$(git rev-parse --show-toplevel)/.codex/hooks/compaction_handoff.py"'
 timeout = 10
-additionalContextLimit = 1800
-statusMessage = "Loading ShaderLOD goal checkpoint"
+additionalContextLimit = 900
+statusMessage = "Loading ShaderLOD checkpoint pointer"
+
+# Keep development context focused. Enable a plugin for an artifact/native-UI
+# task when needed; restart only its agent session after checking job ownership.
+[plugins."browser@openai-bundled"]
+enabled = false
+[plugins."visualize@openai-bundled"]
+enabled = false
+[plugins."documents@openai-primary-runtime"]
+enabled = false
+[plugins."pdf@openai-primary-runtime"]
+enabled = false
+[plugins."spreadsheets@openai-primary-runtime"]
+enabled = false
+[plugins."presentations@openai-primary-runtime"]
+enabled = false
+[plugins."template-creator@openai-primary-runtime"]
+enabled = false
+[plugins."google-calendar@openai-curated"]
+enabled = false
+[plugins."slack@openai-curated"]
+enabled = false
+[plugins."computer-use@openai-bundled"]
+enabled = false
+[plugins."codex-app-tools@openai-bundled"]
+enabled = false
+[plugins."unified-computer-use@openai-bundled"]
+enabled = false
+[mcp_servers.node_repl]
+enabled = false

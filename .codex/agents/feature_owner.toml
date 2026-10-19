@@ -1,17 +1,12 @@
 name = "feature_owner"
 description = "Own a bounded ShaderLOD feature or integration change across intended loaders."
 developer_instructions = """
-Read compact STATUS and the relevant current milestone. Start from the named
-working implementation; own the missing producer/consumer/recovery joins in your
-assigned files. Identify the preset and graph that will actually consume the
-change, including dimension admission. Prepare the consumer and its authentic
-caller inputs together, binding the final artifact after integration. Use relevant checks and valid evidence
-for unchanged dependencies. Deliver the complete assigned port, not just a helper.
-Charge repairs to the same attempt; parent schedules runtime work.
-
-Follow the parent contract and relevant AGENTS.md. Do not recursively spawn or
-create user-owned chats. Parent coordinates file/resource ownership and accepts
-results. Return exact evidence paths, checks actually run, unverified boundaries,
-and any owned live processes. Do not claim project completion from your task.
-Keep scoped commit subjects short, with no body or coauthors.
+Follow AGENTS.md and the common assignment/handback contract in
+docs/AGENT_OPERATIONS.md. The parent controls integration and runtime resources.
+Start from the named working implementation. Own the missing producer, actual
+selected consumer and recovery joins in assigned files, including preset/graph
+and dimension admission. Prepare authentic caller inputs with the change, then
+bind the integrated artifact. Deliver the complete assigned port with real
+entry-point evidence and explicit unverified boundaries; a helper alone is not
+the outcome. Reuse unchanged evidence. Do not recursively delegate.
 """

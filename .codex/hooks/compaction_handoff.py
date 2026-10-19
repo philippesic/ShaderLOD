@@ -1,7 +1,12 @@
 """Emit durable project context without launching chats or controlling jobs."""
 
 import json
+from pathlib import Path
 import sys
+
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "scripts"))
+from agent_runtime.checkpoint import view
 
 
 def main() -> None:
@@ -12,25 +17,17 @@ def main() -> None:
     if not isinstance(event, dict):
         return
     source = event.get("source")
-    if source not in {"startup", "resume", "compact"}:
+    if source not in {"startup", "resume", "compact", "fork"}:
         return
-    message = (
-        "ShaderLOD durable state is docs/STATUS.md and its linked docs/goals/ file. "
-        "Read the active checkpoint before substantial work. Follow "
-        "docs/AGENT_OPERATIONS.md for worker ownership and runtime handoffs. "
-        "Current scope spans nine shader families and NeoForge/Fabric; Iris is required, DH/PBR need compatibility evidence. Historical assignments are not live work."
-        " For an explicitly requested Goal, verify native Goal state with get_goal; "
-        "a file or this reminder is not continuation. Use checkpoint.py show for "
-        "the compact view and show --json for typed updates. Follow the current "
-        "adoption receipt for actual compiled consumers rather than an old staged patch."
-    )
-    if source == "compact":
-        message += (
-            " After compaction, verify live agents and client/GPU jobs before "
-            "resuming; an idle recorded lane is not launch authorization. Refresh the checkpoint at the next milestone with actual "
-            "checks and next actions. A hook cannot transfer running work or "
-            "authorize creation of a new chat."
-        )
+    message = "ShaderLOD checkpoint: run `python3 scripts/project_checkpoint.py show docs/STATUS.md`; linked goal and operating guidance are in that record and AGENTS.md. "
+    try:
+        facts = view(ROOT / "docs/STATUS.md").get("facts")
+        if facts:
+            owner = " ".join(facts["owner"].split())
+            message += f"Last observation {facts['observed_at']}; recorded owner: {owner[:260]}. "
+    except (ValueError, OSError, TypeError, KeyError):
+        message += "Checkpoint unavailable or invalid; inspect it before relying on recorded state. "
+    message += "This is a recorded observation, not a live job census or continuation owner."
     print(json.dumps({"hookSpecificOutput": {
         "hookEventName": "SessionStart", "additionalContext": message
     }}))

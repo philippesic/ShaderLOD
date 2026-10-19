@@ -1,4 +1,4 @@
 interface:
-  display_name: "Start Goal Team"
-  short_description: "Coordinate a ShaderLOD goal and scoped agents"
-  default_prompt: "Use $start-goal-team to turn this request into a ShaderLOD goal and coordinate the right agents."
+  display_name: "Start ShaderLOD Goal"
+  short_description: "Set a requested project goal and bounded team"
+  default_prompt: "Use $start-goal-team to establish this new ShaderLOD project goal and coordinate useful bounded work."
