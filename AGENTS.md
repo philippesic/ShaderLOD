@@ -1,47 +1,9 @@
-# ShaderLOD working rules
+# ShaderLOD notes
 
-## Authority and document map
-
-[STATUS](docs/STATUS.md) is the sole current project state: objective, scope,
-authorization, baseline, owners, last observation and next action. Before
-substantial work use `python3 scripts/project_checkpoint.py show docs/STATUS.md`.
-Read the linked goal sections when the task depends on campaign acceptance,
-allocation or history; unrelated local edits do not require the full archive.
-Historical assignments never establish live ownership. Harness work does not
-resume shader execution.
-
-- [Operations](docs/AGENT_OPERATIONS.md): assignments, attempt decisions,
-  client/build/GPU control, receipts and handoff.
-- [Evaluation](docs/EVALUATION.md): claim-specific evidence; consult
-  [active lessons](docs/USER_LESSONS.md) when the affected boundary recurs.
-- [T3 workflow](docs/T3_WORKFLOW.md): human steering and configured defaults.
-  [Runtime adapter](docs/T3_AGENT_RUNTIME.md): native/T3 delegation, worktrees,
-  Goals and scheduling; read the relevant section before using that facility.
-
-## Project invariants
-
-The support frontier covers Photon, Complementary Reimagined/Unbound, BSL,
-MakeUp UltraFast, Sildur's Vibrant, Solas, Bliss and AstraLex, with NeoForge and
-Fabric across MC 1.21.1, 1.21.11, 26.1.2, 26.2 and 26.3 (90 family/loader/version
-cells). This frontier does not expand the current operation beyond STATUS.
-Iris is required; DH is optional for users but required compatibility evidence,
-as is PBR. One tuple does not prove another.
-
-Prioritize complete existing-mechanism family ports and recovery joins using
-[the support frontier](docs/SUPPORT_NEXT_20261011.md). Identify the actual selected
-preset, dimension, graph and active native work before editing. Use explicit
-pinned adapters, preserve ancestry/licenses and native quality/AA, and exercise
-original/Off/Quality/Cancel/failed-Apply/mismatch restoration. No universal GLSL
-rewriting or inferred support.
-
-Distinguish source/build, actual rendering, loaded options, consuming paths,
-avoided work, still/motion quality, total-frame speed and compatibility. Match
-baseline/candidate hardware, revision, settings and workload for performance
-claims. Preserve raw failures and closed negative trials; never weaken a guard
-or retune a closed fixed experiment to manufacture a pass.
-
-One acknowledged owner controls each client/build/GPU lane; use Operations for
-exact resource procedures. Keep worlds, downloads, builds, captures and raw logs
-out of Git. Commit scoped work with short subjects and no body/coauthors.
-Pushes, publication, external messages and remote-host actions require current
-authorization; a local policy file grants none.
+- For campaign or remote work, consult [STATUS](docs/STATUS.md) for current scope, pauses and allocation; use [Operations](docs/AGENT_OPERATIONS.md) for client/build/GPU procedures.
+- Use pinned shader-family adapters, preserving ancestry, licenses and native quality/AA. Avoid universal GLSL rewriting.
+- Identify the selected preset, dimension and active render graph before changing an adapter.
+- Preserve restoration for original/Off/Quality/Cancel, failed Apply and mismatched configurations.
+- Iris is required. DH is optional for users, but DH and PBR compatibility evidence are required. Support for one family/loader/version tuple does not establish another.
+- Use matched total-frame measurements for performance claims; see [Evaluation](docs/EVALUATION.md).
+- Keep worlds, downloads, builds, captures and raw logs out of Git. Commits use short subjects with no body or coauthors.
