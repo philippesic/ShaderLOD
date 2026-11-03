@@ -40,6 +40,15 @@ class ArmRuntimeTests(unittest.TestCase):
             with self.assertRaises(ValueError): runtime.verify_libraries(lock,root/'natives')
 
     def test_path_jdk_resolution_has_useful_missing_prerequisite(self):
-        with patch.object(runtime.shutil,'which',return_value=None):
+        with patch.object(runtime.shutil,'which',return_value=None), patch.object(runtime,'installed_jdks',return_value=[]):
             with self.assertRaisesRegex(ValueError,'pass --jdk or set JAVA_HOME'):
                 runtime.java_home('')
+
+    def test_cached_full_jdk_is_found_without_path_compiler(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp)
+            for name in ('bin/java','bin/javac','lib/ct.sym'):
+                p=root/name;p.parent.mkdir(exist_ok=True);p.touch()
+            (root/'release').write_text('JAVA_VERSION="21.0.13"')
+            with patch.object(runtime.shutil,'which',return_value=None), patch.object(runtime,'installed_jdks',return_value=[root]):
+                self.assertEqual(root,runtime.java_home(''))

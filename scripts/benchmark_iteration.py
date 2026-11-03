@@ -46,11 +46,32 @@ def stopped_profiles(*profiles):
         yield
 
 
+def check_profile_inputs(profile):
+    """Read-only early check; prepare_profile repeats under ownership before copying."""
+    profile=Path(profile)
+    marker=json.loads((profile.parent/'workspace.json').read_text())
+    source=storage.safe_path(marker['source'])
+    life.require(source.is_dir(),'Canonical source is missing: '+str(source)+'; preserve this slot and select a slot with an existing canonical source')
+    original=profile_map(profile);canonical=profile_map(source)
+    differences=[];categories=[]
+    for name in original:
+        if original[name]!=canonical[name]:
+            categories.append(name)
+            keys=sorted(set(original[name])|set(canonical[name]))
+            for key in keys:
+                if original[name].get(key)!=canonical[name].get(key):
+                    differences.append(name+'/'+key)
+                    if len(differences)>=8:break
+    life.require(not differences,'Managed profile differs from canonical inputs (bytes, modes or presence); categories '+', '.join(categories)+'; example paths: '+', '.join(differences[:8])+'; preserve changes and inspect before checkout/reset')
+    return {'source':str(source),'matching':True}
+
+
 def prepare_profile(op):
     """Fresh full maps and independent whole-save backup, before any staging."""
     profile=Path(op.data['profile'])
     marker=json.loads((profile.parent/'workspace.json').read_text())
     source=storage.safe_path(marker['source'])
+    life.require(source.is_dir(),'Canonical source is missing: '+str(source)+'; preserve this slot')
     with stopped_profiles(profile,source):
         original=profile_map(profile);canonical=profile_map(source)
         life.require(original==canonical,'Standard test needs a clean managed checkout; differing original inputs are preserved')
@@ -549,12 +570,22 @@ def early_alpha_work(state, *, before=None, activation=None):
     return counters
 
 
+def functional_evaluation(*, execution_completed, restored):
+    return {'execution':'COMPLETE' if execution_completed else 'FAILED',
+            'validity':'VALID' if execution_completed and restored else 'INVALID',
+            'improvement':'NOT_EVALUATED','closure':False,
+            'limits':'Functional candidate activation, source/work checks and restoration only; short captures provide no performance or visual qualification.'}
+
+
 def evaluate(output, *, execution_completed, restored):
     result = dict(execution='COMPLETE' if execution_completed else 'FAILED',
                   completion='INCOMPLETE', validity='INVALID', improvement='UNRESOLVED',
-                  review='REQUIRED', closure=False, arms={},
+                  review='CLOSURE_ONLY', closure=False, arms={},
                   limits='One chronological development comparison; no statistical, visual, DH/PBR, hardware-universal or closure claim.')
     try:
+        summary=Path(output)/'summary.json'
+        if summary.is_file() and json.loads(summary.read_text()).get('purpose')=='functional-check':
+            return functional_evaluation(execution_completed=execution_completed,restored=restored)
         life.require(execution_completed and restored, 'Execution and restoration must both complete')
         for label in ('native', 'candidate', 'return'):
             result['arms'][label] = arm_metrics(Path(output)/'windows'/label, label)

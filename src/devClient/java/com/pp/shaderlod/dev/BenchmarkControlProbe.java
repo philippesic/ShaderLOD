@@ -430,17 +430,19 @@ public final class BenchmarkControlProbe {
     }
     private void observedPack(JsonObject request)throws Exception {
         requireMain();requireSavedAuthored();
-        if(!Boolean.getBoolean("shaderlod.dev.blissAoCoverage")||!savedAuthoredReady()
+        boolean selectionAllowed=request.has("dimension")&&ObservedPackReload.permitsSelection(
+            Boolean.getBoolean("shaderlod.dev.blissAoCoverage"),Boolean.getBoolean("shaderlod.dev.privateObservedReload"),
+            Boolean.getBoolean("shaderlod.dev.mipFamilyRuntime"),request.get("dimension").getAsString());
+        if(!selectionAllowed||!savedAuthoredReady()
             ||!request.has("observe")||!request.get("observe").getAsBoolean()
             ||!request.has("reload")||!request.get("reload").getAsBoolean()
-            ||request.has("rearm_settled")||!request.has("dimension")
-            ||!"minecraft:overworld".equals(request.get("dimension").getAsString())
+            ||request.has("rearm_settled")
             ||motion!=null||MipFamilyProbe.observing()||CpuTimers.recording()||GpuTimers.recording()
             ||Installed.bslMipObserving()||Installed.frameCopyObserving()
             ||com.pp.shaderlod.ShaderLodConfig.ENABLED.get()
             ||Installed.featureProfile().values().stream().anyMatch("true"::equals)
             ||!Iris.getShaderPackOptionQueue().isEmpty()||Iris.isFallback())
-            throw new IllegalStateException("Exclusive untimed owned Bliss Overworld, Off/empty requests/options required");
+            throw new IllegalStateException("Exclusive untimed owned observed reload, Off/empty requests/options and authorized dimension required");
         diagnosticPack(request,true);
     }
     private static void diagnosticPack(JsonObject request,boolean observed)throws Exception {

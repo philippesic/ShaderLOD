@@ -57,11 +57,20 @@ def setup(lock, directory):
     verify_libraries(lock, directory / 'natives')
 
 
+def installed_jdks():
+    return sorted(Path('/usr/lib/jvm').glob('*')) + sorted((Path.home()/'.gradle/jdks').glob('*'))
+
+
 def java_home(value):
     if not value:
         compiler = shutil.which('javac')
-        if not compiler:raise ValueError('Full JDK21 missing; pass --jdk or set JAVA_HOME (javac not on PATH)')
-        value = str(Path(compiler).resolve().parent.parent)
+        candidates = ([Path(compiler).resolve().parent.parent] if compiler else [])
+        candidates += installed_jdks()
+        for candidate in candidates:
+            if all((candidate / p).is_file() for p in ('bin/java','bin/javac','lib/ct.sym','release')):
+                if 'JAVA_VERSION="21.' in (candidate/'release').read_text():
+                    value = str(candidate); break
+        if not value:raise ValueError('Full JDK21 missing; pass --jdk or set JAVA_HOME to a full JDK21')
     home = Path(value).expanduser().resolve()
     if not all((home / p).is_file() for p in ('bin/java', 'bin/javac', 'lib/ct.sym')):
         raise ValueError('JAVA_HOME must contain a full JDK21 (java, javac and lib/ct.sym)')
@@ -89,6 +98,7 @@ def main(argv=None):
         print('Full JDK21 and locked Linux ARM64 natives verified')
         return
     env = dict(os.environ, JAVA_HOME=str(home), PATH=str(home / 'bin') + os.pathsep + os.environ['PATH'])
+    env['SHADERLOD_ARM64_RUNTIME_READY'] = '1'
     env.setdefault('ORG_GRADLE_PROJECT_clientHeap', '2304m')
     env.setdefault('ORG_GRADLE_PROJECT_clientProcessors', '2')
     env['GRADLE_OPTS'] = env.get('GRADLE_OPTS', '') + ' -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=1 -Dorg.gradle.parallel=false -Dorg.gradle.jvmargs=-Xmx768m'
@@ -102,4 +112,7 @@ def main(argv=None):
 
 
 if __name__ == '__main__':
-    sys.exit(main())
+    try: sys.exit(main())
+    except (ValueError, OSError) as error:
+        print(json.dumps({'state':'environment-not-ready','error':str(error),'launched':False}),file=sys.stderr)
+        sys.exit(1)

@@ -18,7 +18,7 @@ import run_storage as storage
 
 class RunStorageTests(unittest.TestCase):
     def setUp(self):
-        self.temp = tempfile.TemporaryDirectory()
+        self.temp = tempfile.TemporaryDirectory(dir=storage.ROOT)
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name).resolve()
         self.source = self.root / 'canonical/client'
@@ -271,7 +271,7 @@ class RunStorageTests(unittest.TestCase):
 
 class ScopedUsageTests(unittest.TestCase):
     def test_exact_roots_categories_overlaps_allocation_and_free_are_separate(self):
-        with tempfile.TemporaryDirectory() as directory:
+        with tempfile.TemporaryDirectory(dir=storage.ROOT) as directory:
             root=Path(directory).resolve()
             paths={'report/frame-0001.png':5,'client/saves/world/data.sqlite':7,
                    'report/generated/source.frag':9,'client/backups/world.zip':11,'report/console.log':13}
@@ -283,14 +283,14 @@ class ScopedUsageTests(unittest.TestCase):
             self.assertIn('APFS',report['allocation_note']);self.assertIn('WSL',report['allocation_note'])
             self.assertTrue(report['filesystems']);self.assertGreaterEqual(report['allocated_bytes'],0)
     def test_budget_symlinks_and_unknown_paths_never_authorize_cleanup(self):
-        with tempfile.TemporaryDirectory() as directory:
+        with tempfile.TemporaryDirectory(dir=storage.ROOT) as directory:
             root=Path(directory).resolve();(root/'unknown').write_text('protected')
             with self.assertRaisesRegex(ValueError,'entry limit'):storage.scoped_usage([root],max_entries=1)
             (root/'escape').symlink_to(root/'unknown')
             with self.assertRaisesRegex(ValueError,'Symlink'):storage.scoped_usage([root])
             self.assertEqual('protected',(root/'unknown').read_text())
     def test_hardlinked_readonly_metadata_counts_unique_inodes_once(self):
-        with tempfile.TemporaryDirectory() as directory:
+        with tempfile.TemporaryDirectory(dir=storage.ROOT) as directory:
             root=Path(directory).resolve();(root/'source').write_bytes(b'1234');os.link(root/'source',root/'link')
             report=storage.scoped_usage([root]);self.assertEqual(4,report['logical_bytes']);self.assertEqual(1,report['files'])
 

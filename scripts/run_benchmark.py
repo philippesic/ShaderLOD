@@ -2,6 +2,7 @@
 """Finite local benchmark caller: shared clocks/analysis, canonical supervision, exact restoration."""
 from __future__ import annotations
 import argparse,json,hashlib,os,subprocess,sys,time,math,shutil
+import benchmark_workflow as workflow
 from contextlib import ExitStack
 import experiment_lifecycle as life
 import run_storage as storage
@@ -36,6 +37,25 @@ import benchmark_sildur_lean_alpha as sildur_alpha
 import benchmark_sildur_underwater_ao as sildur_ao
 import benchmark_photon_pbr_resources as photon_pbr
 ROOT=Path(__file__).resolve().parents[1]
+
+# Shared private prototype lifecycle: candidate-specific validators stay in their modules.
+# Module, report key and settled-observation requirement; membership also selects shared staging/observation hooks.
+PRIVATE_CANDIDATES = {
+ 'n04-bliss-sky': (bliss_ao, 'bliss_ao_observations', True),
+ 'n03-bliss-fog-copy': (bliss_copy, 'bliss_copy_observations', False),
+ 'n04-bliss-zero': (bliss_zero, 'bliss_zero_observations', False),
+ 'n03-photon-cloud-copy': (photon_copy, 'photon_copy_observations', False),
+ 'n02-bliss-unused-rt12': (bliss_unused, 'bliss_unused_observations', False),
+ 'n04-solas-lean-alpha': (solas_alpha, 'solas_alpha_observations', True),
+ 'n04-sildur-underwater-ao': (sildur_ao, 'sildur_ao_observations', True),
+ 'n02-photon-pbr-resources': (photon_pbr, 'photon_pbr_observations', False),
+ 'n04-sildur-lean-alpha': (sildur_alpha, 'sildur_alpha_observations', True),
+}
+
+def private_consumer(a):
+ if a.candidate=='n04-bliss-zero' and getattr(a,'bliss_zero_lean',False):return bliss_zero_lean
+ return PRIVATE_CANDIDATES[a.candidate][0] if a.candidate in PRIVATE_CANDIDATES else None
+
 
 def verify_requested_dh(manifest, installed, mode):
  expected='ABSENT' if not installed else 'ENABLED' if mode=='DEFAULT' else 'INSTALLED_DISABLED'
@@ -212,10 +232,11 @@ def candidate_compile_contract(identity, features):
  return {'options':expected}
 
 
-def arguments(argv=None):
+def argument_parser():
  p=argparse.ArgumentParser(description=__doc__+' Default: static preflight; --run explicitly launches the foreground protocol.',allow_abbrev=False)
  p.add_argument('--protocol',default=life.PROTOCOL,choices=[life.PROTOCOL])
  p.add_argument('--run',action='store_true',help='Launch the finite foreground benchmark; requires actual lane authority')
+ p.add_argument('--slot',help='Existing managed world-pool slot name; see discover')
  p.add_argument('--profile',type=Path,default=ROOT/'run-workloads/world-pool/neoforge-1211-coast/client')
  p.add_argument('--pack',required=True,type=Path);p.add_argument('--pack-options',type=Path)
  p.add_argument('--bootstrap-options',type=Path,help='Exact base native366 used only before new N02 PBR Nether activation; qualifying arms use --pack-options in full')
@@ -247,13 +268,22 @@ def arguments(argv=None):
  p.add_argument('--g08-bound-layout',choices=('loop','split','alu'),default='loop',help='Finite private native100 cloud bound loop layout')
  p.add_argument('--g02-public-contrast',action='store_true',help='Finite same-process native/private-deletion/public-singleton/return contrast')
  p.add_argument('--c01-mode',choices=('deferred_cpu','deferred','deferred_wait'),default='deferred_cpu',help='Finite private current-frame occlusion decision mode')
- p.add_argument('--candidate',choices=('public','c01-bounds','g10-exact-bloom','g10-native-control','g02-native-mips','g02-photon-native','g05-fixed16','g08-native-bound','n04-bliss-sky','n03-bliss-fog-copy','n04-bliss-zero','n03-photon-cloud-copy','n02-bliss-unused-rt12','n04-solas-lean-alpha','n04-sildur-underwater-ao','n02-photon-pbr-resources','n04-sildur-lean-alpha'),default='public',help='Standard test: normal public request or finite private original-derived prototype')
+ p.add_argument('--candidate',choices=('public','c01-bounds','g10-exact-bloom','g10-native-control','g02-native-mips','g02-photon-native','g05-fixed16','g08-native-bound',*PRIVATE_CANDIDATES),default='public',help='Standard test: normal public request or finite private original-derived prototype')
  p.add_argument('--dh',action='store_true');p.add_argument('--dh-mode',choices=['DISABLED','DEFAULT'],default='DISABLED')
  p.add_argument('--seconds',type=float,default=6);p.add_argument('--warmup',type=float,default=20)
  p.add_argument('--budget',type=int,default=900);p.add_argument('--already-built',action='store_true',help='Compatibility flag; this protocol always requires a validated existing build')
  p.add_argument('--minimum-benefit-ms',type=float);p.add_argument('--maximum-drift-ms',type=float);p.add_argument('--maximum-p95-regression-ms',type=float)
  p.add_argument('--reload-controls',action='store_true');p.add_argument('--diagnostic',action='store_true')
+ return p
+
+def arguments(argv=None):
+ p=argument_parser()
  a=p.parse_args(argv)
+ if a.slot:
+  if Path(a.slot).name!=a.slot or a.slot in ('.','..'):p.error('slot must be a single managed slot name')
+  if argv and any(x=='--profile' or x.startswith('--profile=') for x in argv):p.error('choose slot or profile, not both')
+  a.profile=ROOT/'run-workloads/world-pool'/a.slot/'client'
+  if not (a.profile.parent/'workspace.json').is_file():p.error('unknown managed slot; use discover')
  for key in ('profile','pack','output','pack_options','bootstrap_options'):
   if getattr(a,key) is not None:setattr(a,key,storage.safe_path(getattr(a,key)))
  return a
@@ -263,10 +293,12 @@ def preflight(a):
  """Batch independent cheap boundaries; no profile/world/build mutation or launch."""
  import tempfile
  import check_experiment_plan as checker
- errors=[];checked=[];plan=None
+ errors=[];checked=[];plan=None;check_seconds={}
  def check(name,call):
+  started=time.monotonic()
   try:call();checked.append(name)
-  except (OSError,ValueError,KeyError,TypeError,dev.zipfile.BadZipFile) as error:errors.append({'check':name,'error':str(error)})
+  except (OSError,ValueError,KeyError,TypeError,dev.zipfile.BadZipFile) as error:errors.append({'check':name,'error':str(error),'next_action':workflow.remedy(name)})
+  finally:check_seconds[name]=time.monotonic()-started
  def inputs():
   life.require(not a.output.exists(),'A fresh report root is required; use recover for an interrupted operation')
   life.require(not a.output.is_relative_to(a.profile.parent) and not a.profile.is_relative_to(a.output),'Reports must be outside the runtime slot')
@@ -305,7 +337,7 @@ def preflight(a):
    life.require(getattr(a,'standard_test',False) and a.candidate=='c01-bounds' and not selected_features(a) and not a.dh and 0<=a.c01_site<16 and 0<=a.c01_direction<4,'Natural cave requires finite private C01 and bounded site/direction')
    a.world='ShaderLOD-Smoke'
   else:life.require(a.c01_site==0 and a.c01_direction==0,'Cave site/direction require natural-cave scene')
-  if a.candidate in ('n04-bliss-sky','n03-bliss-fog-copy','n04-bliss-zero','n03-photon-cloud-copy','n02-bliss-unused-rt12','n04-solas-lean-alpha','n04-sildur-underwater-ao','n02-photon-pbr-resources','n04-sildur-lean-alpha'):
+  if a.candidate in PRIVATE_CANDIDATES:
    life.require(not a.untimed_diagnostic and not selected_features(a) and not a.dh,'Private Bliss sky candidate owns its source diagnostic and empty requests')
   if getattr(a,'bliss_albedo_domain',False):life.require(a.candidate in ('n03-bliss-fog-copy','n04-bliss-zero') and not a.dh,'Albedo domain diagnostic requires exact private Bliss native463 candidate')
   if a.untimed_diagnostic=='cpu-admission-cost':
@@ -361,8 +393,8 @@ def preflight(a):
   if a.candidate=='n02-photon-pbr-resources':
    a.private_identity=photon_pbr.identity(a.pack,a.pack_options,a.bootstrap_options)
    return
-  if a.candidate in ('n04-bliss-sky','n03-bliss-fog-copy','n04-bliss-zero','n03-photon-cloud-copy','n02-bliss-unused-rt12','n04-solas-lean-alpha','n04-sildur-underwater-ao','n02-photon-pbr-resources','n04-sildur-lean-alpha'):
-   a.private_identity=({'n03-bliss-fog-copy':bliss_copy,'n04-bliss-zero':bliss_zero_lean if getattr(a,'bliss_zero_lean',False) else bliss_zero,'n03-photon-cloud-copy':photon_copy,'n02-bliss-unused-rt12':bliss_unused,'n04-solas-lean-alpha':solas_alpha,'n04-sildur-underwater-ao':sildur_ao,'n02-photon-pbr-resources':photon_pbr,'n04-sildur-lean-alpha':sildur_alpha}.get(a.candidate,bliss_ao)).identity(a.pack,a.pack_options)
+  if a.candidate in PRIVATE_CANDIDATES:
+   a.private_identity=private_consumer(a).identity(a.pack,a.pack_options)
    return
   if a.candidate=='g08-native-bound':
    a.private_identity=cloud_bound.identity(a.pack,a.pack_options,layout=a.g08_bound_layout)
@@ -427,7 +459,8 @@ def preflight(a):
  if a.untimed_diagnostic in ('g01-graph','g09-storage','g09-prefix','g09-functional'):hook_actions+=(('g01_graph',) if a.untimed_diagnostic=='g01-graph' else ('g09_prefix_admission',))
  if a.candidate=='g02-native-mips':hook_actions+=('diagnostic_pack',)
  if a.candidate in ('g02-photon-native','n04-bliss-sky','n03-bliss-fog-copy','n04-bliss-zero','n03-photon-cloud-copy','n02-bliss-unused-rt12','n04-solas-lean-alpha','n04-sildur-underwater-ao','n02-photon-pbr-resources','n04-sildur-lean-alpha'):hook_actions+=('diagnostic_pack','diagnostic_empty_requests')
- if a.candidate in ('n04-bliss-sky','n03-bliss-fog-copy','n04-bliss-zero','n03-photon-cloud-copy','n02-bliss-unused-rt12','n04-solas-lean-alpha','n04-sildur-underwater-ao','n02-photon-pbr-resources','n04-sildur-lean-alpha'):hook_actions+=('mip_family_observe','graph_dump')
+ if a.candidate in PRIVATE_CANDIDATES:hook_actions+=('mip_family_observe','graph_dump')
+ if a.candidate in PRIVATE_CANDIDATES and not getattr(a,'bliss_qualification',None):hook_actions+=('shaderlod.dev.privateObservedReload',)
  if a.candidate=='n04-solas-lean-alpha':hook_actions+=('solas_lean_alpha',)
  if a.candidate=='n04-sildur-lean-alpha':hook_actions+=('sildur_lean_alpha',)
  if a.candidate=='g05-fixed16':hook_actions+=('diagnostic_pack','depth_hierarchy_cost','depth_hierarchy_status','depth_hierarchy_verify','causal_fragment','motion_start','motion_stop')
@@ -487,7 +520,8 @@ def preflight(a):
   if getattr(a,'cpu_placement',False):plan['command']+=['-PcpuPlacement=true']
   if getattr(a,'render_cpu',-1)>=0:plan['command']+=['-PrenderCpu='+str(a.render_cpu)]
   if a.g02_public_contrast:plan['command']+=['-PmipFamilyRuntime=true']
-  if a.untimed_diagnostic=='g02-family' or a.candidate in ('n04-bliss-sky','n03-bliss-fog-copy','n04-bliss-zero','n03-photon-cloud-copy','n02-bliss-unused-rt12','n04-solas-lean-alpha','n04-sildur-underwater-ao','n02-photon-pbr-resources','n04-sildur-lean-alpha'):plan['command']+=['-PmipFamilyRuntime=true']
+  if a.untimed_diagnostic=='g02-family' or a.candidate in PRIVATE_CANDIDATES:plan['command']+=['-PmipFamilyRuntime=true']
+  if a.candidate in PRIVATE_CANDIDATES and not getattr(a,'bliss_qualification',None):plan['command']+=['-PprivateObservedReload=true']
   if a.candidate=='n04-bliss-sky':plan['command']+=['-PblissAoCoverage=true']
   if a.candidate=='n04-solas-lean-alpha':plan['command']+=['-PsolasLeanAlpha=true']
   if a.candidate=='n04-sildur-lean-alpha':plan['command']+=['-PsildurLeanAlpha=true']
@@ -520,6 +554,9 @@ def preflight(a):
  check('destination_capacity',capacity)
  if getattr(a,'standard_test',False):
   check('restore_filesystem',lambda:check_restore_filesystem(a.output,a.profile))
+  check('runtime_available',lambda:life.require(not dev.clients(dev.process_table()),'Minecraft client is active; preserve its operation and retry after it is released'))
+  if not any(e['check']=='runtime_available' for e in errors):
+   check('managed_profile_inputs',lambda:iteration.check_profile_inputs(a.profile))
  def storage_guard():
   with tempfile.TemporaryDirectory(prefix='shaderlod-storage-preflight-',dir=probe_parent(a.output)) as directory:
    life.StorageGuard(Path(directory),a.profile).check()
@@ -532,7 +569,7 @@ def preflight(a):
   if a.feature=='dead_mip_chain' or a.candidate in ('g02-photon-native','n04-bliss-sky','n03-bliss-fog-copy','n04-bliss-zero','n03-photon-cloud-copy','n02-bliss-unused-rt12','n04-solas-lean-alpha','n04-sildur-underwater-ao','n02-photon-pbr-resources','n04-sildur-lean-alpha'):required+=arms*32  # untimed observed reload/frames
   if 'dead_frame_copy' in selected_features(a):required+=3*4
   if a.budget<required:errors.append({'check':'complete_sequence_budget','error':f'Full standard sequence requires at least {math.ceil(required)} seconds including 90 seconds recovery'})
- return {'protocol':life.PROTOCOL,'errors':errors,'checked':checked,'plan':plan,
+ return {'protocol':life.PROTOCOL,'errors':errors,'checked':checked,'check_seconds':check_seconds,'plan':plan,
          'unverified':['Live ownership/lane and world locks','Actual JVM loaded runtime and control acknowledgments','Capture completion and native render correctness','APFS/Windows/WSL runtime and physical reclamation']}
 
 
@@ -663,7 +700,7 @@ class Control:
       # World entry is asynchronous: its callback receipt precedes rendered
       # readiness and delayed Iris/settings writes. Keep ownership until then.
       if (action in {'open_saved_authored','c01_natural_open','mip_nether_pose','settings_apply','diagnostic_pack'} or action in ('bsl_mip_observe','mip_family_observe') and kwargs.get('reload') is True) and receipt.get('success') is True:
-       self.ready()
+       self.acknowledged_ready=self.ready()
       # Driver reload/family migration can persist configuration after the control callback.
       # Keep the mutation boundary open until its owned bytes have settled.
       until_settled=time.monotonic()+10;previous=None;stable_since=time.monotonic()
@@ -692,6 +729,20 @@ class Control:
   raise TimeoutError('World/pipeline readiness')
 
 
+def ready_after_apply(control):
+ """Apply already waited for rendered readiness; verify its boundary remains current."""
+ previous=getattr(control,'acknowledged_ready',None)
+ state=control.send('status')['state']
+ keys=('pipeline_identity','pack_identity','width','height','dimension')
+ if (isinstance(previous,dict) and all(previous.get(k) is not None for k in keys) and all(state.get(k)==previous.get(k) for k in keys)
+     and all(state.get(k) for k in ('world_loaded','meshes_ready')) and not state.get('fallback')
+     and isinstance(state.get('render_frames'),int) and isinstance(previous.get('render_frames'),int)
+     and state['render_frames']>previous['render_frames']):
+  control.reused_apply_readiness=getattr(control,'reused_apply_readiness',0)+1
+  return state
+ return control.ready()
+
+
 def run_operation(a,admission):
  out=a.output;plan=admission['plan'];target=a.profile/'shaderpacks'/a.pack.name
  paths=life.configuration_paths(a.profile,a.pack)
@@ -708,9 +759,9 @@ def run_operation(a,admission):
  c01=private_identity and private_identity.get('candidate')=='c01-bounds'
  g02=private_identity and private_identity.get('candidate') in ('g02-native-mips','g02-photon-native')
  photon_g02=bool(g02 and private_identity.get('candidate')=='g02-photon-native')
- bliss=private_identity and private_identity.get('candidate') in ('n04-bliss-sky','n03-bliss-fog-copy','n04-bliss-zero','n03-photon-cloud-copy','n02-bliss-unused-rt12','n04-solas-lean-alpha','n04-sildur-underwater-ao','n02-photon-pbr-resources','n04-sildur-lean-alpha')
- bliss_consumer={'n03-bliss-fog-copy':bliss_copy,'n04-bliss-zero':bliss_zero_lean if getattr(a,'bliss_zero_lean',False) else bliss_zero,'n03-photon-cloud-copy':photon_copy,'n02-bliss-unused-rt12':bliss_unused,'n04-solas-lean-alpha':solas_alpha,'n04-sildur-underwater-ao':sildur_ao,'n02-photon-pbr-resources':photon_pbr,'n04-sildur-lean-alpha':sildur_alpha}.get(a.candidate,bliss_ao)
- bliss_observations_key={'n03-bliss-fog-copy':'bliss_copy_observations','n04-bliss-zero':'bliss_zero_observations','n03-photon-cloud-copy':'photon_copy_observations','n02-bliss-unused-rt12':'bliss_unused_observations','n04-solas-lean-alpha':'solas_alpha_observations','n04-sildur-underwater-ao':'sildur_ao_observations','n02-photon-pbr-resources':'photon_pbr_observations','n04-sildur-lean-alpha':'sildur_alpha_observations'}.get(a.candidate,'bliss_ao_observations')
+ bliss=private_identity and private_identity.get('candidate') in PRIVATE_CANDIDATES
+ bliss_consumer=private_consumer(a)
+ bliss_observations_key=PRIVATE_CANDIDATES[a.candidate][1] if a.candidate in PRIVATE_CANDIDATES else None
  g05=private_identity and private_identity.get('candidate')=='g05-fixed16'
  g08=private_identity and private_identity.get('candidate')=='g08-native-bound'
  if g08:paths += [a.profile/'shaderpacks'/(private_identity[key]+suffix) for key in ('generated','work') for suffix in ('','.txt')]
@@ -729,8 +780,9 @@ def run_operation(a,admission):
   op.data['processes']['controller']=dev.identity(dev.process_table()[os.getpid()]);op.save()
   guard=life.StorageGuard(out,a.profile);control=Control(op,guard,time.monotonic()+a.budget-(90 if getattr(a,'standard_test',False) else 45))
   clock=time.monotonic();costs={}
-  summary={'cost_seconds':costs,'started':life.now(),'protocol':life.PROTOCOL,'arm':a.arm,'suite':a.suite,'windows':[],'analyses':[]}
+  summary={'purpose':'functional-check' if getattr(a,'functional_check',False) else 'benchmark','cost_seconds':costs,'workflow_setup_seconds':admission.get('workflow_setup_seconds',0),'workflow_build_seconds':admission.get('workflow_build_seconds',0),'started':life.now(),'protocol':life.PROTOCOL,'arm':a.arm,'suite':a.suite,'windows':[],'analyses':[]}
   if private_identity:summary['private_identity']=private_identity
+  if bliss:summary['private_reload_protocol']='atomic-observed-reload-v3'
   summary['candidate_contract']={'public_features':selected_features(a),'c01_private':bool(c01),'g02_native_mips_private':bool(g02),'g05_fixed16_private':bool(g05),'g10_private_addition':a.with_g10,'g10_observer_control':a.g10_control,'scene':getattr(a,'scene',None) or 'automatic'}
   if getattr(a,'bliss_qualification',None):
    summary['qualification']={'mode':a.bliss_qualification,'order':a.qualification_order,
@@ -791,7 +843,9 @@ def run_operation(a,admission):
    path=out/(label+'-request.json');life.atomic_json(path,request);summary.setdefault('analysis_requests',[]).append(str(path))
   try:
    guard.check();life.atomic_json(out/'preflight.json',admission);life.atomic_json(out/'plan.json',plan)
-   if getattr(a,'standard_test',False):iteration.prepare_profile(op)
+   if getattr(a,'standard_test',False):
+    detail_start=time.monotonic();iteration.prepare_profile(op)
+    summary.setdefault('cost_details_seconds',{})['profile_prepare']=time.monotonic()-detail_start
    resource_contract=iteration.resource_contract(a.profile) if getattr(a,'standard_test',False) and not getattr(a,'native_startup_check',False) else None
    if g10:summary['private_artifacts']=iteration.stage_g10(op,a.pack,a.pack_options,private_identity)
    if g02:summary['private_artifacts']=(photon_native_mips if photon_g02 else native_mips).stage(op,a.pack,a.pack_options,private_identity)
@@ -932,16 +986,16 @@ def run_operation(a,admission):
      if a.candidate in ('n04-solas-lean-alpha','n04-sildur-lean-alpha'):control.send(private_alpha_action,arm=False)
      if c01:control.send('c01_bounds',mode='off')
      if g05:control.send('depth_hierarchy_cost',enabled=False)
-     if (g10 or g02 or g05 or g08 or bliss) and not getattr(a,'bliss_qualification',None):
+     if g10 or g02 or g05 or g08:
       native_name=private_identity['qualified_original'] if a.candidate=='n02-photon-pbr-resources' else plan['pack_name']
       context={'dimension':private_identity['required_dimension']} if a.candidate=='n02-photon-pbr-resources' else {}
       control.send('diagnostic_pack',pack=native_name,sha256=private_identity['original_sha256'],**context)
-     control.send('configure',features=selected_features(a) if active and (not private_identity or identity is not None) else [])
-     if not getattr(a,'bliss_qualification',None):
+     if not bliss or getattr(a,'bliss_qualification',None):control.send('configure',features=selected_features(a) if active and (not private_identity or identity is not None) else [])
+     if not bliss:
       applied=control.send('settings_apply',enabled=(active or label.startswith('control')) and (not private_identity or identity is not None),preset='PERFORMANCE')
       life.require(applied.get('success') is True,'Public settings Apply failed')
-     state=control.ready()
-     if getattr(a,'bliss_qualification',None):bliss_qualification.require_off(state)
+     state=control.ready() if bliss else ready_after_apply(control)
+     if bliss:bliss_qualification.require_off(state)
      if g08:
       chosen=private_identity['generated'] if active else plan['pack_name']
       pin=summary['private_artifacts']['artifacts']['lean']['sha256'] if active else private_identity['original_sha256']
@@ -967,20 +1021,11 @@ def run_operation(a,admission):
       if active and getattr(a,'bliss_zero_lean',False):bliss_zero_lean.require_native_domain(summary.get(bliss_observations_key,{}))
       chosen=private_identity['generated'] if active else private_identity['qualified_original'] if a.candidate=='n02-photon-pbr-resources' else plan['pack_name']
       pin=summary['private_artifacts']['candidate_sha256'] if active else private_identity['original_sha256']
-      selection=None
-      if getattr(a,'bliss_qualification',None):
-       selection={'pack':chosen,'sha256':pin,'dimension':'minecraft:overworld'}
-      elif active:
-       context={'dimension':private_identity['required_dimension']} if private_identity.get('required_dimension') else {}
-       control.send('diagnostic_pack',pack=chosen,sha256=pin,**context)
-      if selection is None:
-       state=bliss_consumer.private_off.clear(control,chosen,pin)
-       bliss_consumer.activation(state,private_identity,expected_pack=chosen)
-      packet=mip_family.capture(control,settled=a.candidate in ('n04-bliss-sky','n04-solas-lean-alpha','n04-sildur-underwater-ao','n04-sildur-lean-alpha'),selection=selection)
-      if selection is not None:
-       state=bliss_consumer.private_off.clear(control,chosen,pin)
-       bliss_consumer.activation(state,private_identity,expected_pack=chosen)
-      if a.candidate in ('n04-bliss-sky','n04-solas-lean-alpha','n04-sildur-underwater-ao','n04-sildur-lean-alpha'):
+      selection={'pack':chosen,'sha256':pin,'dimension':private_identity.get('required_dimension','minecraft:overworld')}
+      packet=mip_family.capture(control,settled=PRIVATE_CANDIDATES[a.candidate][2],selection=selection)
+      state=bliss_consumer.private_off.clear(control,chosen,pin)
+      bliss_consumer.activation(state,private_identity,expected_pack=chosen)
+      if PRIVATE_CANDIDATES[a.candidate][2]:
        image_path=Path(packet['actual']['settled_screenshot'])
        if not image_path.is_absolute():image_path=a.profile/image_path
        life.require(image_path.parent.resolve()==(a.profile/'screenshots').resolve() and image_path.name.startswith('probe-ao-settled-'),
@@ -1274,7 +1319,9 @@ def run_operation(a,admission):
    # Interrupted commands are uncertain. Release/restoration refuses rather than guessing.
    try:
     release_runtime(op,proc)
-    if getattr(a,'standard_test',False):iteration.finish_profile(op)
+    if getattr(a,'standard_test',False):
+     detail_start=time.monotonic();iteration.finish_profile(op)
+     summary.setdefault('cost_details_seconds',{})['profile_restore_and_reset']=time.monotonic()-detail_start
     summary['configuration_restored']=True
     op.data['state']='complete' if summary.get('execution_completed') else 'failed-restored';op.save()
     summary['backup_disposal']=op.dispose_backups()
@@ -1282,7 +1329,7 @@ def run_operation(a,admission):
    except Exception as error:summary['release_error']=str(error);op.data['state']='recovery-required';op.save()
    if log:log.close()
    summary['clients_remaining']=len(dev.clients(dev.process_table()));summary['finished']=life.now();summary['storage']=guard.last
-   costs['restoration_release']=time.monotonic()-phase;costs['total']=time.monotonic()-clock
+   costs['restoration_release']=time.monotonic()-phase;costs['total']=time.monotonic()-clock;summary['command_total_seconds']=costs['total']+summary['workflow_setup_seconds']
    save()
   if op.data.get('release_verified'):
    for request in summary.get('analysis_requests',[]):
@@ -1291,6 +1338,7 @@ def run_operation(a,admission):
   elif a.suite=='controls':summary['evaluation']=comparison_evaluation(summary['analyses'],['null','known-effect']);summary['instrument_checks_passed']=instrument_controls_passed([d for d in summary['analyses'] if 'controlKind' in d])
   elif getattr(a,'native_startup_check',False):summary['evaluation']={'execution':'COMPLETE' if summary.get('execution_completed') else 'FAILED','completion':'COMPLETE' if summary.get('execution_completed') and summary.get('configuration_restored') else 'INCOMPLETE','validity':'VALID' if summary.get('execution_completed') and summary.get('configuration_restored') else 'INVALID','improvement':'NOT_EVALUATED','limits':'Native startup diagnostic with ShaderLOD absent; no optimization comparison.'}
   elif getattr(a,'bliss_qualification',None):summary['evaluation']=bliss_qualification.evaluate(out,order=a.qualification_order,mode=a.bliss_qualification,execution_completed=summary.get('execution_completed'),restored=summary.get('configuration_restored'))
+  elif getattr(a,'functional_check',False):summary['evaluation']=iteration.functional_evaluation(execution_completed=summary.get('execution_completed'),restored=summary.get('configuration_restored'))
   elif getattr(a,'standard_test',False):summary['evaluation']=iteration.evaluate(out,execution_completed=summary.get('execution_completed'),restored=summary.get('configuration_restored'))
   else:summary['evaluation']={'completion':'NOT_EVALUATED','validity':'UNTESTED','improvement':'NOT_EVALUATED'}
   if g10 and private_identity.get('compile_mode')=='0':
@@ -1299,10 +1347,12 @@ def run_operation(a,admission):
    summary['evaluation']['improvement']='DIAGNOSTIC_NATIVE_HOLD'
    summary['evaluation']['control_scope']='G09 storage observation retires its owner with Active0; timings cannot establish prefix optimization performance.'
   summary['evaluation']['execution']='COMPLETE' if summary.get('execution_completed') else 'FAILED'
+  summary['workflow_counters']={'reused_apply_readiness':getattr(control,'reused_apply_readiness',0)}
+  summary['workflow']=workflow.outcome(summary)
   save();op.pin([out/'summary.json',out/'plan.json',out/'preflight.json'])
   if op.data['state'] in life.TERMINAL:op.data['terminal_storage']=storage.scoped_usage([out]);op.save()
   print(json.dumps({'state':op.data['state'],'execution_completed':summary.get('execution_completed'),'restored':summary.get('configuration_restored'),'error':summary.get('error'),'release_error':summary.get('release_error'),
-                    'output':str(out),'evaluation':summary['evaluation']}))
+                    'output':str(out),'workflow':summary['workflow'],'evaluation':summary['evaluation']}))
   if not summary.get('execution_completed') or not summary.get('configuration_restored') or summary['clients_remaining'] or summary.get('benchmark_recovery_error'):return 1
   if a.suite=='controls' and not summary.get('instrument_checks_passed'):return 2
   if a.suite=='scenarios' and not summary.get('scenario_complete'):return 2
@@ -1312,15 +1362,22 @@ def run_operation(a,admission):
 
 def main(argv=None):
  argv=list(sys.argv[1:] if argv is None else argv)
+ if argv and argv[0] in ('discover','report'):return workflow.command(argv,sys.modules[__name__])
+ planning=bool(argv and argv[0]=='plan')
+ if planning:argv=['test',*argv[1:]]
  if argv and argv[0]=='evaluate':return evaluate_main(argv[1:])
  if argv and argv[0]=='recover':return recover_main(argv[1:])
  if argv and argv[0]=='_supervise-operation':
   p=argparse.ArgumentParser();p.add_argument('--output',required=True,type=Path)
   supervise_operation(p.parse_args(argv[1:]).output);return 0
  native_startup=bool(argv and argv[0]=='native-startup')
- standard=bool(argv and argv[0]=='test') or native_startup
+ functional_check=bool(argv and argv[0]=='check')
+ standard=bool(argv and argv[0]=='test') or native_startup or functional_check
  if standard:argv=argv[1:]
- a=arguments(argv);a.standard_test=standard;a.native_startup_check=native_startup
+ try:a=arguments(argv)
+ except (ValueError,OSError) as error:
+  print(json.dumps({'state':'input-error','error':str(error),'launched':False}));return 1
+ a.standard_test=standard;a.native_startup_check=native_startup;a.functional_check=functional_check
  if standard:
   supplied={flag.split('=',1)[0] for flag in argv if flag.startswith('--')}
   if supplied & {'--suite','--arm','--seconds','--world','--warmup','--budget','--conditioning','--public-hot','--native-null','--reload-controls','--diagnostic'}:
@@ -1329,20 +1386,37 @@ def main(argv=None):
   a.seconds=20
   a.warmup=5;a.conditioning=120;a.budget=900
   if getattr(a,'bliss_qualification',None):a.seconds=60;a.warmup=20;a.conditioning=180;a.budget=1800
+  if functional_check:
+   if a.bliss_qualification:
+    print(json.dumps({'error':'Frozen qualification cannot use functional check'}));return 1
+   a.seconds=3;a.conditioning=0;a.budget=900
   if native_startup:a.suite='smoke';a.arm='absent';a.seconds=3;a.conditioning=0;a.budget=450
+ setup_started=time.monotonic();build_seconds=0
  result=preflight(a)
+ if planning:
+  result['schedule']={'conditioning_seconds':a.conditioning,'seconds_per_window':a.seconds,'warmup_seconds':a.warmup,'budget_seconds':a.budget}
+  result['launched']=False;result['build_needed']=any(e['check'] in {'existing_build_binding','compiled_control_hooks'} for e in result['errors'])
+  print(json.dumps(result,indent=2));return 1 if result['errors'] else 0
  if standard and result['errors'] and all(error['check'] in {'existing_build_binding','compiled_control_hooks'} for error in result['errors']):
   try:
+   print(json.dumps({'stage':'build','reason':'Source/output receipt or compiled control hooks are stale; rebuilding before launch'}),file=sys.stderr)
    with dev.runtime_lock():
     life.require(not dev.clients(dev.process_table()),'Runtime lane occupied; build withheld')
-    dev.compile_current(timeout=180)
+    build_started=time.monotonic();dev.compile_current(timeout=180);build_seconds=time.monotonic()-build_started
    result=preflight(a)
   except (ValueError,OSError,subprocess.TimeoutExpired) as error:
    print(json.dumps({'state':'preflight-failed','error':str(error),'launched':False}));return 1
  if result['errors'] or not a.run:
   print(json.dumps(result,indent=2));return 1 if result['errors'] else 0
+ result['workflow_setup_seconds']=time.monotonic()-setup_started
+ result['workflow_build_seconds']=build_seconds
  return run_operation(a,result)
 
 
 if __name__=='__main__':
+ import platform
+ if (sys.argv[1:] and sys.argv[1] in ('test','check','plan','native-startup')
+     and platform.system()=='Linux' and platform.machine() in ('aarch64','arm64')
+     and os.environ.get('SHADERLOD_ARM64_RUNTIME_READY')!='1'):
+  os.execv(sys.executable,[sys.executable,str(ROOT/'scripts/linux_arm64_runtime.py'),'benchmark',*sys.argv[1:]])
  sys.exit(main())

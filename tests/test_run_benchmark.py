@@ -1,4 +1,7 @@
 import unittest
+import sys
+from pathlib import Path
+sys.path.insert(0,str(Path(__file__).resolve().parents[1]/"scripts"))
 from run_benchmark import (verify_requested_dh, scenario_timing_complete, scenario_evaluation,
                            comparison_evaluation, FAST_CASES, DIAGNOSTIC_CASES, evidence_snapshot, instrument_controls_passed, analyze_request)
 import json
@@ -459,7 +462,10 @@ class FixtureProcessSmokeTest(unittest.TestCase):
     def test_early_alpha_no_qualified_draw_refuses_timing_and_restores(self):
         self.smoke(standard=True,alpha=True,alpha_refuse=True)
 
-    def smoke(self,arm='empty',interrupt=False,standard=False,fail_native=False,bad_native_samples=None,refuse_compile=False,g04_fixture=False,fail_scene=False,fail_resources=False,c01=False,fail_c01=False,g10=False,fail_g10=False,g10_native=False,alpha=False,alpha_refuse=False,alpha_setup=False,combo=False,no_copy=False,scene_baseline=False,scene_saved=False,with_g10=False,fail_observer=False,g10_control=False):
+    def test_functional_check_runs_owned_three_arms_without_performance_claim(self):
+        self.smoke(standard=True,functional=True)
+
+    def smoke(self,arm='empty',functional=False,interrupt=False,standard=False,fail_native=False,bad_native_samples=None,refuse_compile=False,g04_fixture=False,fail_scene=False,fail_resources=False,c01=False,fail_c01=False,g10=False,fail_g10=False,g10_native=False,alpha=False,alpha_refuse=False,alpha_setup=False,combo=False,no_copy=False,scene_baseline=False,scene_saved=False,with_g10=False,fail_observer=False,g10_control=False):
         import run_benchmark as runner
         import experiment_lifecycle as life
         import run_storage as storage
@@ -564,7 +570,7 @@ class FixtureProcessSmokeTest(unittest.TestCase):
                         return real_run(argv,**kwargs)
                     with patch.object(runner.subprocess,'run',side_effect=command):
                         argv=['--pack',str(pack),'--profile',str(profile),'--output',str(out)]
-                        code=runner.main(['test',*argv,*(['--candidate','g10-native-control' if g10_native else 'g10-exact-bloom'] if g10 else ['--candidate','c01-bounds',*(['--features','dead_frame_copy,ao_attenuation'] if combo else [])] if c01 else ['--features',','.join(([] if no_copy else ['dead_frame_copy'])+['ao_attenuation']+(['early_alpha'] if alpha else [])+(['translucent_fastpath'] if g04_fixture and not scene_baseline else []))] if combo else ['--feature',feature]),*(['--saved-pose','9'] if g04_fixture and not scene_saved else []),*(['--scene','translucent-fixture'] if scene_baseline else ['--scene','saved'] if scene_saved else []),*(['--with-g10'] if with_g10 else ['--g10-control'] if g10_control else [])] if standard else ['--run',*argv,'--suite','smoke','--arm',arm])
+                        code=runner.main(['check' if functional else 'test',*argv,*(['--candidate','g10-native-control' if g10_native else 'g10-exact-bloom'] if g10 else ['--candidate','c01-bounds',*(['--features','dead_frame_copy,ao_attenuation'] if combo else [])] if c01 else ['--features',','.join(([] if no_copy else ['dead_frame_copy'])+['ao_attenuation']+(['early_alpha'] if alpha else [])+(['translucent_fastpath'] if g04_fixture and not scene_baseline else []))] if combo else ['--feature',feature]),*(['--saved-pose','9'] if g04_fixture and not scene_saved else []),*(['--scene','translucent-fixture'] if scene_baseline else ['--scene','saved'] if scene_saved else []),*(['--with-g10'] if with_g10 else ['--g10-control'] if g10_control else [])] if standard else ['--run',*argv,'--suite','smoke','--arm',arm])
                 op=life.Operation(out)
                 self.assertEqual(1 if interrupt or fail_native or bad_native_samples or refuse_compile or fail_scene or fail_resources or fail_c01 or fail_g10 or alpha_refuse or fail_observer else 0,code,(out/'summary.json').read_text())
                 self.assertEqual('failed-restored' if interrupt or fail_native or bad_native_samples or refuse_compile or fail_scene or fail_resources or fail_c01 or fail_g10 or alpha_refuse or fail_observer else 'complete',op.data['state']);self.assertTrue(op.data['release_verified'])
@@ -596,6 +602,12 @@ class FixtureProcessSmokeTest(unittest.TestCase):
                             self.assertFalse((out/'windows/candidate').exists())
                         elif not alpha_refuse and not fail_observer and not (combo and fail_c01 or with_g10 and fail_g10):self.assertFalse(any(row['action']=='settings_apply' and row['arguments']['enabled'] for row in op.data['commands']))
                         if alpha_refuse:self.assertTrue(any(row['action']=='settings_apply' and row['arguments']['enabled'] for row in op.data['commands']))
+                    elif functional:
+                        self.assertEqual('VALID',result['validity'])
+                        self.assertEqual('NOT_EVALUATED',result['improvement'])
+                        self.assertNotIn('speedup_ratio',result)
+                        self.assertNotIn('frame_time_reduction_percent',result)
+                        self.assertEqual([],measurement_waits)
                     else:
                         self.assertEqual('VALID',result['validity']);self.assertAlmostEqual(20,result['frame_time_reduction_percent'])
                         self.assertEqual([20,20,20],measurement_waits)

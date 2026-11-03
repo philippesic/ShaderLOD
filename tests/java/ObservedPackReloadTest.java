@@ -4,6 +4,14 @@ import java.util.*;
 public final class ObservedPackReloadTest {
     static void check(boolean value){if(!value)throw new AssertionError();}
     public static void main(String[] args)throws Exception {
+        check(!ObservedPackReload.permitsSelection(false,false,true,"minecraft:overworld"));
+        check(!ObservedPackReload.permitsSelection(false,true,false,"minecraft:overworld"));
+        check(ObservedPackReload.permitsSelection(false,true,true,"minecraft:overworld"));
+        check(ObservedPackReload.permitsSelection(false,true,true,"minecraft:the_nether"));
+        check(!ObservedPackReload.permitsSelection(false,true,true,"minecraft:the_end"));
+        check(!ObservedPackReload.permitsSelection(false,true,true,null));
+        check(ObservedPackReload.permitsSelection(true,false,true,"minecraft:overworld"));
+        check(!ObservedPackReload.permitsSelection(true,false,true,"minecraft:the_nether"));
         var events=new ArrayList<String>();
         ObservedPackReload.run(()->events.add("arm"),()->events.add("reload"),()->events.add("disarm"),()->events.add("rollback"));
         check(events.equals(List.of("arm","reload")));
