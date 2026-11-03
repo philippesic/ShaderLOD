@@ -63,22 +63,28 @@ class SpatialReferenceBindingTest {
         assertThrows(IllegalArgumentException.class, () -> new WorkCapability.DiscreteRates(Set.of(1.0, Double.NaN)));
     }
 
-    @Test void unknownSourcesAndChangedMembersRemainFull() {
-        var candidates = List.of(
-                new SourceFingerprint("0".repeat(64), SOURCE.memberSha256()),
-                new SourceFingerprint(SOURCE.sourceSha256(), Map.of()),
-                new SourceFingerprint(SOURCE.sourceSha256(), changedMembers()));
-        for (var fingerprint : candidates) {
-            var binding = registration().seal().bind(new Access(), ignored -> fingerprint);
-            binding.registerCurrentPack();
-            assertFull(binding.snapshot(), AdapterRuntimeBinding.Reason.UNKNOWN_SOURCE);
+    @Test void unknownHistoricalAndEveryChangedMemberRemainFull() {
+        for (var source : PhotonSpatialReferenceAdapter.sourceBindings()) {
+            for (var hash : List.of("0".repeat(64),
+                    "a8c004f5be0b341ed117220da0d2e2a0dadeefd62fd899ff64a3100c19a54ceb",
+                    "c2790b61bd4d096e24eedbf9ca800d35541ca81e8ec5efeecec122b764dbf6f0")) {
+                assertUnknown(new SourceFingerprint(hash, source.memberSha256()));
+            }
+            assertUnknown(new SourceFingerprint(source.sourceSha256(), Map.of()));
+            for (var member : source.memberSha256().keySet()) {
+                var members = new LinkedHashMap<>(source.memberSha256());
+                members.put(member, "0".repeat(64));
+                assertUnknown(new SourceFingerprint(source.sourceSha256(), members));
+                members.remove(member);
+                assertUnknown(new SourceFingerprint(source.sourceSha256(), members));
+            }
         }
     }
 
-    private static Map<String, String> changedMembers() {
-        var members = new LinkedHashMap<>(SOURCE.memberSha256());
-        members.put("shaders/program/shaderlod_spatial_prepass.fsh", "0".repeat(64));
-        return members;
+    private static void assertUnknown(SourceFingerprint fingerprint) {
+        var binding = registration().seal().bind(new Access(), ignored -> fingerprint);
+        binding.registerCurrentPack();
+        assertFull(binding.snapshot(), AdapterRuntimeBinding.Reason.UNKNOWN_SOURCE);
     }
 
     @Test void everyMissingAndUnsupportedOptionFailsFullWithoutRehashing() {

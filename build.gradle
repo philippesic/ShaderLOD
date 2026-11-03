@@ -8,30 +8,38 @@ version = mod_version
 group = mod_group_id
 base { archivesName = mod_id }
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
-sourceSets { devClient }
+// Dependency-neutral clocks, analysis and result contract are shared even when
+// the production mod is absent from a developer baseline.
+sourceSets { benchmarkCore; devClient; pcControl }
 sourceSets.devClient.compileClasspath += sourceSets.main.compileClasspath
+sourceSets.pcControl.compileClasspath += sourceSets.main.compileClasspath
 // Lightweight effect config/command integration tests need the pinned main APIs.
 sourceSets.test.compileClasspath += sourceSets.main.compileClasspath
 sourceSets.test.runtimeClasspath += sourceSets.main.compileClasspath
+// Standalone cross-port probe requires its bindingcompat target sources;
+// it is not a JUnit test or a root NeoForge1.21.1 consumer.
+sourceSets.test.java.exclude('com/pp/shaderlod/optimization/BindingSliceChecksMain.java')
+// Prototype API/tests belong to this NeoForge1.21.1 module, not shared port tests.
+sourceSets.test.java.srcDir('src/neoforge1211Test/java')
 
 configurations {
     runtimeClasspath.extendsFrom localRuntime
     devClientRuntimeClasspath.extendsFrom localRuntime
 }
 
-// Bootstrap downloads are checksum-locked in dev/runtime.lock.json.
-def runtimeLock = new groovy.json.JsonSlurper().parse(file('dev/runtime.lock.json'))
+// Bootstrap downloads are checksum-locked in dependencies/runtime.lock.json.
+def runtimeLock = new groovy.json.JsonSlurper().parse(file('dependencies/runtime.lock.json'))
 def performanceStack = project.findProperty('performanceStack')?.toString() ?: 'minimal'
 def optionalRuntimeFiles = []
 if (performanceStack != 'minimal') {
-    def optionalLockFile = file('dev/performance-mods.lock.json')
+    def optionalLockFile = file('dependencies/performance-mods.lock.json')
     if (!optionalLockFile.exists()) throw new GradleException('Optional performance lock missing; use the minimal stack until setup is complete.')
     def optionalLock = new groovy.json.JsonSlurper().parse(optionalLockFile)
     def selected = optionalLock.stacks[performanceStack]
     if (selected == null) throw new GradleException("Unknown performanceStack: ${performanceStack}")
     selected.each { name ->
         def artifact = optionalLock.artifacts[name]
-        def jarFile = file("dev/runtime/performance/${artifact.filename}")
+        def jarFile = file("dependencies/runtime/performance/${artifact.filename}")
         if (!jarFile.exists()) throw new GradleException("Missing ${jarFile}; run python3 scripts/setup_performance_mods.py first.")
         def actualHash = java.security.MessageDigest.getInstance('SHA-256').digest(jarFile.bytes).encodeHex().toString()
         if (actualHash != artifact.hashes.sha256) throw new GradleException("Optional runtime checksum mismatch: ${jarFile}")
@@ -39,16 +47,38 @@ if (performanceStack != 'minimal') {
     }
 }
 dependencies {
+    implementation sourceSets.benchmarkCore.output
+    devClientImplementation sourceSets.benchmarkCore.output
+    pcControlImplementation sourceSets.benchmarkCore.output
+    testImplementation sourceSets.benchmarkCore.output
     devClientCompileOnly sourceSets.main.output
-    compileOnly files("dev/runtime/${runtimeLock.artifacts.iris.filename}")
-    compileOnly files("dev/runtime/${runtimeLock.artifacts.sodium.filename}")
-    localRuntime files("dev/runtime/${runtimeLock.artifacts.iris.filename}",
-                       "dev/runtime/${runtimeLock.artifacts.sodium.filename}")
+    pcControlCompileOnly sourceSets.main.output
+    compileOnly files("dependencies/runtime/${runtimeLock.artifacts.iris.filename}")
+    compileOnly files("dependencies/runtime/${runtimeLock.artifacts.sodium.filename}")
+    devClientCompileOnly('org.anarres:jcpp:1.4.14') { transitive = false }
+    localRuntime files("dependencies/runtime/${runtimeLock.artifacts.iris.filename}",
+                       "dependencies/runtime/${runtimeLock.artifacts.sodium.filename}")
     localRuntime files(optionalRuntimeFiles)
     testImplementation 'org.junit.jupiter:junit-jupiter:5.14.1'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    // Native-memory consumer tests use Minecraft 1.21.1's pinned LWJGL version.
+    def testOs = System.getProperty('os.name').toLowerCase(Locale.ROOT)
+    def testArm = System.getProperty('os.arch') in ['aarch64', 'arm64']
+    def testPlatform = testOs.contains('mac') ? 'macos' : testOs.contains('windows') ? 'windows' : 'linux'
+    def testNatives = 'natives-' + testPlatform + (testArm ? '-arm64' : '')
+    if (testPlatform == 'linux' && testArm) {
+        // The Minecraft repository owns this module's metadata but omits the
+        // ARM classifier. Reuse the separately checksum-locked native archive.
+        testRuntimeOnly files('dependencies/runtime/linux-arm64/lwjgl-3.3.3-natives-linux-arm64.jar')
+    } else {
+        testRuntimeOnly "org.lwjgl:lwjgl:3.3.3:${testNatives}"
+    }
+
+    // Standalone tests exercise the actual Iris preprocessor without FML's nested-JAR loader.
+    testRuntimeOnly('org.anarres:jcpp:1.4.14') { transitive = false }
 }
 repositories { mavenCentral() }
+apply from: 'gradle/linux-arm64.gradle'
 
 neoForge {
     version = project.neo_version
@@ -77,7 +107,50 @@ neoForge {
         }
         configureEach { logLevel = org.slf4j.event.Level.INFO }
         configureEach {
+            if (project.hasProperty('clientHeap')) jvmArgument "-Xmx${project.property('clientHeap')}"
+            if (project.hasProperty('clientProcessors')) jvmArgument "-XX:ActiveProcessorCount=${project.property('clientProcessors')}"
+        }
+        configureEach {
             systemProperty 'shaderlod.dev.performanceStack', performanceStack
+            if(project.hasProperty('benchmarkTunerProbe'))systemProperty 'shaderlod.dev.benchmarkTunerProbe',project.property('benchmarkTunerProbe').toString()
+            if(project.hasProperty('shortlistCombinationRuntime'))systemProperty 'shaderlod.dev.shortlistCombinationRuntime',project.property('shortlistCombinationRuntime').toString()
+            if(project.hasProperty('shortlistG10Runtime'))systemProperty 'shaderlod.dev.shortlistG10Runtime',project.property('shortlistG10Runtime').toString()
+            for (key in ['g09StoragePropertiesOnly', 'g09PrefixAdmissionOnly', 'g09PrefixFunctional']) {
+                if (project.hasProperty(key)) systemProperty 'shaderlod.dev.' + key, project.property(key).toString()
+            }
+            if(project.hasProperty('c01PreparedSmoke'))systemProperty 'shaderlod.dev.c01PreparedSmoke',project.property('c01PreparedSmoke').toString()
+            if(project.hasProperty('cpuAdmissionCost'))systemProperty 'shaderlod.dev.cpuAdmissionCost',project.property('cpuAdmissionCost').toString()
+            if(project.hasProperty('cpuPlacement'))systemProperty 'shaderlod.dev.cpuPlacement',project.property('cpuPlacement').toString()
+            if(project.hasProperty('renderCpu'))systemProperty 'shaderlod.dev.renderCpu',project.property('renderCpu').toString()
+            if(project.hasProperty('nativeTerrainScene'))systemProperty 'shaderlod.dev.nativeTerrainScene',project.property('nativeTerrainScene').toString()
+            if(project.hasProperty('mipFamilyRuntime'))systemProperty 'shaderlod.dev.mipFamilyRuntime',project.property('mipFamilyRuntime').toString()
+            if(project.hasProperty('blissAoCoverage'))systemProperty 'shaderlod.dev.blissAoCoverage',project.property('blissAoCoverage').toString()
+            if(project.hasProperty('sildurLeanAlpha'))systemProperty 'shaderlod.dev.sildurLeanAlpha',project.property('sildurLeanAlpha').toString()
+            if(project.hasProperty('solasLeanAlpha'))systemProperty 'shaderlod.dev.solasLeanAlpha',project.property('solasLeanAlpha').toString()
+            if(project.hasProperty('blissAlbedoDomain'))systemProperty 'shaderlod.dev.blissAlbedoDomain',project.property('blissAlbedoDomain').toString()
+            if(project.hasProperty('sildurAoObservation'))systemProperty 'shaderlod.dev.sildurAoObservation',project.property('sildurAoObservation').toString()
+            if(project.hasProperty('g08BoundRuntime'))systemProperty 'shaderlod.dev.g08BoundRuntime',project.property('g08BoundRuntime').toString()
+            if(project.hasProperty('g08CloudRuntime'))systemProperty 'shaderlod.dev.g08CloudRuntime',project.property('g08CloudRuntime').toString()
+            if(project.hasProperty('g10BenchmarkRuntime'))systemProperty 'shaderlod.dev.g10BenchmarkRuntime',project.property('g10BenchmarkRuntime').toString()
+            if(project.hasProperty('c01Bounds'))systemProperty 'shaderlod.dev.c01Bounds',project.property('c01Bounds').toString()
+            if(project.hasProperty('c01Cost'))systemProperty 'shaderlod.dev.c01Cost',project.property('c01Cost').toString()
+            if(project.hasProperty('bslNativeMipWitnessRuntime'))systemProperty 'shaderlod.dev.bslNativeMipWitnessRuntime',project.property('bslNativeMipWitnessRuntime').toString()
+            if(project.hasProperty('c01NativeR66'))systemProperty 'shaderlod.dev.c01NativeR66',project.property('c01NativeR66').toString()
+            if(project.hasProperty('inactiveDrawElision'))systemProperty 'shaderlod.dev.inactiveDrawElision',project.property('inactiveDrawElision').toString()
+            if(project.hasProperty('earlyAlphaCpuCost'))systemProperty 'shaderlod.dev.earlyAlphaCpuCost',project.property('earlyAlphaCpuCost').toString()
+            if(project.hasProperty('benchmarkControlProbe'))systemProperty 'shaderlod.dev.benchmarkControlProbe',project.property('benchmarkControlProbe').toString()
+            if(project.hasProperty('readinessEvents')) {
+                systemProperty 'shaderlod.dev.readinessEvents',project.property('readinessEvents').toString()
+                jvmArgument "-Xlog:gc*,safepoint:file=${project.property('readinessEvents')}/gc-safepoint.log:utctime,uptime,pid,tid,level,tags"
+            }
+            if(project.hasProperty('savedAuthoredScene'))systemProperty 'shaderlod.dev.savedAuthoredScene',project.property('savedAuthoredScene').toString()
+            if(project.hasProperty('rendererWorkCounters'))systemProperty 'shaderlod.dev.rendererWorkCounters',project.property('rendererWorkCounters').toString()
+            if(project.findProperty('mixinExport') == 'true')systemProperty 'mixin.debug.export','true'
+            if(project.findProperty('nativeSubmitObserver') == 'true')systemProperty 'shaderlod.dev.nativeSubmitObserver','true'
+            systemProperty 'shaderlod.experimentalRendererResearch', project.findProperty('experimentalRendererResearch') == 'true' ? 'true' : 'false'
+            for (name in ['solasParserPack', 'solasParserOut']) {
+                if (project.hasProperty(name)) systemProperty "shaderlod.dev.${name}", project.property(name).toString()
+            }
             if (project.hasProperty('includeDh')) {
                 systemProperty 'shaderlod.dev.includeDh', project.property('includeDh').toString()
             }
@@ -121,16 +194,126 @@ neoForge {
             if (project.hasProperty('benchmarkWindowScale')) {
                 systemProperty 'shaderlod.dev.benchmarkWindowScale', project.property('benchmarkWindowScale').toString()
             }
-            for (name in ['cameraQuality', 'cameraQualityOnly']) {
+            if (project.hasProperty('comparisonDebug')) {
+                systemProperty 'shaderlod.dev.comparisonDebug', project.property('comparisonDebug').toString()
+            }
+            systemProperty 'shaderlod.dev.backgroundLaunch', project.findProperty('backgroundLaunch')?.toString() ?: System.getProperty('os.name').startsWith('Mac').toString()
+            if (project.hasProperty('comparisonFullscreen')) {
+                systemProperty 'shaderlod.dev.comparisonFullscreen', project.property('comparisonFullscreen').toString()
+            }
+            for (name in ['macWindowState', 'physicalResolution', 'cameraQuality', 'cameraQualityOnly', 'pixelHistoryCapture', 'pixelHistoryCaptureOnly', 'pixelHistoryArchiveSha256', 'pixelHistoryOptionsSha256']) {
                 if (project.hasProperty(name)) {
                     systemProperty "shaderlod.dev.${name}", project.property(name).toString()
                 }
             }
+            if (project.hasProperty('controlCaptureReceipt')) {
+                systemProperty 'shaderlod.dev.controlCaptureReceipt', project.property('controlCaptureReceipt').toString()
+            }
+            if (project.hasProperty('controlCaptureOriginal')) {
+                systemProperty 'shaderlod.dev.controlCaptureOriginal', project.property('controlCaptureOriginal').toString()
+            }
+            if (project.hasProperty('settledConsumerUniforms')) {
+                systemProperty 'shaderlod.dev.settledConsumerUniforms', project.property('settledConsumerUniforms').toString()
+            }
+            if (project.hasProperty('g01ExposureProbe')) {
+                systemProperty 'shaderlod.dev.g01ExposureProbe', project.property('g01ExposureProbe').toString()
+            }
+            if (project.hasProperty('fragmentWorkProbe')) {
+                systemProperty 'shaderlod.dev.fragmentWorkProbe', project.property('fragmentWorkProbe').toString()
+            }
             if (project.hasProperty('cloudSamplerProbe')) {
                 systemProperty 'shaderlod.dev.cloudSamplerProbe', project.property('cloudSamplerProbe').toString()
             }
+            if (project.hasProperty('rasterFragmentSource')) {
+                systemProperty 'shaderlod.dev.rasterFragmentSource', project.property('rasterFragmentSource').toString()
+            }
+            if (project.hasProperty('quadShaderSource')) {
+                systemProperty 'shaderlod.dev.quadShaderSource', project.property('quadShaderSource').toString()
+            }
+            if (project.hasProperty('blissChainWitness')) {
+                systemProperty 'shaderlod.dev.blissChainWitness', project.property('blissChainWitness').toString()
+            }
+            if (project.hasProperty('sildurReceiverWitness')) {
+                systemProperty 'shaderlod.dev.sildurReceiverWitness', project.property('sildurReceiverWitness').toString()
+            }
+            if (project.hasProperty('makeupCloudWitness')) {
+                systemProperty 'shaderlod.dev.makeupCloudWitness', project.property('makeupCloudWitness').toString()
+            }
+            if (project.hasProperty('bslMipWitness')) {
+                systemProperty 'shaderlod.dev.bslMipWitness', project.property('bslMipWitness').toString()
+            }
+            if (project.hasProperty('experimentalMakeUpHistoryExchange')) {
+                systemProperty 'shaderlod.experimentalMakeUpHistoryExchange', project.property('experimentalMakeUpHistoryExchange').toString()
+            }
+            if (project.hasProperty('experimentalMakeUpHistoryRotation')) {
+                systemProperty 'shaderlod.experimentalMakeUpHistoryRotation', project.property('experimentalMakeUpHistoryRotation').toString()
+            }
+            if (project.hasProperty('experimentalBslC6Mip')) {
+                systemProperty 'shaderlod.experimentalBslC6Mip', project.property('experimentalBslC6Mip').toString()
+            }
+            if (project.hasProperty('bslMipParityPass')) {
+                systemProperty 'shaderlod.dev.bslMipParityPass', project.property('bslMipParityPass').toString()
+            }
+            if (project.hasProperty('bslMipParityExtent')) {
+                systemProperty 'shaderlod.dev.bslMipParityExtent', project.property('bslMipParityExtent').toString()
+            }
+            if (project.hasProperty('bslMipParity')) {
+                systemProperty 'shaderlod.dev.bslMipParity', project.property('bslMipParity').toString()
+            }
+            for (name in ['archiveSha256', 'optionsPin', 'selectionEnabled']) {
+                def rasterProperty = 'rasterR1' + name.substring(0, 1).toUpperCase() + name.substring(1)
+                if (project.hasProperty(rasterProperty)) {
+                    systemProperty "shaderlod.rasterR1.${name}", project.property(rasterProperty).toString()
+                }
+            }
+            for (name in ['archiveSha256', 'optionsPin', 'receiptPin']) {
+                def temporalProperty = 'unboundTemporalR1' + name.substring(0, 1).toUpperCase() + name.substring(1)
+                if (project.hasProperty(temporalProperty)) {
+                    systemProperty "shaderlod.unboundTemporalR1.${name}", project.property(temporalProperty).toString()
+                }
+            }
+            if (project.hasProperty('makeupQuadMainAdmissionR1')) {
+                systemProperty 'shaderlod.dev.makeupQuadMainAdmissionR1', project.property('makeupQuadMainAdmissionR1').toString()
+            }
+            for (name in ['makeupQuadCoalescerR1', 'makeupQuadCoalescerOptionsPin', 'makeupQuadCoalescerAdmission']) {
+                if (project.hasProperty(name)) systemProperty "shaderlod.dev.${name}", project.property(name).toString()
+            }
+            for (name in ['makeupSingleAlphaR1', 'bslPostSampleAlphaR1', 'g03CanopyFixture', 'sourceOnlyAlphaAsahiR1', 'sourceOnlyNativeOpaqueR74', 'depthHierarchyParallelR70', 'depthHierarchyProbe', 'depthHierarchyR50', 'depthHierarchyLowerAsahiR2', 'depthHierarchyCostAsahiR3', 'depthHierarchyFixed16AsahiR1', 'sourceOnlyAlphaR23', 'sourceOnlyAlphaExport', 'makeupEarlyAlphaR1', 'makeupEarlyAlphaOptionsPin', 'makeupMergedSubmissionR1', 'makeupMergedDraws', 'makeupMergedOptionsPin']) {
+                if (project.hasProperty(name)) systemProperty "shaderlod.dev.${name}", project.property(name).toString()
+            }
+            for (name in ['unboundDepthPrimingR2', 'unboundDepthOptionsPin']) {
+                if (project.hasProperty(name)) {
+                    systemProperty "shaderlod.dev.${name}", project.property(name).toString()
+                }
+            }
+            for (name in ['bslPrefixProbeR3', 'bslPrefixProbeOutputR3', 'bslPrefixNativeOptionsR3', 'bslPrefixSustainedR8', 'bslPrefixR8Options', 'bslPrefixR8Functions', 'bslPrefixR8Output', 'bslPrefixBindingHotpathR17']) {
+                if (project.hasProperty(name)) systemProperty "shaderlod.dev.${name}", project.property(name).toString()
+            }
+            for (name in ['bslFieldBridge', 'bslFieldOptionsPin', 'bslFieldEvidence', 'bslFieldFrames', 'bslFieldArm', 'bslGpuValueEcho', 'bslFieldSteady', 'bslSteadyWitness', 'bslSteadyWitnessArm']) {
+                if (project.hasProperty(name)) {
+                    systemProperty "shaderlod.dev.${name}", project.property(name).toString()
+                }
+            }
+            for (name in ['rasterActivationProbe', 'rasterActivationProbeArm']) {
+                if (project.hasProperty(name)) systemProperty "shaderlod.dev.${name}", project.property(name).toString()
+            }
+            if (project.hasProperty('makeupMrtProbe')) {
+                systemProperty 'shaderlod.dev.makeupMrtProbe', project.property('makeupMrtProbe').toString()
+            }
+            if (project.hasProperty('complementaryCopyGraph')) {
+                systemProperty 'shaderlod.dev.complementaryCopyGraph', project.property('complementaryCopyGraph').toString()
+            }
+            if (project.hasProperty('complementaryCopyGraphSources')) {
+                systemProperty 'shaderlod.dev.complementaryCopyGraphSources', project.property('complementaryCopyGraphSources').toString()
+            }
+            if (project.hasProperty('compositeCopyWitness')) {
+                systemProperty 'shaderlod.dev.compositeCopyWitness', project.property('compositeCopyWitness').toString()
+            }
             if (project.hasProperty('dhDrawEvidence')) {
                 systemProperty 'shaderlod.dev.dhDrawEvidence', project.property('dhDrawEvidence').toString()
+            }
+            if (project.hasProperty('bslMipWitnessRuntime')) {
+                systemProperty 'shaderlod.dev.bslMipWitnessRuntime', project.property('bslMipWitnessRuntime').toString()
             }
             if (project.hasProperty('waterSceneSurvey')) {
                 systemProperty 'shaderlod.dev.waterSceneSurvey', project.property('waterSceneSurvey').toString()
@@ -138,7 +321,7 @@ neoForge {
             if (project.hasProperty('cpuLayerTiming')) {
                 systemProperty 'shaderlod.dev.cpuLayerTiming', project.property('cpuLayerTiming').toString()
             }
-            for (name in ['cpuTiming', 'workTrace', 'workTraceOnly', 'workTraceMetadata', 'workTraceOutput']) {
+            for (name in ['cpuTiming', 'workTrace', 'workTraceOnly', 'workTraceMetadata', 'workTraceOutput', 'spatialLayoutProbe', 'spatialLayoutOnly', 'pixelCoverage', 'pixelCoverageSceneSha256', 'hideWorkloadGui']) {
                 if (project.hasProperty(name)) {
                     systemProperty "shaderlod.dev.${name}", project.property(name).toString()
                 }
@@ -166,10 +349,12 @@ neoForge {
         }
     }
     mods {
-        shaderlod { sourceSet(sourceSets.main) }
+        shaderlod { sourceSet(sourceSets.main); sourceSet(sourceSets.benchmarkCore) }
         shaderlod_dev { sourceSet(sourceSets.devClient) }
+        shaderlod_neutral { sourceSet(sourceSets.devClient); sourceSet(sourceSets.benchmarkCore) }
     }
 }
+neoForge.runs.configureEach { loadedMods = [neoForge.mods.shaderlod, neoForge.mods.shaderlod_dev] }
 // Runtime directories own DH; never silently move a user's mod files to change a benchmark.
 ['runClientLodOn', 'runClientLodOff'].each { taskName ->
     def defaultDirectory = taskName == 'runClientLodOn' ? 'run-landscape/lod-on' : 'run-landscape/lod-off'
@@ -177,8 +362,19 @@ neoForge {
     def dhFilename = runtimeLock.artifacts.distanthorizons.filename
     def dhJar = new File(profile, "mods/${dhFilename}")
     def expectedDh = project.findProperty('includeDh')?.toString() != 'false'
+    def backgroundLaunch = project.findProperty('backgroundLaunch')?.toString() ?: System.getProperty('os.name').startsWith('Mac').toString()
     tasks.named(taskName).configure {
         doFirst {
+            if (backgroundLaunch == 'true') {
+                def options = new File(profile, 'options.txt')
+                if (!options.isFile() || !(options.getText('UTF-8') =~ /(?m)^fullscreen:false\s*$/).find()) {
+                    throw new GradleException('Background launch requires fullscreen:false; use scripts/dev_client.py to back up and prepare this profile before launch')
+                }
+                def loaderConfig = new File(profile, 'config/fml.toml')
+                if (!loaderConfig.isFile() || !(loaderConfig.getText('UTF-8') =~ /(?m)^earlyWindowControl\s*=\s*false\s*$/).find()) {
+                    throw new GradleException('Background launch requires earlyWindowControl=false; use scripts/dev_client.py to back up and prepare this profile before launch')
+                }
+            }
             if (dhJar.exists() != expectedDh) throw new GradleException("DH presence disagrees with includeDh=${expectedDh} in ${profile}")
             if (new File(profile, 'mods').exists()) {
                 def unmanaged = new File(profile, 'mods').listFiles().findAll { it.name.endsWith('.jar') && it.name != dhFilename }
@@ -188,9 +384,34 @@ neoForge {
     }
 }
 neoForge.addModdingDependenciesTo(sourceSets.devClient)
+// A separate opt-in thin controller for the PC test instance. The normal JAR
+// remains unchanged. One optional exact-API observer is gated off for ordinary timings.
+neoForge.addModdingDependenciesTo(sourceSets.pcControl)
+tasks.register('pcControlJar', Jar) {
+    dependsOn tasks.named('pcControlClasses')
+    dependsOn tasks.named('compileDevClientJava')
+    from sourceSets.pcControl.output
+    from(sourceSets.devClient.output) { include 'com/pp/shaderlod/dev/mixin/BslMipWitnessMixin.class' }
+    archiveFileName = 'shaderlod-remote-control-1.21.1-neoforge.jar'
+}
+// Same observer classes in both arms. Only the standalone variant bundles the
+// shared clocks; pairing that variant with main would create a split package.
+tasks.register('neutralBenchmarkJar', Jar) {
+    dependsOn tasks.named('devClientClasses')
+    from sourceSets.devClient.output.classesDirs
+    from 'src/neutralBenchmark/resources'
+    archiveFileName = 'shaderlod-neutral-benchmark-paired.jar'
+}
+tasks.register('neutralBenchmarkStandaloneJar', Jar) {
+    dependsOn tasks.named('devClientClasses'), tasks.named('benchmarkCoreClasses')
+    from sourceSets.devClient.output.classesDirs
+    from sourceSets.benchmarkCore.output.classesDirs
+    from 'src/neutralBenchmark/resources'
+    archiveFileName = 'shaderlod-neutral-benchmark-standalone.jar'
+}
 neoForge.runs.named('clientLodOff') {
     sourceSet = sourceSets.devClient
-    loadedMods = [neoForge.mods.shaderlod_dev]
+    loadedMods = [neoForge.mods.shaderlod_neutral]
 }
 
 def generateModMetadata = tasks.register('generateModMetadata', ProcessResources) {
@@ -207,7 +428,26 @@ neoForge.ideSyncTask generateModMetadata
 
 tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8' }
 tasks.named('test') { useJUnitPlatform() }
+tasks.register('benchmarkAnalyze', JavaExec) {
+    dependsOn tasks.named('devClientClasses')
+    classpath = sourceSets.devClient.runtimeClasspath
+    mainClass = 'com.pp.shaderlod.dev.BenchmarkAnalyze'
+    if (project.hasProperty('benchmarkAnalysisRequest')) args project.property('benchmarkAnalysisRequest').toString()
+}
 tasks.named('jar') {
+    from sourceSets.benchmarkCore.output
     from('LICENSE') { into 'META-INF'; rename { 'LICENSE.shaderlod' } }
 }
 idea { module { downloadSources = true } }
+
+// Isolated packaged-main admission; existing lanes are unchanged.
+if (project.hasProperty('packagedMainProfile')) {
+    apply from: 'dev/logs/cross-shader-performance-r2/packaged-main-runtime-r1/parent/packaged-main.gradle'
+}
+
+// Modern Iris ShaderSupplier is not present on either MC1.21.1 legacy API.
+def makeupShadowSupplierLegacyExcluded = file("src/main/java/com/pp/shaderlod/optimization/makeupshadow/mixin/ShadowSupplierMixin.java").canonicalPath
+sourceSets.main.java.exclude { it.file.canonicalPath == makeupShadowSupplierLegacyExcluded }
+
+// Pinned native draw replacement is compiled only for this NeoForge 1.21.1 module.
+sourceSets.main.java.srcDir("src/neoforge1211/java")

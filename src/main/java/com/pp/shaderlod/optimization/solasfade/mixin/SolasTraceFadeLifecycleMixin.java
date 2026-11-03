@@ -1,0 +1,2 @@
+package com.pp.shaderlod.optimization.solasfade.mixin;import com.pp.shaderlod.optimization.solasfade.SolasTraceFadeRuntime;import org.spongepowered.asm.mixin.*;import org.spongepowered.asm.mixin.injection.*;import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+@Mixin(targets="net.irisshaders.iris.Iris",remap=false)public abstract class SolasTraceFadeLifecycleMixin{@Inject(method="reload()V",at=@At("HEAD"),require=1)private static void reset(CallbackInfo ci){SolasTraceFadeRuntime.invalidate();}}

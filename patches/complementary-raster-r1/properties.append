@@ -1,0 +1,10 @@
+
+# ShaderLOD private raster R1. Originals and selected native AA unchanged.
+#if SHADERLOD_RASTER_R1 == 1
+size.buffer.colortex9 = 0.75 0.75
+size.buffer.colortex10 = 0.75 0.75
+#else
+program.world0/deferred2.enabled=false
+program.world0/composite2.enabled=false
+#endif
+screen.SHADERLOD_RASTER_R1 = SHADERLOD_RASTER_R1

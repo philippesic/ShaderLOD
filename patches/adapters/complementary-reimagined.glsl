@@ -9,10 +9,15 @@ uniform float shaderlodNear;
 uniform float shaderlodFar;
 uniform float shaderlodTransition;
 #include "/include/shaderlod/optimization_flags.glsl"
+// Normal receiver verifies actual depth owner and single base0 same-filter sampler.
+// Missing/unbound permission0 retains literal native implicit queries.
+uniform int shaderlodReimaginedAODepthSamplingQualified;
 uniform int shaderlodOptWaterParallaxBudget;
 uniform int shaderlodOptWaterWaveBudget;
 uniform int shaderlodOptZeroEmissionArithmetic;
 uniform int shaderlodOptSsrProjectionArithmetic;
+uniform int shaderlodReimaginedExactDepthPermission;
+uniform int shaderlodOptSsrProjectedFootprintExit;
 uniform int shaderlodOptReflectionDeferredMetric;
 uniform int shaderlodOptSkyAtmosphereOwnership;
 uniform int shaderlodOptTemporalShadowFilter;

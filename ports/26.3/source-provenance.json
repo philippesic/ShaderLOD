@@ -1,0 +1,359 @@
+{
+  "owner": "port_263",
+  "referenceAuthorization": "port_2612 authorized frozen read-only scaffold reuse 2026-10-06; root authorized frozen facade/common references",
+  "irisPublishedBinary": "1.11.7+mc26.3",
+  "irisSourceReference": "770155cc91d8c11272d93cb4457fac1625d37a4d declares 1.11.6; not exact ancestry",
+  "localSources": [
+    {
+      "path": "fabric/src/main/java/com/pp/shaderlod/ShaderLodEffectConfig.java",
+      "sha256": "818af2ccec05dd741d67c13b378e224fe879ef639cec1f47b8e2f935a7b8c772",
+      "reference": "ports/26.1.2/fabric/src/main/java/com/pp/shaderlod/ShaderLodEffectConfig.java",
+      "referenceSha256": "818af2ccec05dd741d67c13b378e224fe879ef639cec1f47b8e2f935a7b8c772"
+    },
+    {
+      "path": "fabric/src/main/java/com/pp/shaderlod/fabric/FabricLodConfig.java",
+      "sha256": "04c139b12bc2af721d6a81b2025cb5c6dcdd742e5c067a1022d931c86e26614f",
+      "reference": "ports/26.1.2/fabric/src/main/java/com/pp/shaderlod/fabric/FabricLodConfig.java",
+      "referenceSha256": "04c139b12bc2af721d6a81b2025cb5c6dcdd742e5c067a1022d931c86e26614f"
+    },
+    {
+      "path": "fabric/src/main/java/com/pp/shaderlod/fabric/FabricLodScreen.java",
+      "sha256": "cab69a438875fe3e05c3607345230e40a3fb1d0cfd5d48ca4d952f1c98215573",
+      "reference": "ports/26.1.2/fabric/src/main/java/com/pp/shaderlod/fabric/FabricLodScreen.java",
+      "referenceSha256": "14e27b4bfee9e248b2d341df29b9ccedcd63c80cac2128d1ccff97f90b0cb57d",
+      "beforeUiArgbR1Sha256": "790d3277e0869b0d8a6fab84b39051b7bdcba6f4676c398fd07bc09832ee45cb"
+    },
+    {
+      "path": "fabric/src/main/java/com/pp/shaderlod/fabric/FabricLodSettings.java",
+      "sha256": "571af0c84acc0d3e688f73675c73810c3fe174bc4d2dde9d9d661e54dc3eee9f",
+      "reference": "ports/26.1.2/fabric/src/main/java/com/pp/shaderlod/fabric/FabricLodSettings.java",
+      "referenceSha256": "b8c6d7185aaa9c43bc708e39f5824e0520517f7eb90e3a12ffa8f2c6558f1ff2"
+    },
+    {
+      "path": "fabric/src/main/java/com/pp/shaderlod/fabric/FabricPackSelection.java",
+      "sha256": "845815c234e45e0610a250dd097ea14e2dd55466a56f0c608ea29c89ea9b18bc",
+      "reference": "ports/26.1.2/fabric/src/main/java/com/pp/shaderlod/fabric/FabricPackSelection.java",
+      "referenceSha256": "845815c234e45e0610a250dd097ea14e2dd55466a56f0c608ea29c89ea9b18bc"
+    },
+    {
+      "path": "fabric/src/main/java/com/pp/shaderlod/fabric/ShaderLodFabric.java",
+      "sha256": "05c3931356cbe233674a45a96be0c45929160d93ebafd387a9eff6278acc13d0",
+      "reference": "ports/26.1.2/fabric/src/main/java/com/pp/shaderlod/fabric/ShaderLodFabric.java",
+      "referenceSha256": "2e1f1da55bf5bef2a4e979d3d15a6e7938c0b2cb90ce304c51b44f7a0febc36e"
+    },
+    {
+      "path": "fabric/src/main/java/com/pp/shaderlod/fabric/mixin/FabricCoreUniformsMixin.java",
+      "sha256": "555e85f9874fb58b24cf1220f33ac907b8c34d847b37a82ca65f71343ddb70ef",
+      "reference": "ports/26.1.2/fabric/src/main/java/com/pp/shaderlod/fabric/mixin/FabricCoreUniformsMixin.java",
+      "referenceSha256": "787ce7df6ff4b21770921914ef81563f86b8348782882cd4c6ff0dfc57502fb4"
+    },
+    {
+      "path": "fabric/src/main/java/com/pp/shaderlod/integration/IrisRuntimeAccess.java",
+      "sha256": "a4de33103c8e8ecb3b8c1e77b85c45cb7dd3dda96bfe1e100cf39db22f8b1958",
+      "reference": null,
+      "referenceSha256": null
+    },
+    {
+      "path": "fabric/src/main/java/com/pp/shaderlod/integration/KnownRuntimeBoundary.java",
+      "sha256": "6b5dc7a9bdb1ecbc7c5c289495e5b1dbff356fd9a347b73de933dad0dd4000a5",
+      "reference": "ports/26.1.2/fabric/src/main/java/com/pp/shaderlod/integration/KnownRuntimeBoundary.java",
+      "referenceSha256": "1683f26d973be1ed4a6e626b6a743f899bddf070f182bea83a54e0a0c1d34b6a"
+    },
+    {
+      "path": "fabric/src/main/java/com/pp/shaderlod/integration/RendererBackend.java",
+      "sha256": "85f38a24490359355361705a75732714451b3dc27767495749689c57f35234b4",
+      "reference": "ports/26.1.2/fabric/src/main/java/com/pp/shaderlod/integration/RendererBackend.java",
+      "referenceSha256": "86f87c62b7deffed4783ca52269ba7399677b46d0ca9435cc9de1fe610a36862"
+    },
+    {
+      "path": "fabric/src/main/resources/assets/shaderlod/lang/en_us.json",
+      "sha256": "460ef63d82a1021b6698964bdbf78c5d4a735d9b568c53b3bfa0e0c991bc6b54",
+      "reference": "ports/26.1.2/fabric/src/main/resources/assets/shaderlod/lang/en_us.json",
+      "referenceSha256": "460ef63d82a1021b6698964bdbf78c5d4a735d9b568c53b3bfa0e0c991bc6b54"
+    },
+    {
+      "path": "fabric/src/main/resources/fabric.mod.json",
+      "sha256": "0da6ffed4cbc741d6025be9b9deed4baacdba52c5d87fa724ca18fdf831a0cc8",
+      "reference": "ports/26.1.2/fabric/src/main/resources/fabric.mod.json",
+      "referenceSha256": "320197a172966660c18c49e49bed2146b2c629a61eefd94c6835ebdcca24d6c8"
+    },
+    {
+      "path": "fabric/src/main/resources/shaderlod-fabric.mixins.json",
+      "sha256": "8ef6243ff7427ce03175716a92ba82ab307bd71a74bfc5e03a5d411750ca4967",
+      "reference": "ports/26.1.2/fabric/src/main/resources/shaderlod-fabric.mixins.json",
+      "referenceSha256": "8ef6243ff7427ce03175716a92ba82ab307bd71a74bfc5e03a5d411750ca4967"
+    },
+    {
+      "path": "fabric/src/main/resources/shaderlod-shared.mixins.json",
+      "sha256": "0eddbfbacd9b8adba7bfff652e410ede39178ebaa21b6c9f38ee9e0e82efb701",
+      "reference": "ports/26.1.2/fabric/src/main/resources/shaderlod-shared.mixins.json",
+      "referenceSha256": "0eddbfbacd9b8adba7bfff652e410ede39178ebaa21b6c9f38ee9e0e82efb701"
+    },
+    {
+      "path": "fabric/src/test/java/com/pp/shaderlod/fabric/FabricLodConfigTest.java",
+      "sha256": "0cf0bd4d68981169e7ddae7647f3c3dfd0853292eb85e680d58c4d0a3f1962d6",
+      "reference": "ports/26.1.2/fabric/src/test/java/com/pp/shaderlod/fabric/FabricLodConfigTest.java",
+      "referenceSha256": "0cf0bd4d68981169e7ddae7647f3c3dfd0853292eb85e680d58c4d0a3f1962d6"
+    },
+    {
+      "path": "fabric/src/test/java/com/pp/shaderlod/fabric/FabricLodSettingsTest.java",
+      "sha256": "3bbab5154cbc3021d2d4d3c9327c3a632cbb3310db556eda04f8801e5def87cb",
+      "reference": "ports/26.1.2/fabric/src/test/java/com/pp/shaderlod/fabric/FabricLodSettingsTest.java",
+      "referenceSha256": "3bbab5154cbc3021d2d4d3c9327c3a632cbb3310db556eda04f8801e5def87cb"
+    },
+    {
+      "path": "fabric/src/test/java/com/pp/shaderlod/fabric/IrisBundledRuntimeTest.java",
+      "sha256": "a283f9b52577a1cdb599280afc15fd1bb1b39d7e7167443d2f477a8319472d7d",
+      "reference": "ports/26.1.2/fabric/src/test/java/com/pp/shaderlod/fabric/IrisBundledRuntimeTest.java",
+      "referenceSha256": "a283f9b52577a1cdb599280afc15fd1bb1b39d7e7167443d2f477a8319472d7d"
+    },
+    {
+      "path": "fabric/src/test/java/com/pp/shaderlod/port/RendererBackendTest.java",
+      "sha256": "f2ea7d1f7caefa766c578a5901f88ade7f654c44badffcb188dc8349da0d7504",
+      "reference": null,
+      "referenceSha256": null
+    },
+    {
+      "path": "neoforge/src/main/java/com/pp/shaderlod/ShaderLod.java",
+      "sha256": "2d05b566477c449a1b058fd987bed59035f0f47f0a182e557d7e2752cd0c8e29",
+      "reference": "ports/26.1.2/neoforge/src/main/java/com/pp/shaderlod/ShaderLod.java",
+      "referenceSha256": "17d65234d623d5e8158114d72c235252c5ac9d84eacc6a556444b3c57cf16676"
+    },
+    {
+      "path": "neoforge/src/main/java/com/pp/shaderlod/ShaderLodConfig.java",
+      "sha256": "de27b7d82c53c9133b1bc9df842d80636465fb77dbe05a2c044fd5adeb735d82",
+      "reference": "ports/26.1.2/neoforge/src/main/java/com/pp/shaderlod/ShaderLodConfig.java",
+      "referenceSha256": "de27b7d82c53c9133b1bc9df842d80636465fb77dbe05a2c044fd5adeb735d82"
+    },
+    {
+      "path": "neoforge/src/main/java/com/pp/shaderlod/ShaderLodEffectConfig.java",
+      "sha256": "344eab644e149f479a7217fc20c70293e0b793b8fca27b5388636300d4e40618",
+      "reference": "ports/26.1.2/neoforge/src/main/java/com/pp/shaderlod/ShaderLodEffectConfig.java",
+      "referenceSha256": "344eab644e149f479a7217fc20c70293e0b793b8fca27b5388636300d4e40618"
+    },
+    {
+      "path": "neoforge/src/main/java/com/pp/shaderlod/ShaderLodPackDetection.java",
+      "sha256": "dcb4ed431bcee1d6723d0759645d75a9aa82ced0d711f20c813ec240f2cf9073",
+      "reference": "ports/26.1.2/neoforge/src/main/java/com/pp/shaderlod/ShaderLodPackDetection.java",
+      "referenceSha256": "dcb4ed431bcee1d6723d0759645d75a9aa82ced0d711f20c813ec240f2cf9073"
+    },
+    {
+      "path": "neoforge/src/main/java/com/pp/shaderlod/ShaderLodSettings.java",
+      "sha256": "8d6dff9d5f9390e019c3603019a1f9e44acf07c0eb8682423358a0abb7d0e11e",
+      "reference": "ports/26.1.2/neoforge/src/main/java/com/pp/shaderlod/ShaderLodSettings.java",
+      "referenceSha256": "c3f8424053eac24924d071490ae0986710602f2224e23f328dd80eb7ab75022f"
+    },
+    {
+      "path": "neoforge/src/main/java/com/pp/shaderlod/ShaderLodSettingsScreen.java",
+      "sha256": "607150970abc8b1aa7f0b7875b694c286df28dbad6b9138d416cdfe2b25b20d6",
+      "reference": "ports/26.1.2/neoforge/src/main/java/com/pp/shaderlod/ShaderLodSettingsScreen.java",
+      "referenceSha256": "7eef6979c203605140e843ee4b98780232184d062386e1d8f39f0acf68c60b96",
+      "beforeUiArgbR1Sha256": "6dc42545859ac311d49849d4f342c5edd5a61d924b497d60e583629b9e8d147f"
+    },
+    {
+      "path": "neoforge/src/main/java/com/pp/shaderlod/integration/IrisRuntimeAccess.java",
+      "sha256": "a4de33103c8e8ecb3b8c1e77b85c45cb7dd3dda96bfe1e100cf39db22f8b1958",
+      "reference": null,
+      "referenceSha256": null
+    },
+    {
+      "path": "neoforge/src/main/java/com/pp/shaderlod/integration/KnownRuntimeBoundary.java",
+      "sha256": "6b5dc7a9bdb1ecbc7c5c289495e5b1dbff356fd9a347b73de933dad0dd4000a5",
+      "reference": "ports/26.1.2/neoforge/src/main/java/com/pp/shaderlod/integration/KnownRuntimeBoundary.java",
+      "referenceSha256": "1683f26d973be1ed4a6e626b6a743f899bddf070f182bea83a54e0a0c1d34b6a"
+    },
+    {
+      "path": "neoforge/src/main/java/com/pp/shaderlod/integration/RendererBackend.java",
+      "sha256": "85f38a24490359355361705a75732714451b3dc27767495749689c57f35234b4",
+      "reference": "ports/26.1.2/neoforge/src/main/java/com/pp/shaderlod/integration/RendererBackend.java",
+      "referenceSha256": "86f87c62b7deffed4783ca52269ba7399677b46d0ca9435cc9de1fe610a36862"
+    },
+    {
+      "path": "neoforge/src/main/java/com/pp/shaderlod/mixin/CommonUniformsMixin.java",
+      "sha256": "59fb1dfa314ce749e26632239001eb5d0a44b849eb9921e42ce068c526cb39dd",
+      "reference": "ports/26.1.2/neoforge/src/main/java/com/pp/shaderlod/mixin/CommonUniformsMixin.java",
+      "referenceSha256": "3725cbfe56cae89a7fea757447c9fb5adb270312effe58433abeb56de68474f0"
+    },
+    {
+      "path": "neoforge/src/main/resources/META-INF/neoforge.mods.toml",
+      "sha256": "abbbef0a1826991fe1ff20d8f27ee07362340e4e7349a4467e39e32aeb4e0619",
+      "reference": "ports/26.1.2/neoforge/src/main/resources/META-INF/neoforge.mods.toml",
+      "referenceSha256": "6f5828ba2129018cda8afb6d654b810a06736345775142c79fe1911abc9e700e"
+    },
+    {
+      "path": "neoforge/src/main/resources/shaderlod.mixins.json",
+      "sha256": "74776985689f1a92d862aaacdca964d2d6f5898031f0dc05159998cc40ff237c",
+      "reference": "ports/26.1.2/neoforge/src/main/resources/shaderlod.mixins.json",
+      "referenceSha256": "74776985689f1a92d862aaacdca964d2d6f5898031f0dc05159998cc40ff237c"
+    },
+    {
+      "path": "neoforge/src/test/java/com/pp/shaderlod/port/RendererBackendTest.java",
+      "sha256": "f2ea7d1f7caefa766c578a5901f88ade7f654c44badffcb188dc8349da0d7504",
+      "reference": null,
+      "referenceSha256": null
+    }
+  ],
+  "sharedReadOnlySources": [
+    {
+      "path": "src/main/java/com/pp/shaderlod/CoreUniformFrame.java",
+      "sha256": "9cc908c0f38f9d81f74f0c4dfc1d9b61ec40832040638cff25c3d1f874e04a5c"
+    },
+    {
+      "path": "src/main/java/com/pp/shaderlod/LodSettings.java",
+      "sha256": "08a0a9938b3aacda8f38111ee75f2cffa440bf41d7ccb57bcabf0d10025cc705"
+    },
+    {
+      "path": "src/main/java/com/pp/shaderlod/LodPreset.java",
+      "sha256": "843b03b48e3159324114dc89e37e07edff5dfd961fc23e779a81399470d515c3"
+    },
+    {
+      "path": "src/main/java/com/pp/shaderlod/EffectUniformFrame.java",
+      "sha256": "b9b3e333a318ad5fb0332547b5efb1124b4388a2b6b15811808540d05b3d1fa0"
+    },
+    {
+      "path": "src/main/java/com/pp/shaderlod/lod/DistanceBands.java",
+      "sha256": "fda4e549bcb15784eefc39ee3ddc10af8d858c175aebd210424b884d1837db03"
+    },
+    {
+      "path": "src/main/java/com/pp/shaderlod/lod/Effect.java",
+      "sha256": "1ebcfd4480875ae133900b53f7d946f8638ff256185e7472056d8be6c7c32816"
+    },
+    {
+      "path": "src/main/java/com/pp/shaderlod/lod/EffectPolicy.java",
+      "sha256": "2d1d1fda100b4d48e299828604ede0bf1b9683fbd392ae4fc901fbe1e32738b8"
+    },
+    {
+      "path": "src/main/java/com/pp/shaderlod/lod/WorkBudget.java",
+      "sha256": "60f4cc41746e2e8261070e3a3ac0ed275d802a7500db22ef23431502bee71d81"
+    },
+    {
+      "path": "src/main/java/com/pp/shaderlod/lod/adapter/AdapterDescriptor.java",
+      "sha256": "778087dfaffa84e07c64913e177bc63a62d4b63b4a7d98312215b3bd93660160"
+    },
+    {
+      "path": "src/main/java/com/pp/shaderlod/lod/adapter/AdapterIdentity.java",
+      "sha256": "7e6902ecd56f283fe1ee9220aaaf6791b10189d96ab83053588e68795a5988f0"
+    },
+    {
+      "path": "src/main/java/com/pp/shaderlod/lod/adapter/AdapterRegistry.java",
+      "sha256": "08a3e7ebb53643f55ff5915b4eb4713fd107c640aae2431c617a865d39da960c"
+    },
+    {
+      "path": "src/main/java/com/pp/shaderlod/lod/adapter/ProtocolRequirement.java",
+      "sha256": "5c4d1cd228599ef9358b542e43caf482d4f06e9a062e8adb367022635d58a7d6"
+    },
+    {
+      "path": "src/main/java/com/pp/shaderlod/lod/adapter/WorkCapability.java",
+      "sha256": "dc6cdca40c462ccc50c87eafe467b29c5d4d2e8a38158f0aa72f6e91d6440aa2"
+    },
+    {
+      "path": "src/main/java/com/pp/shaderlod/lod/adapter/WorkKey.java",
+      "sha256": "0a4e63bebeb7e3b2bdc22e794b68af7e62606c80de8927676be1274ccd02b12c"
+    },
+    {
+      "path": "src/main/java/com/pp/shaderlod/lod/adapter/WorkKind.java",
+      "sha256": "3b2c86a18a46c45df72dd7d11ed03f4677977520d839e5e485bb6ff03efdb77b"
+    },
+    {
+      "path": "src/main/java/com/pp/shaderlod/lod/adapter/WorkNegotiation.java",
+      "sha256": "9fa1a989b2ca0805f08e2926502f5ea06425363a1ba5ecc4f5a2d3c8ea4097c4"
+    },
+    {
+      "path": "src/main/java/com/pp/shaderlod/lod/adapter/WorkRequest.java",
+      "sha256": "87ca0c3ba300ee3f53386542baab5ca55f4877d2bc379bd3aa46ae8253421d05"
+    },
+    {
+      "path": "src/main/java/com/pp/shaderlod/lod/adapter/layout/AdapterLayout.java",
+      "sha256": "1b1b31ce7e35de268933841d120200e31e33b1988b9fb9d45d288604536d5806"
+    },
+    {
+      "path": "src/main/java/com/pp/shaderlod/lod/adapter/layout/Dimensions.java",
+      "sha256": "2b9fa8de93b4a564c41575e68a1f463e3541d61feb0aea5f72c07fbe16ff4fed"
+    },
+    {
+      "path": "src/main/java/com/pp/shaderlod/lod/adapter/layout/LayoutValidation.java",
+      "sha256": "f927659a16d8c4ab062c2742a2fc9b3261ab738375d4da0543d83e951248a3ad"
+    },
+    {
+      "path": "src/main/java/com/pp/shaderlod/lod/adapter/layout/PassDeclaration.java",
+      "sha256": "17c8c8f05395a24c69283197ebb6be86b82a406121849a5816de77228e127189"
+    },
+    {
+      "path": "src/main/java/com/pp/shaderlod/lod/adapter/layout/TargetDeclaration.java",
+      "sha256": "b7753bac29b164f1aa55f2c29dc344a51c8cc01c169507fe0eb9f710f6066e5d"
+    },
+    {
+      "path": "src/main/java/com/pp/shaderlod/lod/adapter/layout/TargetFormat.java",
+      "sha256": "4cee1e18a7f49ea9fc683d7a9ac5ae5563cebd50e22501c2b0a40e0dae1f9122"
+    },
+    {
+      "path": "src/main/java/com/pp/shaderlod/lod/adapter/layout/TargetSize.java",
+      "sha256": "a026b689deb5968b074206f5bf382f9e4206a6432302ec008a8f94765105763b"
+    },
+    {
+      "path": "src/main/java/com/pp/shaderlod/integration/AdapterRegistration.java",
+      "sha256": "975196508db9095cdaec66e75b96d52ced46ac3104afc70f537248f2a0909f37"
+    },
+    {
+      "path": "src/main/java/com/pp/shaderlod/integration/AdapterRuntimeBinding.java",
+      "sha256": "4090a5d92e6abc620d7d8b35071290adc3c56093fb1be0d9e45ffc2431bb9f60"
+    },
+    {
+      "path": "src/main/java/com/pp/shaderlod/integration/CapabilityExport.java",
+      "sha256": "1f742c496a97686562a8a9eb8aa26e960556f2832faf4686bce4dd349477e5fd"
+    },
+    {
+      "path": "src/main/java/com/pp/shaderlod/integration/IrisAdapterRuntime.java",
+      "sha256": "e4e317f0dc0398d2bb0fb360ebfcd9c0c5e23dc96f7269b228af30abb67024f4"
+    },
+    {
+      "path": "src/main/java/com/pp/shaderlod/integration/LodOperations.java",
+      "sha256": "17dba60777d8b3959fb003f86829a76867a5ef23148a1bec13586926397e0c35"
+    },
+    {
+      "path": "src/main/java/com/pp/shaderlod/integration/PackSelectionTransaction.java",
+      "sha256": "3b720cc02e2dd790712aab4fa8ffdee6424e58b3896890a0fbe179e25a6bac89"
+    },
+    {
+      "path": "src/main/java/com/pp/shaderlod/integration/PackSourceReader.java",
+      "sha256": "75fcf8ce7015f01e67520857b1a8bc61cbee295d87946cf478d82d20b83506c8"
+    },
+    {
+      "path": "src/main/java/com/pp/shaderlod/integration/PhotonReferenceAdapter.java",
+      "sha256": "bb70e29750a8f72fda254acf32d1553812e53d908712a21723f31995b5949c66"
+    },
+    {
+      "path": "src/main/java/com/pp/shaderlod/integration/PhotonSpatialReferenceAdapter.java",
+      "sha256": "bde8866de7a705067a4c3eb73b5857e70443ebb64c95bb1c84538e3dcbc7a0ff"
+    },
+    {
+      "path": "src/main/java/com/pp/shaderlod/integration/RuntimeLayoutRequirement.java",
+      "sha256": "dcda8726f2b95f0c632ff679237092e2f3acc5aea1a963bb210a305b0926a97b"
+    },
+    {
+      "path": "src/main/java/com/pp/shaderlod/integration/SourceBinding.java",
+      "sha256": "b94fb1132dd66b7cb11f370a0cf6e6056f1f9aea8cd440916e65a92636da9d9c"
+    },
+    {
+      "path": "src/main/java/com/pp/shaderlod/integration/SourceFingerprint.java",
+      "sha256": "842263640a672f4964ce42744a7c198bf61878bbe227202a56fe46535ccceb87"
+    },
+    {
+      "path": "src/main/java/com/pp/shaderlod/packs/PackSelectionService.java",
+      "sha256": "05dced950aa44044af53012bd28fe1ffb064056809c9a45b27936bbbf7d073cc"
+    },
+    {
+      "path": "src/main/java/com/pp/shaderlod/packs/SupportedPackCatalog.java",
+      "sha256": "420aae8e1922fb4867c3f68845cde376e146c4efb1fde9cbfc075c0a72700eb6"
+    },
+    {
+      "path": "src/main/java/com/pp/shaderlod/mixin/EffectUniformsMixin.java",
+      "sha256": "4a07862f0f42e6bd2b20880ca13d4cc4959470fe80c77289a2e7b0ff624e0aa9"
+    },
+    {
+      "path": "src/main/java/com/pp/shaderlod/mixin/IrisWorldCompletionMixin.java",
+      "sha256": "314b69963ab97ecf5dd4ceed1cc8a2e5aa09ee55d65dbf8ecb4e4b41ecc1cffc"
+    }
+  ],
+  "runtimeVerified": false
+}

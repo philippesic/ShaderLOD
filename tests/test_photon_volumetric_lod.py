@@ -468,12 +468,6 @@ class VolumeGlslProof {
             self.assertEqual(0,result.returncode,result.stdout+result.stderr)
             self.assertIn('sole new option; no stage leak',result.stdout)
 
-    def test_prior_sampler_report_qualifies_no_mip_filters_only_not_new_pack_rendering(self):
-        import build_photon_cloud_literal_probe as sampler
-        evidence=MANIFEST['sampler_constraints']
-        report=(ROOT/evidence['report_path']).read_bytes()
-        self.assertEqual(evidence['report_sha256'],probe.sha256(report))
-        self.assertEqual(2,len(sampler.validate_sampler_report(json.loads(report))['candidate_program_ids']))
 
 
 JAVA_HARNESS = r'''

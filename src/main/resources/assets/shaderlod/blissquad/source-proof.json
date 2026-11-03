@@ -1,0 +1,61 @@
+{
+  "archive_sha256": "f41db92acc585fe9ffe0cc124d6ecaea27cef9ded91129ebc2a8e60226947b2c",
+  "capture": {
+    "bytes": 17578,
+    "path": "/Users/pippo/github/shaderlod/dev/logs/cross-shader-performance-r3/bliss-native-noise-runtime-r1/original/captures/bliss-original-native-noise.json",
+    "sha256": "9c3e29b524a69051efccf7aba2de969e35b53b986921663190f705879117d603"
+  },
+  "encoded_draw": "_draw_id=a_LightAndData[3] attribute; shifts(5,0,2)/masks(7,3,7); *16 and native u_RegionOffset; no command-dependent builtins",
+  "exports": [
+    {
+      "bytes": 14064,
+      "path": "/Users/pippo/github/shaderlod/run-workloads/cross-shader-performance-r3/bliss-native-noise-runtime-r1/original/client/patched_shaders/092_sodium_gbuffers_terrain.vsh",
+      "sha256": "e4ca2ab2d34c7aadbce0fa0ae3567d62c164327396826c34cb047e7630b523a1"
+    },
+    {
+      "bytes": 9744,
+      "path": "/Users/pippo/github/shaderlod/run-workloads/cross-shader-performance-r3/bliss-native-noise-runtime-r1/original/client/patched_shaders/092_sodium_gbuffers_terrain.fsh",
+      "sha256": "ef7895465dcc63492da64f5a5ab806b1de6f309e37b0e38265992288b1e70381"
+    },
+    {
+      "bytes": 14064,
+      "path": "/Users/pippo/github/shaderlod/run-workloads/cross-shader-performance-r3/bliss-native-noise-runtime-r1/original/client/patched_shaders/093_sodium_gbuffers_terrain.vsh",
+      "sha256": "e4ca2ab2d34c7aadbce0fa0ae3567d62c164327396826c34cb047e7630b523a1"
+    },
+    {
+      "bytes": 9744,
+      "path": "/Users/pippo/github/shaderlod/run-workloads/cross-shader-performance-r3/bliss-native-noise-runtime-r1/original/client/patched_shaders/093_sodium_gbuffers_terrain.fsh",
+      "sha256": "ef7895465dcc63492da64f5a5ab806b1de6f309e37b0e38265992288b1e70381"
+    }
+  ],
+  "launch": {
+    "bytes": 135912,
+    "path": "/Users/pippo/github/shaderlod/dev/logs/cross-shader-performance-r3/bliss-native-noise-runtime-r1/launch.json",
+    "sha256": "80f45e5ccceaf46f3404314330a43a9cf78914015ca637d65b21270a26053d49"
+  },
+  "native_contract": "Same-region/pass SOLID/CUTOUT; integer shared quad IBO 4q+[0,1,2,2,3,0]; zero pointers, positive six-divisible counts, adjacent base; full batch preflight; native growth ceiling268435452; shadow/translucent/custom/invalid fallback",
+  "options_sha256": "c6c53b96a18a0f6d6a8a6a3019f7041315aa5e626052f90201665cea21cd7883",
+  "owner": {
+    "bytes": 22634,
+    "path": "/Users/pippo/github/shaderlod/dev/logs/cross-shader-performance-r3/bliss-native-noise-runtime-r1/original/owner.json",
+    "sha256": "d6ad8c396b6827f83acf8539815994aec7fd1ccc983fc1fcbe64b49004a4891e"
+  },
+  "release": {
+    "bytes": 235,
+    "path": "/Users/pippo/github/shaderlod/dev/logs/cross-shader-performance-r3/bliss-native-noise-runtime-r1/parent-release.json",
+    "sha256": "bca672473039b2e522ca5aff16ac1b9d3f8b846783f5858840b064d9a17d5e14"
+  },
+  "scope": "MC1.21.1/Neo21.1.253/pinnedIris1.8.12+Sodium0.6.13/Overworld/native463/vanilla+mod_resources/noDH",
+  "source_boundary": "Authentic original compilation-path source exports and native backend map, not linked attached source or coalescer execution",
+  "source_pass_map": "SOLID TerrainSolid -> Terrain; CUTOUT TerrainCutout -> Terrain. Actual native exports092/093 sodium_gbuffers_terrain; common pinned SodiumPrograms resolves native terrain family",
+  "status": "SOURCE_ADMIT_ONE_FINITE_BLISS_RENDERER_CANDIDATE",
+  "unverified": [
+    "actual helper reduction",
+    "still/motion/quality",
+    "original-relative speed",
+    "normal controls/restoration",
+    "DH/PBR",
+    "other resources/dimensions/loaders/versions",
+    "shader LOD"
+  ]
+}

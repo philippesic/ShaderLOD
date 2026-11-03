@@ -1,0 +1,253 @@
+[
+  {
+    "tuple": "neoforge1.21.1",
+    "backend": "Quad",
+    "classes": {
+      "net/irisshaders/iris/pipeline/CompositeRenderer.class": "710afa36c1d800b5f83f0ae69cbc52d9707332436c2c9fd32f443490e3eabfbd",
+      "net/irisshaders/iris/pipeline/CompositeRenderer$Pass.class": "e0487ee63567a3224315e15aa37eb46529306d31e71c60c2d4136b9654adc8f3",
+      "net/irisshaders/iris/pipeline/IrisRenderingPipeline.class": "95b3eb4425306964328cf771c7cc79b8bfffdf90e15bce813ad1a7bd38f34579",
+      "net/irisshaders/iris/pathways/FullScreenQuadRenderer.class": "7595d1408a17a4203af0c66b7d8a7f66c7f28e4a7b9ac7243893800e9d5a4d22",
+      "net/irisshaders/iris/pipeline/PipelineManager.class": "9688ac772f3d6f1db13162d560f7c8a8afe0e520af1c7401621e386467b57b4f",
+      "net/irisshaders/iris/targets/RenderTargets.class": "8a981c44321f7b0a4ef61d86e94fe3a9c0cdd5c651645b4f3ffb0bbd66847b6a",
+      "net/irisshaders/iris/targets/RenderTarget.class": "73f7a90b778e839797799be73007db16f9b8481b424537180b926b3f71e827c8",
+      "net/irisshaders/iris/gl/program/Program.class": "8252cffe8d7322a3d64fad8036938e07b871cbd5667c0dafec0a3d48fd610d49",
+      "net/irisshaders/iris/Iris.class": "4cb88bd1c15635db3845cb4b3db757c611707e1fc2a00af879298c09bb45d3d1",
+      "net/irisshaders/iris/shaderpack/programs/ProgramSource.class": "a1d142aac769ad65f77761f5f8275c7f22972f2e967c09a19074433eea117893",
+      "net/irisshaders/iris/samplers/IrisSamplers.class": "9ca8e284dd3a0394a90c273e2a2422b1c569e664654e85843d06d5b5a33f18e4",
+      "net/irisshaders/iris/gl/program/ProgramSamplers.class": "431566fc2b9233c62c4413dbe1231600275bd1a31562e62355f0e3d75ce387f7",
+      "net/irisshaders/iris/gl/sampler/SamplerBinding.class": "f3b15536d1c4edb697a1c686bccb939223a17adbc428f3b8c548b849fc355fd9"
+    }
+  },
+  {
+    "tuple": "neoforge1.21.11",
+    "backend": "RenderPass",
+    "classes": {
+      "net/irisshaders/iris/pipeline/CompositeRenderer.class": "862aa635b490d9e8fc199bab80ed3a1d08697306eb763c0eb1ff0eb8d109c952",
+      "net/irisshaders/iris/pipeline/CompositeRenderer$Pass.class": "7c6324684922060b2eacb0bb7bc503f80dcfd88a680c72502d4916a2de02aebc",
+      "net/irisshaders/iris/pipeline/IrisRenderingPipeline.class": "313783af9ce511c40fcb39d246c4322de0120c1031c0cfd2fe3685fdde7c71ca",
+      "net/irisshaders/iris/pathways/FullScreenQuadRenderer.class": "528c19ed58a879039d34efe19459bed40ca4f5ef2e88fc59f7266f89dd421c56",
+      "net/irisshaders/iris/pipeline/PipelineManager.class": "180f4399c8a694af3da7f000251be7d7d3e0e555c3f03c58e29e6b2cf6050424",
+      "net/irisshaders/iris/targets/RenderTargets.class": "c1a58b8858ff58bf0ba3f26a586c88e764a6825e91c1d53a0d15f983cf3ab5d4",
+      "net/irisshaders/iris/targets/RenderTarget.class": "8da7fd3458aa2d14a09b8c2525831ebd981c51a02c1ff9fd2e82b3718493d9fe",
+      "net/irisshaders/iris/gl/program/Program.class": "69418b4bea10ef1671c6819535ead839d5344a37133778824fd03b0ff7f223b4",
+      "net/irisshaders/iris/Iris.class": "e6db6370696e8821da52651bec248602db30b9457e01a54fac3e4ec4452a012c",
+      "net/irisshaders/iris/shaderpack/programs/ProgramSource.class": "a1d142aac769ad65f77761f5f8275c7f22972f2e967c09a19074433eea117893",
+      "net/irisshaders/iris/samplers/IrisSamplers.class": "2aee9417f3e535d14a9bc4bf532d65f79cfeaf43618e83754f842bfee63983e5",
+      "net/irisshaders/iris/gl/program/ProgramSamplers.class": "e225d8fe36f19fd6e5e877f12e5eb71a4dbd106425ff4c58bdcf0c0c442346c6",
+      "net/irisshaders/iris/gl/sampler/SamplerBinding.class": "4202ee36144265b077484a132a1eb4217e7c2b7ff8c0f4b8e96463acc83b7ef4",
+      "com/mojang/blaze3d/opengl/GlStateManager.class": "06b91028538fbfdef641e0b23fad6f440e6276959ed36a3f010f875b92106d6e",
+      "com/mojang/blaze3d/opengl/GlCommandEncoder.class": "79a5f47b7f7426ab4cf35291a5f581172584ca779424a0d62f653fa05f0e740e",
+      "com/mojang/blaze3d/opengl/VertexArrayCache.class": "0c4e115b9794cac22a968377ae02e1a0560190ca6181a102e1fa21fbe13edc27",
+      "net/irisshaders/iris/mixin/MixinGlCommandEncoder.class": "93b9d55b0e07139e0b3dca5cfd7efe75d77c66f7055838da85495ea7c8105507",
+      "net/irisshaders/iris/mixin/MixinRenderPass.class": "5fffb63a1a717df98defefb13be4786dffa91ffc10b51a8c2090ff4ed0c13417"
+    }
+  },
+  {
+    "tuple": "neoforge26.1.2",
+    "backend": "Gl",
+    "classes": {
+      "net/irisshaders/iris/pipeline/CompositeRenderer.class": "68d5d779de47757afeda530c1fb4d5a9c403796b345cb2b82b92cd43e257fa18",
+      "net/irisshaders/iris/pipeline/CompositeRenderer$Pass.class": "0c56951e5b71d24a76074a5abd0f2760f9babc12d5ce64b807ec40ed257b3649",
+      "net/irisshaders/iris/pipeline/IrisRenderingPipeline.class": "5175b6dc1422df3450a142447a4e0570c7bfcd61ebeb12b05cacb4366fb4d2f5",
+      "net/irisshaders/iris/pathways/FullScreenQuadRenderer.class": "2185bfecf0c58c64258363a496b825a96696925b54a3f7bcce778697939277dd",
+      "net/irisshaders/iris/pipeline/PipelineManager.class": "b92997f17ab18ba5f45a9cb0bc4ed17139b188735e0d2313d39d6f3a036a4f97",
+      "net/irisshaders/iris/targets/RenderTargets.class": "e3788a6b718358f4b45f9bc7142995a0a6430a51cfd50cc6baee0050ebc97cf2",
+      "net/irisshaders/iris/targets/RenderTarget.class": "4ba879e7707be7434eafcde0ea1c68164ff747b1ebe92e0a004233c0fd6645ba",
+      "net/irisshaders/iris/gl/program/Program.class": "f43e5e4bfca9534bb794cc34c60d3370b45429a8a0c5487639c8497d2ad6e523",
+      "net/irisshaders/iris/Iris.class": "089838deb5a7bf72af0bdfa5b02683c5ec0fb05ec2efb5ee70c8da2aca5528ba",
+      "net/irisshaders/iris/shaderpack/programs/ProgramSource.class": "296ff722433acb3eab17f6c39e9c1c72838e923a4b995d043fd656b9a1f0fa0d",
+      "net/irisshaders/iris/samplers/IrisSamplers.class": "f3875ac28743f482d52500c00e7e0a40956b0dfe3c9ae2ac86c020a36ab309df",
+      "net/irisshaders/iris/gl/program/ProgramSamplers.class": "ea20f4a02c685b69a01dc78b5a8764a7c9d17ebcc2b2f5489e342c700bb9a78b",
+      "net/irisshaders/iris/gl/sampler/SamplerBinding.class": "424f5ec062150954f5278129ed60759e99c76a58745564a3e1f0a81307ecf069",
+      "com/mojang/blaze3d/opengl/GlStateManager.class": "c6451af28adedda9a6b12af40577f39ae9b8d38fc6d822b5f02e97aabd93c3e9"
+    }
+  },
+  {
+    "tuple": "neoforge26.2",
+    "backend": "Gl",
+    "classes": {
+      "net/irisshaders/iris/pipeline/CompositeRenderer.class": "185c8060d0ff27468e8ba35eb14dc510125b06c1afcc88457edb0f740da405e8",
+      "net/irisshaders/iris/pipeline/CompositeRenderer$Pass.class": "75456f1a64823c384085a4f6cad783d1c4cc80db7b8b269e149ca01f0810eaf5",
+      "net/irisshaders/iris/pipeline/IrisRenderingPipeline.class": "bc9352887ef09159c4680b759b498c7bc80531660b4f4ac893f3f060392064c4",
+      "net/irisshaders/iris/pathways/FullScreenQuadRenderer.class": "2b3ab880ed35afcc697ca8e03f131478b2a2a981559808c939394ca6af85da49",
+      "net/irisshaders/iris/pipeline/PipelineManager.class": "ea0a956606c3a010ee58da4af18de63b10e23d95dcc2f93df718cd56b5d0536d",
+      "net/irisshaders/iris/targets/RenderTargets.class": "ac4fdc19fdb8c03f348522b22345b6fba94af1a41827dff619e6962f50573b7d",
+      "net/irisshaders/iris/targets/RenderTarget.class": "4ba879e7707be7434eafcde0ea1c68164ff747b1ebe92e0a004233c0fd6645ba",
+      "net/irisshaders/iris/gl/program/Program.class": "f43e5e4bfca9534bb794cc34c60d3370b45429a8a0c5487639c8497d2ad6e523",
+      "net/irisshaders/iris/Iris.class": "8056f6f84efebd10f5367bff0ace4d7659641445552bf051d6f0ed56055560a7",
+      "net/irisshaders/iris/shaderpack/programs/ProgramSource.class": "296ff722433acb3eab17f6c39e9c1c72838e923a4b995d043fd656b9a1f0fa0d",
+      "net/irisshaders/iris/samplers/IrisSamplers.class": "f3875ac28743f482d52500c00e7e0a40956b0dfe3c9ae2ac86c020a36ab309df",
+      "net/irisshaders/iris/gl/program/ProgramSamplers.class": "ea20f4a02c685b69a01dc78b5a8764a7c9d17ebcc2b2f5489e342c700bb9a78b",
+      "net/irisshaders/iris/gl/sampler/SamplerBinding.class": "424f5ec062150954f5278129ed60759e99c76a58745564a3e1f0a81307ecf069",
+      "com/mojang/blaze3d/opengl/GlStateManager.class": "b143319a16bad4fd5c4ee536d83cbacbd001cf6a7415c13bfdb800401a8309b5"
+    }
+  },
+  {
+    "tuple": "neoforge26.3",
+    "backend": "Pearl",
+    "classes": {
+      "net/irisshaders/iris/pipeline/CompositeRenderer.class": "e1960b473749d3ca8fd30c7edea3310dff5025c4d169747d5ff2785a9ccead3c",
+      "net/irisshaders/iris/pipeline/CompositeRenderer$Pass.class": "7d28a48f61d70d4c310ce5307aba256aaac0b44847e39666bee02b222d66bbf4",
+      "net/irisshaders/iris/pipeline/IrisRenderingPipeline.class": "53a667ae4114da83f10a19246898afb4ca5e2c1599595a53878559cfa03cee88",
+      "net/irisshaders/iris/pathways/FullScreenQuadRenderer.class": "af5a0c9c3160bc372592374be79e45208ca56f5e93ce408b7fd24b75d1009699",
+      "net/irisshaders/iris/pipeline/PipelineManager.class": "95ba0c10d45ad1a69453a84a48ac5a3d785d933bb3f046a1e416a020dae63097",
+      "net/irisshaders/iris/targets/RenderTargets.class": "a2aa79959c59de328fd6baab25d328ef6aee703a4df239c96eca80f4ddbdb5ab",
+      "net/irisshaders/iris/targets/RenderTarget.class": "922efe41bd2dc1962a2d0e8af1138db5bf5409a50cd9f7b3e2760bce9a0fdcca",
+      "net/irisshaders/iris/gl/program/Program.class": "e072e5aa925dcc093bca4db6d6f660b8b733fdf36ffcf6d6c57f74b81dd64bc9",
+      "net/irisshaders/iris/Iris.class": "edc6f8738ed79ac42756068613cbef937a2dea1996d2929148a3ca089ea36071",
+      "net/irisshaders/iris/shaderpack/programs/ProgramSource.class": "296ff722433acb3eab17f6c39e9c1c72838e923a4b995d043fd656b9a1f0fa0d",
+      "net/irisshaders/iris/samplers/IrisSamplers.class": "e19f6f028ee4000f31ae70af9f16cd9241d626d443f59f406c56b7675faf8d1d",
+      "net/irisshaders/iris/gl/program/ProgramSamplers.class": "6bbb741855cad03681d0c63cc5bd1e79f7703734551eafef3ac9d2edd49b4448",
+      "net/irisshaders/iris/gl/sampler/SamplerBinding.class": "424f5ec062150954f5278129ed60759e99c76a58745564a3e1f0a81307ecf069",
+      "com/mojang/renderpearl/backend/opengl/GlStateManager.class": "c4f20d2576b37d29c1fbec4db1831cbce10f045b098647ef81c77f7c5746575d"
+    }
+  },
+  {
+    "tuple": "fabric1.21.1",
+    "backend": "Quad",
+    "classes": {
+      "net/irisshaders/iris/pipeline/CompositeRenderer.class": "5e2cc6b2833789390cba354f29e8c98e07ca8652bb745711cc570b0af6b74977",
+      "net/irisshaders/iris/pipeline/CompositeRenderer$Pass.class": "8c4eefc4a372d2679737bb27384139c599d2d2f208756c9e67d3e8a2af820326",
+      "net/irisshaders/iris/pipeline/IrisRenderingPipeline.class": "eea6e6cdbca25786177fd69eba632643df6691afe17257f6cbe580351393f3b4",
+      "net/irisshaders/iris/pathways/FullScreenQuadRenderer.class": "a09e6b72a85e2308d456e0682de775d4c00785571548c3c08e1e7255abfdb822",
+      "net/irisshaders/iris/pipeline/PipelineManager.class": "466b313deb592db78e83b9e1621e57788c3ea95e2a522db2680ca3812c52e57b",
+      "net/irisshaders/iris/targets/RenderTargets.class": "b2221406d31f9046ac3144d0d408a71c6a5ac73a1ae31047198f793b9ea0c533",
+      "net/irisshaders/iris/targets/RenderTarget.class": "f9df390f58f0eec71502f68adced1cab23b0148e70f58dc939594b2e59cf5831",
+      "net/irisshaders/iris/gl/program/Program.class": "bc7720cdd846d4065887f3203d02f4173d2c661c8ef18ee4637b6c585a6f25f8",
+      "net/irisshaders/iris/Iris.class": "3d77455150d5711af960fb9d85123fb201eb9996d948afcf61c46a6983b7836c",
+      "net/irisshaders/iris/shaderpack/programs/ProgramSource.class": "298a15f80330d4d408fcc71811945da4c2c7fd0ba970dd0b217fed248f60fb3e",
+      "net/irisshaders/iris/samplers/IrisSamplers.class": "0c67cf2c5b31ae44f5800bb4442b0f9d8cbbe52af1d265a14c7242441a42916f",
+      "net/irisshaders/iris/gl/program/ProgramSamplers.class": "37f018e6044f78f1a387e2d938c77b5c582df1842c3e904ab5fe8d7006a3e606",
+      "net/irisshaders/iris/gl/sampler/SamplerBinding.class": "16d880a45524d220976ec46b1f6a772456935d7089c7c23cfb681fde0820313a"
+    }
+  },
+  {
+    "tuple": "fabric1.21.11",
+    "backend": "RenderPass",
+    "classes": {
+      "net/irisshaders/iris/pipeline/CompositeRenderer.class": "aa35e36f3a649c210513b900c9b2f6b1f1c55271f106edba982bb824d961b44f",
+      "net/irisshaders/iris/pipeline/CompositeRenderer$Pass.class": "092d55311152305d4a2ffed58e06f32bf19b0eb92c94cfe630427c9c98738e19",
+      "net/irisshaders/iris/pipeline/IrisRenderingPipeline.class": "c9098ede6d1e24c7f85c9bdad6e5a255d0bf1abcb94e3614aa8255fe8ff76b4d",
+      "net/irisshaders/iris/pathways/FullScreenQuadRenderer.class": "f1e27db41409b0d4a39efc23f0587f0f235fb6e3c24a348da975ef3ef9c5aa85",
+      "net/irisshaders/iris/pipeline/PipelineManager.class": "91467ad603194453bf561c09a41f53414b6af56b25e7915bf755c1b8e0d4f7ae",
+      "net/irisshaders/iris/targets/RenderTargets.class": "777530b7a3aa1db01a460574a33f178c26ef3ce4e362d8ce83737a4b478534e4",
+      "net/irisshaders/iris/targets/RenderTarget.class": "ab17450edfde5d82e500bec7ff9b925e9bdaa34e5af6b793fda86d0f5069ec85",
+      "net/irisshaders/iris/gl/program/Program.class": "788a190dd9b164dfb4dbc678ac987a0a1a7388f3cd51fb8df08bf516a08544a0",
+      "net/irisshaders/iris/Iris.class": "3fdc8ac841f047ed76a61210132833a1654e317926bae9ca33e0605756582997",
+      "net/irisshaders/iris/shaderpack/programs/ProgramSource.class": "298a15f80330d4d408fcc71811945da4c2c7fd0ba970dd0b217fed248f60fb3e",
+      "net/irisshaders/iris/samplers/IrisSamplers.class": "df8705307261f2b9ff78b834c19dc0d97a0f9863ccf95af4f25a23f494edb5d6",
+      "net/irisshaders/iris/gl/program/ProgramSamplers.class": "cb26c6a56fc92955e33b2b04a7cddf3ccc6862fea308767ea3ec5e447ddbda88",
+      "net/irisshaders/iris/gl/sampler/SamplerBinding.class": "d1ae214c22c442979ce9ee98c24eec534c1541e198f4901463511f4d8038cd11",
+      "com/mojang/blaze3d/opengl/GlStateManager.class": "d51f7faedd6485e03dbf568f2482dc9b1243ae5ab5d9549e670266b67aa6cff2",
+      "com/mojang/blaze3d/opengl/GlCommandEncoder.class": "0daafcb38a70c7047ccf4d792c126c19e358c949757eab3155b25213e5566d3e",
+      "com/mojang/blaze3d/opengl/VertexArrayCache.class": "23f7411f2744c11885ab9f559583abd4fa42c23086beb46d3c0cb65706b67bcd",
+      "net/irisshaders/iris/mixin/MixinGlCommandEncoder.class": "ad965fdf09a2cce44f11efd160b0862d62a51a59b1029dc7a61a2e700dad326b",
+      "net/irisshaders/iris/mixin/MixinRenderPass.class": "59865a14a421f4153757201e1418f656b02251a6276027717e53ca059754eb41"
+    }
+  },
+  {
+    "tuple": "fabric26.1.2",
+    "backend": "Gl",
+    "classes": {
+      "net/irisshaders/iris/pipeline/CompositeRenderer.class": "68d5d779de47757afeda530c1fb4d5a9c403796b345cb2b82b92cd43e257fa18",
+      "net/irisshaders/iris/pipeline/CompositeRenderer$Pass.class": "0c56951e5b71d24a76074a5abd0f2760f9babc12d5ce64b807ec40ed257b3649",
+      "net/irisshaders/iris/pipeline/IrisRenderingPipeline.class": "5175b6dc1422df3450a142447a4e0570c7bfcd61ebeb12b05cacb4366fb4d2f5",
+      "net/irisshaders/iris/pathways/FullScreenQuadRenderer.class": "2185bfecf0c58c64258363a496b825a96696925b54a3f7bcce778697939277dd",
+      "net/irisshaders/iris/pipeline/PipelineManager.class": "b92997f17ab18ba5f45a9cb0bc4ed17139b188735e0d2313d39d6f3a036a4f97",
+      "net/irisshaders/iris/targets/RenderTargets.class": "e3788a6b718358f4b45f9bc7142995a0a6430a51cfd50cc6baee0050ebc97cf2",
+      "net/irisshaders/iris/targets/RenderTarget.class": "4ba879e7707be7434eafcde0ea1c68164ff747b1ebe92e0a004233c0fd6645ba",
+      "net/irisshaders/iris/gl/program/Program.class": "f43e5e4bfca9534bb794cc34c60d3370b45429a8a0c5487639c8497d2ad6e523",
+      "net/irisshaders/iris/Iris.class": "089838deb5a7bf72af0bdfa5b02683c5ec0fb05ec2efb5ee70c8da2aca5528ba",
+      "net/irisshaders/iris/shaderpack/programs/ProgramSource.class": "296ff722433acb3eab17f6c39e9c1c72838e923a4b995d043fd656b9a1f0fa0d",
+      "net/irisshaders/iris/samplers/IrisSamplers.class": "f3875ac28743f482d52500c00e7e0a40956b0dfe3c9ae2ac86c020a36ab309df",
+      "net/irisshaders/iris/gl/program/ProgramSamplers.class": "ea20f4a02c685b69a01dc78b5a8764a7c9d17ebcc2b2f5489e342c700bb9a78b",
+      "net/irisshaders/iris/gl/sampler/SamplerBinding.class": "424f5ec062150954f5278129ed60759e99c76a58745564a3e1f0a81307ecf069",
+      "com/mojang/blaze3d/opengl/GlStateManager.class": "6fe91f60341be30b71d855a451dad4483e945cf7cfb305b6e230c2a7d1d6ba5d"
+    }
+  },
+  {
+    "tuple": "fabric26.2",
+    "backend": "Gl",
+    "classes": {
+      "net/irisshaders/iris/pipeline/CompositeRenderer.class": "185c8060d0ff27468e8ba35eb14dc510125b06c1afcc88457edb0f740da405e8",
+      "net/irisshaders/iris/pipeline/CompositeRenderer$Pass.class": "75456f1a64823c384085a4f6cad783d1c4cc80db7b8b269e149ca01f0810eaf5",
+      "net/irisshaders/iris/pipeline/IrisRenderingPipeline.class": "bc9352887ef09159c4680b759b498c7bc80531660b4f4ac893f3f060392064c4",
+      "net/irisshaders/iris/pathways/FullScreenQuadRenderer.class": "2b3ab880ed35afcc697ca8e03f131478b2a2a981559808c939394ca6af85da49",
+      "net/irisshaders/iris/pipeline/PipelineManager.class": "ea0a956606c3a010ee58da4af18de63b10e23d95dcc2f93df718cd56b5d0536d",
+      "net/irisshaders/iris/targets/RenderTargets.class": "ac4fdc19fdb8c03f348522b22345b6fba94af1a41827dff619e6962f50573b7d",
+      "net/irisshaders/iris/targets/RenderTarget.class": "4ba879e7707be7434eafcde0ea1c68164ff747b1ebe92e0a004233c0fd6645ba",
+      "net/irisshaders/iris/gl/program/Program.class": "f43e5e4bfca9534bb794cc34c60d3370b45429a8a0c5487639c8497d2ad6e523",
+      "net/irisshaders/iris/Iris.class": "8056f6f84efebd10f5367bff0ace4d7659641445552bf051d6f0ed56055560a7",
+      "net/irisshaders/iris/shaderpack/programs/ProgramSource.class": "296ff722433acb3eab17f6c39e9c1c72838e923a4b995d043fd656b9a1f0fa0d",
+      "net/irisshaders/iris/samplers/IrisSamplers.class": "f3875ac28743f482d52500c00e7e0a40956b0dfe3c9ae2ac86c020a36ab309df",
+      "net/irisshaders/iris/gl/program/ProgramSamplers.class": "ea20f4a02c685b69a01dc78b5a8764a7c9d17ebcc2b2f5489e342c700bb9a78b",
+      "net/irisshaders/iris/gl/sampler/SamplerBinding.class": "424f5ec062150954f5278129ed60759e99c76a58745564a3e1f0a81307ecf069",
+      "com/mojang/blaze3d/opengl/GlStateManager.class": "ec34b8ae32e8bb77cdd7ea13b0b4485524d3ac6d23e6a1cf54559750ff5054b8"
+    }
+  },
+  {
+    "tuple": "fabric26.3",
+    "backend": "Pearl",
+    "classes": {
+      "net/irisshaders/iris/pipeline/CompositeRenderer.class": "e1960b473749d3ca8fd30c7edea3310dff5025c4d169747d5ff2785a9ccead3c",
+      "net/irisshaders/iris/pipeline/CompositeRenderer$Pass.class": "7d28a48f61d70d4c310ce5307aba256aaac0b44847e39666bee02b222d66bbf4",
+      "net/irisshaders/iris/pipeline/IrisRenderingPipeline.class": "53a667ae4114da83f10a19246898afb4ca5e2c1599595a53878559cfa03cee88",
+      "net/irisshaders/iris/pathways/FullScreenQuadRenderer.class": "af5a0c9c3160bc372592374be79e45208ca56f5e93ce408b7fd24b75d1009699",
+      "net/irisshaders/iris/pipeline/PipelineManager.class": "95ba0c10d45ad1a69453a84a48ac5a3d785d933bb3f046a1e416a020dae63097",
+      "net/irisshaders/iris/targets/RenderTargets.class": "a2aa79959c59de328fd6baab25d328ef6aee703a4df239c96eca80f4ddbdb5ab",
+      "net/irisshaders/iris/targets/RenderTarget.class": "922efe41bd2dc1962a2d0e8af1138db5bf5409a50cd9f7b3e2760bce9a0fdcca",
+      "net/irisshaders/iris/gl/program/Program.class": "e072e5aa925dcc093bca4db6d6f660b8b733fdf36ffcf6d6c57f74b81dd64bc9",
+      "net/irisshaders/iris/Iris.class": "edc6f8738ed79ac42756068613cbef937a2dea1996d2929148a3ca089ea36071",
+      "net/irisshaders/iris/shaderpack/programs/ProgramSource.class": "296ff722433acb3eab17f6c39e9c1c72838e923a4b995d043fd656b9a1f0fa0d",
+      "net/irisshaders/iris/samplers/IrisSamplers.class": "e19f6f028ee4000f31ae70af9f16cd9241d626d443f59f406c56b7675faf8d1d",
+      "net/irisshaders/iris/gl/program/ProgramSamplers.class": "6bbb741855cad03681d0c63cc5bd1e79f7703734551eafef3ac9d2edd49b4448",
+      "net/irisshaders/iris/gl/sampler/SamplerBinding.class": "424f5ec062150954f5278129ed60759e99c76a58745564a3e1f0a81307ecf069",
+      "com/mojang/renderpearl/backend/opengl/GlStateManager.class": "9231086c0b0fbb3a170a636a8f5c7dded60bd14e595d951e03f70f7f240c24c9"
+    }
+  },
+  {
+    "tuple": "fabric1.21.1-intermediary",
+    "backend": "Quad",
+    "classes": {
+      "net/irisshaders/iris/pipeline/CompositeRenderer.class": "0b589324084fe38d3f93dd25a98d59761a3da82f78845c0243da232154764d9a",
+      "net/irisshaders/iris/pipeline/CompositeRenderer$Pass.class": "8c4eefc4a372d2679737bb27384139c599d2d2f208756c9e67d3e8a2af820326",
+      "net/irisshaders/iris/pipeline/IrisRenderingPipeline.class": "006906a07a47313efc873289f9f59de5c2ec2030ed85ffaca39491916e8ab91e",
+      "net/irisshaders/iris/pathways/FullScreenQuadRenderer.class": "6d2b94d548a4c0f51aec00ee5938ceedf93c982be44abdb4c6009629e0dc68e7",
+      "net/irisshaders/iris/pipeline/PipelineManager.class": "ca79f11dfff60d064c04fa76bf3e8951111c39af6ac854736f597fc041ce610c",
+      "net/irisshaders/iris/targets/RenderTargets.class": "b2221406d31f9046ac3144d0d408a71c6a5ac73a1ae31047198f793b9ea0c533",
+      "net/irisshaders/iris/targets/RenderTarget.class": "f9df390f58f0eec71502f68adced1cab23b0148e70f58dc939594b2e59cf5831",
+      "net/irisshaders/iris/gl/program/Program.class": "3bd9620ef9acc624056820927083925febd6558eb8bd8cdb2ed11823f78d42ff",
+      "net/irisshaders/iris/Iris.class": "aafe700b689d93193a4c80bacb98e623f66949720ca0038b6a2da21c498074fd",
+      "net/irisshaders/iris/shaderpack/programs/ProgramSource.class": "298a15f80330d4d408fcc71811945da4c2c7fd0ba970dd0b217fed248f60fb3e",
+      "net/irisshaders/iris/samplers/IrisSamplers.class": "2c579c2c9467eb7089336c44b68c6a20198817cd7b0e61057fb38013972960ac",
+      "net/irisshaders/iris/gl/program/ProgramSamplers.class": "37f018e6044f78f1a387e2d938c77b5c582df1842c3e904ab5fe8d7006a3e606",
+      "net/irisshaders/iris/gl/sampler/SamplerBinding.class": "16d880a45524d220976ec46b1f6a772456935d7089c7c23cfb681fde0820313a"
+    },
+    "namespace": "intermediary"
+  },
+  {
+    "tuple": "fabric1.21.11-intermediary",
+    "backend": "RenderPass",
+    "classes": {
+      "net/irisshaders/iris/pipeline/CompositeRenderer.class": "dce4e44defa642f8925665d59ab2d742f8631fb9c3374d963a537ece0065702a",
+      "net/irisshaders/iris/pipeline/CompositeRenderer$Pass.class": "092d55311152305d4a2ffed58e06f32bf19b0eb92c94cfe630427c9c98738e19",
+      "net/irisshaders/iris/pipeline/IrisRenderingPipeline.class": "b41b371736edda913f735c37e01be07acadc11379a560a4ef6eac1ea81803c18",
+      "net/irisshaders/iris/pathways/FullScreenQuadRenderer.class": "32e41ed4107520adde6b080105f4986dacbcffdc4066ddc7c8841dcc6e8ca60f",
+      "net/irisshaders/iris/pipeline/PipelineManager.class": "8ed0d98d824651e175c1149e50da95dec04a8c467362303e020e28bf7b0fe320",
+      "net/irisshaders/iris/targets/RenderTargets.class": "777530b7a3aa1db01a460574a33f178c26ef3ce4e362d8ce83737a4b478534e4",
+      "net/irisshaders/iris/targets/RenderTarget.class": "ab17450edfde5d82e500bec7ff9b925e9bdaa34e5af6b793fda86d0f5069ec85",
+      "net/irisshaders/iris/gl/program/Program.class": "788a190dd9b164dfb4dbc678ac987a0a1a7388f3cd51fb8df08bf516a08544a0",
+      "net/irisshaders/iris/Iris.class": "f29015f17a6e420fd5ec7e8fbad1d104a7141b24c19dbf73adf2f9f5edee66d1",
+      "net/irisshaders/iris/shaderpack/programs/ProgramSource.class": "298a15f80330d4d408fcc71811945da4c2c7fd0ba970dd0b217fed248f60fb3e",
+      "net/irisshaders/iris/samplers/IrisSamplers.class": "f4575f844ecead0243c2043dcdee16aafc1a2d0912396f888635283a0f2a4bfd",
+      "net/irisshaders/iris/gl/program/ProgramSamplers.class": "cb26c6a56fc92955e33b2b04a7cddf3ccc6862fea308767ea3ec5e447ddbda88",
+      "net/irisshaders/iris/gl/sampler/SamplerBinding.class": "d1ae214c22c442979ce9ee98c24eec534c1541e198f4901463511f4d8038cd11",
+      "com/mojang/blaze3d/opengl/GlStateManager.class": "afeff4a0263faf004d4c61083ef2d21848b6058b0d5601e83c40b6cd1b136d78",
+      "net/minecraft/class_10860.class": "8cab6de1535b544c61f4f44d3f96e8f6860117d0beeaf476dba02e59762473ce",
+      "net/minecraft/class_10869.class": "8690aaa090c133304683f5a9afc7d8c215c8ed0ebdb300d7f0137d7946857138",
+      "net/irisshaders/iris/mixin/MixinGlCommandEncoder.class": "bbb74e37b190576e35c10cff321a5af273a12747f55f56a8416a16bd6e91dc74",
+      "net/irisshaders/iris/mixin/MixinRenderPass.class": "2a7ce88985f297b0273e8980f4a9b3113008ca3fca5d174b465e5bbcb6b9afd3"
+    },
+    "namespace": "intermediary"
+  }
+]

@@ -9,7 +9,7 @@ import tempfile
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
-BASE = Path('dev/upstream/photon_v1.3b.zip')
+BASE = Path('dependencies/upstream/photon_v1.3b.zip')
 BASE_SHA256 = '120897768eaa8cb1f14a3e98f88dff009ae3204ee3b96904a4fe8586edfc1ead'
 MANIFEST = Path('patches/photon-experiments/shared-spatial-lod.json')
 OVERLAY = Path('shaderpacks/photon-shared-spatial')
@@ -121,6 +121,7 @@ def build(output: Path | None = None, base: Path | None = None, arm='disabled', 
         shared_helpers=manifest['shared_helpers'], sky_source=manifest['sky_source'], supported_rates=[1.0, 0.25],
         capability_operation='shaderlod:opaque_spatial_irradiance',
         capability_uniform='shaderlodOpaqueSpatialAvailable', capabilities_version=1,
+        producer_idle_work='uniform validated no-coarse-demand gate before surface/classification in quantity and metadata lanes; original sky/prelude retained',
         activation='privateON/core2/global1/effects2/capabilities1/available1/ADAPTIVE; INHERIT unresolved/full',
         approximation='RGB canonical-white diffuse irradiance and alpha AO*shadow visibility; recipient material/albedo/specular/fog remain full resolution',
         fallback='near/invalid/unsupported profile/policy/certificate/quantity execute original lighting',

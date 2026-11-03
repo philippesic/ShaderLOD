@@ -6,6 +6,7 @@ frozen default-off combined archive. Actual fullscreen dimensions remain unknown
 until a separate current-class smoke records them.
 """
 from __future__ import annotations
+from run_storage import copytree as storage_copytree
 
 import argparse
 import json
@@ -184,7 +185,7 @@ def prepare(output, scenes=copies.SCENES, sources=None, probe=None, root=ROOT, r
             copies.write_json(path, manifest)
             (base/'adaptive').rename(base/'combined')
             for arm in ('reflection-only', 'volume-only', 'procedural-only'):
-                shutil.copytree(base/'combined', base/arm, ignore=shutil.ignore_patterns('session.lock'))
+                storage_copytree(base/'combined', base/arm, ignore=shutil.ignore_patterns('session.lock'))
             native = manifest['experiment_arms']['high']['requested_options']
             source_digest = manifest['source_world_sha256']
             arms, digests = {}, {}

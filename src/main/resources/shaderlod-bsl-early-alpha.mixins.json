@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.optimization.bslearlyalpha.mixin",
+  "plugin": "com.pp.shaderlod.optimization.bslearlyalpha.mixin.BslEarlyAlphaPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "BslAlphaProgramsMixin",
+    "BslAlphaUniformMixin",
+    "BslAlphaDrawMixin",
+    "BslAlphaLifecycleMixin",
+    "BslAlphaDestroyMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

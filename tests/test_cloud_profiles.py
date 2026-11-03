@@ -101,12 +101,12 @@ class CloudProfileTests(unittest.TestCase):
     def test_dry_run_only_delegates_provenance_validation_without_save_work(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            (root / 'dev/upstream').mkdir(parents=True)
+            (root / 'dependencies/upstream').mkdir(parents=True)
             photon = {'filename': 'original.zip', 'version': 'v1.3b', 'hashes': {'sha512': 'fixture'}}
-            (root / 'dev/runtime.lock.json').write_text(json.dumps({'artifacts': {'photon': photon}}))
+            (root / 'dependencies/runtime.lock.json').write_text(json.dumps({'artifacts': {'photon': photon}}))
             settings = '\n'.join('#define ' + name + (' 0 // [0 1 2]' if name == 'SHADERLOD_CLOUD_MODE'
                 else ' 4 // [1 2 3 4]' if name == 'CLOUDS_TEMPORAL_UPSCALING' else '') for name in self.declarations())
-            with zipfile.ZipFile(root / 'dev/upstream/original.zip', 'w') as archive:
+            with zipfile.ZipFile(root / 'dependencies/upstream/original.zip', 'w') as archive:
                 archive.writestr('LICENSE', 'fixture license')
                 archive.writestr('shaders/settings.glsl', settings)
             args = self.args(root)

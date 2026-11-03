@@ -1,0 +1,111 @@
+{
+  "minecraft": "26.3",
+  "java": 25,
+  "neoforge": "26.3.0.52-beta",
+  "fabricLoader": "0.19.5",
+  "fabricApi": "0.162.0+26.3",
+  "artifacts": [
+    {
+      "id": "A0VaGfz4",
+      "hashes": {
+        "sha1": "57cbbd1f58b6226c633520541c1a3ae57c019373",
+        "sha512": "302659f09e50d02a6cd96075be93aade2a2f9d709afe21d56465228fb7d7f4717566e3702a7872479df2fff9b7a5ff5b1b6047cc95e09ee6120fad5ea5857eec"
+      },
+      "url": "https://cdn.modrinth.com/data/YL57xq9U/versions/Ag5S66CF/iris-neoforge-1.11.7%2Bmc26.3.jar",
+      "filename": "iris-neoforge-1.11.7+mc26.3.jar",
+      "primary": true,
+      "size": 2804761,
+      "file_type": null,
+      "loader": "neoforge",
+      "kind": "iris",
+      "version": "1.11.7+26.3-neoforge",
+      "version_id": "Ag5S66CF"
+    },
+    {
+      "id": "OJMjKlRu",
+      "hashes": {
+        "sha1": "9015607e5ae2c5b9692ebf05113f9caca6ec41bf",
+        "sha512": "f5b62730bbee7d116a83c765b8e7cdb660da97ab7f122f180293eda3e56b5ca4d701b0bf18c36f087e9a7349f8ec113f1f8c0d462a8893c551a2f3e163bd0cb8"
+      },
+      "url": "https://cdn.modrinth.com/data/AANobbMI/versions/VHtnT9Q4/sodium-neoforge-0.9.2%2Bmc26.3.jar",
+      "filename": "sodium-neoforge-0.9.2+mc26.3.jar",
+      "primary": true,
+      "size": 1208169,
+      "file_type": null,
+      "loader": "neoforge",
+      "kind": "sodium",
+      "version": "mc26.3-0.9.2-neoforge",
+      "version_id": "VHtnT9Q4"
+    },
+    {
+      "id": "kxmcuRvK",
+      "hashes": {
+        "sha512": "0b90b1b08d99974bfc3c8e86b2ceb252e2f91715ed66b925004c28335fb44e1bddbbb6b8043e4d4d53c87ed247789cd1788b1ba4e3f4394efe154e0c59cff236",
+        "sha1": "310c0363068dfae18e91f799ed671a591b6ad49a"
+      },
+      "url": "https://cdn.modrinth.com/data/uCdwusMi/versions/TGgEbP9A/DistantHorizons-3.3.4-26.3-fabric-neoforge.jar",
+      "filename": "DistantHorizons-3.3.4-26.3-fabric-neoforge.jar",
+      "primary": true,
+      "size": 28476894,
+      "file_type": null,
+      "loader": "neoforge",
+      "kind": "dh",
+      "version": "3.3.4-26.3",
+      "version_id": "TGgEbP9A"
+    },
+    {
+      "id": "qytberMI",
+      "hashes": {
+        "sha512": "d8d3312f77fc52a48e4a6cd836fda33669bdebcb4de0b8c0d30adc808b287330a533e0baef355cc1ce6336a26851d9775369a802a4666b7b7a6266af20088f42",
+        "sha1": "fa03640ba1e4ef2f7ae3619c6373a06e46d0ba2c"
+      },
+      "url": "https://cdn.modrinth.com/data/YL57xq9U/versions/vTN4NRGW/iris-fabric-1.11.7%2Bmc26.3.jar",
+      "filename": "iris-fabric-1.11.7+mc26.3.jar",
+      "primary": true,
+      "size": 2850938,
+      "file_type": null,
+      "loader": "fabric",
+      "kind": "iris",
+      "version": "1.11.7+26.3-fabric",
+      "version_id": "vTN4NRGW"
+    },
+    {
+      "id": "t9mEd45c",
+      "hashes": {
+        "sha1": "9acfe851e36f4fb27d7c5baa224e8bd4e0334283",
+        "sha512": "f3f260f204b8ce5e8777c2c73f537956755ec61f3817b0b78b5e5568e8aa40f14891f146475075109747665c7c88a45ca0ca9a8df3c68d79c58ecdaa8d8c4b93"
+      },
+      "url": "https://cdn.modrinth.com/data/AANobbMI/versions/bAZQdGpg/sodium-fabric-0.9.2%2Bmc26.3.jar",
+      "filename": "sodium-fabric-0.9.2+mc26.3.jar",
+      "primary": true,
+      "size": 1908068,
+      "file_type": null,
+      "loader": "fabric",
+      "kind": "sodium",
+      "version": "mc26.3-0.9.2-fabric",
+      "version_id": "bAZQdGpg"
+    },
+    {
+      "id": "kxmcuRvK",
+      "hashes": {
+        "sha512": "0b90b1b08d99974bfc3c8e86b2ceb252e2f91715ed66b925004c28335fb44e1bddbbb6b8043e4d4d53c87ed247789cd1788b1ba4e3f4394efe154e0c59cff236",
+        "sha1": "310c0363068dfae18e91f799ed671a591b6ad49a"
+      },
+      "url": "https://cdn.modrinth.com/data/uCdwusMi/versions/TGgEbP9A/DistantHorizons-3.3.4-26.3-fabric-neoforge.jar",
+      "filename": "DistantHorizons-3.3.4-26.3-fabric-neoforge.jar",
+      "primary": true,
+      "size": 28476894,
+      "file_type": null,
+      "loader": "fabric",
+      "kind": "dh",
+      "version": "3.3.4-26.3",
+      "version_id": "TGgEbP9A"
+    }
+  ],
+  "tooling": {
+    "gradle": "9.7.1",
+    "loom": "1.17.20",
+    "moddev": "2.0.147",
+    "fabricGradleDistributionSha256": "acd53f1edaf02f1a8ff99879f8a34b302661a057d9b063ae9e35b552f804d20a"
+  }
+}

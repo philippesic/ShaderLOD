@@ -84,6 +84,85 @@ class SharedSpatialTests(unittest.TestCase):
         entry=next(e for e in M['members'] if e['path'].endswith('d4_deferred_shading.fsh'))
         self.assertFalse(any('get_specular' in r['before'] or 'apply_fog' in r['before'] for r in entry['replacements']))
 
+    def test_uniform_idle_gate_actual_policy_adapter_and_callback_counts(self):
+        callback=self.overlays['shaders/include/shaderlod/photon_spatial_adapter.glsl'].decode()
+        producer=self.overlays['shaders/program/shaderlod_spatial_prepass.fsh'].decode()
+        gate='    if (!shaderlod_spatial_adapter_has_coarse_demand()) return;'
+        self.assertLess(producer.index('shaderlod_photon_original_sky(direction_world'),producer.index(gate))
+        self.assertLess(producer.index(gate),producer.index('    if (!shaderlod_photon_cache_contract())'))
+        self.assertLess(producer.index(gate),producer.index('    if (lane.x == 0)'))
+        shared=kernel.PIPELINE.read_text()
+        self.assertLess(shared.index('if (!shaderlod_spatial_adapter_has_coarse_demand()) return tile'),
+                        shared.index('vec3 positions[16]'))
+        # Execute actual shared policy/plan/pipeline and actual Photon uniform callbacks.
+        # Only scalar/vector builtins and surface/evaluation callbacks are host shims.
+        host=kernel.HOST_VECTORS.split('const int SHADERLOD_WORK_POLICY=')[0]
+        host += 'using std::min;using std::max;using std::ceil;float clamp(float x,float lo,float hi){return std::clamp(x,lo,hi);}\n'
+        host += '\n'.join(kernel.expanded(n) for n in ('work_policy.glsl','spatial_plan.glsl','surface_region_continuity.glsl','spatial_pipeline.glsl'))
+        host += r'''
+int shaderlodBridgeVersion=2,shaderlodEffectsVersion=2,shaderlodEnabled=1,shaderlodOpaqueLightingMode=2;
+int shaderlodCapabilitiesVersion=1,shaderlodOpaqueSpatialAvailable=1,isEyeInWater=0;
+float shaderlodOpaqueLightingNear=32.f,shaderlodOpaqueLightingFar=96.f,shaderlodOpaqueLightingTransition=8.f;
+float shaderlodOpaqueLightingMediumWorkRatio=1.f,shaderlodOpaqueLightingFarWorkRatio=.25f,wetness=0.f;
+'''
+        for name in ('shaderlod_photon_environment','shaderlod_photon_work_policy','shaderlod_spatial_adapter_has_coarse_demand','shaderlod_spatial_adapter_plan'):
+            host += function(callback,name)
+        fake=kernel.HOST_ADAPTER.split('int main(){')[0]
+        fake=re.sub(r'bool shaderlod_spatial_adapter_has_coarse_demand\(\)\{[^}]*\}', '',fake)
+        fake=re.sub(r'ShaderlodSpatialPlan shaderlod_spatial_adapter_plan\(float d\)\{[^}]*\}', '',fake)
+        fake=fake.replace('ShaderlodSpatialSpread shaderlod_spatial_adapter_spread(ivec2,int){return',
+                          'int spread_calls=0;ShaderlodSpatialSpread shaderlod_spatial_adapter_spread(ivec2,int){++spread_calls;return')
+        host += fake + r'''
+void restore(){shaderlodBridgeVersion=shaderlodEffectsVersion=2;shaderlodEnabled=1;shaderlodOpaqueLightingMode=2;
+ shaderlodCapabilitiesVersion=shaderlodOpaqueSpatialAvailable=1;isEyeInWater=0;wetness=0.f;
+ shaderlodOpaqueLightingNear=32.f;shaderlodOpaqueLightingFar=96.f;shaderlodOpaqueLightingTransition=8.f;
+ shaderlodOpaqueLightingMediumWorkRatio=1.f;shaderlodOpaqueLightingFarWorkRatio=.25f;
+ surface_reads=evaluations=spread_calls=0;}
+int main(){auto limits=shaderlod_region_default_limits();ivec2 size(12,12);
+ for(int control=0;control<21;++control){restore();
+  if(control==0)shaderlodOpaqueLightingMode=1;
+  if(control==1)shaderlodOpaqueLightingMode=0;
+  if(control==2)shaderlodOpaqueLightingMode=3;
+  if(control==3)shaderlodEnabled=0;
+  if(control==4)shaderlodBridgeVersion=1;
+  if(control==5)shaderlodEffectsVersion=1;
+  if(control==6)shaderlodCapabilitiesVersion=2;
+  if(control==7)shaderlodOpaqueSpatialAvailable=0;
+  if(control==8)shaderlodOpaqueLightingFarWorkRatio=1.f;
+  if(control==9)shaderlodOpaqueLightingMediumWorkRatio=.5f;
+  if(control==10)shaderlodOpaqueLightingFarWorkRatio=.0625f;
+  if(control==11)shaderlodOpaqueLightingFarWorkRatio=0.f;
+  if(control==12)shaderlodOpaqueLightingNear=-1.f;
+  if(control==13)shaderlodOpaqueLightingFar=31.f;
+  if(control==14)shaderlodOpaqueLightingTransition=65.f;
+  if(control==15)shaderlodOpaqueLightingFarWorkRatio=std::numeric_limits<float>::quiet_NaN();
+  if(control==16)shaderlodOpaqueLightingFar=std::numeric_limits<float>::infinity();
+  if(control==17)isEyeInWater=1;
+  if(control==18)wetness=.1f;
+  if(control==19)wetness=std::numeric_limits<float>::quiet_NaN();
+  if(control==20)shaderlodOpaqueLightingMode=-1;
+  require(!shaderlod_spatial_adapter_has_coarse_demand(),"uniform no demand");
+  auto quantity=shaderlod_spatial_produce(true,true,2,ivec2(1),size,28.f,limits,1,5);
+  auto metadata=shaderlod_spatial_prepare(2,ivec2(1),size,28.f,limits);
+  require(!quantity.valid&&!metadata.eligible&&surface_reads==0&&spread_calls==0&&evaluations==0,"zero quantity and metadata callbacks");
+ }
+ restore();require(shaderlod_spatial_adapter_has_coarse_demand(),"active adaptive demand");
+ auto full=shaderlod_spatial_adapter_plan(92.f);auto blend=shaderlod_spatial_adapter_plan(96.f);auto quarter=shaderlod_spatial_adapter_plan(100.f);
+ require(full.weights.x==1.f&&blend.weights.x==.5f&&blend.weights.y==.5f&&quarter.weights.y==1.f,"unchanged centered active transition");
+ auto quantity=shaderlod_spatial_produce(true,true,2,ivec2(1),size,28.f,limits,1,5);
+ auto metadata=shaderlod_spatial_prepare(2,ivec2(1),size,28.f,limits);
+ require(quantity.valid&&metadata.eligible&&surface_reads==8&&spread_calls==2&&evaluations==1,"active both lanes retain full guards");
+ std::cout<<"21 uniform idle controls: zero surface/spread/evaluate callbacks in quantity + metadata; active 8/2/1 and transitions unchanged\n";
+}
+'''
+        host=re.sub(r'(?<![\w.])(\d+\.\d*(?:[eE][+-]?\d+)?|\d+[eE][+-]?\d+)(?![\w.])',r'\1f',host)
+        with tempfile.TemporaryDirectory(prefix='photon-spatial-idle-host-') as temp:
+            folder=Path(temp);path=folder/'idle.cpp';path.write_text(host)
+            run=subprocess.run([(shutil.which('clang++') or shutil.which('c++')),'-std=c++20','-O0',str(path),'-o',str(folder/'idle')],capture_output=True,text=True,timeout=30)
+            self.assertEqual(0,run.returncode,run.stdout+run.stderr)
+            run=subprocess.run([str(folder/'idle')],capture_output=True,text=True,timeout=10)
+            self.assertEqual(0,run.returncode,run.stdout+run.stderr);print(run.stdout.strip())
+
     def test_original_sky_exact_extraction_and_pingpong_source_obligation(self):
         original=self.original['shaders/program/d4_deferred_shading.fsh'].decode()
         prelude=original[original.index('    ivec2 texel = ivec2(gl_FragCoord.xy);'):original.index('    if (depth == 1.0) { // Sky')]
@@ -100,7 +179,7 @@ class SharedSpatialTests(unittest.TestCase):
         properties=self.candidate['shaders/shaders.properties'].decode()
         self.assertNotRegex(properties,r'flip\.deferred[45]\.colortex[02]')
         # Inspect the pinned executable path: reads choose snapshot side; FBO chooses opposite.
-        iris=ROOT/'dev/runtime/iris-neoforge-1.8.12+mc1.21.1.jar'
+        iris=ROOT/'dependencies/runtime/iris-neoforge-1.8.12+mc1.21.1.jar'
         evidence={}
         for cls in ('net.irisshaders.iris.samplers.IrisSamplers','net.irisshaders.iris.targets.RenderTargets','net.irisshaders.iris.pipeline.CompositeRenderer'):
             run=subprocess.run(['javap','-p','-c','-classpath',str(iris),cls],capture_output=True,text=True,timeout=15)
@@ -127,6 +206,7 @@ bool shaderlod_photon_cache_contract(){return true;}
 int shaderlod_photon_tile_width(){return 4;}
 vec4 texelFetch(int,ivec2 p,int){return p.x%2==0?stored_quantity:stored_certificate;}
 ShaderlodSpatialPlan active_plan;
+bool shaderlod_spatial_adapter_has_coarse_demand(){return active_plan.evaluate_medium || active_plan.evaluate_far;}
 ShaderlodSpatialSurface shaderlod_spatial_adapter_surface(ivec2 p){return ShaderlodSpatialSurface(vec3(float(p.x),float(p.y),-100.f),vec3(0.f,0.f,1.f),0,vec2(.5f),false);}
 ShaderlodSpatialSpread shaderlod_spatial_adapter_spread(ivec2,int){return ShaderlodSpatialSpread(false,vec2(0.f));}
 ShaderlodSpatialPlan shaderlod_spatial_adapter_plan(float){return active_plan;}
@@ -156,7 +236,7 @@ int main(){
         source=re.sub(r'(?<![\w.])(\d+\.\d*(?:[eE][+-]?\d+)?|\d+[eE][+-]?\d+)(?![\w.])',r'\1f',source)
         with tempfile.TemporaryDirectory(prefix='photon-shared-host-') as temp:
             folder=Path(temp);p=folder/'codec.cpp';p.write_text(source)
-            run=subprocess.run([shutil.which('c++'),'-std=c++20','-O0',str(p),'-o',str(folder/'codec')],capture_output=True,text=True,timeout=30)
+            run=subprocess.run([(shutil.which('clang++') or shutil.which('c++')),'-std=c++20','-O0',str(p),'-o',str(folder/'codec')],capture_output=True,text=True,timeout=30)
             self.assertEqual(0,run.returncode,run.stdout+run.stderr)
             run=subprocess.run([str(folder/'codec')],capture_output=True,text=True,timeout=10)
             self.assertEqual(0,run.returncode,run.stdout+run.stderr);print(run.stdout.strip())
@@ -170,15 +250,16 @@ int main(){
                 index=x+tw*y;self.assertEqual((x,y),(int(f32(index))%tw,int(f32(index))//tw))
 
     def test_actual_iris_graph_grammar_parity_and_all_target_groups(self):
-        iris=ROOT/'dev/runtime/iris-neoforge-1.8.12+mc1.21.1.jar'
+        iris=ROOT/'dependencies/runtime/iris-neoforge-1.8.12+mc1.21.1.jar'
         self.assertEqual('3e3f94d2d5cdcb8145c4385d521974aa2d8669b2cc212351f70cf06488182e83',adapter.sha256(iris.read_bytes()))
         cache=Path.home()/'.gradle/caches/modules-2/files-2.1';dependencies=[]
         for pattern in ('com.google.guava/guava/32.1.2-jre/*/guava-32.1.2-jre.jar','it.unimi.dsi/fastutil/8.5.12/*/fastutil-8.5.12.jar','org.slf4j/slf4j-api/2.0.9/*/slf4j-api-2.0.9.jar','org.antlr/antlr4-runtime/4.13.1/*/antlr4-runtime-4.13.1.jar'):
             found=list(cache.glob(pattern));self.assertEqual(1,len(found));dependencies+=found
         self.assertEqual('54665d2838cc66458343468efc539e454fc95b46a8a04b13c6ac43fc9be63505',adapter.sha256(dependencies[-1].read_bytes()))
-        report=ROOT/'run-workloads/native-terrain-b15-r2/forest/high/workload-measurement.json'
-        self.assertEqual('6f7662a31427f0d0863d926909c67a57b0dfba3c7ee2539c857f699c7ce3da5e',adapter.sha256(report.read_bytes()))
-        native=json.loads(report.read_text())['effective_shader_options']
+        report=ROOT/'src/main/resources/assets/shaderlod/photonquad/native366.json'
+        # Explicit source-test scenario based on the retained native profile,
+        # with sky/environment reflections disabled; no captured runtime-map claim.
+        native=json.loads(report.read_text()) | {'ENVIRONMENT_REFLECTIONS':'false','SKY_REFLECTIONS':'false'}
         self.assertEqual('4efc7af7742bc445adf2b3b1454aa448a557e1d4b024103dd5b9f5758ed68745',adapter.sha256(json.dumps(native,sort_keys=True,separators=(',',':')).encode()))
         self.assertEqual('true',native['USE_SEPARATE_ENTITY_DRAWS']);self.assertEqual('false',native['GALAXY'])
         java=IRIS_PROOF

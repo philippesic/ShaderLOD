@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.optimization.makeupmerged.mixin",
+  "plugin": "com.pp.shaderlod.optimization.makeupmerged.mixin.MergedMixinPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "MergedChunkRendererMixin",
+    "MergedDeviceAccess"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

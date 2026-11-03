@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Prepare matched compile-time Photon effect controls from stopped original-high profiles."""
 from __future__ import annotations
+from run_storage import copytree as storage_copytree
 
 import argparse
 from datetime import datetime, timezone
@@ -48,10 +49,10 @@ def plan_effects(args):
 
 def prepare_effects(args):
     operation = plan_effects(args)
-    runtime = json.loads((ROOT / 'dev/runtime.lock.json').read_text())
+    runtime = json.loads((ROOT / 'dependencies/runtime.lock.json').read_text())
     photon = runtime['artifacts']['photon']
     candidate_path = Path(operation['archive'])
-    original_path = ROOT / 'dev/upstream' / photon['filename']
+    original_path = ROOT / 'dependencies/upstream' / photon['filename']
     with zipfile.ZipFile(original_path) as original: license_bytes = original.read('LICENSE')
     candidate = archive_contents(candidate_path, operation['archive_sha256'], photon, license_bytes)
     allowed = declared_options(candidate['settings'])
@@ -81,7 +82,7 @@ def prepare_effects(args):
                     target = base / arm
                     if arm not in ('high', 'patched-off', 'adaptive'):
                         if target.exists(): raise ValueError('Effect profile collision: ' + str(target))
-                        shutil.copytree(adaptive, target, ignore=shutil.ignore_patterns('session.lock', 'screenshots', 'logs', 'workload-measurement.json', 'workload-request.json'))
+                        storage_copytree(adaptive, target, ignore=shutil.ignore_patterns('session.lock', 'screenshots', 'logs', 'workload-measurement.json', 'workload-request.json'))
                         copied = world_fingerprint(target / 'saves' / WORLD)
                         if copied != fingerprint: raise ValueError('Effect copy differs from stopped source')
                         manifest['copied_world_sha256'][arm] = copied

@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "shaderlod_dev",
+  "version": "0.1.0-dev-2612",
+  "name": "ShaderLOD 26.1.2 dev roundtrip",
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.pp.shaderlod.fabric.dev.PortProbe"
+    ]
+  },
+  "depends": {
+    "shaderlod": "*",
+    "minecraft": "26.1.2",
+    "fabric-api": "*"
+  },
+  "mixins": [
+    "shaderlod-port-dev.mixins.json"
+  ]
+}

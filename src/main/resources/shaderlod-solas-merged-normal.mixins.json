@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.optimization.solasmerged.mixin",
+  "plugin": "com.pp.shaderlod.optimization.solasmerged.mixin.SolasMergedMixinPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "SolasMergedProgramsMixin",
+    "SolasMergedProgramsMixin$BuilderHandle",
+    "SolasMergedChunkRendererMixin",
+    "SolasMergedPipelineDestroyMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

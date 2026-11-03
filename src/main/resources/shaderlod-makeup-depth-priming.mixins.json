@@ -1,0 +1,21 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.optimization.makeupprime.mixin",
+  "plugin": "com.pp.shaderlod.optimization.makeupprime.mixin.DepthMixinPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "DepthSodiumProgramsMixin",
+    "DepthChunkRendererMixin",
+    "DepthPipelineLifetimeMixin",
+    "DepthBuilderAccess",
+    "C01BoundsCarrierMixin",
+    "C01BoundsBuildMixin",
+    "C01BoundsUploadMixin",
+    "C01BoundsStorageMixin",
+    "C01BoundsSegmentMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

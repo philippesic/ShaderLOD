@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.optimization.bslprime.mixin",
+  "plugin": "com.pp.shaderlod.optimization.bslprime.mixin.DepthMixinPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "DepthSodiumProgramsMixin",
+    "DepthChunkRendererMixin",
+    "DepthPipelineLifetimeMixin",
+    "DepthBuilderAccess",
+    "BslSpatialPipelineView"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

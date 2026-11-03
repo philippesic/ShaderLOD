@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.experiment.bsl.mixin",
+  "plugin": "com.pp.shaderlod.experiment.bsl.mixin.BslPrefixProbePlugin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "BslPrefixProbeBuildMixin",
+    "BslPrefixProbeSodiumMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

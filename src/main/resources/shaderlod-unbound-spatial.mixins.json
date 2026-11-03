@@ -1,0 +1,19 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.optimization.unboundspatial.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "plugin": "com.pp.shaderlod.optimization.unboundspatial.mixin.UnboundSpatialPlugin",
+  "client": [
+    "UnboundSpatialCompositeMixin",
+    "UnboundSpatialProgramsMixin",
+    "UnboundSpatialDrawMixin",
+    "UnboundSpatialLayerMixin",
+    "UnboundSpatialPipelineMixin",
+    "UnboundSpatialReloadMixin",
+    "UnboundSpatialPrepareMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

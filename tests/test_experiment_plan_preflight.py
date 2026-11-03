@@ -4,6 +4,8 @@ from datetime import datetime, timedelta, timezone
 import hashlib
 import importlib.util
 import json
+import shlex
+import shutil
 from pathlib import Path
 import sys
 import tempfile
@@ -36,8 +38,9 @@ class ExperimentPlanTest(unittest.TestCase):
         (profile / 'config/iris.properties').write_text('shaderPack=' + self.p['pack_name'] + '\n')
         (self.root / 'gradlew').write_text('not executable; checker never launches')
         (self.root / 'dev').mkdir(exist_ok=True)
-        (self.root / 'dev/performance-mods.lock.json').write_text(json.dumps({'stacks': {'minimal': [], 'optimized': [], 'optimized-culling': []}}))
-        (self.root / 'dev/runtime.lock.json').write_text(json.dumps({'artifacts': {'distanthorizons': {'filename': 'dh.jar'}}}))
+        (self.root / "dependencies").mkdir(exist_ok=True)
+        (self.root / 'dependencies/performance-mods.lock.json').write_text(json.dumps({'stacks': {'minimal': [], 'optimized': [], 'optimized-culling': []}}))
+        (self.root / 'dependencies/runtime.lock.json').write_text(json.dumps({'artifacts': {'distanthorizons': {'filename': 'dh.jar'}}}))
         for pack in (Path(self.p['pack']), profile / 'shaderpacks/ComplementaryReimagined_r5.9.3.zip'):
             pack.parent.mkdir(parents=True, exist_ok=True)
             with zipfile.ZipFile(pack, 'w') as z:
@@ -66,6 +69,18 @@ class ExperimentPlanTest(unittest.TestCase):
         self.assertEqual(self.check()['errors'], [])
         self.assertEqual(self.check({'plan': self.p, 'status': 'pending'})['errors'], [])
         self.assertIn('actual JVM/argfile consumption', self.check()['unverified'])
+
+    def test_custom_saved_world_requires_neutral_control_and_exact_file(self):
+        p = copy.deepcopy(self.p)
+        p['world'] = 'ShaderLOD-Benchmark-overworld-3-flat'
+        world = Path(p['profile']) / 'saves' / p['world']
+        world.mkdir()
+        (world / 'level.dat').write_bytes(b'bounded fixture')
+        self.assertIn('profile_world_iris', {e['check'] for e in self.check(p)['errors']})
+        p['benchmark_control_probe'] = str(self.root / 'neutral.json')
+        self.assertNotIn('profile_world_iris', {e['check'] for e in self.check(p)['errors']})
+        p['world'] = '../outside'
+        self.assertIn('profile_world_iris', {e['check'] for e in self.check(p)['errors']})
 
     def test_independent_errors_reported_together(self):
         p = copy.deepcopy(self.p)
@@ -180,6 +195,395 @@ class ExperimentPlanTest(unittest.TestCase):
         with patch.object(pre.dc, 'validate_built') as validate:
             self.assertEqual(self.check(check_built=True)['errors'], [])
             validate.assert_called_once_with()
+
+    def fabric_plan(self):
+        p = copy.deepcopy(self.p)
+        p.update(launcher='fabric1211', mode='on', include_dh=False,
+                 fullscreen=True, apply_lod_settings=False)
+        p.pop('protocol_capture_name', None)
+        game = shlex.join(['--gameDir', p['profile'], '--username', 'Dev',
+                          '--fullscreen', '--width', '1920', '--height', '1200',
+                          '--quickPlaySingleplayer', pre.dc.WORLD])
+        p['command'] = [str(self.root / 'gradlew'), '-p', 'fabric', '--no-daemon',
+                        '--max-workers=2', '--console=plain', 'runClient', '-PfabricRoundtrip=true',
+                        '-PfabricRendererSpeedProbe=true', '-PfabricRoundtripOriginal=' + p['pack_name'],
+                        '-PfabricRoundtripDh=false', '-PfabricRoundtripUi=false', '--args=' + game]
+        for task in pre.dc.SKIPPABLE:
+            p['command'] += ['-x', task]
+        return p
+
+    def test_explicit_fabric_launcher_validates_forwarded_real_entry_shape(self):
+        self.assertEqual(self.check(self.fabric_plan())['errors'], [])
+        p = self.fabric_plan()
+        p['launcher'] = 'fabric263'
+        self.assertIn('launcher', {e['check'] for e in self.check(p)['errors']})
+
+    def test_fabric_rejects_wrong_duplicate_project_task_and_game_directory(self):
+        changes = [lambda a: a.__setitem__(a.index('fabric'), 'ports/1.21.11/fabric'),
+                   lambda a: a.extend(['-p', 'fabric']), lambda a: a.append('runClient'),
+                   lambda a: a.append('--project-dir=other'), lambda a: a.append('build'),
+                   lambda a: a.append('--args=--gameDir wrong'),
+                   lambda a: a.__setitem__(next(i for i, v in enumerate(a) if v.startswith('--args=')),
+                       '--args=--gameDir wrong --fullscreen --quickPlaySingleplayer ' + pre.dc.WORLD)]
+        for change in changes:
+            p = self.fabric_plan(); change(p['command'])
+            self.assertIn('launcher_command', {e['check'] for e in self.check(p)['errors']}, p['command'])
+        for duplicate in ('--gameDir "' + self.p['profile'] + '"', '--fullscreen',
+                          '--quickPlaySingleplayer ' + pre.dc.WORLD):
+            p = self.fabric_plan()
+            p['command'] = [v + ' ' + duplicate if v.startswith('--args=') else v for v in p['command']]
+            self.assertIn('launcher_command', {e['check'] for e in self.check(p)['errors']})
+
+    def test_fabric_requires_candidate_original_and_no_ui_dh_research_properties(self):
+        for key, value in [('fabricRoundtrip', 'false'), ('fabricRendererSpeedProbe', 'false'),
+                           ('fabricRoundtripOriginal', 'foreign.zip'), ('fabricRoundtripDh', 'true'),
+                           ('fabricRoundtripUi', 'true')]:
+            p = self.fabric_plan()
+            p['command'] = ['-P' + key + '=' + value if v.startswith('-P' + key + '=') else v
+                            for v in p['command']]
+            self.assertIn('launcher_command', {e['check'] for e in self.check(p)['errors']}, key)
+        p = self.fabric_plan(); p['command'] += ['-PexperimentalFabricRenderer1211=false']
+        self.assertIn('launcher_command', {e['check'] for e in self.check(p)['errors']})
+        p = self.fabric_plan(); p['command'] += ['-PfabricRendererSpeedProbe=true']
+        self.assertIn('launcher_command', {e['check'] for e in self.check(p)['errors']})
+
+    def test_fabric_already_built_skip_vector_and_empty_profile_mods(self):
+        p = self.fabric_plan(); p['command'] = p['command'][:-2]
+        self.assertIn('launcher_command', {e['check'] for e in self.check(p)['errors']})
+        p = self.fabric_plan(); (Path(p['profile']) / 'mods/foreign.jar').write_bytes(b'foreign')
+        self.assertIn('profile_mods', {e['check'] for e in self.check(p)['errors']})
+
+    def test_fabric_untimed_source_probe_is_explicit_and_excludes_speed_probe(self):
+        p = self.fabric_plan()
+        p['command'] = [arg.replace('-PfabricRendererSpeedProbe=true', '-PfabricRendererSourceProbe=true')
+                        for arg in p['command']]
+        self.assertEqual(self.check(p)['errors'], [])
+        p['command'] += ['-PfabricRendererSpeedProbe=true']
+        self.assertIn('launcher_command', {e['check'] for e in self.check(p)['errors']})
+
+    def test_fabric_rejects_invalid_probe_values(self):
+        p = self.fabric_plan()
+        p['command'] += ['-PfabricRendererSourceProbe=unknown']
+        self.assertIn('launcher_command', {e['check'] for e in self.check(p)['errors']})
+
+    def test_fabric_never_reuses_neoforge_build_receipt(self):
+        with patch.object(pre.dc, 'validate_built') as validate:
+            errors = {e['check'] for e in self.check(self.fabric_plan(), check_built=True)['errors']}
+            self.assertEqual(errors, {'current_build_receipt'})
+            validate.assert_not_called()
+
+    def port_fabric_plan(self):
+        p = self.fabric_plan(); p['launcher'] = 'fabric12111'
+        launcher = self.root / 'ports/1.21.11/runtime/gradle-9.4.0/bin/gradle'
+        launcher.parent.mkdir(parents=True, exist_ok=True); launcher.write_text('not executable; static only')
+        p['command'][0] = str(launcher)
+        p['command'][p['command'].index('fabric')] = str(self.root / 'ports/1.21.11/fabric')
+        mapping = {'fabricRoundtrip': 'portRoundtrip', 'fabricRendererSpeedProbe': 'portRendererSpeedProbe',
+                   'fabricRoundtripOriginal': 'portRoundtripOriginal', 'fabricRoundtripDh': 'portQualityRoundtrip',
+                   'fabricRoundtripUi': 'portRoundtripUi'}
+        p['command'] = ['-P' + mapping[v[2:].split('=', 1)[0]] + '=' + v.split('=', 1)[1]
+                        if v.startswith('-P') else v for v in p['command']]
+        p['command'].append('-PportRendererSpeedCandidate=true')
+        return p
+
+    def test_explicit12111_fabric_real_launcher_and_negative_version_candidate_inputs(self):
+        p = self.port_fabric_plan(); self.assertEqual(self.check(p)['errors'], [])
+        for key, value in [('portRendererSpeedCandidate', 'false'), ('portRendererSpeedProbe', 'false'),
+                           ('portQualityRoundtrip', 'true'), ('portRoundtripOriginal', 'foreign.zip')]:
+            wrong = copy.deepcopy(p)
+            wrong['command'] = ['-P' + key + '=' + value if v.startswith('-P' + key + '=') else v for v in wrong['command']]
+            self.assertIn('launcher_command', {e['check'] for e in self.check(wrong)['errors']}, key)
+        wrong = copy.deepcopy(p); wrong['command'][wrong['command'].index('-p') + 1] = str(self.root / 'ports/26.1.2/fabric')
+        self.assertIn('launcher_command', {e['check'] for e in self.check(wrong)['errors']})
+        wrong = copy.deepcopy(p); wrong['command'].append('-PportRendererSpeedCandidate=true')
+        self.assertIn('launcher_command', {e['check'] for e in self.check(wrong)['errors']})
+
+    def test_explicit262_fabric_pins_launcher_module_and_rejects_borrowed_receipt(self):
+        p = self.port_fabric_plan(); p['launcher'] = 'fabric262'
+        launcher = self.root / 'ports/26.2/runtime/gradle-9.5.0/bin/gradle'
+        launcher.parent.mkdir(parents=True); launcher.write_text('not executable; static only')
+        p['command'][0] = str(launcher)
+        p['command'][p['command'].index('-p') + 1] = str(self.root / 'ports/26.2/fabric')
+        self.assertEqual(self.check(p)['errors'], [])
+        for module in ('ports/1.21.11/fabric', 'ports/26.3/fabric'):
+            wrong = copy.deepcopy(p)
+            wrong['command'][wrong['command'].index('-p') + 1] = str(self.root / module)
+            self.assertIn('launcher_command', {e['check'] for e in self.check(wrong)['errors']})
+        wrong = copy.deepcopy(p)
+        wrong['command'][0] = str(self.root / 'ports/1.21.11/runtime/gradle-9.4.0/bin/gradle')
+        self.assertIn('launcher_command', {e['check'] for e in self.check(wrong)['errors']})
+        wrong = copy.deepcopy(p); wrong['launcher'] = 'fabric263'
+        self.assertIn('launcher', {e['check'] for e in self.check(wrong)['errors']})
+        with patch.object(pre.dc, 'validate_built') as validate:
+            self.assertEqual({e['check'] for e in self.check(p, check_built=True)['errors']},
+                             {'current_build_receipt'})
+            validate.assert_not_called()
+
+    def bsl_original_plan(self):
+        p = self.fabric_plan()
+        pack = self.root / 'authentic-BSL_v10.1.8.zip'
+        shutil.copy2(ROOT / 'dependencies/upstream/other-pack-research/BSL_v10.1.8.zip', pack)
+        p.update(pack=str(pack), pack_name=pack.name,
+                 installed_pack=str(Path(p['profile']) / 'shaderpacks' / pack.name),
+                 expected_loaded_pack=pack.name,
+                 expected_loaded_sha256='36b0a50ff7918bf10e9422c401d93779f9d0088a26acea975b435243f96930b5',
+                 expected_options_count=384)
+        shutil.copy2(pack, p['installed_pack'])
+        native = ROOT / 'src/main/resources/assets/shaderlod/bslquad/native384.json'
+        target = self.root / 'src/main/resources/assets/shaderlod/bslquad/native384.json'
+        target.parent.mkdir(parents=True, exist_ok=True); shutil.copy2(native, target)
+        for name in ('source-proof.json', 'api-proof.json'):
+            shutil.copy2(native.parent / name, target.parent / name)
+        Path(p['expected_options_source']).write_bytes(native.read_bytes())
+        values = json.loads(native.read_text())
+        Path(p['pack_options']).write_text(''.join(key + '=' + value + '\n' for key, value in values.items()))
+        (Path(p['profile']) / 'config/iris.properties').write_text(
+            'shaderPack=' + pack.name + '\nenableShaders=true\nenableDebugOptions=true\n')
+        (Path(p['profile']) / 'config/shaderlod-client.json').write_text(
+            json.dumps(dict(enabled=False, preset='PERFORMANCE', debug=False)))
+        p['command'] = [v for v in p['command'] if not v.startswith('-PfabricRendererSpeedProbe=')]
+        p['command'] = ['-PfabricRoundtripOriginal=' + pack.name if v.startswith('-PfabricRoundtripOriginal=') else v
+                        for v in p['command']]
+        p['command'] += ['-PfabricOriginalSourceProbe=true', '-PfabricOriginalSourceFamily=bsl']
+        return p
+
+    def test_bsl_original_only_uses_real_archive_native384_and_actual_explicit_flags(self):
+        p = self.bsl_original_plan(); self.assertEqual(self.check(p)['errors'], [])
+        p['command'].remove('-PfabricRoundtrip=true')
+        self.assertEqual(self.check(p)['errors'], [], 'Original flag is its own compiled entrypoint')
+
+    def sildur_port_original_plan(self):
+        p = self.bsl_original_plan()
+        archive = ROOT / "dependencies/upstream/pack-expansion/Sildur's Vibrant Shaders v2.02 Extreme.zip"
+        pack = self.root / archive.name
+        shutil.copy2(archive, pack)
+        p.update(launcher='fabric12111', pack=str(pack), pack_name=pack.name,
+                 installed_pack=str(Path(p['profile']) / 'shaderpacks' / pack.name),
+                 expected_loaded_pack=pack.name,
+                 expected_loaded_sha256='824504bc937f9570277c0a809f5059ae4a5fe70c413cf4459b6ccff4dfed7ebe',
+                 expected_options_count=115)
+        shutil.copy2(pack, p['installed_pack'])
+        native = ROOT / 'src/main/resources/assets/shaderlod/sildurquad/native115.json'
+        folder = self.root / 'src/main/resources/assets/shaderlod/sildurquad'
+        folder.mkdir(parents=True)
+        for name in ('native115.json', 'source-proof.json', 'api-proof.json'):
+            shutil.copy2(native.parent / name, folder / name)
+        Path(p['expected_options_source']).write_bytes(native.read_bytes())
+        Path(p['pack_options']).write_text('')
+        profile = Path(p['profile'])
+        (profile / 'config/iris.properties').write_text(
+            'shaderPack=' + pack.name + '\nenableShaders=true\nenableDebugOptions=true\n')
+        (profile / 'config/sodium-options.json').write_text(
+            json.dumps({'performance': {'use_no_error_g_l_context': False}}))
+        launcher = self.root / 'ports/1.21.11/runtime/gradle-9.4.0/bin/gradle'
+        launcher.parent.mkdir(parents=True)
+        launcher.write_text('not executable; static only')
+        p['command'][0] = str(launcher)
+        p['command'][p['command'].index('-p') + 1] = str(self.root / 'ports/1.21.11/fabric')
+        p['command'] = [v for v in p['command'] if not v.startswith('-Pfabric')]
+        p['command'] += ['-PportSildurOriginalSource=true', '-PportRoundtripOriginal=' + pack.name]
+        return p
+
+    def test_sildur12111_original_accepts_authentic_native115_and_rejects_mixed_modes(self):
+        p = self.sildur_port_original_plan()
+        self.assertEqual(self.check(p)['errors'], [])
+        for flag in ('portBslOriginalSource', 'portRoundtrip', 'portRendererSpeedProbe',
+                     'portRendererSpeedCandidate', 'portRoundtripUi', 'portQualityRoundtrip',
+                     'experimentalRendererResearch'):
+            wrong = copy.deepcopy(p)
+            wrong['command'].append('-P' + flag + '=true')
+            self.assertIn('launcher_command', {e['check'] for e in self.check(wrong)['errors']}, flag)
+        wrong = copy.deepcopy(p)
+        wrong['command'] = [v for v in wrong['command'] if not v.startswith('-PportSildurOriginalSource=')]
+        self.assertIn('launcher_command', {e['check'] for e in self.check(wrong)['errors']})
+
+    def test_sildur12111_original_refuses_foreign_inputs_and_export_alias(self):
+        p = self.sildur_port_original_plan()
+        native = Path(p['expected_options_source'])
+        before = native.read_bytes()
+        values = json.loads(before); values['SHADERLOD_FOREIGN'] = 'true'
+        native.write_text(json.dumps(values))
+        self.assertIn('launcher_command', {e['check'] for e in self.check(p)['errors']})
+        native.write_bytes(before)
+        Path(p['pack_options']).write_text('TAA=true\n')
+        self.assertIn('launcher_command', {e['check'] for e in self.check(p)['errors']})
+        Path(p['pack_options']).write_text('')
+        exports = Path(p['profile']) / 'patched_shaders'
+        exports.symlink_to(self.root, target_is_directory=True)
+        self.assertIn('launcher_command', {e['check'] for e in self.check(p)['errors']})
+        exports.unlink()
+        for name in ('native115.json', 'source-proof.json', 'api-proof.json'):
+            f = self.root / 'src/main/resources/assets/shaderlod/sildurquad' / name
+            data = f.read_bytes(); f.write_bytes(data + b'foreign')
+            self.assertIn('launcher_command', {e['check'] for e in self.check(p)['errors']}, name)
+            f.write_bytes(data)
+
+    def test_sildur12111_debug_exports_refuse_native_modal_context_conflict(self):
+        p = self.sildur_port_original_plan()
+        options = Path(p['profile']) / 'config/sodium-options.json'
+        for value in (True, None, 'false'):
+            options.write_text(json.dumps({'performance': {'use_no_error_g_l_context': value}}))
+            self.assertIn('launcher_command', {e['check'] for e in self.check(p)['errors']}, value)
+        options.unlink()
+        self.assertIn('launcher_command', {e['check'] for e in self.check(p)['errors']})
+
+    def test_bsl_original_only_rejects_missing_unknown_family_wrong_original_and_mixed_modes(self):
+        p = self.bsl_original_plan()
+        for key, value in [('fabricOriginalSourceFamily', ''), ('fabricOriginalSourceFamily', 'photon'),
+                           ('fabricRoundtripOriginal', 'foreign.zip'), ('fabricOriginalSourceProbe', 'false')]:
+            wrong = copy.deepcopy(p)
+            wrong['command'] = ['-P' + key + '=' + value if v.startswith('-P' + key + '=') else v for v in wrong['command']]
+            self.assertIn('launcher_command', {e['check'] for e in self.check(wrong)['errors']}, key + '=' + value)
+        wrong = copy.deepcopy(p); wrong['command'].remove('-PfabricOriginalSourceFamily=bsl')
+        self.assertIn('launcher_command', {e['check'] for e in self.check(wrong)['errors']})
+        for flag in ('fabricRendererSpeedProbe', 'fabricRendererSourceProbe', 'experimentalRendererResearch',
+                     'experimentalFabricRenderer1211', 'fabricRoundtripUi', 'fabricRoundtripDh'):
+            wrong = copy.deepcopy(p)
+            wrong['command'] = [v for v in wrong['command'] if not v.startswith('-P' + flag + '=')]
+            wrong['command'].append('-P' + flag + '=true')
+            self.assertIn('launcher_command', {e['check'] for e in self.check(wrong)['errors']}, flag)
+
+    def test_bsl_original_only_refuses_changed_or_missing_installed_archive_and_native_option_map(self):
+        p = self.bsl_original_plan(); expected = json.loads(Path(p['expected_options_source']).read_text())
+        for change in ('missing', 'changed', 'extra'):
+            wrong = dict(expected); key = next(iter(wrong))
+            if change == 'missing': wrong.pop(key)
+            if change == 'changed': wrong[key] = 'foreign'
+            if change == 'extra': wrong['SHADERLOD_PRIVATE_SOURCE'] = '1'
+            Path(p['expected_options_source']).write_text(json.dumps(wrong))
+            self.assertIn('launcher_command', {e['check'] for e in self.check(p)['errors']}, change)
+        Path(p['expected_options_source']).write_text(json.dumps(expected))
+        Path(p['installed_pack']).write_bytes(b'foreign')
+        self.assertIn('launcher_command', {e['check'] for e in self.check(p)['errors']})
+        Path(p['installed_pack']).unlink()
+        self.assertIn('launcher_command', {e['check'] for e in self.check(p)['errors']})
+
+    def test_bsl_original_only_refuses_unprepared_selected_debug_or_on_profile(self):
+        p = self.bsl_original_plan(); iris = Path(p['profile']) / 'config/iris.properties'
+        iris.write_text('shaderPack=' + p['pack_name'] + '\nenableShaders=true\nenableDebugOptions=false\n')
+        self.assertIn('launcher_command', {e['check'] for e in self.check(p)['errors']})
+        iris.write_text('shaderPack=foreign.zip\nenableShaders=true\nenableDebugOptions=true\n')
+        self.assertIn('launcher_command', {e['check'] for e in self.check(p)['errors']})
+        iris.write_text('shaderPack=' + p['pack_name'] + '\nenableShaders=true\nenableDebugOptions=true\n')
+        config = Path(p['profile']) / 'config/shaderlod-client.json'
+        config.write_text(json.dumps(dict(enabled=True, preset='PERFORMANCE', debug=False)))
+        self.assertIn('launcher_command', {e['check'] for e in self.check(p)['errors']})
+
+    def test_bsl_original_only_refuses_stale_exports_and_foreign_actual_overrides(self):
+        p = self.bsl_original_plan(); exports = Path(p['profile']) / 'patched_shaders'
+        exports.mkdir(); (exports / 'old.fsh').write_text('stale historical export')
+        self.assertIn('launcher_command', {e['check'] for e in self.check(p)['errors']})
+        (exports / 'old.fsh').unlink()
+        self.assertEqual(self.check(p)['errors'], [])
+        with Path(p['pack_options']).open('a') as output: output.write('SHADERLOD_UNKNOWN=1\n')
+        self.assertIn('launcher_command', {e['check'] for e in self.check(p)['errors']})
+
+    def test_bsl_original_only_requires_unchanged_native_and_ancestry_certificate_resources(self):
+        p = self.bsl_original_plan()
+        folder = self.root / 'src/main/resources/assets/shaderlod/bslquad'
+        for name in ('native384.json', 'source-proof.json', 'api-proof.json'):
+            resource = folder / name; before = resource.read_bytes()
+            resource.write_bytes(before + b'changed')
+            self.assertIn('launcher_command', {e['check'] for e in self.check(p)['errors']}, name)
+            resource.unlink()
+            self.assertIn('launcher_command', {e['check'] for e in self.check(p)['errors']}, name)
+            resource.write_bytes(before)
+
+    def bsl_renderer_plan(self, source=False):
+        p = self.bsl_original_plan()
+        p['command'] = [a for a in p['command'] if not a.startswith(('-PfabricOriginalSourceProbe=', '-PfabricOriginalSourceFamily='))]
+        p['command'] += ['-PfabricRendererResearchFamily=bsl',
+                        '-PfabricRendererSourceProbe=true' if source else '-PfabricRendererSpeedProbe=true']
+        iris = Path(p['profile']) / 'config/iris.properties'
+        iris.write_text('shaderPack=' + p['pack_name'] + '\nenableShaders=true\nenableDebugOptions=' + str(source).lower() + '\n')
+        return p
+
+    def test_named_bsl_renderer_real_certificate_source_and_clean_speed_inputs_admit(self):
+        for source in (False, True):
+            self.assertEqual(self.check(self.bsl_renderer_plan(source))['errors'], [])
+
+    def test_named_bsl_renderer_missing_unknown_and_mixed_family_modes_refuse(self):
+        p = self.bsl_renderer_plan()
+        for replacement in (None, '', 'unknown', 'photon'):
+            wrong = copy.deepcopy(p)
+            wrong['command'] = [a for a in wrong['command'] if not a.startswith('-PfabricRendererResearchFamily=')]
+            if replacement is not None: wrong['command'].append('-PfabricRendererResearchFamily=' + replacement)
+            self.assertIn('launcher_command', {e['check'] for e in self.check(wrong)['errors']}, replacement)
+        for flag in ('fabricOriginalSourceProbe', 'fabricRendererSourceProbe', 'fabricRoundtripUi',
+                     'fabricRoundtripDh', 'experimentalRendererResearch', 'experimentalFabricRenderer1211'):
+            wrong = copy.deepcopy(p)
+            wrong['command'] = [a for a in wrong['command'] if not a.startswith('-P' + flag + '=')]
+            wrong['command'].append('-P' + flag + '=true')
+            self.assertIn('launcher_command', {e['check'] for e in self.check(wrong)['errors']}, flag)
+
+    def test_named_bsl_renderer_wrong_source_or_debug_policy_refuses(self):
+        p = self.bsl_renderer_plan()
+        p['command'] = ['-PfabricRoundtripOriginal=foreign.zip' if a.startswith('-PfabricRoundtripOriginal=') else a for a in p['command']]
+        self.assertIn('launcher_command', {e['check'] for e in self.check(p)['errors']})
+        p = self.bsl_renderer_plan(); iris = Path(p['profile']) / 'config/iris.properties'
+        iris.write_text(iris.read_text().replace('enableDebugOptions=false', 'enableDebugOptions=true'))
+        self.assertIn('launcher_command', {e['check'] for e in self.check(p)['errors']})
+        p = self.bsl_renderer_plan(True)
+        Path(p['installed_pack']).write_bytes(b'foreign')
+        self.assertIn('launcher_command', {e['check'] for e in self.check(p)['errors']})
+
+    def test_native_bsl_cost_control_explicit_speed_and_no_reload_admits(self):
+        p = self.bsl_renderer_plan(); p['command'].append('-PfabricNativeCostControl=true')
+        self.assertEqual(self.check(p)['errors'], [])
+
+    def test_native_cost_control_missing_family_source_mixed_or_invalid_values_refuse(self):
+        for source in (False, True):
+            p = self.bsl_renderer_plan(source); p['command'].append('-PfabricNativeCostControl=true')
+            if source: self.assertIn('launcher_command', {e['check'] for e in self.check(p)['errors']})
+        for flag, value in [('fabricNativeCostControl', 'false'), ('fabricNativeCostControl', ''),
+                            ('fabricRendererResearchFamily', 'unknown'), ('fabricRendererSpeedProbe', 'false'),
+                            ('fabricOriginalSourceProbe', 'true'), ('fabricRoundtripUi', 'true'),
+                            ('fabricRoundtripDh', 'true'), ('fabricNativeCostReload', 'true')]:
+            p = self.bsl_renderer_plan(); p['command'].append('-PfabricNativeCostControl=true')
+            p['command'] = [a for a in p['command'] if not a.startswith('-P' + flag + '=')]
+            p['command'].append('-P' + flag + '=' + value)
+            self.assertIn('launcher_command', {e['check'] for e in self.check(p)['errors']}, flag)
+        p = self.fabric_plan(); p['command'].append('-PfabricNativeCostControl=true')
+        self.assertIn('launcher_command', {e['check'] for e in self.check(p)['errors']})
+
+    def single_bsl_plan(self, phase):
+        p = self.bsl_renderer_plan(); p['command'].append('-PfabricRendererSinglePhase=' + phase)
+        path = Path(p['profile']) / 'config/shaderlod-client.json'
+        config = json.loads(path.read_text()); config['enabled'] = phase == 'on'
+        path.write_text(json.dumps(config)); return p
+
+    def test_single_bsl_window_phases_require_matching_preloaded_core(self):
+        for phase in ('original', 'on', 'original-return'):
+            p = self.single_bsl_plan(phase)
+            self.assertEqual(self.check(p)['errors'], [], phase)
+            path = Path(p['profile']) / 'config/shaderlod-client.json'
+            config = json.loads(path.read_text()); config['enabled'] = not config['enabled']
+            path.write_text(json.dumps(config))
+            self.assertIn('launcher_command', {e['check'] for e in self.check(p)['errors']}, phase)
+
+    def test_single_bsl_window_unknown_phase_and_mixed_producers_refuse(self):
+        for phase in ('', 'unknown', 'off', 'native-off-2'):
+            p = self.single_bsl_plan(phase)
+            self.assertIn('launcher_command', {e['check'] for e in self.check(p)['errors']}, phase)
+        for flag, value in [('fabricNativeCostControl', 'true'), ('fabricNativeCostControl', 'false'),
+                            ('fabricRendererSourceProbe', 'true'), ('fabricOriginalSourceProbe', 'true'),
+                            ('fabricRoundtripUi', 'true'), ('fabricRoundtripDh', 'true'),
+                            ('fabricRendererResearchFamily', 'unknown'), ('fabricRendererSpeedProbe', 'false'),
+                            ('fabricRoundtrip', 'false'), ('fabricNativeCostReload', 'true')]:
+            p = self.single_bsl_plan('on')
+            p['command'] = [a for a in p['command'] if not a.startswith('-P' + flag + '=')]
+            p['command'].append('-P' + flag + '=' + value)
+            self.assertIn('launcher_command', {e['check'] for e in self.check(p)['errors']}, flag)
+
+    def test_single_bsl_window_wrong_preset_debug_archive_and_family_refuse(self):
+        for key, value in [('preset', 'QUALITY'), ('debug', True)]:
+            p = self.single_bsl_plan('on'); path = Path(p['profile']) / 'config/shaderlod-client.json'
+            config = json.loads(path.read_text()); config[key] = value; path.write_text(json.dumps(config))
+            self.assertIn('launcher_command', {e['check'] for e in self.check(p)['errors']}, key)
+        p = self.single_bsl_plan('on'); Path(p['installed_pack']).write_bytes(b'foreign')
+        self.assertIn('launcher_command', {e['check'] for e in self.check(p)['errors']})
+        p = self.fabric_plan(); p['command'].append('-PfabricRendererSinglePhase=original')
+        self.assertIn('launcher_command', {e['check'] for e in self.check(p)['errors']})
 
 
 if __name__ == '__main__':

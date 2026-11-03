@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "mechanism": "B16",
+  "scope": "MakeUp 9.5g Overworld deferred sky only; original inputs certified; private source assembly, candidate runtime untested",
+  "base_sha256": "0036da17e0c7158e1c669593e6322d53fce3f5a42fb5124b935e9e21a5719db8",
+  "iris_sha256": "3e3f94d2d5cdcb8145c4385d521974aa2d8669b2cc212351f70cf06488182e83",
+  "source_members": {
+    "shaders/lib/volumetric_clouds.glsl": "b280a4aeec467c4c6f67692b77dc4244f54e29dedf307eed0269bb3599f75783",
+    "shaders/lib/volumetric_clouds_vertex.glsl": "739f3af3e136f5f4a2f775e4afd69a3f502c0919adbdabe8375dac01a755d38d",
+    "shaders/common/deferred_fragment.glsl": "6d6dbf4e7ca8a1818776a25fcc6bd0fc9597d0724e933642741f7cdd705ca5ac",
+    "shaders/common/water_blocks_fragment.glsl": "4e550dc0dbfcca04e2f79b506ee33e2900793082782f8ca1e2652f2495a2c70a",
+    "shaders/lib/config.glsl": "1290769f3932378760770a4b13e21563988e67b8457de73e3e9677583136f9f2",
+    "shaders/world0/deferred.fsh": "2e6c131506665f08745df2825070f7eb5529a4804882d56fb192568c8d00d661",
+    "shaders/shaders.properties": "4788ee3bc2ee467a4dfc8aa3c6afe3190b00e5151462d9edb909ffae7b609261",
+    "shaders/textures/clouds_natural_512_R_8bit.png": "15464859fad1cc5871b9fec2ae289d727cee75b48f881182f47e9f3c33da4d59",
+    "shaders/textures/clouds_natural_512_R_8bit.png.mcmeta": "2bb76dc58e77f0d484d91f9133db6351e4a43db087834ec5c5d3cf67c7750a14",
+    "shaders/textures/clouds_blocky_512_R_8bit.png": "c5e15ea9ab47134e8c62629a4352eb286d7f5e338730b004b19c449e223a1592",
+    "shaders/textures/clouds_blocky_512_R_8bit.png.mcmeta": "2bb76dc58e77f0d484d91f9133db6351e4a43db087834ec5c5d3cf67c7750a14"
+  },
+  "required_options": {
+    "V_CLOUDS": "1",
+    "CLOUD_VOL_STYLE": "0",
+    "CLOUD_STEPS_AVG": "10"
+  },
+  "approved_runtime_certificate_sha256": "3baa49140743f0cd8d6e3773b92005f8acfcdbcbc825ea95d295000cca20492f",
+  "native_options_count": 100,
+  "native_options_map_sha256": "d9a7a3f046896b8df518efb4c46bc25cda6d8d696b4393b395367406155e897b",
+  "native_sidecar_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "status": "ORIGINAL_R4_CERTIFIED_PRIVATE_SOURCE_ASSEMBLY_ONLY",
+  "permission_expressions": {
+    "0": "min(max(screenBrightness, 0.0), 1.0) * 0.0",
+    "1": "min(max(screenBrightness, 0.0), 1.0) * 0.0 + 1.0"
+  },
+  "not_proven": [
+    "candidate/control actual linked sampler/source/options/uniform",
+    "native-equivalent original output",
+    "candidate driver compilation and skip activation",
+    "quality and speed",
+    "DH, other loader/version/hardware lines"
+  ],
+  "original_console_sha256": "0dff9a560dbefc6943ee56296642a5c6193421e9607e67f9551dfa07592ac3a4"
+}

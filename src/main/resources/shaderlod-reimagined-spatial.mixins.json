@@ -1,0 +1,19 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.optimization.reimaginedspatial.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "plugin": "com.pp.shaderlod.optimization.reimaginedspatial.mixin.ReimaginedSpatialPlugin",
+  "client": [
+    "ReimaginedSpatialCompositeMixin",
+    "ReimaginedSpatialProgramsMixin",
+    "ReimaginedSpatialDrawMixin",
+    "ReimaginedSpatialLayerMixin",
+    "ReimaginedSpatialPipelineMixin",
+    "ReimaginedSpatialReloadMixin",
+    "ReimaginedSpatialPrepareMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

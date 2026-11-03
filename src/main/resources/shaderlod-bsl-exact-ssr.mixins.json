@@ -1,0 +1,18 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.optimization.bslexact.mixin",
+  "plugin": "com.pp.shaderlod.optimization.bslexact.mixin.BslExactPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "BslExactPipelineView",
+    "BslExactOwnerMixin",
+    "BslExactDrawMixin",
+    "BslExactCopyMixin",
+    "BslExactLifetimeMixin",
+    "BslExactReloadMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

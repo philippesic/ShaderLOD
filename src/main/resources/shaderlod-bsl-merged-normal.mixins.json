@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.optimization.bslmerged.mixin",
+  "plugin": "com.pp.shaderlod.optimization.bslmerged.mixin.BslMergedMixinPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "BslMergedProgramsMixin",
+    "BslMergedProgramsMixin$BuilderHandle",
+    "BslMergedChunkRendererMixin",
+    "BslMergedPipelineDestroyMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

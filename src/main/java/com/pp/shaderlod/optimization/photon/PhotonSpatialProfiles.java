@@ -1,0 +1,9 @@
+package com.pp.shaderlod.optimization.photon;
+import java.util.*;import com.google.gson.*;import java.security.MessageDigest;
+/** Two complete source-owner profiles. No independent native-key relaxation. */
+public final class PhotonSpatialProfiles {
+ private static final Map<String,String> ELIGIBLE=load("eligible-generated394.json","2777acc1c8b1865fd4e765ca2858d71e8fe3ab1754d3c1469072e97e0c4fbb25");
+ private PhotonSpatialProfiles(){}
+ private static Map<String,String> load(String path,String sha){try(var in=PhotonSpatialProfiles.class.getResourceAsStream("/assets/shaderlod/photonspatial/"+path)){if(in==null)return Map.of();byte[] b=in.readAllBytes();if(!HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(b)).equals(sha))return Map.of();var m=new TreeMap<String,String>();for(var e:JsonParser.parseString(new String(b,java.nio.charset.StandardCharsets.UTF_8)).getAsJsonObject().entrySet())m.put(e.getKey(),e.getValue().getAsString());return m.size()==395?Map.copyOf(m):Map.of();}catch(Exception|LinkageError unavailable){return Map.of();}}
+ public static boolean eligible(Map<String,String> actual){if(ELIGIBLE.size()!=395||!actual.keySet().equals(ELIGIBLE.keySet()))return false;var normalized=new TreeMap<>(actual);String depth=normalized.get("SHADERLOD_PHOTON_DEPTH_PRIMING");if(!Set.of("0","1").contains(depth))return false;normalized.put("SHADERLOD_PHOTON_DEPTH_PRIMING","0");for(String key:List.of("SHADERLOD_SHARED_SPATIAL","SHADERLOD_LIGHTING_RATE_PROBE")){if(!Set.of("false","true").contains(normalized.get(key)))return false;normalized.put(key,ELIGIBLE.get(key));}String mip=normalized.get("SHADERLOD_PHOTON_DEAD_MIP_CHAIN");if(!Set.of("0","1").contains(mip))return false;normalized.put("SHADERLOD_PHOTON_DEAD_MIP_CHAIN","0");return ELIGIBLE.equals(normalized);}
+}

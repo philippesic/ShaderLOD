@@ -1,0 +1,60 @@
+{
+  "archive_sha256": "fed6c879e732cf7fc7bc6570ebb1def43235aa7e96f62859fbdbdbfa0b484b38",
+  "boundary": "Fresh original native398 Overworld Iris/Sodium compilation-path exports; not linked-program readback or executed command reduction",
+  "capture": {
+    "path": "/Users/pippo/github/shaderlod/dev/logs/cross-shader-performance-r3/quad-original-exports-r1/reimagined/captures/reimagined-quad-original.json",
+    "sha256": "be4f867b89cac3a89c208df27567d4bd55d4b35f782a2bcb168a04c2cb465f16"
+  },
+  "encoded_draw_translation": "_draw_id=a_LightAndData[3] vertex attribute; shifts(5,0,2), masks(7,3,7), *16 blocks; ordered absolute indices preserve attributes; u_RegionOffset stays native",
+  "exports": [
+    {
+      "bytes": 137744,
+      "original_path": "/Users/pippo/github/shaderlod/run-workloads/cross-shader-performance-r3/quad-original-exports-r1/reimagined/client/patched_shaders/084_sodium_gbuffers_terrain.fsh",
+      "path": "084_sodium_gbuffers_terrain.fsh",
+      "sha256": "eccd5eff4e6bb9534eecc71011efc9280335647b2053d9773e3f9f7a4022315b",
+      "unsafe_identity": false,
+      "unsafe_writes": false
+    },
+    {
+      "bytes": 27952,
+      "original_path": "/Users/pippo/github/shaderlod/run-workloads/cross-shader-performance-r3/quad-original-exports-r1/reimagined/client/patched_shaders/084_sodium_gbuffers_terrain.vsh",
+      "path": "084_sodium_gbuffers_terrain.vsh",
+      "sha256": "8767d240d4f8331cd68d111b355c4f3ef02c3a39c7e2a7c002ae7a32b12a2b41",
+      "unsafe_identity": false,
+      "unsafe_writes": false
+    },
+    {
+      "bytes": 137847,
+      "original_path": "/Users/pippo/github/shaderlod/run-workloads/cross-shader-performance-r3/quad-original-exports-r1/reimagined/client/patched_shaders/085_sodium_gbuffers_terrain.fsh",
+      "path": "085_sodium_gbuffers_terrain.fsh",
+      "sha256": "cbeb084fb0814dc15b778d166ded8ccbd7891e439d08b2fbc6810ec9489044ff",
+      "unsafe_identity": false,
+      "unsafe_writes": false
+    },
+    {
+      "bytes": 27952,
+      "original_path": "/Users/pippo/github/shaderlod/run-workloads/cross-shader-performance-r3/quad-original-exports-r1/reimagined/client/patched_shaders/085_sodium_gbuffers_terrain.vsh",
+      "path": "085_sodium_gbuffers_terrain.vsh",
+      "sha256": "8767d240d4f8331cd68d111b355c4f3ef02c3a39c7e2a7c002ae7a32b12a2b41",
+      "unsafe_identity": false,
+      "unsafe_writes": false
+    }
+  ],
+  "inventory": {
+    "path": "/Users/pippo/github/shaderlod/dev/logs/cross-shader-performance-r3/quad-original-exports-r1/reimagined/actual-original-source-inventory.json",
+    "sha256": "c036845a5437742341e36ed36a53db377fc32b6995da031e058060e47f282cbc"
+  },
+  "native_contract": "SOLID/CUTOUT; same-region/pass zero-pointer INTEGER shared quad IBO; 4q+[0,1,2,2,3,0]; preserve common full-batch preflight/native growth bound 268435452 and every fallback",
+  "options_sha256": "ccfca334aeaa074a74d1f8e9071b707d32161a6b771366fefcc0f87f3b1175f4",
+  "scope": "Exact source/native398/APIs, MC1.21.1/Neo21.1.253/Overworld/vanilla+mod_resources/noDH only",
+  "status": "SOURCE_ADMIT_FINITE_REIMAGINED_CANDIDATE; actual backend integration/consumption unverified",
+  "unverified": [
+    "runtime helper execution",
+    "controls/restoration",
+    "quality/motion/chunk change",
+    "FPS/GPU benefit",
+    "PBR/DH",
+    "ports/loaders/versions",
+    "actual shader LOD"
+  ]
+}

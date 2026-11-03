@@ -1,0 +1,88 @@
+{
+  "schema": 1,
+  "kind": "projected-material-primary-march",
+  "id": "complementary-projected-pom",
+  "name": "Complementary Shaders - Reimagined",
+  "version": "r5.9.3",
+  "version_id": "Bqen1mJX",
+  "primary_page": "https://modrinth.com/shader/complementary-reimagined",
+  "release_url": "https://cdn.modrinth.com/data/HVnmMxH1/versions/Bqen1mJX/ComplementaryReimagined_r5.9.3.zip",
+  "release_archive_sha256": "fed6c879e732cf7fc7bc6570ebb1def43235aa7e96f62859fbdbdbfa0b484b38",
+  "license": {
+    "id": "LicenseRef-Custom",
+    "name": "",
+    "url": "https://github.com/ComplementaryDevelopment/ComplementaryReimagined/blob/main/License.txt"
+  },
+  "license_note": "Private local research copy only. Complementary License Agreement 1.7 retains restrictive modification/redistribution conditions; this visually conservative adapter does not establish compliance for redistribution. Original credit: https://www.complementary.dev/",
+  "source_members": {
+    "License.txt": "e8d4ee004e2a706303e89651e5cafa2f06af4d04f373fa17fc8251880a995add",
+    "shaders/lib/common.glsl": "fccb97c8ff5094996ea073d1d1c732fb841e3c6baf1f160b066e73e29d6e7dbe",
+    "shaders/shaders.properties": "b29be050d6296bc5df769a66e351adbaaa9108eec801eb0442137a7a81266ab7",
+    "shaders/lib/materials/materialMethods/pomEffects.glsl": "59f27de86c3b6ee983a90db220dad8f4611a5bdce02ab085d03247a2cf7a1d21",
+    "shaders/lib/materials/materialHandling/customMaterials.glsl": "2acb156154410b42fd8cf1fc0d46dd97c09e6494925a7ff025794f2a74c11510",
+    "shaders/lib/util/dFdxdFdy.glsl": "67d8af93d13f67e2c7a4a24a3b552d97a117d1e066e7f7c3fbd794170727db44",
+    "shaders/lib/lighting/mainLighting.glsl": "53f8a5b4ef985001c17b3fa014b30eb4bd770e72b489bf521ad04904d28547b5",
+    "shaders/program/gbuffers_terrain.glsl": "1189f81fbfacde4749d28925f705b136f070ee83cd103c24580bc905b0e6f68f",
+    "shaders/block.properties": "27f5ffedc5e07ffc9889b4502b11800413af9283c9ac68bd5e59a46a2223a19e"
+  },
+  "patches": [
+    {
+      "path": "shaders/lib/materials/materialMethods/pomEffects.glsl",
+      "before": "#include \"/lib/util/dFdxdFdy.glsl\"",
+      "after": "#include \"/lib/util/dFdxdFdy.glsl\"\r\n#include \"/lib/shaderlod/projected_pom_adapter.glsl\""
+    },
+    {
+      "path": "shaders/lib/materials/materialMethods/pomEffects.glsl",
+      "before": "vec2 GetParallaxCoord(float parallaxFade, float dither, inout vec2 newCoord, inout float texDepth, inout vec3 traceCoordDepth) {",
+      "after": "vec2 GetParallaxCoord(float parallaxFade, float dither, inout vec2 newCoord, inout float texDepth, inout vec3 traceCoordDepth\r\n#if SHADERLOD_PROJECTED_POM == 1 && defined GBUFFERS_TERRAIN && !defined GBUFFERS_COLORWHEEL && !defined DISTANT_HORIZONS && !defined VOXY && !defined POM_ALLOW_CUTOUT\r\n    , float shaderlodDistanceBlocks, bool shaderlodOpaqueMaterial\r\n#endif\r\n) {"
+    },
+    {
+      "path": "shaders/lib/materials/materialMethods/pomEffects.glsl",
+      "before": "    vec2 interval = viewVector.xy * 0.25 * (1.0 - parallaxFade) * POM_DEPTH / (-viewVector.z * POM_QUALITY);",
+      "after": "#if SHADERLOD_PROJECTED_POM == 1 && defined GBUFFERS_TERRAIN && !defined GBUFFERS_COLORWHEEL && !defined DISTANT_HORIZONS && !defined VOXY && !defined POM_ALLOW_CUTOUT\r\n    int shaderlodMarchCount = shaderlod_complementary_pom_count(shaderlodDistanceBlocks, parallaxFade, shaderlodOpaqueMaterial);\r\n    invParallaxQuality = 1.0 / float(shaderlodMarchCount);\r\n    vec2 interval = viewVector.xy * 0.25 * (1.0 - parallaxFade) * POM_DEPTH / (-viewVector.z * float(shaderlodMarchCount));\r\n#else\r\n    vec2 interval = viewVector.xy * 0.25 * (1.0 - parallaxFade) * POM_DEPTH / (-viewVector.z * POM_QUALITY);\r\n#endif"
+    },
+    {
+      "path": "shaders/lib/materials/materialMethods/pomEffects.glsl",
+      "before": "    for (; i < POM_QUALITY && texDepth <= 1.0 - i * invParallaxQuality; i++) {",
+      "after": "#if SHADERLOD_PROJECTED_POM == 1 && defined GBUFFERS_TERRAIN && !defined GBUFFERS_COLORWHEEL && !defined DISTANT_HORIZONS && !defined VOXY && !defined POM_ALLOW_CUTOUT\r\n    for (; i < shaderlodMarchCount && texDepth <= 1.0 - i * invParallaxQuality; i++) {\r\n#else\r\n    for (; i < POM_QUALITY && texDepth <= 1.0 - i * invParallaxQuality; i++) {\r\n#endif"
+    },
+    {
+      "path": "shaders/lib/materials/materialHandling/customMaterials.glsl",
+      "before": "                parallaxLocalCoord = GetParallaxCoord(parallaxFade, dither, texCoordM, parallaxTexDepth, parallaxTraceCoordDepth);",
+      "after": "#if SHADERLOD_PROJECTED_POM == 1 && defined GBUFFERS_TERRAIN && !defined GBUFFERS_COLORWHEEL && !defined DISTANT_HORIZONS && !defined VOXY && !defined POM_ALLOW_CUTOUT\r\n                // Initial opaque material groups only; other mapped members in these\r\n                // groups remain an unverified quality boundary. No foliage/cutout group.\r\n                bool shaderlodOpaqueMaterial = color.a >= 0.999 &&\r\n                    (mat == 10080 || mat == 10152 || mat == 10156);\r\n                parallaxLocalCoord = GetParallaxCoord(parallaxFade, dither, texCoordM, parallaxTexDepth, parallaxTraceCoordDepth, lViewPos, shaderlodOpaqueMaterial);\r\n#else\r\n                parallaxLocalCoord = GetParallaxCoord(parallaxFade, dither, texCoordM, parallaxTexDepth, parallaxTraceCoordDepth);\r\n#endif"
+    },
+    {
+      "path": "shaders/shaders.properties",
+      "before": "    screen=<empty> <empty> [INFORMATION] SHADER_STYLE <profile> RP_MODE <empty> <empty> [PERFORMANCE_SETTINGS] [CAMERA_SETTINGS] [LIGHTING_SETTINGS] [ATMOSPHERE_SETTINGS] [MATERIAL_SETTINGS] [OTHER_SETTINGS]",
+      "after": "    screen=<empty> <empty> [INFORMATION] SHADER_STYLE <profile> RP_MODE <empty> <empty> [PERFORMANCE_SETTINGS] [CAMERA_SETTINGS] [LIGHTING_SETTINGS] [ATMOSPHERE_SETTINGS] [MATERIAL_SETTINGS] [OTHER_SETTINGS] [SHADERLOD_PROJECTED_MATERIAL]\r\nscreen.SHADERLOD_PROJECTED_MATERIAL = SHADERLOD_PROJECTED_POM"
+    }
+  ],
+  "additions": {
+    "shaders/lib/shaderlod/projected_pom_adapter.glsl": {
+      "path": "patches/adapters/projected-pom/complementary_adapter.glsl",
+      "sha256": "f2dcc1f5ceb5a433a5a876686f54bcd45a3e4195948a96b7cecf915cb43fb1b4"
+    },
+    "shaders/include/shaderlod/projected_material_budget.glsl": {
+      "path": "shaderpacks/common/shaders/include/shaderlod/projected_material_budget.glsl",
+      "sha256": "7985f3fe1f6a0aa4c61bbf0a8f0bb4003613ad169f2944226d331fbf7a552309"
+    },
+    "shaders/include/shaderlod/work_policy.glsl": {
+      "path": "shaderpacks/common/shaders/include/shaderlod/work_policy.glsl",
+      "sha256": "1b70d1b34959778ac34ae9316797c23d858531ff366b55373bae1c7ee55ee309"
+    },
+    "shaders/include/shaderlod/effect_policy.glsl": {
+      "path": "shaderpacks/common/shaders/include/shaderlod/effect_policy.glsl",
+      "sha256": "5df5427a1cfa51e68446978040235061ab6db60ec3f5079d40ffa0c39bad6943"
+    }
+  },
+  "validation": {
+    "glsl_static_checked": false,
+    "iris_rendered": false,
+    "dh_rendered": false,
+    "pbr_rendered": false,
+    "quality_checked": false,
+    "performance_measured": false
+  },
+  "shader_source_digest": "95e2a1eabb73a72b01422d06a6f636de85d4ee136358e16a1c762a55633cfef0",
+  "default_enabled": false
+}

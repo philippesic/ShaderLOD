@@ -1,9 +1,7 @@
-# ShaderLOD notes
+# ShaderLOD
 
-- For campaign or remote work, consult [STATUS](docs/STATUS.md) for current scope, pauses and allocation; use [Operations](docs/AGENT_OPERATIONS.md) for client/build/GPU procedures.
-- Use pinned shader-family adapters, preserving ancestry, licenses and native quality/AA. Avoid universal GLSL rewriting.
-- Identify the selected preset, dimension and active render graph before changing an adapter.
-- Preserve restoration for original/Off/Quality/Cancel, failed Apply and mismatched configurations.
-- Iris is required. DH is optional for users, but DH and PBR compatibility evidence are required. Support for one family/loader/version tuple does not establish another.
-- Use matched total-frame measurements for performance claims; see [Evaluation](docs/EVALUATION.md).
-- Keep worlds, downloads, builds, captures and raw logs out of Git. Commits use short subjects with no body or coauthors.
+- Current objective and pause: [STATUS](docs/STATUS.md).
+- For optimization work, search [experiment history](docs/EXPERIMENTS.md) for relevant prior attempts. Record meaningful outcomes with their scope and evidence.
+- Run optimization tests using the maintained command in the [benchmark guide](docs/BENCHMARK.md); fix harness defects in the harness, not through custom wrappers.
+- Preserve original shader packs, native quality and AA, and restoration on Off, Cancel and failed Apply. Use pinned family adapters and identify the preset, dimension and render graph. Iris is required; DH and PBR need compatibility evidence.
+- Reuse prepared client slots; profile/world copies must use `run_storage.copytree` and its capacity checks. Keep worlds, captures, raw logs and builds out of Git.

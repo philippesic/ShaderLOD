@@ -1,0 +1,20 @@
+package com.pp.shaderlod.fabric.dev;
+import java.util.*;
+import java.nio.file.Path;
+/** Explicit seven-family existing preview measurement policy; no shader rewriting or eligibility invention. */
+public final class PortFpsPolicy {
+ private PortFpsPolicy(){}
+ public static String family(String mode){return switch(mode){case "measure-makeup" -> "makeup";case "measure-sildur" -> "sildur";case "measure-bsl" -> "bsl";case "measure-reimagined" -> "reimagined";case "measure-unbound" -> "unbound";case "measure-photon" -> "photon";case "measure-bliss" -> "bliss";default -> "";};}
+ public static boolean opticalCostRequested(){return Boolean.getBoolean("shaderlod.dev.portRoundtrip")&&Boolean.getBoolean("shaderlod.dev.portPhotonOpticalCost")&&"photon-cloud".equals(System.getProperty("shaderlod.dev.portNativeFamily",""));}
+ public static boolean requested(){return opticalCostRequested()||Boolean.getBoolean("shaderlod.dev.portRoundtrip")&&!family(System.getProperty("shaderlod.dev.portNativeFamily","")).isEmpty();}
+ public static String adapter(String family){return switch(family){case "makeup" -> "makeup-ultra-fast-shaders";case "sildur" -> "sildurs-vibrant-shaders";case "bsl" -> "bsl-shaders";case "reimagined" -> "complementary-reimagined";case "unbound" -> "complementary-unbound";case "photon" -> "photon";case "bliss" -> "bliss-shader";default -> throw new IllegalArgumentException("Unknown FPS family");};}
+ public static Map<String,String> nativeOptions(String family){return switch(family){case "makeup" -> com.pp.shaderlod.integration.makeupquad.MakeUpQuadEligibility.nativeOptions();case "sildur" -> com.pp.shaderlod.integration.sildurquad.SildurQuadEligibility.nativeOptions();case "bsl" -> com.pp.shaderlod.integration.bslquad.BslQuadEligibility.nativeOptions();case "reimagined" -> com.pp.shaderlod.integration.reimaginedquad.ReimaginedQuadEligibility.nativeOptions();case "unbound" -> com.pp.shaderlod.integration.unboundquad.UnboundQuadEligibility.nativeOptions();case "photon" -> com.pp.shaderlod.integration.photonquad.PhotonQuadEligibility.nativeOptions();case "bliss" -> com.pp.shaderlod.integration.blissquad.BlissQuadEligibility.nativeOptions();default -> Map.of();};}
+ public static boolean sourceMatches(String family,Path archive){return switch(family){case "makeup" -> com.pp.shaderlod.integration.makeupquad.MakeUpQuadEligibility.validate(archive,nativeOptions(family)).eligible();case "sildur" -> com.pp.shaderlod.integration.sildurquad.SildurQuadEligibility.validate(archive,nativeOptions(family)).eligible();case "bsl" -> com.pp.shaderlod.integration.bslquad.BslQuadEligibility.validate(archive,nativeOptions(family)).eligible();case "reimagined" -> com.pp.shaderlod.integration.reimaginedquad.ReimaginedQuadEligibility.validate(archive,nativeOptions(family)).eligible();case "unbound" -> com.pp.shaderlod.integration.unboundquad.UnboundQuadEligibility.validate(archive,nativeOptions(family)).eligible();case "photon" -> com.pp.shaderlod.integration.photonquad.PhotonQuadEligibility.validate(archive,nativeOptions(family)).eligible();case "bliss" -> com.pp.shaderlod.integration.blissquad.BlissQuadEligibility.validate(archive,nativeOptions(family)).eligible();default -> false;};}
+ public static Map<String,String> generatedOptions(String family){
+  var options=new TreeMap<>(nativeOptions(family));if(options.isEmpty())return Map.of();
+  if(family.equals("photon")){options.put("SHADERLOD_LIVE_PIXEL_BUDGET","true");options.put("SHADERLOD_LIVE_PIXEL_BUDGET_INCLUDED","true");options.put("SHADERLOD_RENDER_BUDGET_INCLUDED","true");options.put("TAAU","true");options.put("TAAU_RENDER_SCALE","1.00");}
+  else if(family.equals("sildur")||family.equals("bliss")){options.put("SHADERLOD_EFFECT_ADAPTER","1");options.put("SHADERLOD_EFFECT_ADAPTER_INCLUDED","true");options.put("SHADERLOD_UNIFORM_SAMPLE_BUDGET_INCLUDED","true");}
+  else{options.put("SHADERLOD_REFINEMENT_ADAPTER","1");options.put("SHADERLOD_REFINEMENT_ADAPTER_INCLUDED","true");options.put("SHADERLOD_REFINEMENT_BUDGET_INCLUDED","true");}
+  return Map.copyOf(options);
+ }
+}

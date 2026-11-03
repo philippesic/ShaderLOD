@@ -8,7 +8,7 @@ import re
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
-BASE = ROOT / "dev/prism-testing-r1/staging/packs/bliss-shader/shaderpacks/Bliss_v2.1.2_(Chocapic13_Shaders_edit).zip"
+BASE = ROOT / "dependencies/upstream/pack-expansion/Bliss_v2.1.2_(Chocapic13_Shaders_edit).zip"
 OPTIONS = ROOT / "dev/logs/cross-shader-performance-r3/bliss-shader-lod-next-r1/original-sidecar.txt"
 OUT = ROOT / "dev/logs/speed-replication-r1/bliss-sky-elision"
 BASE_SHA = "f41db92acc585fe9ffe0cc124d6ecaea27cef9ded91129ebc2a8e60226947b2c"

@@ -24,7 +24,7 @@ public final class IrisRuntimeAccess implements AdapterRuntimeBinding.RuntimeAcc
                 throw new IllegalArgumentException("Pack source outside shaderpacks directory");
             }
             return new AdapterRuntimeBinding.Pack(pack, source,
-                    effectiveOptions(pack.getShaderPackOptions(), requiredOptionKeys));
+                    com.pp.shaderlod.optimization.sourcecache.EffectiveOptions.current(pack.getShaderPackOptions()));
         });
     }
 

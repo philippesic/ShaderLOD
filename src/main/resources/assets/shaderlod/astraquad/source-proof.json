@@ -1,0 +1,11 @@
+{
+  "original_archive_sha256": "70b6d8127a6733f0a19bd1d351b92709d6ee7496967ff49c4793d2c28c7a6c58",
+  "native_options_sha256": "298347d107f05379e2ab255059f768cc5542ab215ccfaad5a9c121c8778fba71",
+  "main_vertex_proof": "df2f3f159abd5d5a4df039b8fde5f8c5e372e5b109cd20ea1ebf0190828987d2",
+  "native_main_stages": 49,
+  "generated_exact_stages": 47,
+  "unused_bridge_stages": 2,
+  "input_producer": "actual SodiumPrograms.transformShaders RETURN; owner+pack identity; linked healthy pipeline still required",
+  "driver": "unverified; original Mac shader failure retained",
+  "api_input_producer_pending_live": true
+}

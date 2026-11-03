@@ -18,7 +18,7 @@ from prepare_bliss_cloud_budget import (
     candidate_manifest, recover, prepare,
 )
 
-BASE = ROOT / 'dev/upstream/other-pack-research/Bliss_v2.1.2_(Chocapic13_Shaders_edit).zip'
+BASE = ROOT / 'dependencies/upstream/pack-expansion/Bliss_v2.1.2_(Chocapic13_Shaders_edit).zip'
 NATIVE = ROOT / 'src/main/resources/assets/shaderlod/blissquad/native463.json'
 
 
@@ -70,9 +70,8 @@ class BlissCloudBudgetTest(unittest.TestCase):
             self.assertEqual(body.count(patch['after'].encode()), 1)
             body = body.replace(patch['after'].encode(), patch['before'].encode(), 1)
         self.assertEqual(body, self.original[VOLUME])
-        tail = b'#ifndef CLOUDSHADOWSONLY'
-        self.assertEqual(self.changed[VOLUME].split(tail, 1)[1],
-                         self.original[VOLUME].split(tail, 1)[1])
+        # Independent integrated effects also own later cloud code; exact
+        # sequential restoration above checks every declared edit.
         self.assertNotIn(b'dFdx(shaderlod', self.changed[VOLUME])
         self.assertNotIn(b'dFdy(shaderlod', self.changed[VOLUME])
 

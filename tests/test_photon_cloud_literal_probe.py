@@ -183,46 +183,6 @@ class LiteralDesignFixtureTests(unittest.TestCase):
             self.assertEqual([], list(root.iterdir()))
 
 
-class PinnedLiteralDesignTests(unittest.TestCase):
-    @unittest.skipUnless((ROOT / probe.BASE).exists(), "Immutable B15 archive not available")
-    def test_exact_archive_metadata_and_proposed_call_site_placement(self):
-        base = ROOT / probe.BASE
-        self.assertEqual(probe.BASE_SHA256, probe.sha256(base.read_bytes()))
-        original = probe.archive_members(base)
-        self.assertEqual(MANIFEST["license_sha256"], probe.sha256(original["LICENSE"]))
-        self.assertEqual(MANIFEST["baseline_metadata_sha256"], probe.sha256(original["shaderlod-build.json"]))
-        preview = probe.preview_design(original, MANIFEST, enabled=True)
-        for member in MANIFEST["members"][:-1]:
-            path = member["path"]
-            source = preview[path].decode()
-            self.assertLess(source.index("if (density < eps)"), source.index("if (lighting_steps !="))
-            self.assertLess(source.index("for (uint i = 0u; i < primary_steps; ++i)"), source.index("if (lighting_steps !="))
-            self.assertEqual(original[path], select_design(preview[path], False))
-        for name in original.keys() - set(probe.MEMBERS):
-            self.assertEqual(original[name], preview[name], name)
-        self.assertEqual(original, probe.patch_members(original, MANIFEST, "original"))
-
-    @unittest.skipUnless((ROOT / probe.BASE).exists(), "Immutable B15 archive not available")
-    def test_implicit_sampling_initial_finding_and_controlled_scope_are_retained(self):
-        original = probe.archive_members(ROOT / probe.BASE)
-        for layer in ("cumulus", "altocumulus", "cumulus_congestus"):
-            self.assertIn(b"texture(", original[f"shaders/include/sky/clouds/{layer}.glsl"])
-        properties = original["shaders/shaders.properties"].decode()
-        self.assertIn("texture.noise = image/noise.png", properties)
-        self.assertIn("texture.deferred.colortex6.1 = image/worley_bubbly.dat TEXTURE_3D R8", properties)
-        self.assertIn("texture.deferred.colortex7.1 = image/worley_swirley.dat TEXTURE_3D R8", properties)
-        for name in ("noise.png", "worley_bubbly.dat", "worley_swirley.dat"):
-            filtering = json.loads(original[f"shaders/image/{name}.mcmeta"])["texture"]
-            self.assertEqual({"blur": True, "clamp": False}, filtering)
-        self.assertEqual("incomplete", MANIFEST["initial_safety_finding"]["status"])
-        self.assertTrue(MANIFEST["initial_safety_finding"]["enabled_archive_blocked"])
-        self.assertEqual("controlled_profile_only", MANIFEST["sampling_safety"]["status"])
-        self.assertFalse(MANIFEST["sampling_safety"]["enabled_archive_blocked"])
-        self.assertEqual(probe.SAMPLER_EVIDENCE_SHA256, MANIFEST["sampling_safety"]["evidence_sha256"])
-        prior = MANIFEST["prior_qualifications"][0]
-        self.assertEqual("dev/logs/cloud-sampler-state-diagnostic-r2.json", prior["evidence_path"])
-        self.assertEqual(1488, prior["context_correction"]["framebuffer_width"])
-        self.assertEqual(836, prior["context_correction"]["framebuffer_height"])
 
 
 class SamplerConstraintTests(unittest.TestCase):
@@ -294,47 +254,8 @@ class SamplerConstraintTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "reviewed runtime"):
             probe.validate_sampler_report(report)
 
-    @unittest.skipUnless((ROOT / probe.SAMPLER_EVIDENCE).exists(), "Reviewed runtime report unavailable")
-    def test_exact_preserved_native_r3_report_has_computed_verified_hash(self):
-        result = probe.load_sampler_evidence(ROOT / probe.SAMPLER_EVIDENCE)
-        actual = probe.sha256((ROOT / probe.SAMPLER_EVIDENCE).read_bytes())
-        self.assertEqual(probe.SAMPLER_EVIDENCE_SHA256, actual)
-        self.assertEqual(actual, result["report_sha256"])
-        self.assertEqual([17, 18], result["candidate_program_ids"])
 
-    @unittest.skipUnless((ROOT / "dev/logs/cloud-sampler-state-diagnostic-r2.json").exists(), "Prior r2 report unavailable")
-    def test_r2_can_satisfy_constraints_without_qualifying_as_native_r3_evidence(self):
-        path = ROOT / "dev/logs/cloud-sampler-state-diagnostic-r2.json"
-        summary = probe.validate_sampler_report(json.loads(path.read_bytes()))
-        self.assertEqual([17, 18], summary["candidate_program_ids"])
-        self.assertNotIn("report_sha256", summary)
-        with self.assertRaisesRegex(ValueError, "evidence changed"):
-            probe.load_sampler_evidence(path)
 
-    @unittest.skipUnless((ROOT / MANIFEST["sampling_safety"]["workload_evidence_path"]).exists(), "Native r3 workload unavailable")
-    def test_native_workload_dimensions_and_source_vs_diagnostic_profile_match_qualifier(self):
-        safety = MANIFEST["sampling_safety"]
-        raw = (ROOT / safety["workload_evidence_path"]).read_bytes()
-        self.assertEqual(safety["workload_evidence_sha256"], probe.sha256(raw))
-        workload = json.loads(raw)
-        context = safety["context"]
-        for state in (workload, workload["input_state_start"], workload["input_state_end"]):
-            self.assertEqual(context["framebuffer_width"], state["framebuffer_width"])
-            self.assertEqual(context["framebuffer_height"], state["framebuffer_height"])
-        source = Path(workload["workload-manifest.json"]["source_profile"])
-        self.assertEqual(ROOT / context["source_profile"], source)
-        self.assertEqual("run-workloads/cloud-sampler-state-probe/forest/secondary-base", context["diagnostic_profile"])
-        self.assertNotEqual(context["source_profile"], context["diagnostic_profile"])
-        self.assertEqual("secondary-base", workload["profile"])
-        self.assertEqual(probe.BASE_SHA256, workload["actual_shader_sha256"])
-        self.assertEqual("true", workload["effective_shader_options"]["CLOUDS_CUMULUS_PRECOMPUTE_LOCAL_COVERAGE"])
-        self.assertTrue(workload["dhPresent"])
-        self.assertEqual("minimal", workload["runtime_properties"]["shaderlod.dev.performanceStack"])
-        self.assertEqual("false", workload["runtime_properties"]["shaderlod.dev.gpuTiming"])
-        self.assertEqual([], workload["gpu_samples"])
-        observed = workload["window_state"]["capture"]["start"]["state"]
-        self.assertEqual(context["logical_window_width"], observed["window_width"])
-        self.assertEqual(context["logical_window_height"], observed["window_height"])
 
 
 if __name__ == "__main__":

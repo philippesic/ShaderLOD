@@ -1,0 +1,19 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.optimization.solasdepth.mixin",
+  "plugin": "com.pp.shaderlod.optimization.solasdepth.mixin.SolasAoDepthMixinPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "SolasAoDepthCompositeMixin",
+    "SolasAoDepthLegacyDrawMixin",
+    "SolasAoDepthModernDrawMixin",
+    "SolasAoDepthDirectDrawMixin",
+    "SolasAoDepthPearlDirectDrawMixin",
+    "SolasAoDepthReloadMixin",
+    "SolasAoDepthDestroyMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

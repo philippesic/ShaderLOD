@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Prepare four pinned SSR cost controls at the observed sun-glint pose."""
+from run_storage import copytree as storage_copytree
 from contextlib import ExitStack
 import argparse
 import json
@@ -15,7 +16,7 @@ def prepare(output):
     output = output.resolve()
     if output.exists(): raise ValueError('Fresh output required')
     source = ROOT / 'run-workloads/photon-glint-isolations-r1/coastalwater'
-    original = ROOT / 'dev/upstream/photon_v1.3b.zip'
+    original = ROOT / 'dependencies/upstream/photon_v1.3b.zip'
     b15 = ROOT / 'build/photon-lighting-tier-no-atmosphere.zip'
     full = ROOT / 'build/Photon-SSRFarFullTraceProbe-enabled.zip'
     reduced = ROOT / 'build/Photon-SSRFarReducedTraceProbe-enabled.zip'
@@ -34,8 +35,8 @@ def prepare(output):
         for name, (source_arm, pack, pin, overrides) in arms.items():
             src, dst = source / source_arm, base / name
             if any((src / 'mods').glob('*DistantHorizons*.jar')): raise ValueError('SSR cost controls require physical DH absence')
-            shutil.copytree(src, dst, ignore=shutil.ignore_patterns('saves', 'logs', 'screenshots', 'camera-quality', 'benchmark.json', 'workload-request.json', 'workload-measurement.json'))
-            (dst / 'saves').mkdir(); shutil.copytree(world, dst / 'saves' / WORLD, ignore=shutil.ignore_patterns('session.lock'))
+            storage_copytree(src, dst, ignore=shutil.ignore_patterns('saves', 'logs', 'screenshots', 'camera-quality', 'benchmark.json', 'workload-request.json', 'workload-measurement.json'))
+            (dst / 'saves').mkdir(); storage_copytree(world, dst / 'saves' / WORLD, ignore=shutil.ignore_patterns('session.lock'))
             if world_fingerprint(dst / 'saves' / WORLD) != fingerprint: raise ValueError('Save copy differs')
             iris = read_option_properties((src / 'config/iris.properties').read_text()); old = iris['shaderPack']
             option_file = src / 'shaderpacks' / (old + '.txt')

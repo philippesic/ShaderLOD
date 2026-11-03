@@ -291,7 +291,7 @@ def analyze(path, lock_path=None, equivalences_path=None):
     path = Path(path)
     manifest = json.loads(path.read_text())
     require(manifest.get('schema') == 2 and manifest.get('status') == 'complete', 'Require complete schema-2 matrix')
-    lock_path = Path(lock_path or ROOT / 'dev/performance-mods.lock.json')
+    lock_path = Path(lock_path or ROOT / 'dependencies/performance-mods.lock.json')
     lock = json.loads(lock_path.read_text())
     lock_hash = hashlib.sha256(lock_path.read_bytes()).hexdigest()
     equivalences = load_equivalences(equivalences_path)
@@ -415,7 +415,7 @@ def analyze(path, lock_path=None, equivalences_path=None):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('manifest', type=Path)
-    parser.add_argument('--lock', type=Path, default=ROOT / 'dev/performance-mods.lock.json')
+    parser.add_argument('--lock', type=Path, default=ROOT / 'dependencies/performance-mods.lock.json')
     parser.add_argument('--equivalences', type=Path, help='Explicit opt-in to the exact reviewed API Base artifact pair on its pinned runtime')
     parser.add_argument('--output', type=Path)
     args = parser.parse_args()

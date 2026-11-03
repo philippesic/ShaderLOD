@@ -86,6 +86,52 @@ public final class ShaderLodEffectConfig {
     /** Allocation-free immutable map, published only after load/reload or a complete edit. */
     public static Map<Effect, Control> snapshot() { return controls; }
 
+    /** Complete requested values for portable tunings; transport protection is recomputed normally. */
+    public static synchronized Map<String, String> tuningValues() {
+        var result = new java.util.TreeMap<String, String>();
+        for (var effect : Effect.values()) {
+            var c = snapshot().get(effect);var p = c.requested();String k = effectKey(effect) + ".";
+            result.put(k + "mode", c.mode().name());
+            result.put(k + "near", Double.toString(p.bands().nearBlocks()));
+            result.put(k + "far", Double.toString(p.bands().farBlocks()));
+            result.put(k + "transition", Double.toString(p.bands().transitionBlocks()));
+            result.put(k + "medium", Double.toString(p.mediumWorkRatio()));
+            result.put(k + "low", Double.toString(p.farWorkRatio()));
+            result.put(k + "protect", Boolean.toString(p.preserveSalientLighting()));
+        }
+        return Map.copyOf(result);
+    }
+
+    /** Validate every member before changing any requested policy. Save/recovery uses the same transport. */
+    public static void applyTuningValues(Map<String, String> input) {
+        input = com.pp.shaderlod.lod.EffectTuningValues.canonical(input);
+        var validated = new EnumMap<Effect, Control>(Effect.class);
+        var expected = new java.util.HashSet<String>();
+        for (var effect : Effect.values()) {
+            String k = effectKey(effect) + ".";
+            for (var suffix : java.util.List.of("mode", "near", "far", "transition", "medium", "low", "protect")) expected.add(k + suffix);
+            Mode mode = Mode.valueOf(input.get(k + "mode"));
+            double near = Double.parseDouble(input.get(k + "near")), far = Double.parseDouble(input.get(k + "far"));
+            double width = Double.parseDouble(input.get(k + "transition"));
+            double medium = Double.parseDouble(input.get(k + "medium")), low = Double.parseDouble(input.get(k + "low"));
+            requireRange(near, 1, 4095, "near");requireRange(far, 2, 4096, "far");requireRange(width, 0, 512, "transition");
+            new DistanceBands(near, far, width);requireRange(medium, 0, 1, "medium");requireRange(low, 0, 1, "low");
+            if(low > medium || !java.util.Set.of("true", "false").contains(input.get(k + "protect"))) throw new IllegalArgumentException("Invalid tuning effect ratios/protection");
+            validated.put(effect, normalize(effect, mode, near, far, width, medium, low, Boolean.parseBoolean(input.get(k + "protect"))));
+        }
+        if(!input.keySet().equals(expected)) throw new IllegalArgumentException("Incomplete or unknown tuning effect fields");
+        synchronized (ShaderLodEffectConfig.class) {
+            if(!SPEC.isLoaded()) throw new IllegalStateException("Effects config is not loaded");
+            for(var entry : validated.entrySet()) {
+                var v = VALUES.get(entry.getKey());var c = entry.getValue();var p = c.requested();
+                v.mode.set(c.mode());v.near.set(p.bands().nearBlocks());v.far.set(p.bands().farBlocks());v.transition.set(p.bands().transitionBlocks());
+                v.mediumRatio.set(p.mediumWorkRatio());v.farRatio.set(p.farWorkRatio());v.protectLighting.set(p.preserveSalientLighting());
+            }
+            refresh();
+        }
+        SPEC.save();
+    }
+
     @SubscribeEvent
     public static void onConfigEvent(ModConfigEvent event) {
         if (event.getConfig().getSpec() != SPEC) return;

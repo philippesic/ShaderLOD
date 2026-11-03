@@ -1,8 +1,9 @@
 package com.pp.shaderlod;
 
-/** Ordinal is the version-2 shader uniform contract: 0/1/2. */
+/** Existing ordinals 0/1/2 stay stable; QUALITY is the additive full-budget preset. */
 public enum LodPreset {
     BALANCED,
     PERFORMANCE,
-    AGGRESSIVE
+    AGGRESSIVE,
+    QUALITY
 }

@@ -1,0 +1,198 @@
+{
+  "schema": 1,
+  "checked_on": "2026-10-06",
+  "inventory": [
+    {
+      "id": "astralex",
+      "name": "AstraLex Shaders",
+      "version": "93.0",
+      "version_id": "qSbtQS2o",
+      "published": "2024-06-16T14:35:35.447944Z",
+      "page": "https://modrinth.com/shader/astralex",
+      "license": {
+        "id": "LicenseRef-All-Rights-Reserved",
+        "name": "",
+        "url": null
+      },
+      "source_url": null,
+      "url": "https://cdn.modrinth.com/data/RphJSnEs/versions/qSbtQS2o/%C2%A7r%C2%A7lAstra%C2%A74%C2%A7lLex%C2%A7r%C2%A7l_By_LexBoosT_%C2%A74%C2%A7lV93.0%C2%A7r%C2%A7l.zip",
+      "filename": "\u00a7r\u00a7lAstra\u00a74\u00a7lLex\u00a7r\u00a7l_By_LexBoosT_\u00a74\u00a7lV93.0\u00a7r\u00a7l.zip",
+      "hashes": {
+        "sha1": "1041c11b811ee3546bca75cbb14c8c1916a2e9c3",
+        "sha512": "171131e16b65af67c3ed2fe75f3bde9d81f66b4e921ba3ca33187cff7c87b40e1f21637e95e2fa3a1567b0717374809b18adc240c5ef74622c8e9317ecc14f9d"
+      },
+      "original_shader_source_digest": null,
+      "adapter_shader_source_digest": null,
+      "adapter_archive_sha256": null,
+      "local_adapter": null
+    },
+    {
+      "id": "bliss-shader",
+      "name": "Bliss Shaders",
+      "version": "2.1.2",
+      "version_id": "kC2Y8q1P",
+      "published": "2025-11-23T03:14:46.231498Z",
+      "page": "https://modrinth.com/shader/bliss-shader",
+      "license": {
+        "id": "LicenseRef-All-Rights-Reserved",
+        "name": "",
+        "url": "https://github.com/X0nk/Bliss-Shader/blob/main/LICENSE.md"
+      },
+      "source_url": "https://github.com/X0nk/Bliss-Shader",
+      "url": "https://cdn.modrinth.com/data/ZvMtQlho/versions/kC2Y8q1P/Bliss_v2.1.2_%28Chocapic13_Shaders_edit%29.zip",
+      "filename": "Bliss_v2.1.2_(Chocapic13_Shaders_edit).zip",
+      "hashes": {
+        "sha512": "dafc60be4980ec40f40edc0f2625cb0976f3c9ce5ed86383146a120480826bb1de70ef5e38b7f1437294ed4d38c6ef3c82ebef0ae4e00b8cee165788c9c18280",
+        "sha1": "ded6c8a98305f8aff90ef781e7585b33b8452cfd"
+      },
+      "original_shader_source_digest": "dc7ef8dd62fb9db1ca500c1d300f206891035e5129dab81bf19c901f526ac2e4",
+      "adapter_shader_source_digest": null,
+      "adapter_archive_sha256": null,
+      "local_adapter": null
+    },
+    {
+      "id": "bsl-shaders",
+      "name": "BSL Shaders",
+      "version": "10.1.8",
+      "version_id": "Y68yiql9",
+      "published": "2026-09-21T12:25:21.321877Z",
+      "page": "https://modrinth.com/shader/bsl-shaders",
+      "license": {
+        "id": "LicenseRef-All-Rights-Reserved",
+        "name": "",
+        "url": null
+      },
+      "source_url": null,
+      "url": "https://cdn.modrinth.com/data/Q1vvjJYV/versions/Y68yiql9/BSL_v10.1.8.zip",
+      "filename": "BSL_v10.1.8.zip",
+      "hashes": {
+        "sha1": "e89818c8827d0131c102fb480c3c3446624db0df",
+        "sha512": "94a3c25d6820868db624e11347873e6b572e7cd571967d9ac6f4690ca5d37ca302a7645d85eec800e0654541e3825fba14d37b5a25d3996aaf038178552be26f"
+      },
+      "original_shader_source_digest": "198235a39479dee0964f272104844ff2ee32fd4438309a54d1421278986066bb",
+      "adapter_shader_source_digest": null,
+      "adapter_archive_sha256": null,
+      "local_adapter": null
+    },
+    {
+      "id": "complementary-reimagined",
+      "name": "Complementary Shaders - Reimagined",
+      "version": "r5.9.3",
+      "version_id": "Bqen1mJX",
+      "published": "2026-09-15T06:35:41.918796Z",
+      "page": "https://modrinth.com/shader/complementary-reimagined",
+      "license": {
+        "id": "LicenseRef-Custom",
+        "name": "",
+        "url": "https://github.com/ComplementaryDevelopment/ComplementaryReimagined/blob/main/License.txt"
+      },
+      "source_url": "https://github.com/ComplementaryDevelopment/ComplementaryReimagined",
+      "url": "https://cdn.modrinth.com/data/HVnmMxH1/versions/Bqen1mJX/ComplementaryReimagined_r5.9.3.zip",
+      "filename": "ComplementaryReimagined_r5.9.3.zip",
+      "hashes": {
+        "sha1": "838139b54cddb56b2e83cd260d8efd960ac536d6",
+        "sha512": "45304b1d7862afdb2177b7e6226fc9c6737911d17a4ad46cc9c519ca4deb935f05072cd337cd8b19a15bb8062b57b54eceec7bdee4cd572d94858e2946d37d85"
+      },
+      "original_shader_source_digest": "95e2a1eabb73a72b01422d06a6f636de85d4ee136358e16a1c762a55633cfef0",
+      "adapter_shader_source_digest": "18fcf18e20d753dac8e24309abe4b5e0f773b5c73c0bbe1bb18ae3b8f290f46b",
+      "adapter_archive_sha256": "5721f980badc919dd36b63fad761dc7a030f26a90705acb0ed4d2ed078a70350",
+      "local_adapter": "dependencies/upstream/pack-expansion/generated/ShaderLOD-Private-Aurora-reimagined-r2.zip"
+    },
+    {
+      "id": "complementary-unbound",
+      "name": "Complementary Shaders - Unbound",
+      "version": "r5.9.3",
+      "version_id": "B1kyfoUZ",
+      "published": "2026-09-15T06:36:17.528689Z",
+      "page": "https://modrinth.com/shader/complementary-unbound",
+      "license": {
+        "id": "LicenseRef-Custom",
+        "name": "",
+        "url": "https://github.com/ComplementaryDevelopment/ComplementaryShadersV4/blob/main/License.txt"
+      },
+      "source_url": "https://github.com/ComplementaryDevelopment/ComplementaryReimagined",
+      "url": "https://cdn.modrinth.com/data/R6NEzAwj/versions/B1kyfoUZ/ComplementaryUnbound_r5.9.3.zip",
+      "filename": "ComplementaryUnbound_r5.9.3.zip",
+      "hashes": {
+        "sha512": "a085d1d8cda67cd17a2b414eeba48bbd809da069f269bab46246235ec8fe714a275013c70d0504527b0987d810deddddba4564332414ab3b3bd7435932ff808c",
+        "sha1": "2ee08300e1d6f039e63eae8484dddf57b3aaaf67"
+      },
+      "original_shader_source_digest": "2212a1f3d796c70a337eabae6cd7e0309917f95434a5aaa31d8e77ebe6a5dc39",
+      "adapter_shader_source_digest": "cd60c29d8d3f2e1437b965f9c32ec0e41c95df0f25f47d18e7fb7b45377476fc",
+      "adapter_archive_sha256": "282927561afb47868ad439f624ce69fac3fecf348640a97be5eb1c57d143eef0",
+      "local_adapter": "dependencies/upstream/pack-expansion/generated/ShaderLOD-Private-Aurora-unbound-r2.zip"
+    },
+    {
+      "id": "makeup-ultra-fast-shaders",
+      "name": "MakeUp - Ultra Fast",
+      "version": "9.5g",
+      "version_id": "pgb0JjoN",
+      "published": "2026-10-04T05:28:42.138680Z",
+      "page": "https://modrinth.com/shader/makeup-ultra-fast-shaders",
+      "license": {
+        "id": "LGPL-3.0-or-later",
+        "name": "GNU Lesser General Public License v3.0 or later",
+        "url": null
+      },
+      "source_url": "https://github.com/javiergcim/MakeUpUltraFast",
+      "url": "https://cdn.modrinth.com/data/izsIPI7a/versions/pgb0JjoN/MakeUp-UltraFast-9.5g.zip",
+      "filename": "MakeUp-UltraFast-9.5g.zip",
+      "hashes": {
+        "sha512": "90a2f75eb073eaae5fe65f2ea5f8d656c122760c07ff75306728df4b162c42f88be531f026d174e035fea153f0ac5e227e8885d8b199335d3beadb6a58f79239",
+        "sha1": "57938ae6e1c83a2758b2e5dab80061d5002e88e7"
+      },
+      "original_shader_source_digest": "5077d90851e1f07aa9bc2551eadcc1d9b270694c9f3761924fd800188bebbf32",
+      "adapter_shader_source_digest": "ee4d9d08fc9e071cdffb1d63c920368cc7c5b1b05623d3f5a82c27505bdb4a51",
+      "adapter_archive_sha256": "b60de1855b1642276c27d6ea90b76ebb97116142d1047fa8cae40f13627f4b63",
+      "local_adapter": "dependencies/upstream/pack-expansion/generated/ShaderLOD-Private-makeup-ultra-fast-shaders-r2.zip"
+    },
+    {
+      "id": "sildurs-vibrant-shaders",
+      "name": "Sildur's Vibrant Shaders",
+      "version": "2.02",
+      "version_id": "J4RlzpKF",
+      "published": "2026-09-15T19:20:12.136825Z",
+      "page": "https://modrinth.com/shader/sildurs-vibrant-shaders",
+      "license": {
+        "id": "LicenseRef-All-Rights-Reserved",
+        "name": "",
+        "url": null
+      },
+      "source_url": null,
+      "url": "https://cdn.modrinth.com/data/z8EjLYqN/versions/J4RlzpKF/Sildur%27s%20Vibrant%20Shaders%20v2.02%20Extreme.zip",
+      "filename": "Sildur's Vibrant Shaders v2.02 Extreme.zip",
+      "hashes": {
+        "sha1": "2362f4dd27178879c30374c8f33965999bc350c8",
+        "sha512": "da6d9cfdfaedfe96741f7b61d69a650d4b2f7a02f744b9e0935873135b9b9fff74ea73c44c74c22c828e7a42783e25db767d5ef867d47f4d907e5aedb1294971"
+      },
+      "original_shader_source_digest": null,
+      "adapter_shader_source_digest": null,
+      "adapter_archive_sha256": null,
+      "local_adapter": null
+    },
+    {
+      "id": "solas-shader",
+      "name": "Solas Shader",
+      "version": "3.7b",
+      "version_id": "KcfQaN5J",
+      "published": "2026-08-23T09:13:09.670686Z",
+      "page": "https://modrinth.com/shader/solas-shader",
+      "license": {
+        "id": "LicenseRef-All-Rights-Reserved",
+        "name": "",
+        "url": null
+      },
+      "source_url": "https://github.com/Septonious/Solas-Shader",
+      "url": "https://cdn.modrinth.com/data/EpQFjzrQ/versions/KcfQaN5J/Solas%20Shader%20V3.7b.zip",
+      "filename": "Solas Shader V3.7b.zip",
+      "hashes": {
+        "sha1": "abf2e33feae040cc91894aea11e6d30750d50ee9",
+        "sha512": "5c184091c2d9b1d8ee0f4f7eb720fdcd9e2f4aea5a0d7a425927f205ee6d1a3577ad1411176d3705b5945e1f39d81a50cac479ed6f2054d49d90a6002f2878d9"
+      },
+      "original_shader_source_digest": null,
+      "adapter_shader_source_digest": null,
+      "adapter_archive_sha256": null,
+      "local_adapter": null
+    }
+  ]
+}

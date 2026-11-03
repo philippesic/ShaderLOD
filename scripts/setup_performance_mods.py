@@ -8,7 +8,7 @@ import urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-LOCK = ROOT / 'dev/performance-mods.lock.json'
+LOCK = ROOT / 'dependencies/performance-mods.lock.json'
 
 
 def validate(data, artifact):

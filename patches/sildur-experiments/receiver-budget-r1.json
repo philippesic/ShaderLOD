@@ -1,0 +1,161 @@
+{
+  "schema": 1,
+  "id": "sildur-receiver-budget-r1",
+  "version": "2.02 Extreme",
+  "kind": "private-projected-receiver-nested-quadrature",
+  "primary_page": "https://modrinth.com/shader/sildurs-vibrant-shaders",
+  "license_note": "Private personal local adaptation only. Original banners/members retained; no redistribution permission established.",
+  "original_archive_sha256": "824504bc937f9570277c0a809f5059ae4a5fe70c413cf4459b6ccff4dfed7ebe",
+  "original_members_digest": "da259479763f2af69398cf22458c1198ffb09311f6bc4e8e013c61b48511e52d",
+  "source_members": {
+    "shaders/deferred.fsh": "377379d56b9d2a4bdf1da63a91ee89fc05a803c002fa54e445520a3bed73b5f3",
+    "shaders/shaders.settings": "cacf013321aa8c1786e6d15050c014329fd90098db379a736992f68440e118fd",
+    "shaders/shaders.properties": "770ecfdd520373789771ab0176268336c66045ca806d15e0ceb1a0889ee09d9c",
+    "shaders/gbuffers_textured.vsh": "6e70328cd74167f0fa904214421de5a035e643cb79b172e97b58d47d28d0544f",
+    "shaders/gbuffers_textured.fsh": "3247149013d9d015d58393610a41bdf55e7bd22f314e4d2624f44f5ffe405c88",
+    "shaders/gbuffers_water.fsh": "d6ac5a57e559084b1d6f319a13d0f5c7fff822d22dfe76e61b7e4ba2ac5f75fe",
+    "shaders/composite2.fsh": "1cda48739eab8d1702554cde3f9595da430a7d58beca9e87564d39222c6ba23e",
+    "shaders/block.properties": "6d574d16e0d1c7328ffbdc689477b6ea248eb7300debb0a132dad946404f9a7b"
+  },
+  "shared_policy_sha256": "b3f2e631ea01984e677964f1ad98b333e925ef7216e2788213a72d83328ef074",
+  "native_count": 12,
+  "reduced_count": 9,
+  "transition_count": 12,
+  "omitted_indices": [
+    6,
+    7,
+    8
+  ],
+  "receiver_guard": "SHADERLOD_SILDUR_RECEIVER_BUDGET == 1 && defined IS_IRIS && defined IRIS_VERSION && IRIS_VERSION == 10812 && defined MC_VERSION && MC_VERSION == 12101 && defined MC_OS_MAC && defined Shadows && defined TAA && defined PCSS && nMap == 0 && shadow_samples == 12 && !defined raytracedShadows && !defined DISTANT_HORIZONS && !defined VOXY",
+  "supported_runtime_source_boundary": {
+    "minecraft": "1.21.1",
+    "iris": "1.8.12 NeoForge",
+    "iris_jar_sha256": "3e3f94d2d5cdcb8145c4385d521974aa2d8669b2cc212351f70cf06488182e83",
+    "os": "macOS",
+    "api": "OpenGL"
+  },
+  "validation": {
+    "driver_compiled": false,
+    "in_world_rendered": false,
+    "actual_work_proved": false,
+    "quality_checked": false,
+    "performance_measured": false,
+    "dh_rendered": false,
+    "pbr_rendered": false,
+    "other_versions_loaders": false
+  },
+  "patched_receiver_sha256": {
+    "native": "f8d7a311baf83bc2059680b923fe69af01be759d14fe33d9db2bab722dd4c2d9",
+    "candidate": "8797819be19b4b531d5812de63763b354ae817086ebdd0427bcda13530e3aa37",
+    "native-equivalent": "8797819be19b4b531d5812de63763b354ae817086ebdd0427bcda13530e3aa37"
+  },
+  "activation_options": {
+    "receipt": "dev/logs/mechanism-evaluation-r2/sildur-original-qualification-r2/captures/sildur-original-r2.json",
+    "receipt_sha256": "6b428459060e3bac58c1ba7ea7f3349852003594bde87d5e9cb1f6cfb7d1cc60",
+    "key": "loadedIrisOptions",
+    "count": 115,
+    "names_sha256": "8ccc73ea680fa9a580991ba4f3698f3b1ba8166b7f97e279178ed37ebfa54a96",
+    "values_sha256": "bd5a43e1c0e43237d68252c5c357dc6571d6b1a724661d92e034b1ce20291d6a",
+    "native_sidecar": "dev/logs/mechanism-evaluation-r2/sildur-original-qualification-r2/first-original-defaults.txt",
+    "native_sidecar_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "required_values": {
+      "Shadows": "true",
+      "ColoredShadows": "true",
+      "PCSS": "true",
+      "TAA": "true",
+      "shadow_samples": "12",
+      "shadowMapResolution": "3072",
+      "shadowDistance": "110.0",
+      "Nearshadowplane": "0.05",
+      "Farshadowplane": "0.8",
+      "nMap": "0",
+      "raytracedShadows": "false",
+      "Volumetric_Lighting": "false",
+      "WaterParallax": "true",
+      "Caustics": "true",
+      "TAA_sharpness": "0.6",
+      "Showbuffer": "0",
+      "Depth_of_Field": "false",
+      "Motionblur": "false"
+    },
+    "required_capture_fields": {
+      "irisSelectedPack": "Sildur's Vibrant Shaders v2.02 Extreme.zip",
+      "irisLoadedPack": "Sildur's Vibrant Shaders v2.02 Extreme.zip",
+      "shaderPackInUse": true,
+      "irisFallback": false,
+      "pendingIrisOptionQueue": {},
+      "mainModPresent": false,
+      "originalArchive": "Sildur's Vibrant Shaders v2.02 Extreme.zip",
+      "originalArchiveSha256": "824504bc937f9570277c0a809f5059ae4a5fe70c413cf4459b6ccff4dfed7ebe",
+      "selectedArchiveSha256": "824504bc937f9570277c0a809f5059ae4a5fe70c413cf4459b6ccff4dfed7ebe",
+      "selectedResourcePacks": [
+        "vanilla",
+        "mod_resources"
+      ],
+      "actuallyLoadedResourcePacks": [
+        "vanilla",
+        "mod_resources",
+        "mod/sodium",
+        "mod/fabric_rendering_data_attachment_v1",
+        "mod/iris",
+        "mod/fabric_renderer_api_v1",
+        "mod/fabric_api_base",
+        "mod/neoforge",
+        "mod/fabric_block_view_api_v2",
+        "mod/shaderlod_dev"
+      ],
+      "selectedFileResourceArchivesSha256": {},
+      "hasSelectedFileResourceArchives": false,
+      "fullscreen": true,
+      "focused": true,
+      "framebufferWidth": 1920,
+      "framebufferHeight": 1200,
+      "windowFramebufferWidth": 1920,
+      "windowFramebufferHeight": 1200,
+      "dimension": "minecraft:overworld",
+      "dhPresent": false,
+      "glVendor": "Apple",
+      "glRenderer": "Apple M3 Max",
+      "glVersion": "4.1 Metal - 91.7"
+    },
+    "runtime_evidence_inputs": [
+      {
+        "path": "dev/logs/mechanism-evaluation-r2/sildur-original-qualification-r2/prepare.json",
+        "sha256": "64a17bd0d98562be9b3d85f3b933ff63b1d70cc1c0caaec751589e1c6edb7a3f"
+      },
+      {
+        "path": "dev/logs/mechanism-evaluation-r2/sildur-original-qualification-r2/plan.json",
+        "sha256": "564172164c0c8b7f45b8edf82245872480ea11286479a559254b794ca8e194a3"
+      },
+      {
+        "path": "dev/logs/mechanism-evaluation-r2/sildur-original-qualification-r2/owner.json",
+        "sha256": "06f943f808921582f83b3364740b12414f66d0a61201878e85b2ec3748ae5b71"
+      },
+      {
+        "path": "dev/logs/mechanism-evaluation-r2/sildur-original-qualification-r2/console.log",
+        "sha256": "ac9b2c00627c5d3393b8dafd6ba2556bc5161f94c91abae50ba374db38e21b95"
+      },
+      {
+        "path": "dev/logs/mechanism-evaluation-r2/sildur-original-qualification-r2/parent-analysis.json",
+        "sha256": "dc0a5006aaa71a4e08266d750bb286183e943c0d2d9378a57a28a4707c507c00"
+      }
+    ],
+    "runtime_observed": {
+      "minecraft": "1.21.1",
+      "neoforge": "21.1.253",
+      "iris_log_label": "1.8.12-snapshot+mc1.21.1-local",
+      "iris_classpath": "dependencies/runtime/iris-neoforge-1.8.12+mc1.21.1.jar",
+      "iris_jar_sha256": "3e3f94d2d5cdcb8145c4385d521974aa2d8669b2cc212351f70cf06488182e83",
+      "sodium": "0.6.13+mc1.21.1",
+      "sodium_jar_sha256": "7acd7af2ef75ec883a6872c17494ead65e38025151eb08a1d60e36d34377f403"
+    },
+    "remaining_runtime_gates": [
+      "Candidate consumed source and linked permission",
+      "Actual deferred raster/output ratio1; receipt window/framebuffer1920x1200 is not a deferred viewport query",
+      "Actual shadowtex0/1 size3072, depth/compare/filter/LOD/border and RT2RGB16F sampler state",
+      "Actual reduced work/coverage, native-equivalent classifier overhead, still/motion quality, total-frame benefit, compatibility and restoration"
+    ]
+  },
+  "candidate_build_hold": null,
+  "prior_activation_refusal": "No complete original Sildur effective-option observation certified. Prior modified volumetric runtime is not the original baseline. Root must capture/freeze exact full original map and native sidecar before activating private candidate."
+}

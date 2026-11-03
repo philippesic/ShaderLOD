@@ -191,6 +191,48 @@ def ssr_cost_fixture(pin=TERRAIN_PHOTON_SHA256, reverse=False):
     return report
 
 
+class OriginalNullTests(unittest.TestCase):
+    def test_preregistered_all_four_total_and_gpu_stability(self):
+        from analyze_inprocess_control import original_null_screen
+        phases=[dict(frame_mean_ms=16, gpu_median_ms=12) for _ in range(4)]
+        result=original_null_screen(phases)
+        self.assertEqual(result['verdict'], 'stable-rendering-equivalent-null-diagnostic')
+        self.assertFalse(result['performanceEvidence'])
+        for metric in ('frame_mean_ms','gpu_median_ms'):
+            bad=copy.deepcopy(phases);bad[1][metric]*=1.04
+            self.assertEqual(original_null_screen(bad)['verdict'],'inconclusive-null-drift')
+            bad=copy.deepcopy(phases);bad[-1][metric]*=1.04
+            self.assertFalse(original_null_screen(bad)['metrics'][metric]['passes'])
+        with self.assertRaises(ValueError):original_null_screen(phases[:3])
+        bad=copy.deepcopy(phases);bad[2]['gpu_median_ms']=0
+        with self.assertRaises(ValueError):original_null_screen(bad)
+
+    def test_original_null_not_generic_patched_guard_bypass(self):
+        from analyze_inprocess_control import validate_state
+        state=fixture()['phases'][0]['inputStart']
+        state['original_null_control']=True
+        with self.assertRaises(ValueError):validate_state(state,False,PIN,original_null=True)
+        state['actual_shader_sha256']=ORIGINAL_PHOTON_SHA256
+        with self.assertRaises(ValueError):validate_state(state,False,ORIGINAL_PHOTON_SHA256,original_null=True)
+        state['effective_shader_options']={'QUALITY':'high'}
+        state['effective_shader_options_sha256']=hashlib.sha256(canonical(state['effective_shader_options']).encode()).hexdigest()
+        with self.assertRaises(ValueError):validate_state(state,False,ORIGINAL_PHOTON_SHA256,original_null=True)
+        with self.assertRaises(ValueError):validate_state(state,False,ORIGINAL_PHOTON_SHA256)
+
+    def test_null_header_requires_explicit_feature_full_policy_and_external_configuration(self):
+        for change in ('type','feature','flag','order','gpu','warm','wetness','config'):
+            report=fixture();report.update(original_null_control=True,selected_flag='lod.enabled',initial_warmup_seconds=30,settle_seconds=8)
+            report['instrumentation_properties'].update(benchmarkFeature='global',gpuSampleInterval='5',fixedWetness='1')
+            if change=='type':report['original_null_control']='true'
+            elif change=='feature':report['benchmark_feature']='effects'
+            elif change=='flag':report['selected_flag']='terrain.enabled'
+            elif change=='order':report['starting_order']='ON/OFF/ON/OFF'
+            elif change=='gpu':report['gpu_requested']=False
+            elif change=='warm':report['initial_warmup_seconds']=29
+            elif change=='wetness':report['instrumentation_properties']['fixedWetness']='0'
+            with self.subTest(change=change),self.assertRaises(ValueError):analyze_report(report)
+
+
 class InprocessTests(unittest.TestCase):
     def test_ssr_cost_three_exact_qualified_policies_in_both_orders(self):
         for pin in SSR_COST_ARCHIVES:
@@ -289,7 +331,7 @@ class InprocessTests(unittest.TestCase):
         self.assertIn('inputs.qualifySsrCostArchive()', session)
         self.assertIn('WorkloadInputs.validateSsrCost(state, expectedEnabled)', session)
         reference_setup = session.split('if (stableReference == null) {', 1)[1].split('} else checkIdentity(state);', 1)[0]
-        self.assertIn('if (feature.equals("ssr_cost")) cameraReference = Minecraft.getInstance().getCameraEntity();', reference_setup)
+        self.assertIn('if (feature.equals("ssr_cost") || isStrictCoreDiagnostic()) cameraReference = Minecraft.getInstance().getCameraEntity();', reference_setup)
         for pin in SSR_COST_ARCHIVES: self.assertIn(pin, inputs)
         for record in SSR_COST_ARCHIVES.values():
             self.assertIn(record['specular'], inputs); self.assertIn(record['settings'], inputs)

@@ -1,0 +1,19 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.optimization.astraao.mixin",
+  "plugin": "com.pp.shaderlod.optimization.astraao.mixin.AstraAoMixinPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "AstraAoPassView",
+    "AstraAoTargetsView",
+    "AstraAoCompositeMixin",
+    "AstraAoPipelineMixin",
+    "AstraAoReloadMixin",
+    "AstraAoPrepareMixin",
+    "AstraAoQuadDrawMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

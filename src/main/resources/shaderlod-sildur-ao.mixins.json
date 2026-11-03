@@ -1,0 +1,20 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.optimization.sildurao.mixin",
+  "plugin": "com.pp.shaderlod.optimization.sildurao.mixin.SildurAoMixinPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "SildurAoPassView",
+    "SildurAoTargetsView",
+    "SildurAoCompositeMixin",
+    "SildurAoPipelineMixin",
+    "SildurAoReloadMixin",
+    "SildurAoPrepareMixin",
+    "SildurAoQuadDrawMixin",
+    "SildurSpatialSamplerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

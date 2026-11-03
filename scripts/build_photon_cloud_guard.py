@@ -71,7 +71,7 @@ def build(output: Path | None = None, base: Path | None = None,
           arm: str = "disabled", root: Path = ROOT) -> dict:
     if arm not in ARMS:
         raise ValueError(f"Unknown experiment arm: {arm}")
-    base = (base or root / "dev/upstream/photon_v1.3b.zip").resolve()
+    base = (base or root / "dependencies/upstream/photon_v1.3b.zip").resolve()
     output = (output or root / "build" / f"Photon-CloudConsumerGuard-{arm}.zip").resolve()
     build_root = (root / "build").resolve()
     if not output.is_relative_to(build_root) or output.suffix.lower() != ".zip":

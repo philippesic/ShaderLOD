@@ -1,0 +1,57 @@
+{
+  "schema": 1,
+  "id": "solas-shader-deferred-metric-r1",
+  "pack": "solas-shader",
+  "name": "solas-shader",
+  "version": "3.7b",
+  "kind": "output-only-ray-metric-deferral",
+  "primary_page": "https://modrinth.com/shader/solas-shader",
+  "original_archive": "dependencies/upstream/pack-expansion/Solas Shader V3.7b.zip",
+  "original_archive_sha256": "b7dfe4c7353d677a92cc4c86b87bc0633f1014305d927ca6a482c303427bf825",
+  "license": "LicenseRef-All-Rights-Reserved",
+  "shader_source_digest": "f38d0fb61e858690ce3b40b0dfc8a0bd3212b4f3dbd42d0aa1c354dcdda35640",
+  "source_members": {
+    "drm/drm.readme": "141fcc55175786f57180f32edbe856c5c159a12e54aa46695986c0bedbd0fc47",
+    "shaders/lib/pbr/raytracer.glsl": "86511aa1fd4616c2f850ac98f9648ae60dd1bec988c58ed1bcb759a386d469f2",
+    "shaders/programs/deferred1.glsl": "47f31d07ef3d78ca079f22ca2c635a789ab2d1c5f75a81dfc4df21f94c7a16bb",
+    "shaders/programs/dh_water.glsl": "bd14e5142ca580ba26225031b1704de764252c9391b0935a79ccbff8029159a1",
+    "shaders/programs/gbuffers_water.glsl": "4b4d8f7b7d5da334dfc88c8236a2d9095520aa2e2e84cc0ffa027e7d4786ebbf",
+    "shaders/programs/voxyTranslucent.glsl": "8f624b395109708bf5d122a9c69fdfd6d8ae53b42335d4e4bc2b1ad25b78421b",
+    "shaders/shaders.properties": "9fed287e7da2d1bb7bb4c76e7397a5e0d1b7989b43a147d7d8f5508ffdb4a362"
+  },
+  "patches": [
+    {
+      "path": "shaders/lib/pbr/raytracer.glsl",
+      "before": "vec3 nvec3(vec4 pos) {",
+      "after": "#include \"/lib/shaderlod/deferred_metric.glsl\"\nvec3 nvec3(vec4 pos) {"
+    },
+    {
+      "path": "shaders/lib/pbr/raytracer.glsl",
+      "before": "    float dist = 0.0;",
+      "after": "    float dist = 0.0;\n    #if SHADERLOD_DEFERRED_METRIC == 1\n    bool shaderlodDeferMetric = shaderlod_defer_metric();\n    bool shaderlodSampledHit = false;\n    vec3 shaderlodLastHit = vec3(0.0);\n    #endif"
+    },
+    {
+      "path": "shaders/lib/pbr/raytracer.glsl",
+      "before": "        dist = abs(dot(normalize(start - hitViewPos), normal));",
+      "after": "        #if SHADERLOD_DEFERRED_METRIC == 1\n        // Uniform control precedes the expensive metric; traversal is native.\n        if (shaderlodDeferMetric) {\n            shaderlodLastHit = hitViewPos;\n            shaderlodSampledHit = true;\n        } else {\n        dist = abs(dot(normalize(start - hitViewPos), normal));\n        }\n        #else\n        dist = abs(dot(normalize(start - hitViewPos), normal));\n        #endif"
+    },
+    {
+      "path": "shaders/lib/pbr/raytracer.glsl",
+      "before": "    return vec4(pos, dist);",
+      "after": "    #if SHADERLOD_DEFERRED_METRIC == 1\n    // An off-screen break before sampling retains native zero/previous hit.\n    if (shaderlodDeferMetric && shaderlodSampledHit)\n        dist = abs(dot(normalize(start - shaderlodLastHit), normal));\n    #endif\n    return vec4(pos, dist);"
+    },
+    {
+      "path": "shaders/shaders.properties",
+      "before": "screen=SOLAS_BY_SEPTONIOUS <profile> <empty> [ATMOSPHERICS] [WATER] [PBR] [LIGHTING] [COLOR] [POST] [OTHER]",
+      "after": "screen=SOLAS_BY_SEPTONIOUS <profile> <empty> [ATMOSPHERICS] [WATER] [PBR] [LIGHTING] [COLOR] [POST] [OTHER] [SHADERLOD_METRIC]\nscreen.SHADERLOD_METRIC = SHADERLOD_DEFERRED_METRIC"
+    }
+  ],
+  "additions": {
+    "shaders/lib/shaderlod/deferred_metric.glsl": {
+      "path": "patches/solas-astralex-lod-r1/deferred_metric.glsl",
+      "sha256": "b0ac37e4b3d94cf4ac0aa7bfb2bbc1ff98f0f01a1fda2fd0d2de5f89166e0ee8"
+    }
+  },
+  "option_key": "SHADERLOD_DEFERRED_METRIC",
+  "default_enabled": false
+}

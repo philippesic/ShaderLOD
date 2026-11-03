@@ -46,7 +46,7 @@ def apply_patches(files: dict[str, bytes], manifest: dict) -> dict[str, bytes]:
 def build(output: Path, base: Path | None = None, root: Path = ROOT) -> dict:
     manifest_path = root / "patches/makeup/9.5g.json"
     manifest = json.loads(manifest_path.read_text())
-    candidate = next(item for item in json.loads((root / "dev/shader-candidates.lock.json").read_text())["candidates"]
+    candidate = next(item for item in json.loads((root / "dependencies/shader-candidates.lock.json").read_text())["candidates"]
                      if item["modrinth_project"] == "makeup-ultra-fast-shaders")
     release = candidate["release"]
     if manifest["base_version"] != release["version"] or manifest["source_revision"] != candidate["source"]["revision"]:
@@ -54,7 +54,7 @@ def build(output: Path, base: Path | None = None, root: Path = ROOT) -> dict:
     for algorithm, expected in manifest["archive_hashes"].items():
         if expected != release[algorithm]:
             raise ValueError(f"MakeUp manifest disagrees with candidate {algorithm}")
-    base = base or root / "dev/upstream/other-pack-research" / release["filename"]
+    base = base or root / "dependencies/upstream/other-pack-research" / release["filename"]
     source = base.read_bytes()
     for algorithm, expected in manifest["archive_hashes"].items():
         if hashlib.new(algorithm, source).hexdigest() != expected:

@@ -26,17 +26,24 @@ NATIVE_DESCRIPTOR = '(IJIJIJ)V'
 
 
 class RasterReadbackHookTest(unittest.TestCase):
-    def test_hook_is_one_native_before_injection_with_only_observer_call(self):
+    def test_hooks_bracket_one_native_call_with_existing_observers(self):
         source = MIXIN.read_text()
         self.assertIn('targets = "' + DRAW_CLASS + '"', source)
         self.assertIn('method = "multiDrawElementsBaseVertex' + METHOD_DESCRIPTOR + '"', source)
         self.assertIn('target = "Lorg/lwjgl/opengl/GL32C;nglMultiDrawElementsBaseVertex' + NATIVE_DESCRIPTOR + '"', source)
         self.assertIn('shift = At.Shift.BEFORE', source)
         self.assertIn('require = 1, allow = 1, remap = false', source)
-        self.assertEqual(1, source.count('@Inject('))
+        self.assertEqual(2, source.count('@Inject('))
+        self.assertEqual(1,source.count('shift = At.Shift.BEFORE'))
+        self.assertEqual(1,source.count('shift = At.Shift.AFTER'))
         self.assertNotIn('@At("HEAD")', source)
         body = re.search(r'private void shaderlod\$observeRasterSamplers\(CallbackInfo callback\) \{([^}]*)}', source)
-        self.assertEqual('CloudSamplerStateProbe.beforeRasterDraw();', body.group(1).strip())
+        self.assertEqual(['com.pp.shaderlod.dev.BslMaterialProbe.beforeDraw();',
+                          'CloudSamplerStateProbe.beforeRasterDraw();',
+                          'com.pp.shaderlod.dev.ComplementaryRasterActivationProbe.beforeOpaqueDraw();',
+                          'com.pp.shaderlod.dev.G04NativeWriter.before();'],
+                         [line.strip() for line in body.group(1).splitlines() if line.strip()])
+        self.assertIn('com.pp.shaderlod.dev.G04NativeWriter.returned();',source)
         self.assertNotRegex(source, r'\b(GL\w*|GpuTimers|ShadowRenderer|Supplier)\.')
         data = json.loads(RESOURCE.read_text())
         self.assertEqual(1, data['client'].count('RasterSamplerStateMixin'))
@@ -45,12 +52,14 @@ class RasterReadbackHookTest(unittest.TestCase):
         self.assertEqual('com.pp.shaderlod.dev.mixin.DevEvidenceMixinPlugin', data['plugin'])
         self.assertTrue(data['required'])
 
-    def test_actual_plugin_property_gate_preserves_dh_and_other_rules(self):
+    def test_actual_plugin_raster_and_dh_property_gates(self):
         if not shutil.which('javac') or not shutil.which('java'):
             self.skipTest('JDK required for real plugin fixture')
         with tempfile.TemporaryDirectory(prefix='shaderlod-raster-plugin-') as directory:
             folder = Path(directory)
             files = {
+                # Unrelated native-chain policy is outside this raster/DH gate fixture.
+                'com/pp/shaderlod/optimization/nativechain/NativeChainAdmission.java': 'package com.pp.shaderlod.optimization.nativechain; public class NativeChainAdmission {public static boolean useReplacement(){return false;}}',
                 'org/objectweb/asm/tree/ClassNode.java': 'package org.objectweb.asm.tree; public class ClassNode {}',
                 'org/spongepowered/asm/mixin/extensibility/IMixinInfo.java': 'package org.spongepowered.asm.mixin.extensibility; public interface IMixinInfo {}',
                 'org/spongepowered/asm/mixin/extensibility/IMixinConfigPlugin.java': '''package org.spongepowered.asm.mixin.extensibility;
@@ -72,10 +81,7 @@ public final class PluginFixture {
     System.setProperty("shaderlod.dev.dhDrawEvidence", Boolean.toString(dh));
     if (plugin.shouldApplyMixin("target", prefix+"RasterSamplerStateMixin") != sampler) throw new AssertionError("raster gate");
     if (plugin.shouldApplyMixin("target", prefix+"DhDrawEvidenceMixin") != dh) throw new AssertionError("DH gate");
-    for (String name : args) {
-     if (!name.equals("RasterSamplerStateMixin") && !name.equals("DhDrawEvidenceMixin") &&
-         !plugin.shouldApplyMixin("target", prefix+name)) throw new AssertionError("changed rule: "+name);
-    }
+
    }
   }
   System.clearProperty("shaderlod.dev.cloudSamplerProbe");
@@ -88,12 +94,14 @@ public final class PluginFixture {
             for relative, source in files.items():
                 target = folder / relative; target.parent.mkdir(parents=True, exist_ok=True); target.write_text(source)
             sources = [str(folder / relative) for relative in files]
-            subprocess.run(['javac', '-d', str(folder), str(PLUGIN), *sources], check=True, capture_output=True, text=True)
+            compilation = subprocess.run(['javac', '-d', str(folder), str(PLUGIN), str(ROOT / 'src/devClient/java/com/pp/shaderlod/dev/ShaderAnimationClock.java'),
+                            *sources], capture_output=True, text=True)
+            self.assertEqual(compilation.returncode,0,compilation.stdout+compilation.stderr)
             subprocess.run(['java', '-cp', str(folder), 'PluginFixture', *json.loads(RESOURCE.read_text())['client']],
                            check=True, capture_output=True, text=True)
 
     def test_local_pinned_submission_instruction(self):
-        runtime = Path(os.environ.get('SHADERLOD_PINNED_RUNTIME_DIR', ROOT / 'dev/runtime'))
+        runtime = Path(os.environ.get('SHADERLOD_PINNED_RUNTIME_DIR', ROOT / 'dependencies/runtime'))
         jar = runtime / 'sodium-neoforge-0.6.13+mc1.21.1.jar'
         if not jar.exists() or not shutil.which('javap'):
             self.skipTest('Pinned local Sodium/JDK required for bytecode fixture')

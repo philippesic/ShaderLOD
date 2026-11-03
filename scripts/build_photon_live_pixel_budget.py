@@ -9,14 +9,14 @@ import tempfile
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
-BASE = Path('dev/upstream/photon_v1.3b.zip')
+BASE = Path('dependencies/upstream/photon_v1.3b.zip')
 BASE_SHA256 = '120897768eaa8cb1f14a3e98f88dff009ae3204ee3b96904a4fe8586edfc1ead'
 MANIFEST = Path('patches/photon-experiments/live-pixel-budget.json')
 SWITCH = 'SHADERLOD_LIVE_PIXEL_BUDGET'
 SETTINGS = 'shaders/settings.glsl'
 GLOBAL = 'shaders/include/global.glsl'
-MEMBERS = (SETTINGS, GLOBAL, *('shaders/program/'+n+'.fsh' for n in
-    ('gbuffers_all_solid','gbuffers_all_translucent','gbuffers_damagedblock','gbuffers_armor_glint'))) + ('shaders/include/sky/clouds/cumulus.glsl',)
+MEMBERS = ('shaders/settings.glsl', 'shaders/include/global.glsl', 'shaders/program/gbuffers_all_solid.fsh', 'shaders/program/gbuffers_all_translucent.fsh', 'shaders/program/gbuffers_damagedblock.fsh', 'shaders/program/gbuffers_armor_glint.fsh', 'shaders/include/sky/clouds/cumulus.glsl', 'shaders/world1/deferred4.fsh', 'shaders/shaders.properties', 'shaders/include/surface/parallax.glsl', 'shaders/include/surface/material.glsl', 'shaders/include/surface/water_normal.glsl', 'shaders/include/lighting/ao/ssao.glsl', 'shaders/include/lighting/ao/gtao.glsl', 'shaders/include/lighting/shadows/ssrt.glsl', 'shaders/include/lighting/shadows/pcss.glsl', 'shaders/include/lighting/specular_lighting.glsl', 'shaders/include/fog/water_fog_vl.glsl', 'shaders/include/fog/overworld/raymarched.glsl', 'shaders/include/fog/lpv_fog.glsl', 'shaders/include/fog/end_fog_vl.glsl', 'shaders/include/sky/aurora.glsl', 'shaders/include/sky/clouds/cumulus_congestus.glsl', 'shaders/include/sky/clouds/cirrus.glsl', 'shaders/include/sky/clouds/altocumulus.glsl', 'shaders/include/buffers.glsl', 'shaders/include/misc/raytracer.glsl', 'shaders/program/d3_ao.fsh', 'shaders/program/d4_deferred_shading.fsh', 'shaders/program/dh_water.fsh', 'shaders/world0/deferred4.fsh', 'shaders/world-1/deferred4.fsh', 'shaders/program/gbuffers_all_solid.vsh')
+EXTRA_HELPERS = ('shaders/include/shaderlod/optimization_flags.glsl', 'shaders/include/shaderlod/uniform_sample_budget.glsl', 'shaders/include/shaderlod/refinement_budget.glsl', 'shaders/include/shaderlod/projected_material_budget.glsl', 'shaders/include/shaderlod/work_policy.glsl', 'shaders/include/shaderlod/effect_policy.glsl', 'shaders/include/shaderlod/contribution_tail.glsl', 'shaders/include/shaderlod/ao_history_gather_r1.glsl', 'shaders/include/shaderlod/procedural_footprint.glsl', 'shaders/include/shaderlod/procedural_parallax.glsl', 'shaders/include/shaderlod/procedural_water.glsl', 'shaders/include/shaderlod/volume_light_rate.glsl', 'shaders/include/shaderlod/reflection_depth_cache.glsl', 'shaders/include/shaderlod/shadow_budget.glsl', 'shaders/include/shaderlod/photon_linear_basis.glsl', 'shaders/include/shaderlod/photon_original_sky.glsl', 'shaders/include/shaderlod/photon_spatial_adapter.glsl', 'shaders/include/shaderlod/spatial_pipeline.glsl', 'shaders/include/shaderlod/spatial_plan.glsl', 'shaders/include/shaderlod/surface_region_continuity.glsl', 'shaders/program/shaderlod_spatial_prepass.fsh', 'shaders/world-1/deferred5.fsh', 'shaders/world-1/deferred5.vsh', 'shaders/world0/deferred5.fsh', 'shaders/world0/deferred5.vsh', 'shaders/world1/deferred5.fsh', 'shaders/world1/deferred5.vsh', 'shaders/include/shaderlod/photon_optional_flags.glsl', 'shaders/include/shaderlod/water_shadow_zero.glsl', 'shaders/include/shaderlod/sky_owned_atmosphere.glsl', 'shaders/include/shaderlod/water_lod.glsl', 'shaders/include/shaderlod/water_height_static.glsl', 'shaders/include/shaderlod/water_parallax_static.glsl', 'shaders/include/shaderlod/water_budget_policy.glsl', 'shaders/include/shaderlod/photon_shadow_field_control.glsl', 'shaders/program/shaderlod_photon_shadow_field.glsl', 'shaders/world0/shadowcomp1.fsh', 'shaders/world0/shadowcomp1.vsh', 'shaders/include/shaderlod/photon_shadow_query.glsl', 'shaders/include/shaderlod/receiver_footprint_budget_r1.glsl', 'shaders/include/shaderlod/photon_receiver.glsl', 'shaders/include/shaderlod/surface_continuity.glsl', 'shaders/include/shaderlod/lighting_rate_policy.glsl', 'shaders/program/shaderlod_lighting_prepass.fsh', 'shaders/include/shaderlod/photon_pom_prefix.glsl')
 HELPER = 'shaders/include/shaderlod/live_pixel_budget.glsl'
 COMMON_HELPER = 'shaders/include/shaderlod/render_budget.glsl'
 METADATA = 'shaderlod-live-pixel-budget.json'
@@ -77,6 +77,13 @@ def patch_members(files, manifest, arm, root=ROOT):
             raise ValueError('Conflicting/changed helper: ' + addition['path'])
         if arm != 'original':
             result[addition['path']] = helper
+    if tuple(manifest.get('additions', {})) != EXTRA_HELPERS:
+        raise ValueError('Unreviewed Photon union helper scope')
+    for target, addition in manifest['additions'].items():
+        helper = (root / addition['path']).read_bytes()
+        if target in files or sha256(helper) != addition['sha256']:
+            raise ValueError('Conflicting/changed union helper: ' + target)
+        if arm != 'original': result[target] = helper
     return result
 
 
@@ -102,15 +109,15 @@ def build(output=None, base=None, arm='disabled', root=ROOT):
         member_sha256={n:sha256(files[n]) for n in (*MEMBERS,*manifest['source_dependencies'],'LICENSE')},
         helper_sha256=manifest['addition']['sha256'] if arm != 'original' else None,
         common_helper_sha256=manifest['common_addition']['sha256'] if arm != 'original' else None,
-        added_shader_files=[] if arm == 'original' else sorted((HELPER, COMMON_HELPER)),
+        added_shader_files=[] if arm == 'original' else sorted((HELPER, COMMON_HELPER, *EXTRA_HELPERS)),
         preset_scales=manifest['preset_scales'],preset_ids=manifest['preset_ids'],
         preset_policy=manifest['preset_policy'],
-        activation='Private ON; primary cumulus and its lighting/ambient optical-depth density: Overworld/deferred1, version2/global1/Balanced, no DH/Voxy/PBR mapping/blocky clouds, native AA/TAAU graph retained; inherited pixel scaling only when native TAA+TAAU selected',
+        activation='Pinned optimization union: private ON, flagsVersion1/core2/global1/preset0..2 and independent named switches; native AA/TAAU, source-specific protected/excluded routes preserved',
         cloud_fallback='Off/Quality/missing bridge/unknown preset retain exact native density; primary and optical-depth native-zero bound preserves native march and shaping',
         fallback=manifest['unknown_bridge_fallback'],voxy_status=manifest['voxy_status'],
         transition_status=manifest['transition_status'],
         disabled_baseline='Private OFF is upstream source; global OFF/QUALITY preserve selected stock scale and graph, NOT original native with forced TAAU',
-        mod_linkage='Core version/global/preset; no per-effect or capability/source registration proof',
+        mod_linkage='Core plus flagsVersion1 and individual shaderlodOpt integers; source/control tests do not establish linked uniform/driver consumption',
         runtime_compilation='unverified',quality='unaccepted',performance='unmeasured',
         attribution='Photon v1.3b by Benjamin Stott (SixthSurge); upstream LICENSE retained')
     files[METADATA] = (json.dumps(metadata,indent=2,sort_keys=True)+'\n').encode()

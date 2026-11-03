@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.optimization.photonreceiver.mixin",
+  "plugin": "com.pp.shaderlod.optimization.photonreceiver.mixin.PhotonReceiverMixinPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "PhotonReceiverCompositeMixin",
+    "PhotonReceiverLegacyDrawMixin",
+    "PhotonReceiverReloadMixin",
+    "PhotonReceiverPipelineMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

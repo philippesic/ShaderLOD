@@ -1,0 +1,1 @@
+#define SHADERLOD_SOLAS_AO_HALF_RES 0 // [0 1]

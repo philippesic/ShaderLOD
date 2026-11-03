@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.port.dev.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "client": [
+    "PortRendererFramesMixin",
+    "PortCommandEvidenceMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

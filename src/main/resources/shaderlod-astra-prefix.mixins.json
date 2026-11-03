@@ -1,0 +1,21 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.astraprefix.mixin",
+  "plugin": "com.pp.shaderlod.astraprefix.mixin.AstraPrefixPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "AstraPrefixSodiumR8Mixin",
+    "AstraPrefixBuildR8Mixin",
+    "AstraPrefixPipelineR8Mixin",
+    "AstraPrefixAtlasR8Mixin",
+    "AstraPrefixTextureR8Mixin",
+    "AstraPrefixResourceR8Mixin",
+    "AstraPrefixWorldR8Mixin",
+    "AstraPrefixManagerR8Mixin",
+    "AstraPrefixFormatReloadR12Mixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

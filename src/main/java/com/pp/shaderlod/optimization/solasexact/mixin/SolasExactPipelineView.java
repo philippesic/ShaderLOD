@@ -1,0 +1,1 @@
+package com.pp.shaderlod.optimization.solasexact.mixin;import org.spongepowered.asm.mixin.Mixin;import org.spongepowered.asm.mixin.gen.Accessor;import net.irisshaders.iris.targets.RenderTargets;@Mixin(targets="net.irisshaders.iris.pipeline.IrisRenderingPipeline",remap=false)public interface SolasExactPipelineView{@Accessor("renderTargets")RenderTargets shaderlod$exactTargets();}

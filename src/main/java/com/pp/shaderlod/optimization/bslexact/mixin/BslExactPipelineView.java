@@ -1,0 +1,1 @@
+package com.pp.shaderlod.optimization.bslexact.mixin;import org.spongepowered.asm.mixin.Mixin;import org.spongepowered.asm.mixin.gen.Accessor;import net.irisshaders.iris.targets.RenderTargets;@Mixin(targets="net.irisshaders.iris.pipeline.IrisRenderingPipeline",remap=false)public interface BslExactPipelineView{@Accessor("renderTargets")RenderTargets shaderlod$exactTargets();}

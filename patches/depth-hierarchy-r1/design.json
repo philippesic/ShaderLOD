@@ -1,0 +1,19 @@
+{
+  "mechanism": "A8",
+  "status": "portable-two-consumer-design-rejected-scoped",
+  "candidate_emitted": false,
+  "source_receipt": "dev/logs/cross-shader-performance-r1/depth-hierarchy/source-resource-receipt.json",
+  "pack_pins": {
+    "photon": "120897768eaa8cb1f14a3e98f88dff009ae3204ee3b96904a4fe8586edfc1ead",
+    "bsl-shaders": "36b0a50ff7918bf10e9422c401d93779f9d0088a26acea975b435243f96930b5",
+    "solas-shader": "b7dfe4c7353d677a92cc4c86b87bc0633f1014305d927ca6a482c303427bf825",
+    "bliss-shader": "f41db92acc585fe9ffe0cc124d6ecaea27cef9ded91129ebc2a8e60226947b2c"
+  },
+  "source_originals_and_licenses": "untouched; no upstream GLSL redistributed",
+  "owned_processes": [],
+  "resource_design": "two-parity RG32F fragment atlases; full same-frame rebuild; 2 consumer sampler groups",
+  "rejection": "Solas exact portable contact skipping assumes a neutral factor from reversed-edge smoothstep; GLSL 4.10 leaves this undefined. Contact remains native, so no accepted second costly compatible consumer.",
+  "not_global_rejection": "Solas/BSL SSR-only hierarchy remains conditional on dominating residual cost and a complete depth/projection/filter/metadata certificate. Bliss optional GI not activated; Photon multiple epochs/domains remain separate.",
+  "disabled_baseline": "original ZIP byte-exact, no new allocations/builds; unknown DH/hand/filter/preset/runtime paths native",
+  "next_decisive_alternative": "Source-qualified SSR-only interval block skip preserving native endpoint metadata after original rendering, linked sampler and active iteration/cost evidence. Compare added full producer plus changed consumers to native projected traversal and metadata deferral; no overlap double counting."
+}

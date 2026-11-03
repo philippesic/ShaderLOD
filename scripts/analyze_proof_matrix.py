@@ -34,7 +34,7 @@ def qualified_fullscreen_lod_pair(baseline, candidate, baseline_report, candidat
         qualification = preparation.get(batch.QUALIFICATION_KEY, {})
         if qualification.get('qualified') is not True or qualification.get('manifest_sha256') != batch.MANIFEST_SHA256:
             raise ValueError('Fullscreen LOD source qualification missing or changed')
-        expected = batch.qualify_combined(ROOT/'dev/upstream/photon_v1.3b.zip', ROOT/'build'/batch.ARCHIVE_NAME,
+        expected = batch.qualify_combined(ROOT/'dependencies/upstream/photon_v1.3b.zip', ROOT/'build'/batch.ARCHIVE_NAME,
                                          preparation['runtime_lock'], ROOT)
         if qualification != expected:
             raise ValueError('Fullscreen LOD complete source/member/helper/metadata qualification differs')

@@ -12,6 +12,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class CloudSamplerStateMixin {
     @Inject(method = "renderQuad()V", at = @At("HEAD"), require = 1, remap = false)
     private void shaderlod$observeBoundSamplers(CallbackInfo callback) {
+        com.pp.shaderlod.dev.BloomCoordinateProbe.beforeQuad();
         CloudSamplerStateProbe.beforeQuadDraw();
+    }
+
+    @Inject(method = "renderQuad()V", at = @At("RETURN"), require = 1, remap = false)
+    private void shaderlod$observeQuadReturn(CallbackInfo callback) {
+        com.pp.shaderlod.dev.BloomCoordinateProbe.afterQuad();
+        CloudSamplerStateProbe.afterQuadDraw();
     }
 }

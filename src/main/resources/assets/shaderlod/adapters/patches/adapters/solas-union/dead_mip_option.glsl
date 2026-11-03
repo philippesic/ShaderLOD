@@ -1,0 +1,1 @@
+#define SHADERLOD_SOLAS_DEAD_MIP_CHAIN 0 // [0 1]

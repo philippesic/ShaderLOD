@@ -1,0 +1,5 @@
+package com.pp.shaderlod.optimization.photon.mixin;
+import com.pp.shaderlod.optimization.photon.*;import org.spongepowered.asm.mixin.extensibility.*;import org.objectweb.asm.tree.ClassNode;import java.util.*;
+public final class PhotonSpatialMixinPlugin implements IMixinConfigPlugin{
+ public void onLoad(String p){if(PhotonSpatialApiPins.exactApi())PhotonSpatialNormal.install();}public String getRefMapperConfig(){return null;}public boolean shouldApplyMixin(String target,String mixin){if(!PhotonSpatialApiPins.exactApi())return false;int kind=PhotonSpatialApiPins.drawKind();if(mixin.endsWith("LegacyDrawMixin"))return kind==0;if(mixin.endsWith("ModernDrawMixin"))return kind==1;if(mixin.endsWith("DirectDrawMixin")&&!mixin.endsWith("PearlDirectDrawMixin"))return kind==2;if(mixin.endsWith("PearlDirectDrawMixin"))return kind==3;if(mixin.endsWith("RenderPearlDrawMixin"))return false;return true;}public void acceptTargets(Set<String>a,Set<String>b){}public List<String>getMixins(){return null;}public void preApply(String t,ClassNode n,String m,IMixinInfo i){}public void postApply(String t,ClassNode n,String m,IMixinInfo i){}
+}

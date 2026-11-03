@@ -29,11 +29,15 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.ArrayDeque;
+import java.util.function.BooleanSupplier;
 
 /** Opt-in render-thread diagnostic. Getters can stall; this is not a timing run. */
 public final class CloudSamplerStateProbe {
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final boolean ENABLED = Boolean.getBoolean("shaderlod.dev.cloudSamplerProbe");
+    private static final boolean RASTER_FRAGMENT_SOURCE = Boolean.getBoolean("shaderlod.dev.rasterFragmentSource");
+    private static final boolean QUAD_SHADER_SOURCE = Boolean.getBoolean("shaderlod.dev.quadShaderSource");
     private static final int PROGRAM_LIMIT = 64;
     private static final int UNIFORM_LIMIT = 4096;
     private static final int UNIFORM_NAME_LIMIT = 1024;
@@ -50,6 +54,8 @@ public final class CloudSamplerStateProbe {
     private static final String[] CAPABILITY_UNIFORMS = {"shaderlodCapabilitiesVersion", "shaderlodVolumeIntegrationAvailable",
             "shaderlodOpaqueSpatialAvailable"};
     private static final Set<String> CAPABILITY_INTEGER_UNIFORMS = Set.of(CAPABILITY_UNIFORMS);
+    private static final String[] TEMPORAL_UNIFORMS = {"shaderlodTemporalVersion", "shaderlodHistoryReset"};
+    private static final Set<String> TEMPORAL_INTEGER_UNIFORMS = Set.of(TEMPORAL_UNIFORMS);
     private static final UniformReader GL_UNIFORM_READER = new UniformReader() {
         public int location(int program, String name) { return GL20.glGetUniformLocation(program, name); }
         public int integerValue(int program, int location) { return GL20.glGetUniformi(program, location); }
@@ -59,17 +65,227 @@ public final class CloudSamplerStateProbe {
     private static final JsonArray PROGRAMS = new JsonArray();
     private static JsonObject report;
     private static boolean failed;
+    // A separately armed, finite window never clears or extends the legacy
+    // startup probe's 64-program inventory. While present it excludes raster.
+    private static QuadSamplerWindow quadWindow;
+    private static BooleanSupplier quadBinding;
+    private static Path quadOutput;
+    private static final ArrayDeque<String> QUAD_NAMES = new ArrayDeque<>();
+    private static String pendingQuad;
+    private static int pendingProgram, pendingFrame;
 
     private CloudSamplerStateProbe() {}
 
+    public static JsonObject bslMipState() {
+        if (System.getProperty("shaderlod.dev.bslMipWitness", "").isBlank())
+            throw new IllegalStateException("Explicit BSL mip witness not requested");
+        int program = GL11.glGetInteger(GL20.GL_CURRENT_PROGRAM);
+        var entry = new JsonObject(); entry.addProperty("current_program", program);
+        entry.addProperty("draw_origin", "bsl-actual-c6-c7-pass");
+        entry.add("draw_state", sourceDrawState());
+        capture(program, entry, GL.getCapabilities());
+        return entry;
+    }
+
+    public static JsonObject makeupCloudState() {
+        if (System.getProperty("shaderlod.dev.makeupCloudWitness", "").isBlank())
+            throw new IllegalStateException("Explicit MakeUp original cloud witness not requested");
+        int program = GL11.glGetInteger(GL20.GL_CURRENT_PROGRAM);
+        var entry = new JsonObject(); entry.addProperty("current_program", program);
+        entry.addProperty("draw_origin", "makeup-actual-deferred-pass");
+        entry.addProperty("current_glfw_context", org.lwjgl.glfw.GLFW.glfwGetCurrentContext());
+        entry.add("draw_state", sourceDrawState());
+        capture(program, entry, GL.getCapabilities());
+        return entry;
+    }
+
+    public static JsonObject bloomCoordinateState() {
+        if (!Boolean.getBoolean("shaderlod.dev.fragmentWorkProbe")) throw new IllegalStateException("Explicit untimed coordinate witness required");
+        int program=GL11.glGetInteger(GL20.GL_CURRENT_PROGRAM);
+        var entry=new JsonObject();entry.addProperty("current_program",program);entry.addProperty("draw_origin","actual-bloom-coordinate-fullscreen-quad");
+        entry.add("draw_state",sourceDrawState());capture(program,entry,GL.getCapabilities());
+        entry.add("attached_fragment_source",attachedStageSource(program,GL20.GL_FRAGMENT_SHADER));
+        return entry;
+    }
+    public static JsonObject bslMaterialState() {
+        if (!Boolean.getBoolean("shaderlod.dev.fragmentWorkProbe")) throw new IllegalStateException("Explicit untimed material witness required");
+        int program=GL11.glGetInteger(GL20.GL_CURRENT_PROGRAM);
+        var entry=new JsonObject();entry.addProperty("current_program",program);entry.addProperty("draw_origin","actual-bsl-native-terrain-submission");
+        entry.add("draw_state",sourceDrawState());capture(program,entry,GL.getCapabilities());
+        entry.add("attached_fragment_source",attachedStageSource(program,GL20.GL_FRAGMENT_SHADER));
+        entry.add("attached_vertex_source",attachedStageSource(program,GL20.GL_VERTEX_SHADER));
+        return entry;
+    }
+
+    public static JsonObject sildurReceiverState() {
+        if (System.getProperty("shaderlod.dev.sildurReceiverWitness", "").isBlank())
+            throw new IllegalStateException("Explicit Sildur receiver witness not requested");
+        int program = GL11.glGetInteger(GL20.GL_CURRENT_PROGRAM);
+        var entry = new JsonObject(); entry.addProperty("current_program", program);
+        entry.addProperty("draw_origin", "sildur-actual-deferred-pass");
+        entry.add("draw_state", sourceDrawState());
+        capture(program, entry, GL.getCapabilities());
+        return entry;
+    }
+
+    public static JsonObject blissChainState() {
+        if (System.getProperty("shaderlod.dev.blissChainWitness", "").isBlank())
+            throw new IllegalStateException("Explicit pinned Bliss chain witness not requested");
+        int program = GL11.glGetInteger(GL20.GL_CURRENT_PROGRAM);
+        var entry = new JsonObject(); entry.addProperty("current_program", program);
+        entry.addProperty("draw_origin", "pinned-bliss-real-composite-pass");
+        entry.add("draw_state", sourceDrawState());
+        capture(program, entry, GL.getCapabilities());
+        return entry;
+    }
+
     /** Called at pinned Iris FullScreenQuadRenderer.renderQuad()V HEAD. */
     public static void beforeQuadDraw() {
+        if (quadWindow != null) { boundedQuad(false); return; }
         beforeDraw("iris-fullscreen-quad");
+    }
+
+    /** Existing native renderQuad RETURN, used only by an explicitly armed window. */
+    public static void afterQuadDraw() {
+        if (quadWindow != null) boundedQuad(true);
+    }
+
+    /** Exact native CompositeRenderer debug-group labels, including its outer group. */
+    public static void beginNamedPass(String name) {
+        if (quadWindow == null) return;
+        if (QUAD_NAMES.size() >= 8) { quadWindow.refuse("NATIVE_PASS_STACK_LIMIT"); return; }
+        QUAD_NAMES.push(name);
+    }
+
+    public static void endNamedPass() {
+        if (quadWindow != null && !QUAD_NAMES.isEmpty()) QUAD_NAMES.pop();
+    }
+
+    public static boolean quadCapturePresent() { return quadWindow != null; }
+
+    /** Caller owns archive/core/options validation and current context identity. No game/source mutation. */
+    public static JsonObject armQuadCapture(Path output, JsonObject binding, BooleanSupplier currentBinding) throws IOException {
+        if (!ENABLED || quadWindow != null || Files.exists(output))
+            throw new IllegalStateException("Opt-in sampler probe, fresh output and no prior window required");
+        if (!currentBinding.getAsBoolean()) throw new IllegalStateException("Bound diagnostic context changed before arm");
+        quadBinding = currentBinding; quadOutput = output;
+        QUAD_NAMES.clear(); pendingQuad = null;
+        quadWindow = new QuadSamplerWindow(System.nanoTime(), binding);
+        publishQuad();
+        return quadCaptureStatus();
+    }
+
+    public static JsonObject quadCaptureStatus() throws IOException {
+        if (quadWindow == null) { var absent = new JsonObject(); absent.addProperty("status", "IDLE"); return absent; }
+        if (quadWindow.active(System.nanoTime()) && !quadBinding.getAsBoolean()) quadWindow.refuse("BOUND_CONTEXT_CHANGED");
+        publishQuad();
+        JsonObject result = quadWindow.snapshot(System.nanoTime());
+        result.addProperty("report_path", quadOutput.toString());
+        return result;
+    }
+
+    public static JsonObject stopQuadCapture() throws IOException {
+        if (quadWindow == null) return quadCaptureStatus();
+        quadWindow.refuse("STOPPED_BEFORE_COMPLETE");
+        JsonObject result = quadCaptureStatus();
+        quadWindow = null; quadBinding = null; quadOutput = null;
+        pendingQuad = null; QUAD_NAMES.clear();
+        return result;
+    }
+
+    private static void boundedQuad(boolean returned) {
+        if (!quadWindow.active(System.nanoTime())) return;
+        try {
+            if (!quadBinding.getAsBoolean()) throw new IllegalStateException("BOUND_CONTEXT_CHANGED");
+            String name = QUAD_NAMES.peek();
+            if (!"deferred".equals(name) && !"deferred1".equals(name)) return;
+            int program = GL11.glGetInteger(GL20.GL_CURRENT_PROGRAM);
+            int frame = net.irisshaders.iris.uniforms.SystemTimeUniforms.COUNTER.getAsInt();
+            if (returned) {
+                if (!name.equals(pendingQuad) || program != pendingProgram || frame != pendingFrame)
+                    throw new IllegalStateException("NATIVE_QUAD_IDENTITY_CHANGED");
+                quadWindow.returned(name, program, frame, System.nanoTime());
+                pendingQuad = null;
+            } else {
+                var entry = new JsonObject(); entry.addProperty("current_program", program);
+                entry.addProperty("draw_origin", "armed-iris-fullscreen-quad");
+                entry.add("draw_state", boundedDrawState());
+                capture(program, entry, GL.getCapabilities());
+                quadWindow.before(name, program, frame, entry, System.nanoTime());
+                pendingQuad = name; pendingProgram = program; pendingFrame = frame;
+            }
+            publishQuad();
+        } catch (Exception refusal) {
+            quadWindow.refuse(refusal.toString());
+            try { publishQuad(); } catch (IOException io) { LOGGER.warn("Bounded quad report unavailable", io); }
+        }
+    }
+
+    /** Read-only bindings restored exactly, including when an allocation getter fails. */
+    private static JsonObject boundedDrawState() {
+        var draw = sourceDrawState();
+        int previous = GL11.glGetInteger(GL11.GL_TEXTURE_BINDING_2D);
+        try {
+            for (var value : draw.getAsJsonArray("color_attachments")) {
+                var attachment = value.getAsJsonObject();
+                if (attachment.get("object_type").getAsInt() != GL11.GL_TEXTURE) continue;
+                if (attachment.get("texture_level").getAsInt() != 0) continue;
+                GL11.glBindTexture(GL11.GL_TEXTURE_2D, attachment.get("texture").getAsInt());
+                attachment.add("allocation", textureLevelZero(GL11.GL_TEXTURE_2D, GL.getCapabilities()));
+            }
+        } finally { GL11.glBindTexture(GL11.GL_TEXTURE_2D, previous); }
+        return draw;
+    }
+
+    private static void publishQuad() throws IOException {
+        JsonObject value = quadWindow.snapshot(System.nanoTime());
+        value.addProperty("report_path", quadOutput.toString());
+        Files.createDirectories(quadOutput.getParent());
+        Path temporary = Files.createTempFile(quadOutput.getParent(), "g06-quad-", ".tmp");
+        try {
+            Files.writeString(temporary, new GsonBuilder().setPrettyPrinting().create().toJson(value));
+            Files.move(temporary, quadOutput, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
+        } finally { Files.deleteIfExists(temporary); }
     }
 
     /** Optional pinned Sodium native draw-site hook; the hook owner proves binding order. */
     public static void beforeRasterDraw() {
+        if (quadWindow != null) return;
         beforeDraw("sodium-raster-submission");
+    }
+
+    /** One local readback owned by the exact-frame diagnostic; no global probe or file output. */
+    public static JsonObject historySamplerState() {
+        if (!Boolean.getBoolean("shaderlod.dev.pixelHistoryCapture"))
+            throw new IllegalStateException("Exact-frame history capture is not enabled");
+        int program = GL11.glGetInteger(GL20.GL_CURRENT_PROGRAM);
+        JsonObject entry = new JsonObject();
+        entry.addProperty("current_program", program);
+        entry.addProperty("draw_origin", "exact-frame-history-consumer");
+        entry.addProperty("gl_renderer", GL11.glGetString(GL11.GL_RENDERER));
+        entry.addProperty("gl_version", GL11.glGetString(GL11.GL_VERSION));
+        capture(program, entry, GL.getCapabilities());
+        return entry;
+    }
+
+    /** Existing getter, only for the explicit source-joined settled sampler mode. */
+    public static JsonObject joinedSamplerState() {
+        String request = System.getProperty("shaderlod.dev.settledConsumerUniforms", "");
+        if (request.isBlank()) throw new IllegalStateException("Source-joined sampler request is absent");
+        try {
+            Path path = Path.of(request);
+            if (Files.size(path) > 8192 || !com.google.gson.JsonParser.parseString(Files.readString(path))
+                    .getAsJsonObject().get("adapter").getAsString().equals("photon-atmosphere-lut"))
+                throw new IllegalStateException("Explicit atmosphere sampler mode is absent");
+        } catch (IOException failure) { throw new IllegalStateException("Cannot inspect explicit sampler mode", failure); }
+        int program = GL11.glGetInteger(GL20.GL_CURRENT_PROGRAM);
+        JsonObject entry = new JsonObject();
+        entry.addProperty("current_program", program);
+        entry.addProperty("draw_origin", "source-joined-settled-consumer");
+        entry.addProperty("gl_renderer", GL11.glGetString(GL11.GL_RENDERER));
+        entry.addProperty("gl_version", GL11.glGetString(GL11.GL_VERSION));
+        capture(program, entry, GL.getCapabilities());
+        return entry;
     }
 
     private static void beforeDraw(String origin) {
@@ -83,6 +299,12 @@ public final class CloudSamplerStateProbe {
             entry.addProperty("timestamp_utc", Instant.now().toString());
             entry.addProperty("current_program", program);
             entry.addProperty("draw_origin", origin);
+            if ((RASTER_FRAGMENT_SOURCE && origin.equals("sodium-raster-submission"))
+                    || (QUAD_SHADER_SOURCE && origin.equals("iris-fullscreen-quad"))) {
+                entry.add("attached_fragment_source", attachedStageSource(program, GL20.GL_FRAGMENT_SHADER));
+                entry.add("attached_vertex_source", attachedStageSource(program, GL20.GL_VERTEX_SHADER));
+                entry.add("draw_state", sourceDrawState());
+            }
             try {
                 capture(program, entry, capabilities);
             } catch (RuntimeException exception) {
@@ -111,6 +333,8 @@ public final class CloudSamplerStateProbe {
         result.addProperty("gl_vendor", GL11.glGetString(GL11.GL_VENDOR));
         result.addProperty("glsl_version", GL11.glGetString(GL20.GL_SHADING_LANGUAGE_VERSION));
         result.addProperty("sampler_objects_supported", samplerObjects(capabilities));
+        result.addProperty("raster_fragment_source_enabled", RASTER_FRAGMENT_SOURCE);
+        result.addProperty("quad_shader_source_enabled", QUAD_SHADER_SOURCE);
         result.addProperty("anisotropy_supported", anisotropy(capabilities));
         result.addProperty("max_combined_texture_units", GL11.glGetInteger(GL20.GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS));
         result.addProperty("program_limit", PROGRAM_LIMIT);
@@ -123,6 +347,8 @@ public final class CloudSamplerStateProbe {
         result.addProperty("effect_uniform_selection", "Effects version plus six Volumetrics and six OpaqueLighting fields; version/mode scalar int, bands/retained ratios scalar float; actual linked readbacks, not mod suppliers or inferred consumption");
         result.addProperty("capability_uniform_schema", 1);
         result.addProperty("capability_uniform_selection", "Capabilities version, VolumeIntegration availability and OpaqueSpatial availability scalar int linked-program readbacks; actual sampled values, no source detection or supplier invocation; first observed draw may precede capability availability");
+        result.addProperty("temporal_uniform_schema", 1);
+        result.addProperty("temporal_uniform_selection", "Separate temporal version/reset scalar int linked-program readbacks; no supplier invocation or inferred values; first draw per numeric program does not prove switch lifetime, consuming stage or settled state");
         result.addProperty("texture_allocation_scope", "Bound nonzero 2D/3D texture level 0 dimensions/internal format only; no other mip images, completeness, texture contents or physical fetch counts");
         result.addProperty("raster_hook", "Optional pinned Sodium native draw-site callback; availability/injection verified separately by hook owner");
         result.addProperty("scope", "First draw per numeric GL program ID in this JVM across enabled fullscreen/raster hooks; per-entry draw_origin is not a program-name or shader-stage proof");
@@ -132,10 +358,140 @@ public final class CloudSamplerStateProbe {
         return result;
     }
 
+    /** Fresh-JVM, no-reload readback at the existing native draw hook; no executed-loop counts. */
+    public static JsonObject g04FragmentSource(int program) {
+        return attachedStageSource(program, GL20.GL_FRAGMENT_SHADER, false);
+    }
+
+    private static JsonObject attachedStageSource(int program, int requestedType) {
+        return attachedStageSource(program, requestedType, true);
+    }
+
+    private static JsonObject attachedStageSource(int program, int requestedType, boolean publish) {
+        try {
+            if (program == 0 || GL20.glGetProgrami(program, GL20.GL_LINK_STATUS) == GL11.GL_FALSE)
+                return unknown("Current raster program is absent or unlinked");
+            int attached = GL20.glGetProgrami(program, GL20.GL_ATTACHED_SHADERS);
+            if (attached < 1 || attached > 4) return unknown("Attached shader count outside the bounded contract");
+            var result = new JsonObject();
+            int fragment = 0;
+            try (MemoryStack stack = MemoryStack.stackPush()) {
+                var count = stack.mallocInt(1);
+                var ids = stack.mallocInt(attached);
+                GL20.glGetAttachedShaders(program, count, ids);
+                if (count.get(0) != attached) return unknown("Incomplete attached shader inventory");
+                for (int index = 0; index < attached; index++) {
+                    int shader = ids.get(index);
+                    if (GL20.glGetShaderi(shader, GL20.GL_SHADER_TYPE) != requestedType) continue;
+                    if (fragment != 0) return unknown("Ambiguous attached requested stage");
+                    fragment = shader;
+                }
+                if (fragment == 0) return unknown("No attached requested stage");
+                int lengthWithTerminator = GL20.glGetShaderi(fragment, GL20.GL_SHADER_SOURCE_LENGTH);
+                // Native Unbound terrain exports are about 145 KiB. Capture complete
+                // diagnostic source within a finite cap; exact hash joins still apply.
+                if (lengthWithTerminator < 2 || lengthWithTerminator > 262144)
+                    return unknown("Fragment source absent or exceeds 256 KiB; no truncated match");
+                var length = stack.mallocInt(1);
+                var bytes = org.lwjgl.BufferUtils.createByteBuffer(lengthWithTerminator);
+                GL20.glGetShaderSource(fragment, length, bytes);
+                int returned = length.get(0);
+                if (returned != lengthWithTerminator - 1)
+                    return unknown("Returned source length differs from the complete NUL-terminated contract");
+                byte[] complete = new byte[returned];
+                bytes.get(complete);
+                boolean isFragment = requestedType == GL20.GL_FRAGMENT_SHADER;
+                result.addProperty("status", isFragment ? "complete_attached_fragment_bytes" : "complete_attached_vertex_bytes");
+                result.addProperty("shader_type", requestedType);
+                result.addProperty(isFragment ? "fragment_shader" : "vertex_shader", fragment);
+                result.addProperty(isFragment ? "fragment_delete_marked" : "vertex_delete_marked", GL20.glGetShaderi(fragment, GL20.GL_DELETE_STATUS) != GL11.GL_FALSE);
+                result.addProperty("source_length_with_terminator", lengthWithTerminator);
+                result.addProperty("returned_bytes", returned);
+                String digest = java.util.HexFormat.of().formatHex(java.security.MessageDigest.getInstance("SHA-256").digest(complete));
+                result.addProperty("sha256", digest);
+                if (!publish) {
+                    String compact = new String(complete, java.nio.charset.StandardCharsets.UTF_8).replaceAll("\\s+", "");
+                    result.addProperty("g04_class_encoding", compact.contains("iris_FragData1=vec4(blockType==0.0?1.0:(blockType==2.0?3.0:(blockType==3.0?4.0:257.0)))")
+                            && GL30.glGetFragDataLocation(program, "iris_FragData1") == 1);
+                    return result;
+                }
+                Path sourceFile = Minecraft.getInstance().gameDirectory.toPath().resolve("logs/cloud-sampler-sources")
+                        .resolve(program + "-" + (isFragment ? "fragment-" : "vertex-") + digest + ".glsl").toAbsolutePath().normalize();
+                publishAttachedSource(sourceFile, complete);
+                result.addProperty("source_path", sourceFile.toString());
+            }
+            var client = Minecraft.getInstance();
+            var pipeline = net.irisshaders.iris.Iris.getPipelineManager().getPipelineNullable();
+            var pack = net.irisshaders.iris.Iris.getCurrentPack().orElse(null);
+            JsonObject defines = new JsonObject();
+            for (String key : java.util.List.of("IS_IRIS", "MC_GL_VERSION", "MC_GLSL_VERSION", "GL_ARB_shader_texture_lod"))
+                defines.add(key, com.google.gson.JsonNull.INSTANCE);
+            boolean observedDefines = false;
+            // The authentic native baseline omits main classes. This optional
+            // adapter-owned define join is unavailable there; attached source
+            // and actual sampler readbacks remain valid without inventing it.
+            if (net.neoforged.fml.ModList.get().isLoaded("shaderlod")
+                    && pack instanceof com.pp.shaderlod.optimization.sourcecache.IrisCompiledSource.PackView view) {
+                var input = view.shaderlod$makeupPackInput();
+                if (input != null) {
+                    observedDefines = true;
+                    for (var pair : input.glslDefines()) if (defines.has(pair.key())) defines.addProperty(pair.key(), pair.value());
+                }
+            }
+            result.addProperty("captured_glsl_defines_observed", observedDefines);
+            result.add("captured_glsl_defines", defines);
+            result.addProperty("pack_identity", System.identityHashCode(pack));
+            boolean shadow = net.irisshaders.iris.shadows.ShadowRenderingState.areShadowsCurrentlyBeingRendered();
+            result.addProperty("shadow_rendering", shadow);
+            result.addProperty("loaded_pack", net.irisshaders.iris.Iris.getCurrentPackName());
+            result.addProperty("pipeline_identity", System.identityHashCode(pipeline));
+            result.addProperty("world_present", client.level != null);
+            if (client.level != null) result.addProperty("dimension", client.level.dimension().location().toString());
+            result.addProperty("iris_frame_source", net.irisshaders.iris.uniforms.SystemTimeUniforms.COUNTER.getAsInt());
+            result.addProperty("iris_time_source", net.irisshaders.iris.uniforms.SystemTimeUniforms.TIMER.getFrameTimeCounter());
+            if (!shadow && pipeline != null && pipeline.getSodiumPrograms() != null) {
+                var translucent = pipeline.getSodiumPrograms().getProgram(
+                    net.caffeinemc.mods.sodium.client.render.chunk.terrain.DefaultTerrainRenderPasses.TRANSLUCENT);
+                if (translucent != null) {
+                    result.addProperty("named_translucent_program", translucent.handle());
+                    result.addProperty("matches_named_translucent_program", translucent.handle() == program);
+                }
+            }
+            if (GL11.glGetInteger(GL20.GL_CURRENT_PROGRAM) != program
+                    || net.irisshaders.iris.Iris.getPipelineManager().getPipelineNullable() != pipeline
+                    || net.irisshaders.iris.Iris.getCurrentPack().orElse(null) != pack)
+                return unknown("Program/pipeline identity changed during readback");
+            result.addProperty("scope", "Attached complete source at pre-submission; exact export hash join required. Fresh JVM only; no water pixel coverage, hit, loop-count, quality or speed proof");
+            return result;
+        } catch (Exception failure) {
+            return unknown("Attached source readback unavailable: " + failure);
+        }
+    }
+
+    /** Bounded collision read; a failed export never publishes a partial final file. */
+    private static void publishAttachedSource(Path output, byte[] complete) throws IOException {
+        if (complete.length == 0 || complete.length > 262143) throw new IOException("Source exceeds diagnostic bound");
+        Files.createDirectories(output.getParent());
+        if (Files.exists(output)) {
+            if (Files.size(output) != complete.length) throw new IOException("Existing diagnostic source size differs");
+            try (var input = Files.newInputStream(output)) {
+                if (!java.util.Arrays.equals(complete, input.readNBytes(complete.length + 1)))
+                    throw new IOException("Existing diagnostic source differs from attached bytes");
+            }
+            return;
+        }
+        Path temporary = Files.createTempFile(output.getParent(), "shader-source-", ".tmp");
+        try {
+            Files.write(temporary, complete);
+            Files.move(temporary, output, StandardCopyOption.ATOMIC_MOVE);
+        } finally { Files.deleteIfExists(temporary); }
+    }
+
     private static void capture(int program, JsonObject entry, GLCapabilities capabilities) {
         entry.add("core_uniforms", coreUniforms(program, Map.of(), "not inspected; see capture_failure if present"));
         entry.add("effect_uniforms", effectUniforms(program, Map.of(), "not inspected; see capture_failure if present", GL_UNIFORM_READER));
         entry.add("capability_uniforms", capabilityUniforms(program, Map.of(), "not inspected; see capture_failure if present", GL_UNIFORM_READER));
+        entry.add("temporal_uniforms", temporalUniforms(program, Map.of(), "not inspected; see capture_failure if present", GL_UNIFORM_READER));
         int linked = GL20.glGetProgrami(program, GL20.GL_LINK_STATUS);
         entry.addProperty("linked", linked != GL11.GL_FALSE);
         if (linked == GL11.GL_FALSE) {
@@ -143,6 +499,7 @@ public final class CloudSamplerStateProbe {
             entry.add("core_uniforms", coreUniforms(program, Map.of(), "current program not linked"));
             entry.add("effect_uniforms", effectUniforms(program, Map.of(), "current program not linked", GL_UNIFORM_READER));
             entry.add("capability_uniforms", capabilityUniforms(program, Map.of(), "current program not linked", GL_UNIFORM_READER));
+            entry.add("temporal_uniforms", temporalUniforms(program, Map.of(), "current program not linked", GL_UNIFORM_READER));
             return;
         }
         int count = GL20.glGetProgrami(program, GL20.GL_ACTIVE_UNIFORMS);
@@ -168,6 +525,13 @@ public final class CloudSamplerStateProbe {
             linkedUniforms.add(uniform.name(), identity);
         }
         entry.add("linked_uniforms", linkedUniforms);
+        if (RASTER_FRAGMENT_SOURCE || QUAD_SHADER_SOURCE) {
+            entry.add("native_frame_uniforms", uniformReadbacks(program, uniforms,
+                count > UNIFORM_LIMIT || maxLength > UNIFORM_NAME_LIMIT
+                    ? "not found in bounded linked inventory" : "inactive, optimized out, or undeclared",
+                new String[]{"frameCounter", "frameTimeCounter", "rainStrength", "wetness", "viewWidth", "viewHeight", "near", "far", "shaderlodReceiverReductionPermission", "shaderlodMakeupCloudSaturationPermission", "shaderlodMakeupEarlyAlphaEnabled", "iris_currentAlphaTest", "shaderlod_makeup_merged_input_enabled", "shaderlod_makeup_region_page_count", "shaderlodOptimizationFlagsVersion", "shaderlodOptWaterWaveBudget", "shaderlodOptAoBudget", "shaderlodOptAoDepthReuse", "shaderlodOptAoSkyElision", "shaderlodOptReflectionTraceBudget", "shaderlodOptReflectionProjectedRefinement", "shaderlodOptReflectionTraceFade", "shaderlodOptReflectionRefinement", "isEyeInWater"},
+                Set.of("frameCounter", "shaderlodMakeupEarlyAlphaEnabled", "shaderlod_makeup_merged_input_enabled", "shaderlod_makeup_region_page_count", "shaderlodOptimizationFlagsVersion", "shaderlodOptWaterWaveBudget", "shaderlodOptAoBudget", "shaderlodOptAoDepthReuse", "shaderlodOptAoSkyElision", "shaderlodOptReflectionTraceBudget", "shaderlodOptReflectionProjectedRefinement", "shaderlodOptReflectionTraceFade", "shaderlodOptReflectionRefinement", "isEyeInWater"), GL_UNIFORM_READER));
+        }
         entry.add("core_uniforms", coreUniforms(program, uniforms, count > UNIFORM_LIMIT
                 ? "not found in truncated active-uniform scan"
                 : "inactive, optimized out, or undeclared; linked introspection cannot distinguish"));
@@ -175,6 +539,9 @@ public final class CloudSamplerStateProbe {
                 ? "not found in bounded/truncated active-uniform scan"
                 : "inactive, optimized out, or undeclared; linked introspection cannot distinguish", GL_UNIFORM_READER));
         entry.add("capability_uniforms", capabilityUniforms(program, uniforms, count > UNIFORM_LIMIT || maxLength > UNIFORM_NAME_LIMIT
+                ? "not found in bounded/truncated active-uniform scan"
+                : "inactive, optimized out, or undeclared; linked introspection cannot distinguish", GL_UNIFORM_READER));
+        entry.add("temporal_uniforms", temporalUniforms(program, uniforms, count > UNIFORM_LIMIT || maxLength > UNIFORM_NAME_LIMIT
                 ? "not found in bounded/truncated active-uniform scan"
                 : "inactive, optimized out, or undeclared; linked introspection cannot distinguish", GL_UNIFORM_READER));
         JsonObject samplers = new JsonObject();
@@ -210,6 +577,60 @@ public final class CloudSamplerStateProbe {
         entry.addProperty("active_texture_after", GL11.glGetInteger(GL13.GL_ACTIVE_TEXTURE));
     }
 
+    private static JsonObject sourceDrawState() {
+        var result = new JsonObject();
+        try (MemoryStack stack = MemoryStack.stackPush()) {
+            var viewport = stack.mallocInt(4);
+            GL11.glGetIntegerv(GL11.GL_VIEWPORT, viewport);
+            var values = new JsonArray();
+            for (int index = 0; index < 4; index++) values.add(viewport.get(index));
+            result.add("viewport", values);
+            int framebuffer = GL11.glGetInteger(GL30.GL_DRAW_FRAMEBUFFER_BINDING);
+            result.addProperty("draw_framebuffer", framebuffer);
+            result.addProperty("draw_buffer1", GL11.glGetInteger(GL20.GL_DRAW_BUFFER1));
+            var attachments = new JsonArray();
+            if (framebuffer != 0) {
+                for (int index = 0; index < 4; index++) {
+                    var attachment = new JsonObject();
+                    int point = GL30.GL_COLOR_ATTACHMENT0 + index;
+                    int type = GL30.glGetFramebufferAttachmentParameteri(GL30.GL_DRAW_FRAMEBUFFER, point,
+                        GL30.GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE);
+                    attachment.addProperty("index", index);
+                    attachment.addProperty("object_type", type);
+                    if (type == GL11.GL_TEXTURE) {
+                        attachment.addProperty("texture", GL30.glGetFramebufferAttachmentParameteri(GL30.GL_DRAW_FRAMEBUFFER,
+                            point, GL30.GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME));
+                        attachment.addProperty("texture_level", GL30.glGetFramebufferAttachmentParameteri(GL30.GL_DRAW_FRAMEBUFFER,
+                            point, GL30.GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LEVEL));
+                    }
+                    attachments.add(attachment);
+                }
+            }
+            result.add("color_attachments", attachments);
+            var depth = new JsonObject();
+            if (framebuffer != 0) {
+                int type = GL30.glGetFramebufferAttachmentParameteri(GL30.GL_DRAW_FRAMEBUFFER,
+                    GL30.GL_DEPTH_ATTACHMENT, GL30.GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE);
+                depth.addProperty("object_type", type);
+                if (type == GL11.GL_TEXTURE || type == GL30.GL_RENDERBUFFER) {
+                    depth.addProperty("object", GL30.glGetFramebufferAttachmentParameteri(GL30.GL_DRAW_FRAMEBUFFER,
+                        GL30.GL_DEPTH_ATTACHMENT, GL30.GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME));
+                    if (type == GL11.GL_TEXTURE)
+                        depth.addProperty("texture_level", GL30.glGetFramebufferAttachmentParameteri(GL30.GL_DRAW_FRAMEBUFFER,
+                            GL30.GL_DEPTH_ATTACHMENT, GL30.GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LEVEL));
+                }
+                depth.addProperty("depth_write", GL11.glGetBoolean(GL11.GL_DEPTH_WRITEMASK));
+                depth.addProperty("depth_test", GL11.glIsEnabled(GL11.GL_DEPTH_TEST));
+                depth.addProperty("scope", "Current draw depth attachment identity; compare with actual sampled depthtex1. No depth contents or all-draw immutability proof.");
+            } else depth.addProperty("status", "DEFAULT_FRAMEBUFFER_NO_TEXTURE_IDENTITY");
+            result.add("depth_attachment", depth);
+            result.addProperty("scope", "Read-only current viewport, depth and first four color FBO attachments; not raster coverage, texture contents or fragment invocation count");
+        } catch (Exception failure) {
+            result.addProperty("failure", failure.toString());
+        }
+        return result;
+    }
+
     private static JsonObject coreUniforms(int program, Map<String, Uniform> uniforms, String missingReason) {
         return coreUniforms(program, uniforms, missingReason, GL_UNIFORM_READER);
     }
@@ -230,16 +651,23 @@ public final class CloudSamplerStateProbe {
         return result;
     }
 
+    static JsonObject temporalUniforms(int program, Map<String, Uniform> uniforms, String missingReason, UniformReader reader) {
+        JsonObject result = uniformReadbacks(program, uniforms, missingReason, TEMPORAL_UNIFORMS, TEMPORAL_INTEGER_UNIFORMS, reader);
+        result.getAsJsonObject("shaderlodTemporalVersion").addProperty("expected_protocol_version", 1);
+        return result;
+    }
+
     private static JsonObject uniformReadbacks(int program, Map<String, Uniform> uniforms, String missingReason,
                                               String[] names, Set<String> integers, UniformReader reader) {
         JsonObject result = new JsonObject();
         for (String name : names) {
-            int expectedType = integers.contains(name) ? GL11.GL_INT : GL11.GL_FLOAT;
+            int expectedType = (name.equals("shaderlodMakeupEarlyAlphaEnabled") || name.equals("shaderlod_makeup_merged_input_enabled")) ? GL20.GL_BOOL
+                : integers.contains(name) ? GL11.GL_INT : GL11.GL_FLOAT;
             Uniform uniform = uniforms.get(name);
             JsonObject value = new JsonObject();
             result.add(name, value);
             value.addProperty("expected_type", expectedType);
-            value.addProperty("expected_type_name", expectedType == GL11.GL_INT ? "int" : "float");
+            value.addProperty("expected_type_name", expectedType == GL20.GL_BOOL ? "bool" : expectedType == GL11.GL_INT ? "int" : "float");
             value.addProperty("found_in_linked_inventory", uniform != null);
             if (uniform == null) {
                 value.addProperty("status", "unknown");
@@ -260,7 +688,7 @@ public final class CloudSamplerStateProbe {
                 if (location < 0) {
                     value.addProperty("status", "unknown");
                     value.addProperty("reason", "active linked uniform has no queryable location; value not queried");
-                } else if (expectedType == GL11.GL_INT) {
+                } else if (expectedType == GL11.GL_INT || expectedType == GL20.GL_BOOL) {
                     value.addProperty("value", reader.integerValue(program, location));
                     value.addProperty("status", "queried_without_gl_error_consumption");
                 } else {
@@ -319,6 +747,15 @@ public final class CloudSamplerStateProbe {
             textureParameters.addProperty("max_level", GL11.glGetTexParameteri(target, GL12.GL_TEXTURE_MAX_LEVEL));
             textureParameters.addProperty("level_scope", "Level 0 allocation queried separately; other mip images/completeness not queried");
             result.add("texture_level_zero", textureLevelZero(target, capabilities));
+            if (!System.getProperty("shaderlod.dev.makeupCloudWitness", "").isBlank()
+                    && target == GL11.GL_TEXTURE_2D
+                    && (uniform.name().equals("gaux2") || uniform.name().equals("colortex5")
+                        || uniform.name().matches("customtex[0-9]{1,2}")
+                        || uniform.name().equals("shaderlodG08ReferenceNoise")))
+                result.add("makeup_cloud_image", makeupCloudImage(target, capabilities));
+            if (!System.getProperty("shaderlod.dev.makeupCloudWitness", "").isBlank()
+                    && target == GL11.GL_TEXTURE_2D && uniform.name().equals("noisetex"))
+                result.add("makeup_directional_atlas_image", makeupCloudImage(target, capabilities,256));
         }
         result.add("texture_parameters", textureParameters);
         if (!samplerObjects(capabilities)) {
@@ -326,7 +763,7 @@ public final class CloudSamplerStateProbe {
             result.add("effective_sampling_parameters", textureParameters.deepCopy());
             result.addProperty("effective_parameter_source", "texture; sampler objects unsupported");
         } else {
-            int boundSampler = GL30.glGetIntegeri(GL33.GL_SAMPLER_BINDING, unit);
+            int boundSampler = GL11.glGetInteger(GL33.GL_SAMPLER_BINDING);
             result.addProperty("bound_sampler", boundSampler);
             if (boundSampler == 0) {
                 result.add("effective_sampling_parameters", textureParameters.deepCopy());
@@ -350,6 +787,8 @@ public final class CloudSamplerStateProbe {
         result.addProperty("min_filter_name", filterName(min));
         result.addProperty("mag_filter", mag);
         result.addProperty("mag_filter_name", filterName(mag));
+        result.addProperty("wrap_s", integerParameter(target, sampler, GL11.GL_TEXTURE_WRAP_S, capabilities));
+        result.addProperty("wrap_t", integerParameter(target, sampler, GL11.GL_TEXTURE_WRAP_T, capabilities));
         result.addProperty("min_lod", floatParameter(target, sampler, GL12.GL_TEXTURE_MIN_LOD, capabilities));
         result.addProperty("max_lod", floatParameter(target, sampler, GL12.GL_TEXTURE_MAX_LOD, capabilities));
         result.addProperty("lod_bias", floatParameter(target, sampler, GL14.GL_TEXTURE_LOD_BIAS, capabilities));
@@ -375,6 +814,48 @@ public final class CloudSamplerStateProbe {
     private static int integerParameter(int target, int sampler, int parameter, GLCapabilities capabilities) {
         if (sampler == 0) return GL11.glGetTexParameteri(target, parameter);
         return capabilities.OpenGL33 ? GL33.glGetSamplerParameteri(sampler, parameter) : ARBSamplerObjects.glGetSamplerParameteri(sampler, parameter);
+    }
+
+    /** One exact bounded original asset read; no pixel-pack changes or texture rebinding. */
+    private static JsonObject makeupCloudImage(int target, GLCapabilities capabilities) {
+        return makeupCloudImage(target,capabilities,512);
+    }
+    private static JsonObject makeupCloudImage(int target, GLCapabilities capabilities,int size) {
+        try {
+            if ((size!=256&&size!=512)||!capabilities.OpenGL33 || GL11.glGetTexLevelParameteri(target, 0, GL11.GL_TEXTURE_WIDTH) != size
+                    || GL11.glGetTexLevelParameteri(target, 0, GL11.GL_TEXTURE_HEIGHT) != size
+                    || (GL11.glGetTexLevelParameteri(target, 0, GL11.GL_TEXTURE_INTERNAL_FORMAT) != GL11.GL_RGBA8
+                        && (size != 512 || GL11.glGetTexLevelParameteri(target, 0, GL11.GL_TEXTURE_INTERNAL_FORMAT) != GL30.GL_R8)))
+                return unknown("MakeUp asset requires exact "+size+"x"+size+" RGBA8 (or512R8) level0");
+            if (GL11.glGetInteger(org.lwjgl.opengl.GL21.GL_PIXEL_PACK_BUFFER_BINDING) != 0
+                    || GL11.glGetInteger(GL11.GL_PACK_ROW_LENGTH) != 0
+                    || GL11.glGetInteger(GL11.GL_PACK_SKIP_ROWS) != 0
+                    || GL11.glGetInteger(GL11.GL_PACK_SKIP_PIXELS) != 0
+                    || GL11.glGetInteger(GL11.GL_PACK_ALIGNMENT) != 4)
+                return unknown("MakeUp cloud asset requires native tightly packed client readback state");
+            var result = new JsonObject();
+            result.addProperty("level1_width", GL11.glGetTexLevelParameteri(target, 1, GL11.GL_TEXTURE_WIDTH));
+            result.addProperty("level1_height", GL11.glGetTexLevelParameteri(target, 1, GL11.GL_TEXTURE_HEIGHT));
+            var swizzle = new JsonArray();
+            for (int component : new int[]{GL33.GL_TEXTURE_SWIZZLE_R, GL33.GL_TEXTURE_SWIZZLE_G,
+                    GL33.GL_TEXTURE_SWIZZLE_B, GL33.GL_TEXTURE_SWIZZLE_A})
+                swizzle.add(GL11.glGetTexParameteri(target, component));
+            result.add("swizzle_rgba", swizzle);
+            var bytes = org.lwjgl.BufferUtils.createByteBuffer(size * size * 4);
+            GL11.glGetTexImage(target, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, bytes);
+            byte[] complete = new byte[bytes.capacity()]; bytes.get(complete);
+            byte[] red = new byte[size * size];
+            for (int i = 0; i < red.length; i++) red[i] = complete[i * 4];
+            result.addProperty("red8_level0_sha256", java.util.HexFormat.of().formatHex(
+                java.security.MessageDigest.getInstance("SHA-256").digest(red)));
+            result.addProperty("internal_format", GL11.glGetTexLevelParameteri(target, 0, GL11.GL_TEXTURE_INTERNAL_FORMAT));
+            result.addProperty("rgba8_level0_sha256", java.util.HexFormat.of().formatHex(
+                java.security.MessageDigest.getInstance("SHA-256").digest(complete)));
+            result.addProperty("returned_bytes", complete.length);
+            result.addProperty("status", "queried_without_gl_error_consumption");
+            result.addProperty("scope", "Full bound"+size+"x"+size+" asset converted toRGBA8 plus separate native red8 hash; exact source decode join required. R8 conversion supplies zeroG/B and oneA. No shader sample/iteration count or speed proof.");
+            return result;
+        } catch (Exception failure) { return unknown("MakeUp cloud image readback unavailable: " + failure); }
     }
 
     private static float floatParameter(int target, int sampler, int parameter, GLCapabilities capabilities) {

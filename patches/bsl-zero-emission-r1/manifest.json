@@ -1,0 +1,44 @@
+{
+  "arms": {
+    "candidate": {
+      "added_members": [
+        "shaders/shaderlod/bsl_zero_emission_r1/NOTICE",
+        "shaders/shaderlod/bsl_zero_emission_r1/terrain.glsl"
+      ],
+      "control_unused_uniforms_may_be_pruned": false,
+      "modified_original_members": [
+        "shaders/world0/gbuffers_terrain.fsh"
+      ],
+      "private_member_sha256": {
+        "shaders/shaderlod/bsl_zero_emission_r1/NOTICE": "c6294535d53f36766e0b9249601567e3cbb6daeb04b90c46a8e7a0d5f838c38b",
+        "shaders/shaderlod/bsl_zero_emission_r1/terrain.glsl": "516e129c13903340044f610be3985d1ea1914aafb563719c3edd452fd711d1e6"
+      },
+      "sha256": "7889f6f44c444c415ad212e985be21fbb3caef5b6720273a41eab91baee1ae81",
+      "sidecar_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "control": {
+      "added_members": [
+        "shaders/shaderlod/bsl_zero_emission_r1/NOTICE",
+        "shaders/shaderlod/bsl_zero_emission_r1/terrain.glsl"
+      ],
+      "control_unused_uniforms_may_be_pruned": true,
+      "modified_original_members": [
+        "shaders/world0/gbuffers_terrain.fsh"
+      ],
+      "private_member_sha256": {
+        "shaders/shaderlod/bsl_zero_emission_r1/NOTICE": "c6294535d53f36766e0b9249601567e3cbb6daeb04b90c46a8e7a0d5f838c38b",
+        "shaders/shaderlod/bsl_zero_emission_r1/terrain.glsl": "e8065901df30f9af6f852462004c88c09f119954072c50eee0919b810f1c1377"
+      },
+      "sha256": "c521e68e25b120da34600507d9a2497cf758eb5d6098ec102a0e0759705d6881",
+      "sidecar_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "base_path": "/Users/pippo/github/shaderlod/dependencies/upstream/other-pack-research/BSL_v10.1.8.zip",
+  "base_sha256": "36b0a50ff7918bf10e9422c401d93779f9d0088a26acea975b435243f96930b5",
+  "builder_sha256": "1820b75c531edeb0b14de30cb4eb4743f59a65b2887de19e0559b5eb1557a1c6",
+  "kind": "private-bsl-native384-zero-emission-r1",
+  "native384_sha256": "0aaa1276ea6e24106e6ed062a3bd149d1b53c09693d04a4637dcb19e6c43c394",
+  "performance_accepted": false,
+  "quality_accepted": false,
+  "runtime_accepted": false
+}

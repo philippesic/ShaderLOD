@@ -1,0 +1,11 @@
+{
+  "GetParallaxCoord": "577685eefe3aa15a01b32371388f2980a5cd63051c3739086a380aa60b7fd77d",
+  "GetParallaxShadow": "61f1a68a702d258e3fe4f69d1ef4fee539c4fe0a19ffb705385e479cc5baf476",
+  "GetParallaxSlopeNormal": "a8408decc56e1abeb3aa403f234abcc611c86e2242ae4a6bcaaa8bc2e31c09ea",
+  "ReadNormal": "8e9d81d111be2b2c06ea3a3d992e8e51d75ac5cf00ba644ec1052dc91380f596",
+  "shaderlodReimaginedPrefixCertificate": "e3907707c711645850f50d8e7044d580160dfe9db5d1f10c36a07c89bf401e7d",
+  "shaderlodReimaginedPrefixDescriptor": "59eb2b59b31de9b2c970197952a1bc2c44d32df80ddd505e23bbbcb4066808f5",
+  "shaderlodReimaginedPrefixSupport": "3ffc9c1a98be5a1636e41f571bd3c1967a432e7be5b618e6101b49785b5ab47e",
+  "shaderlodReimaginedPrefixUV": "6ee92f6c6f314b6a05ec58b191fd640349d4401d9dbf65de1e8c0b78ee207746",
+  "shaderlod_reimagined_prefix_continue": "ab0ae54c6fea817856a4fd6a6c4d58f716a8825ff7719389bcc7f634fd6c22ab"
+}

@@ -1,0 +1,79 @@
+{
+  "schema": 1,
+  "experiment": "photon-ao-history-gather-r1",
+  "base_version": "v1.3b",
+  "base_sha256": "120897768eaa8cb1f14a3e98f88dff009ae3204ee3b96904a4fe8586edfc1ead",
+  "switch": "SHADERLOD_AO_HISTORY_GATHER_R1",
+  "license_sha256": "514402d18eedb0afe374344ca9f0fe87b7399779518184b8fc64e31674555fc5",
+  "members": [
+    {
+      "path": "shaders/program/d3_ao.fsh",
+      "source_sha256": "5a47a1a64788105b5d197db8bc1a9aff1cdf17727c3c1804c01573c76863c266",
+      "replacements": [
+        {
+          "before": "#include \"/include/utility/bicubic.glsl\"\n",
+          "after": "#include \"/include/utility/bicubic.glsl\"\n#ifdef SHADERLOD_AO_HISTORY_GATHER_R1\n#include \"/include/shaderlod/ao_history_gather_r1.glsl\"\n#endif // SHADERLOD_AO_HISTORY_GATHER_R1\n"
+        },
+        {
+          "before": "    vec4 history =\n        max0(catmull_rom_filter_fast(colortex6, previous_screen_pos.xy, 0.65));\n    vec2 history_data = max0(texture(colortex14, previous_screen_pos.xy).xy);\n",
+          "after": "#ifdef SHADERLOD_AO_HISTORY_GATHER_R1\n    vec4 history = vec4(0.0);\n    vec2 history_data = vec2(0.0);\n    if (shaderlod_ao_history_gather_active()) {\n        // Native eligibility before the six gathers. Equality retains UV 0/1.\n        if (clamp01(previous_screen_pos.xy) == previous_screen_pos.xy) {\n            history = max0(shaderlod_ao_history_filter_lod0(\n                colortex6, previous_screen_pos.xy, 0.65));\n            history_data = max0(textureLod(\n                colortex14, previous_screen_pos.xy, 0.0).xy);\n        }\n    } else {\n        // Frame-uniform fallback preserves literal upstream implicit gathers.\n        history = max0(catmull_rom_filter_fast(\n            colortex6, previous_screen_pos.xy, 0.65));\n        history_data = max0(texture(colortex14, previous_screen_pos.xy).xy);\n    }\n#else // SHADERLOD_AO_HISTORY_GATHER_R1\n    vec4 history =\n        max0(catmull_rom_filter_fast(colortex6, previous_screen_pos.xy, 0.65));\n    vec2 history_data = max0(texture(colortex14, previous_screen_pos.xy).xy);\n#endif // SHADERLOD_AO_HISTORY_GATHER_R1\n"
+        }
+      ],
+      "patched_sha256": "0c01e691a543098edceeb047dd67a5f21eae1436d54405d99386e491db2fdb2f"
+    },
+    {
+      "path": "shaders/settings.glsl",
+      "source_sha256": "93401d268fe859cc1df81929ad41156757a98db80f80cf32af80d9cdca96c394",
+      "replacements": [
+        {
+          "before": "#define SETTINGS_INCLUDED\n",
+          "after": "#define SETTINGS_INCLUDED\n#ifdef SHADERLOD_AO_HISTORY_GATHER_R1\n// Private exact dead-history-gather candidate. No fresh-ray reductions.\n#endif // SHADERLOD_AO_HISTORY_GATHER_R1\n//#define SHADERLOD_AO_HISTORY_GATHER_R1\n"
+        }
+      ],
+      "patched_sha256": "c655f2ea9c9f6756173877654cc8bee548a8ff58a6c1094fd01afeb9f5a2d459",
+      "enabled_sha256": "9f7cfa0158bd158ccebc3202f32366d68c96aa65e92bb8bede674dd94c034f99"
+    }
+  ],
+  "addition": {
+    "path": "shaders/include/shaderlod/ao_history_gather_r1.glsl",
+    "source_path": "shaderpacks/photon-ao-history-gather-r1/shaders/include/shaderlod/ao_history_gather_r1.glsl",
+    "sha256": "fd5fe5aadaf6817aa85b979fd2bd7823498a0bb6d44213e9af313f5fafeb69df"
+  },
+  "source_dependencies": {
+    "shaders/include/buffers.glsl": "203cd05b25adec942bce5ab36fd0b7a9719a4f7790e3fe6983b59a8644124f9f",
+    "shaders/include/misc/lod_mod_support.glsl": "90609391732c88933e73d4b01dd5be957d22f10bd8485085b2c60c32a4525239",
+    "shaders/include/utility/bicubic.glsl": "679927091c954041ead2d3f07421b0e7f9b009e101e7fdfa4be0902448d70812",
+    "shaders/include/utility/space_conversion.glsl": "7285b08819737ea31eff7867bae4e5dee76f7e7f1b0d6c5abc5d3746fa38aa0c",
+    "shaders/program/c0_vl.fsh": "1a5335ee12e04e74b4f8b2ba62437f3ee27137cf9d2ccf7985f0fbf32bf48729",
+    "shaders/program/c17_copy_ao.fsh": "814148b092705072393661f05d1ee61bd09682154240b096f3eabc82cf3e5c9a",
+    "shaders/program/c17_copy_ao.vsh": "3bbcea768ae021ead1e88db87d447283da43a6fb9b04a0f7294a950e5b30fb17",
+    "shaders/program/c1_blend_layers.fsh": "9a22e67280a57927c9dc8ca7ef194abb64b636de6a736651aa5b743035052cad",
+    "shaders/program/d0_sky_map.fsh": "011e4bd7cc2d380850cc4e8767dd14e2b4f037da9a969f763e421936bba02319",
+    "shaders/program/d1_clouds.fsh": "1f0dd330b837becff393380283eb767e3a55fe48e9b04705bf825fde535d0cae",
+    "shaders/program/d2_clouds_upscaling.fsh": "2b026e4bf367527213264b333b267c649a1ac85ba3105155b71085878c3c204a",
+    "shaders/program/d3_ao.vsh": "1469e046de453a13c5521f9b278e0c4f70b69ca2acbf9bd83280d165ad279e1c",
+    "shaders/program/d4_deferred_shading.fsh": "212081e707c20c78e17cbfd3380b2f22eb696cc1aa14bdf006c07d59f53f67e0",
+    "shaders/shaders.properties": "f8cc8df60f930612e8817e4176a34886c1a9de778c15427a5468ecbc4f71ee9a"
+  },
+  "native_contract": {
+    "history_attachments": [
+      6,
+      14
+    ],
+    "formats": [
+      "RGBA16",
+      "RG16F"
+    ],
+    "linear_allocation": [
+      0.5,
+      0.5
+    ],
+    "mip_requests": false,
+    "sharpness": 0.65,
+    "fresh_ao_work": "unchanged",
+    "activation": "bridge 2 + enabled 1 + preset 0,1,2; compile option true",
+    "distance_units": "none; eligibility normalized previous UV; positions unchanged camera-relative blocks",
+    "transition": "no distance band; binary frame-uniform switch; history contents/encoding unchanged",
+    "quality_fallback": "Quality/Off/unknown use native gathers"
+  }
+}

@@ -1,0 +1,25 @@
+#if !defined SHADERLOD_PHOTON_OPTIONAL_FLAGS_INCLUDED
+#define SHADERLOD_PHOTON_OPTIONAL_FLAGS_INCLUDED
+uniform int shaderlodOptWaterShadowZero;
+uniform int shaderlodOptSkyAtmosphereOwnership;
+uniform int shaderlodOptWaterWaveBudget;
+uniform int shaderlodOptWaterParallaxBudget;
+uniform int shaderlodOptSpatialLightingRate;
+int shaderlod_photon_parallax_wave_count = WATER_WAVE_ITERATIONS;
+uniform int shaderlodOptPomHeightCache;
+uniform int shaderlodOptAoSkyElision;
+uniform int shaderlodOptSsrProjectedFootprintExit;
+uniform int shaderlodOptTemporalShadowFilter;
+uniform int shaderlodOptReflectionRayBudget;
+uniform int shaderlodOptCloudSecondaryExtentCache;
+uniform int shaderlodOptZeroEmissionArithmetic;
+uniform int shaderlodOptShadowMinField;
+uniform int shaderlodOptShadowRawQuery;
+uniform int shaderlodOptShadowReceiverFootprint;
+uniform int shaderlodOptPomEmptyHeightPrefix;
+uniform int shaderlodOptReflectionNextEventRefinement;
+bool shaderlod_photon_opaque_rough_next_event = false;
+bool shaderlod_photon_opaque_reflection_caller = false;
+uniform int shaderlodPhotonSpatialResources;
+uniform int shaderlodPhotonLightingResources;
+#endif

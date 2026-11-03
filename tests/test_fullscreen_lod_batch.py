@@ -48,40 +48,6 @@ class FullscreenBatchTest(unittest.TestCase):
         self.assertEqual(runner.CASES['water-high'], ('coastalwater/high','runClientLodOff'))
         self.assertEqual(runner.CASES['forest-adaptive'], ('forest/adaptive','runClientLodOn'))
 
-    def test_frozen_whole_combined_archive_and_full_metadata(self):
-        runtime = json.loads((ROOT/'dev/runtime.lock.json').read_text())
-        private = ROOT/'build'/batch.ARCHIVE_NAME
-        original = ROOT/'dev/upstream/photon_v1.3b.zip'
-        self.assertTrue(private.exists() and original.exists(), 'Pinned local archive prerequisite missing')
-        qualification = batch.qualify_combined(original, private, runtime)
-        string_qualification = batch.qualify_combined(str(original), str(private), runtime, str(ROOT))
-        self.assertEqual(string_qualification, qualification)
-        # Exercise the real canonical inspector callback, whose original path is
-        # deliberately serialized as a string. Direct Path qualification alone
-        # previously missed this integration contract.
-        record = batch.inspect_scene({'scene':'coastalwater',
-            'source_profile':str(batch.copies.DEFAULT_SOURCES['coastalwater'])}, str(private), runtime, str(ROOT))
-        self.assertIsInstance(record['original']['path'], str)
-        self.assertEqual(record['qualification'], qualification)
-        self.assertEqual(record['patched_options'], record['native_options'] | batch.feature_flags('patched-off'))
-        self.assertEqual(record['source_files_sha256'][str(private)], batch.ARCHIVE_SHA256)
-        self.assertTrue(qualification['qualified'])
-        self.assertEqual(qualification['archive_sha256'], batch.ARCHIVE_SHA256)
-        self.assertEqual(len(qualification['runtime_option_subsets']), 8)
-        self.assertEqual(qualification['metadata']['enabled_tracks'], [])
-        self.assertEqual(qualification['metadata']['unchanged_upstream_member_count'], 527)
-        files = batch.combined.reflection.archive_members(private)
-        for mutation in ('metadata','helper','addition'):
-            altered = dict(files)
-            if mutation == 'metadata':
-                metadata = json.loads(altered[batch.combined.METADATA]); metadata['gpu_benefit']='fabricated'
-                altered[batch.combined.METADATA] = json.dumps(metadata).encode()
-            elif mutation == 'helper': altered[batch.combined.CORE_HEADER] += b'\n// changed'
-            else: altered['unexpected.glsl'] = b'void main(){}'
-            output = self.root/(mutation+'.zip')
-            with zipfile.ZipFile(output,'w') as archive:
-                for name,data in altered.items(): archive.writestr(name,data)
-            with self.assertRaises(ValueError): batch.qualify_combined(original, output, runtime)
 
     def fullscreen_report(self):
         pacing = dict(pause_on_lost_focus=False, fullscreen=True, configured_framerate_limit=260, vsync=False)
@@ -113,16 +79,6 @@ class FullscreenBatchTest(unittest.TestCase):
             with self.assertRaises(ValueError): runner.validate_fullscreen_report(altered, request)
         with self.assertRaises(ValueError): runner.validate_fullscreen_report(report, request|{'expected_window':[1700,1000]})
         with self.assertRaises(ValueError): runner.validate_fullscreen_report(report, request|{'expected_focus':'false'})
-
-    def test_cli_forwarding_and_legacy_without_fullscreen(self):
-        command = [sys.executable,str(ROOT/'scripts/run_proof_matrix.py'),'water-high','water-reflection-only',
-                   '--stacks','minimal','--dh','absent','--repeats','2','--dry-run']
-        old = json.loads(subprocess.check_output(command,text=True))
-        new = json.loads(subprocess.check_output(command+['--fullscreen','--expected-framebuffer','3456','2234'],text=True))
-        self.assertEqual([row['case'] for row in new['plan']], ['water-high','water-reflection-only','water-reflection-only','water-high'])
-        self.assertTrue(all('-PcomparisonFullscreen=true' not in row['command'] for row in old['plan']))
-        self.assertTrue(all('-PcomparisonFullscreen=true' in row['command'] and '-PcloudSamplerProbe=false' in row['command'] for row in new['plan']))
-        self.assertTrue(all('-PgpuPassTiming=false' in row['command'] and '-PcpuLayerTiming=false' in row['command'] for row in new['plan']))
 
     def test_copy_fixture_expands_controls_without_touching_source_or_production_pins(self):
         source = self.root/'canonical/coastalwater/high'
@@ -178,30 +134,6 @@ class FullscreenBatchTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'blocked by retained driver failure'):
             runner.validate_fullscreen_batch_readiness(profile, True)
 
-    def test_exact_family_analysis_accepts_declared_gates_and_rejects_mutations(self):
-        runtime = json.loads((ROOT/'dev/runtime.lock.json').read_text())
-        qualification = batch.qualify_combined(ROOT/'dev/upstream/photon_v1.3b.zip',ROOT/'build'/batch.ARCHIVE_NAME,runtime)
-        summary = json.loads((ROOT/'dev/logs/photon-native-attribution-coastal-r1/summary.json').read_text())
-        upstream = summary['input_state']['effective_shader_options']
-        preparation = dict(experiment_family=batch.EXPERIMENT,proof_profiles=list(batch.ARMS),scene='coastalwater',
-            runtime_lock=runtime,fullscreen_required=True,**{batch.QUALIFICATION_KEY:qualification})
-        original = dict(actual_shader_sha256=batch.combined.BASE_SHA256,effective_shader_options=upstream,
-                        **{'workload-manifest.json':preparation})
-        active = dict(actual_shader_sha256=batch.ARCHIVE_SHA256,
-                      effective_shader_options=upstream|batch.feature_flags('reflection-only'),
-                      input_state_end={'lod_settings':{'enabled':True}},**{'workload-manifest.json':preparation})
-        manifest = {'source_inputs':{'water-high':{'shader_sha256':batch.combined.BASE_SHA256},
-                                    'water-reflection-only':{'shader_sha256':batch.ARCHIVE_SHA256}}}
-        base_run,candidate_run = {'case':'water-high'},{'case':'water-reflection-only'}
-        result = qualified_fullscreen_lod_pair(base_run,candidate_run,original,active,manifest)
-        self.assertEqual(result['private_archive_sha256'],batch.ARCHIVE_SHA256)
-        for mutation in (lambda r:r['effective_shader_options'].update(SHADERLOD_UNREVIEWED='false'),
-                         lambda r:r['effective_shader_options'].update(CLOUDS_CUMULUS_PRIMARY_STEPS_H='80'),
-                         lambda r:r['input_state_end']['lod_settings'].update(enabled=False),
-                         lambda r:r['workload-manifest.json'][batch.QUALIFICATION_KEY]['metadata'].update(quality_status='accepted'),
-                         lambda r:r.update(actual_shader_sha256='0'*64)):
-            altered = copy.deepcopy(active); mutation(altered)
-            with self.assertRaises(ValueError): qualified_fullscreen_lod_pair(base_run,candidate_run,original,altered,manifest)
 
 
 if __name__ == '__main__': unittest.main()

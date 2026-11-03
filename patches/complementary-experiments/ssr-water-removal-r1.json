@@ -1,0 +1,107 @@
+{
+  "schema": 1,
+  "id": "ssr-water-removal-r1",
+  "mechanism": "A2",
+  "name": "Complementary Reimagined",
+  "version": "r5.9.3",
+  "kind": "coupled-degraded-water-terrain-removal-versus-native-background",
+  "default_mode": "native",
+  "modes": [
+    "native",
+    "remove-water-terrain"
+  ],
+  "primary_page": "https://modrinth.com/shader/complementary-reimagined",
+  "original_archive_sha256": "fed6c879e732cf7fc7bc6570ebb1def43235aa7e96f62859fbdbdbfa0b484b38",
+  "original_members_digest": "5252a5630f98185d08760f7688cad064e37a6203adb0f80af49fb3e49a155ac8",
+  "source_members": {
+    "License.txt": "e8d4ee004e2a706303e89651e5cafa2f06af4d04f373fa17fc8251880a995add",
+    "shaders/lib/common.glsl": "fccb97c8ff5094996ea073d1d1c732fb841e3c6baf1f160b066e73e29d6e7dbe",
+    "shaders/shaders.properties": "b29be050d6296bc5df769a66e351adbaaa9108eec801eb0442137a7a81266ab7",
+    "shaders/block.properties": "27f5ffedc5e07ffc9889b4502b11800413af9283c9ac68bd5e59a46a2223a19e",
+    "shaders/lib/materials/materialMethods/reflections.glsl": "3b6d3b6477680a89ab56a2c0ae053b56b7b6b8cb39dabfba3d688772dac005ec",
+    "shaders/lib/materials/materialMethods/reflectionBackground.glsl": "274835f0a27dd8b75bfc3fab4dc12309fd2b07e807e24bb178a5d89386b00dc1",
+    "shaders/program/gbuffers_water.glsl": "8c2afedb074b06d36a760cc359d42340cfe7bd17312820027111384928d0a849",
+    "shaders/lib/materials/materialHandling/translucentMaterials.glsl": "bf8079ea080723ebb43b3ca48a01fe463f52bf51fef7de44ab5a0a92cb4235fa",
+    "shaders/lib/materials/materialHandling/translucentIPBR.glsl": "b27b8698c48f697a18c7090057d189740307f24d4012168b374de299917ef9ac",
+    "shaders/lib/materials/specificMaterials/translucents/water.glsl": "90cf3643d886864bcffec320bb5d72193da45e209aeb8ca499cddcd809cf3338",
+    "shaders/lib/lighting/mainLighting.glsl": "53f8a5b4ef985001c17b3fa014b30eb4bd770e72b489bf521ad04904d28547b5",
+    "shaders/lib/atmospherics/fog/mainFog.glsl": "953bcaa3f880a15ab36ad5cc91698b67d30a176819e80510b63d112acb08c2d7",
+    "shaders/world0/gbuffers_water.fsh": "2e60f0b681bf75f8f70b70c403aa3ae4f2cdf67c06c8d0a462e3fce239dddb2c",
+    "shaders/world0/gbuffers_water.vsh": "5f3a28551c24dfb3a3e4ecc23e522dda3d83ac23a95c32acb9000d233aedcd30",
+    "shaders/world-1/gbuffers_water.fsh": "5b909d77aafd314a42f2a3b5150cbdfbdf618c7ffa86238c078af0da5fd65913",
+    "shaders/world1/gbuffers_water.fsh": "021e99fd03bea76c2bafea00384d755418382d4fac0f5a9e4c6a7525fdafad15"
+  },
+  "patched_reflections_sha256": {
+    "native": "e7e049a864885845ba7e454a9f6e4d7bafdf66361bc148492d685ffe6b31f6a0",
+    "remove-water-terrain": "264a4821c18365a737cb71a4719219f3babf7615d1e06d8a67c0a0f849af3806"
+  },
+  "retained_options": {
+    "path": "dev/logs/complementary-shadow-sequence-r11/original-options.txt",
+    "sha256": "6de620be1faf86174e96bc267529a361a965c72051a00fdf16de094babf0d974",
+    "stored_map": {
+      "SHADOW_QUALITY": "2"
+    },
+    "old_runtime_receipt": "dev/logs/complementary-shadow-sequence-r11/original/captures/original-r11-shadow-still.json",
+    "old_runtime_receipt_sha256": "07f95e0e9a96f22bd5e6a35ccd66b8fe2eba2279dc312866437ce69231055dfc",
+    "old_runtime_values": {
+      "WATER_REFLECT_QUALITY": "2",
+      "WORLD_SPACE_REFLECTIONS": "-1",
+      "WORLD_SPACE_REF_MODE": "2",
+      "WORLD_BLUR": "0",
+      "TAA": "true",
+      "SHADOW_QUALITY": "2",
+      "RP_MODE": "1"
+    },
+    "current_runtime_activation_verified": false
+  },
+  "compile_guard": "{enabled} && defined MC_OS_MAC && MC_VERSION == 12101 && RP_MODE == 1 && defined OVERWORLD && defined GBUFFERS_WATER && !defined COMPOSITE && !defined GBUFFERS_COLORWHEEL_TRANSLUCENT && !defined DISTANT_HORIZONS && !defined DH_WATER && !defined DH_TERRAIN && !defined VOXY && !defined VOXY_PATCH && !defined VOXY_TRANSLUCENT && WORLD_SPACE_REFLECTIONS_INTERNAL == -1 && WATER_REFLECT_QUALITY >= 2",
+  "material_guard": "mat != 32000 executes native ray and hit block; mat == 32000 leaves reflection vec4(0) and refDist far",
+  "preserved": [
+    "all native options and shader properties",
+    "all original upstream members except reflections.glsl",
+    "Step 1 normal preparation including normalMR/nViewPosR/RVdotU/RVdotS",
+    "Step 3 AddBackgroundReflection and later normalM assignment",
+    "water caller Fresnel/color mix/direct lighting and non-hit fog",
+    "all other material, dimension, DH, VOXY and WSR paths under refused scope",
+    "upstream license and attribution",
+    "RP_MODE 0/2/3 refuse removal; custom PBR retains native work pending qualification"
+  ],
+  "removed_only_in_eligible_water": [
+    "Method 1 ray initialization, 30-step/refinement traversal, projections and depth fetches",
+    "hit acceptance, radiance fetch/decode, hit fog and border/alpha factors",
+    "hit refDist assignment; native miss keeps global refDist = far"
+  ],
+  "added_costs_and_coupling": [
+    "flat material branch around native trace for eligible program",
+    "native miss can increase cloud/sky/background evaluation and reflected glint contribution",
+    "changed reflection output can change downstream execution and temporal accumulation"
+  ],
+  "license": {
+    "member": "License.txt",
+    "sha256": "e8d4ee004e2a706303e89651e5cafa2f06af4d04f373fa17fc8251880a995add",
+    "name": "Complementary License Agreement 1.7",
+    "private_only": true,
+    "redistribution_authorized": false
+  },
+  "runtime_required": [
+    "fresh original archive/options/scene/viewport/focus identity",
+    "named linked gbuffers_water fragment source and active scope macros",
+    "visible native terrain reflection on mat 32000 water coverage",
+    "diagnostic same-pixel trace omission and native background route",
+    "native-equivalent derivative versus untouched original overhead check",
+    "matched original/removal/original return with actual temporal inputs",
+    "separate deliberate-loss still and restoration evidence"
+  ],
+  "validation": {
+    "source_contract_only": true,
+    "driver_compilation": false,
+    "in_world_rendering": false,
+    "actual_avoided_work": false,
+    "quality": false,
+    "performance": false,
+    "dh": false,
+    "pbr": false,
+    "other_versions": false
+  },
+  "stopping_rule": "Stop on missing activation/work proof, unintended changes, failed restoration or inconclusive/flat contrast; no scene/preset/parameter rescue. Never promote this degraded diagnostic."
+}

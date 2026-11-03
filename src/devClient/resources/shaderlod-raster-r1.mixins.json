@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.experiment.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "RasterPipelineMixin",
+    "RasterCompositeMixin",
+    "RasterViewportMixin",
+    "RasterUniformsMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

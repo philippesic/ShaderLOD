@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.optimization.sildurmerged.mixin",
+  "plugin": "com.pp.shaderlod.optimization.sildurmerged.mixin.SildurMergedMixinPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "SildurMergedProgramsMixin",
+    "SildurMergedProgramsMixin$BuilderHandle",
+    "SildurMergedChunkRendererMixin",
+    "SildurMergedPipelineDestroyMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

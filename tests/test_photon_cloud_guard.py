@@ -149,14 +149,14 @@ class CloudGuardFixtureTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             with self.assertRaisesRegex(ValueError, "ignored build"):
-                guard.build(root / "dev/upstream/photon_v1.3b.zip", root=root)
+                guard.build(root / "dependencies/upstream/photon_v1.3b.zip", root=root)
             self.assertEqual([], list(root.iterdir()))
 
 
 class PinnedCloudGuardSourceTests(unittest.TestCase):
-    @unittest.skipUnless((ROOT / "dev/upstream/photon_v1.3b.zip").exists(), "Pinned original not downloaded")
+    @unittest.skipUnless((ROOT / "dependencies/upstream/photon_v1.3b.zip").exists(), "Pinned original not downloaded")
     def test_exact_pinned_source_hashes_fallback_and_entry_points(self):
-        base = ROOT / "dev/upstream/photon_v1.3b.zip"
+        base = ROOT / "dependencies/upstream/photon_v1.3b.zip"
         self.assertEqual(guard.BASE_SHA256, guard.sha256(base.read_bytes()))
         with zipfile.ZipFile(base) as archive:
             original = archive.read(guard.MEMBER)

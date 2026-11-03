@@ -17,13 +17,14 @@ public final class ShaderLodConfig {
     public static final ModConfigSpec.BooleanValue OPTIMIZE_SHADOW_CULLING;
     public static final ModConfigSpec.BooleanValue SEPARATE_SHADOW_VISIBILITY_LISTS;
     public static final ModConfigSpec.BooleanValue SHADOW_FRUSTUM_COHERENCE;
+    public static final ModConfigSpec.BooleanValue EXPERIMENTAL_BLOOM_VRS;
 
     static {
         var builder = new ModConfigSpec.Builder();
         builder.push("lod");
-        ENABLED = builder.comment("Enable distance quality changes in the patched Photon pack.")
+        ENABLED = builder.comment("Enable quality budgets in supported ShaderLOD shader adapters.")
                 .define("enabled", true);
-        PRESET = builder.comment("Distance quality budgets: BALANCED, PERFORMANCE, or AGGRESSIVE.")
+        PRESET = builder.comment("LOD preset: PERFORMANCE, BALANCED, or QUALITY. AGGRESSIVE is a legacy setting.")
                 .defineEnum("preset", LodPreset.PERFORMANCE);
         NEAR = builder.comment("End of full quality zone, in blocks.")
                 .defineInRange("near", 32.0, 1.0, 4095.0);
@@ -51,6 +52,13 @@ public final class ShaderLodConfig {
                 .define("separateShadowVisibilityLists", false);
         SHADOW_FRUSTUM_COHERENCE = builder.comment("Experimental frame-local containing-box proofs for exact shadow visibility acceptance. Keeps all casters and original fallback tests.")
                 .define("shadowFrustumCoherence", false);
+        builder.pop();
+        builder.push("experimental");
+        EXPERIMENTAL_BLOOM_VRS = builder.comment(
+                "Default OFF. Experimental 2x2 hardware VRS for pinned BSL10.1.8 bloom prefilter only.",
+                "Requires OpenGL4.5, NV_shading_rate_image and NV_framebuffer_mixed_samples with callable entrypoints.",
+                "Lower bloom shading quality; no promise of higher FPS. Unsupported contexts stay native.")
+                .define("bloomVrs", false);
         builder.pop();
         SPEC = builder.build();
     }

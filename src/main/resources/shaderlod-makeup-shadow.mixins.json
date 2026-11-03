@@ -1,0 +1,31 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.optimization.makeupshadow.mixin",
+  "plugin": "com.pp.shaderlod.optimization.makeupshadow.mixin.ShadowPermissionPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "ShadowPipelineView",
+    "ShadowFrameMixin",
+    "ShadowReloadMixin",
+    "ShadowLegacyOwnerMixin",
+    "ShadowLegacyDrawMixin",
+    "ShadowScalarDrawMixin",
+    "ShadowModernDrawMixin",
+    "ShadowPearlDrawMixin",
+    "SamplerPassShaderMixin",
+    "SamplerPassBindingMixin",
+    "SamplerPassSamplersMixin",
+    "SamplerPassProgramMixin",
+    "SamplerPassPipelineMixin",
+    "SamplerPassTargetsMixin",
+    "SamplerPassDepthMixin",
+    "SamplerPassColorMixin",
+    "SamplerPassIrisSystemMixin",
+    "SamplerPassGlStateMixin",
+    "SamplerPassRendererMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

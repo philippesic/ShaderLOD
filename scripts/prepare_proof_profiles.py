@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Prepare isolated original/disabled/adaptive Photon profiles for repeated proof."""
 from __future__ import annotations
+from run_storage import copytree as storage_copytree
 import argparse
 import json
 from pathlib import Path
@@ -28,8 +29,8 @@ def prepare_scene(args, scene):
     # The disabled control contains the same patched code and loaded mod as active.
     disabled = base / 'patched-off'
     with unlocked_world(base / 'adaptive/saves' / WORLD):
-        shutil.copytree(base / 'adaptive', disabled)
-    lock = json.loads((ROOT / 'dev/runtime.lock.json').read_text())
+        storage_copytree(base / 'adaptive', disabled)
+    lock = json.loads((ROOT / 'dependencies/runtime.lock.json').read_text())
     for mode in ('high', 'lower', 'adaptive', 'patched-off'):
         profile = base / mode
         enabled = mode == 'adaptive'

@@ -1,0 +1,32 @@
+{
+  "kind": "private-bsl-native384-early-alpha-r1",
+  "original_sha256": "36b0a50ff7918bf10e9422c401d93779f9d0088a26acea975b435243f96930b5",
+  "native384_sha256": "0aaa1276ea6e24106e6ed062a3bd149d1b53c09693d04a4637dcb19e6c43c394",
+  "builder_sha256": "8cee420e536feb7ab26d5d7a0adbd30e73af80701fbebd04e6421c652cb4bf01",
+  "arms": {
+    "control": {
+      "sha256": "82ddff3530ab9c99cee4e779cc8718643627074a4b1b308bc55dea40b8223086",
+      "modifiedOriginalMembers": [
+        "shaders/world0/gbuffers_terrain.fsh"
+      ],
+      "privateMemberSha256": {
+        "shaders/shaderlod/bsl_early_alpha_r1/NOTICE": "06e07a3461eb5ff9b2fb390173f9fa34fe96f86fb8c34e81f5d53de543946ee4",
+        "shaders/shaderlod/bsl_early_alpha_r1/lighting.glsl": "e8405f2d6d4c336e66f6fb4993de999776bbe504267234926e85585f9195579b",
+        "shaders/shaderlod/bsl_early_alpha_r1/shadows.glsl": "69000119eaaad535baa490eac6c094d39033ff776f254a8db84d7ddc9009de61",
+        "shaders/shaderlod/bsl_early_alpha_r1/terrain.glsl": "9f3169e0ffa655af7c77aff0c3a05a3c5f3dc002dd36efad19414fb0c8523daf"
+      }
+    },
+    "candidate": {
+      "sha256": "ee73a4272233d5b7ca7e13d6d009d4e95253cdd9fd234d6393871d0091e69b92",
+      "modifiedOriginalMembers": [
+        "shaders/world0/gbuffers_terrain.fsh"
+      ],
+      "privateMemberSha256": {
+        "shaders/shaderlod/bsl_early_alpha_r1/NOTICE": "06e07a3461eb5ff9b2fb390173f9fa34fe96f86fb8c34e81f5d53de543946ee4",
+        "shaders/shaderlod/bsl_early_alpha_r1/lighting.glsl": "e8405f2d6d4c336e66f6fb4993de999776bbe504267234926e85585f9195579b",
+        "shaders/shaderlod/bsl_early_alpha_r1/shadows.glsl": "69000119eaaad535baa490eac6c094d39033ff776f254a8db84d7ddc9009de61",
+        "shaders/shaderlod/bsl_early_alpha_r1/terrain.glsl": "46de6c6338e99f9babc3cd16b266b3e0e4cf5a51a695a443a6ac8f8bd67c9bf2"
+      }
+    }
+  }
+}

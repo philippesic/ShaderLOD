@@ -1,0 +1,13 @@
+{
+  "required": false,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.dev.makeupquad.mixin",
+  "plugin": "com.pp.shaderlod.dev.makeupquad.mixin.MainQuadAdmissionMixinPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "MainQuadAdmissionMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

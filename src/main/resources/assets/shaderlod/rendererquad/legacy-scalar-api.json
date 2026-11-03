@@ -1,0 +1,18 @@
+[
+  {
+    "tuple": "fabric-1.21.1",
+    "classes": {
+      "net/caffeinemc/mods/sodium/client/gl/device/MultiDrawBatch.class": "b155dbeeebad99b1fac87103816529383eb256b1fb650e59ba5c825687b7acfa",
+      "net/caffeinemc/mods/sodium/client/render/chunk/DefaultChunkRenderer.class": "571f06982ae05c65ff68b263dde5a2f514d1ffa31276b7dd9c29aff82a2550ab",
+      "net/caffeinemc/mods/sodium/client/render/chunk/data/SectionRenderDataUnsafe.class": "908026c22632568a792959309a399700e232453313b9f502f4a41724e8c2a5b3"
+    }
+  },
+  {
+    "tuple": "neoforge-1.21.1",
+    "classes": {
+      "net/caffeinemc/mods/sodium/client/gl/device/MultiDrawBatch.class": "8b355f8255d0c6d1fd5e9bf1a89d9dacb2b494cabacdfbb1059201cb0dde3d8c",
+      "net/caffeinemc/mods/sodium/client/render/chunk/DefaultChunkRenderer.class": "e57ee69430ac4a79ab4608e2a3341b5af2ce08c5ecc84406502a9d0379a6333f",
+      "net/caffeinemc/mods/sodium/client/render/chunk/data/SectionRenderDataUnsafe.class": "2575f892c39b62fad17efe815a7a32453a8becc2e1d5da36a6c86807e992953f"
+    }
+  }
+]

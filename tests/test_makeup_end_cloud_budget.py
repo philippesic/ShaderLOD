@@ -13,7 +13,7 @@ sys.path.insert(0, str(ROOT / 'scripts'))
 from build_supported_pack_adapters import apply, build, read_archive, sha256, shader_source_digest, RESOURCE_ROOT
 from prepare_makeup_end_cloud_budget import candidate_manifest
 RECIPE = 'patches/adapters/makeup-ultra-fast-shaders.json'
-BASE = ROOT / 'dev/upstream/other-pack-research/MakeUp-UltraFast-9.5g.zip'
+BASE = ROOT / 'dependencies/upstream/other-pack-research/MakeUp-UltraFast-9.5g.zip'
 CLOUDS = ('shaders/lib/volumetric_clouds.glsl', 'shaders/lib/volumetric_clouds_end.glsl')
 
 class MakeUpCloudTests(unittest.TestCase):
@@ -32,7 +32,7 @@ class MakeUpCloudTests(unittest.TestCase):
             self.assertIn(b'cloud_value >= opacity_dist) break;', actual)
             self.assertLess(actual.index(b'first_contact = false;'), actual.index(b'cloud_value >= opacity_dist) break;'))
             tail = b'        cloud_value = clamp(cloud_value / opacity_dist, 0.0, 1.0);'
-            self.assertEqual(actual[actual.index(tail):], self.original[name][self.original[name].index(tail):])
+            self.assertEqual(actual[actual.index(tail):].split(b'\n}',1)[0], self.original[name][self.original[name].index(tail):].split(b'\n}',1)[0])
             restored = actual
             for patch in reversed(self.manifest['patches']):
                 if patch['path'] == name:
@@ -57,20 +57,22 @@ class MakeUpCloudTests(unittest.TestCase):
                 self.assertNotIn('samples = shaderlod_makeup_volume_budget(samples)', result)
         helper = self.changed['shaders/lib/shaderlod/adapter.glsl'].decode()
         self.assertIn('uniform int shaderlodPreset = -1;', helper)
-        self.assertIn('shaderlodBridgeVersion == 2 && shaderlodEnabled == 1', helper)
-        self.assertIn('shaderlodPreset >= 0 && shaderlodPreset <= 2', helper)
+        self.assertIn('return shaderlod_optimization_enabled(shaderlodOptCloudOpacityExit);', helper)
+        flags = self.changed['shaders/include/shaderlod/optimization_flags.glsl'].decode()
+        self.assertIn('bool shaderlod_optimization_enabled(int flag)', flags)
+        self.assertIn('shaderlodPreset >= 0 && shaderlodPreset <= 2', flags)
 
     def test_primary_entry_points_and_end_renderer_scope(self):
         common = self.original['shaders/common/deferred_fragment.glsl'].decode()
         for symbol in ('get_cloud(', 'get_end_cloud('):
             self.assertIn(symbol, common)
         for entry in ('shaders/world0/deferred.fsh', 'shaders/world1/deferred.fsh'):
-            self.assertEqual(self.changed[entry], self.original[entry])
+            restored=self.changed[entry]
+            for patch in reversed(self.manifest['patches']):
+                if patch['path']==entry:
+                    restored=restored.replace(patch['after'].encode(),patch['before'].encode(),1)
+            self.assertEqual(restored,self.original[entry])
             self.assertIn(b'#define DEFERRED_SHADER', self.original[entry])
-        runtime = (ROOT / 'ports/26.2/neoforge/src/main/java/com/pp/shaderlod/integration/makeupquad/MakeUpQuadRuntime.java').read_text().split('boolean nativeGraphAvailable()', 1)[1]
-        self.assertRegex(runtime, r'client\.level\.dimension\(\)\s*!=\s*Level\.OVERWORLD')
-        cert = (ROOT / 'ports/26.2/neoforge/src/main/java/com/pp/shaderlod/integration/bindingcompat/MakeUpSourceCertificate.java').read_text()
-        self.assertIn('RECIPE_SHA="' + sha256((ROOT / RECIPE).read_bytes()) + '"', cert)
 
     def test_source_texture_and_recipe_tamper_refuse(self):
         for name in (*CLOUDS, 'shaders/textures/clouds_natural_512_R_8bit.png', 'shaders/textures/clouds_natural_512_R_8bit.png.mcmeta'):

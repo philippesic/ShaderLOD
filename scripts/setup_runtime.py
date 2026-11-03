@@ -41,18 +41,18 @@ def main():
     parser.add_argument('--download-only', action='store_true')
     parser.add_argument('--profile', choices=['standard', 'mac'], default='mac' if platform.system() == 'Darwin' else 'standard')
     args = parser.parse_args()
-    lock = json.loads((ROOT / 'dev/runtime.lock.json').read_text())
+    lock = json.loads((ROOT / 'dependencies/runtime.lock.json').read_text())
     for name, artifact in lock['artifacts'].items():
-        destination = ROOT / ('dev/upstream' if name == 'photon' else 'dev/runtime') / artifact['filename']
+        destination = ROOT / ('dependencies/upstream' if name == 'photon' else 'dependencies/runtime') / artifact['filename']
         fetch(artifact, destination)
     if args.download_only:
         return
     subprocess.run([sys.executable, str(ROOT / 'scripts/build_shaderpack.py')], cwd=ROOT, check=True)
     pack = ROOT / 'run/shaderpacks/Photon-ShaderLOD.zip'
-    baseline = ROOT / 'dev/upstream' / lock['artifacts']['photon']['filename']
+    baseline = ROOT / 'dependencies/upstream' / lock['artifacts']['photon']['filename']
     dh = lock['artifacts']['distanthorizons']['filename']
     (ROOT / 'run/mods').mkdir(parents=True, exist_ok=True)
-    shutil.copy2(ROOT / 'dev/runtime' / dh, ROOT / 'run/mods' / dh)
+    shutil.copy2(ROOT / 'dependencies/runtime' / dh, ROOT / 'run/mods' / dh)
     for directory in [ROOT / 'run', ROOT / 'run-iris']:
         (directory / 'shaderpacks').mkdir(parents=True, exist_ok=True)
         if directory.name != 'run':

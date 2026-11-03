@@ -9,11 +9,13 @@ import java.util.zip.ZipFile;
 import java.nio.charset.StandardCharsets;
 /** Pinned Sildur NF26.2 source compatibility admission: exact original or actual maintained generated graph, no batching eligibility. */
 public final class SildurSourceCertificate {
- public static final String RECIPE_SHA="20d32f1cefd4f9f1d1b7cea9f400e00fb283ba7c1ff3b5f0c598480c0f9fd95a";
+ public static final String RECIPE_SHA="a729dfcf50af6bc89ee2e3cdc5dd669bd64ce6aae757c6a67bc8166d438b4a41";
  private static final String ID="sildurs-vibrant-shaders",RECIPE="assets/shaderlod/adapters/patches/adapters/sildurs-vibrant-shaders.json";
  private SildurSourceCertificate(){}
  public record Result(boolean eligible,String reason,boolean generated){}
- public static Map<String,String> generatedOptions(){var m=new TreeMap<>(SildurQuadEligibility.nativeOptions());m.put("SHADERLOD_EFFECT_ADAPTER","1");m.put("SHADERLOD_EFFECT_ADAPTER_INCLUDED","true");m.put("SHADERLOD_UNIFORM_SAMPLE_BUDGET_INCLUDED","true");return Map.copyOf(m);}
+ public static Map<String,String> generatedOptions(){return com.pp.shaderlod.integration.sildurquad.SildurSourceCertificate.generatedOptions();}
+ public static boolean generatedOptionsMatch(Map<String,String> actual){return com.pp.shaderlod.integration.sildurquad.SildurSourceCertificate.generatedSourceProfileOptionsMatch(actual);}
+
  private static String sha(byte[] b)throws Exception{return HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(b));}
  private static Path child(Path dir,String name)throws Exception{Path p=dir.resolve(name).normalize();if(!Path.of(name).getFileName().toString().equals(name)||!p.startsWith(dir)||p.equals(dir)||Files.isSymbolicLink(p)||!Files.isRegularFile(p))throw new IllegalStateException("Unsafe/missing source/state child");return p;}
  private static byte[] resource(String path)throws Exception{try(var in=PackSelectionService.class.getClassLoader().getResourceAsStream(path)){if(in==null)throw new IllegalStateException("Missing packaged recipe/helper: "+path);return in.readAllBytes();}}
@@ -22,14 +24,14 @@ public final class SildurSourceCertificate {
  private static void equalsField(JsonObject o,String key,String expected){if(!expected.equals(o.get(key).getAsString()))throw new IllegalStateException("Source/state field mismatch: "+key);}
  /** Actual byte stamps, used once per world tick in explicit untimed mode; metadata replay cannot hide tampering. */
  public static Object stamp(Path dir,String selected,String original)throws Exception{
-  Path a=child(dir,selected),b=child(dir,original);String as=sha(Files.readAllBytes(a)),bs=a.equals(b)?as:sha(Files.readAllBytes(b));
+  Path a=child(dir,selected),b=child(dir,original);String as=com.pp.shaderlod.optimization.SourceArchiveDigest.sha256(a),bs=a.equals(b)?as:com.pp.shaderlod.optimization.SourceArchiveDigest.sha256(b);
   if(a.equals(b))return List.of(as,bs);
-  var marker=marker(a);Path state=child(dir,marker.get("stateFile").getAsString());return List.of(as,bs,sha(Files.readAllBytes(state)));
+  var marker=marker(a);Path state=child(dir,marker.get("stateFile").getAsString());return List.of(as,bs,com.pp.shaderlod.optimization.SourceArchiveDigest.sha256(state));
  }
  public static String originalName(Path directory,String selected,Map<String,String> options)throws Exception{
   Path dir=directory.toAbsolutePath().normalize(),path=child(dir,selected);
-  if(SildurQuadEligibility.validate(path,options).eligible())return selected;
-  if(!generatedOptions().equals(options))throw new IllegalStateException("No certified Sildur source/options");
+  if(com.pp.shaderlod.integration.sildurquad.SildurSourceCertificate.validateNativeSourceProfile(path,options).eligible())return selected;
+  if(!generatedOptionsMatch(options))throw new IllegalStateException("No certified Sildur source/options");
   return marker(path).get("originalFile").getAsString();
  }
  private static JsonObject marker(Path path)throws Exception{try(var z=new ZipFile(path.toFile())){var e=z.getEntry("shaderlod-selection.json");if(e==null)throw new IllegalStateException("Generated marker absent");try(var in=z.getInputStream(e)){return json(in.readAllBytes());}}}
@@ -37,8 +39,8 @@ public final class SildurSourceCertificate {
   try{
    Path dir=directory.toAbsolutePath().normalize();if(requested==null||requested.isBlank())throw new IllegalStateException("Certified original required");Path original=child(dir,requested);
    if(!SildurQuadEligibility.validate(original,SildurQuadEligibility.nativeOptions()).eligible())throw new IllegalStateException("Original native115/source/API resources refused");
-   if(selected.equals(requested))return new Result(SildurQuadEligibility.optionsMatch(options),"Original native115/TAA/Clouds3/cloudsIT8",false);
-   if(!generatedOptions().equals(options))throw new IllegalStateException("Generated exact118 options refused");
+   if(selected.equals(requested))return new Result(com.pp.shaderlod.integration.sildurquad.SildurSourceCertificate.nativeSourceProfileOptionsMatch(options),"Original native115/TAA/Clouds3/cloudsIT8/POM source profile",false);
+   if(!generatedOptionsMatch(options))throw new IllegalStateException("Generated actual126 declarations/options refused");
    byte[] recipeBytes=resource(RECIPE);if(!sha(recipeBytes).equals(RECIPE_SHA))throw new IllegalStateException("Stale/tampered packaged recipe");var recipe=json(recipeBytes);
    var source=archive(original);var expected=new TreeMap<String,byte[]>(source);var actual=archive(child(dir,selected));var marker=json(actual.get("shaderlod-selection.json"));
    if(marker.get("schema").getAsInt()!=1)throw new IllegalStateException("Marker schema");equalsField(marker,"adapterId",ID);equalsField(marker,"originalFile",requested);equalsField(marker,"originalSha256",SildurQuadEligibility.ARCHIVE_SHA);equalsField(marker,"recipeSha256",RECIPE_SHA);
@@ -49,13 +51,19 @@ public final class SildurSourceCertificate {
    for(var e:expected.entrySet())if(!Arrays.equals(e.getValue(),actual.get(e.getKey())))throw new IllegalStateException("Generated member differs from maintained recipe: "+e.getKey());
    // All vertex/geometry stages remain original, including include bytes except the exact maintained fragment-only patches.
    for(var e:source.entrySet())if(e.getKey().endsWith(".vsh")&&!Arrays.equals(e.getValue(),actual.get(e.getKey())))throw new IllegalStateException("Changed vertex entry");
-   var state=json(Files.readAllBytes(child(dir,marker.get("stateFile").getAsString())));if(state.get("schema").getAsInt()!=1)throw new IllegalStateException("State schema");equalsField(state,"stateFile",marker.get("stateFile").getAsString());equalsField(state,"adapterId",ID);equalsField(state,"originalFile",requested);equalsField(state,"originalSha256",SildurQuadEligibility.ARCHIVE_SHA);equalsField(state,"generatedFile",selected);equalsField(state,"generatedSha256",sha(Files.readAllBytes(child(dir,selected))));equalsField(state,"recipeSha256",RECIPE_SHA);
+   var state=json(Files.readAllBytes(child(dir,marker.get("stateFile").getAsString())));if(state.get("schema").getAsInt()!=1)throw new IllegalStateException("State schema");equalsField(state,"stateFile",marker.get("stateFile").getAsString());equalsField(state,"adapterId",ID);equalsField(state,"originalFile",requested);equalsField(state,"originalSha256",SildurQuadEligibility.ARCHIVE_SHA);equalsField(state,"generatedFile",selected);equalsField(state,"generatedSha256",com.pp.shaderlod.optimization.SourceArchiveDigest.sha256(child(dir,selected)));equalsField(state,"recipeSha256",RECIPE_SHA);
    var owned=state.getAsJsonObject("appliedOverrides");if(owned.size()!=1||!"1".equals(owned.get("SHADERLOD_EFFECT_ADAPTER").getAsString()))throw new IllegalStateException("State owned overrides changed");
-   for(var e:state.getAsJsonObject("baseOptions").entrySet())if(!e.getValue().getAsString().equals(SildurQuadEligibility.nativeOptions().get(e.getKey())))throw new IllegalStateException("State original option choice changed");
+   for(var e:state.getAsJsonObject("baseOptions").entrySet())
+    if(SildurQuadEligibility.nativeOptions().containsKey(e.getKey()) &&
+      !(e.getKey().equals("nMap") && e.getValue().getAsString().equals(options.get("nMap"))) &&
+      !e.getValue().getAsString().equals(SildurQuadEligibility.nativeOptions().get(e.getKey())))
+       throw new IllegalStateException("State original option choice changed");
+   // Undeclared personal sidecar values remain owned by the user; source/state verifier still checks all known effective options.
+   if(state.get("active").getAsBoolean() && !ID.equals(PackSelectionService.verifyGeneratedRendererGraph(child(dir,selected),options)))throw new IllegalStateException("Current public source/state/owned-option replay refused");
    String note="Private local ShaderLOD adapter. Original: "+ID+". Upstream files and license retained. Do not redistribute this copy.\nRendering, quality, DH and PBR validation remain separate checks.\n";
    if(!Arrays.equals(note.getBytes(StandardCharsets.UTF_8),actual.get("SHADERLOD_PRIVATE_SELECTION.md")))throw new IllegalStateException("Generated provenance member changed");
    if(!state.get("active").getAsBoolean()&&!nativeReturnTransition)throw new IllegalStateException("Inactive generated state outside genuine native-return selection");
-   return new Result(true,"Exact maintained generated118 source/state/unchanged vertex entries; compatibility only",true);
+   return new Result(true,"Exact maintained generated126 source/state/unchanged vertex entries; compatibility only",true);
   }catch(Exception|LinkageError failure){return new Result(false,failure.toString(),false);}
  }
 }

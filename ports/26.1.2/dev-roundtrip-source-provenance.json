@@ -1,0 +1,159 @@
+{
+  "owner": "port_2612",
+  "state": "source frozen; both dev compilations passed; client handoff pending",
+  "reference": "Frozen working dual-loader1.21.11 probes; no runtime evidence transferred",
+  "files": [
+    {
+      "path": "ports/26.1.2/fabric/src/devClient/java/com/pp/shaderlod/fabric/dev/FabricRoundtrip.java",
+      "sha256": "3b0238cd4eae3bc737c1229601eaf8999ac2bea087831d72e08ed43f386a9fb7",
+      "reference": "ports/1.21.11/fabric/src/devClient/java/com/pp/shaderlod/fabric/dev/FabricRoundtrip.java",
+      "referenceSha256": "a6890da3bbd98beaa39ffd62cec0dd4ad0b9ce50f043699e63028bbd866ebc86"
+    },
+    {
+      "path": "ports/26.1.2/fabric/src/devClient/java/com/pp/shaderlod/fabric/dev/PortProbe.java",
+      "sha256": "e53ca880928b8fa1ef097c3076d5765cb13fdbfe696807beafde04afe7791775",
+      "reference": "ports/1.21.11/fabric/src/devClient/java/com/pp/shaderlod/fabric/dev/PortProbe.java",
+      "referenceSha256": "e53ca880928b8fa1ef097c3076d5765cb13fdbfe696807beafde04afe7791775"
+    },
+    {
+      "path": "ports/26.1.2/fabric/src/devClient/resources/fabric.mod.json",
+      "sha256": "8295ad557619963ca7a316221bd7cc5ae62cb678b6b53f45e6618bc0bb110fdf",
+      "reference": "ports/1.21.11/fabric/src/devClient/resources/fabric.mod.json",
+      "referenceSha256": "34c81f51a34c71445ea6b4f7516d2201f38a11ea2ea98c7fdecb62e4e60a086a"
+    },
+    {
+      "path": "ports/26.1.2/fabric/build.gradle",
+      "sha256": "be12a4db7966582834082af46ddfdf037e7e51460af3421be9138a33bafdd7cb"
+    },
+    {
+      "path": "ports/26.1.2/neoforge/src/devClient/java/com/pp/shaderlod/dev/NeoForgeRoundtrip.java",
+      "sha256": "6a79ea8855a40f36ee1dd68a2b244088c27fb9c1380f3d9c62defae01b817fec",
+      "reference": "ports/1.21.11/neoforge/src/devClient/java/com/pp/shaderlod/dev/NeoForgeRoundtrip.java",
+      "referenceSha256": "2608b47bc9efa14d8618d5666e08974b7d82d65526a893b1cccc0496e6ece5cf"
+    },
+    {
+      "path": "ports/26.1.2/neoforge/src/devClient/java/com/pp/shaderlod/dev/PortProbe.java",
+      "sha256": "522bcf7a5bccfa986a8b29c6681805520aeb5021ec9b564964a788cdd4478daf",
+      "reference": "ports/1.21.11/neoforge/src/devClient/java/com/pp/shaderlod/dev/PortProbe.java",
+      "referenceSha256": "522bcf7a5bccfa986a8b29c6681805520aeb5021ec9b564964a788cdd4478daf"
+    },
+    {
+      "path": "ports/26.1.2/neoforge/src/devClient/resources/META-INF/neoforge.mods.toml",
+      "sha256": "afcea78adbe1b17b61f54d6d3aaa04448ca6b21032f7410731e47357feea889b",
+      "reference": "ports/1.21.11/neoforge/src/devClient/resources/META-INF/neoforge.mods.toml",
+      "referenceSha256": "102bc172b5cba8acb93ab950d923c22033b850ffb1748ba3c761bffbdf352800"
+    },
+    {
+      "path": "ports/26.1.2/neoforge/build.gradle",
+      "sha256": "bfc033d4b9bc79dc85fb7f002418d5da89674e56e1f7712c9065d8d9e052c586"
+    }
+  ],
+  "productionSourcesReadOnly": [
+    {
+      "path": "ports/26.1.2/fabric/src/main/java/com/pp/shaderlod/ShaderLodEffectConfig.java",
+      "sha256": "818af2ccec05dd741d67c13b378e224fe879ef639cec1f47b8e2f935a7b8c772"
+    },
+    {
+      "path": "ports/26.1.2/fabric/src/main/java/com/pp/shaderlod/fabric/FabricLodConfig.java",
+      "sha256": "04c139b12bc2af721d6a81b2025cb5c6dcdd742e5c067a1022d931c86e26614f"
+    },
+    {
+      "path": "ports/26.1.2/fabric/src/main/java/com/pp/shaderlod/fabric/FabricLodScreen.java",
+      "sha256": "e6ef0d16d7a058d00fdb1d3ee44f4a71a4eeea70ce12616a6712545ac61d8648"
+    },
+    {
+      "path": "ports/26.1.2/fabric/src/main/java/com/pp/shaderlod/fabric/FabricLodSettings.java",
+      "sha256": "12b86110f126185d7dd137647cc3f8564dce25267a2b4e8d35dcb4503f9438c3"
+    },
+    {
+      "path": "ports/26.1.2/fabric/src/main/java/com/pp/shaderlod/fabric/FabricPackSelection.java",
+      "sha256": "845815c234e45e0610a250dd097ea14e2dd55466a56f0c608ea29c89ea9b18bc"
+    },
+    {
+      "path": "ports/26.1.2/fabric/src/main/java/com/pp/shaderlod/fabric/ShaderLodFabric.java",
+      "sha256": "2e1f1da55bf5bef2a4e979d3d15a6e7938c0b2cb90ce304c51b44f7a0febc36e"
+    },
+    {
+      "path": "ports/26.1.2/fabric/src/main/java/com/pp/shaderlod/fabric/mixin/FabricCoreUniformsMixin.java",
+      "sha256": "787ce7df6ff4b21770921914ef81563f86b8348782882cd4c6ff0dfc57502fb4"
+    },
+    {
+      "path": "ports/26.1.2/fabric/src/main/java/com/pp/shaderlod/integration/KnownRuntimeBoundary.java",
+      "sha256": "6b5dc7a9bdb1ecbc7c5c289495e5b1dbff356fd9a347b73de933dad0dd4000a5"
+    },
+    {
+      "path": "ports/26.1.2/fabric/src/main/java/com/pp/shaderlod/integration/RendererBackend.java",
+      "sha256": "63d9a418b75c1e895356bd027cd9da2d7821cba0f6c1d8b61cf716c44df06f9a"
+    },
+    {
+      "path": "ports/26.1.2/fabric/src/main/resources/assets/shaderlod/lang/en_us.json",
+      "sha256": "460ef63d82a1021b6698964bdbf78c5d4a735d9b568c53b3bfa0e0c991bc6b54"
+    },
+    {
+      "path": "ports/26.1.2/fabric/src/main/resources/fabric.mod.json",
+      "sha256": "320197a172966660c18c49e49bed2146b2c629a61eefd94c6835ebdcca24d6c8"
+    },
+    {
+      "path": "ports/26.1.2/fabric/src/main/resources/shaderlod-fabric.mixins.json",
+      "sha256": "8ef6243ff7427ce03175716a92ba82ab307bd71a74bfc5e03a5d411750ca4967"
+    },
+    {
+      "path": "ports/26.1.2/fabric/src/main/resources/shaderlod-shared.mixins.json",
+      "sha256": "0eddbfbacd9b8adba7bfff652e410ede39178ebaa21b6c9f38ee9e0e82efb701"
+    },
+    {
+      "path": "ports/26.1.2/neoforge/src/main/java/com/pp/shaderlod/ShaderLod.java",
+      "sha256": "17d65234d623d5e8158114d72c235252c5ac9d84eacc6a556444b3c57cf16676"
+    },
+    {
+      "path": "ports/26.1.2/neoforge/src/main/java/com/pp/shaderlod/ShaderLodConfig.java",
+      "sha256": "de27b7d82c53c9133b1bc9df842d80636465fb77dbe05a2c044fd5adeb735d82"
+    },
+    {
+      "path": "ports/26.1.2/neoforge/src/main/java/com/pp/shaderlod/ShaderLodEffectConfig.java",
+      "sha256": "344eab644e149f479a7217fc20c70293e0b793b8fca27b5388636300d4e40618"
+    },
+    {
+      "path": "ports/26.1.2/neoforge/src/main/java/com/pp/shaderlod/ShaderLodPackDetection.java",
+      "sha256": "dcb4ed431bcee1d6723d0759645d75a9aa82ced0d711f20c813ec240f2cf9073"
+    },
+    {
+      "path": "ports/26.1.2/neoforge/src/main/java/com/pp/shaderlod/ShaderLodSettings.java",
+      "sha256": "a69eaedc092e169c2a333d7bc987b981acd1358ca04e6b44e6e0640646878263"
+    },
+    {
+      "path": "ports/26.1.2/neoforge/src/main/java/com/pp/shaderlod/ShaderLodSettingsScreen.java",
+      "sha256": "b034d2bab50d35dfcb42f6ea7fab79e564b2232a7742f0b42a1af0f345109bbe"
+    },
+    {
+      "path": "ports/26.1.2/neoforge/src/main/java/com/pp/shaderlod/integration/KnownRuntimeBoundary.java",
+      "sha256": "6b5dc7a9bdb1ecbc7c5c289495e5b1dbff356fd9a347b73de933dad0dd4000a5"
+    },
+    {
+      "path": "ports/26.1.2/neoforge/src/main/java/com/pp/shaderlod/integration/RendererBackend.java",
+      "sha256": "63d9a418b75c1e895356bd027cd9da2d7821cba0f6c1d8b61cf716c44df06f9a"
+    },
+    {
+      "path": "ports/26.1.2/neoforge/src/main/java/com/pp/shaderlod/mixin/CommonUniformsMixin.java",
+      "sha256": "3725cbfe56cae89a7fea757447c9fb5adb270312effe58433abeb56de68474f0"
+    },
+    {
+      "path": "ports/26.1.2/neoforge/src/main/resources/META-INF/neoforge.mods.toml",
+      "sha256": "6f5828ba2129018cda8afb6d654b810a06736345775142c79fe1911abc9e700e"
+    },
+    {
+      "path": "ports/26.1.2/neoforge/src/main/resources/shaderlod.mixins.json",
+      "sha256": "74776985689f1a92d862aaacdca964d2d6f5898031f0dc05159998cc40ff237c"
+    }
+  ],
+  "compiled": true,
+  "runtimeVerified": false,
+  "ownedLiveProcesses": [],
+  "compileLogs": [
+    "evidence/neoforge-build-dev-roundtrip-r2.log",
+    "evidence/fabric-build-dev-roundtrip-r1.log"
+  ],
+  "retainedCompileFailure": "evidence/neoforge-build-dev-roundtrip-r1.log",
+  "testsExecutedThisUpdate": false,
+  "productionAudit": "evidence/dev-roundtrip-compiled-audit-r1.json"
+}

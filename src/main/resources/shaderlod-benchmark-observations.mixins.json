@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.benchmark.mixin",
+  "plugin": "com.pp.shaderlod.benchmark.mixin.BenchmarkObservationPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "BenchmarkSodiumDrawMixin",
+    "BenchmarkSodiumLayerMixin",
+    "BenchmarkSodiumQueuesAccessor",
+    "BenchmarkSectionQueuesAccessor",
+    "BenchmarkDhDrawMixin",
+    "BenchmarkDhBeaconSleepMixin"
+  ],
+  "injectors": { "defaultRequire": 1 }
+}

@@ -33,14 +33,14 @@ class SpatialSourceFixture(SharedSourceFixture):
         self.source = SOURCE.read_text()
         clean = re.sub(r'//[^\n]*', '', self.source)
         found = 0
-        for match in re.finditer(r'(float|int|ShaderlodSpatialPlan) (shaderlod_spatial_\w+)\((.*?)\)\s*\{', clean, re.S):
+        for match in re.finditer(r'(float|int|bool|ShaderlodSpatialPlan) (shaderlod_spatial_\w+)\((.*?)\)\s*\{', clean, re.S):
             kind, name, parameters = match.groups()
             end = self.close(clean, match.end() - 1, '{', '}')
             self.functions[name] = (kind, [p.split() for p in parameters.split(',')], clean[match.end():end])
             self.environment[name] = lambda *args, name=name: self.call(name, *args)
             found += 1
-        if found != 4 or clean.count('{') != 5:
-            raise AssertionError('Expected one plan struct and four explicit helper functions')
+        if found != 5 or clean.count('{') != 6:
+            raise AssertionError('Expected one plan struct and five explicit helper functions')
 
 
 def independent_blend(distance, boundary, width):
@@ -99,6 +99,26 @@ class SpatialLodPlanTest(unittest.TestCase):
         self.assertNotIn('#include', clean)
         self.assertNotIn('work.realized_work', clean)
         self.assertNotIn('work.requested_work', clean)
+
+    def test_uniform_coarse_preflight_reuses_validated_endpoint_policy(self):
+        def demand(ratios=(1, .25), bands=(32, 96, 8), flags=(True, True, False), mask=3, **overrides):
+            return self.fixture.call('shaderlod_spatial_policy_has_coarse_demand',
+                policy(retained_ratios=vec(*ratios), bands_blocks=vec(*bands), **overrides), *flags, mask)
+        for ratios in ((1, 1), (1, .25), (1, .0625), (.25, .25), (.25, .0625), (.0625, .0625)):
+            for mask in range(1, 8):
+                supported=(mask & 1) and all(mask & {1:1,.25:2,.0625:4}[r] for r in ratios)
+                self.assertEqual(bool(supported and ratios[1] < 1), demand(ratios=ratios,mask=mask))
+        self.assertTrue(demand(mode=0,inherited_policy_resolved=True))
+        self.assertTrue(demand(bands=(32,96,0)))
+        for overrides in (dict(mode=1),dict(mode=0),dict(mode=-1),dict(mode=3),
+                          dict(global_enabled=False),dict(policy_enabled=False),dict(core_version=1),dict(effects_version=1,minimum_effects_version=2)):
+            self.assertFalse(demand(**overrides))
+        for flags in ((False,True,False),(True,False,False),(True,True,True)):
+            self.assertFalse(demand(flags=flags))
+        for ratios in ((.5,.25),(.25,0),(1,float('nan')),(1,float('inf'))):
+            self.assertFalse(demand(ratios=ratios))
+        for bands in ((-1,96,8),(32,31,8),(32,96,65),(32,float('nan'),8),(32,96,float('inf'))):
+            self.assertFalse(demand(bands=bands))
 
     def test_centered_endpoints_transition_weights_and_extra_work(self):
         cases = ((0, (1, 0, 0)), (28, (1, 0, 0)), (30, (.84375, .15625, 0)),
@@ -227,7 +247,7 @@ class SpatialLodPlanTest(unittest.TestCase):
             self.assertAlmostEqual(float(line), result.requested_ratio, delta=2e-7)
 
     def test_actual_pinned_iris_glsl410_grammar_and_no_options(self):
-        iris = ROOT/'dev/runtime/iris-neoforge-1.8.12+mc1.21.1.jar'
+        iris = ROOT/'dependencies/runtime/iris-neoforge-1.8.12+mc1.21.1.jar'
         self.assertEqual('3e3f94d2d5cdcb8145c4385d521974aa2d8669b2cc212351f70cf06488182e83', hashlib.sha256(iris.read_bytes()).hexdigest())
         cache = Path.home()/'.gradle/caches/modules-2/files-2.1'; dependencies = []
         for pattern in ('com.google.guava/guava/32.1.2-jre/*/guava-32.1.2-jre.jar',

@@ -1,0 +1,201 @@
+{
+  "schema": 1,
+  "kind": "private-dead-mip-chain-suppression",
+  "id": "bsl-composite7-rt1-mips-r1",
+  "family": "bsl-shaders",
+  "version": "10.1.8",
+  "release_archive_sha256": "36b0a50ff7918bf10e9422c401d93779f9d0088a26acea975b435243f96930b5",
+  "shader_source_digest": "198235a39479dee0964f272104844ff2ee32fd4438309a54d1421278986066bb",
+  "source_members": {
+    "shaders/program/composite6.glsl": "ed05d328124273cb80ef7cfc89f4757550871c7f09a3ff72b71c6f7743a84b03",
+    "shaders/program/composite7.glsl": "a5ccbc5e132b8c43d9195ddb3c3b0f9c292dcf13e2aad9d0f4ba9e0a084d5c0a",
+    "shaders/program/final.glsl": "1b93825ce635c7744c9c166e6b71425ee5e8fa8ecb589c8aa6bb1a054c7ccc50",
+    "shaders/lib/antialiasing/taa.glsl": "0aa98bcfcf941b070b4884edd28583fd7263bfbf0412b0128386a35a30334d16",
+    "shaders/lib/antialiasing/fxaa.glsl": "ff85fcd10be852e2cee963389182a2549014234712447a7649c983819e185e66",
+    "shaders/lib/settings.glsl": "5617a7a13c37373c27e742d2dffb777a1437bae83cf25693451c104915050285",
+    "shaders/shaders.properties": "8856162fcf6846e1b56f5c092e6eaee04af687875f85e87cde87e1bd0a0d3169",
+    "shaders/dimension.properties": "9b1f4da091bdb0680b2516a9c655467bada1acd11e24f2ff08a7d68b18d03bea",
+    "shaders/world0/composite6.fsh": "de5fc1328661d5d69adbfed28e509dee60d2ae2aa13a95300f59e19de3466df9",
+    "shaders/world0/composite6.vsh": "2dd6bb9ff4b0a7e37087ac29b14027142014ce4cf1269c81d914f86805d98217",
+    "shaders/world0/composite7.fsh": "0e88896de10887834fb92bb4f50816c9aa2f88c023216f36615faffb84a49637",
+    "shaders/world0/composite7.vsh": "0eee5b463b294d9ec6cf43d19cd543b4435a925829e688be64936bf497ff67d5",
+    "shaders/world0/final.fsh": "60d2be2342a482973590700dea718075bdc38dad57e1054ce21adf56ce96fc72",
+    "shaders/world0/final.vsh": "aa9a4ab103643cba0e6b40c16f489ef30f82a88b95b5dffda345f987ec66b2a9",
+    "shaders/world-1/composite6.fsh": "6a605526bdd4c434939fb6270a2ebfecaa0d281f88eb691f7fb66b2fdc77a07a",
+    "shaders/world-1/composite6.vsh": "e96110ba059024603b22b34d4a405d0e29b39bf49872109771248de5b58c7edc",
+    "shaders/world-1/composite7.fsh": "20d2e9cf47f1860466da9548a7736eee9cda6236b907c3fcef03c97b346ce24b",
+    "shaders/world-1/composite7.vsh": "d89ca11e04e9159ed5edd3b729fd61faadf608167540c8702af572e37ab35c69",
+    "shaders/world-1/final.fsh": "ea20f56c3728a61b8c1b5260c9ad152c97306ab07d955727b26f04986a38fa1f",
+    "shaders/world-1/final.vsh": "be4b174d1b907a947e96a11eb83949ffb2fea59e611de073b3c3ae102065ee6c",
+    "shaders/world1/composite6.fsh": "f977ca82b4c25e1795d4346526b26f2ce491c6130ebe7537b2313b0d7c1bcbea",
+    "shaders/world1/composite6.vsh": "cc4ba618cf9d5eb76f2902c3a95bbd01d631f9391921cff223d17717f49e5796",
+    "shaders/world1/composite7.fsh": "f5a4a1370bf594e97ee0a2bf6a81ded40c6b793eb58c908a140fe17a45462b68",
+    "shaders/world1/composite7.vsh": "0bad4502d81245e9325162da7fa2a30fa7a55a5b22d7414eca11ef97d6c368a3",
+    "shaders/world1/final.fsh": "ee01876cda5c1f6bcf508086cacfc32bc7a44a57ecabab59340ad79af13a5758",
+    "shaders/world1/final.vsh": "d694da4db92b258ea6cb0d47bda4d7f0996235e65dbcd42ae29ccdd647a14cf9"
+  },
+  "modified_member": "shaders/program/composite7.glsl",
+  "activation_options": {
+    "receipt": "dev/logs/bsl-sanity-r7/original/captures/original-r7-still.json",
+    "receipt_sha256": "b90583be00cabd5d3b1e0e464511fe2e69d916423179ad92b423ea203b13768f",
+    "key": "loadedIrisOptions",
+    "value_count": 384,
+    "names_sha256": "e24463cd176595e7061616d2a4aee219657279352af733f041e86c83021c234c",
+    "values_sha256": "41a861dd87d34ad2d1a0dde900cdcc3cc813cf3d4338c3a8041b59c7493a265f",
+    "required_values": {
+      "SHADOW": "true",
+      "LIGHT_SHAFT": "true",
+      "FXAA": "true",
+      "TAA": "true",
+      "TAA_MODE": "0",
+      "RETRO_FILTER": "false"
+    }
+  },
+  "iris_source_certificate": {
+    "jar": "dependencies/runtime/iris-neoforge-1.8.12+mc1.21.1.jar",
+    "jar_sha256": "3e3f94d2d5cdcb8145c4385d521974aa2d8669b2cc212351f70cf06488182e83",
+    "classes": {
+      "pipeline.CompositeRenderer": {
+        "member": "net/irisshaders/iris/pipeline/CompositeRenderer.class",
+        "class_sha256": "710afa36c1d800b5f83f0ae69cbc52d9707332436c2c9fd32f443490e3eabfbd",
+        "javap": "dev/logs/mechanism-evaluation-r1/pass-liveness/pipeline.CompositeRenderer.javap.txt",
+        "javap_sha256": "228442459174882a844ab70a6bbd10ee969b12c1ab7343b3fee07382b07b3f17"
+      },
+      "pipeline.FinalPassRenderer": {
+        "member": "net/irisshaders/iris/pipeline/FinalPassRenderer.class",
+        "class_sha256": "b94abf03c8541649e2fac542e3f0544ddc557f46ec1a82508d34bda6c35d7696",
+        "javap": "dev/logs/mechanism-evaluation-r1/pass-liveness/pipeline.FinalPassRenderer.javap.txt",
+        "javap_sha256": "1fc00cf0eb0ac50bad5ee0a20faf753545d8676e6b108498ed438fd1cb1f485c"
+      },
+      "targets.RenderTargets": {
+        "member": "net/irisshaders/iris/targets/RenderTargets.class",
+        "class_sha256": "8a981c44321f7b0a4ef61d86e94fe3a9c0cdd5c651645b4f3ffb0bbd66847b6a",
+        "javap": "dev/logs/mechanism-evaluation-r1/pass-liveness/targets.RenderTargets.javap.txt",
+        "javap_sha256": "91eb125824b5c2ede422aa57c30bd48880d696a33d5e2afbaf9ac5e1c5bb9d4a"
+      },
+      "targets.RenderTarget": {
+        "member": "net/irisshaders/iris/targets/RenderTarget.class",
+        "class_sha256": "73f7a90b778e839797799be73007db16f9b8481b424537180b926b3f71e827c8",
+        "javap": "dev/logs/mechanism-evaluation-r1/pass-liveness/targets.RenderTarget.javap.txt",
+        "javap_sha256": "3a9503c6673235eb23362dcf7cd3127d9541a2da856e226f06c856fa3b1ecc3a"
+      },
+      "targets.BufferFlipper": {
+        "member": "net/irisshaders/iris/targets/BufferFlipper.class",
+        "class_sha256": "6743caf75f8c77b75ee0a00442b749e9ed65b38168d4c3ea8e8288568e999787",
+        "javap": "dev/logs/mechanism-evaluation-r1/pass-liveness/targets.BufferFlipper.javap.txt",
+        "javap_sha256": "0e77921596209fea14784b79ba54c974e0446170b8e0f813cc2ac8cdad468a03"
+      },
+      "targets.ClearPassCreator": {
+        "member": "net/irisshaders/iris/targets/ClearPassCreator.class",
+        "class_sha256": "49a7ab24dcbd69dc344a759974b2d70c026d42ba4ac26fde0973aa16cbaca64e",
+        "javap": "dev/logs/mechanism-evaluation-r1/pass-liveness/targets.ClearPassCreator.javap.txt",
+        "javap_sha256": "8ce9224d7f2732b18a29d6847088bcd039e95796fa0ac62cfc4ff4242df64b27"
+      },
+      "targets.ClearPass": {
+        "member": "net/irisshaders/iris/targets/ClearPass.class",
+        "class_sha256": "db5c57bf6df724e2e4f82b1d016252d86e31fd2fb96728c8adaaaee855f60887",
+        "javap": "dev/logs/mechanism-evaluation-r1/pass-liveness/targets.ClearPass.javap.txt",
+        "javap_sha256": "49369f333d20d440620938d3fe9371c59f67bdfe80ca8e8f43e6d5de1c09a4fb"
+      },
+      "shaderpack.programs.ProgramSet": {
+        "member": "net/irisshaders/iris/shaderpack/programs/ProgramSet.class",
+        "class_sha256": "7d0ee9f3c134126775182f23ba085f97d1d3d28a78a2a5ee115413317f47b495",
+        "javap": "dev/logs/mechanism-evaluation-r1/pass-liveness/shaderpack.programs.ProgramSet.javap.txt",
+        "javap_sha256": "16a077a06a48672b2d2f6f130a5bbe8c5f1c843db02b598cb14708aefa1cd25f"
+      },
+      "shaderpack.programs.ProgramSource": {
+        "member": "net/irisshaders/iris/shaderpack/programs/ProgramSource.class",
+        "class_sha256": "a1d142aac769ad65f77761f5f8275c7f22972f2e967c09a19074433eea117893",
+        "javap": "dev/logs/mechanism-evaluation-r1/pass-liveness/shaderpack.programs.ProgramSource.javap.txt",
+        "javap_sha256": "86d032a0268c6c5df2a91684fb9cbcd6712f5ba5fb8d44366fdb9c8ca3e3a8b1"
+      },
+      "shaderpack.ShaderPack": {
+        "member": "net/irisshaders/iris/shaderpack/ShaderPack.class",
+        "class_sha256": "604f775da6a84109950941227c77ec17c0a90db11a7b2de11b0bdae5181c0ef9",
+        "javap": "dev/logs/mechanism-evaluation-r1/pass-liveness/shaderpack.ShaderPack.javap.txt",
+        "javap_sha256": "7fcaa8e8f91cc67efd0fa9b0e6e46c6bb76a51a65b5fd60d062e7d437e4b9512"
+      },
+      "shaderpack.properties.ProgramDirectives": {
+        "member": "net/irisshaders/iris/shaderpack/properties/ProgramDirectives.class",
+        "class_sha256": "f73338f164c05bb1c471718771685be1b964d4df100d480ecf2339a1ee477675",
+        "javap": "dev/logs/mechanism-evaluation-r1/pass-liveness/shaderpack.properties.ProgramDirectives.javap.txt",
+        "javap_sha256": "a2e403ce97987874573fe70a6b9913f775a07efe5d7c1e45f3d02934d5924843"
+      },
+      "shaderpack.properties.PackRenderTargetDirectives": {
+        "member": "net/irisshaders/iris/shaderpack/properties/PackRenderTargetDirectives.class",
+        "class_sha256": "a5e5ad3ebd18483e5b024465bd67529a7653a5c26895cececed4668906f1c8b3",
+        "javap": "dev/logs/mechanism-evaluation-r1/pass-liveness/shaderpack.properties.PackRenderTargetDirectives.javap.txt",
+        "javap_sha256": "e99191738bbf53b1f158a725b34c02d13a15673c727b53f49754ffae47a9e3e9"
+      },
+      "shaderpack.properties.ShaderProperties": {
+        "member": "net/irisshaders/iris/shaderpack/properties/ShaderProperties.class",
+        "class_sha256": "1cf6ddb0622853cbabdab6eda3461ba72abbe61e391be83e22f550e079e8551c",
+        "javap": "dev/logs/mechanism-evaluation-r1/pass-liveness/shaderpack.properties.ShaderProperties.javap.txt",
+        "javap_sha256": "3e7f3715b033152bcc38cbaae57d2014fa9d82ebd3ec737846e8be21dc06be34"
+      },
+      "gl.texture.InternalTextureFormat": {
+        "member": "net/irisshaders/iris/gl/texture/InternalTextureFormat.class",
+        "class_sha256": "55e7e195979cbcbe3e0787a74065ce1a77d1c785845625a29ee6ae705ef86ffb",
+        "javap": "dev/logs/mechanism-evaluation-r1/pass-liveness/gl.texture.InternalTextureFormat.javap.txt",
+        "javap_sha256": "2e5256bec1d29c7914245b1bda781eb24de97c94fb53047f8b3b87b2de0cd816"
+      },
+      "gl.shader.StandardMacros": {
+        "member": "net/irisshaders/iris/gl/shader/StandardMacros.class",
+        "class_sha256": "0492c44ee26513039139c8fdc9f669cbccaefbdcdd648c32f466d1b254f63892",
+        "javap": "dev/logs/mechanism-evaluation-r1/pass-liveness/gl.shader.StandardMacros.javap.txt",
+        "javap_sha256": "9d226335f13bcd41370d3f41005e15ccd8fc3c5e10d197cdf422a286c925e363"
+      },
+      "pipeline.IrisRenderingPipeline": {
+        "member": "net/irisshaders/iris/pipeline/IrisRenderingPipeline.class",
+        "class_sha256": "95b3eb4425306964328cf771c7cc79b8bfffdf90e15bce813ad1a7bd38f34579",
+        "javap": "dev/logs/mechanism-evaluation-r1/pass-liveness/pipeline.IrisRenderingPipeline.javap.txt",
+        "javap_sha256": "ab745b25b077702c3ff0bfe4f6d3367261b9c56b50be57d7803831dc441f43e1"
+      },
+      "samplers.IrisSamplers": {
+        "member": "net/irisshaders/iris/samplers/IrisSamplers.class",
+        "class_sha256": "9ca8e284dd3a0394a90c273e2a2422b1c569e664654e85843d06d5b5a33f18e4",
+        "javap": "dev/logs/mechanism-evaluation-r1/pass-liveness/samplers.IrisSamplers.javap.txt",
+        "javap_sha256": "423097e1ceee4e2fedcce6328747544cc0a2347209c1ea77a834d9d8f06ce7d9"
+      },
+      "targets.RenderTarget$Builder": {
+        "member": "net/irisshaders/iris/targets/RenderTarget$Builder.class",
+        "class_sha256": "312c0764b209f28f89529ce5a16fd19358461d4c2692d19c019c54ad997cd1b6",
+        "javap": "dev/logs/mechanism-evaluation-r1/pass-liveness/targets.RenderTarget$Builder.javap.txt",
+        "javap_sha256": "fdfcb35c7d6fe0836b94c04a23e6f479a34446f25b6d70108c4dc482c087a9d3"
+      },
+      "shaderpack.preprocessor.PropertiesPreprocessor": {
+        "member": "net/irisshaders/iris/shaderpack/preprocessor/PropertiesPreprocessor.class",
+        "class_sha256": "71af48b19f561b3c4057080dfc9817a4fa393fa216783499bf8f13403cc58a7e",
+        "javap": "dev/logs/mechanism-evaluation-r1/pass-liveness/shaderpack.preprocessor.PropertiesPreprocessor.javap.txt",
+        "javap_sha256": "462963a22cda08207a96a99f6ed852bb83700ac559e0726730536cc37f95616d"
+      },
+      "shaderpack.properties.PackRenderTargetDirectives$RenderTargetSettings": {
+        "member": "net/irisshaders/iris/shaderpack/properties/PackRenderTargetDirectives$RenderTargetSettings.class",
+        "class_sha256": "f65672c13d29a96ba34caa2227ca377386dc93f3fa09b0df523adb5f1f3fe6af",
+        "javap": "dev/logs/mechanism-evaluation-r1/pass-liveness/shaderpack.properties.PackRenderTargetDirectives$RenderTargetSettings.javap.txt",
+        "javap_sha256": "a7a203f1cf4581ea6b197408c427f36dc2e729b8ccc839a51694db55ca2c00f8"
+      }
+    }
+  },
+  "source_certificate": {
+    "scope": "Exact original BSL archive, world0, supplied complete native R7 map, exact NeoForge Iris1.8.12/MC1.21.1; root must reobserve runtime",
+    "removed_work": "Only composite7 RT1 input mip generation and min-filter switch; composite6 unchanged",
+    "consumers": "composite7 and taa current-color RT1 reads all explicit LOD0; final reads the opposite physical output and is also explicit LOD0",
+    "end_of_lifetime": "FinalPassRenderer resets both RT1 filters to LINEAR, RT1 defaults to cleared, next frame has no mip-enabled sampling until own regeneration",
+    "unknowns": [
+      "Actual linked source/directive and GL call deletion",
+      "Actual physical RT1/sampler/filter and no external overrides",
+      "Exact downstream RGB/history and lifecycle parity",
+      "DH/PBR actual compatibility",
+      "Total rendering benefit"
+    ]
+  },
+  "launch_owner_requirements": [
+    "Rehash installed Iris and selected artifact; reobserve all 384 effective native option values against this receipt.",
+    "Verify actual dimension minecraft:overworld; BSL world0 includes a wildcard and is not itself proof of this launch scope.",
+    "Private Overworld only. Prove original c7 requests RT1 mips and candidate removes only that request; all graphics passes/flips/framebuffers remain native.",
+    "Join actual pass/source/program to RT1 main/alt input/output and sampler/filter state; source strings alone do not establish runtime activation.",
+    "Compare synchronized current/history/final outputs; differing unused mip bytes alone are not a failure.",
+    "Keep all original members and attribution. Original release has no separate license file; no distribution authorization is implied."
+  ]
+}

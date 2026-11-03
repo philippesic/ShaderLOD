@@ -1,0 +1,19 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.optimization.blissspatial.mixin",
+  "plugin": "com.pp.shaderlod.optimization.blissspatial.mixin.BlissSpatialMixinPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "BlissSpatialPassView",
+    "BlissSpatialCompositeView",
+    "BlissSpatialPipelineMixin",
+    "BlissSpatialReloadMixin",
+    "BlissSpatialPrepareMixin",
+    "BlissSpatialQuadDrawMixin",
+    "BlissSpatialSamplerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

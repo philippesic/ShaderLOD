@@ -1,0 +1,19 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.optimization.photonprime.mixin",
+  "plugin": "com.pp.shaderlod.optimization.photonprime.mixin.DepthMixinPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "DepthSodiumProgramsMixin",
+    "DepthChunkRendererMixin",
+    "DepthPipelineLifetimeMixin",
+    "DepthBuilderAccess",
+    "DepthSamplerViews$ShaderView",
+    "DepthSamplerViews$ProgramView",
+    "DepthSamplerViews$BindingView"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

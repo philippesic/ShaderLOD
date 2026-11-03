@@ -1,0 +1,6 @@
+runtime/
+evidence/
+.gradle/
+**/build/
+**/.gradle/
+**/run/

@@ -1,0 +1,3 @@
+package com.pp.shaderlod.solasprefix.mixin;import com.pp.shaderlod.solasprefix.SolasPrefixRuntime;import net.irisshaders.iris.gl.GlResource;import net.irisshaders.iris.gl.sampler.GlSampler;import org.spongepowered.asm.mixin.Mixin;import org.spongepowered.asm.mixin.injection.*;import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+/** Exact inherited Iris destroy fence, before getId can throw or storage be reused. */
+@Mixin(value=GlResource.class,remap=false)public abstract class SolasPrefixIrisSamplerMixin{@Inject(method="destroy()V",at=@At("HEAD"),require=1)private void destroy(CallbackInfo ci){if((Object)this instanceof GlSampler)SolasPrefixRuntime.allMutating();}}

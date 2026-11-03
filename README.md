@@ -11,17 +11,17 @@ Cheap water kernels use fixed loop counts; analytic normals remain experimental
 and default off until measured benefits justify them.
 
 Development targets **Minecraft 1.21.1**, chosen for the established NeoForge
-ecosystem. [Version selection](docs/VERSION_SELECTION.md) records the public
-evidence and its limits. Iris is required; Distant Horizons is optional.
+ecosystem. Iris is required; Distant Horizons is optional.
 DH terrain and water use their correct depth/projection in shared downstream
 quality decisions. An experimental, default-off policy can hand detailed terrain
-to DH sooner in an explicitly confirmed warmed scene. See the
-[terrain policy and limitations](docs/GEOMETRY_LOD.md).
+to DH sooner in an explicitly confirmed warmed scene. This policy is experimental.
 
 ## Start development
 
-Install Java 21 and Python 3.10 or newer. The Gradle wrapper and Java toolchain
-resolver are included. On a clean checkout:
+Install Java 21 and Python 3.10 or newer. Install the Python test and benchmark
+dependencies with `python3 -m pip install -r requirements-dev.txt` in your
+preferred environment. The Gradle wrapper and Java toolchain resolver are
+included. On a clean checkout:
 
 ```sh
 python3 scripts/setup_runtime.py
@@ -81,7 +81,7 @@ The benchmark uses one client and the same patched pack, alternating OFF/ON
 twice after warmup. Close other game clients first. Raw samples are written to
 the ignored run directory. Edit `run-landscape/control.json` to move both cameras
 or choose a preset; the right-hand original Photon ignores LOD-only controls.
-See [comparison preparation](docs/COMPARISON.md) and [GPU scopes](docs/GPU_TIMING.md).
+Use the [benchmark guide](docs/BENCHMARK.md) for optimization measurements.
 
 ## LOD controls
 
@@ -105,29 +105,16 @@ Build and packaging checks:
 python3 -m unittest discover -s tests -v
 ```
 
-Install `glslangValidator` to run the 1,017 fragment-program compilation variants;
-that check is skipped when the executable is absent. Iris/OpenGL runtime checks
+Install `glslangValidator` to run the fragment-program compilation checks;
+that check is skipped when the executable is absent. On this Fedora Asahi machine,
+local test compilers are available under `dependencies/toolchain/bin`; they are
+ignored by Git and are not a portable toolchain for other hosts. Iris/OpenGL runtime checks
 are separate. Results and limitations are recorded with the active goal;
 individual pass savings do not imply a proportional whole-frame improvement.
 
 ## Project guidance
 
-- [Setup and runtime evidence](docs/SETUP.md)
-- [Current goal and status](docs/STATUS.md)
-- [Photon patch and uniform contract](docs/PHOTON_INTEGRATION.md)
-- [Evaluation procedure](docs/EVALUATION.md)
-- [Agent workflow](AGENTS.md) and [team operations](docs/AGENT_OPERATIONS.md)
-- [Complete CPU/GPU investigation and proof](docs/FULL_FRAME_PROOF.md)
-- [Opt-in detailed terrain policy](docs/GEOMETRY_LOD.md)
-- [Controlled high/lower/adaptive workloads](docs/WORKLOADS.md)
-- [Repeated benchmark matrices](docs/REPEATED_BENCHMARKS.md)
-- [Optional performance-mod stacks](docs/PERFORMANCE_STACKS.md)
-- [Photon optimization mechanisms](docs/PHOTON_OPTIMIZATION.md)
-
-Agent roles and checkpoint hooks live in `.codex/`. The repository-local
-`$start-goal-team` skill lives in `.agents/skills/`; it records requested goals
-and coordinates bounded agents while inheriting your model settings.
-
-ShaderLOD's original code is MIT licensed. Photon retains its own upstream
-license, which the pack builder preserves. Review that license before publishing
-a Photon derivative; the mod jar contains no upstream Photon shaders or mod jars.
+- [Current state](docs/STATUS.md)
+- [Benchmark guide](docs/BENCHMARK.md)
+- [Experiment history](docs/EXPERIMENTS.md)
+- [Project instructions](AGENTS.md)

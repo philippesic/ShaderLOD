@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.fabric.dev.earlyalpha.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "BslAlphaProgramsMixin",
+    "BslAlphaUniformMixin",
+    "BslAlphaTerrainMixin",
+    "BslEarlyAlphaObserverFrameMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

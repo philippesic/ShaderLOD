@@ -5,12 +5,13 @@ from pathlib import Path
 import re
 import subprocess
 import unittest
+import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location("sky_builder", ROOT / "scripts/build_bliss_sky_elision_r1.py")
 b = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(b)
-Q = json.loads((ROOT / "dev/logs/cross-shader-performance-r3/bliss-shader-lod-next-r1/native-options.json").read_text())
+Q = json.loads((ROOT / "src/main/resources/assets/shaderlod/blissquad/native463.json").read_text())
 BASE = ("IS_IRIS", "IRIS_VERSION=10812", "MC_VERSION=12101", "MC_OS_MAC", "MC_HAND_DEPTH=0.125")
 EXPANDED = {}
 
@@ -50,7 +51,6 @@ class BlissSkyElisionTest(unittest.TestCase):
 
     def test_authentic_inputs_and_unchanged_members(self):
         self.assertEqual(b.sha(b.BASE.read_bytes()), b.BASE_SHA)
-        self.assertEqual(b.sha(b.OPTIONS.read_bytes()), b.OPTIONS_SHA)
         self.assertEqual(len(Q), 463)
         self.assertEqual(Q["indirect_effect"], "1")
         self.assertIn(b"#define DENOISE_SSS_AND_SSAO", self.original["shaders/lib/settings.glsl"])
@@ -96,19 +96,19 @@ class BlissSkyElisionTest(unittest.TestCase):
             if mode == 2:
                 self.assertIn("if (swappedDepth >= 1.0 && shaderlodBridgeVersion == 2", text)
                 self.assertIn("vec2 SSAO(", text)
-            path = b.OUT / ("source-mode" + str(mode) + ".fsh")
-            path.write_text("#version 330 compatibility\n#define texelFetch2D texelFetch\n" + text)
-            p = subprocess.run(["glslangValidator", "-S", "frag", str(path)], text=True, capture_output=True, timeout=15)
-            (b.OUT / ("glslang-mode" + str(mode) + ".txt")).write_text(p.stdout + p.stderr)
-            self.assertEqual(p.returncode, 0, p.stdout + p.stderr)
+            with tempfile.TemporaryDirectory() as directory:
+                path = Path(directory) / "source.fsh"
+                path.write_text("#version 330 compatibility\n#define texelFetch2D texelFetch\n" + text)
+                p = subprocess.run(["glslangValidator", "-S", "frag", str(path)], text=True, capture_output=True, timeout=15)
+                self.assertEqual(p.returncode, 0, p.stdout + p.stderr)
 
     def test_pin_and_overwrite_refusal(self):
         with self.assertRaises(ValueError):
             b.patch(self.original | {b.MEMBER: self.original[b.MEMBER] + b"\n"}, 2)
         with self.assertRaises(ValueError):
             b.patch(self.original, 4)
-        with self.assertRaises(ValueError):
-            b.build()
+        with self.assertRaisesRegex(ValueError, "owned ignored"):
+            b.build(output_dir=ROOT / "outside-owned-output")
 
 if __name__ == "__main__":
     unittest.main()

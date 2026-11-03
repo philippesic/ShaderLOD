@@ -1,0 +1,42 @@
+{
+  "archive_sha256": "120897768eaa8cb1f14a3e98f88dff009ae3204ee3b96904a4fe8586edfc1ead",
+  "options_sha256": "9b1d4db811f54cc986c97e8c8ce917f6731fbaf1f006927ccdef351bb3c5797f",
+  "status": "SOURCE_ADMIT_FINITE_PHOTON_CANDIDATE",
+  "source_admitted": true,
+  "exports": [
+    {
+      "kind": "fragment",
+      "path": "096_sodium_gbuffers_terrain_solid.fsh",
+      "original_path": "/Users/pippo/github/shaderlod/run-workloads/cross-shader-performance-r3/quad-original-exports-r1/photon/client/patched_shaders/096_sodium_gbuffers_terrain_solid.fsh",
+      "sha256": "a722fab3886120d64d155f1eca952366017492336892a428d4163871c339f9cf",
+      "unsafe_draw_identity_builtins": false
+    },
+    {
+      "kind": "vertex",
+      "path": "096_sodium_gbuffers_terrain_solid.vsh",
+      "original_path": "/Users/pippo/github/shaderlod/run-workloads/cross-shader-performance-r3/quad-original-exports-r1/photon/client/patched_shaders/096_sodium_gbuffers_terrain_solid.vsh",
+      "sha256": "613cee121fd1769c4d8f97718c21feba8e6899b161ace4b884f2f5e9db8f2f88",
+      "unsafe_draw_identity_builtins": false
+    },
+    {
+      "kind": "fragment",
+      "path": "097_sodium_gbuffers_terrain.fsh",
+      "original_path": "/Users/pippo/github/shaderlod/run-workloads/cross-shader-performance-r3/quad-original-exports-r1/photon/client/patched_shaders/097_sodium_gbuffers_terrain.fsh",
+      "sha256": "7003ef659fe402d801555854b87162ac86b483c0b63c54dd67cff0de87d7ebd8",
+      "unsafe_draw_identity_builtins": false
+    },
+    {
+      "kind": "vertex",
+      "path": "097_sodium_gbuffers_terrain.vsh",
+      "original_path": "/Users/pippo/github/shaderlod/run-workloads/cross-shader-performance-r3/quad-original-exports-r1/photon/client/patched_shaders/097_sodium_gbuffers_terrain.vsh",
+      "sha256": "613cee121fd1769c4d8f97718c21feba8e6899b161ace4b884f2f5e9db8f2f88",
+      "unsafe_draw_identity_builtins": false
+    }
+  ],
+  "boundary": "Fresh actual original native366 Overworld Iris/Sodium transformed sources; not linked-program readback or coalescer execution",
+  "encoded_draw_translation": "_draw_id assigned from a_LightAndData[3] vertex attribute, only consumed in native region+section translation; identical ordered absolute indices preserve it",
+  "scope": "Pinned APIs, original v1.3b/native366/Overworld/noDH; SOLID+CUTOUT shared INTEGER quad indices; shadow/translucent/custom IBO excluded",
+  "native_aa": "TAA true / TAAU false / FXAA true; actual taau_render_scale constant 1.0 in all four sources",
+  "cutout": "Only fragment difference is original base_color.a < 0.1 discard; no injected currentAlphaTest",
+  "required_runtime": "Existing API/config/resource/stack/lifecycle gate, full-batch preflight, same region/pass, zero element pointers, growth safe request ceiling 268435452"
+}

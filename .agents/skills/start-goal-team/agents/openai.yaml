@@ -1,4 +1,0 @@
-interface:
-  display_name: "Start ShaderLOD Goal"
-  short_description: "Set a requested project goal and bounded team"
-  default_prompt: "Use $start-goal-team to establish this new ShaderLOD project goal and coordinate useful bounded work."

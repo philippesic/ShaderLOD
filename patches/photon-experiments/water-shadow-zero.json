@@ -1,0 +1,78 @@
+{
+  "schema": 1,
+  "experiment": "photon-exact-zero-water-shadow",
+  "base_version": "v1.3b",
+  "base_sha256": "120897768eaa8cb1f14a3e98f88dff009ae3204ee3b96904a4fe8586edfc1ead",
+  "license_sha256": "514402d18eedb0afe374344ca9f0fe87b7399779518184b8fc64e31674555fc5",
+  "switch": "SHADERLOD_WATER_SHADOW_ZERO",
+  "option_declaration": "// ShaderLOD private exact-zero water shadow gate; default off.\n//#define SHADERLOD_WATER_SHADOW_ZERO\n",
+  "profile_condition": "#if defined PROGRAM_GBUFFERS_WATER && defined WORLD_OVERWORLD && defined SHADOW && !defined SHADOW_VPS",
+  "members": [
+    {
+      "path": "shaders/settings.glsl",
+      "source_sha256": "93401d268fe859cc1df81929ad41156757a98db80f80cf32af80d9cdca96c394",
+      "patched_sha256": "85b8002a9b62b23072916b5356bf54a862e9d30dc2cb2694b8ff41ef6bd73fc1",
+      "replacements": [
+        {
+          "before": "#define SETTINGS_INCLUDED\n",
+          "after": "#define SETTINGS_INCLUDED\n// ShaderLOD private exact-zero water shadow gate; default off.\n//#define SHADERLOD_WATER_SHADOW_ZERO\n"
+        }
+      ],
+      "enabled_sha256": "c4e0ea0c94946449638803f64a3d180d29a83fdc25332f8cf852ece6816637c1"
+    },
+    {
+      "path": "shaders/program/gbuffers_all_translucent.fsh",
+      "source_sha256": "01c04bc017069cf19c319a0a0875ca706554575dd01e291e17cad8565645b82f",
+      "patched_sha256": "cf5f5bddc2314b07d97cc1a76bccb90599bfd83cc0687fc36523a46ce6303e6a",
+      "replacements": [
+        {
+          "before": "#include \"/include/lighting/shadows/pcss.glsl\"\n",
+          "after": "#ifdef SHADERLOD_WATER_SHADOW_ZERO\n#if defined PROGRAM_GBUFFERS_WATER && defined WORLD_OVERWORLD && defined SHADOW && !defined SHADOW_VPS\n#include \"/include/shaderlod/water_shadow_zero.glsl\"\n#else // SHADERLOD_WATER_SHADOW_STAGE\n#endif // SHADERLOD_WATER_SHADOW_STAGE\n#else // SHADERLOD_WATER_SHADOW_ZERO\n#endif // SHADERLOD_WATER_SHADOW_ZERO\n#include \"/include/lighting/shadows/pcss.glsl\"\n"
+        },
+        {
+          "before": "    vec3 shadows = get_filtered_shadows(\n        position_scene,\n        tbn[2],\n        adjusted_light_levels.y,\n        cloud_shadows,\n        material.sss_amount,\n        shadow_distance_fade,\n        sss_depth\n    );\n",
+          "after": "#ifdef SHADERLOD_WATER_SHADOW_ZERO\n#if defined PROGRAM_GBUFFERS_WATER && defined WORLD_OVERWORLD && defined SHADOW && !defined SHADOW_VPS\n    vec3 shadows = vec3(1.0);\n    if (!shaderlod_water_shadow_zero(is_water, material.albedo, NoL)) {\n        shadows = get_filtered_shadows(\n            position_scene,\n            tbn[2],\n            adjusted_light_levels.y,\n            cloud_shadows,\n            material.sss_amount,\n            shadow_distance_fade,\n            sss_depth\n        );\n    }\n#else // SHADERLOD_WATER_SHADOW_STAGE\n    vec3 shadows = get_filtered_shadows(\n        position_scene,\n        tbn[2],\n        adjusted_light_levels.y,\n        cloud_shadows,\n        material.sss_amount,\n        shadow_distance_fade,\n        sss_depth\n    );\n#endif // SHADERLOD_WATER_SHADOW_STAGE\n#else // SHADERLOD_WATER_SHADOW_ZERO\n    vec3 shadows = get_filtered_shadows(\n        position_scene,\n        tbn[2],\n        adjusted_light_levels.y,\n        cloud_shadows,\n        material.sss_amount,\n        shadow_distance_fade,\n        sss_depth\n    );\n#endif // SHADERLOD_WATER_SHADOW_ZERO\n"
+        }
+      ]
+    },
+    {
+      "path": "shaders/include/lighting/shadows/pcss.glsl",
+      "source_sha256": "c12e98fa923306687bfa5ac2b00214d45b1614ebafb719e22839f3420750a76b",
+      "patched_sha256": "5e483b650af478f27e1ff4b469002839faa11c345a1cab884e7fa7560192b115",
+      "replacements": [
+        {
+          "before": "    float shadow = texture(shadowtex1, shadow_screen_pos);\n",
+          "after": "#ifdef SHADERLOD_WATER_SHADOW_ZERO\n#if defined PROGRAM_GBUFFERS_WATER && defined WORLD_OVERWORLD && defined SHADOW && !defined SHADOW_VPS\n    float shadow = shaderlod_water_shadow_sample(shadow_screen_pos);\n#else // SHADERLOD_WATER_SHADOW_STAGE\n    float shadow = texture(shadowtex1, shadow_screen_pos);\n#endif // SHADERLOD_WATER_SHADOW_STAGE\n#else // SHADERLOD_WATER_SHADOW_ZERO\n    float shadow = texture(shadowtex1, shadow_screen_pos);\n#endif // SHADERLOD_WATER_SHADOW_ZERO\n"
+        },
+        {
+          "before": "        shadow += texture(shadowtex1, vec3(uv, shadow_screen_pos.z));\n",
+          "after": "#ifdef SHADERLOD_WATER_SHADOW_ZERO\n#if defined PROGRAM_GBUFFERS_WATER && defined WORLD_OVERWORLD && defined SHADOW && !defined SHADOW_VPS\n        shadow += shaderlod_water_shadow_sample(vec3(uv, shadow_screen_pos.z));\n#else // SHADERLOD_WATER_SHADOW_STAGE\n        shadow += texture(shadowtex1, vec3(uv, shadow_screen_pos.z));\n#endif // SHADERLOD_WATER_SHADOW_STAGE\n#else // SHADERLOD_WATER_SHADOW_ZERO\n        shadow += texture(shadowtex1, vec3(uv, shadow_screen_pos.z));\n#endif // SHADERLOD_WATER_SHADOW_ZERO\n",
+          "count": 2
+        }
+      ]
+    }
+  ],
+  "addition": {
+    "path": "shaders/include/shaderlod/water_shadow_zero.glsl",
+    "source_path": "shaderpacks/photon-water-shadow-zero/shaders/include/shaderlod/water_shadow_zero.glsl",
+    "sha256": "ba866764a6ff29558341e1ce5aa57bc9e8dc12bedededa5ca59965d76e01d3a9"
+  },
+  "source_dependencies": {
+    "shaders/include/lighting/diffuse_lighting.glsl": "e4d10857d779d0e461290c0d09c594cbaf9ac45e1a3db541d4ce9b7af4abaf04",
+    "shaders/include/lighting/specular_lighting.glsl": "01d260e65de1dc1766e62044d79adef61dbdee9b75a8d48bd15ff8bd778a15e0",
+    "shaders/include/surface/material.glsl": "23b1ab4f304d2c02ffe497006b5feefd649ab3176c01251fe5e8cd79cee66d78",
+    "shaders/include/fog/simple_fog.glsl": "66d17b0d86c68e1dd6315728da26703f2bac1e913b4b10f39950b63236cd7580",
+    "shaders/include/utility/fast_math.glsl": "c70c9dac6870d25591e11e211de7e35a84702f18eeca84c198865fc391ca713e",
+    "shaders/include/lighting/shadows/common.glsl": "d0e0715e2edecaf8852cdead9c98dfd9a756f68fb4f74d4e1d727ea0e799e3a6",
+    "shaders/shaders.properties": "f8cc8df60f930612e8817e4176a34886c1a9de778c15427a5468ecbc4f71ee9a"
+  },
+  "gate": "is_water && finite(albedo,NoL) && max_of(albedo)<eps && NoL<=eps",
+  "excluded_quality": "SHADOW_VPS",
+  "distance_units": "none; existing consumer epsilon 1e-6",
+  "transition": "hard exact-zero selection; no temporal reuse",
+  "sampling": "known enabled core uses explicit LOD0 nonmip shadowtex1; unknown/globalOFF original implicit sampling",
+  "iris_option_discovery": {
+    "jar_path": "dependencies/runtime/iris-neoforge-1.8.12+mc1.21.1.jar",
+    "jar_sha256": "3e3f94d2d5cdcb8145c4385d521974aa2d8669b2cc212351f70cf06488182e83"
+  }
+}

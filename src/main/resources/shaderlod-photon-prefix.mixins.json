@@ -1,0 +1,21 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.photonprefix.mixin",
+  "plugin": "com.pp.shaderlod.photonprefix.mixin.PhotonPrefixPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "PhotonPrefixSodiumR8Mixin",
+    "PhotonPrefixBuildR8Mixin",
+    "PhotonPrefixPipelineR8Mixin",
+    "PhotonPrefixAtlasR8Mixin",
+    "PhotonPrefixTextureR8Mixin",
+    "PhotonPrefixResourceR8Mixin",
+    "PhotonPrefixWorldR8Mixin",
+    "PhotonPrefixManagerR8Mixin",
+    "PhotonPrefixFormatReloadR12Mixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

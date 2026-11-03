@@ -14,9 +14,9 @@ import net.neoforged.neoforge.client.event.ClientTickEvent;
 public final class GeometryLodController {
     public record Status(boolean active, int requestedChunks, int effectiveChunks, int cap,
                          String reason, String detail, int stableTicks, int warmupTicks) {}
-    private record State(GeometryCoverageGuard.Scene scene, GeometryLodPolicy.Decision decision) {}
+    private record State(GeometryCoverageGuard.Scene scene, GeometryLodPolicy.Decision decision, long flagsGeneration, long lifecycleGeneration) {}
 
-    private static volatile State state = new State(null, new GeometryLodPolicy.Decision(false, 16, "not initialized"));
+    private static volatile State state = new State(null, new GeometryLodPolicy.Decision(false, 16, "not initialized"), -1, -1);
     private static volatile Status status = new Status(false, 0, 0, 16, "not initialized", "", 0, 600);
     private static GeometryCoverageGuard.Scene observedScene;
     private static int stableTicks;
@@ -28,12 +28,32 @@ public final class GeometryLodController {
 
     private GeometryLodController() {}
 
+    private static long observedFlagsGeneration=-1, observedLifecycleGeneration=-1;
+    /** Generation changes require fresh coverage, even when the scene itself did not change. */
+    private static void checkGenerations() {
+        long flags=com.pp.shaderlod.optimization.OptimizationConfig.generation();
+        long lifecycle=com.pp.shaderlod.integration.makeupquad.MakeUpQuadLifecycle.epoch();
+        if (observedFlagsGeneration<0 || flags!=observedFlagsGeneration || lifecycle!=observedLifecycleGeneration) {
+            coverage.invalidate(); stableTicks=0; observedScene=null;
+            State current=state;
+            state=new State(null,new GeometryLodPolicy.Decision(false,current.decision().cap(),
+                    "terrain inputs changed; reconfirm coverage"),flags,lifecycle);
+            Status previous=status;
+            int original=lastOriginalEffectiveChunks>0?lastOriginalEffectiveChunks:previous.requestedChunks();
+            status=new Status(false,previous.requestedChunks(),original,current.decision().cap(),
+                    "terrain inputs changed; reconfirm coverage",previous.detail(),0,previous.warmupTicks());
+        }
+        observedFlagsGeneration=flags; observedLifecycleGeneration=lifecycle;
+    }
+
+
     /** Register once on NeoForge's client game event bus from the main mod constructor. */
     public static void onClientTick(ClientTickEvent.Post event) {
+        checkGenerations();
         Minecraft client = Minecraft.getInstance();
         Object world = client.level;
         int requested = client.options.renderDistance().get();
-        boolean optedIn = ShaderLodConfig.ENABLED.get() && ShaderLodConfig.TERRAIN_ENABLED.get();
+        boolean optedIn = ShaderLodConfig.SPEC.isLoaded() && ShaderLodConfig.ENABLED.get() && ShaderLodConfig.PRESET.get()==LodPreset.PERFORMANCE && com.pp.shaderlod.optimization.OptimizationConfig.requested(com.pp.shaderlod.optimization.OptimizationId.TERRAIN_RADIUS) && !com.pp.shaderlod.integration.makeupquad.MakeUpQuadLifecycle.suspended();
         Object pipeline = null;
         boolean irisReady = false;
         boolean dhReady = false;
@@ -62,7 +82,7 @@ public final class GeometryLodController {
             }
         }
         int warmupTicks = ShaderLodConfig.TERRAIN_WARMUP_SECONDS.get() * 20;
-        // A persisted true waits for the first stable eligible scene at startup.
+        // Persisted acknowledgement does not qualify an unknown startup generation.
         // Once bound, reload/readiness/travel/config changes require false then true.
         GeometryCoverageGuard.Scene scene = world != null && camera != null && irisReady && dhReady && optedIn
                 ? new GeometryCoverageGuard.Scene(world, pipeline, camera,
@@ -77,10 +97,10 @@ public final class GeometryLodController {
         boolean coverageConfirmed = coverage.confirmed(stableTicks >= warmupTicks ? scene : null,
                 ShaderLodConfig.TERRAIN_WARM_SOURCE_CONFIRMED.get());
         var decision = GeometryLodPolicy.decide(new GeometryLodPolicy.Inputs(
-                ShaderLodConfig.ENABLED.get(), ShaderLodConfig.TERRAIN_ENABLED.get(), world != null,
+                ShaderLodConfig.ENABLED.get(), optedIn, world != null,
                 irisReady, dhReady, coverageConfirmed,
                 stableTicks, warmupTicks, cap));
-        state = new State(scene, decision);
+        state = new State(scene, decision, observedFlagsGeneration, observedLifecycleGeneration);
         int original = lastOriginalEffectiveChunks > 0 ? lastOriginalEffectiveChunks : requested;
         status = new Status(decision.active(), requested, decision.apply(original), decision.cap(),
                 decision.reason(), detail, stableTicks, warmupTicks);
@@ -88,13 +108,22 @@ public final class GeometryLodController {
 
     /** Constant work: no reflection, allocations, GL calls, config reads or renderer mutations. */
     public static int effectiveChunks(int original) {
+        checkGenerations();
         lastOriginalEffectiveChunks = original;
         State current = state;
         // Travel, dimension and camera changes restore before the next tick.
-        if (!current.decision().active() || !coverage.isConfirmed(current.scene())) return original;
+        if (!com.pp.shaderlod.optimization.OptimizationConfig.requested(com.pp.shaderlod.optimization.OptimizationId.TERRAIN_RADIUS) ||
+                com.pp.shaderlod.integration.makeupquad.MakeUpQuadLifecycle.suspended() ||
+                current.flagsGeneration()!=com.pp.shaderlod.optimization.OptimizationConfig.generation() ||
+                current.lifecycleGeneration()!=com.pp.shaderlod.integration.makeupquad.MakeUpQuadLifecycle.epoch() ||
+                !current.decision().active() || !coverage.isConfirmed(current.scene())) return original;
         Minecraft client = Minecraft.getInstance();
         Entity camera = client.getCameraEntity();
-        if (current.scene() == null || camera == null || !current.scene().contains(client.level, camera,
+        if (current.scene() == null || camera == null
+                || current.scene().pipeline()!=Iris.getPipelineManager().getPipelineNullable()
+                || current.scene().requestedChunks()!=client.options.renderDistance().get()
+                || current.scene().cap()!=ShaderLodConfig.TERRAIN_VANILLA_CHUNK_CAP.get()
+                || !current.scene().contains(client.level, camera,
                 camera.getX(), camera.getY(), camera.getZ())) {
             coverage.invalidate();
             return original;
@@ -110,17 +139,28 @@ public final class GeometryLodController {
      * bypass warmup, inspect terrain coverage, or enable the terrain policy.
      */
     public static boolean confirmCurrentScene() {
+        checkGenerations();
         Minecraft client = Minecraft.getInstance();
         Entity camera = client.getCameraEntity();
         State current = state;
         GeometryCoverageGuard.Scene scene = current.scene();
         if (client.level == null || client.player == null || camera == null || scene == null
-                || !scene.contains(client.level, camera, camera.getX(), camera.getY(), camera.getZ())) {
+                || !scene.contains(client.level, camera, camera.getX(), camera.getY(), camera.getZ())
+                || scene.pipeline()!=Iris.getPipelineManager().getPipelineNullable()
+                || scene.requestedChunks()!=client.options.renderDistance().get()
+                || scene.cap()!=ShaderLodConfig.TERRAIN_VANILLA_CHUNK_CAP.get()
+                || stableTicks < ShaderLodConfig.TERRAIN_WARMUP_SECONDS.get()*20) {
             return false;
         }
         coverage.rearm();
-        if (stableTicks >= status.warmupTicks()) coverage.confirmed(scene, true);
+        coverage.confirmed(scene, true);
         return true;
+    }
+
+    public static String confirmationReason() {
+        return state.scene()==null ? "The current DH scene is not eligible for terrain replacement."
+                : stableTicks < status.warmupTicks() ? "Warm this DH scene for " + ((status.warmupTicks()-stableTicks+19)/20) + " more seconds, then inspect coverage and confirm."
+                : "Inspect complete DH replacement coverage before confirming this current scene.";
     }
 
     /** Immediately fail open; caller can clear/save the config flag for durable revocation. */
@@ -128,7 +168,7 @@ public final class GeometryLodController {
         coverage.invalidate();
         State current = state;
         state = new State(current.scene(), new GeometryLodPolicy.Decision(false,
-                current.decision().cap(), "DH replacement coverage revoked"));
+                current.decision().cap(), "DH replacement coverage revoked"), -1, -1);
         Status previous = status;
         int original = lastOriginalEffectiveChunks > 0 ? lastOriginalEffectiveChunks : previous.requestedChunks();
         status = new Status(false, previous.requestedChunks(), original, previous.cap(),

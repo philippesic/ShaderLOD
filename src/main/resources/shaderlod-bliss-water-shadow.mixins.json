@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.optimization.blisswater.mixin",
+  "plugin": "com.pp.shaderlod.optimization.blisswater.mixin.BlissWaterShadowPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "ShadowPipelineView",
+    "ShadowFrameMixin",
+    "ShadowReloadMixin",
+    "ShadowLegacyOwnerMixin",
+    "ShadowLegacyDrawMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.optimization.reimagineddepth.mixin",
+  "plugin": "com.pp.shaderlod.optimization.reimagineddepth.mixin.ReimaginedAoDepthMixinPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [],
+  "client": [
+    "ReimaginedAoDepthCompositeMixin",
+    "ReimaginedAoDepthLegacyDrawMixin",
+    "ReimaginedAoDepthModernDrawMixin",
+    "ReimaginedAoDepthDirectDrawMixin",
+    "ReimaginedAoDepthPearlDirectDrawMixin",
+    "ReimaginedAoDepthReloadMixin",
+    "ReimaginedAoDepthPipelineMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

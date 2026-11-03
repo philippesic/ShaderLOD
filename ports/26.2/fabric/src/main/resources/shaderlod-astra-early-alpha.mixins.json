@@ -1,0 +1,19 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.optimization.astraearlyalpha.mixin",
+  "plugin": "com.pp.shaderlod.optimization.astraearlyalpha.mixin.AstraEarlyAlphaPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "AstraAlphaProgramsMixin",
+    "AstraAlphaUniformMixin",
+    "AstraAlphaDrawMixin",
+    "AstraAlphaLifecycleMixin",
+    "AstraAlphaDestroyMixin",
+    "AstraAlphaCloseMixin",
+    "AstraAlphaPipelineView"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -184,12 +184,12 @@
     "shaders/include/shaderlod/effect_policy.glsl": "5df5427a1cfa51e68446978040235061ab6db60ec3f5079d40ffa0c39bad6943",
     "shaders/include/shaderlod/photon_linear_basis.glsl": "c3dcddf89570759be947be1e98d6c2c983cfa4948d0df2bd0b1c1099b660b5a2",
     "shaders/include/shaderlod/photon_original_sky.glsl": "830671927217110800d91f45c7f5074d20ea9820c03b783b068aaaf6efd8e629",
-    "shaders/include/shaderlod/photon_spatial_adapter.glsl": "b74a872678aad5c0a09e99a641d449bdb07f9dfba6b104b1106a28251b349c7b",
-    "shaders/include/shaderlod/spatial_pipeline.glsl": "d0f44c038320fb8f68bc3769888f69d7db9b23b47e335861e4d59e33530652c9",
-    "shaders/include/shaderlod/spatial_plan.glsl": "70738064fd0dad8b63af95868be55d7df6aba337f398b3d6ff6ca5c5f5709033",
+    "shaders/include/shaderlod/photon_spatial_adapter.glsl": "f0e0c5917a061cf6d999b07c8c937424ad083104c694552d4f32050799f6bb78",
+    "shaders/include/shaderlod/spatial_pipeline.glsl": "89706bd84d258058dad6e81f05e125aed5af3019ca5b303d879a802037a4d124",
+    "shaders/include/shaderlod/spatial_plan.glsl": "b3e92b9a26f59c03dc1b14a90e5ab40012fe38fc5b226664429f7a138bab46c9",
     "shaders/include/shaderlod/surface_region_continuity.glsl": "497c38b723df0255e9b07b5b62e695d644f0d0eb19538f14db5f95846e9cc040",
     "shaders/include/shaderlod/work_policy.glsl": "1b70d1b34959778ac34ae9316797c23d858531ff366b55373bae1c7ee55ee309",
-    "shaders/program/shaderlod_spatial_prepass.fsh": "e01fe0cc82d30174d2ae81696e93aa044ae100fe186c22df862397a1eddcb408",
+    "shaders/program/shaderlod_spatial_prepass.fsh": "034f7cc924608720dd760397b4f621579a08ccdfee3cf595a90f1444cbefabae",
     "shaders/world-1/deferred5.fsh": "91a5c585d8756d1ad085e1faf6d5419e929f1e00336da436a5bf77323b6c8c56",
     "shaders/world-1/deferred5.vsh": "c076400a410a980af1f505ec6f9bf863518141014a302b55c919215773113097",
     "shaders/world0/deferred5.fsh": "7e2ad5e02559b740b661f7d5fdd92fe32e54f40ed84ab0f7dad0e626236e5b95",
@@ -200,9 +200,9 @@
   "shared_helpers": {
     "effect_policy.glsl": "5df5427a1cfa51e68446978040235061ab6db60ec3f5079d40ffa0c39bad6943",
     "work_policy.glsl": "1b70d1b34959778ac34ae9316797c23d858531ff366b55373bae1c7ee55ee309",
-    "spatial_plan.glsl": "70738064fd0dad8b63af95868be55d7df6aba337f398b3d6ff6ca5c5f5709033",
+    "spatial_plan.glsl": "b3e92b9a26f59c03dc1b14a90e5ab40012fe38fc5b226664429f7a138bab46c9",
     "surface_region_continuity.glsl": "497c38b723df0255e9b07b5b62e695d644f0d0eb19538f14db5f95846e9cc040",
-    "spatial_pipeline.glsl": "d0f44c038320fb8f68bc3769888f69d7db9b23b47e335861e4d59e33530652c9"
+    "spatial_pipeline.glsl": "89706bd84d258058dad6e81f05e125aed5af3019ca5b303d879a802037a4d124"
   },
   "sky_source": {
     "source_prelude_sha256": "8c9810fa2a709ce0dc17da7a432f82fefa5efc7540b7241abef05f5593b738f8",

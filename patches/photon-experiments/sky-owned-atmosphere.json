@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "experiment": "photon-sky-owned-atmosphere",
+  "base_sha256": "970d670116e28202ae6c1067cb086294995f02ad02a3b58ef2664d208590b57f",
+  "upstream_sha256": "120897768eaa8cb1f14a3e98f88dff009ae3204ee3b96904a4fe8586edfc1ead",
+  "license_sha256": "514402d18eedb0afe374344ca9f0fe87b7399779518184b8fc64e31674555fc5",
+  "members": [
+    {
+      "path": "shaders/program/d4_deferred_shading.fsh",
+      "source_sha256": "212081e707c20c78e17cbfd3380b2f22eb696cc1aa14bdf006c07d59f53f67e0",
+      "patched_sha256": "585309bef18670fe45a8f577905dda1e8f0d836a41d1c5a5e71d538b6ee69249",
+      "replacements": [
+        {
+          "before": "#include \"/include/sky/sky.glsl\"",
+          "after": "#include \"/include/sky/sky.glsl\"\n#include \"/include/shaderlod/sky_owned_atmosphere.glsl\""
+        },
+        {
+          "before": "    vec3 atmosphere = atmosphere_scattering(\n        direction_world,\n        sun_color,\n        sun_dir,\n        moon_color,\n        moon_dir,\n        /* use_klein_nishina_phase */ depth == 1.0\n    );",
+          "after": "#if defined BORDER_FOG || defined BLOCKY_CLOUDS\n    vec3 atmosphere = atmosphere_scattering(\n        direction_world,\n        sun_color,\n        sun_dir,\n        moon_color,\n        moon_dir,\n        /* use_klein_nishina_phase */ depth == 1.0\n    );\n#endif // SHADERLOD_ORIGINAL_ATMOSPHERE_CONSUMERS"
+        },
+        {
+          "before": "    if (depth == 1.0) { // Sky\n#if defined WORLD_OVERWORLD\n",
+          "after": "    if (depth == 1.0) { // Sky\n#if defined WORLD_OVERWORLD\n#if !defined BORDER_FOG && !defined BLOCKY_CLOUDS\n    vec3 atmosphere = shaderlod_sky_owned_atmosphere(\n        direction_world,\n        sun_color,\n        sun_dir,\n        moon_color,\n        moon_dir,\n        /* use_klein_nishina_phase */ depth == 1.0\n    );\n#endif // SHADERLOD_SKY_OWNED_ATMOSPHERE\n"
+        }
+      ]
+    }
+  ],
+  "addition": {
+    "path": "shaders/include/shaderlod/sky_owned_atmosphere.glsl",
+    "source_path": "patches/photon-experiments/sky_owned_atmosphere.glsl",
+    "sha256": "e42edbe39dade0ac34a2f4a16923e90d4ea15d3440340f0919a8fa102d937374"
+  },
+  "original_helper": {
+    "path": "shaders/include/sky/atmosphere.glsl",
+    "member_sha256": "d6033728e8f6301d9b68b5a294ae06dcfc3ae5315208ab3e25fbbe826714ba79",
+    "function_sha256": "88fa21575e3e475c0d76860a34e2c1773b9ba1824710c5a9fcebf3585015502d",
+    "first_line": 279,
+    "last_line": 450
+  },
+  "policy": "Experimental existing-sky-branch ownership only when BORDER_FOG and BLOCKY_CLOUDS absent; either present preserves original evaluation. Local explicit LUT LOD0. No new runtime flag or depth branch. Production original Off/Quality unchanged. Actual sampler/rendering/quality/performance unverified."
+}

@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.fabric.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "client": [
+    "FabricCoreUniformsMixin",
+    "MeasurementFrameMixin",
+    "MeasurementCleanupMixin",
+    "MeasurementReloadMixin",
+    "CompileDimensionMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -1,0 +1,351 @@
+{
+  "spatial_effect_controls": {
+    "SHADOW_FILTERING": {
+      "mode": "INHERIT",
+      "requested": {
+        "enabled": false,
+        "preserveSalientLighting": true,
+        "bands": {
+          "nearBlocks": 32.0,
+          "farBlocks": 96.0,
+          "transitionBlocks": 8.0
+        },
+        "mediumWorkRatio": 1.0,
+        "farWorkRatio": 1.0
+      },
+      "policy": {
+        "enabled": false,
+        "preserveSalientLighting": true,
+        "bands": {
+          "nearBlocks": 32.0,
+          "farBlocks": 96.0,
+          "transitionBlocks": 8.0
+        },
+        "mediumWorkRatio": 1.0,
+        "farWorkRatio": 1.0
+      },
+      "repaired": false
+    },
+    "AMBIENT_OCCLUSION": {
+      "mode": "INHERIT",
+      "requested": {
+        "enabled": false,
+        "preserveSalientLighting": true,
+        "bands": {
+          "nearBlocks": 32.0,
+          "farBlocks": 96.0,
+          "transitionBlocks": 8.0
+        },
+        "mediumWorkRatio": 1.0,
+        "farWorkRatio": 1.0
+      },
+      "policy": {
+        "enabled": false,
+        "preserveSalientLighting": true,
+        "bands": {
+          "nearBlocks": 32.0,
+          "farBlocks": 96.0,
+          "transitionBlocks": 8.0
+        },
+        "mediumWorkRatio": 1.0,
+        "farWorkRatio": 1.0
+      },
+      "repaired": false
+    },
+    "REFLECTIONS": {
+      "mode": "INHERIT",
+      "requested": {
+        "enabled": false,
+        "preserveSalientLighting": true,
+        "bands": {
+          "nearBlocks": 32.0,
+          "farBlocks": 96.0,
+          "transitionBlocks": 8.0
+        },
+        "mediumWorkRatio": 1.0,
+        "farWorkRatio": 1.0
+      },
+      "policy": {
+        "enabled": false,
+        "preserveSalientLighting": true,
+        "bands": {
+          "nearBlocks": 32.0,
+          "farBlocks": 96.0,
+          "transitionBlocks": 8.0
+        },
+        "mediumWorkRatio": 1.0,
+        "farWorkRatio": 1.0
+      },
+      "repaired": false
+    },
+    "VOLUMETRICS": {
+      "mode": "INHERIT",
+      "requested": {
+        "enabled": false,
+        "preserveSalientLighting": true,
+        "bands": {
+          "nearBlocks": 32.0,
+          "farBlocks": 96.0,
+          "transitionBlocks": 8.0
+        },
+        "mediumWorkRatio": 1.0,
+        "farWorkRatio": 1.0
+      },
+      "policy": {
+        "enabled": false,
+        "preserveSalientLighting": true,
+        "bands": {
+          "nearBlocks": 32.0,
+          "farBlocks": 96.0,
+          "transitionBlocks": 8.0
+        },
+        "mediumWorkRatio": 1.0,
+        "farWorkRatio": 1.0
+      },
+      "repaired": false
+    },
+    "WATER_SURFACE": {
+      "mode": "INHERIT",
+      "requested": {
+        "enabled": false,
+        "preserveSalientLighting": true,
+        "bands": {
+          "nearBlocks": 32.0,
+          "farBlocks": 96.0,
+          "transitionBlocks": 8.0
+        },
+        "mediumWorkRatio": 1.0,
+        "farWorkRatio": 1.0
+      },
+      "policy": {
+        "enabled": false,
+        "preserveSalientLighting": true,
+        "bands": {
+          "nearBlocks": 32.0,
+          "farBlocks": 96.0,
+          "transitionBlocks": 8.0
+        },
+        "mediumWorkRatio": 1.0,
+        "farWorkRatio": 1.0
+      },
+      "repaired": false
+    },
+    "MATERIALS": {
+      "mode": "INHERIT",
+      "requested": {
+        "enabled": false,
+        "preserveSalientLighting": true,
+        "bands": {
+          "nearBlocks": 32.0,
+          "farBlocks": 96.0,
+          "transitionBlocks": 8.0
+        },
+        "mediumWorkRatio": 1.0,
+        "farWorkRatio": 1.0
+      },
+      "policy": {
+        "enabled": false,
+        "preserveSalientLighting": true,
+        "bands": {
+          "nearBlocks": 32.0,
+          "farBlocks": 96.0,
+          "transitionBlocks": 8.0
+        },
+        "mediumWorkRatio": 1.0,
+        "farWorkRatio": 1.0
+      },
+      "repaired": false
+    },
+    "OPAQUE_LIGHTING": {
+      "mode": "ADAPTIVE",
+      "requested": {
+        "enabled": true,
+        "preserveSalientLighting": true,
+        "bands": {
+          "nearBlocks": 32.0,
+          "farBlocks": 96.0,
+          "transitionBlocks": 8.0
+        },
+        "mediumWorkRatio": 1.0,
+        "farWorkRatio": 0.25
+      },
+      "policy": {
+        "enabled": true,
+        "preserveSalientLighting": true,
+        "bands": {
+          "nearBlocks": 32.0,
+          "farBlocks": 96.0,
+          "transitionBlocks": 8.0
+        },
+        "mediumWorkRatio": 1.0,
+        "farWorkRatio": 0.25
+      },
+      "repaired": false
+    }
+  },
+  "spatial_effect_controls_sha256": "98d3b9fcba8ad94b06261d9574cb89757194d8047abe585f63c295a970311b72",
+  "spatial_adapter_binding": {
+    "reason": "AVAILABLE",
+    "descriptor": {
+      "identity": {
+        "id": "shaderlod:photon-shared-spatial",
+        "revision": "v1.3b-shared-spatial-cf9acc6617dbfdf388b0c54894914242270ce8e582eeef565e0a7bd08039139e"
+      },
+      "protocols": [
+        {
+          "id": "shaderlod:core",
+          "acceptedVersions": [
+            2
+          ]
+        },
+        {
+          "id": "shaderlod:effects",
+          "acceptedVersions": [
+            2
+          ]
+        },
+        {
+          "id": "shaderlod:capabilities",
+          "acceptedVersions": [
+            1
+          ]
+        }
+      ],
+      "capabilities": [
+        {
+          "key": {
+            "effect": "OPAQUE_LIGHTING",
+            "operation": "shaderlod:opaque_spatial_irradiance",
+            "kind": "RATE"
+          },
+          "domain": {
+            "retainedRates": [
+              0.25,
+              1.0
+            ]
+          }
+        }
+      ]
+    },
+    "operations": [
+      {
+        "effect": "OPAQUE_LIGHTING",
+        "operation": "shaderlod:opaque_spatial_irradiance",
+        "kind": "RATE"
+      }
+    ]
+  },
+  "spatial_adapter_binding_sha256": "676a7949900be99a382e00d96e5a2fc2f35dbbacacc0188a3a21468e77c5a988",
+  "spatial_source_qualification": {
+    "qualified": true,
+    "source_binding": {
+      "adapter": {
+        "id": "shaderlod:photon-shared-spatial",
+        "revision": "v1.3b-shared-spatial-cf9acc6617dbfdf388b0c54894914242270ce8e582eeef565e0a7bd08039139e"
+      },
+      "sourceSha256": "db5a81b57e584237cc6e2f47434215a0d33ae365dde1677a82d3420971c861b9",
+      "memberSha256": {
+        "shaders/include/shaderlod/photon_linear_basis.glsl": "c3dcddf89570759be947be1e98d6c2c983cfa4948d0df2bd0b1c1099b660b5a2",
+        "shaders/shaders.properties": "cd83f7009b5b254865468fd3a3d3b7bbf621d143833fe7f3780de438fa29db47",
+        "shaders/world1/deferred5.fsh": "41246aedab1a3020c82bfb347b0a6efbeaca2a8c2b2efa199fca0c8f331c4cd0",
+        "shaders/include/shaderlod/effect_policy.glsl": "5df5427a1cfa51e68446978040235061ab6db60ec3f5079d40ffa0c39bad6943",
+        "shaders/program/d4_deferred_shading.fsh": "0c7bff3c6369df0601781ea08488e8a9cd2f6e7634e43b526ae2815c899a9def",
+        "shaders/world-1/deferred5.vsh": "c076400a410a980af1f505ec6f9bf863518141014a302b55c919215773113097",
+        "shaders/include/lighting/shadows/pcss.glsl": "fb5a28fd5594c5465e3b4e1b30ccbdee61957a6c86d8e64fd70f047d28a9db9f",
+        "LICENSE": "514402d18eedb0afe374344ca9f0fe87b7399779518184b8fc64e31674555fc5",
+        "shaders/world-1/deferred4.fsh": "965b7698e385459af2af916455b27f08b76583c694fa949138e62dd2cc61bad0",
+        "shaders/world0/deferred5.vsh": "70e1a7a4657765cff24e50aa92be4ae481ea4994e961416cf7fe434ac0660187",
+        "shaders/world0/deferred4.fsh": "70fe571207f38ead75d5223eab3088d3b11d0fa65894b64c73842e15069c5e69",
+        "shaders/include/shaderlod/spatial_plan.glsl": "b3e92b9a26f59c03dc1b14a90e5ab40012fe38fc5b226664429f7a138bab46c9",
+        "shaders/include/shaderlod/surface_region_continuity.glsl": "497c38b723df0255e9b07b5b62e695d644f0d0eb19538f14db5f95846e9cc040",
+        "shaders/include/buffers.glsl": "c096d28c2c2c5232fea8770af133f6dec22901d6a3c3e25b951dede10be5672b",
+        "shaders/world1/deferred5.vsh": "dd5d9becf6aae7cce4237fa2afcd339d30976457ff8f6500a7b844fdc7cd3975",
+        "shaders/include/lighting/shadows/ssrt.glsl": "00b43e59666a8a7d1f35cb01c5463a4e6f624a1e7eeea8adc2d73810eb939a2c",
+        "shaders/include/shaderlod/photon_spatial_adapter.glsl": "f0e0c5917a061cf6d999b07c8c937424ad083104c694552d4f32050799f6bb78",
+        "shaders/world1/deferred4.fsh": "0cd8f95ff73c14e130e83705d322d8fefdd9e9ade7ffc7950fa455f74e26d8a6",
+        "shaders/program/shaderlod_spatial_prepass.fsh": "034f7cc924608720dd760397b4f621579a08ccdfee3cf595a90f1444cbefabae",
+        "shaders/include/shaderlod/photon_original_sky.glsl": "830671927217110800d91f45c7f5074d20ea9820c03b783b068aaaf6efd8e629",
+        "shaders/include/shaderlod/spatial_pipeline.glsl": "89706bd84d258058dad6e81f05e125aed5af3019ca5b303d879a802037a4d124",
+        "shaders/settings.glsl": "bf612686d1c9b79a71e3b1338600d67739fb5455a0612c2b1caea944e324d186",
+        "shaders/world-1/deferred5.fsh": "91a5c585d8756d1ad085e1faf6d5419e929f1e00336da436a5bf77323b6c8c56",
+        "shaders/include/shaderlod/work_policy.glsl": "1b70d1b34959778ac34ae9316797c23d858531ff366b55373bae1c7ee55ee309",
+        "shaders/world0/deferred5.fsh": "7e2ad5e02559b740b661f7d5fdd92fe32e54f40ed84ab0f7dad0e626236e5b95"
+      },
+      "requiredOptions": {
+        "ENVIRONMENT_REFLECTIONS": [
+          "false"
+        ],
+        "CLOUD_SHADOWS": [
+          "false"
+        ],
+        "SHADERLOD_SHARED_SPATIAL": [
+          "true"
+        ],
+        "BORDER_FOG": [
+          "false"
+        ],
+        "SH_SKYLIGHT": [
+          "false"
+        ],
+        "SKY_REFLECTIONS": [
+          "false"
+        ],
+        "NORMAL_MAPPING": [
+          "false"
+        ],
+        "SHADOW_VPS": [
+          "false"
+        ],
+        "SPECULAR_MAPPING": [
+          "false"
+        ],
+        "BLOCKY_CLOUDS": [
+          "false"
+        ],
+        "SHADOW_COLOR": [
+          "false"
+        ],
+        "TAAU": [
+          "false"
+        ],
+        "COLORED_LIGHTS": [
+          "false"
+        ],
+        "GALAXY": [
+          "false"
+        ]
+      }
+    },
+    "source_fingerprint": {
+      "sourceSha256": "db5a81b57e584237cc6e2f47434215a0d33ae365dde1677a82d3420971c861b9",
+      "memberSha256": {
+        "shaders/include/shaderlod/photon_linear_basis.glsl": "c3dcddf89570759be947be1e98d6c2c983cfa4948d0df2bd0b1c1099b660b5a2",
+        "shaders/shaders.properties": "cd83f7009b5b254865468fd3a3d3b7bbf621d143833fe7f3780de438fa29db47",
+        "shaders/world1/deferred5.fsh": "41246aedab1a3020c82bfb347b0a6efbeaca2a8c2b2efa199fca0c8f331c4cd0",
+        "shaders/include/shaderlod/effect_policy.glsl": "5df5427a1cfa51e68446978040235061ab6db60ec3f5079d40ffa0c39bad6943",
+        "shaders/program/d4_deferred_shading.fsh": "0c7bff3c6369df0601781ea08488e8a9cd2f6e7634e43b526ae2815c899a9def",
+        "shaders/world-1/deferred5.vsh": "c076400a410a980af1f505ec6f9bf863518141014a302b55c919215773113097",
+        "shaders/include/lighting/shadows/pcss.glsl": "fb5a28fd5594c5465e3b4e1b30ccbdee61957a6c86d8e64fd70f047d28a9db9f",
+        "LICENSE": "514402d18eedb0afe374344ca9f0fe87b7399779518184b8fc64e31674555fc5",
+        "shaders/world-1/deferred4.fsh": "965b7698e385459af2af916455b27f08b76583c694fa949138e62dd2cc61bad0",
+        "shaders/world0/deferred5.vsh": "70e1a7a4657765cff24e50aa92be4ae481ea4994e961416cf7fe434ac0660187",
+        "shaders/world0/deferred4.fsh": "70fe571207f38ead75d5223eab3088d3b11d0fa65894b64c73842e15069c5e69",
+        "shaders/include/shaderlod/spatial_plan.glsl": "b3e92b9a26f59c03dc1b14a90e5ab40012fe38fc5b226664429f7a138bab46c9",
+        "shaders/include/shaderlod/surface_region_continuity.glsl": "497c38b723df0255e9b07b5b62e695d644f0d0eb19538f14db5f95846e9cc040",
+        "shaders/include/buffers.glsl": "c096d28c2c2c5232fea8770af133f6dec22901d6a3c3e25b951dede10be5672b",
+        "shaders/world1/deferred5.vsh": "dd5d9becf6aae7cce4237fa2afcd339d30976457ff8f6500a7b844fdc7cd3975",
+        "shaders/include/lighting/shadows/ssrt.glsl": "00b43e59666a8a7d1f35cb01c5463a4e6f624a1e7eeea8adc2d73810eb939a2c",
+        "shaders/include/shaderlod/photon_spatial_adapter.glsl": "f0e0c5917a061cf6d999b07c8c937424ad083104c694552d4f32050799f6bb78",
+        "shaders/world1/deferred4.fsh": "0cd8f95ff73c14e130e83705d322d8fefdd9e9ade7ffc7950fa455f74e26d8a6",
+        "shaders/program/shaderlod_spatial_prepass.fsh": "034f7cc924608720dd760397b4f621579a08ccdfee3cf595a90f1444cbefabae",
+        "shaders/include/shaderlod/photon_original_sky.glsl": "830671927217110800d91f45c7f5074d20ea9820c03b783b068aaaf6efd8e629",
+        "shaders/include/shaderlod/spatial_pipeline.glsl": "89706bd84d258058dad6e81f05e125aed5af3019ca5b303d879a802037a4d124",
+        "shaders/settings.glsl": "bf612686d1c9b79a71e3b1338600d67739fb5455a0612c2b1caea944e324d186",
+        "shaders/world-1/deferred5.fsh": "91a5c585d8756d1ad085e1faf6d5419e929f1e00336da436a5bf77323b6c8c56",
+        "shaders/include/shaderlod/work_policy.glsl": "1b70d1b34959778ac34ae9316797c23d858531ff366b55373bae1c7ee55ee309",
+        "shaders/world0/deferred5.fsh": "7e2ad5e02559b740b661f7d5fdd92fe32e54f40ed84ab0f7dad0e626236e5b95"
+      }
+    }
+  },
+  "spatial_source_qualification_sha256": "62fbda55f98b3296f673bd8727055ed1db4991b185caa20db1291ee0e7ed8aa5"
+}

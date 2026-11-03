@@ -1,0 +1,23 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.experiment.bsl.mixin",
+  "plugin": "com.pp.shaderlod.experiment.bsl.mixin.BslFieldMixinPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "BslFieldUniformsMixin",
+    "BslFieldCompositeMixin",
+    "BslFieldPipelineMixin",
+    "BslFieldShadowMixin",
+    "BslFieldTerrainDrawMixin",
+    "BslFieldProgramSourceMixin",
+    "BslFieldProgramLifetimeMixin",
+    "BslSteadySodiumLinkMixin",
+    "BslSteadySodiumBuildMixin",
+    "BslSteadySodiumStateMixin",
+    "BslSteadySodiumLifetimeMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

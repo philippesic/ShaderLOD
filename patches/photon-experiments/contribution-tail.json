@@ -1,0 +1,58 @@
+{
+  "schema": 1,
+  "experiment": "photon-finite-contribution-tail",
+  "base_version": "v1.3b",
+  "base_sha256": "120897768eaa8cb1f14a3e98f88dff009ae3204ee3b96904a4fe8586edfc1ead",
+  "license_sha256": "514402d18eedb0afe374344ca9f0fe87b7399779518184b8fc64e31674555fc5",
+  "switch": "SHADERLOD_CONTRIBUTION_TAIL",
+  "option_declaration": "// ShaderLOD private contribution tail; default off.\n//#define SHADERLOD_CONTRIBUTION_TAIL\n",
+  "profile_condition": "#if defined PROGRAM_DEFERRED1 && defined WORLD_OVERWORLD && !defined ATMOSPHERE_TRANSMITTANCE_LUT",
+  "members": [
+    {
+      "path": "shaders/include/sky/clouds/cumulus.glsl",
+      "source_sha256": "1923542cd9ad862a6166a542dbdcb1597fd70316e4338b236deefc2ccb932ba5",
+      "patched_sha256": "a6c8c416ff1ba173fdbe17db34f8108d2f826da318f3eea8ddc1bfa3fdce533a",
+      "replacements": [
+        {
+          "before": "vec2 clouds_cumulus_scattering(\n",
+          "after": "#ifdef SHADERLOD_CONTRIBUTION_TAIL\n#if defined PROGRAM_DEFERRED1 && defined WORLD_OVERWORLD && !defined ATMOSPHERE_TRANSMITTANCE_LUT\nvec2 shaderlod_tail_original_scattering(\n#else // SHADERLOD_TAIL_STAGE\nvec2 clouds_cumulus_scattering(\n#endif // SHADERLOD_TAIL_STAGE\n#else // SHADERLOD_CONTRIBUTION_TAIL\nvec2 clouds_cumulus_scattering(\n#endif // SHADERLOD_CONTRIBUTION_TAIL\n"
+        },
+        {
+          "before": "\nCloudsResult draw_cumulus_clouds(\n",
+          "after": "#ifdef SHADERLOD_CONTRIBUTION_TAIL\n#if defined PROGRAM_DEFERRED1 && defined WORLD_OVERWORLD && !defined ATMOSPHERE_TRANSMITTANCE_LUT\n#include \"/include/shaderlod/contribution_tail.glsl\"\n#endif // SHADERLOD_TAIL_STAGE\n#endif // SHADERLOD_CONTRIBUTION_TAIL\n\nCloudsResult draw_cumulus_clouds(\n"
+        }
+      ]
+    },
+    {
+      "path": "shaders/settings.glsl",
+      "source_sha256": "93401d268fe859cc1df81929ad41156757a98db80f80cf32af80d9cdca96c394",
+      "patched_sha256": "9cd7c54d51c6dace40fcfb23a8a43877a40a94f6059f6ea2b4ab8c4e3a0d5c41",
+      "replacements": [
+        {
+          "before": "#define SETTINGS_INCLUDED\n",
+          "after": "#define SETTINGS_INCLUDED\n// ShaderLOD private contribution tail; default off.\n//#define SHADERLOD_CONTRIBUTION_TAIL\n"
+        }
+      ],
+      "enabled_sha256": "38aeac5183fa6dda58acc0301d803a9b62af801b453061fc400ca51a6a88b64f"
+    }
+  ],
+  "addition": {
+    "path": "shaders/include/shaderlod/contribution_tail.glsl",
+    "source_path": "shaderpacks/photon-contribution-tail/shaders/include/shaderlod/contribution_tail.glsl",
+    "sha256": "76e18c623794a7f7e82e7799ee1d94b7c8216b0350748d13b7825092534a1fac"
+  },
+  "source_dependencies": {
+    "shaders/include/sky/clouds/common.glsl": "4762892447e8251e0351ed413ca35f2aebd318e23b2933e5e9c5f872c1ff7f7f",
+    "shaders/include/utility/phase_functions.glsl": "e05f81783a0a5073754fc088f81f7696de6355e58bcf9f43b043187e6ff5c24d",
+    "shaders/include/utility/fast_math.glsl": "c70c9dac6870d25591e11e211de7e35a84702f18eeca84c198865fc391ca713e"
+  },
+  "component_error_budget": 0.02,
+  "retained_orders": 4,
+  "original_orders": 8,
+  "distance_policy": "none; unitless component budget, optical-depth units unchanged from pinned Photon",
+  "transition": "hard bounded eligibility at order 4; display/motion unaccepted",
+  "iris_option_discovery": {
+    "jar_path": "dependencies/runtime/iris-neoforge-1.8.12+mc1.21.1.jar",
+    "jar_sha256": "3e3f94d2d5cdcb8145c4385d521974aa2d8669b2cc212351f70cf06488182e83"
+  }
+}

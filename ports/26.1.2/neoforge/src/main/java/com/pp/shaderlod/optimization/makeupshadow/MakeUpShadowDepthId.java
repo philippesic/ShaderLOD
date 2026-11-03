@@ -1,0 +1,1 @@
+package com.pp.shaderlod.optimization.makeupshadow;import net.irisshaders.iris.shadows.ShadowRenderTargets;import net.irisshaders.iris.mixinterface.GpuTextureInterface;public final class MakeUpShadowDepthId{private MakeUpShadowDepthId(){}public static int current(ShadowRenderTargets s){return ((GpuTextureInterface)s.getDepthTextureNoTranslucents()).iris$getGlId();}}

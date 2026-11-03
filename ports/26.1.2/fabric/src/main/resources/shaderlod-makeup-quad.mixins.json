@@ -1,0 +1,20 @@
+{
+  "required": false,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.integration.makeupquad.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "plugin": "com.pp.shaderlod.integration.makeupquad.mixin.MakeUpQuadMixinPlugin",
+  "client": [
+    "PortBatchMixin",
+    "MakeUpQuadMixin",
+    "LegacyScalarBatchMixin",
+    "LegacyScalarFillMixin",
+    "SolasQuadInputMixin",
+    "SolasQuadModernInputMixin",
+    "SolasQuadCreatorInputMixin",
+    "SolasQuadCreatorSetInputMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

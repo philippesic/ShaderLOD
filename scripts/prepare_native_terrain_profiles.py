@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Prepare four frozen Photon/native terrain controls; never build or launch clients."""
 from __future__ import annotations
+from run_storage import copytree as storage_copytree
 
 import argparse
 from contextlib import ExitStack, closing
@@ -226,7 +227,7 @@ def prepare(source_root, output, acknowledge_warmed_scene=False, runtime_lock_pa
     operation = plan(source_root, output, acknowledge_warmed_scene)
     require_exclusive_runtime()
     source_root, output = Path(operation['source_root']), Path(operation['output'])
-    runtime_lock_path = Path(runtime_lock_path or ROOT / 'dev/runtime.lock.json')
+    runtime_lock_path = Path(runtime_lock_path or ROOT / 'dependencies/runtime.lock.json')
     runtime_lock = json.loads(runtime_lock_path.read_text())
     with ExitStack() as locks:
         for arm in SOURCE_ARMS:
@@ -252,11 +253,11 @@ def prepare(source_root, output, acknowledge_warmed_scene=False, runtime_lock_pa
                 # canonical save; other source saves are deliberately excluded.
                 original = base / 'adaptive' if arm == 'geometry' else source['profiles'][arm]['path']
                 ignored = TRANSIENT + (() if arm == 'geometry' else ('saves',))
-                shutil.copytree(original, target, ignore=shutil.ignore_patterns(*ignored))
+                storage_copytree(original, target, ignore=shutil.ignore_patterns(*ignored))
                 world = target / 'saves' / WORLD
                 if arm != 'geometry':
                     world.parent.mkdir()
-                    shutil.copytree(canonical_world, world, ignore=shutil.ignore_patterns('session.lock'))
+                    storage_copytree(canonical_world, world, ignore=shutil.ignore_patterns('session.lock'))
                 copies[arm] = world_fingerprint(world)
                 require(copies[arm] == fingerprint, 'New copied world differs: ' + arm)
                 source_arm = 'adaptive' if arm == 'geometry' else arm

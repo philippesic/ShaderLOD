@@ -1,0 +1,118 @@
+modLoader="javafml"
+loaderVersion="[1,)"
+license="MIT"
+
+[[mods]]
+modId="shaderlod"
+version="0.1.0-dev-2612"
+displayName="ShaderLOD"
+description='''Distance-based shader quality experiments for Iris and Photon.'''
+
+[[dependencies.shaderlod]]
+modId="neoforge"
+type="required"
+versionRange="[26.1.2.114]"
+ordering="NONE"
+side="CLIENT"
+
+[[dependencies.shaderlod]]
+modId="minecraft"
+type="required"
+versionRange="[26.1.2]"
+ordering="NONE"
+side="CLIENT"
+
+# This internal uniform hook is audited against exactly this Iris patch line.
+[[dependencies.shaderlod]]
+modId="iris"
+type="required"
+versionRange="[1.11.4+mc26.1.2]"
+ordering="AFTER"
+side="CLIENT"
+
+[[dependencies.shaderlod]]
+modId="sodium"
+type="required"
+versionRange="[0.9.2+mc26.1.2]"
+ordering="AFTER"
+side="CLIENT"
+
+[[dependencies.shaderlod]]
+modId="distanthorizons"
+type="optional"
+versionRange="[3.3.3,3.3.4)"
+ordering="AFTER"
+side="CLIENT"
+
+[[mixins]]
+config="shaderlod.mixins.json"
+
+[[mixins]]
+config="shaderlod-makeup-quad.mixins.json"
+
+# Source/API/sampler-qualified BSL receiver quadrature.
+[[mixins]]
+config="shaderlod-bsl-resource.mixins.json"
+
+[[mixins]]
+config="shaderlod-makeup-ao.mixins.json"
+
+[[mixins]]
+config="shaderlod-bsl-ao.mixins.json"
+
+[[mixins]]
+config="shaderlod-photon-spatial.mixins.json"
+
+[[mixins]]
+config="shaderlod-bliss-pixel.mixins.json"
+
+[[mixins]]
+config="shaderlod-unbound-ao-depth.mixins.json"
+
+[[mixins]]
+config="shaderlod-solas-ao-depth.mixins.json"
+
+[[mixins]]
+config="shaderlod-reimagined-ao-depth.mixins.json"
+
+[[mixins]]
+config="shaderlod-makeup-shadow.mixins.json"
+
+[[mixins]]
+config="shaderlod-photon-ao-history.mixins.json"
+
+[[mixins]]
+config="shaderlod-terrain-radius.mixins.json"
+
+[[mixins]]
+config="shaderlod-solas-prefix.mixins.json"
+
+[[mixins]]
+config = "shaderlod-unbound-early-alpha.mixins.json"
+
+[[mixins]]
+config = "shaderlod-sildur-early-alpha.mixins.json"
+
+[[mixins]]
+config = "shaderlod-astra-early-alpha.mixins.json"
+
+[[mixins]]
+config = "shaderlod-photon-early-alpha.mixins.json"
+
+[[mixins]]
+config = "shaderlod-makeup-early-alpha.mixins.json"
+
+[[mixins]]
+config = "shaderlod-bsl-early-alpha.mixins.json"
+
+[[mixins]]
+config = "shaderlod-reimagined-early-alpha.mixins.json"
+
+[[mixins]]
+config = "shaderlod-solas-early-alpha.mixins.json"
+
+[[mixins]]
+config = "shaderlod-bliss-early-alpha.mixins.json"
+
+[[mixins]]
+config="shaderlod-source-lifecycle.mixins.json"

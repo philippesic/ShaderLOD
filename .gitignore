@@ -6,8 +6,8 @@ run-compare/
 run-landscape/
 run-workloads/
 logs/
-dev/runtime/
-dev/upstream/
+dependencies/runtime/
+dependencies/upstream/
 dev/logs/
 dev/runtime-doctor.json
 .idea/
@@ -16,3 +16,13 @@ dev/runtime-doctor.json
 __pycache__/
 *.pyc
 .venv/
+
+# Disposable experiment work and retained local evidence
+/dev/experiments/
+/experiment-evidence/
+
+/dependencies/shortlist-test-inputs/
+
+/dependencies/toolchain/
+
+/dependencies/test-python/

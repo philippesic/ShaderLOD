@@ -1,0 +1,85 @@
+{
+  "minecraft": "26.1.2",
+  "loader": "fabric",
+  "classification": "guarded research source candidate; no build/driver/quality/speed acceptance",
+  "optIn": "shaderlod.rendererSpeedPortR1",
+  "authenticLauncherEvidence": "dev/logs/ported-quality-runtime-r1/26.1.2-fabric/console.log",
+  "apiClassPins": [
+    [
+      "net/caffeinemc/mods/sodium/client/gl/device/MultiDrawBatch.class",
+      "a64ef72a497d126388992e9d52dab9c4cb5b0e18a5eb2b8e227be613cd0bea60"
+    ],
+    [
+      "net/caffeinemc/mods/sodium/client/render/chunk/DefaultChunkRenderer.class",
+      "d8ec37130555f3e9670760fc06f94a0c93e268aee8d218df1ba91f7522586e9a"
+    ],
+    [
+      "net/caffeinemc/mods/sodium/client/render/chunk/SharedQuadIndexBuffer.class",
+      "66996a71cd179d0a97d65d14213fe82badab252983a6686fc805e1de10a2b7ff"
+    ],
+    [
+      "net/caffeinemc/mods/sodium/client/render/chunk/SharedQuadIndexBuffer$IndexType.class",
+      "4ccf07b8f830cbc84ef77d61a33f7d7ee065628f87ffe37ed043f89ace31c39e"
+    ],
+    [
+      "net/caffeinemc/mods/sodium/client/render/chunk/SharedQuadIndexBuffer$IndexType$2.class",
+      "1b69dfd875789687e4cccd6aa037cc9f1d77b8bf60a2f5e6847a3002255766c5"
+    ],
+    [
+      "net/irisshaders/iris/pipeline/programs/SodiumPrograms.class",
+      "dde8eb4bc65bc6da23f2031477b22c410cdd0bf13b70309fe5f8198b1e383717"
+    ],
+    [
+      "net/irisshaders/iris/pipeline/IrisRenderingPipeline.class",
+      "5175b6dc1422df3450a142447a4e0570c7bfcd61ebeb12b05cacb4366fb4d2f5"
+    ],
+    [
+      "net/irisshaders/iris/pipeline/transform/transformer/SodiumTransformer.class",
+      "94e4d8e715e8b05c1a04006e70aacfb23366679b09583f4c9792175aa19b9396"
+    ],
+    [
+      "net/irisshaders/iris/compat/sodium/mixin/MixinDefaultChunkRenderer.class",
+      "86b03c81632ec14151b452eaa746fcd6a3be67113acff4a9b7e61099b4456067"
+    ],
+    [
+      "net/irisshaders/iris/shaderpack/option/ShaderPackOptions.class",
+      "6a147b6da07959b0eaf4084e5d13379c6ab9cef3b53f76b43b265b0b997606b7"
+    ],
+    [
+      "net/irisshaders/iris/shaderpack/option/values/MutableOptionValues.class",
+      "202a4d6bc280585614e802f785dec6d6735a877b1595054a98e103b53f99b29f"
+    ],
+    [
+      "net/caffeinemc/mods/sodium/client/render/chunk/data/SectionRenderDataUnsafe.class",
+      "2a1a4538d8282141cc9214ab697e8363a006c3517576759f890f5c82bf9b6d13"
+    ],
+    [
+      "net/caffeinemc/mods/sodium/client/render/chunk/terrain/DefaultTerrainRenderPasses.class",
+      "0f16663d97db3eb5d6f99f0a9f358c01792eac16479f3ca8167d9942d5caf6dd"
+    ],
+    [
+      "net/caffeinemc/mods/sodium/client/render/chunk/lists/ChunkRenderList.class",
+      "6810faf8bc5a9b5a53c83438afa5fb109aa90d8db2c7279c9ab567e07ca1a788"
+    ],
+    [
+      "net/caffeinemc/mods/sodium/client/render/chunk/vertex/format/ChunkMeshFormats.class",
+      "c75a46977916b531c81d81a3cc4ba2f3133453f3173b4a181554d3867eb3b481"
+    ],
+    [
+      "net/irisshaders/iris/vertices/sodium/terrain/XHFPTerrainVertex.class",
+      "c00e05d3bb6fb294a2d19e11d4345c2efe54408fa13ddfe1d4321d070a83145d"
+    ]
+  ],
+  "ownedSourceSha256": {
+    "ports/26.1.2/fabric/src/main/java/com/pp/shaderlod/integration/makeupquad/MakeUpQuadRuntime.java": "18817eb18162c236ae5daae7d5b9c23198e1eab8cf0a52ffc018b35c128c1c24",
+    "ports/26.1.2/fabric/src/main/java/com/pp/shaderlod/integration/makeupquad/PortBatchState.java": "55655aed55ca2b507a250ff5f610af9fe4956f662d8af1130057de11715b6e01",
+    "ports/26.1.2/fabric/src/main/java/com/pp/shaderlod/integration/makeupquad/MakeUpQuadApiPins.java": "64318a62cc42a701d3c2e4d8b86a6eb19319847ea1641eae021fd30c47d1bc43",
+    "ports/26.1.2/fabric/src/main/java/com/pp/shaderlod/integration/makeupquad/mixin/MakeUpQuadMixin.java": "6a4cdde977e512fcfcc366f4c08aedc7111051af29f40ceb593ce27b64a8df34",
+    "ports/26.1.2/fabric/src/main/java/com/pp/shaderlod/integration/makeupquad/mixin/PortBatchMixin.java": "7c1e5476302f30f05a83b6c1351506a951772b920555ae273f24961eb437cd54",
+    "ports/26.1.2/fabric/src/main/java/com/pp/shaderlod/integration/RasterExperimentRuntime.java": "f8a1dcbdc001d32c12c2aafa0cc9dd56a9e96e44be040e3bff84cdc8df229281",
+    "ports/26.1.2/fabric/src/main/java/com/pp/shaderlod/fabric/FabricLodSettings.java": "24904d7105f1db8d124290ef7d23847024bb9d3e569874dafe532f22f5351895"
+  },
+  "growthComposition": "INTEGER 4-byte index, six indices/quad, max(2p,r+16384) clamped by typeMax, 24*next byte allocation; same NativeIndexGrowth proof applies",
+  "vertexComposition": "Pinned newer SodiumTransformer _draw_id=a_LightAndData[3]; shifts(5,0,2)/masks(7,3,7), coordinate*16 and u_RegionOffset; chunk-fade lookup depends on vertex chunk ID; ordered absolute shared-quad index stream unchanged",
+  "remaining": "Actual transformed shader captures for every pack/version/loader, seam consumption, cache transition restoration, still/motion quality, matched original/candidate/return speed, DH/PBR remain unverified"
+}

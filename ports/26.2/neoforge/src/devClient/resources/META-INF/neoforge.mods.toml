@@ -1,0 +1,19 @@
+modLoader="javafml"
+loaderVersion="[1,)"
+license="MIT"
+[[mods]]
+modId="shaderlod_dev"
+version="0.1.0-dev-262"
+displayName="ShaderLOD 26.2 dev roundtrip"
+[[dependencies.shaderlod_dev]]
+modId="shaderlod"
+type="required"
+versionRange="[0.1.0-dev-262]"
+ordering="AFTER"
+side="CLIENT"
+
+[[mixins]]
+config="shaderlod-port-renderer-dev.mixins.json"
+
+[[mixins]]
+config="shaderlod-port-binding-input-dev.mixins.json"

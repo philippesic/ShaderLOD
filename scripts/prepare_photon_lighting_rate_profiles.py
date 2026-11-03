@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Qualify immutable lighting-rate source and clone stopped original/OFF/ON profiles."""
 from __future__ import annotations
+from run_storage import copytree as storage_copytree
 import argparse
 import json
 from pathlib import Path
@@ -198,7 +199,7 @@ def prepare(output,source=SOURCE,probe=PROBE,runtime_lock=None,root=ROOT,cue=Fal
             require_exclusive_runtime()
             extra_base=out/kind/'forest';extra_base.mkdir(parents=True);extra_profile=extra_base/'adaptive'
             with unlocked_world(base/'adaptive'/'saves'/WORLD):
-                shutil.copytree(base/'adaptive',extra_profile,ignore=shutil.ignore_patterns('session.lock'))
+                storage_copytree(base/'adaptive',extra_profile,ignore=shutil.ignore_patterns('session.lock'))
                 extra_manifest=json.loads(json.dumps(manifest))
                 record=extra_manifest['experiment_arms']['adaptive']
                 record['requested_options'][shader.SWITCH]=str(gate).lower()

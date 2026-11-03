@@ -1,20 +1,8 @@
 # ShaderLOD provider defaults. T3 owns its thread selection and orchestration.
-model = "gpt-6.1-sol"
-model_reasoning_effort = "high"
 # Notifications are host/user settings; project-local notify is ignored.
 [features]
 hooks = true
 goals = true
-
-[[hooks.SessionStart]]
-matcher = "^(startup|resume|compact|fork)$"
-
-[[hooks.SessionStart.hooks]]
-type = "command"
-command = '/usr/bin/python3 "$(git rev-parse --show-toplevel)/.codex/hooks/compaction_handoff.py"'
-timeout = 10
-additionalContextLimit = 900
-statusMessage = "Loading ShaderLOD checkpoint pointer"
 
 # Keep development context focused. Enable a plugin for an artifact/native-UI
 # task when needed; restart only its agent session after checking job ownership.
@@ -44,3 +32,6 @@ enabled = false
 enabled = false
 [mcp_servers.node_repl]
 enabled = false
+
+[agents.shaderlod_reviewer]
+config_file = "agents/shaderlod_reviewer.toml"

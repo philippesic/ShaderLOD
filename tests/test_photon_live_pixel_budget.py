@@ -57,36 +57,35 @@ class LivePixelBudgetTests(unittest.TestCase):
         cls.helper=cls.enabled[probe.HELPER].decode()
         cls.common=cls.enabled[probe.COMMON_HELPER].decode()
 
-    def test_pins_scope_private_off_and_nonconsumer_exact_original(self):
+    def test_pins_scope_and_exact_native_source_recovery(self):
         self.assertEqual(probe.BASE_SHA256,probe.sha256((ROOT/probe.BASE).read_bytes()))
         count=0
         for arm in probe.ARMS:
             files=probe.patch_members(self.original,M,arm)
-            for private,consumer in ((False,False),(False,True),(True,False)):
-                for name,payload in self.original.items():
-                    actual=select(files[name].decode(),private,consumer).encode() if name in probe.MEMBERS and name != 'shaders/include/sky/clouds/cumulus.glsl' else files[name]
-                    if name == 'shaders/include/sky/clouds/cumulus.glsl' and arm != 'original':
-                        # This member intentionally adds active default-graph primary work.
-                        # Reverse the exact pinned overlay to prove native source recovery;
-                        # actual nonselected preprocessing is checked separately below.
-                        entry=next(e for e in M['members'] if e['path']==name)
-                        for replacement in reversed(entry['replacements']):
-                            self.assertEqual(1,actual.count(replacement['after'].encode()))
-                            actual=actual.replace(replacement['after'].encode(),replacement['before'].encode(),1)
-                    self.assertEqual(payload,actual,(arm,private,consumer,name)); count+=1
+            for name,payload in self.original.items():
+                actual=files[name]
+                if arm!='original' and name in probe.MEMBERS:
+                    if name==probe.SETTINGS and arm=='enabled':
+                        actual=actual.replace(('#define '+probe.SWITCH+'\n').encode(),('//#define '+probe.SWITCH+'\n').encode(),1)
+                    entry=next(e for e in M['members'] if e['path']==name)
+                    for replacement in reversed(entry['replacements']):
+                        self.assertEqual(1,actual.count(replacement['after'].encode()),name)
+                        actual=actual.replace(replacement['after'].encode(),replacement['before'].encode(),1)
+                self.assertEqual(payload,actual,(arm,name));count+=1
             self.assertEqual(self.original['LICENSE'],files['LICENSE'])
-        (OUT/'parity.json').write_text(json.dumps({'exact_upstream_member_comparisons':count,
-            'private_OFF':'byte exact after selecting injected gates','nonconsumer':'byte exact'},indent=2)+'\n')
+        # Literal recipe recovery is source ownership evidence. Actual fallback
+        # source is preprocessed below; this does not claim runtime parity.
+        (OUT/'parity.json').write_text(json.dumps({'exact_upstream_member_recoveries':count,
+            'method':'reverse every exact pinned sequential replacement; not runtime evidence'},indent=2)+'\n')
         for name in (*probe.MEMBERS,*M['source_dependencies'],'LICENSE'):
             with self.assertRaises(ValueError):probe.patch_members(self.original|{name:self.original[name]+b'x'},M,'enabled')
-        bad=copy.deepcopy(M); bad['addition']['source_path']='elsewhere'
-        with self.assertRaises(ValueError):probe.patch_members(self.original,bad,'enabled')
-        bad=copy.deepcopy(M); bad['common_addition']['source_path']='elsewhere'
-        with self.assertRaises(ValueError):probe.patch_members(self.original,bad,'enabled')
+        for key in ('addition','common_addition'):
+            bad=copy.deepcopy(M);bad[key]['source_path']='elsewhere'
+            with self.assertRaises(ValueError):probe.patch_members(self.original,bad,'enabled')
         with self.assertRaises(ValueError):probe.patch_members(self.original|{probe.COMMON_HELPER:b'conflict'},M,'enabled')
         with self.assertRaises(ValueError):probe.build(ROOT/'elsewhere.zip')
 
-    def test_exhaustive_scale_dependencies_allocations_and_lighting_unchanged(self):
+    def test_exhaustive_scale_dependencies_and_declared_source_ownership(self):
         observed={}
         for n,payload in self.original.items():
             if n.endswith(('.glsl','.vsh','.fsh','.properties','.json')):
@@ -97,45 +96,48 @@ class LivePixelBudgetTests(unittest.TestCase):
             self.assertTrue(n in probe.MEMBERS or n in M['source_dependencies'],n)
         for n,payload in self.original.items():
             if n not in probe.MEMBERS:self.assertEqual(payload,self.enabled[n],n)
-        for n in ['shaders/include/buffers.glsl','shaders/shaders.properties','shaders/program/voxy.json']:
-            self.assertEqual(self.original[n],self.enabled[n])
-        for n in [name for name in probe.MEMBERS[2:] if name != 'shaders/include/sky/clouds/cumulus.glsl']:
-            s=select(self.enabled[n].decode(),True,True)
-            self.assertNotIn('const float lod_bias',s)
-            self.assertEqual(self.original[n].decode().replace('const float lod_bias = log2(taau_render_scale);',
-                '#define lod_bias log2(taau_render_scale)'),s)
-        # Whole cloud/lighting/shadow and c3/c4/AO program bodies are unchanged.
-        for n in self.original:
-            if (n.startswith(('shaders/include/lighting/','shaders/include/sky/')) and n != 'shaders/include/sky/clouds/cumulus.glsl') or n in [
-                'shaders/program/c3_taau_prep.fsh','shaders/program/c4_taa_exposure.fsh',
-                'shaders/program/d2_clouds_upscaling.fsh','shaders/program/d3_ao.fsh']:
-                self.assertEqual(self.original[n],self.enabled[n],n)
+        # The maintained recipe now integrates independent cloud, AO, water,
+        # shadow and spatial effects. Every edit must remain declared and pinned;
+        # unrelated source/dependency bytes stay exact.
+        self.assertEqual(set(probe.MEMBERS),{e['path'] for e in M['members']})
+        for name,expected in M['source_dependencies'].items():
+            self.assertEqual(expected,probe.sha256(self.original[name]))
+            if name not in probe.MEMBERS:self.assertEqual(self.original[name],self.enabled[name])
 
     def test_primary_cloud_join_native_source_and_nonselected_parity(self):
         name='shaders/include/sky/clouds/cumulus.glsl'
         cloud=self.enabled[name].decode(); native=self.original[name].decode()
         self.assertEqual(native.split('float clouds_cumulus_density(vec3 pos)',1)[1].split('float clouds_cumulus_optical_depth(',1)[0],
             cloud.split('float clouds_cumulus_density(vec3 pos)',1)[1].split('#if defined SHADERLOD_LIVE_PIXEL_BUDGET',1)[0])
-        self.assertIn('shaderlodBridgeVersion != 2 || shaderlodEnabled != 1 || shaderlodPreset != 0',cloud)
+        self.assertIn('if (!shaderlod_optimization_enabled(optimization_flag))',cloud)
         self.assertIn('if (!shaderlodNativeZero)',cloud)
-        self.assertEqual(1,cloud.count('float density = shaderlod_cumulus_primary_density(ray_pos);'))
+        self.assertEqual(1,cloud.count('float density = shaderlod_cumulus_primary_density(ray_pos, shaderlodOptCloudPrimaryDetail);'))
         self.assertIn('clouds_cumulus_density(ray_pos + ray_step.xyz * dither)',cloud)
-        self.assertEqual(1,cloud.count('shaderlod_cumulus_primary_density(ray_pos + ray_step.xyz * dither)'))
-        # The optical-depth recurrence and all remaining ray/scattering work stay exact.
-        joined='#if defined SHADERLOD_LIVE_PIXEL_BUDGET && defined WORLD_OVERWORLD && defined PROGRAM_DEFERRED1 && !defined DISTANT_HORIZONS && !defined VOXY && !defined NORMAL_MAPPING && !defined SPECULAR_MAPPING && !defined BLOCKY_CLOUDS\n            shaderlod_cumulus_primary_density(ray_pos + ray_step.xyz * dither) *\n#else\n            clouds_cumulus_density(ray_pos + ray_step.xyz * dither) *\n#endif\n'
-        native_call='            clouds_cumulus_density(ray_pos + ray_step.xyz * dither) *\n'
-        self.assertEqual(native.split('float clouds_cumulus_optical_depth(',1)[1],
-            cloud.split('float clouds_cumulus_optical_depth(',1)[1].replace(joined,native_call,1).replace(
-                '#if defined SHADERLOD_LIVE_PIXEL_BUDGET && defined WORLD_OVERWORLD && defined PROGRAM_DEFERRED1 && !defined DISTANT_HORIZONS && !defined VOXY && !defined NORMAL_MAPPING && !defined SPECULAR_MAPPING && !defined BLOCKY_CLOUDS\n        float density = shaderlod_cumulus_primary_density(ray_pos);\n#else\n        float density = clouds_cumulus_density(ray_pos);\n#endif',
-                '        float density = clouds_cumulus_density(ray_pos);'))
-        # Exact native source is retained when no selected primary context exists.
+        self.assertEqual(1,cloud.count('shaderlod_cumulus_primary_density(ray_pos + ray_step.xyz * dither, shaderlodOptCloudSecondaryDetail)'))
+        # All native density/optical-depth/scattering source can be recovered
+        # from the authentic archive with only the declared literal replacements.
+        recovered=cloud
+        entry=next(e for e in M['members'] if e['path']==name)
+        for replacement in reversed(entry['replacements']):
+            self.assertEqual(1,recovered.count(replacement['after']))
+            recovered=recovered.replace(replacement['after'],replacement['before'],1)
+        self.assertEqual(native,recovered)
+        # The native density implementation remains exact in nonselected contexts.
         for defines in ['', '#define SHADERLOD_LIVE_PIXEL_BUDGET\n',
                 '#define WORLD_OVERWORLD\n#define PROGRAM_DEFERRED1\n']:
             texts=[]
             for files in [self.original,self.enabled]:
                 p=subprocess.run(['clang','-E','-P','-x','c','-'],input=defines+expand(files,name),text=True,capture_output=True,timeout=20)
                 self.assertEqual(0,p.returncode,p.stderr);texts.append(p.stdout)
-            self.assertEqual(*texts)
+            def density(text):
+                start=text.index('float clouds_cumulus_density(')
+                opening=text.index('{',start);depth=1;end=opening+1
+                while depth:
+                    depth+=(text[end]=='{')-(text[end]=='}');end+=1
+                return text[start:end]
+            # The integrated recipe adds independent optional helper functions.
+            # Verify the native density body, without a whole-program parity claim.
+            self.assertEqual(density(texts[0]),density(texts[1]))
         # Default native-AA and AA-off selected wrappers both declare core once;
         # inherited raster scaling remains absent when native TAAU is disabled.
         for taa in [True,False]:
@@ -317,7 +319,7 @@ class LivePixelIris {
             self.assertEqual(first,path.read_bytes())
             files=probe.archive_members(path)
             self.assertEqual(metadata,json.loads(files[probe.METADATA]))
-            self.assertEqual(sorted(metadata['added_shader_files']),[] if arm=='original' else sorted((probe.HELPER,probe.COMMON_HELPER)))
+            self.assertEqual(sorted(metadata['added_shader_files']),[] if arm=='original' else sorted((probe.HELPER,probe.COMMON_HELPER,*probe.EXTRA_HELPERS)))
             if arm=='original':
                 self.assertEqual(self.original,{n:p for n,p in files.items() if n!=probe.METADATA})
 

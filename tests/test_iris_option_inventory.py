@@ -5,6 +5,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 import zipfile
+from pinned_tools import java_tool
 
 ROOT = Path(__file__).resolve().parents[1]
 SPEC = importlib.util.spec_from_file_location('discover_iris_options', ROOT / 'scripts/discover_iris_options.py')
@@ -36,8 +37,8 @@ class InputTests(unittest.TestCase):
 class AuthenticIrisTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.java = ROOT / 'dev/runtime/jdk25/jdk-25.0.2.jdk/Contents/Home/bin/java'
-        cls.iris = ROOT / 'ports/26.1.2/runtime/iris-fabric-1.11.4+mc26.1.2.jar'
+        cls.java = Path(java_tool('java'))
+        cls.iris = ROOT / 'dependencies/runtime/iris-neoforge-1.8.12+mc1.21.1.jar'
         cache = Path.home() / '.gradle/caches/modules-2/files-2.1'
         coordinates = [('com.google.guava/guava/32.1.2-jre', 'guava-32.1.2-jre.jar'),
                        ('it.unimi.dsi/fastutil/8.5.12', 'fastutil-8.5.12.jar'),
@@ -51,7 +52,7 @@ class AuthenticIrisTests(unittest.TestCase):
             cls.dependencies.append(paths[0])
         if not cls.java.is_file() or not cls.iris.is_file():
             raise unittest.SkipTest('Pinned local JDK/Iris fixture unavailable')
-        cls.iris_sha = '69bdb6899ba006cf91b16565e4445a7a4f331e39b790c81c99626814bf6e22df'
+        cls.iris_sha = '3e3f94d2d5cdcb8145c4385d521974aa2d8669b2cc212351f70cf06488182e83'
         if parser.file_hash(cls.iris) != cls.iris_sha:
             raise AssertionError('Pinned Iris fixture changed')
 
@@ -59,30 +60,26 @@ class AuthenticIrisTests(unittest.TestCase):
         return parser.discover(original, generated, native, self.iris, self.iris_sha,
                                self.dependencies, self.java, overrides)
 
-    def test_actual_bsl_and_reimagined_current_recipes_match_saved_parser_maps(self):
-        cases = [('bsl-shaders', 'BSL_v10.1.8.zip', 'bslquad/native384.json',
-                  'bsl-runtime/actual-iris-generated-options.json', 384, 388, 385, 389),
-                 ('complementary-reimagined', 'ComplementaryReimagined_r5.9.3.zip',
-                  'reimaginedquad/native398.json',
-                  'complementary-runtime/reimagined-actual-iris-generated-options.json', 398, 402, 403, 407)]
+    def test_actual_bsl_and_reimagined_current_recipes_match_packaged_parser_maps(self):
+        cases = [('bsl-shaders','BSL_v10.1.8.zip','bslquad/native384.json',384,385),
+                 ('complementary-reimagined','ComplementaryReimagined_r5.9.3.zip','reimaginedquad/native398.json',398,403)]
+        expected=json.loads((ROOT/'src/main/resources/assets/shaderlod/rendererquad/generated-main-options.json').read_text())
         with tempfile.TemporaryDirectory() as directory:
             directory = Path(directory)
             overrides = directory / 'overrides.json'
             overrides.write_text(json.dumps({'SHADERLOD_REFINEMENT_ADAPTER': '1'}))
-            for adapter, filename, native_name, saved_name, n, c, ob, gb in cases:
+            for adapter, filename, native_name, n, ob in cases:
                 with self.subTest(adapter=adapter):
-                    original = ROOT / 'dev/upstream/other-pack-research' / filename
+                    original = ROOT / 'dependencies/upstream/other-pack-research' / filename
                     generated = directory / (adapter + '.zip')
                     builder.build(original, generated, ROOT / 'patches/adapters' / (adapter + '.json'))
                     native = ROOT / 'src/main/resources/assets/shaderlod' / native_name
                     report = self.discover(original, generated, native, overrides)
-                    saved = json.loads((ROOT / 'dev/logs/concept-transfer-r1' / saved_name).read_text())
-                    self.assertEqual(report['candidateExpectedOptions'], saved['generated']['effectivePlannedMap'])
-                    self.assertEqual(report['addedDeclarations'], saved['actualAddedOptions'])
-                    self.assertEqual((report['nativeOptionCount'], report['candidateOptionCount']), (n, c))
-                    self.assertEqual((report['originalBroadInventory']['declarationCount'],
-                                      report['generatedBroadInventory']['declarationCount']), (ob, gb))
-                    self.assertEqual(len(report['excludedOriginalDeclarations']), ob - n)
+                    self.assertEqual(report['candidateExpectedOptions'],expected[adapter])
+                    self.assertEqual((report['nativeOptionCount'],report['candidateOptionCount']),(n,len(expected[adapter])))
+                    self.assertEqual(report['originalBroadInventory']['declarationCount'],ob)
+                    self.assertEqual(len(report['excludedOriginalDeclarations']),ob-n)
+                    self.assertEqual(set(report['candidateExpectedOptions'])-set(json.loads(native.read_text())),set(report['addedDeclarations']))
                     self.assertTrue(report['nativeMapPreserved'])
                     self.assertFalse(report['loadedMapVerified'])
                     self.assertEqual(report['execution']['exitCode'], 0)
@@ -92,7 +89,7 @@ class AuthenticIrisTests(unittest.TestCase):
                         self.assertNotIn(key, report['candidateExpectedOptions'])
 
     def test_actual_bsl_native_value_removed_from_generated_range_refuses(self):
-        original = ROOT / 'dev/upstream/other-pack-research/BSL_v10.1.8.zip'
+        original = ROOT / 'dependencies/upstream/other-pack-research/BSL_v10.1.8.zip'
         native = ROOT / 'src/main/resources/assets/shaderlod/bslquad/native384.json'
         with tempfile.TemporaryDirectory() as directory:
             generated = Path(directory) / 'narrowed.zip'

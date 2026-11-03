@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Prepare pinned original/off/combined reduced-SSR profiles; no build or client."""
 from __future__ import annotations
+from run_storage import copytree as storage_copytree
 
 import argparse
 from contextlib import ExitStack
@@ -171,7 +172,7 @@ def write_json(path, value):
 def prepare(output, scenes=SCENES, sources=None, reduced_archive=REDUCED_ARCHIVE, runtime_lock=None):
     operation = plan(output, scenes, sources, reduced_archive)
     require_exclusive_runtime()
-    runtime_lock = Path(runtime_lock or ROOT / 'dev/runtime.lock.json')
+    runtime_lock = Path(runtime_lock or ROOT / 'dependencies/runtime.lock.json')
     runtime = json.loads(runtime_lock.read_text())
     output = Path(operation['output'])
     with ExitStack() as locks:
@@ -191,9 +192,9 @@ def prepare(output, scenes=SCENES, sources=None, reduced_archive=REDUCED_ARCHIVE
                 copies, arms = {}, {}
                 for arm in ARMS:
                     profile = base / arm
-                    shutil.copytree(scene['profile'], profile, ignore=shutil.ignore_patterns(*TRANSIENT))
+                    storage_copytree(scene['profile'], profile, ignore=shutil.ignore_patterns(*TRANSIENT))
                     world = profile / 'saves' / WORLD; world.parent.mkdir()
-                    shutil.copytree(scene['world'], world, ignore=shutil.ignore_patterns('session.lock'))
+                    storage_copytree(scene['world'], world, ignore=shutil.ignore_patterns('session.lock'))
                     copies[arm] = world_fingerprint(world)
                     require(copies[arm] == scene['world_sha256'], 'Copied canonical save differs: ' + arm)
                     dh_jar = profile / 'mods' / runtime['artifacts']['distanthorizons']['filename']

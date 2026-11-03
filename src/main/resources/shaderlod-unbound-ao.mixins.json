@@ -1,0 +1,19 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.optimization.unboundao.mixin",
+  "plugin": "com.pp.shaderlod.optimization.unboundao.mixin.UnboundAoMixinPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "UnboundAoPassView",
+    "UnboundAoTargetsView",
+    "UnboundAoCompositeMixin",
+    "UnboundAoPipelineMixin",
+    "UnboundAoReloadMixin",
+    "UnboundAoPrepareMixin",
+    "UnboundAoQuadDrawMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.optimization.unbounddepth.mixin",
+  "plugin": "com.pp.shaderlod.optimization.unbounddepth.mixin.UnboundAoDepthMixinPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [],
+  "client": [
+    "UnboundAoDepthCompositeMixin",
+    "UnboundAoDepthLegacyDrawMixin",
+    "UnboundAoDepthModernDrawMixin",
+    "UnboundAoDepthDirectDrawMixin",
+    "UnboundAoDepthPearlDirectDrawMixin",
+    "UnboundAoDepthReloadMixin",
+    "UnboundAoDepthPipelineMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

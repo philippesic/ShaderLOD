@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Prepare stopped, matched Photon isolation profiles; never launch a client."""
 from __future__ import annotations
+from run_storage import copytree as storage_copytree
 
 import argparse
 from contextlib import ExitStack
@@ -184,10 +185,10 @@ def write_json(path, value):
 def prepare(args):
     operation = plan(args)
     source_root, output = Path(operation['source_proof_root']), Path(operation['output'])
-    runtime_lock_path = ROOT / 'dev/runtime.lock.json'
+    runtime_lock_path = ROOT / 'dependencies/runtime.lock.json'
     runtime_lock = json.loads(runtime_lock_path.read_text())
     photon = runtime_lock['artifacts']['photon']
-    original_path = ROOT / 'dev/upstream' / photon['filename']
+    original_path = ROOT / 'dependencies/upstream' / photon['filename']
     if output == original_path or output in original_path.parents: raise ValueError('Output contains the original archive')
     original = archive_contents(original_path, ORIGINAL_SHA256, photon)
     if file_hash(original_path, 'sha512') != photon['hashes']['sha512']: raise ValueError('Original runtime-lock checksum mismatch')
@@ -249,10 +250,10 @@ def prepare(args):
                     target = base / mode
                     (target / 'saves').mkdir(parents=True)
                     copied_world = target / 'saves' / WORLD
-                    shutil.copytree(scene['world'], copied_world, ignore=shutil.ignore_patterns('session.lock'))
+                    storage_copytree(scene['world'], copied_world, ignore=shutil.ignore_patterns('session.lock'))
                     copies[mode] = world_fingerprint(copied_world)
                     if copies[mode] != fingerprint: raise ValueError('Copied save differs from stopped source')
-                    shutil.copytree(scene['source'] / 'config', target / 'config')
+                    storage_copytree(scene['source'] / 'config', target / 'config')
                     (target / 'mods').mkdir()
                     if not args.without_dh:
                         for jar in scene['dh_jars']: shutil.copy2(jar, target / 'mods' / jar.name)

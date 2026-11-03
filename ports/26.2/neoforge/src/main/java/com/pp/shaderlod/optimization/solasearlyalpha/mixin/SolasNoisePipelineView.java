@@ -1,0 +1,1 @@
+package com.pp.shaderlod.optimization.solasearlyalpha.mixin;import org.spongepowered.asm.mixin.Mixin;import org.spongepowered.asm.mixin.gen.Accessor;@Mixin(targets="net.irisshaders.iris.pipeline.IrisRenderingPipeline",remap=false)public interface SolasNoisePipelineView{@Accessor("customTextureManager")net.irisshaders.iris.pipeline.CustomTextureManager solas$customTextures();}

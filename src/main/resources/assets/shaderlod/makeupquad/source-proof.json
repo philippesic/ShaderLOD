@@ -1,0 +1,31 @@
+{
+  "archive_sha256": "0036da17e0c7158e1c669593e6322d53fce3f5a42fb5124b935e9e21a5719db8",
+  "options_sha256": "0c11f31b3d5e51d9d1bff56a84ac13a3f1265472f7313997a493c74435a418bb",
+  "boundary": "Historical actual native100 Overworld transformed exports; shipped hash certificate, not runtime driver readback",
+  "exports": [
+    {
+      "kind": "vertex",
+      "path": "081_sodium_gbuffers_terrain.vsh",
+      "sha256": "b17c8f78738c9eefaa36c51b2614034ddb01b55c31b3449ce1ecd89d126d048a",
+      "unsafe_draw_identity_builtins": false
+    },
+    {
+      "kind": "fragment",
+      "path": "081_sodium_gbuffers_terrain.fsh",
+      "sha256": "4ac31f1c86155dc11b84ebcc69092321f7160754616673581f76b11dfc53f07f",
+      "unsafe_draw_identity_builtins": false
+    },
+    {
+      "kind": "vertex",
+      "path": "082_sodium_gbuffers_terrain.vsh",
+      "sha256": "b17c8f78738c9eefaa36c51b2614034ddb01b55c31b3449ce1ecd89d126d048a",
+      "unsafe_draw_identity_builtins": false
+    },
+    {
+      "kind": "fragment",
+      "path": "082_sodium_gbuffers_terrain.fsh",
+      "sha256": "1be82856504191105922d898acb78d3f8aee51144fe90b94a214684911f2eb74",
+      "unsafe_draw_identity_builtins": false
+    }
+  ]
+}

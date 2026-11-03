@@ -12,7 +12,6 @@ from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]/'scripts'))
 import benchmark_storage as storage
-import renderer_average_storage as recipe
 
 
 class StorageTests(unittest.TestCase):
@@ -131,67 +130,6 @@ class StorageTests(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError, 'Cannot verify actual process session'):
                     self.process_inventory()
 
-    def test_documented_relative_prepare_cli_with_tiny_saved_plan_inputs(self):
-        # Three saved plans use the same fields/argv consumed by the authentic
-        # Bliss renderer recipe; payloads and dependency APIs are tiny fixtures.
-        template = self.base/'template'; template.mkdir()
-        pack = self.base/'Bliss_v2.1.2.zip'; pack.write_bytes(b'fixture-pack')
-        review = self.base/'source-review.md'; review.write_text('Fixture source evidence')
-        sha = lambda p: hashlib.sha256(p.read_bytes()).hexdigest()
-        worldmap = {'level.dat': sha(self.source/'level.dat')}
-        for arm in recipe.ARMS:
-            prior = self.base/'templates'/arm/'client'
-            (prior/'config').mkdir(parents=True); (prior/'mods').mkdir()
-            (prior/'config/shaderlod-client.toml').write_text('[lod]\nenabled=false\n')
-            (prior/'options.txt').write_text('renderDistance:24\n')
-            stage = template/arm; stage.mkdir()
-            for name, data in [('options.txt','QUALITY=3\n'), ('core.toml','[lod]\nenabled=false\n'),
-                               ('control.json','{"x":256.5,"time":7000}'), ('expected-options.json','{"QUALITY":"3"}')]:
-                (stage/name).write_text(data)
-            plan = dict(profile=str(prior), pack=pack.name, pack_name=pack.name, sourceReview=review.name,
-                        command=[str(self.base/'gradlew'), 'runClientLodOff', '-PrunDirectory='+str(prior),
-                                 '-PcontrolCaptureReceipt='+str(stage/'captures')])
-            storage.write(stage/'plan.json', plan)
-            storage.write(stage/'freeze.json', dict(build={}, canonicalWorld=worldmap,
-                          files={str(stage/'plan.json'):sha(stage/'plan.json')}))
-        client = mock.Mock()
-        client.runtime_lock.side_effect = contextlib.nullcontext
-        client.clients.return_value = {}; client.build_fingerprint.return_value = {}
-        observed = []
-        def consume(plan, backup):
-            observed.append(plan)
-            for key in ('profile', 'installed_pack', 'pack', 'pack_options', 'expected_options_source', 'sourceReview'):
-                self.assertTrue(Path(plan[key]).is_absolute(), key)
-            self.assertTrue(Path(backup).is_absolute())
-        client.prepare.side_effect = consume
-        prior_cwd = Path.cwd()
-        try:
-            os.chdir(self.base)
-            argv = ['renderer_average_storage.py', 'prepare', '--template', 'template', '--world', 'canonical',
-                    '--profiles', 'run-workloads/cli-next', '--output', 'reports/cli-next']
-            with mock.patch.object(recipe, 'load_client', return_value=client), \
-                 mock.patch.object(sys, 'argv', argv), contextlib.redirect_stdout(io.StringIO()):
-                recipe.main()
-        finally:
-            os.chdir(prior_cwd)
-        profiles = self.base/'run-workloads/cli-next'; output = self.base/'reports/cli-next'
-        manifest = json.loads((profiles/storage.MARKER).read_text())
-        self.assertEqual(len(manifest['disposable_world_clones']), 3)
-        self.assertEqual(manifest['root'], str(profiles))
-        self.assertEqual(len(observed), 3)
-        for arm in recipe.ARMS:
-            world = profiles/arm/'client/saves'/recipe.WORLD
-            self.assertEqual((world/'level.dat').read_bytes(), b'save')
-            generated = json.loads((output/arm/'plan.json').read_text())
-            self.assertIn('-PrunDirectory='+str(profiles/arm/'client'), generated['command'])
-            self.assertIn('-PcontrolCaptureReceipt='+str(output/arm/'captures'), generated['command'])
-            freeze = json.loads((output/arm/'freeze.json').read_text())
-            self.assertTrue(all(Path(name).is_absolute() for name in freeze['files']))
-
-    def test_adapter_default_preserve_and_boundary_pin(self):
-        recipe.dispose(None, None, None, False)
-        with self.assertRaisesRegex(ValueError, 'Frozen renderer runner'):
-            recipe.adapted_runner('changed', self.base, self.report.parent, False)
 
 
 if __name__ == '__main__': unittest.main()

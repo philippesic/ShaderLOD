@@ -1,0 +1,3 @@
+accessWidener v2 named
+# Invoke the same native option validator used by NeoForge timing controls.
+accessible class net/minecraft/client/OptionInstance$ValueSet

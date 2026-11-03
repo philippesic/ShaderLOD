@@ -1,0 +1,18 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.optimization.sildurpixel.mixin",
+  "plugin": "com.pp.shaderlod.optimization.sildurpixel.mixin.SildurPixelMixinPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "SildurPixelPassView",
+    "SildurPixelCompositeMixin",
+    "SildurPixelPipelineMixin",
+    "SildurPixelPrepareMixin",
+    "SildurPixelReloadMixin",
+    "SildurPixelQuadDrawMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

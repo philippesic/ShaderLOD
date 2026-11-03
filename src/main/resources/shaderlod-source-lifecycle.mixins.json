@@ -1,0 +1,18 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.optimization.sourcecache.mixin",
+  "plugin": "com.pp.shaderlod.optimization.sourcecache.mixin.SourceLifecyclePlugin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "SourceOptionsInputMixin",
+    "SourcePackInputMixin",
+    "SourceIdMapInputMixin",
+    "SourceSetInputMixin",
+    "SourceLifecycleMixin",
+    "SourceDestroyMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

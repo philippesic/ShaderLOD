@@ -150,7 +150,7 @@ class MakeUpBridgeProbeTests(unittest.TestCase):
 
     def test_available_actual_derivative_and_readonly_transport_source(self):
         source = (ROOT / self.manifest["transport_source"]).read_text()
-        self.assertIn('uniform1i(frequency, "shaderlodBridgeVersion", () -> 2)', source)
+        self.assertIn('uniform1i(frequency, "shaderlodBridgeVersion", () -> CoreUniformFrame.BRIDGE_VERSION)', source)
         self.assertIn("UniformUpdateFrequency.PER_FRAME", source)
         for name, kind in self.manifest["declared_core_fields"].items():
             call = "uniform1i" if kind == "int" else "uniform1f"

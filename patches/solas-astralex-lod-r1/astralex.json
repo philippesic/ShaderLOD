@@ -1,0 +1,55 @@
+{
+  "schema": 1,
+  "id": "astralex-deferred-metric-r1",
+  "pack": "astralex",
+  "name": "astralex",
+  "version": "93.0",
+  "kind": "output-only-ray-metric-deferral",
+  "primary_page": "https://modrinth.com/shader/astralex",
+  "original_archive": "dependencies/upstream/pack-expansion/§r§lAstra§4§lLex§r§l_By_LexBoosT_§4§lV93.0§r§l.zip",
+  "original_archive_sha256": "70b6d8127a6733f0a19bd1d351b92709d6ee7496967ff49c4793d2c28c7a6c58",
+  "license": "LicenseRef-All-Rights-Reserved",
+  "shader_source_digest": "e89fe2686d5a73d18ae9aae5104da24f6cb23ae79f1012f95b79aa78e655485a",
+  "source_members": {
+    "Credits.txt": "6565f4f3a8e906cde16dc5b852e09e7d3d21aa19c6e43ce41b65f8a01886fa4b",
+    "shaders/lib/reflections/roughReflections.glsl": "f9cbe67f374a1ae459d6cd3e8543adf7608d38c6487bc3afba2f5b4847461333",
+    "shaders/program/deferred.glsl": "846c3fdf2cc66dd02d0f9bd87acf847118ae9f485490351af26d281c556c2ee4",
+    "shaders/settings/globalSettings.glsl": "e01d79612ede70f6a5ec5ef400aced64fbdf217d208974e2c98252b97e6298b5",
+    "shaders/shaders.properties": "f41738863446205bd189b4071858caa407990bc238023004e687d2cb7b92c59d"
+  },
+  "patches": [
+    {
+      "path": "shaders/lib/reflections/roughReflections.glsl",
+      "before": "vec4 RaytraceRough(sampler2D depthtex, vec3 viewPos, vec3 normal, float dither, out float border) {",
+      "after": "#include \"/lib/shaderlod/deferred_metric.glsl\"\r\nvec4 RaytraceRough(sampler2D depthtex, vec3 viewPos, vec3 normal, float dither, out float border) {"
+    },
+    {
+      "path": "shaders/lib/reflections/roughReflections.glsl",
+      "before": "    float dist = 0.0;",
+      "after": "    float dist = 0.0;\r\n    #if SHADERLOD_DEFERRED_METRIC == 1\r\n    bool shaderlodDeferMetric = shaderlod_defer_metric();\r\n    bool shaderlodSampledHit = false;\r\n    vec3 shaderlodLastHit = vec3(0.0);\r\n    #endif"
+    },
+    {
+      "path": "shaders/lib/reflections/roughReflections.glsl",
+      "before": "        dist = length(start - rfragpos);",
+      "after": "        #if SHADERLOD_DEFERRED_METRIC == 1\r\n        // Uniform control precedes the expensive metric; traversal is native.\r\n        if (shaderlodDeferMetric) {\r\n            shaderlodLastHit = rfragpos;\r\n            shaderlodSampledHit = true;\r\n        } else {\r\n        dist = length(start - rfragpos);\r\n        }\r\n        #else\r\n        dist = length(start - rfragpos);\r\n        #endif"
+    },
+    {
+      "path": "shaders/lib/reflections/roughReflections.glsl",
+      "before": "    return vec4(pos, dist);",
+      "after": "    #if SHADERLOD_DEFERRED_METRIC == 1\r\n    // An off-screen break before sampling retains native zero/previous hit.\r\n    if (shaderlodDeferMetric && shaderlodSampledHit)\r\n        dist = length(start - shaderlodLastHit);\r\n    #endif\r\n    return vec4(pos, dist);"
+    },
+    {
+      "path": "shaders/shaders.properties",
+      "before": "screen=<empty> <empty> <empty> <profile> [ABOUT] ABOUT1 <empty> <empty> <empty> <empty> <empty> <empty> [ADVANCED_MATERIALS] [POST_PROCESS] [SKY] <empty> <empty> <empty> [WATER] [TERRAIN] [WORLD] <empty> <empty> <empty> [VISUAL] [LIGHTING] [MISC]",
+      "after": "screen=<empty> <empty> <empty> <profile> [ABOUT] ABOUT1 <empty> <empty> <empty> <empty> <empty> <empty> [ADVANCED_MATERIALS] [POST_PROCESS] [SKY] <empty> <empty> <empty> [WATER] [TERRAIN] [WORLD] <empty> <empty> <empty> [VISUAL] [LIGHTING] [MISC] [SHADERLOD_METRIC]\r\nscreen.SHADERLOD_METRIC = SHADERLOD_DEFERRED_METRIC"
+    }
+  ],
+  "additions": {
+    "shaders/lib/shaderlod/deferred_metric.glsl": {
+      "path": "patches/solas-astralex-lod-r1/deferred_metric.glsl",
+      "sha256": "b0ac37e4b3d94cf4ac0aa7bfb2bbc1ff98f0f01a1fda2fd0d2de5f89166e0ee8"
+    }
+  },
+  "option_key": "SHADERLOD_DEFERRED_METRIC",
+  "default_enabled": false
+}

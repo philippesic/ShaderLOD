@@ -42,22 +42,22 @@ class ComplementaryQualityTest(unittest.TestCase):
 
     @contextlib.contextmanager
     def fixture(self):
-        lock = json.loads((ROOT / 'dev/shader-candidates.lock.json').read_text())
+        lock = json.loads((ROOT / 'dependencies/shader-candidates.lock.json').read_text())
         pin = next(c['release'] for c in lock['candidates'] if c['modrinth_project'] == 'complementary-reimagined')
-        release = ROOT / 'dev/upstream/other-pack-research' / pin['filename']
-        photon = quality.DEFAULT_SOURCE / 'shaderpacks/photon_v1.3b.zip'
+        release = ROOT / 'dependencies/upstream/other-pack-research' / pin['filename']
+        photon = ROOT / 'dependencies/upstream/photon_v1.3b.zip'
         if not release.is_file() or not photon.is_file():
             self.skipTest('Pinned ignored Complementary/Photon archives unavailable; no downloads by tests')
         self.assertEqual(file_hash(release), quality.COMPLEMENTARY_RELEASE_SHA256)
         self.assertEqual(file_hash(photon), quality.SOURCE_PHOTON_SHA256)
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            archive_dir = root / 'dev/upstream/other-pack-research'
+            archive_dir = root / 'dependencies/upstream/other-pack-research'
             archive_dir.mkdir(parents=True)
             shutil.copy2(release, archive_dir / pin['filename'])
-            (root / 'dev/shader-candidates.lock.json').write_text(json.dumps({'candidates': [
+            (root / 'dependencies/shader-candidates.lock.json').write_text(json.dumps({'candidates': [
                 {'modrinth_project': 'complementary-reimagined', 'release': pin}]}))
-            shutil.copy2(ROOT / 'dev/runtime.lock.json', root / 'dev/runtime.lock.json')
+            shutil.copy2(ROOT / 'dependencies/runtime.lock.json', root / 'dependencies/runtime.lock.json')
             source = root / 'source/coastalwater/high'
             for folder in ('mods', 'config', 'shaderpacks', f'saves/{WORLD}/region'):
                 (source / folder).mkdir(parents=True)

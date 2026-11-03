@@ -1,0 +1,21 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.bslprefix.mixin",
+  "plugin": "com.pp.shaderlod.bslprefix.mixin.BslPrefixPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "BslPrefixSodiumR8Mixin",
+    "BslPrefixBuildR8Mixin",
+    "BslPrefixPipelineR8Mixin",
+    "BslPrefixAtlasR8Mixin",
+    "BslPrefixTextureR8Mixin",
+    "BslPrefixResourceR8Mixin",
+    "BslPrefixWorldR8Mixin",
+    "BslPrefixManagerR8Mixin",
+    "BslPrefixFormatReloadR12Mixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -12,7 +12,7 @@ public final class PhotonSpatialReferenceAdapter {
     public static final WorkKey OPAQUE_SPATIAL_IRRADIANCE = new WorkKey(Effect.OPAQUE_LIGHTING,
             "shaderlod:opaque_spatial_irradiance", WorkKind.RATE);
     public static final AdapterIdentity IDENTITY = new AdapterIdentity("shaderlod:photon-shared-spatial",
-            "v1.3b-shared-spatial-bd9fbf3f70bb117a1825f630cc3a20e34089bd7bf9f8dd14377e2cc72ac582fa");
+            "v1.3b-shared-spatial-cf9acc6617dbfdf388b0c54894914242270ce8e582eeef565e0a7bd08039139e");
     public static final String PRIVATE_OPTION = "SHADERLOD_SHARED_SPATIAL";
     public static final String COMPOSITION = "shaderlod:photon_spatial_composition";
     public static final String CACHE = "shaderlod:photon_spatial_cache";
@@ -42,9 +42,9 @@ public final class PhotonSpatialReferenceAdapter {
     /** Both frozen derivatives can load the private option ON; their effective default is checked separately. */
     public static List<SourceBinding> sourceBindings() {
         return List.of(new SourceBinding(IDENTITY,
-                "a8c004f5be0b341ed117220da0d2e2a0dadeefd62fd899ff64a3100c19a54ceb", consumingMembers(false), requiredOptions()),
+                "db5a81b57e584237cc6e2f47434215a0d33ae365dde1677a82d3420971c861b9", consumingMembers(false), requiredOptions()),
                 new SourceBinding(IDENTITY,
-                "c2790b61bd4d096e24eedbf9ca800d35541ca81e8ec5efeecec122b764dbf6f0", consumingMembers(true), requiredOptions()));
+                "50c134eca19cdd587cc8e317c57e68b4c76ace5c9cb155970f7640cf4345fc99", consumingMembers(true), requiredOptions()));
     }
 
     private static Map<String, String> consumingMembers(boolean enabled) {
@@ -64,11 +64,11 @@ public final class PhotonSpatialReferenceAdapter {
                 Map.entry("shaders/include/shaderlod/photon_original_sky.glsl",
                         "830671927217110800d91f45c7f5074d20ea9820c03b783b068aaaf6efd8e629"),
                 Map.entry("shaders/include/shaderlod/photon_spatial_adapter.glsl",
-                        "b74a872678aad5c0a09e99a641d449bdb07f9dfba6b104b1106a28251b349c7b"),
+                        "f0e0c5917a061cf6d999b07c8c937424ad083104c694552d4f32050799f6bb78"),
                 Map.entry("shaders/include/shaderlod/spatial_pipeline.glsl",
-                        "d0f44c038320fb8f68bc3769888f69d7db9b23b47e335861e4d59e33530652c9"),
+                        "89706bd84d258058dad6e81f05e125aed5af3019ca5b303d879a802037a4d124"),
                 Map.entry("shaders/include/shaderlod/spatial_plan.glsl",
-                        "70738064fd0dad8b63af95868be55d7df6aba337f398b3d6ff6ca5c5f5709033"),
+                        "b3e92b9a26f59c03dc1b14a90e5ab40012fe38fc5b226664429f7a138bab46c9"),
                 Map.entry("shaders/include/shaderlod/surface_region_continuity.glsl",
                         "497c38b723df0255e9b07b5b62e695d644f0d0eb19538f14db5f95846e9cc040"),
                 Map.entry("shaders/include/shaderlod/work_policy.glsl",
@@ -76,7 +76,7 @@ public final class PhotonSpatialReferenceAdapter {
                 Map.entry("shaders/program/d4_deferred_shading.fsh",
                         "0c7bff3c6369df0601781ea08488e8a9cd2f6e7634e43b526ae2815c899a9def"),
                 Map.entry("shaders/program/shaderlod_spatial_prepass.fsh",
-                        "e01fe0cc82d30174d2ae81696e93aa044ae100fe186c22df862397a1eddcb408"),
+                        "034f7cc924608720dd760397b4f621579a08ccdfee3cf595a90f1444cbefabae"),
                 Map.entry("shaders/settings.glsl",
                         enabled ? "2aec76ec624573ee793834b5849f1d0cb1f215aca188750a82650373bb02e981"
                                 : "bf612686d1c9b79a71e3b1338600d67739fb5455a0612c2b1caea944e324d186"),

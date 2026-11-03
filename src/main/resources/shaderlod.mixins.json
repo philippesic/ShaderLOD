@@ -5,15 +5,23 @@
   "compatibilityLevel": "JAVA_21",
   "client": [
     "CommonUniformsMixin",
+    "IrisWorldCompletionMixin",
     "EffectUniformsMixin",
+    "IrisOptionWriteMixin",
     "EffectiveRenderDistanceMixin",
     "ShadowCullingFrustumMixin",
     "ShadowCullingFrustumMixin$Reversed",
     "ShadowRegionListsMixin",
     "ShadowSpriteListsMixin",
-    "ShadowBoxDistanceAccessor"
+    "ShadowBoxDistanceAccessor",
+    "MeasurementFrameMixin",
+    "MeasurementCleanupMixin",
+    "MeasurementReloadMixin",
+    "CompileDimensionMixin",
+    "FinalPassCopyMixin"
   ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "plugin": "com.pp.shaderlod.mixin.FrameCopyMixinPlugin"
 }

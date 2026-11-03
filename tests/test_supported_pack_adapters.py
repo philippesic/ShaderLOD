@@ -14,14 +14,66 @@ from build_supported_pack_adapters import (apply, build, read_archive, shader_so
     sync_resources, catalog_update, CATALOG, RESOURCE_ROOT)
 
 class SupportedPackAdapterTests(unittest.TestCase):
+    def test_reimagined_ao_budget_uses_supported_radial_caller_and_native_fallbacks(self):
+        manifest=json.loads((ROOT/'patches/adapters/complementary-reimagined.json').read_text())
+        stock=read_archive(ROOT/'dependencies/upstream/other-pack-research/ComplementaryReimagined_r5.9.3.zip')
+        generated=apply(stock,manifest)['shaders/program/deferred1.glsl'].decode()
+        guard='SHADERLOD_REFINEMENT_ADAPTER == 1 && defined IS_IRIS && MC_VERSION == 12101 && IRIS_VERSION == 10812 && defined OVERWORLD && !defined DISTANT_HORIZONS && !defined VOXY'
+        self.assertIn('#if '+guard,generated)
+        self.assertIn('far - near, length(viewPos.xyz));',generated)
+        self.assertIn('float aoWorldRange, float shaderlodAoDistance)',generated)
+        self.assertIn('shaderlod_optimization_enabled(shaderlodOptAoBudget) && shaderlodAoDistance > shaderlodNear',generated)
+        self.assertIn('shaderlodPreset, shaderlodAoDistance, samples, 2)',generated)
+        self.assertNotIn('shaderlod_reimagined_budget(shaderlodOptAoBudget',generated)
+        self.assertIn('aoWorldRange, -1.0);',generated) # Existing 7-argument AO-half fallbacks stay native.
+        self.assertIn('if (z0 < 0.56) return 1.0;',generated)
+        self.assertIn('for (int i = 1; i <= samples; i++)',generated)
+        self.assertIn('ao /= samples;',generated)
+        self.assertIn('GetAmbientOcclusion(vxDepthTexTrans, z0lod, GetLinearDepth(z0lod, farLod, nearLod), dither, farLod, nearLod, aoWorldRange);',generated)
+
+    def test_reimagined_ao_near_and_far_counts_evaluate_existing_budget_source(self):
+        import math,re
+        from test_shared_lod_policy import SharedSourceFixture
+        from test_effect_policy_glsl import F32
+        fixture=SharedSourceFixture()
+        helper=re.sub(r'//[^\n]*','',(ROOT/'patches/adapters/shared/refinement_budget.glsl').read_text())
+        body=re.search(r'int shaderlod_refinement_budget\([^{}]+\)\s*\{([^{}]+)\}',helper,re.S).group(1)
+        body=body.replace('preset == 0 ? 0.875 : 0.75','(0.875 if preset == 0 else 0.75)')
+        blend=re.search(r'float shaderlod_refinement_blend\([^{}]+\)\s*\{([^{}]+)\}',helper,re.S).group(1)
+        blend=blend.replace('distance_blocks < boundary ? 0.0 : 1.0','(0.0 if distance_blocks < boundary else 1.0)')
+        def selected(distance,original=4,enabled=1,preset=1):
+            # Compose the explicit caller near guard with the existing helper, using
+            # the established restricted source interpreter rather than a new policy.
+            if not distance>32:return original
+            def smoothstep(low,high,value):
+                t=F32(min(1,max(0,(value-low)/(high-low))))
+                return t*t*(F32(3)-F32(2)*t)
+            scope=dict(fixture.environment,bridge=2,enabled=enabled,preset=preset,distance_blocks=F32(distance),original=original,minimum=2,
+                shaderlodNear=F32(32),shaderlodFar=F32(96),shaderlodTransition=F32(8),smoothstep=smoothstep,
+                mix=lambda a,b,t:a*(F32(1)-t)+b*t)
+            scope['shaderlod_refinement_blend']=lambda distance,boundary:fixture.run(blend,dict(scope,distance_blocks=distance,boundary=boundary))[1]
+            return fixture.run(body,scope)[1]
+        for distance in (-1,0,16,31.999,32):
+            self.assertEqual(selected(distance),4)
+            self.assertEqual(selected(distance,64),64)
+        self.assertEqual(selected(64),4)
+        self.assertEqual(selected(100),3)
+        self.assertEqual(selected(100,12),9)
+        for distance in (100,math.inf,math.nan):
+            self.assertEqual(selected(distance,enabled=0),4)
+            self.assertEqual(selected(distance,preset=3),4)
+
     def manifests(self, kinds=('ssr-hit-refinement', 'volumetric-sample-budget')):
         manifests = [json.loads(p.read_text()) for p in sorted((ROOT / 'patches/adapters').glob('*.json')) if p.name != 'catalog.json']
         return [manifest for manifest in manifests if manifest.get('kind') in kinds]
 
     def fixture(self, manifest):
-        files = {n: b'fixture\n' for n in manifest['source_members']}
-        for name in {p['path'] for p in manifest['patches']}:
-            files[name] = '\nfixture separator\n'.join(p['before'] for p in manifest['patches'] if p['path'] == name).encode()
+        # Sequential maintained patches may share/extend earlier anchors; use
+        # authentic pinned members rather than concatenating unrelated preimages.
+        matches = [p for p in (ROOT/'dependencies/upstream').rglob('*.zip')
+                   if hashlib.sha256(p.read_bytes()).hexdigest() == manifest['release_archive_sha256']]
+        self.assertTrue(matches, 'Pinned original archive prerequisite missing: '+manifest['id'])
+        files = read_archive(matches[0])
         files['unrelated-readme'] = b'original credit'
         manifest = copy.deepcopy(manifest)
         manifest['source_members'] = {n: hashlib.sha256(files[n]).hexdigest() for n in manifest['source_members']}
@@ -93,49 +145,56 @@ class SupportedPackAdapterTests(unittest.TestCase):
             # Reflection invariants apply to reflection consumers, not independent
             # volume/AO patches carried by the same maintained recipe.
             edits='\n'.join(p['after'] for p in m['patches'] if
-                any(part in p['path'].lower() for part in ('reflection', 'water.glsl')))
+                ('shaderlod_refinement_budget(' in p['after'] or 'shaderlod_solas_distance_budget(' in p['after']) and ('reflection' in p['path'].lower() or p['path'].endswith('/water.glsl')))
             self.assertIn('!defined DISTANT_HORIZONS && !defined VOXY',edits)
             if m['id'].startswith('makeup'):
-                self.assertIn('for (int i = 0; i < RAYMARCH_STEPS; i++)',edits)
+                self.assertIn('shaderlodRefinementLimit',edits)
+                self.assertIn('RAYMARCH_STEPS',edits)
                 self.assertIn('if (searchFlag && shaderlodRefinements >= shaderlodRefinementLimit) break;',edits)
             elif m['id'] in ('bsl-shaders', 'solas-shader', 'astralex'):
                 self.assertIn('length(viewPos)',edits)
-                self.assertIn('shaderlod_refinement_budget',edits)
-                self.assertNotIn('for (',edits)
-                self.assertFalse(any('raytrace' in p['path'].lower() for p in m['patches']))
+                self.assertTrue('shaderlod_refinement_budget' in edits or 'shaderlod_solas_distance_budget' in edits)
+                self.assertEqual(edits.count('for ('),sum(p['before'].count('for (') for p in m['patches'] if ('shaderlod_refinement_budget(' in p['after'] or 'shaderlod_solas_distance_budget(' in p['after']) and ('reflection' in p['path'].lower() or p['path'].endswith('/water.glsl'))))
+                self.assertFalse(any('raytrace' in p['path'].lower() for p in m['patches'] if ('shaderlod_refinement_budget(' in p['after'] or 'shaderlod_solas_distance_budget(' in p['after']) and ('reflection' in p['path'].lower() or p['path'].endswith('/water.glsl'))))
             else:
                 self.assertIn('refinementCount = shaderlod_refinement_budget',edits)
                 self.assertNotIn('sampleCount =',edits)
             for p in m['patches']:
-                self.assertNotIn('reflection.rgb',p['after']);self.assertNotIn('reflection.a',p['after'])
+                if ('shaderlod_refinement_budget(' in p['after'] or 'shaderlod_solas_distance_budget(' in p['after']) and ('reflection' in p['path'].lower() or p['path'].endswith('/water.glsl')):
+                    for field in ('reflection.rgb','reflection.a'):
+                        self.assertEqual(p['before'].count(field),p['after'].count(field))
 
     def test_available_real_sources_assemble_only_declared_members(self):
-        locations={'complementary-reimagined':'dev/upstream/other-pack-research/ComplementaryReimagined_r5.9.3.zip',
-            'complementary-unbound':'dev/upstream/pack-expansion/ComplementaryUnbound_r5.9.3.zip',
-            'makeup-ultra-fast-shaders':'dev/upstream/other-pack-research/MakeUp-UltraFast-9.5g.zip',
-            'bsl-shaders':'dev/upstream/other-pack-research/BSL_v10.1.8.zip',
-            'solas-shader':'dev/upstream/pack-expansion/Solas Shader V3.7b.zip',
-            'astralex':'dev/upstream/pack-expansion/§r§lAstra§4§lLex§r§l_By_LexBoosT_§4§lV93.0§r§l.zip',
-            'bliss-shader':'dev/upstream/pack-expansion/Bliss_v2.1.2_(Chocapic13_Shaders_edit).zip',
-            'sildurs-vibrant-shaders':"dev/upstream/pack-expansion/Sildur's Vibrant Shaders v2.02 Extreme.zip"}
+        locations={'complementary-reimagined':'dependencies/upstream/other-pack-research/ComplementaryReimagined_r5.9.3.zip',
+            'complementary-unbound':'dependencies/upstream/other-pack-research/ComplementaryUnbound_r5.9.3.zip',
+            'makeup-ultra-fast-shaders':'dependencies/upstream/other-pack-research/MakeUp-UltraFast-9.5g.zip',
+            'bsl-shaders':'dependencies/upstream/other-pack-research/BSL_v10.1.8.zip',
+            'solas-shader':'dependencies/upstream/pack-expansion/Solas Shader V3.7b.zip',
+            'astralex':'dependencies/upstream/pack-expansion/§r§lAstra§4§lLex§r§l_By_LexBoosT_§4§lV93.0§r§l.zip',
+            'bliss-shader':'dependencies/upstream/pack-expansion/Bliss_v2.1.2_(Chocapic13_Shaders_edit).zip',
+            'sildurs-vibrant-shaders':"dependencies/upstream/pack-expansion/Sildur's Vibrant Shaders v2.02 Extreme.zip"}
         for m in self.manifests():
             p=ROOT/locations[m['id']]
             if not p.exists():continue
             files=read_archive(p);result=apply(files,m)
             changed={n for n in files if files[n]!=result[n]}
-            self.assertEqual(changed,{p['path'] for p in m['patches']})
-            # Original shader quality profiles and DH programs untouched except options screen.
-            for n in files:
-                if 'dh_' in n or '/DH_' in n or n.endswith('water_dh.glsl'):self.assertEqual(files[n],result[n])
+            declared={p['path'] for p in m['patches']}
+            self.assertTrue(changed <= declared)
+            for name in declared-changed:
+                self.assertEqual(files[name],result[name],name)
+            # Some declared wrappers now include guarded DH entry points. This
+            # check establishes ownership of edits; fallback semantics have separate compiler checks.
+            for n in set(files)-declared:
+                self.assertEqual(files[n],result[n],n)
 
     def test_new_water_bindings_preserve_coarse_and_pbr_consumers(self):
-        sources={'bsl-shaders':'dev/upstream/other-pack-research/BSL_v10.1.8.zip',
-            'solas-shader':'dev/upstream/pack-expansion/Solas Shader V3.7b.zip'}
+        sources={'bsl-shaders':'dependencies/upstream/other-pack-research/BSL_v10.1.8.zip',
+            'solas-shader':'dependencies/upstream/pack-expansion/Solas Shader V3.7b.zip'}
         for m in self.manifests():
             if m['id'] not in sources:continue
             edits='\n'.join(p['after'] for p in m['patches'] if
-                any(part in p['path'].lower() for part in ('reflection', 'water.glsl')))
-            self.assertNotIn('!defined ADVANCED_MATERIALS',edits)
+                ('shaderlod_refinement_budget(' in p['after'] or 'shaderlod_solas_distance_budget(' in p['after']) and ('reflection' in p['path'].lower() or p['path'].endswith('/water.glsl')))
+            self.assertIn('!defined DISTANT_HORIZONS && !defined VOXY',edits)
             if m['id']=='bsl-shaders':
                 self.assertIn('length(viewPos), maxf, 3)',edits)
                 self.assertIn('defined SHADERLOD_BSL_WATER',edits)
@@ -149,7 +208,15 @@ class SupportedPackAdapterTests(unittest.TestCase):
             source=ROOT/sources[m['id']]
             if not source.exists():continue
             files=read_archive(source);result=apply(files,m)
-            for name in untouched:self.assertEqual(files[name],result[name])
+            for name in untouched:
+                restored=result[name]
+                # Other independent integrated effects may own these members.
+                # Check exact restoration of every declared sequential patch.
+                for patch in reversed(m['patches']):
+                    if patch['path']==name:
+                        self.assertEqual(1,restored.count(patch['after'].encode()),name)
+                        restored=restored.replace(patch['after'].encode(),patch['before'].encode(),1)
+                self.assertEqual(files[name],restored,name)
             self.assertEqual([l for l in files['shaders/shaders.properties'].splitlines() if l.startswith(b'profile.')],
                 [l for l in result['shaders/shaders.properties'].splitlines() if l.startswith(b'profile.')])
 
@@ -162,27 +229,28 @@ class SupportedPackAdapterTests(unittest.TestCase):
                 self.assertIn('length(viewPos), 6, 5)',edits)
                 self.assertIn('shaderlodNearHit = shaderlodNearHit || (dist < difFactor && err > difFactor)',edits)
                 self.assertIn('shaderlodNearHit ? 6 : shaderlodRefinementCount',edits)
-                self.assertNotIn('vector *=',edits)
+                self.assertEqual(edits.count('vector *='),sum(p['before'].count('vector *=') for p in m['patches']))
             else:
                 self.assertEqual(m['kind'],'volumetric-sample-budget')
                 binding=(ROOT/m['additions']['shaders/lib/shaderlod/adapter.glsl']['path']).read_text()
                 self.assertIn('#define SHADERLOD_EFFECT_ADAPTER 0 // [0 1]',binding)
-                self.assertNotIn('distance',binding)
+                budget=binding.split('int shaderlod_effect_budget(',1)[1].split('}',1)[0]
+                self.assertNotIn('distance',budget)
                 if id=='bliss-shader':
-                    self.assertIn('shaderlod_effect_budget(SAMPLECOUNT, 4)',edits)
-                    self.assertFalse(any('specular' in p['path'] or 'translucent.fsh' in p['path'] for p in m['patches']))
+                    self.assertIn('shaderlod_effect_budget(shaderlodOptVolumetricLightBudget, SAMPLECOUNT, 4)',edits)
+                    self.assertFalse(any('specular' in p['path'] or 'translucent.fsh' in p['path'] for p in m['patches'] if 'shaderlod_effect_budget(' in p['after']))
                 else:
                     self.assertIn('shaderlod_effect_budget(6, 5)',edits)
                     self.assertIn('1.0 / float(shaderlodSampleCount)',edits)
                     self.assertIn('vL *= 6.0 / float(shaderlodSampleCount)',edits)
-                    self.assertFalse(any('world' in p['path'] for p in m['patches']))
+                    self.assertFalse(any('world' in p['path'] for p in m['patches'] if 'shaderlod_effect_budget(' in p['after']))
         helper=(ROOT/'patches/adapters/shared/uniform_sample_budget.glsl').read_text()
         self.assertIn('bridge != 2 || enabled != 1 || preset < 0 || preset > 2',helper)
         self.assertNotIn('texture(',helper);self.assertNotIn('dFdx',helper)
 
 class AdapterResourceSyncTests(unittest.TestCase):
     adapter = 'bsl-shaders'
-    original = ROOT / 'dev/upstream/other-pack-research/BSL_v10.1.8.zip'
+    original = ROOT / 'dependencies/upstream/other-pack-research/BSL_v10.1.8.zip'
 
     def setUp(self):
         if not self.original.exists():

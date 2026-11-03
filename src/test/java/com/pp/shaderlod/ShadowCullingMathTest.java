@@ -145,7 +145,16 @@ class ShadowCullingMathTest {
         }
     }
 
-    @Test void controllerRequiresConfigurationAndEligibilityAndInvalidatesImmediately() {
+    @Test void controllerRequiresConfigurationAndEligibilityAndInvalidatesImmediately() throws Exception {
+        var stateMethod=com.pp.shaderlod.optimization.OptimizationConfig.class.getDeclaredMethod("state");
+        stateMethod.setAccessible(true);Object previous=stateMethod.invoke(null);
+        var restoreMethod=com.pp.shaderlod.optimization.OptimizationConfig.class.getDeclaredMethod("restoreState",previous.getClass());
+        restoreMethod.setAccessible(true);
+        try {
+        com.pp.shaderlod.optimization.OptimizationConfig.load(java.nio.file.Files.createTempDirectory("shadow-controller-").resolve("requests.properties"));
+        var feature=com.pp.shaderlod.optimization.OptimizationId.SHADOW_POSITIVE_VERTEX;
+        com.pp.shaderlod.optimization.OptimizationConfig.replace(
+            com.pp.shaderlod.optimization.OptimizationSnapshot.noneRequested().with(feature,true));
         assertFalse(ShadowCullingController.isActive());
         ShadowCullingController.configure(true);
         assertFalse(ShadowCullingController.isActive());
@@ -157,5 +166,11 @@ class ShadowCullingMathTest {
         assertTrue(ShadowCullingController.isActive());
         ShadowCullingController.setEligible(false);
         assertFalse(ShadowCullingController.isActive());
+        ShadowCullingController.setEligible(true);
+        assertTrue(ShadowCullingController.isActive());
+        com.pp.shaderlod.optimization.OptimizationConfig.replace(
+            com.pp.shaderlod.optimization.OptimizationSnapshot.noneRequested());
+        assertFalse(ShadowCullingController.isActive(),"Independent request Off invalidates an otherwise eligible controller immediately");
+        } finally {restoreMethod.invoke(null,previous);}
     }
 }

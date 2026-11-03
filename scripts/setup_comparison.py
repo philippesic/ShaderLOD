@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Prepare matched Photon + DH landscape profiles without launching clients."""
 from __future__ import annotations
+from run_storage import copytree as storage_copytree
 
 import argparse
 from contextlib import ExitStack, contextmanager
@@ -97,10 +98,10 @@ def prepare(args: argparse.Namespace) -> None:
         raise ValueError(f'Source world does not exist: {world}')
     if output == source or source in output.parents or output in source.parents:
         raise ValueError('Comparison output must be separate from source game directory')
-    lock = json.loads((ROOT / 'dev/runtime.lock.json').read_text())
+    lock = json.loads((ROOT / 'dependencies/runtime.lock.json').read_text())
     dh_artifact, photon = lock['artifacts']['distanthorizons'], lock['artifacts']['photon']
-    dh_jar = ROOT / 'dev/runtime' / dh_artifact['filename']
-    baseline = ROOT / 'dev/upstream' / photon['filename']
+    dh_jar = ROOT / 'dependencies/runtime' / dh_artifact['filename']
+    baseline = ROOT / 'dependencies/upstream' / photon['filename']
     for path, artifact in ((dh_jar, dh_artifact), (baseline, photon)):
         if file_hash(path, 'sha512') != artifact['hashes']['sha512']:
             raise ValueError(f'Pinned artifact checksum mismatch: {path}')
@@ -151,7 +152,7 @@ def prepare(args: argparse.Namespace) -> None:
                 target_world.rename(backup)
                 print(f'Preserved old save: {backup}')
             if not target_world.exists():
-                shutil.copytree(world, target_world, ignore=shutil.ignore_patterns('session.lock'))
+                storage_copytree(world, target_world, ignore=shutil.ignore_patterns('session.lock'))
                 copied[mode] = world_fingerprint(target_world)
                 if copied[mode] != source_fingerprint:
                     raise ValueError(f'Copied save differs from source: {target_world}')

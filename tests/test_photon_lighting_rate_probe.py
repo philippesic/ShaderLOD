@@ -217,16 +217,15 @@ class LightingRateTests(unittest.TestCase):
         for path in (first,second):path.unlink()
 
     def test_actual_iris_lexer_jcpp_format_and_property_parser(self):
-        iris=ROOT/'dev/runtime/iris-neoforge-1.8.12+mc1.21.1.jar'
+        iris=ROOT/'dependencies/runtime/iris-neoforge-1.8.12+mc1.21.1.jar'
         self.assertEqual('3e3f94d2d5cdcb8145c4385d521974aa2d8669b2cc212351f70cf06488182e83',probe.sha256(iris.read_bytes()))
         cache=Path.home()/'.gradle/caches/modules-2/files-2.1'
         jars=[]
         for rel,pattern in [('com.google.guava/guava/32.1.2-jre','guava-*.jar'),('it.unimi.dsi/fastutil/8.5.12','fastutil-*.jar'),
                             ('org.joml/joml/1.10.5','joml-*.jar'),('org.slf4j/slf4j-api/2.0.9','slf4j-api-*.jar'),('com.mojang/brigadier/1.3.10','brigadier-*.jar')]:
             candidates=list((cache/rel).glob('*/'+pattern));self.assertEqual(1,len(candidates),rel);jars+=candidates
-        minecraft=Path.home()/'.gradle/caches/neoformruntime/intermediate_results/compiledWithNeoForge_14005814aca71498f3705030e9545a3b184086e8_output.jar'
-        self.assertEqual('a3f878f97a229b543a2c872c4a3c03b19ebd3efbd11af2caed9c258c08aebf55',probe.sha256(minecraft.read_bytes()))
-        jars.append(minecraft)
+        # The fixture constructs immutable graph data directly; no Minecraft UI
+        # path or environment-specific intermediate Minecraft archive is required.
         harness=r'''
 import java.nio.file.*; import java.util.*;
 import com.google.common.collect.ImmutableList; import com.google.common.collect.ImmutableMap;
@@ -308,12 +307,13 @@ class RateIrisProof {
         This does not type-check GLSL, run Iris transformations, link a program or
         validate a GL driver. A deliberately broken active helper must fail.
         """
-        iris=ROOT/'dev/runtime/iris-neoforge-1.8.12+mc1.21.1.jar'
+        iris=ROOT/'dependencies/runtime/iris-neoforge-1.8.12+mc1.21.1.jar'
         self.assertEqual('3e3f94d2d5cdcb8145c4385d521974aa2d8669b2cc212351f70cf06488182e83',probe.sha256(iris.read_bytes()))
-        forest_report=ROOT/'run-workloads/native-terrain-b15-r2/forest/high/workload-measurement.json'
-        self.assertEqual('6f7662a31427f0d0863d926909c67a57b0dfba3c7ee2539c857f699c7ce3da5e',probe.sha256(forest_report.read_bytes()))
-        native=json.loads(forest_report.read_text())['effective_shader_options']
-        self.assertEqual('4efc7af7742bc445adf2b3b1454aa448a557e1d4b024103dd5b9f5758ed68745',
+        forest_report=ROOT/'src/main/resources/assets/shaderlod/photonquad/native366.json'
+        # Explicit source-test scenario based on the retained native profile,
+        # with environment reflections disabled; no captured runtime-map claim.
+        native=json.loads(forest_report.read_text()) | {'ENVIRONMENT_REFLECTIONS':'false'}
+        self.assertEqual('a111291c05aa517e89178ec3eb13dfa6ee4d47f9785c965540353ffc60f4f5d5',
                          probe.sha256(json.dumps(native,sort_keys=True,separators=(',',':')).encode()))
         excluded=('NORMAL_MAPPING','SPECULAR_MAPPING','SHADOW_COLOR','SHADOW_VPS','COLORED_LIGHTS',
                   'CLOUD_SHADOWS','SH_SKYLIGHT','TAAU','BLOCKY_CLOUDS','ENVIRONMENT_REFLECTIONS')

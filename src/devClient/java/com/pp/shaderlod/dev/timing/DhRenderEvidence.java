@@ -31,6 +31,18 @@ public final class DhRenderEvidence {
 
     public static boolean enabled() { return ENABLED; }
 
+    /** Live cumulative counters only; no terminal freeze, file reads or GL getters. */
+    public static JsonObject liveCounters() {
+        var result = new JsonObject();
+        result.addProperty("enabled", ENABLED);
+        result.addProperty("terminal", terminalSnapshot != null);
+        var draws = new JsonArray(); var indices = new JsonArray();
+        for (int i = 0; i < DRAW_CALLS.length; i++) { draws.add(DRAW_CALLS[i]); indices.add(INDEX_COUNTS[i]); }
+        result.add("draws", draws); result.add("indices", indices);
+        result.addProperty("scope", "cumulative CPU submissions; divide deltas by completed render frames for steady geometry observations");
+        return result;
+    }
+
     /** Cheap render-thread marker; establishes the hook was exercised even if every buffer is skipped. */
     public static void rendererEntered(String renderer, boolean opaque, boolean shadow) {
         if (!ENABLED || terminalSnapshot != null) return;

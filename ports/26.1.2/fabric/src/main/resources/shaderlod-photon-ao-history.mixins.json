@@ -1,0 +1,20 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.optimization.photonhistory.mixin",
+  "plugin": "com.pp.shaderlod.optimization.photonhistory.mixin.PhotonAoHistoryMixinPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [],
+  "client": [
+    "PhotonAoHistoryCompositeMixin",
+    "PhotonAoHistoryLegacyDrawMixin",
+    "PhotonAoHistoryModernDrawMixin",
+    "PhotonAoHistoryDirectDrawMixin",
+    "PhotonAoHistoryPearlDirectDrawMixin",
+    "PhotonAoHistoryReloadMixin",
+    "PhotonAoHistoryPipelineMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

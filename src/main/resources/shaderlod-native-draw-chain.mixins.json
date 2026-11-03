@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.optimization.nativechain.mixin",
+  "plugin": "com.pp.shaderlod.optimization.nativechain.mixin.NativeDrawChainPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "NativeDrawChainMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

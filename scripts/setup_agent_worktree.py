@@ -71,7 +71,7 @@ def inspect(root, runtime_source=None):
             pass
     artifacts = []
     try:
-        lock = json.loads((root / "dev/runtime.lock.json").read_text())
+        lock = json.loads((root / "dependencies/runtime.lock.json").read_text())
         required_java = lock["java"]
         if type(required_java) is not int or required_java < 1:
             raise ValueError("invalid java version")
@@ -83,7 +83,7 @@ def inspect(root, runtime_source=None):
             expected = artifact["hashes"]["sha512"]
             if Path(filename).name != filename or not re.fullmatch(r"[a-f0-9]{128}", expected):
                 raise ValueError(f"invalid pinned artifact: {name}")
-            target = root / "dev/runtime" / filename
+            target = root / "dependencies/runtime" / filename
             state = "missing"
             if target.exists() or target.is_symlink():
                 state = "verified" if target.is_file() and digest(target) == expected else "checksum mismatch"

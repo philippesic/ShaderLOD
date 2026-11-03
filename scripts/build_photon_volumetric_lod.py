@@ -9,7 +9,7 @@ import zipfile
 from build_photon_density_detail_probe import archive_members, sha256
 
 ROOT = Path(__file__).resolve().parents[1]
-BASE = Path('dev/upstream/photon_v1.3b.zip')
+BASE = Path('dependencies/upstream/photon_v1.3b.zip')
 BASE_SHA256 = '120897768eaa8cb1f14a3e98f88dff009ae3204ee3b96904a4fe8586edfc1ead'
 MANIFEST = Path('patches/photon-experiments/volumetric-lod.json')
 EXPERIMENT = 'photon-primary-volumetric-integration-lod'

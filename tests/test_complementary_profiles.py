@@ -22,10 +22,10 @@ from setup_comparison import WORLD, file_hash, world_fingerprint
 class ComplementaryProfilesTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        lock = json.loads((ROOT / 'dev/shader-candidates.lock.json').read_text())
+        lock = json.loads((ROOT / 'dependencies/shader-candidates.lock.json').read_text())
         cls.pin = next(c for c in lock['candidates']
                        if c['modrinth_project'] == 'complementary-reimagined')['release']
-        cls.archive = ROOT / 'dev/upstream/other-pack-research' / cls.pin['filename']
+        cls.archive = ROOT / 'dependencies/upstream/other-pack-research' / cls.pin['filename']
 
     def require_archive(self):
         if not self.archive.is_file():
@@ -37,13 +37,13 @@ class ComplementaryProfilesTest(unittest.TestCase):
         self.require_archive()
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            (root / 'dev/upstream/other-pack-research').mkdir(parents=True)
-            shutil.copy2(self.archive, root / 'dev/upstream/other-pack-research' / self.pin['filename'])
+            (root / 'dependencies/upstream/other-pack-research').mkdir(parents=True)
+            shutil.copy2(self.archive, root / 'dependencies/upstream/other-pack-research' / self.pin['filename'])
             candidates = {'candidates': [{'modrinth_project': 'complementary-reimagined',
                                          'release': dict(self.pin)}]}
-            (root / 'dev/shader-candidates.lock.json').write_text(json.dumps(candidates))
-            runtime = json.loads((ROOT / 'dev/runtime.lock.json').read_text())
-            (root / 'dev/runtime.lock.json').write_text(json.dumps(runtime))
+            (root / 'dependencies/shader-candidates.lock.json').write_text(json.dumps(candidates))
+            runtime = json.loads((ROOT / 'dependencies/runtime.lock.json').read_text())
+            (root / 'dependencies/runtime.lock.json').write_text(json.dumps(runtime))
             source = root / 'source/coastalwater/inspected'
             for folder in ('config', 'shaderpacks', 'mods', f'saves/{WORLD}/region'):
                 (source / folder).mkdir(parents=True)
@@ -171,7 +171,7 @@ class ComplementaryProfilesTest(unittest.TestCase):
                 preparation.prepare(source.parent.parent / 'forest/high', output, 'complementary')
             with self.assertRaisesRegex(ValueError, 'DH compatibility override'):
                 preparation.prepare(source, output, 'complementary', with_dh=True)
-            lock_path = root / 'dev/shader-candidates.lock.json'
+            lock_path = root / 'dependencies/shader-candidates.lock.json'
             lock = json.loads(lock_path.read_text())
             lock['candidates'][0]['release']['version'] = 'future'
             lock_path.write_text(json.dumps(lock))
@@ -179,7 +179,7 @@ class ComplementaryProfilesTest(unittest.TestCase):
                 preparation.prepare(source, output, 'complementary')
             lock['candidates'][0]['release'] = dict(self.pin)
             lock_path.write_text(json.dumps(lock))
-            pack = root / 'dev/upstream/other-pack-research' / self.pin['filename']
+            pack = root / 'dependencies/upstream/other-pack-research' / self.pin['filename']
             pack.write_bytes(pack.read_bytes() + b'changed container')
             with self.assertRaisesRegex(ValueError, 'release differs from pin'):
                 preparation.prepare(source, output, 'complementary')
@@ -191,9 +191,6 @@ class ComplementaryProfilesTest(unittest.TestCase):
         for case, profile in expected.items():
             self.assertEqual(CASES[case], ('coastalwater/' + profile, 'runClientLodOff'))
         for case, profile, task in (
-                ('miniature-high', 'high', 'runClientLodOff'),
-                ('miniature-lower', 'lower', 'runClientLodOff'),
-                ('miniature-refinement-lod', 'refinement-lod', 'runClientLodOn'),
                 ('bsl-high', 'high', 'runClientLodOff'),
                 ('bsl-parallax-off', 'parallax-off', 'runClientLodOff'),
                 ('makeup-high', 'high', 'runClientLodOff'),

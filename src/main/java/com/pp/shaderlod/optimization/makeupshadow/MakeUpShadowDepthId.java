@@ -1,0 +1,1 @@
+package com.pp.shaderlod.optimization.makeupshadow;import net.irisshaders.iris.shadows.ShadowRenderTargets;public final class MakeUpShadowDepthId{private MakeUpShadowDepthId(){}public static int current(ShadowRenderTargets s){return s.getDepthTextureNoTranslucents().getTextureId();}}

@@ -1,0 +1,23 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.solasprefix.mixin",
+  "plugin": "com.pp.shaderlod.solasprefix.mixin.SolasPrefixPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "SolasPrefixSodiumR8Mixin",
+    "SolasPrefixBuildR8Mixin",
+    "SolasPrefixPipelineR8Mixin",
+    "SolasPrefixAtlasR8Mixin",
+    "SolasPrefixTextureR8Mixin",
+    "SolasPrefixResourceR8Mixin",
+    "SolasPrefixWorldR8Mixin",
+    "SolasPrefixManagerR8Mixin",
+    "SolasPrefixFormatReloadR12Mixin",
+    "SolasPrefixNativeSamplerMixin",
+    "SolasPrefixIrisSamplerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

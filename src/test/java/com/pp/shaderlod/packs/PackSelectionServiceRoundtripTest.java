@@ -16,21 +16,35 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.io.TempDir;
 
 class PackSelectionServiceRoundtripTest {
     @TempDir Path directory;
-    private static final Path PHOTON = Path.of("dev/upstream/photon_v1.3b.zip");
+ private Object savedFlags;
+ @TempDir Path flagsDirectory;
+ @BeforeEach void isolateFlags()throws Exception {
+  var save=com.pp.shaderlod.optimization.OptimizationConfig.class.getDeclaredMethod("state");save.setAccessible(true);savedFlags=save.invoke(null);
+  com.pp.shaderlod.optimization.OptimizationConfig.load(flagsDirectory.resolve("requests.properties"));
+  com.pp.shaderlod.optimization.OptimizationConfig.replace(cpuPair());
+ }
+ @AfterEach void restoreFlags()throws Exception {
+  var restore=com.pp.shaderlod.optimization.OptimizationConfig.class.getDeclaredMethod("restoreState",savedFlags.getClass());restore.setAccessible(true);restore.invoke(null,savedFlags);
+ }
+ private static com.pp.shaderlod.optimization.OptimizationSnapshot cpuPair(){return com.pp.shaderlod.optimization.OptimizationSnapshot.noneRequested().with(com.pp.shaderlod.optimization.OptimizationId.QUAD_COMMAND_COMPACTION,true).with(com.pp.shaderlod.optimization.OptimizationId.SHADOW_ADMISSION_CACHE,true);}
+
+    private static final Path PHOTON = Path.of("dependencies/upstream/photon_v1.3b.zip");
     private static final Map<String, String> ORIGINALS = Map.ofEntries(
-        Map.entry("photon", "dev/upstream/photon_v1.3b.zip"),
-        Map.entry("complementary-reimagined", "dev/upstream/other-pack-research/ComplementaryReimagined_r5.9.3.zip"),
-        Map.entry("complementary-unbound", "dev/upstream/pack-expansion/ComplementaryUnbound_r5.9.3.zip"),
-        Map.entry("makeup-ultra-fast-shaders", "dev/upstream/other-pack-research/MakeUp-UltraFast-9.5g.zip"),
-        Map.entry("bsl-shaders", "dev/upstream/other-pack-research/BSL_v10.1.8.zip"),
-        Map.entry("solas-shader", "dev/upstream/pack-expansion/Solas Shader V3.7b.zip"),
-        Map.entry("astralex", "dev/upstream/pack-expansion/§r§lAstra§4§lLex§r§l_By_LexBoosT_§4§lV93.0§r§l.zip"),
-        Map.entry("bliss-shader", "dev/upstream/pack-expansion/Bliss_v2.1.2_(Chocapic13_Shaders_edit).zip"),
-        Map.entry("sildurs-vibrant-shaders", "dev/upstream/pack-expansion/Sildur's Vibrant Shaders v2.02 Extreme.zip"));
+        Map.entry("photon", "dependencies/upstream/photon_v1.3b.zip"),
+        Map.entry("complementary-reimagined", "dependencies/upstream/other-pack-research/ComplementaryReimagined_r5.9.3.zip"),
+        Map.entry("complementary-unbound", "dependencies/upstream/other-pack-research/ComplementaryUnbound_r5.9.3.zip"),
+        Map.entry("makeup-ultra-fast-shaders", "dependencies/upstream/other-pack-research/MakeUp-UltraFast-9.5g.zip"),
+        Map.entry("bsl-shaders", "dependencies/upstream/other-pack-research/BSL_v10.1.8.zip"),
+        Map.entry("solas-shader", "dependencies/upstream/pack-expansion/Solas Shader V3.7b.zip"),
+        Map.entry("astralex", "dependencies/upstream/pack-expansion/§r§lAstra§4§lLex§r§l_By_LexBoosT_§4§lV93.0§r§l.zip"),
+        Map.entry("bliss-shader", "dependencies/upstream/pack-expansion/Bliss_v2.1.2_(Chocapic13_Shaders_edit).zip"),
+        Map.entry("sildurs-vibrant-shaders", "dependencies/upstream/pack-expansion/Sildur's Vibrant Shaders v2.02 Extreme.zip"));
     private String install(String name) throws IOException {
         assumeTrue(Files.exists(PHOTON), "Local pinned Photon fixture required");
         Files.copy(PHOTON, directory.resolve(name)); return name;
@@ -48,6 +62,77 @@ class PackSelectionServiceRoundtripTest {
     }
     private void assertAccepted(PackSelectionService.Result result) {
         assertTrue(result.accepted(), result::detail);
+    }
+    @Test void capturedGeneratedInputsUseVerifiedMembersAndRefuseChangedSelectionOrAncestry() throws Exception {
+        String original = install("Photon.zip");
+        assertNull(PackSelectionService.captureGeneratedRendererInputs(directory.resolve(original), Map.of()));
+        var on = apply(original, true); assertAccepted(on);
+        Path selected = directory.resolve(on.packFile());
+        Map<String, String> effective = new TreeMap<>();
+        options(on.packFile()).forEach((key, value) -> effective.put(key.toString(), value.toString()));
+        assertEquals("photon", PackSelectionService.verifyGeneratedRendererGraph(selected, effective));
+        var captured = PackSelectionService.captureGeneratedRendererInputs(selected, effective);
+        assertNotNull(captured); assertEquals("photon", captured.adapterId());
+        var generated = members(selected);
+        assertEquals(generated.keySet(), captured.memberNames());
+        var marker = JsonParser.parseString(new String(generated.get("shaderlod-selection.json"), StandardCharsets.UTF_8)).getAsJsonObject();
+        Path statePath = directory.resolve(marker.get("stateFile").getAsString());
+        assertEquals(sha256(Files.readAllBytes(directory.resolve(original))), captured.provenance().originalSha256());
+        assertEquals(sha256(Files.readAllBytes(selected)), captured.provenance().generatedSha256());
+        assertEquals(sha256(Files.readAllBytes(statePath)), captured.provenance().stateSha256());
+        try (var recipe = PackSelectionService.class.getResourceAsStream(
+                "/assets/shaderlod/adapters/patches/photon-experiments/live-pixel-budget.json")) {
+            assertNotNull(recipe);
+            assertEquals(sha256(recipe.readAllBytes()), captured.provenance().recipeSha256());
+        }
+        String member = "shaders/settings.glsl";
+        var lines = java.util.List.of(new String(generated.get(member), StandardCharsets.UTF_8).split("\\R"));
+        assertTrue(captured.matchesIrisLines(member, lines));
+        byte[] selectedBytes = Files.readAllBytes(selected);
+        generated.put(member, "changed\n".getBytes(StandardCharsets.UTF_8));
+        writeZip(selected, generated);
+        assertNull(PackSelectionService.captureGeneratedRendererInputs(selected, effective));
+        assertTrue(captured.matchesIrisLines(member, lines), "Already captured inputs stay immutable; this grants no admission");
+        Files.write(selected, selectedBytes);
+        assertNotNull(PackSelectionService.captureGeneratedRendererInputs(selected, effective));
+        Files.write(directory.resolve(original), new byte[]{1, 2, 3});
+        assertNull(PackSelectionService.captureGeneratedRendererInputs(selected, effective));
+        assertTrue(captured.matchesIrisLines(member, lines));
+    }
+    @Test void capturedInputsRefuseInactiveMalformedMismatchedAndAliasedState() throws Exception {
+        String original = install("Photon.zip");
+        var on = apply(original, true); assertAccepted(on);
+        Path selected = directory.resolve(on.packFile());
+        Map<String, String> effective = new TreeMap<>();
+        options(on.packFile()).forEach((key, value) -> effective.put(key.toString(), value.toString()));
+        var generated = members(selected);
+        var marker = JsonParser.parseString(new String(generated.get("shaderlod-selection.json"), StandardCharsets.UTF_8)).getAsJsonObject();
+        Path statePath = directory.resolve(marker.get("stateFile").getAsString());
+        byte[] savedState = Files.readAllBytes(statePath);
+        var state = JsonParser.parseString(new String(savedState, StandardCharsets.UTF_8)).getAsJsonObject();
+        for (String field : java.util.List.of("active", "adapterId", "originalSha256")) {
+            var changed = state.deepCopy();
+            if (field.equals("active")) changed.addProperty(field, false);
+            else changed.addProperty(field, "mismatch");
+            Files.writeString(statePath, changed.toString());
+            assertNull(PackSelectionService.captureGeneratedRendererInputs(selected, effective), field);
+            Files.write(statePath, savedState);
+        }
+        Files.writeString(statePath, "{");
+        assertNull(PackSelectionService.captureGeneratedRendererInputs(selected, effective));
+        Files.write(statePath, savedState);
+        assertNotNull(PackSelectionService.captureGeneratedRendererInputs(selected, effective));
+
+        // Keep hashes and every other identity consistent, but point the marker at an alias
+        // whose contents still claim the original state filename. The new capture must refuse.
+        marker.addProperty("stateFile", "alias-state.json");
+        generated.put("shaderlod-selection.json", marker.toString().getBytes(StandardCharsets.UTF_8));
+        writeZip(selected, generated);
+        state.addProperty("generatedSha256", sha256(Files.readAllBytes(selected)));
+        Files.writeString(directory.resolve("alias-state.json"), state.toString());
+        assertEquals("photon", PackSelectionService.verifyGeneratedRendererGraph(selected, effective),
+                "Legacy verifier demonstrates that the capture-specific filename check is decisive");
+        assertNull(PackSelectionService.captureGeneratedRendererInputs(selected, effective));
     }
     @Test void nativeGraphRoundtripPreservesOriginalBytesAndLatentChosenScale() throws Exception {
         String original = install("Photon.zip");
@@ -234,7 +319,7 @@ class PackSelectionServiceRoundtripTest {
                 com.pp.shaderlod.LodPreset.QUALITY, Map.of()).accepted()); assertSnapshot(before);
         assertFalse(result.accepted()); assertSnapshot(before);
     }
-    @Test void packSwitchDoesNotMixOriginalSelectionsOrGenerateDerivatives() throws Exception {
+    @Test void packSwitchKeepsOriginalSelectionsAndOwnedDerivativesSeparate() throws Exception {
         String first = install("Photon-one.zip"), second = install("Photon-two.zip");
         sidecar(first, "INFO=1\nTAAU=false\n"); sidecar(second, "INFO=3\nTAAU=true\nTAAU_RENDER_SCALE=0.50\n");
         var a = apply(first, true); var b = apply(second, true); assertAccepted(a); assertAccepted(b);
@@ -269,16 +354,28 @@ class PackSelectionServiceRoundtripTest {
             assertTrue(generated.containsKey(entry.getKey()));
             if (!Arrays.equals(entry.getValue(), generated.get(entry.getKey()))) changed.add(entry.getKey());
         }
-        assertEquals(java.util.Set.of("shaders/settings.glsl", "shaders/include/global.glsl",
-            "shaders/program/gbuffers_all_solid.fsh", "shaders/program/gbuffers_all_translucent.fsh",
-            "shaders/program/gbuffers_damagedblock.fsh", "shaders/program/gbuffers_armor_glint.fsh",
-            "shaders/include/sky/clouds/cumulus.glsl"), changed);
+        var recipe=JsonParser.parseString(Files.readString(Path.of("patches/photon-experiments/live-pixel-budget.json"))).getAsJsonObject();
+        var expectedChanged=new java.util.TreeSet<String>();
+        for(var member:recipe.getAsJsonArray("members")){
+            var pin=member.getAsJsonObject();String path=pin.get("path").getAsString();
+            assertEquals(pin.get("source_sha256").getAsString(),sha256(base.get(path)),path);
+            String expected=pin.get(path.equals("shaders/settings.glsl")?"enabled_sha256":"patched_sha256").getAsString();
+            assertEquals(expected,sha256(generated.get(path)),path);
+            if(!pin.get("source_sha256").getAsString().equals(expected))expectedChanged.add(path);
+        }
+        assertEquals(expectedChanged,changed,"Only exact current pinned recipe members may change");
+        var expectedMembers=new java.util.TreeSet<>(base.keySet());
+        for(String key:java.util.List.of("addition","common_addition"))expectedMembers.add(recipe.getAsJsonObject(key).get("path").getAsString());
+        expectedMembers.addAll(recipe.getAsJsonObject("additions").keySet());
+        expectedMembers.add("shaderlod-selection.json");expectedMembers.add("SHADERLOD_PRIVATE_SELECTION.md");
+        assertEquals(expectedMembers,generated.keySet(),"No undeclared helper or missing original member");
+        for(var member:base.entrySet())if(!expectedChanged.contains(member.getKey()))assertArrayEquals(member.getValue(),generated.get(member.getKey()),member.getKey());
         assertArrayEquals(base.get("LICENSE"), generated.get("LICENSE"));
     }
     @Test void shaderAndRendererSelectionsPreserveQualityAndOriginalBytes() throws Exception {
-        for (String source : java.util.List.of("dev/upstream/other-pack-research/ComplementaryReimagined_r5.9.3.zip",
-                "dev/upstream/pack-expansion/ComplementaryUnbound_r5.9.3.zip",
-                "dev/upstream/other-pack-research/MakeUp-UltraFast-9.5g.zip")) {
+        for (String source : java.util.List.of("dependencies/upstream/other-pack-research/ComplementaryReimagined_r5.9.3.zip",
+                "dependencies/upstream/other-pack-research/ComplementaryUnbound_r5.9.3.zip",
+                "dependencies/upstream/other-pack-research/MakeUp-UltraFast-9.5g.zip")) {
             assumeTrue(Files.exists(Path.of(source)), source);
             String name = Path.of(source).getFileName().toString(); Files.copy(Path.of(source), directory.resolve(name));
             byte[] original = Files.readAllBytes(directory.resolve(name)); sidecar(name, "QUALITY=3\nCUSTOM_QUALITY=high\n");
@@ -364,8 +461,7 @@ class PackSelectionServiceRoundtripTest {
         }
     }
     @Test void actualRendererAvailabilityRetainsNativeOnlyForPerformance() throws Exception {
-        for (String id : java.util.List.of("photon", "complementary-reimagined", "complementary-unbound",
-                "makeup-ultra-fast-shaders", "sildurs-vibrant-shaders", "bsl-shaders", "bliss-shader")) {
+        for (String id : ORIGINALS.keySet()) {
             Path source = Path.of(ORIGINALS.get(id)); assertTrue(Files.isRegularFile(source), source.toString());
             String original = id + ".zip"; Files.copy(source, directory.resolve(original));
             sidecar(original, "TAA=true\nTAAU=false\nTAAU_RENDER_SCALE=0.67\nCUSTOM_QUALITY=high\n");
@@ -411,7 +507,13 @@ class PackSelectionServiceRoundtripTest {
             String original = id + ".zip"; Files.copy(source, directory.resolve(original));
             var on = apply(original, true); assertAccepted(on);
             Properties defaults = options(on.packFile());
-            assertEquals(1, defaults.size()); assertEquals("1", defaults.getProperty("SHADERLOD_EFFECT_ADAPTER"));
+            var manifest=JsonParser.parseString(Files.readString(Path.of("patches/adapters/"+id+".json"))).getAsJsonObject();
+            var expectedOwned=new TreeMap<String,String>();expectedOwned.put("SHADERLOD_EFFECT_ADAPTER","1");
+            for(var control:manifest.getAsJsonObject("optimization_compile_controls").entrySet()){
+                var definition=control.getValue().getAsJsonObject();expectedOwned.put(definition.get("option").getAsString(),definition.get("disabled").getAsString());
+            }
+            assertEquals(expectedOwned.keySet(),defaults.stringPropertyNames());
+            expectedOwned.forEach((key,value)->assertEquals(value,defaults.getProperty(key),key));
             assertAccepted(apply(on.packFile(), false));
             assertFalse(Files.exists(directory.resolve(original + ".txt")));
             String disabled = "# keep fog and lighting disabled\nVolumetric_Lighting=false\nTOGGLE_VL_FOG=false\nVL_SAMPLES=4\n";

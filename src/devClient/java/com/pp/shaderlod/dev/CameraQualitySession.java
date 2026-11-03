@@ -39,6 +39,20 @@ import java.util.concurrent.TimeUnit;
  * synchronized image-lease stages. At most two images/callbacks are pending.
  */
 public final class CameraQualitySession {
+    /** Shared bounded pose sampler for the authored-world quality caller; no writer or timing. */
+    static final class MotionPath {
+        private final Config config;
+        private final Pose original;
+        MotionPath(Minecraft client, JsonObject request) {
+            config = Config.parse(request.toString());
+            original = Pose.of(client);
+            if (!original.near(config.waypoints().getFirst().pose(), .05, .1))
+                throw new IllegalArgumentException("Motion must start at the current authored pose");
+        }
+        double duration() { return config.duration(); }
+        void applyAt(Minecraft client, double seconds) { apply(client, config.poseAt(seconds)); }
+        void restore(Minecraft client) { apply(client, original); }
+    }
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
     private static final long MAX_PIXELS = 4096L * 2160;
     private static final long MAX_PNG_BYTES = 64L * 1024 * 1024;
@@ -132,7 +146,7 @@ public final class CameraQualitySession {
         report.addProperty("request_sha256", sourceHash);
         report.addProperty("output_directory", output.toString());
         report.addProperty("evidence_kind", "unmeasured moving-camera quality; PNG readback/write can stall rendering");
-        report.addProperty("clock_policy", "20 Hz eased waypoint ticks; normal partial-tick camera interpolation; Iris clocks and temporal history advance normally");
+        report.addProperty("clock_policy", "20 Hz eased waypoint ticks; actual Minecraft camera position and rotation recorded per image; Iris clocks and temporal history advance normally");
         report.addProperty("world_policy", "Existing singleplayer control must freeze daylight/weather; no world rules/time/weather edits by this harness");
         report.addProperty("close_owned_client_requested", closeOwnedClient);
         addPngEncoding(report);
@@ -158,6 +172,7 @@ public final class CameraQualitySession {
         for (var mod : ModList.get().getMods()) mods.addProperty(mod.getModId(), mod.getVersion().toString());
         report.add("loaded_mod_versions", mods);
         report.add("loaded_mod_artifacts", artifactIdentities());
+        report.add("loaded_artifact_evidence_initial", LoadedArtifactEvidence.capture());
         try (var stream = CameraQualitySession.class.getResourceAsStream("CameraQualitySession.class")) {
             if (stream != null) report.addProperty("harness_class_sha256", hash(stream.readAllBytes()));
         }
@@ -204,7 +219,7 @@ public final class CameraQualitySession {
                 World observed = worldCheck.join();
                 worldCheck = null;
                 if (!observed.daylightFrozen() || !observed.weatherFrozen() || !observed.spectator()) return;
-                JsonObject preparedInputs = inputs.benchmarkInputState();
+                JsonObject preparedInputs = qualityInputState();
                 // Prepared controls arrive through separate server/player/time packets.
                 // Do not freeze the fingerprint until the client reflects the frozen server scene.
                 if (!preparedInputs.get("dimension").getAsString().equals(observed.dimension())
@@ -247,7 +262,7 @@ public final class CameraQualitySession {
                 apply(client, config.waypoints().getFirst().pose());
                 warmedTicks++;
                 if (seconds(now, warmedAt) < config.warmupSeconds() || warmedTicks < Math.ceil(config.warmupSeconds() * 20)) return;
-                captureInputs = inputs.benchmarkInputState();
+                captureInputs = qualityInputState();
                 requirePipeline(captureInputs);
                 if (!initialInputs.get("actual_shader_sha256").equals(captureInputs.get("actual_shader_sha256"))) throw new IllegalStateException("Shader archive changed during warmup");
                 report.add("input_state_capture_start", captureInputs);
@@ -287,7 +302,7 @@ public final class CameraQualitySession {
             if (motionTick > config.duration() * 20 && nextSlot >= config.slotCount()) {
                 report.addProperty("actual_motion_wall_seconds", seconds(System.nanoTime(), motionStarted));
                 report.addProperty("actual_motion_ticks", motionTick);
-                JsonObject end = inputs.benchmarkInputState();
+                JsonObject end = qualityInputState();
                 report.add("input_state_capture_end", end);
                 if (!captureInputs.get("actual_shader_sha256").equals(end.get("actual_shader_sha256"))) throw new IllegalStateException("Shader archive changed during capture");
                 report.add("shader_temporal_capture_end", inputs.temporalInputs());
@@ -346,6 +361,16 @@ public final class CameraQualitySession {
         addPngEncoding(frame);
         frame.addProperty("status", "write_pending");
         frames.add(frame);
+        var observedWindow = qualityWindow(client);
+        frame.add("window_state", GSON.toJsonTree(observedWindow));
+        frame.addProperty("hide_gui", client.options.hideGui);
+        if (!observedWindow.availability().equals("available") || !observedWindow.focused().equals("true")
+                || !observedWindow.visible().equals("true") || !observedWindow.iconified().equals("false")
+                || !client.options.hideGui || observedWindow.framebuffer_width() != target.width
+                || observedWindow.framebuffer_height() != target.height) {
+            frame.addProperty("status", "window_contract_rejected");
+            throw new IllegalStateException("Capture requires a focused visible native framebuffer and hidden GUI");
+        }
         JsonObject cameraContext = WaterSceneSurvey.observeCameraSnapshot(client);
         frame.add("camera_context", cameraContext);
         try { requireCameraContract(cameraContext); }
@@ -568,6 +593,9 @@ public final class CameraQualitySession {
         report.addProperty("request_unchanged_at_end", unchanged);
         if (!unchanged && failure == null) failure = "Request source changed before finalization";
         try {
+            var endInputs = qualityInputState();
+            report.add("input_state_end", endInputs);
+            report.add("loaded_artifact_evidence_end", LoadedArtifactEvidence.capture());
             var artifacts = artifactIdentities();
             report.add("loaded_mod_artifacts_at_end", artifacts);
             if (!report.get("loaded_mod_artifacts").equals(artifacts) && failure == null) failure = "Loaded artifact files changed during quality session";
@@ -585,6 +613,25 @@ public final class CameraQualitySession {
             }
         }
         LogUtils.getLogger().info("Camera quality finished: status={}, images={}, skipped={}, output={}", status, completedWrites, skippedFrames, output);
+    }
+
+    private JsonObject qualityInputState() throws Exception {
+        var state = inputs.benchmarkInputState();
+        state.add("configuration_files", ConfigurationFilesEvidence.capture(gameDirectory));
+        state.add("window_state", GSON.toJsonTree(qualityWindow(Minecraft.getInstance())));
+        if (ModList.get().isLoaded("shaderlod")) {
+            state.getAsJsonObject("loaded_semantic_config").add("effects",
+                    GSON.toJsonTree(com.pp.shaderlod.ShaderLodEffectConfig.snapshot()));
+        }
+        return state;
+    }
+
+    private static com.pp.shaderlod.dev.timing.WindowStateTracker.State qualityWindow(Minecraft client) {
+        var window = client.getWindow();
+        return com.pp.shaderlod.dev.timing.WindowStateTracker.readWindow(window.getWindow(),
+                window.getScreenWidth(), window.getScreenHeight(), window.getWidth(), window.getHeight(),
+                new com.pp.shaderlod.dev.timing.WindowStateTracker.Pacing(client.options.pauseOnLostFocus,
+                        window.isFullscreen(), client.options.framerateLimit().get(), client.options.enableVsync().get()));
     }
 
     private void writeManifest(String status) {

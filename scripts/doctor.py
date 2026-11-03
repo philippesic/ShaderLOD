@@ -10,11 +10,11 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def main():
-    lock = json.loads((ROOT / 'dev/runtime.lock.json').read_text())
+    lock = json.loads((ROOT / 'dependencies/runtime.lock.json').read_text())
     result = {'host': platform.platform(), 'stack': {}, 'runs': {}}
     failures = []
     for name, artifact in lock['artifacts'].items():
-        path = ROOT / ('dev/upstream' if name == 'photon' else 'dev/runtime') / artifact['filename']
+        path = ROOT / ('dependencies/upstream' if name == 'photon' else 'dependencies/runtime') / artifact['filename']
         valid = path.exists() and hashlib.sha512(path.read_bytes()).hexdigest() == artifact['hashes']['sha512']
         result['stack'][name] = {'version': artifact['version'], 'checksum_valid': valid}
         if not valid:

@@ -1,0 +1,60 @@
+{
+  "schema": 1,
+  "experiment": "photon-fixed-graph-air-fog-cost-ablation",
+  "base_version": "v1.3b",
+  "base_sha256": "120897768eaa8cb1f14a3e98f88dff009ae3204ee3b96904a4fe8586edfc1ead",
+  "switch": "SHADERLOD_AIR_FOG_COST_ABLATION",
+  "profile_condition": "#if defined WORLD_OVERWORLD && defined PROGRAM_COMPOSITE0 && defined VL && !defined COLORED_LIGHTS && !defined AIR_FOG_COLORED_LIGHT_SHAFTS",
+  "activation": "private ON; core ABI 2/global 1; ordinary Overworld air camera only",
+  "license_sha256": "514402d18eedb0afe374344ca9f0fe87b7399779518184b8fc64e31674555fc5",
+  "option_declaration": "// Private ShaderLOD air-fog body cost diagnostic; default OFF.\n//#define SHADERLOD_AIR_FOG_COST_ABLATION\n",
+  "members": [
+    {
+      "path": "shaders/settings.glsl",
+      "source_sha256": "93401d268fe859cc1df81929ad41156757a98db80f80cf32af80d9cdca96c394",
+      "patched_sha256": "003666296ce0ad50cdf832149e19b7e17959c3e35f56f431a1c799ac86f115a3",
+      "replacements": [
+        {
+          "before": "#define SETTINGS_INCLUDED\n",
+          "after": "#define SETTINGS_INCLUDED\n// Private ShaderLOD air-fog body cost diagnostic; default OFF.\n//#define SHADERLOD_AIR_FOG_COST_ABLATION\n"
+        }
+      ],
+      "enabled_sha256": "209c2eeade7f45b0c66b1aa15800adf041a1a26069c81faf002c22dfedb324e8"
+    },
+    {
+      "path": "shaders/program/c0_vl.fsh",
+      "source_sha256": "1a5335ee12e04e74b4f8b2ba62437f3ee27137cf9d2ccf7985f0fbf32bf48729",
+      "patched_sha256": "a17adb4b3c98a48d758116c2dae6f4cccf36a130823a1f01d14780a66797366c",
+      "replacements": [
+        {
+          "before": "#include \"/include/fog/water_fog_vl.glsl\"\n",
+          "after": "#ifdef SHADERLOD_AIR_FOG_COST_ABLATION\n#if defined WORLD_OVERWORLD && defined PROGRAM_COMPOSITE0 && defined VL && !defined COLORED_LIGHTS && !defined AIR_FOG_COLORED_LIGHT_SHAFTS\n#include \"/include/shaderlod/air_fog_cost_ablation.glsl\"\n#endif // SHADERLOD_AIR_FOG_COST_STAGE\n#endif // SHADERLOD_AIR_FOG_COST_ABLATION\n#include \"/include/fog/water_fog_vl.glsl\"\n"
+        },
+        {
+          "before": "            mat2x3 fog = raymarch_air_fog(\n                world_start_pos,\n                world_end_pos,\n                depth0 == 1.0,\n                skylight,\n                dither\n            );",
+          "after": "#ifdef SHADERLOD_AIR_FOG_COST_ABLATION\n#if defined WORLD_OVERWORLD && defined PROGRAM_COMPOSITE0 && defined VL && !defined COLORED_LIGHTS && !defined AIR_FOG_COLORED_LIGHT_SHAFTS\n            mat2x3 fog;\n            if (shaderlod_air_fog_cost_ablation_active()) {\n                fog = shaderlod_air_fog_cost_ablation_neutral();\n            } else {\n                fog = raymarch_air_fog(\n                world_start_pos,\n                world_end_pos,\n                depth0 == 1.0,\n                skylight,\n                dither\n            );\n            }\n#else // SHADERLOD_AIR_FOG_COST_STAGE\n            mat2x3 fog = raymarch_air_fog(\n                world_start_pos,\n                world_end_pos,\n                depth0 == 1.0,\n                skylight,\n                dither\n            );\n#endif // SHADERLOD_AIR_FOG_COST_STAGE\n#else // SHADERLOD_AIR_FOG_COST_ABLATION\n            mat2x3 fog = raymarch_air_fog(\n                world_start_pos,\n                world_end_pos,\n                depth0 == 1.0,\n                skylight,\n                dither\n            );\n#endif // SHADERLOD_AIR_FOG_COST_ABLATION"
+        }
+      ]
+    }
+  ],
+  "source_dependencies": {
+    "shaders/include/fog/overworld/raymarched.glsl": "242cf128c4b18b6fd7ac080806de83fcd766676837e929f32fe4f7c613547ea5",
+    "shaders/include/fog/overworld/parameters.glsl": "ca92feb510f0c7987ddded6d587c3d1f8193825be56d26cb01350bb82cd85ef2",
+    "shaders/program/c0_vl.vsh": "700fb5c3f0ea93c7e817b2ee83e1a48f12cbc7693b3c108a69b846afd70a82a2",
+    "shaders/program/c1_blend_layers.fsh": "9a22e67280a57927c9dc8ca7ef194abb64b636de6a736651aa5b743035052cad",
+    "shaders/shaders.properties": "f8cc8df60f930612e8817e4176a34886c1a9de778c15427a5468ecbc4f71ee9a",
+    "shaders/world0/composite.fsh": "cb8da432fea6cd3bf170ee4899d5f68e8ffe274df92835354936713a5d6c55d8",
+    "shaders/world0/composite.vsh": "163c6eafaa514df77854d380f421850e92d08364a3a86205cbd301e7b27fdca8"
+  },
+  "addition": {
+    "path": "shaders/include/shaderlod/air_fog_cost_ablation.glsl",
+    "source_path": "shaderpacks/photon-air-fog-cost-ablation/shaders/include/shaderlod/air_fog_cost_ablation.glsl",
+    "sha256": "aa534f38453c35101b3f66a7cc34bc9c671ede3bc38ddfdf76e4fd16f7c32269"
+  },
+  "iris_option_discovery": {
+    "jar_path": "dependencies/runtime/iris-neoforge-1.8.12+mc1.21.1.jar",
+    "jar_sha256": "3e3f94d2d5cdcb8145c4385d521974aa2d8669b2cc212351f70cf06488182e83"
+  },
+  "sampling": "Added control is draw-uniform, before original body; no new texture accesses, implicit derivative calculations or sample patterns. Existing air-camera switch and body unchanged. Dynamic inactive-arm driver equivalence remains unverified.",
+  "diagnostic_only": true
+}

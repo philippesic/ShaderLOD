@@ -1,0 +1,65 @@
+{
+  "schema": 1,
+  "experiment": "photon-existing-pass-volume-light-rate",
+  "base_version": "v1.3b",
+  "base_sha256": "120897768eaa8cb1f14a3e98f88dff009ae3204ee3b96904a4fe8586edfc1ead",
+  "license_sha256": "514402d18eedb0afe374344ca9f0fe87b7399779518184b8fc64e31674555fc5",
+  "switch": "SHADERLOD_VOLUME_LIGHT_RATE",
+  "reuse_switch": "SHADERLOD_VOLUME_LIGHT_RATE_REUSE",
+  "option_declaration": "// ShaderLOD private volume light-rate controls; default off.\n//#define SHADERLOD_VOLUME_LIGHT_RATE\n//#define SHADERLOD_VOLUME_LIGHT_RATE_REUSE\n",
+  "profile_condition": "#if defined PROGRAM_DEFERRED1 && defined WORLD_OVERWORLD && !defined ATMOSPHERE_TRANSMITTANCE_LUT",
+  "members": [
+    {
+      "path": "shaders/include/sky/clouds/cumulus.glsl",
+      "source_sha256": "1923542cd9ad862a6166a542dbdcb1597fd70316e4338b236deefc2ccb932ba5",
+      "patched_sha256": "9880ef402134bd6384f2b6c77c2b7bc289bac1596ad25fa2771b67b32bb94a2e",
+      "replacements": [
+        {
+          "before": "CloudsResult draw_cumulus_clouds(\n",
+          "after": "#ifdef SHADERLOD_VOLUME_LIGHT_RATE\n#if defined PROGRAM_DEFERRED1 && defined WORLD_OVERWORLD && !defined ATMOSPHERE_TRANSMITTANCE_LUT\nCloudsResult shaderlod_rate_original_draw_cumulus_clouds(\n#else // SHADERLOD_RATE_STAGE\nCloudsResult draw_cumulus_clouds(\n#endif // SHADERLOD_RATE_STAGE\n#else // SHADERLOD_VOLUME_LIGHT_RATE\nCloudsResult draw_cumulus_clouds(\n#endif // SHADERLOD_VOLUME_LIGHT_RATE\n"
+        },
+        {
+          "before": "\n#endif\n",
+          "after": "\n#ifdef SHADERLOD_VOLUME_LIGHT_RATE\n#if defined PROGRAM_DEFERRED1 && defined WORLD_OVERWORLD && !defined ATMOSPHERE_TRANSMITTANCE_LUT\n#include \"/include/shaderlod/volume_light_rate.glsl\"\n#endif // SHADERLOD_RATE_STAGE\n#endif // SHADERLOD_VOLUME_LIGHT_RATE\n#endif\n",
+          "occurrence": "final"
+        }
+      ]
+    },
+    {
+      "path": "shaders/settings.glsl",
+      "source_sha256": "93401d268fe859cc1df81929ad41156757a98db80f80cf32af80d9cdca96c394",
+      "patched_sha256": "22161065a51f3fca1758ba53fe8660f3c89298eae48cd16f5161e7deeac7d496",
+      "sampling_sha256": "25fd1818c1f9fa3d7f6e7cfe2002f899fcc8ac5ff2087fc715b66301c57abc05",
+      "enabled_sha256": "f13517195b92740cad98312e48bad76160639a0642df9822d8926b2ac7e1e4ea",
+      "replacements": [
+        {
+          "before": "#define SETTINGS_INCLUDED\n",
+          "after": "#define SETTINGS_INCLUDED\n// ShaderLOD private volume light-rate controls; default off.\n//#define SHADERLOD_VOLUME_LIGHT_RATE\n//#define SHADERLOD_VOLUME_LIGHT_RATE_REUSE\n"
+        }
+      ]
+    }
+  ],
+  "addition": {
+    "path": "shaders/include/shaderlod/volume_light_rate.glsl",
+    "source_path": "shaderpacks/photon-volume-light-rate/shaders/include/shaderlod/volume_light_rate.glsl",
+    "sha256": "9ec44f50eb924af896bbb7348d0a6f97e747e47305392e5cf5c5be11378729d1"
+  },
+  "source_dependencies": {
+    "shaders/include/sky/clouds/coverage_map.glsl": "bd2a920f270ae11e45babc1c237d100f0912be0ea6a17d5d17d98a637a7468b2"
+  },
+  "distance_band_blocks": [
+    512,
+    1536
+  ],
+  "projected_cell_extent_pixels": [
+    32,
+    48
+  ],
+  "max_consecutive_reused_cells": 1,
+  "quality_status": "heuristic only; remote shadow discontinuities and motion unaccepted",
+  "sampling_status": "private density/coverage clone explicit LOD0; sampling-only control required; upstream globalOFF/unknown original",
+  "iris_option_discovery": {
+    "jar_path": "dependencies/runtime/iris-neoforge-1.8.12+mc1.21.1.jar",
+    "jar_sha256": "3e3f94d2d5cdcb8145c4385d521974aa2d8669b2cc212351f70cf06488182e83"
+  }
+}

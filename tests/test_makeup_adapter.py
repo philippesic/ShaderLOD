@@ -41,7 +41,8 @@ class MakeUpAdapterTests(unittest.TestCase):
             shutil.copy(ROOT / "patches/makeup" / name, root / "patches/makeup" / name)
         (root / "patches/makeup/9.5g.json").write_text(json.dumps(manifest))
         (root / "dev").mkdir()
-        (root / "dev/shader-candidates.lock.json").write_text(json.dumps({"candidates": [{
+        (root / "dependencies").mkdir(exist_ok=True)
+        (root / "dependencies/shader-candidates.lock.json").write_text(json.dumps({"candidates": [{
             "modrinth_project": "makeup-ultra-fast-shaders",
             "release": {"version": "9.5g", "filename": "upstream.zip", **manifest["archive_hashes"]},
             "source": {"revision": manifest["source_revision"]},
@@ -117,7 +118,7 @@ class MakeUpAdapterTests(unittest.TestCase):
             base.write_bytes(original)
             with self.assertRaisesRegex(ValueError, "overwrite"):
                 build(base, base, root)
-            lock_path = root / "dev/shader-candidates.lock.json"
+            lock_path = root / "dependencies/shader-candidates.lock.json"
             lock = lock_path.read_text()
             content = json.loads(lock)
             content["candidates"][0]["source"]["revision"] = "changed"
@@ -165,7 +166,7 @@ class MakeUpAdapterTests(unittest.TestCase):
         self.assertIn("texture2DLod(depthtex1, screenMarchPos.xy, 0.0)", helper)
 
     def test_available_pinned_source_scope_and_search_math(self):
-        base = ROOT / "dev/upstream/other-pack-research/MakeUp-UltraFast-9.5g.zip"
+        base = ROOT / "dependencies/upstream/other-pack-research/MakeUp-UltraFast-9.5g.zip"
         if not base.exists():
             self.skipTest("Ignored pinned upstream archive unavailable; fixtures remain independent")
         self.assertEqual(hashlib.sha256(base.read_bytes()).hexdigest(), self.manifest["archive_hashes"]["sha256"])

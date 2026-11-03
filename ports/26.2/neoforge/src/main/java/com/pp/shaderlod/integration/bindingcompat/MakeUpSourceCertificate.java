@@ -9,11 +9,16 @@ import java.util.zip.ZipFile;
 import java.nio.charset.StandardCharsets;
 /** DEV compatibility admission only: exact original or actual maintained generated graph, no batching eligibility. */
 public final class MakeUpSourceCertificate {
- public static final String RECIPE_SHA="afa6b30f5ff2c5425815eea7e38379eb9842f754097100826d3469e3e2f1edae";
+ public static final String RECIPE_SHA="d51f244512c2b2ca05afc5d4a650907c7247af87ddfb46fc04ba9aa34161e4f7";
  private static final String ID="makeup-ultra-fast-shaders",RECIPE="assets/shaderlod/adapters/patches/adapters/makeup-ultra-fast-shaders.json";
  private MakeUpSourceCertificate(){}
  public record Result(boolean eligible,String reason,boolean generated){}
- public static Map<String,String> generatedOptions(){var m=new TreeMap<>(MakeUpQuadEligibility.nativeOptions());m.put("SHADERLOD_REFINEMENT_ADAPTER","1");m.put("SHADERLOD_REFINEMENT_ADAPTER_INCLUDED","true");m.put("SHADERLOD_REFINEMENT_BUDGET_INCLUDED","true");m.put("SHADERLOD_UNIFORM_SAMPLE_BUDGET_INCLUDED","true");m.put("SHADERLOD_OPTIMIZATION_FLAGS_INCLUDED","true");return Map.copyOf(m);}
+ public static Map<String,String> generatedOptions(){return generatedOptions("0");}
+ /** Mandatory native binding compatibility only; batching/compaction certificates remain unchanged. */
+ public static boolean nativeOptionsMatchKnown(Map<String,String> options){if(options==null||options.size()!=100||!Set.of("true","false").contains(options.getOrDefault("COLORED_SHADOW","invalid")))return false;var normalized=new TreeMap<>(options);normalized.put("COLORED_SHADOW","true");return MakeUpQuadEligibility.optionsMatch(normalized);}
+ public static boolean generatedOptionsMatch(Map<String,String> options){if(options==null||options.size()!=106)return false;String graph=options.get("SHADERLOD_MAKEUP_AO_HALF_RES");if(graph==null||!Set.of("0","1").contains(graph)||!Set.of("true","false").contains(options.getOrDefault("COLORED_SHADOW","invalid")))return false;var normalized=new TreeMap<>(options);normalized.put("COLORED_SHADOW","true");return generatedOptions(graph).equals(normalized);}
+ public static Map<String,String> generatedOptions(String graph){if(!Set.of("0","1").contains(graph))throw new IllegalArgumentException("AO graph0/1 required");var m=new TreeMap<>(MakeUpQuadEligibility.nativeOptions());m.put("SHADERLOD_REFINEMENT_ADAPTER","1");m.put("SHADERLOD_REFINEMENT_ADAPTER_INCLUDED","true");m.put("SHADERLOD_REFINEMENT_BUDGET_INCLUDED","true");m.put("SHADERLOD_UNIFORM_SAMPLE_BUDGET_INCLUDED","true");m.put("SHADERLOD_OPTIMIZATION_FLAGS_INCLUDED","true");m.put("SHADERLOD_MAKEUP_AO_HALF_RES",graph);return Map.copyOf(m);}
+ private static Object inputResources()throws Exception{var pins=Map.of("native100.json","0c11f31b3d5e51d9d1bff56a84ac13a3f1265472f7313997a493c74435a418bb","source-proof.json","f7d016d9ea720256ce3e7b5fb86055c657cc77c5c65fdc755f0ecfa9ffca0dc0","api-proof.json","806daab5da2ec861b16ff3271c481dbb579bf789743c78afee6103fe0ab2ea07");var hashes=new TreeMap<String,String>();for(var e:pins.entrySet()){String actual=sha(resource("assets/shaderlod/makeupquad/"+e.getKey()));if(!e.getValue().equals(actual))throw new IllegalStateException("Changed original source/input/API resource");hashes.put(e.getKey(),actual);}return Map.copyOf(hashes);}
  private static String sha(byte[] b)throws Exception{return HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(b));}
  private static Path child(Path dir,String name)throws Exception{Path p=dir.resolve(name).normalize();if(!Path.of(name).getFileName().toString().equals(name)||!p.startsWith(dir)||p.equals(dir)||Files.isSymbolicLink(p)||!Files.isRegularFile(p))throw new IllegalStateException("Unsafe/missing source/state child");return p;}
  private static byte[] resource(String path)throws Exception{try(var in=PackSelectionService.class.getClassLoader().getResourceAsStream(path)){if(in==null)throw new IllegalStateException("Missing packaged recipe/helper: "+path);return in.readAllBytes();}}
@@ -22,40 +27,40 @@ public final class MakeUpSourceCertificate {
  private static void equalsField(JsonObject o,String key,String expected){if(!expected.equals(o.get(key).getAsString()))throw new IllegalStateException("Source/state field mismatch: "+key);}
  /** Actual byte stamps, used once per world tick in explicit untimed mode; metadata replay cannot hide tampering. */
  public static Object stamp(Path dir,String selected,String original)throws Exception{
-  Path a=child(dir,selected),b=child(dir,original);String as=sha(Files.readAllBytes(a)),bs=a.equals(b)?as:sha(Files.readAllBytes(b));
-  if(a.equals(b))return List.of(as,bs);
-  var marker=marker(a);Path state=child(dir,marker.get("stateFile").getAsString());return List.of(as,bs,sha(Files.readAllBytes(state)));
+  Path a=child(dir,selected),b=child(dir,original);String as=com.pp.shaderlod.optimization.SourceArchiveDigest.sha256(a),bs=a.equals(b)?as:com.pp.shaderlod.optimization.SourceArchiveDigest.sha256(b);
+  Object inputs=inputResources();if(a.equals(b))return List.of(as,bs,inputs);
+  var marker=marker(a);Path state=child(dir,marker.get("stateFile").getAsString());byte[] bytes=resource(RECIPE);if(!sha(bytes).equals(RECIPE_SHA))throw new IllegalStateException("Recipe byte-stamp mismatch");var helpers=new TreeMap<String,String>();for(var e:json(bytes).getAsJsonObject("additions").entrySet()){var pin=e.getValue().getAsJsonObject();String actual=sha(resource("assets/shaderlod/adapters/"+pin.get("path").getAsString()));if(!actual.equals(pin.get("sha256").getAsString()))throw new IllegalStateException("Helper byte-stamp mismatch");helpers.put(e.getKey(),actual);}return List.of(as,bs,com.pp.shaderlod.optimization.SourceArchiveDigest.sha256(state),inputs,sha(bytes),Map.copyOf(helpers));
  }
  public static String originalName(Path directory,String selected,Map<String,String> options)throws Exception{
   Path dir=directory.toAbsolutePath().normalize(),path=child(dir,selected);
-  if(MakeUpQuadEligibility.validate(path,options).eligible())return selected;
-  if(!generatedOptions().equals(options))throw new IllegalStateException("No certified MakeUp source/options");
+  if(nativeOptionsMatchKnown(options)&&MakeUpQuadEligibility.validate(path,MakeUpQuadEligibility.nativeOptions()).eligible())return selected;
+  if(!generatedOptionsMatch(options))throw new IllegalStateException("No certified MakeUp source/options");
   return marker(path).get("originalFile").getAsString();
  }
  private static JsonObject marker(Path path)throws Exception{try(var z=new ZipFile(path.toFile())){var e=z.getEntry("shaderlod-selection.json");if(e==null)throw new IllegalStateException("Generated marker absent");try(var in=z.getInputStream(e)){return json(in.readAllBytes());}}}
  public static Result validate(Path directory,String selected,String requested,Map<String,String> options,boolean nativeReturnTransition){
   try{
-   Path dir=directory.toAbsolutePath().normalize();if(requested==null||requested.isBlank())throw new IllegalStateException("Certified original required");Path original=child(dir,requested);
+   Path dir=directory.toAbsolutePath().normalize();if(requested==null||requested.isBlank())throw new IllegalStateException("Certified original required");Path original=child(dir,requested);inputResources();
    if(!MakeUpQuadEligibility.validate(original,MakeUpQuadEligibility.nativeOptions()).eligible())throw new IllegalStateException("Original native100/source/API resources refused");
-   if(selected.equals(requested))return new Result(MakeUpQuadEligibility.optionsMatch(options),"Original native100/AA2",false);
-   if(!generatedOptions().equals(options))throw new IllegalStateException("Generated exact105 options refused");
+   if(selected.equals(requested))return new Result(nativeOptionsMatchKnown(options),"Original native100/AA2",false);
+   if(!generatedOptionsMatch(options))throw new IllegalStateException("Generated exact106 options refused");
    byte[] recipeBytes=resource(RECIPE);if(!sha(recipeBytes).equals(RECIPE_SHA))throw new IllegalStateException("Stale/tampered packaged recipe");var recipe=json(recipeBytes);
-   var source=archive(original);var expected=new TreeMap<String,byte[]>(source);var actual=archive(child(dir,selected));var marker=json(actual.get("shaderlod-selection.json"));
+   var source=archive(original);var expected=new TreeMap<String,byte[]>(source);var actual=archive(child(dir,selected));if(!"ee935828dce7fe127a8c1568245e959da11227cd7e6100e8669f2fd60d81a9db".equals(com.pp.shaderlod.packs.SupportedPackCatalog.shaderSourceDigest(com.pp.shaderlod.integration.PackSourceReader.read(child(dir,selected)).memberSha256())))throw new IllegalStateException("Current generated source identity mismatch");var marker=json(actual.get("shaderlod-selection.json"));
    if(marker.get("schema").getAsInt()!=1)throw new IllegalStateException("Marker schema");equalsField(marker,"adapterId",ID);equalsField(marker,"originalFile",requested);equalsField(marker,"originalSha256",MakeUpQuadEligibility.ARCHIVE_SHA);equalsField(marker,"recipeSha256",RECIPE_SHA);
    for(var e:recipe.getAsJsonObject("source_members").entrySet())if(!sha(source.get(e.getKey())).equals(e.getValue().getAsString()))throw new IllegalStateException("Pinned source member mismatch");
    for(var item:recipe.getAsJsonArray("patches")){var p=item.getAsJsonObject();String name=p.get("path").getAsString();if(!recipe.getAsJsonObject("source_members").has(name))throw new IllegalStateException("Unpinned patch");String before=p.get("before").getAsString(),after=p.get("after").getAsString(),text=new String(expected.get(name),StandardCharsets.UTF_8);int at=text.indexOf(before);if(before.isEmpty()||at<0||text.indexOf(before,at+before.length())>=0)throw new IllegalStateException("Source anchor mismatch");expected.put(name,(text.substring(0,at)+after+text.substring(at+before.length())).getBytes(StandardCharsets.UTF_8));}
    for(var e:recipe.getAsJsonObject("additions").entrySet()){if(expected.containsKey(e.getKey()))throw new IllegalStateException("Helper collision");var pin=e.getValue().getAsJsonObject();byte[] bytes=resource("assets/shaderlod/adapters/"+pin.get("path").getAsString());if(!sha(bytes).equals(pin.get("sha256").getAsString()))throw new IllegalStateException("Helper pin mismatch");expected.put(e.getKey(),bytes);}
    var allowed=new HashSet<>(expected.keySet());allowed.add("shaderlod-selection.json");allowed.add("SHADERLOD_PRIVATE_SELECTION.md");if(!actual.keySet().equals(allowed))throw new IllegalStateException("Unexpected/missing generated members");
    for(var e:expected.entrySet())if(!Arrays.equals(e.getValue(),actual.get(e.getKey())))throw new IllegalStateException("Generated member differs from maintained recipe: "+e.getKey());
-   // All vertex/geometry stages remain original, including include bytes except the exact maintained fragment-only patches.
+   // Native vertex entry bytes remain original; maintained include changes require separate named batching admission.
    for(var e:source.entrySet())if(e.getKey().endsWith(".vsh")&&!Arrays.equals(e.getValue(),actual.get(e.getKey())))throw new IllegalStateException("Changed vertex entry");
-   var state=json(Files.readAllBytes(child(dir,marker.get("stateFile").getAsString())));if(state.get("schema").getAsInt()!=1)throw new IllegalStateException("State schema");equalsField(state,"stateFile",marker.get("stateFile").getAsString());equalsField(state,"adapterId",ID);equalsField(state,"originalFile",requested);equalsField(state,"originalSha256",MakeUpQuadEligibility.ARCHIVE_SHA);equalsField(state,"generatedFile",selected);equalsField(state,"generatedSha256",sha(Files.readAllBytes(child(dir,selected))));equalsField(state,"recipeSha256",RECIPE_SHA);
+   var state=json(Files.readAllBytes(child(dir,marker.get("stateFile").getAsString())));if(state.get("schema").getAsInt()!=1)throw new IllegalStateException("State schema");equalsField(state,"stateFile",marker.get("stateFile").getAsString());equalsField(state,"adapterId",ID);equalsField(state,"originalFile",requested);equalsField(state,"originalSha256",MakeUpQuadEligibility.ARCHIVE_SHA);equalsField(state,"generatedFile",selected);equalsField(state,"generatedSha256",com.pp.shaderlod.optimization.SourceArchiveDigest.sha256(child(dir,selected)));equalsField(state,"recipeSha256",RECIPE_SHA);
    var owned=state.getAsJsonObject("appliedOverrides");if(owned.size()!=1||!"1".equals(owned.get("SHADERLOD_REFINEMENT_ADAPTER").getAsString()))throw new IllegalStateException("State owned overrides changed");
-   for(var e:state.getAsJsonObject("baseOptions").entrySet())if(!e.getValue().getAsString().equals(MakeUpQuadEligibility.nativeOptions().get(e.getKey())))throw new IllegalStateException("State original option choice changed");
+   var base=new TreeMap<String,String>();for(var e:state.getAsJsonObject("baseOptions").entrySet())base.put(e.getKey(),e.getValue().getAsString());for(var e:base.entrySet()){String expectedChoice=e.getKey().equals("COLORED_SHADOW")?options.get("COLORED_SHADOW"):MakeUpQuadEligibility.nativeOptions().get(e.getKey());if(!e.getValue().equals(expectedChoice))throw new IllegalStateException("State original option choice changed");}if("false".equals(options.get("COLORED_SHADOW"))&&!nativeOptionsMatchKnown(base))throw new IllegalStateException("Uncolored compatibility requires full original100 state choices");
    String note="Private local ShaderLOD adapter. Original: "+ID+". Upstream files and license retained. Do not redistribute this copy.\nRendering, quality, DH and PBR validation remain separate checks.\n";
    if(!Arrays.equals(note.getBytes(StandardCharsets.UTF_8),actual.get("SHADERLOD_PRIVATE_SELECTION.md")))throw new IllegalStateException("Generated provenance member changed");
    if(!state.get("active").getAsBoolean()&&!nativeReturnTransition)throw new IllegalStateException("Inactive generated state outside genuine native-return selection");
-   return new Result(true,"Exact maintained generated105 source/state/unchanged vertex entries; compatibility only",true);
+   return new Result(true,"Exact maintained generated106 source/state/unchanged vertex entries; compatibility only",true);
   }catch(Exception|LinkageError failure){return new Result(false,failure.toString(),false);}
  }
 }

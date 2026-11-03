@@ -1,0 +1,1 @@
+package com.pp.shaderlod.optimization.bslprime.mixin;import org.spongepowered.asm.mixin.*;import org.spongepowered.asm.mixin.gen.Accessor;import net.irisshaders.iris.pipeline.*;@Mixin(value=IrisRenderingPipeline.class,remap=false)public interface BslSpatialPipelineView{@Accessor("customTextureManager")CustomTextureManager shaderlod$bslSpatialTextures();}

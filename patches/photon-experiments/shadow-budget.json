@@ -1,0 +1,83 @@
+{
+  "schema": 1,
+  "experiment": "photon-existing-pass-shadow-tail-budget",
+  "base_version": "v1.3b",
+  "base_sha256": "120897768eaa8cb1f14a3e98f88dff009ae3204ee3b96904a4fe8586edfc1ead",
+  "license_sha256": "514402d18eedb0afe374344ca9f0fe87b7399779518184b8fc64e31674555fc5",
+  "switch": "SHADERLOD_SHADOW_BUDGET",
+  "option_declaration": "// ShaderLOD existing-pass shadow tail budget; default off.\n//#define SHADERLOD_SHADOW_BUDGET\n",
+  "profile_condition": "#if defined PROGRAM_DEFERRED4 && defined WORLD_OVERWORLD",
+  "members": [
+    {
+      "path": "shaders/include/lighting/shadows/pcss.glsl",
+      "source_sha256": "c12e98fa923306687bfa5ac2b00214d45b1614ebafb719e22839f3420750a76b",
+      "patched_sha256": "08b6274722c80a537cc61280caaa4bf84c7405f54e30d5364acb03f59d0b3810",
+      "replacements": [
+        {
+          "before": "#define INCLUDE_LIGHTING_SHADOWS\n",
+          "after": "#define INCLUDE_LIGHTING_SHADOWS\n#ifdef SHADERLOD_SHADOW_BUDGET\n#if defined PROGRAM_DEFERRED4 && defined WORLD_OVERWORLD\n#include \"/include/shaderlod/shadow_budget.glsl\"\n#endif // SHADERLOD_SHADOW_PROFILE\n#endif // SHADERLOD_SHADOW_BUDGET\n"
+        },
+        {
+          "before": "    float penumbra_size,\n    float dither\n) {",
+          "after": "    float penumbra_size,\n    float dither\n#ifdef SHADERLOD_SHADOW_BUDGET\n#if defined PROGRAM_DEFERRED4 && defined WORLD_OVERWORLD\n    , vec3 scene_pos, float sss_amount\n#endif // SHADERLOD_SHADOW_PROFILE\n#endif // SHADERLOD_SHADOW_BUDGET\n) {"
+        },
+        {
+          "before": "    // perform first 4 iterations and filter shadow color",
+          "after": "#ifdef SHADERLOD_SHADOW_BUDGET\n#if defined PROGRAM_DEFERRED4 && defined WORLD_OVERWORLD\n    // Decide before any PCF sample; first four retain original positions.\n    int budget_steps = shaderlod_shadow_budget(step_count, scene_pos, filter_radius, sss_amount);\n#endif // SHADERLOD_SHADOW_PROFILE\n#endif // SHADERLOD_SHADOW_BUDGET\n    // perform first 4 iterations and filter shadow color"
+        },
+        {
+          "before": "        shadow += texture(shadowtex1, vec3(uv, shadow_screen_pos.z));",
+          "occurrences": 2,
+          "after_occurrences": [
+            "#ifdef SHADERLOD_SHADOW_BUDGET\n#if defined PROGRAM_DEFERRED4 && defined WORLD_OVERWORLD\n        shadow += textureLod(shadowtex1, vec3(uv, shadow_screen_pos.z), 0.0);\n#else // SHADERLOD_SHADOW_PROFILE\n        shadow += texture(shadowtex1, vec3(uv, shadow_screen_pos.z));\n#endif // SHADERLOD_SHADOW_PROFILE\n#else // SHADERLOD_SHADOW_BUDGET\n        shadow += texture(shadowtex1, vec3(uv, shadow_screen_pos.z));\n#endif // SHADERLOD_SHADOW_BUDGET",
+            "#ifdef SHADERLOD_SHADOW_BUDGET\n#if defined PROGRAM_DEFERRED4 && defined WORLD_OVERWORLD\n        shadow += tail_weight * textureLod(shadowtex1, vec3(uv, shadow_screen_pos.z), 0.0);\n#else // SHADERLOD_SHADOW_PROFILE\n        shadow += texture(shadowtex1, vec3(uv, shadow_screen_pos.z));\n#endif // SHADERLOD_SHADOW_PROFILE\n#else // SHADERLOD_SHADOW_BUDGET\n        shadow += texture(shadowtex1, vec3(uv, shadow_screen_pos.z));\n#endif // SHADERLOD_SHADOW_BUDGET"
+          ]
+        },
+        {
+          "before": "    // perform remaining iterations\n    for (int i = 4; i < step_count; ++i) {\n        vec2 offset =\n            vogel_disc_sample(i, step_count, dither * tau) * filter_radius;",
+          "after": "    // perform remaining iterations\n#ifdef SHADERLOD_SHADOW_BUDGET\n#if defined PROGRAM_DEFERRED4 && defined WORLD_OVERWORLD\n    float tail_weight = budget_steps == step_count ? 1.0 :\n        float(step_count - 4) / float(budget_steps - 4);\n    for (int i = 4; i < budget_steps; ++i) {\n        int sample_index = budget_steps == step_count ? i :\n            4 + int(floor((float(i - 4) + 0.5) * tail_weight));\n        vec2 offset =\n            vogel_disc_sample(sample_index, step_count, dither * tau) * filter_radius;\n#else // SHADERLOD_SHADOW_PROFILE\n    for (int i = 4; i < step_count; ++i) {\n        vec2 offset =\n            vogel_disc_sample(i, step_count, dither * tau) * filter_radius;\n#endif // SHADERLOD_SHADOW_PROFILE\n#else // SHADERLOD_SHADOW_BUDGET\n    for (int i = 4; i < step_count; ++i) {\n        vec2 offset =\n            vogel_disc_sample(i, step_count, dither * tau) * filter_radius;\n#endif // SHADERLOD_SHADOW_BUDGET"
+        },
+        {
+          "before": "        dither\n    );\n#else\n    vec3 shadow = shadow_basic",
+          "after": "        dither\n#ifdef SHADERLOD_SHADOW_BUDGET\n#if defined PROGRAM_DEFERRED4 && defined WORLD_OVERWORLD\n        , scene_pos, sss_amount\n#endif // SHADERLOD_SHADOW_PROFILE\n#endif // SHADERLOD_SHADOW_BUDGET\n    );\n#else\n    vec3 shadow = shadow_basic"
+        }
+      ]
+    },
+    {
+      "path": "shaders/settings.glsl",
+      "source_sha256": "93401d268fe859cc1df81929ad41156757a98db80f80cf32af80d9cdca96c394",
+      "patched_sha256": "e755ac3929c77352e3bf491dd3cc2ec900d7b8d20397649d7cb8f2126508c19c",
+      "enabled_sha256": "53cffabf1ef036388d4e6f7ce9ae40935ea39e1b4f78bf7874bb35e86a38a34e",
+      "replacements": [
+        {
+          "before": "#define SETTINGS_INCLUDED\n",
+          "after": "#define SETTINGS_INCLUDED\n// ShaderLOD existing-pass shadow tail budget; default off.\n//#define SHADERLOD_SHADOW_BUDGET\n"
+        }
+      ]
+    }
+  ],
+  "addition": {
+    "path": "shaders/include/shaderlod/shadow_budget.glsl",
+    "source_path": "shaderpacks/photon-shadow-budget/shaders/include/shaderlod/shadow_budget.glsl",
+    "sha256": "4ffb18b985d3cc677fbf50542a0096cd3547a6fddddda92c8e2ebe622e6af313"
+  },
+  "distance_band_blocks": [
+    64,
+    112
+  ],
+  "projected_filter_radius_pixels": [
+    1,
+    2
+  ],
+  "maximum_tail_reduction": 0.5,
+  "quality_class": "experimental_weighted_annulus_decimation",
+  "iris_option_discovery": {
+    "jar_path": "dependencies/runtime/iris-neoforge-1.8.12+mc1.21.1.jar",
+    "jar_sha256": "3e3f94d2d5cdcb8145c4385d521974aa2d8669b2cc212351f70cf06488182e83",
+    "class_path": "net/irisshaders/iris/shaderpack/option/OptionAnnotatedSource.class",
+    "class_sha256": "bcc5221aacd9b72619c966ac753e137144b45a8e6462511d104d9155db6bbba7",
+    "parse_rule": "parseLine only enters declaration/ifdef/ifndef paths; parseIfdef accepts one word and line end; #if defined does not register boolean reference",
+    "guard_contract": "outer #ifdef private switch; inner #if defined PROGRAM_DEFERRED4 && defined WORLD_OVERWORLD",
+    "acceptance": "actual OptionAnnotatedSource/getOptionSet fixture with stage entry; private gate sole added option, default/override validation; compilation/rendering pending"
+  }
+}

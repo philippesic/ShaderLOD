@@ -10,8 +10,8 @@ public final class ShadowCullingRuntime {
     private ShadowCullingRuntime() {}
 
     public static void onClientTick(ClientTickEvent.Post event) {
-        boolean configured = ShaderLodConfig.ENABLED.get() && ShaderLodConfig.OPTIMIZE_SHADOW_CULLING.get();
-        boolean coherence = ShaderLodConfig.ENABLED.get() && ShaderLodConfig.SHADOW_FRUSTUM_COHERENCE.get();
+        boolean configured = com.pp.shaderlod.integration.makeupquad.MakeUpQuadRuntime.enabled(com.pp.shaderlod.optimization.OptimizationId.SHADOW_POSITIVE_VERTEX);
+        boolean coherence = com.pp.shaderlod.integration.makeupquad.MakeUpQuadRuntime.enabled(com.pp.shaderlod.optimization.OptimizationId.SHADOW_FRUSTUM_COHERENCE);
         ShadowCullingController.configure(configured);
         if ((!configured && !coherence) || Minecraft.getInstance().level == null) {
             ShadowCullingController.setEligible(false);
@@ -19,7 +19,7 @@ public final class ShadowCullingRuntime {
             return;
         }
         String pack = Iris.getCurrentPackName();
-        boolean photon = "Photon-ShaderLOD.zip".equals(pack) || "photon_v1.3b.zip".equals(pack);
+        boolean photon = com.pp.shaderlod.integration.makeupquad.MakeUpQuadRuntime.nativeGraphAvailable();
         boolean eligible = photon && IrisApi.getInstance().isShaderPackInUse() && !Iris.isFallback();
         ShadowCullingController.setEligible(eligible);
         ShadowFrustumCoherenceController.configure(coherence && eligible);

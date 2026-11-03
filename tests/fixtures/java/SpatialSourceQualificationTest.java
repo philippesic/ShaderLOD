@@ -2,6 +2,7 @@ package com.pp.shaderlod;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.pp.shaderlod.integration.*;
 import com.pp.shaderlod.lod.adapter.WorkKey;
@@ -23,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /** Explicit opt-in frozen artifact qualification. Missing artifacts are failures, never skips. */
 class SpatialSourceQualificationTest {
+    private static final Path LEDGER = Path.of("build/spatial-idle-work-freeze/freeze.json");
     private static final Map<String, Integer> PROTOCOLS = Map.of("shaderlod:core", 2,
             "shaderlod:effects", 2, "shaderlod:capabilities", 1);
     private static final WorkKey WORK = PhotonSpatialReferenceAdapter.OPAQUE_SPATIAL_IRRADIANCE;
@@ -54,16 +56,17 @@ class SpatialSourceQualificationTest {
     }
 
     @Test void frozenLedgerEqualsEveryContainerMemberOptionAndIdentityPin() throws Exception {
-        var ledgerPath = Path.of("build/photon-shared-spatial-freeze.json");
-        assertTrue(Files.isRegularFile(ledgerPath), "Generate the frozen spatial ledger before source qualification");
-        var ledger = JsonParser.parseString(Files.readString(ledgerPath)).getAsJsonObject();
+        var ledger = ledger();
+        assertEquals("v1.3b-shared-spatial-" + ledger.get("manifest_sha256").getAsString(),
+                PhotonSpatialReferenceAdapter.IDENTITY.revision());
         var bindings = PhotonSpatialReferenceAdapter.sourceBindings();
         for (int arm = 0; arm < 2; arm++) {
-            var metadata = ledger.getAsJsonObject(arm == 0 ? "disabled" : "enabled");
+            var metadata = ledger.getAsJsonObject("arms").getAsJsonObject(arm == 0 ? "disabled" : "enabled");
             var declared = metadata.getAsJsonObject("reference_registration");
             var source = declared.getAsJsonArray("sourceBindings").get(0).getAsJsonObject();
             var actual = bindings.get(arm);
             assertEquals(metadata.get("archive_sha256").getAsString(), actual.sourceSha256());
+            assertEquals(declared.getAsJsonObject("identity").get("id").getAsString(), actual.adapter().id());
             assertEquals(declared.getAsJsonObject("identity").get("revision").getAsString(), actual.adapter().revision());
             assertEquals(25, actual.memberSha256().size());
             assertEquals(source.getAsJsonObject("memberSha256").size(), actual.memberSha256().size());
@@ -78,14 +81,13 @@ class SpatialSourceQualificationTest {
             assertThrows(UnsupportedOperationException.class, () -> actual.memberSha256().clear());
             assertThrows(UnsupportedOperationException.class, () -> actual.requiredOptions().get("TAAU").add("true"));
         }
-        assertTrue(ledger.getAsJsonObject("original").getAsJsonObject("reference_registration")
+        assertTrue(ledger.getAsJsonObject("arms").getAsJsonObject("original").getAsJsonObject("reference_registration")
                 .getAsJsonArray("sourceBindings").isEmpty());
     }
 
     @Test void actualImmutableArchivesQualifyLoadedIrisDefaultsAndOverrides() throws Exception {
         for (int arm = 0; arm < 2; arm++) {
-            var archive = Path.of("build/Photon-SharedSpatial-" + (arm == 0 ? "disabled" : "enabled") + ".zip");
-            assertTrue(Files.isRegularFile(archive), "Generate frozen archives before qualification");
+            var archive = archive(arm == 0 ? "disabled" : "enabled");
             var source = PhotonSpatialReferenceAdapter.sourceBindings().get(arm);
             assertTrue(source.matches(PackSourceReader.read(archive)), "Every frozen container/member pin must match");
             var overrides = new LinkedHashMap<>(supportedOptions());
@@ -107,6 +109,19 @@ class SpatialSourceQualificationTest {
             access.options = effective(archive, overrides);
             assertFull(binding.snapshot(), AdapterRuntimeBinding.Reason.REQUIRED_OPTION_MISSING_OR_UNSUPPORTED);
         }
+    }
+
+    private static JsonObject ledger() throws Exception {
+        assertTrue(Files.isRegularFile(LEDGER), "Generate the frozen idle-work ledger before source qualification");
+        return JsonParser.parseString(Files.readString(LEDGER)).getAsJsonObject();
+    }
+
+    private static Path archive(String arm) throws Exception {
+        var metadata = ledger().getAsJsonObject("arms").getAsJsonObject(arm);
+        var archive = Path.of(metadata.get("archive_path").getAsString());
+        assertTrue(Files.isRegularFile(archive), "Frozen " + arm + " archive must exist at its ledger path");
+        assertEquals(metadata.get("archive_sha256").getAsString(), PackSourceReader.read(archive).sourceSha256());
+        return archive;
     }
 
     private static Map<String, String> effective(Path archivePath, Map<String, String> overrides) throws Exception {
@@ -131,10 +146,9 @@ class SpatialSourceQualificationTest {
     }
 
     @Test void actualOriginalArchiveRemainsUnbound() throws Exception {
-        var original = Path.of("build/Photon-SharedSpatial-original.zip");
-        assertTrue(Files.isRegularFile(original), "Generate frozen original archive before qualification");
+        var original = archive("original");
         var fingerprint = PackSourceReader.read(original);
-        assertEquals("c4e956dfee9ceebb6df245ea4792f5626cbc2d0ff995ccf9b49766d2286b57f1", fingerprint.sourceSha256());
+        assertEquals("d263a9cb079e4341d9169fe3b184c2a1f0339a9e9bdf80ee4cf24e2a622b5250", fingerprint.sourceSha256());
         var access = new Access();
         access.source = original;
         var binding = registration().seal().bind(access, PackSourceReader::read);

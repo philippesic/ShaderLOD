@@ -1,0 +1,26 @@
+modLoader="javafml"
+loaderVersion="[1,)"
+license="MIT"
+
+[[mods]]
+modId="shaderlod_dev"
+version="0.1.0"
+displayName="ShaderLOD Remote Test Controller"
+description="Optional file-only caller of normal ShaderLOD APIs. Enable with -Dshaderlod.pcControl=true. Install instead of the development harness, never alongside it."
+
+[[mixins]]
+config="shaderlod-bsl-mip-control.mixins.json"
+
+[[dependencies.shaderlod_dev]]
+modId="shaderlod"
+type="required"
+versionRange="[0,)"
+ordering="AFTER"
+side="CLIENT"
+
+[[dependencies.shaderlod_dev]]
+modId="minecraft"
+type="required"
+versionRange="[1.21.1]"
+ordering="NONE"
+side="CLIENT"

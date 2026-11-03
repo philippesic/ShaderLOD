@@ -1,0 +1,5 @@
+package com.pp.shaderlod.integration.makeupquad.mixin;
+import com.pp.shaderlod.integration.solasquad.SolasQuadInputProof;import net.irisshaders.iris.shaderpack.programs.*;import net.irisshaders.iris.gl.blending.AlphaTest;import net.irisshaders.iris.pipeline.transform.PatchShaderType;import org.spongepowered.asm.mixin.Mixin;import org.spongepowered.asm.mixin.injection.*;import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;import java.util.Map;
+/** Real native transformation return; records actual source inputs before the normal link. */
+@Mixin(targets="net.irisshaders.iris.pipeline.programs.SodiumPrograms",remap=false)
+public abstract class SolasQuadModernInputMixin {@Inject(method="transformShaders(Lnet/irisshaders/iris/shaderpack/programs/ProgramSource;Lnet/irisshaders/iris/gl/blending/AlphaTest;Lnet/irisshaders/iris/shaderpack/programs/ProgramSet;Z)Ljava/util/Map;",at=@At("RETURN"),require=1,allow=1)private void actual(ProgramSource source,AlphaTest alpha,ProgramSet set,boolean shadow,CallbackInfoReturnable<Map<PatchShaderType,String>> ci){SolasQuadInputProof.captured(this,set.getPack(),source.getName(),ci.getReturnValue());}}

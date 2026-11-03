@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.optimization.astramerged.mixin",
+  "plugin": "com.pp.shaderlod.optimization.astramerged.mixin.AstraMergedMixinPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "AstraMergedProgramsMixin",
+    "AstraMergedProgramsMixin$BuilderHandle",
+    "AstraMergedChunkRendererMixin",
+    "AstraMergedPipelineDestroyMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

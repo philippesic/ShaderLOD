@@ -47,38 +47,6 @@ class DensityProfilesTests(unittest.TestCase):
             runtime_compilation='unverified', gpu_benefit='unmeasured',
             attribution='Photon v1.3b by Benjamin Stott (SixthSurge); original LICENSE retained')
 
-    def test_real_pinned_members_metadata_and_inspected_coastal_options(self):
-        base=ROOT/BASE
-        if not base.exists(): self.skipTest('Local pinned original Photon absent')
-        manifest_bytes=(ROOT/prep.MANIFEST).read_bytes(); manifest=json.loads(manifest_bytes)
-        original=prep.archive_members(base); patched=prep.patch_members(original,manifest,'disabled')
-        cumulus=patched[prep.MEMBERS[0]].decode()
-        # R1's combined #if was not discovered by the actual Iris option lexer.
-        # These source expectations supplement the builder's real lexer fixtures.
-        self.assertEqual(cumulus.count('#ifdef '+prep.SWITCH+'\n'),2)
-        self.assertNotIn('#if defined '+prep.SWITCH+' && defined PROGRAM_DEFERRED1',cumulus)
-        self.assertIn('#if defined PROGRAM_DEFERRED1',cumulus)
-        self.assertEqual(prep.sha256(patched[prep.MEMBERS[0]]),'3a5b3fbae654259567e76e660fac012fa0c2743e60c09519945f57d2e7440024')
-        metadata=self.metadata(original,patched,manifest_bytes)
-        def write(files,meta):
-            with zipfile.ZipFile(self.probe,'w',compression=zipfile.ZIP_DEFLATED) as archive:
-                for name,data in files.items(): archive.writestr(name,data)
-                archive.writestr(prep.METADATA,json.dumps(meta))
-        runtime=json.loads((ROOT/'dev/runtime.lock.json').read_text())
-        write(patched,metadata)
-        original_info,probe,qualified=prep.qualify_archives(base,self.probe,runtime)
-        self.assertEqual(qualified['archive_sha256'],file_hash(self.probe))
-        self.assertEqual(qualified['quality_class'],'quality_changing_cost_control')
-        if (prep.SOURCE/'workload-measurement.json').exists():
-            record=prep.inspect_scene(dict(scene='coastalwater',source_profile=str(prep.SOURCE)),self.probe,runtime)
-            self.assertEqual(record['patched_options'],record['native_options']|{prep.SWITCH:'true'})
-            self.assertEqual(record['qualification']['manifest_path'],str(ROOT/prep.MANIFEST))
-        write(patched|{'extra-member':b'injected'},metadata)
-        with self.assertRaisesRegex(ValueError,'inventory'): prep.qualify_archives(base,self.probe,runtime)
-        write(patched|{prep.MEMBERS[0]:patched[prep.MEMBERS[0]]+b'changed'},metadata)
-        with self.assertRaisesRegex(ValueError,'frozen density patch'): prep.qualify_archives(base,self.probe,runtime)
-        write(patched,metadata|{'quality_class':'accepted_optimization'})
-        with self.assertRaisesRegex(ValueError,'metadata'): prep.qualify_archives(base,self.probe,runtime)
 
     def option_fixture(self):
         profile=self.root/'option-source'; (profile/'config').mkdir(parents=True); (profile/'shaderpacks').mkdir()

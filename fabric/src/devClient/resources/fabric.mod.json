@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "id": "shaderlod_dev",
+  "version": "0.1.0-dev",
+  "name": "ShaderLOD Fabric development smoke",
+  "license": "MIT",
+  "environment": "client",
+  "mixins": ["shaderlod-fabric-dev.mixins.json"],
+  "entrypoints": { "client": ["com.pp.shaderlod.fabric.dev.FabricSmoke"] },
+  "depends": { "shaderlod": "*", "fabric-api": "*", "minecraft": "1.21.1" }
+}

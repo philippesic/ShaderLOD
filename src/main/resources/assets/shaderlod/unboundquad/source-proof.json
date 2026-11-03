@@ -1,0 +1,38 @@
+{
+  "archive_sha256": "98ac741dee294d2a3c82d153349148c3bb7fb688c30eb3b49c3b9ac37e968c5a",
+  "options_sha256": "b64d94998c99bf867e80d350a4a0a8108c58507e0401eb053a70e3aca81a5036",
+  "boundary": "Fresh actual original native398 Overworld Iris/Sodium transformed exports; certificate is not linked-program readback or executed coalescer proof",
+  "exports": [
+    {
+      "kind": "fragment",
+      "path": "084_sodium_gbuffers_terrain.fsh",
+      "original_path": "/Users/pippo/github/shaderlod/run-workloads/cross-shader-performance-r2/unbound-quad-original-export-r1/original/client/patched_shaders/084_sodium_gbuffers_terrain.fsh",
+      "sha256": "e8e6ac62ac63470a777f30426c0d37de6caf1b332128383b60db061470f8d985",
+      "unsafe_draw_identity_builtins": false
+    },
+    {
+      "kind": "vertex",
+      "path": "084_sodium_gbuffers_terrain.vsh",
+      "original_path": "/Users/pippo/github/shaderlod/run-workloads/cross-shader-performance-r2/unbound-quad-original-export-r1/original/client/patched_shaders/084_sodium_gbuffers_terrain.vsh",
+      "sha256": "8e7df39a0895198269f8aefe8247e4623d262c2e69583e2c28d101e4dc10d166",
+      "unsafe_draw_identity_builtins": false
+    },
+    {
+      "kind": "fragment",
+      "path": "085_sodium_gbuffers_terrain.fsh",
+      "original_path": "/Users/pippo/github/shaderlod/run-workloads/cross-shader-performance-r2/unbound-quad-original-export-r1/original/client/patched_shaders/085_sodium_gbuffers_terrain.fsh",
+      "sha256": "50270bd46bc77ab34121997352c1351fcce9de199593b1fb79b272a7db79eb9e",
+      "unsafe_draw_identity_builtins": false
+    },
+    {
+      "kind": "vertex",
+      "path": "085_sodium_gbuffers_terrain.vsh",
+      "original_path": "/Users/pippo/github/shaderlod/run-workloads/cross-shader-performance-r2/unbound-quad-original-export-r1/original/client/patched_shaders/085_sodium_gbuffers_terrain.vsh",
+      "sha256": "8e7df39a0895198269f8aefe8247e4623d262c2e69583e2c28d101e4dc10d166",
+      "unsafe_draw_identity_builtins": false
+    }
+  ],
+  "encoded_draw_translation": "_draw_id comes from a_LightAndData[3] vertex attribute; same absolute index stream preserves it and u_RegionOffset remains native",
+  "scope": "Pinned APIs, Overworld, original/native398/noDH, SOLID and CUTOUT, native shared integer quad indices only",
+  "status": "SOURCE_ADMIT_FINITE_CANDIDATE; no active admission implementation"
+}

@@ -1,0 +1,45 @@
+package com.pp.shaderlod.optimization.blissearlyalpha.mixin;
+import java.util.List;
+import java.util.Set;
+import org.objectweb.asm.tree.ClassNode;
+import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
+import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
+/** Private pinned API gate. Original arms have no new injections. */
+public final class BlissEarlyAlphaPlugin implements IMixinConfigPlugin {
+ public void onLoad(String p){com.pp.shaderlod.optimization.OptimizationRuntimeContext.configureImplementation("bliss-shader",com.pp.shaderlod.optimization.OptimizationId.EARLY_ALPHA,com.pp.shaderlod.optimization.blissearlyalpha.BlissEarlyAlphaRuntime::status);} public String getRefMapperConfig(){return null;}
+ private static Boolean pinned;
+ public static boolean exactApi(){
+  if(pinned!=null)return pinned;
+  String[][] pins={
+{"net/irisshaders/iris/Iris.class","e6db6370696e8821da52651bec248602db30b9457e01a54fac3e4ec4452a012c"},
+{"net/irisshaders/iris/shadows/ShadowRenderTargets.class","7f2c1a6eed82fc15a730c0d2892eb91f5324f23a0e1f44defbd3ebc3f197a309"},
+{"net/irisshaders/iris/mixin/MixinGpuTexture.class","e332f94e84c727b3a06daa7c37cee77a1c691dc0b76806f7db4a9312d8587b48"},
+{"net/irisshaders/iris/mixin/MixinGpuTexture2.class","af2bc01576f61f831a5bbbc379087cf7c8e1e13af20481b8c0526bb83443297b"},
+   {"net/irisshaders/iris/pipeline/programs/SodiumPrograms.class","09aacd566bb2d1585ea32561447c23567d44c82f12b9beb6a7c5f1d1246832b9"},
+   {"net/irisshaders/iris/pipeline/programs/SodiumShader.class","6b0376f8a15fb3823118c4afd7608cbc8eb5629dc82b1049dc45116cbbc6d262"},
+   {"net/irisshaders/iris/gl/blending/AlphaTest.class","d64dc340271e3ec90d405175de1bb092719fd6aca5935fff771987e1d8a1535d"},
+   {"net/irisshaders/iris/pipeline/transform/transformer/CommonTransformer.class","ddcfe64a531955b22dcccb3f957e0e372b5948cc3f291290cf39954948894a41"},
+   {"net/irisshaders/iris/uniforms/IrisInternalUniforms.class","d738758d58b691d3e939041e45e898047843ebff72bc9bcadb26c9d6ff827662"},
+   {"net/irisshaders/iris/uniforms/CapturedRenderingState.class","7e6c737df927de1a7b0a1e99ee1f0b6605de8cb15f8135277817ad746e313272"},
+   {"net/caffeinemc/mods/sodium/client/render/chunk/terrain/TerrainRenderPass.class","a8c1cef1e051ad68c9d79b6998744635e2c6a62bd75d0ef41e0a8cd977d7c59a"},
+   {"net/irisshaders/iris/pipeline/transform/TransformPatcher.class","2b502309e52bcff35fcfa91432422267a47af3b6ab06ace2bdd5afc87f5a3db4"},
+   {"net/irisshaders/iris/pipeline/transform/transformer/SodiumTransformer.class","02c54dff4a695ad6b233cafb95a0d6a095b829be901fab1a0734a790815844d2"},
+   {"net/caffeinemc/mods/sodium/client/gl/shader/GlShader.class","300606c502a85baea1828a8ca74c2e7c1fce830686f34ce3f816f256c7864d06"},
+   {"net/caffeinemc/mods/sodium/client/gl/shader/ShaderWorkarounds.class","d2972daef0042aaa0aca7bd4d366b62e3a6fd1e1a5a39007c628806cd9867197"},
+   {"net/irisshaders/iris/pipeline/IrisRenderingPipeline.class","313783af9ce511c40fcb39d246c4322de0120c1031c0cfd2fe3685fdde7c71ca"},
+   {"net/irisshaders/iris/mixinterface/GpuTextureInterface.class","a175cdffcd169b1c26062a8bdea9a9357515b8c403d78d5587cc8d769dbd05a6"},
+   {"net/irisshaders/iris/compat/sodium/mixin/MixinShaderChunkRenderer.class","8efc008d2aea7896306068192bda549e699d883fa39d2c2fd059f1fde186222c"},
+   {"net/caffeinemc/mods/sodium/client/render/chunk/DefaultChunkRenderer.class","c3af45983587f78f75d3cd7f1d3ca0867b4df09441ee3823c873890a73007dbd"},
+   {"net/caffeinemc/mods/sodium/client/gl/device/GLRenderDevice$ImmediateDrawCommandList.class","d6540e2616c288d319208368331f8779f024ef20ee09a29a06adadc587f537e5"},
+{"net/irisshaders/iris/pbr/texture/PBRTextureManager.class","8b965da3be1c00dad9a949ad8ebf44fdc0870036a05c9b53931dd1ca1f90871a"},
+{"net/irisshaders/iris/pbr/texture/PBRTextureHolder.class","26c47dbfa97ec4584e7a8efe64fe6e44b8ab73302374b52add9e05caa93999a1"},
+{"net/minecraft/client/renderer/texture/AbstractTexture.class","81c2a150832b64469806b13f9f216bb95e8984b98e5667ffe75b28013b2f1d0c"},
+{"net/irisshaders/iris/pbr/texture/PBRAtlasTexture.class","bf565625ac1f6f0e38386efb3f11df83b37b82c3826dc58ac03481af87cedb11"}};
+  try{for(var pin:pins)try(var in=BlissEarlyAlphaPlugin.class.getClassLoader().getResourceAsStream(pin[0])){
+   if(in==null || !java.util.HexFormat.of().formatHex(java.security.MessageDigest.getInstance("SHA-256").digest(in.readAllBytes())).equals(pin[1]))return pinned=false;
+  }return pinned=true;}catch(Exception|LinkageError e){return pinned=false;}
+ }
+ public boolean shouldApplyMixin(String t,String m){return exactApi();}
+ public void acceptTargets(Set<String> a,Set<String> b){} public List<String> getMixins(){return null;}
+ public void preApply(String t,ClassNode n,String m,IMixinInfo i){} public void postApply(String t,ClassNode n,String m,IMixinInfo i){}
+}

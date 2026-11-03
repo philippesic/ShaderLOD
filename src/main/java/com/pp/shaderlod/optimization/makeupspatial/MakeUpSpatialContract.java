@@ -1,0 +1,7 @@
+package com.pp.shaderlod.optimization.makeupspatial;
+import java.util.*;import com.pp.shaderlod.optimization.makeupao.MakeUpAoContract;
+public final class MakeUpSpatialContract{
+ public static final String ID="makeup-ultra-fast-shaders",KEY="SHADERLOD_MAKEUP_SPATIAL_REUSE",RATE="SHADERLOD_MAKEUP_SPATIAL_RATE",WORLD="SHADERLOD_MAKEUP_WORLD_PIXEL";private MakeUpSpatialContract(){}
+ public static Map<String,String> generated(String graph){if(!Set.of("0","1").contains(graph))throw new IllegalArgumentException();var m=new TreeMap<>(MakeUpAoContract.generated("0"));m.put(KEY,graph);return Map.copyOf(m);}
+ public static boolean profile(Map<String,String> actual){actual=com.pp.shaderlod.optimization.framecopy.MakeUpDeadCopyAdmission.withoutInactiveControl(actual);if(actual==null)return false;var m=new TreeMap<>(actual);for(String k:List.of(KEY,RATE,WORLD,"SHADERLOD_MAKEUP_EARLY_ALPHA","SHADERLOD_MAKEUP_AO_HALF_RES","SHADERLOD_MAKEUP_DEPTH_PRIMING"))if(!Set.of("0","1").contains(java.util.Objects.requireNonNullElse(m.put(k,"0"),"invalid")))return false;if(!Set.of("true","false").contains(java.util.Objects.requireNonNullElse(m.put("COLORED_SHADOW","true"),"invalid")))return false;return (("1".equals(actual.get(KEY))?1:0)+("1".equals(actual.get(RATE))?1:0)+("1".equals(actual.get(WORLD))?1:0)<=1)&&com.pp.shaderlod.optimization.framecopy.MakeUpDeadCopyAdmission.withoutInactiveControl(generated("0")).equals(m);}
+}

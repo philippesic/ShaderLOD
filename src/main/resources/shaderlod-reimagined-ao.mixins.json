@@ -1,0 +1,19 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.optimization.reimaginedao.mixin",
+  "plugin": "com.pp.shaderlod.optimization.reimaginedao.mixin.ReimaginedAoMixinPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "ReimaginedAoPassView",
+    "ReimaginedAoTargetsView",
+    "ReimaginedAoCompositeMixin",
+    "ReimaginedAoPipelineMixin",
+    "ReimaginedAoReloadMixin",
+    "ReimaginedAoPrepareMixin",
+    "ReimaginedAoQuadDrawMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

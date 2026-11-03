@@ -1,0 +1,120 @@
+{
+  "schema": 1,
+  "experiment": "photon-contribution-tail-png-diagnostic",
+  "normal_manifest_sha256": "942d73077af4689656e0a1fdaa3101a9089d211f9381ab6266c500cbe91fc57c",
+  "members": [
+    {
+      "path": "shaders/settings.glsl",
+      "source_sha256": "38aeac5183fa6dda58acc0301d803a9b62af801b453061fc400ca51a6a88b64f",
+      "patched_sha256": "d40319d68894dc8abb2e22fd814ee138d2450dffb42fe36b7b333a05db9f73aa",
+      "replacements": [
+        {
+          "before": "#define SETTINGS_INCLUDED\n",
+          "after": "#define SETTINGS_INCLUDED\n// Private query-free counter diagnostic; default OFF.\n//#define SHADERLOD_CONTRIBUTION_TAIL_DIAGNOSTIC\n"
+        }
+      ],
+      "enabled_sha256": "e3912cf1cdf1a30a04663e4d5ac5c7e7b0fe6b5c2ca813c4ef28dc3f546f10ce"
+    },
+    {
+      "path": "shaders/program/d1_clouds.fsh",
+      "source_sha256": "1f0dd330b837becff393380283eb767e3a55fe48e9b04705bf825fde535d0cae",
+      "patched_sha256": "acbbb919486f8488fe34757324938eb027691fc5aab73c10673932d585710967",
+      "replacements": [
+        {
+          "before": "uniform sampler3D colortex6;",
+          "after": "#ifdef SHADERLOD_CONTRIBUTION_TAIL_DIAGNOSTIC\nuniform int shaderlodBridgeVersion;\nuniform int shaderlodEnabled;\nuint shaderlod_diag_calls=0u;\nuint shaderlod_diag_orders=0u;\nuint shaderlod_diag_breaks=0u;\nbool shaderlod_diag_invalid=false;\n#endif // SHADERLOD_CONTRIBUTION_TAIL_DIAGNOSTIC\n\nuniform sampler3D colortex6;"
+        },
+        {
+          "before": "    clouds.xyz += draw_aurora(ray_dir, dither) * clouds.w;\n#endif\n}",
+          "after": "    clouds.xyz += draw_aurora(ray_dir, dither) * clouds.w;\n#endif\n#ifdef SHADERLOD_CONTRIBUTION_TAIL_DIAGNOSTIC\n    // Emit a digest of every original cloud output, so diagnostics do not\n    // make the normal recurrence/lighting results unobservable to the compiler.\n    float optical_signal=dot(clouds,vec4(1.0,3.0,5.0,7.0)) +\n        clouds_data.x*0.0001 + clouds_data.y*11.0;\n    float optical_digest=mod(floor(abs(optical_signal)*4096.0),256.0);\n    uint core_class=shaderlodBridgeVersion==2?0u:(shaderlodBridgeVersion==0?1u:2u);\n    uint global_class=shaderlodEnabled==0?0u:(shaderlodEnabled==1?1u:2u);\n    uint path=0u;\n#ifdef SHADERLOD_CONTRIBUTION_TAIL\n    path=(shaderlodBridgeVersion==2 && shaderlodEnabled==1)?1u:0u;\n    if (shaderlod_diag_invalid) path=2u;\n#endif\n#if defined TAAU || defined VOXY || defined BLOCKY_CLOUDS || CLOUDS_TEMPORAL_UPSCALING != 4\n    path=7u;\n#endif\n    uint marker=128u+core_class*32u+global_class*8u+path;\n    bool bounded=shaderlod_diag_calls<=80u && shaderlod_diag_breaks<=shaderlod_diag_calls &&\n        shaderlod_diag_orders<=640u && shaderlod_diag_orders%4u==0u &&\n        !isnan(optical_digest) && !isinf(optical_digest);\n    clouds=bounded?vec4(shaderlod_diag_calls,shaderlod_diag_breaks,shaderlod_diag_orders/4u,marker):vec4(255.0);\n    clouds_data=vec2((frameCounter+37*worldTime)%1024,optical_digest);\n#endif // SHADERLOD_CONTRIBUTION_TAIL_DIAGNOSTIC\n}"
+        }
+      ]
+    },
+    {
+      "path": "shaders/program/final.fsh",
+      "source_sha256": "073489c9aa7efc625b4c0f0033dceb37614bcd55580826b9517b54d5dcc7dbbc",
+      "patched_sha256": "496b1a7ba143643a9180a90f776d38036e3e0ded49b79d79f2b870d9bcfdf4be",
+      "replacements": [
+        {
+          "before": "void main() {",
+          "after": "#ifdef SHADERLOD_CONTRIBUTION_TAIL_DIAGNOSTIC\n#if defined WORLD_OVERWORLD && defined PROGRAM_FINAL\n#include \"/include/shaderlod/tail_png_final.glsl\"\n#endif // SHADERLOD_DIAG_WORLD\n#endif // SHADERLOD_CONTRIBUTION_TAIL_DIAGNOSTIC\n\nvoid main() {"
+        },
+        {
+          "before": "void main() {\n",
+          "after": "void main() {\n#ifdef SHADERLOD_CONTRIBUTION_TAIL_DIAGNOSTIC\n#if defined WORLD_OVERWORLD && defined PROGRAM_FINAL\n    shaderlod_diag_final();\n    return;\n#endif // SHADERLOD_DIAG_WORLD\n#endif // SHADERLOD_CONTRIBUTION_TAIL_DIAGNOSTIC\n"
+        }
+      ]
+    },
+    {
+      "path": "shaders/include/sky/clouds/cumulus.glsl",
+      "source_sha256": "a6c8c416ff1ba173fdbe17db34f8108d2f826da318f3eea8ddc1bfa3fdce533a",
+      "patched_sha256": "8efb708d43e8f8185c1c923c169dfb905a5c5a783e6f65ad1d53a7c1b950d75f",
+      "replacements": [
+        {
+          "before": "    vec2 scattering = vec2(0.0);\n",
+          "after": "#ifdef SHADERLOD_CONTRIBUTION_TAIL_DIAGNOSTIC\n#if defined PROGRAM_DEFERRED1 && defined WORLD_OVERWORLD\n    ++shaderlod_diag_calls;\n#endif // SHADERLOD_DIAG_STAGE\n#endif // SHADERLOD_CONTRIBUTION_TAIL_DIAGNOSTIC\n    vec2 scattering = vec2(0.0);\n"
+        },
+        {
+          "before": "    for (uint i = 0u; i < 8u; ++i) {\n",
+          "after": "    for (uint i = 0u; i < 8u; ++i) {\n#ifdef SHADERLOD_CONTRIBUTION_TAIL_DIAGNOSTIC\n#if defined PROGRAM_DEFERRED1 && defined WORLD_OVERWORLD\n        ++shaderlod_diag_orders;\n#endif // SHADERLOD_DIAG_STAGE\n#endif // SHADERLOD_CONTRIBUTION_TAIL_DIAGNOSTIC\n"
+        }
+      ]
+    },
+    {
+      "path": "shaders/include/shaderlod/contribution_tail.glsl",
+      "source_sha256": "76e18c623794a7f7e82e7799ee1d94b7c8216b0350748d13b7825092534a1fac",
+      "patched_sha256": "4ebc65f3044791698a91b110badb9eda62646f4efb928e70f070c2fa36954985",
+      "replacements": [
+        {
+          "before": "uniform int shaderlodBridgeVersion;\nuniform int shaderlodEnabled;\n",
+          "after": "#ifndef SHADERLOD_CONTRIBUTION_TAIL_DIAGNOSTIC\nuniform int shaderlodBridgeVersion;\nuniform int shaderlodEnabled;\n#endif // SHADERLOD_CONTRIBUTION_TAIL_DIAGNOSTIC\n"
+        },
+        {
+          "before": "    vec2 scattering = vec2(0.0);\n",
+          "after": "#ifdef SHADERLOD_CONTRIBUTION_TAIL_DIAGNOSTIC\n    ++shaderlod_diag_calls;\n#endif // SHADERLOD_CONTRIBUTION_TAIL_DIAGNOSTIC\n    vec2 scattering = vec2(0.0);\n"
+        },
+        {
+          "before": "    for (uint i = 0u; i < 8u; ++i) {\n",
+          "after": "    for (uint i = 0u; i < 8u; ++i) {\n#ifdef SHADERLOD_CONTRIBUTION_TAIL_DIAGNOSTIC\n        ++shaderlod_diag_orders;\n#endif // SHADERLOD_CONTRIBUTION_TAIL_DIAGNOSTIC\n"
+        },
+        {
+          "before": "        if (i == 3u && shaderlod_tail_within_budget(\n            scattering, scatter_amount, powder_effect, scattering_falloff,\n            phase_g, extinct_amount, light_optical_depth, sky_optical_depth,\n            ground_optical_depth, clouds_params.l0_shadow, bounced_light)) break;",
+          "after": "#ifdef SHADERLOD_CONTRIBUTION_TAIL_DIAGNOSTIC\n        if (i == 3u && shaderlod_tail_within_budget(\n            scattering, scatter_amount, powder_effect, scattering_falloff,\n            phase_g, extinct_amount, light_optical_depth, sky_optical_depth,\n            ground_optical_depth, clouds_params.l0_shadow, bounced_light)) {\n            ++shaderlod_diag_breaks;\n            break;\n        }\n#else // SHADERLOD_CONTRIBUTION_TAIL_DIAGNOSTIC\n        if (i == 3u && shaderlod_tail_within_budget(\n            scattering, scatter_amount, powder_effect, scattering_falloff,\n            phase_g, extinct_amount, light_optical_depth, sky_optical_depth,\n            ground_optical_depth, clouds_params.l0_shadow, bounced_light)) break;\n#endif // SHADERLOD_CONTRIBUTION_TAIL_DIAGNOSTIC"
+        },
+        {
+          "before": "        return shaderlod_tail_original_scattering(",
+          "after": "#ifdef SHADERLOD_CONTRIBUTION_TAIL_DIAGNOSTIC\n        if (shaderlodBridgeVersion==2 && shaderlodEnabled==1) shaderlod_diag_invalid=true;\n#endif // SHADERLOD_CONTRIBUTION_TAIL_DIAGNOSTIC\n        return shaderlod_tail_original_scattering("
+        }
+      ]
+    }
+  ],
+  "additions": [
+    {
+      "path": "shaders/include/shaderlod/tail_png_final.glsl",
+      "sha256": "f408679a549ff6e26dc2da715ebcc21fde0c8662feb0529040aeb11ad899272a"
+    }
+  ],
+  "protocol": {
+    "schema": 1,
+    "source_tag": "c7a14d32",
+    "producer_stage": "world0/deferred1.fsh",
+    "consumer_stage": "world0/final.fsh",
+    "target9_format": "RGBA16F",
+    "target10_format": "RG16F",
+    "counts": [
+      "calls",
+      "actual_order4_breaks",
+      "actual_executed_orders_divided_by_four"
+    ],
+    "maximum_counts": [
+      80,
+      80,
+      160
+    ],
+    "native_png": "required; 4 pixels per cloud texel; complete footprint starts at GL y=8",
+    "support": "Overworld; TAAU false; CLOUDS_TEMPORAL_UPSCALING 4; BLOCKY_CLOUDS false; VOXY absent",
+    "runtime": "unverified",
+    "producer_stamp": "(frameCounter+37*worldTime) modulo 1024 checked per texel; collisions possible; original RGBA/distance/ambient optical digest emitted"
+  },
+  "iris_jar_sha256": "3e3f94d2d5cdcb8145c4385d521974aa2d8669b2cc212351f70cf06488182e83"
+}

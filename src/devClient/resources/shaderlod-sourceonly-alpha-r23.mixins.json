@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.experiment.sourceonlyalpha.mixin",
+  "plugin": "com.pp.shaderlod.experiment.sourceonlyalpha.mixin.SourceOnlyAlphaPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "SourceOnlyAlphaMixin",
+    "MakeUpSingleAlphaMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

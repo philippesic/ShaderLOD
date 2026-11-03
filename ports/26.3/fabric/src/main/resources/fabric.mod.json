@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "id": "shaderlod",
+  "version": "${version}",
+  "name": "ShaderLOD",
+  "description": "Explicit distance LOD integration for supported Iris shader adapters.",
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.pp.shaderlod.fabric.ShaderLodFabric"
+    ]
+  },
+  "mixins": [
+    "shaderlod-source-lifecycle.mixins.json",
+    "shaderlod-fabric.mixins.json",
+    "shaderlod-shared.mixins.json",
+    "shaderlod-makeup-quad.mixins.json",
+    "shaderlod-bsl-resource.mixins.json",
+    "shaderlod-makeup-ao.mixins.json",
+    "shaderlod-photon-spatial.mixins.json",
+    "shaderlod-bsl-ao.mixins.json",
+    "shaderlod-bliss-pixel.mixins.json",
+    "shaderlod-unbound-ao-depth.mixins.json",
+    "shaderlod-solas-ao-depth.mixins.json",
+    "shaderlod-reimagined-ao-depth.mixins.json",
+    "shaderlod-makeup-shadow.mixins.json",
+    "shaderlod-photon-ao-history.mixins.json",
+    "shaderlod-terrain-radius.mixins.json",
+    "shaderlod-makeup-early-alpha.mixins.json",
+    "shaderlod-bsl-early-alpha.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.19.5",
+    "minecraft": "26.3",
+    "java": ">=25",
+    "fabric-api": "0.162.0+26.3",
+    "iris": "1.11.7+mc26.3",
+    "sodium": "0.9.2"
+  },
+  "suggests": {
+    "distanthorizons": "*"
+  }
+}

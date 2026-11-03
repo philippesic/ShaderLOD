@@ -3,5 +3,5 @@ gradlew text eol=lf
 *.bat text eol=crlf
 *.jar binary
 # Adapter recipes and packaged helpers are SHA-pinned byte for byte.
-patches/adapters/** -text
+patches/** -text
 src/main/resources/assets/shaderlod/adapters/** -text

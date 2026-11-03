@@ -1,0 +1,68 @@
+{
+  "schema": 1,
+  "experiment": "bsl-receiver-budget-r1",
+  "mechanism": "A4",
+  "private_only": true,
+  "pack": "BSL 10.1.8",
+  "license": "All rights reserved; private local derivatives only; all original author and license members preserved; no redistribution authorized",
+  "base_sha256": "36b0a50ff7918bf10e9422c401d93779f9d0088a26acea975b435243f96930b5",
+  "iris_sha256": "3e3f94d2d5cdcb8145c4385d521974aa2d8669b2cc212351f70cf06488182e83",
+  "iris_version": 10812,
+  "mc_version": 12101,
+  "source_members": {
+    "shaders/lib/lighting/shadows.glsl": "b7cecede848a68f6118cdb1ad1c14dfaae32c7fbcdb82f3a11d14bf9274c064a",
+    "shaders/lib/lighting/forwardLighting.glsl": "21687dd916c69c8bcd557e4b1bde367d7eeb77be01be1efc0b7e0ff20109fae8",
+    "shaders/program/gbuffers_terrain.glsl": "c47d350132261e8f7b271f99ba8d060e4b38ee12a5da50597b664245f212c8d7",
+    "shaders/program/final.glsl": "1b93825ce635c7744c9c166e6b71425ee5e8fa8ecb589c8aa6bb1a054c7ccc50",
+    "shaders/lib/settings.glsl": "5617a7a13c37373c27e742d2dffb777a1437bae83cf25693451c104915050285",
+    "shaders/lib/util/spaceConversion.glsl": "270857c7587bb70e8f7537a502cae028a62bae6a225eb9ddffda88aeb73e3a76",
+    "shaders/shaders.properties": "8856162fcf6846e1b56f5c092e6eaee04af687875f85e87cde87e1bd0a0d3169",
+    "shaders/world0/gbuffers_terrain.fsh": "fb8bd36225c0b74ab5befc33f7097e02e10196a20d3441a93819729792580801"
+  },
+  "license_members": {},
+  "helper_sha256": "b3f2e631ea01984e677964f1ad98b333e925ef7216e2788213a72d83328ef074",
+  "native_receipt_sha256": "b90583be00cabd5d3b1e0e464511fe2e69d916423179ad92b423ea203b13768f",
+  "native_sidecar_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "native_options_map_sha256": "41a861dd87d34ad2d1a0dde900cdcc3cc813cf3d4338c3a8041b59c7493a265f",
+  "native_option_count": 384,
+  "native_options_evidence": "dev/logs/bsl-sanity-r7/original/captures/original-r7-still.json",
+  "native_sidecar_empty": true,
+  "permission_uniform": "shaderlodReceiverReductionPermission",
+  "permission_expressions": {
+    "0": "0.0",
+    "1": "1.0"
+  },
+  "permission_semantics": "Unregistered/default0 and any value other than exact1 retain native; floatcustomuniform via exact Iris source evidence, linked driver value unverified",
+  "native_taps": 9,
+  "plateau_taps": 5,
+  "transition_taps": 9,
+  "normalization_denominator": 9,
+  "subset_indices": [
+    0,
+    1,
+    3,
+    5,
+    7
+  ],
+  "filter_uv_half_extent_texels": [
+    2,
+    2
+  ],
+  "native_second_moment_per_axis": 0.44,
+  "plateau_second_moment_per_axis": 0.4444444444444444,
+  "footprint_plateau_output_pixels": 0.25,
+  "footprint_native_output_pixels": 0.5,
+  "native_sss_12_taps_untouched": true,
+  "runtime_obligations": [
+    "Fresh exact Iris/MC/archive and complete loaded native384 options; private switch only, empty pending queue, no fallback; actual source joined to drawing terrain program",
+    "Actual macOS, complete native raster viewport and final output dimensions equal (ratio1); source has no TAAU/scale directive, external scaling invalidates fixed1 unless original restored",
+    "Native shadow depth/color comparison/filter/nonmip/encoding and2048 dimensions; no alien/custom shadowsampler; loaded context unknown retains original before private activation",
+    "Linked reductionPermission location/value1 candidate,0native-equivalent; identical GLSL between both modes; source/defaultOFF may erase classifier and is not overheadproof",
+    "Eligible mat0 fullyopaque nativeTAA terrain and actual plateau avoided diagonal samples; derivative-helper/display probe is not work-countproof",
+    "Preserve full native shadow generation/distances/bias/cloud/ambient/colored transmission/SSS; distinguish optional12tap SSS inactive advanced-material denominator",
+    "Still/motion nearfar borders foliage fences glasswater caustics sun/camera transitions; preserve nativeAA and restoration; test nativefallback PBR/DH beforecompatibilityclaim",
+    "Matched faithful originalOff / native-equivalent / fixedcandidate / return cost with classifier ALU/divergence/register/specialization costs; no inferred gain from4fewer source taps",
+    "Exact-session parent-owned runtime only; no newpasses/targets/history; no Windows/Vulkan/loader/version support inferred",
+    "Weighted comparison may activate colored branch:9native->15candidate nominalfetch counterexample; countbranchincidence/coupledcost, no monotonicworksavings claim"
+  ]
+}

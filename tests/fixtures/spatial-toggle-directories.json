@@ -1,0 +1,1308 @@
+{
+  "provenance": "Actual post-build directories, independently read and checked against spatial-toggle-forest-r1 preparation receipt; Java sorted relative path + NUL + file SHA256 + LF tree algorithm. No runtime capture is asserted.",
+  "loaded_directory_identities": {
+    "/Users/pippo/github/shaderlod/build/classes/java/devClient": {
+      "kind": "development directory; regular files only, symlinks excluded",
+      "complete": true,
+      "files": 147,
+      "bytes": 789455,
+      "tree_sha256": "be65ad3857c4e69ec37c755f5292e3239e20c538480dd189d24eff9ec5cc3044"
+    },
+    "/Users/pippo/github/shaderlod/build/resources/devClient": {
+      "kind": "development directory; regular files only, symlinks excluded",
+      "complete": true,
+      "files": 2,
+      "bytes": 1409,
+      "tree_sha256": "f7ffe04029e42bbde6157772487ecec713e9f5b529dcf4a7efa6f4aba4120a00"
+    },
+    "/Users/pippo/github/shaderlod/build/classes/java/main": {
+      "kind": "development directory; regular files only, symlinks excluded",
+      "complete": true,
+      "files": 102,
+      "bytes": 361844,
+      "tree_sha256": "b0612a03db03d4cba0eda6b30d854cc091e23b1708c958313fb3311d9254956f"
+    },
+    "/Users/pippo/github/shaderlod/build/resources/main": {
+      "kind": "development directory; regular files only, symlinks excluded",
+      "complete": true,
+      "files": 2,
+      "bytes": 1374,
+      "tree_sha256": "aab79372c02ff77cb6e8d8ddb6ecd7d5fe418a0b577502b445ccd85ff581997f"
+    }
+  },
+  "tree_inputs": {
+    "/Users/pippo/github/shaderlod/build/classes/java/devClient": [
+      {
+        "path": "com/pp/shaderlod/dev/BenchmarkSession$Phase.class",
+        "sha256": "9ac61e7d86e5ab414bf6982ed1893dd4668ee31020873e2b7e33b1b8fb07d691",
+        "bytes": 1898
+      },
+      {
+        "path": "com/pp/shaderlod/dev/BenchmarkSession$PhaseMarker.class",
+        "sha256": "9fc61c7332ae93b130b4b34ab73aade64d02b4c3fceeac254a45a8e3fbd4e717",
+        "bytes": 2147
+      },
+      {
+        "path": "com/pp/shaderlod/dev/BenchmarkSession.class",
+        "sha256": "876551958421e12526e941fee9d414b684efa9b5f6d9833657f0fe2454a42993",
+        "bytes": 36701
+      },
+      {
+        "path": "com/pp/shaderlod/dev/CameraQualitySession$1.class",
+        "sha256": "cc5bebb6fa01c33826f07e0ca5b42f2578bd8875b5101d049b6064abba748a98",
+        "bytes": 1471
+      },
+      {
+        "path": "com/pp/shaderlod/dev/CameraQualitySession$Config.class",
+        "sha256": "15bb7ba8bd3f6a52c53d01520f3866180389a0627c3fe44ac8554ea2fb4e57d6",
+        "bytes": 8614
+      },
+      {
+        "path": "com/pp/shaderlod/dev/CameraQualitySession$Pose.class",
+        "sha256": "a8f6eeb0cec6c67c566b5257d753b5b9d99187ffd884ed5f16f518bce725d796",
+        "bytes": 3361
+      },
+      {
+        "path": "com/pp/shaderlod/dev/CameraQualitySession$Waypoint.class",
+        "sha256": "fe3f7805a8ab865d010a94259ec0c193ebae43f569bbb49ffacb0daec3e7ab6b",
+        "bytes": 1909
+      },
+      {
+        "path": "com/pp/shaderlod/dev/CameraQualitySession$World.class",
+        "sha256": "e0796a6e0535f0b4841a8a5351cbe6b6008d1aae4c223c0b5396952d310e3955",
+        "bytes": 2370
+      },
+      {
+        "path": "com/pp/shaderlod/dev/CameraQualitySession.class",
+        "sha256": "d5cdaee63f0a02285c170292dd6cc217776c1fe7319000a89dacfaf4e140391b",
+        "bytes": 44286
+      },
+      {
+        "path": "com/pp/shaderlod/dev/CaptureWriteTracker$Snapshot.class",
+        "sha256": "a93c9c5764b79b95b33570e9a80f2b902421dd5541fa88d4d6e0e18dfeebab78",
+        "bytes": 4443
+      },
+      {
+        "path": "com/pp/shaderlod/dev/CaptureWriteTracker$Stage.class",
+        "sha256": "6ac6d87175c8a15a4d803d22f3a196e8251f0ed983cb1768ddecdb6c041dccbd",
+        "bytes": 1425
+      },
+      {
+        "path": "com/pp/shaderlod/dev/CaptureWriteTracker.class",
+        "sha256": "933ffe2034a62a84ef0d2b074e0a5cf4132d3ac30a482f65952e413fb4f8f1d0",
+        "bytes": 7059
+      },
+      {
+        "path": "com/pp/shaderlod/dev/ComparisonClient.class",
+        "sha256": "f8e78d364dbccf7bd081cfd4e2dbc0545f65fd167d02adfdc9b23f98723311cb",
+        "bytes": 26221
+      },
+      {
+        "path": "com/pp/shaderlod/dev/FastPngWriter$AbgrPixels.class",
+        "sha256": "1f22c0432c6e6d0a0d862a70e1ef76858a1e908d51ffa9afd82e3e2c861e16e4",
+        "bytes": 338
+      },
+      {
+        "path": "com/pp/shaderlod/dev/FastPngWriter$PngChunks.class",
+        "sha256": "ae794e46d2a736a65a030fe99808de4d81520898e7d470c00a7d5e9a202f4032",
+        "bytes": 1575
+      },
+      {
+        "path": "com/pp/shaderlod/dev/FastPngWriter.class",
+        "sha256": "c0a2e47f744bf306d588416e1a70f02cfd1bcec6a37f1b91b5ec7c2410b2aaa9",
+        "bytes": 4067
+      },
+      {
+        "path": "com/pp/shaderlod/dev/SmokeClient.class",
+        "sha256": "c2d06f4d0453e4f0972e45108f111602ad74461296f91a85f21edb33490979a6",
+        "bytes": 10932
+      },
+      {
+        "path": "com/pp/shaderlod/dev/VisibilityListDiagnostics$Membership.class",
+        "sha256": "bf89066a50cd284e3eac6c69eaea0988eac7f9a78173fd5a13deb4ad6af690dc",
+        "bytes": 2585
+      },
+      {
+        "path": "com/pp/shaderlod/dev/VisibilityListDiagnostics$Snapshot.class",
+        "sha256": "6245e0bd7a94db56177660c19ac762196db11297f762010a6e63799eb730717a",
+        "bytes": 2195
+      },
+      {
+        "path": "com/pp/shaderlod/dev/VisibilityListDiagnostics.class",
+        "sha256": "dba86673987faa4009e68c0f2e70d78565c2beba3025a3c7366ee5928952567d",
+        "bytes": 3641
+      },
+      {
+        "path": "com/pp/shaderlod/dev/WaterSceneSurvey$ReadView.class",
+        "sha256": "16e35b4cfdfa0a0b16fbcef0b708ba6df86336c466e04fb3068fcb0941c811c1",
+        "bytes": 4460
+      },
+      {
+        "path": "com/pp/shaderlod/dev/WaterSceneSurvey.class",
+        "sha256": "b4561d5c30e5cd51dcc868cd97b53aa3f857e348ca0593099b7071ea299175aa",
+        "bytes": 15896
+      },
+      {
+        "path": "com/pp/shaderlod/dev/WorkloadInputs.class",
+        "sha256": "09a2a675585d86d1c3af05eddb72d504bd64f2a1b2b8963a0e7e97c664ffbf3f",
+        "bytes": 43761
+      },
+      {
+        "path": "com/pp/shaderlod/dev/WorkloadSession.class",
+        "sha256": "036697d885681caa914261c35fd19ce41305902f1f703d7bb1eda282b67f0406",
+        "bytes": 20726
+      },
+      {
+        "path": "com/pp/shaderlod/dev/mixin/BufferedDrawTimingMixin.class",
+        "sha256": "445bbdc6ed660799ab4934677908d798c3a9ebf4b5ae7448b63abf28cb120989",
+        "bytes": 3418
+      },
+      {
+        "path": "com/pp/shaderlod/dev/mixin/CloudSamplerStateMixin.class",
+        "sha256": "f9bc1ded2f7075f7bcba1bc366d33608b33bd56d295ddd0b44d36a0eaba56df2",
+        "bytes": 1067
+      },
+      {
+        "path": "com/pp/shaderlod/dev/mixin/CompositeRendererTimingMixin.class",
+        "sha256": "65f1b17216cad8f6c9c0e4a8be416ee5af5741af971b2ee99c3b3058bc44dbbc",
+        "bytes": 1453
+      },
+      {
+        "path": "com/pp/shaderlod/dev/mixin/DevEvidenceMixinPlugin.class",
+        "sha256": "1fdd49e3368bdadaf51638cc6366fa0a662ed6f9649c5a936241ce8c7eaa07f9",
+        "bytes": 2391
+      },
+      {
+        "path": "com/pp/shaderlod/dev/mixin/DhDrawEvidenceMixin.class",
+        "sha256": "f4b4a80cf1308f3c2581fed255aae9988c7ac7fd67f003a413337585baae9925",
+        "bytes": 3380
+      },
+      {
+        "path": "com/pp/shaderlod/dev/mixin/DhRenderListTimingMixin.class",
+        "sha256": "0f2044e6a5b6e798c3bec20ae283153e7d5b09b7cb728c58196d428cdbbcbe1d",
+        "bytes": 2010
+      },
+      {
+        "path": "com/pp/shaderlod/dev/mixin/DhTerrainTimingMixin.class",
+        "sha256": "4d2276c0835950509a8ad96a87b698bbbbe3afbecebb528610b5e9ffa9a2ad79",
+        "bytes": 3214
+      },
+      {
+        "path": "com/pp/shaderlod/dev/mixin/DhTotalTimingMixin.class",
+        "sha256": "4a4ef6d38c07120a92454ba7db17fbf5d0f6a89d99adf2bbb51a6367bb7e7222",
+        "bytes": 2979
+      },
+      {
+        "path": "com/pp/shaderlod/dev/mixin/EntityBuildTimingMixin.class",
+        "sha256": "a1eba7192f644821b0e133d0528af52df4400f0437953db8e999fa1f4ed638db",
+        "bytes": 1918
+      },
+      {
+        "path": "com/pp/shaderlod/dev/mixin/FinalPassTimingMixin.class",
+        "sha256": "1a91ca02e8ba20d3bc6f12e7c742387c2d8cffe06c62279589f45054b2a78dc5",
+        "bytes": 1336
+      },
+      {
+        "path": "com/pp/shaderlod/dev/mixin/GameRendererTimingMixin.class",
+        "sha256": "ee7646537def2a5d66c606fe15285436e7bd6c7c350ff3f469e8040c347dbcbf",
+        "bytes": 1717
+      },
+      {
+        "path": "com/pp/shaderlod/dev/mixin/MinecraftFrameTimingMixin.class",
+        "sha256": "f66ceb49134966ddae14dbe0b1163b9e32e8ac07597922123d85b427171e1a97",
+        "bytes": 3183
+      },
+      {
+        "path": "com/pp/shaderlod/dev/mixin/MinecraftTimingCleanupMixin.class",
+        "sha256": "4fd43b757366c235404c5963f1751081a01c174811e1f2b219fcba4e568d589b",
+        "bytes": 954
+      },
+      {
+        "path": "com/pp/shaderlod/dev/mixin/RasterSamplerStateMixin.class",
+        "sha256": "9ee86ec174e0db53b3118c9fecc8a277b844f6fb5a29e9f44b44f49edfc37bfb",
+        "bytes": 1559
+      },
+      {
+        "path": "com/pp/shaderlod/dev/mixin/ShadowCoherenceOracleMixin$Reversed.class",
+        "sha256": "469a9c1f4ba2f7dc66a52074d60a0a4cfcb39e7ef1f5c14b4cee2e59a4b3fa6a",
+        "bytes": 2720
+      },
+      {
+        "path": "com/pp/shaderlod/dev/mixin/ShadowCoherenceOracleMixin.class",
+        "sha256": "449ac5e83fd3d9104267d1058fc84bc59c3fe0497cee3d6d4c5062f220bb5bd5",
+        "bytes": 4523
+      },
+      {
+        "path": "com/pp/shaderlod/dev/mixin/ShadowInputObserverMixin.class",
+        "sha256": "51dcb67938642e5b021940e359d39b8f5d2472fb7ec56f7c98aaf184337679b1",
+        "bytes": 4992
+      },
+      {
+        "path": "com/pp/shaderlod/dev/mixin/ShadowMatrixObserverMixin.class",
+        "sha256": "a21614b8f81360d143aa942a968094810f4c051abe6b49097f788220ad610045",
+        "bytes": 2210
+      },
+      {
+        "path": "com/pp/shaderlod/dev/mixin/ShadowRendererTimingMixin.class",
+        "sha256": "8e23a9aa09296e05c53eec3c7c28dce296d128026249d3bec7e327789973c67d",
+        "bytes": 1355
+      },
+      {
+        "path": "com/pp/shaderlod/dev/mixin/SodiumCommandTimingMixin.class",
+        "sha256": "134a8ce210fca0a60f35e333b45517d0b264f16f32dedd44c1b92254cf9db1a1",
+        "bytes": 1986
+      },
+      {
+        "path": "com/pp/shaderlod/dev/mixin/SodiumDrawSubmissionTimingMixin.class",
+        "sha256": "33256535d77acf0409d7b5f2283f34bd2e2fa652d8cb1b1dcd49c826f500b538",
+        "bytes": 1599
+      },
+      {
+        "path": "com/pp/shaderlod/dev/mixin/SodiumTerrainTimingMixin.class",
+        "sha256": "f37cd960857769cd5894d51191df8cea7f21885705b0c498fcc0d00aae646c13",
+        "bytes": 4311
+      },
+      {
+        "path": "com/pp/shaderlod/dev/mixin/SpatialCompositeMixin.class",
+        "sha256": "fdbdc6f998f9d7d567b1e47efe1e724c028cb7e0c6c7a8a4a6052fe767af4195",
+        "bytes": 4723
+      },
+      {
+        "path": "com/pp/shaderlod/dev/mixin/SpatialFrameMixin.class",
+        "sha256": "92df4694625e9ea9c3ba494f0e432fd91fad59bb5092fb74c12ac18111311c18",
+        "bytes": 1146
+      },
+      {
+        "path": "com/pp/shaderlod/dev/mixin/SpatialPassAccessor.class",
+        "sha256": "0da64f48cd7f6fc2763ee32c3d1195b6b13df4c62fdce24ebffff033b352760c",
+        "bytes": 641
+      },
+      {
+        "path": "com/pp/shaderlod/dev/mixin/SpatialQuadMixin.class",
+        "sha256": "14a095f0de33065c745777836be045552b690778802ed41075506e77b7a2915d",
+        "bytes": 1195
+      },
+      {
+        "path": "com/pp/shaderlod/dev/mixin/VisibilityListPhaseMixin.class",
+        "sha256": "00d7afc12a4c560659ba5ca374c14988c5fee5c87bcb2d79d347657229e14ba7",
+        "bytes": 2194
+      },
+      {
+        "path": "com/pp/shaderlod/dev/mixin/WorkTraceReadbackMixin.class",
+        "sha256": "311333f4791404d26f1d5ae3e8e5fd6378e2813a652a0aed197ea4e519f2bb02",
+        "bytes": 1057
+      },
+      {
+        "path": "com/pp/shaderlod/dev/mixin/WorldShaderInputsMixin.class",
+        "sha256": "e8b27bd45cb54d1b2b723c355dff858f7c9e2462b1af0339099eaafd44599052",
+        "bytes": 3694
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/CloudSamplerStateProbe$1.class",
+        "sha256": "0bfa87725575509cbcbc3b8afbe4663382184103da1397d101f1a0226329076a",
+        "bytes": 1092
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/CloudSamplerStateProbe$Uniform.class",
+        "sha256": "b61861103b9a25ff4ae98d3e4813d4a30fd69bdab5cfe302dec350f0e30eddb8",
+        "bytes": 1890
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/CloudSamplerStateProbe$UniformReader.class",
+        "sha256": "9f2115bd433820a24b01a33006bcc163ff1475acd302cb193fad4e80fa341726",
+        "bytes": 393
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/CloudSamplerStateProbe.class",
+        "sha256": "8b3e4ea000def46e6da8ca796190c19611f2f26ee930ffbc2e153e32c3a27b17",
+        "bytes": 26595
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/CpuTimers$History.class",
+        "sha256": "1f9dfa72615d1e2228a7695ca818eef267a0ea6fc9da1783926256a5cd09affb",
+        "bytes": 631
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/CpuTimers$Mark.class",
+        "sha256": "76517ba4879bd244d859a053ddf0a83355831dd67fe0d37cc39fa8a59cab690b",
+        "bytes": 2040
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/CpuTimers$Sample.class",
+        "sha256": "bcde69a9fc6bf86b14dd9385ff30ed70539dea4696cc42302ae34582e2a50db3",
+        "bytes": 2181
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/CpuTimers$ScopeStats.class",
+        "sha256": "74db313dfd7235b204cf55bca7833ef115ebee94bd6ebb00616f815e2686fa12",
+        "bytes": 2625
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/CpuTimers$Snapshot.class",
+        "sha256": "d5a44a0ca855470090b57aeb7436303f6e9d357cac6300e658440b5ba9a2c524",
+        "bytes": 2641
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/CpuTimers.class",
+        "sha256": "189c8f0940fce3f15453a46f4272d112dd0238267708a03c89ae17a65ce6ef99",
+        "bytes": 10398
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/DhRenderEvidence.class",
+        "sha256": "3a506044e4c394a1e1caf0e6eec75a67b3b4bf65414acd62d4e9454ac540bb74",
+        "bytes": 13470
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/GpuSamplingPolicy$Category.class",
+        "sha256": "a71d4f8265fbc5c902592a7ed70fea41cdfc6b275591d4a8ec08aa05277cee36",
+        "bytes": 1623
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/GpuSamplingPolicy$Decision.class",
+        "sha256": "6a24e3011343dfdc6053c6dc28b345c8abf40e9eaf988afae318e9f7bcff58e0",
+        "bytes": 2206
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/GpuSamplingPolicy.class",
+        "sha256": "a9e86e1bd6f1c83f935dcc65b0fbfd8319e90ca3d2df52a7c3480ebf0ba609be",
+        "bytes": 1689
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/GpuTimers$Backend.class",
+        "sha256": "a9c484a4a7fa5139727bad4ff94c986d909770722f640868694fd99e39809f37",
+        "bytes": 1414
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/GpuTimers$Group.class",
+        "sha256": "37af38e4d654effbf9cd9bf26600a93c8881f942234e11eb7ec0eea5b02f20a7",
+        "bytes": 1862
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/GpuTimers$Sample.class",
+        "sha256": "c10b67169fe114d94a9608bca5f74c76706348569f61f77037a12bd689248edd",
+        "bytes": 1960
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/GpuTimers$Scope.class",
+        "sha256": "f120aa3056bce8e0835fafe39b5a4334a7c593e01700bac61e65d7962405089d",
+        "bytes": 1333
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/GpuTimers$ScopeStats.class",
+        "sha256": "77b326bc317004d098d817d1297eff88447eb874eed60845f170a81ef2c99f54",
+        "bytes": 2569
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/GpuTimers$Slot.class",
+        "sha256": "d21254543ddf8d1b27e2a9e19628eab003e7b3c7c09a6d917da88c6a14298932",
+        "bytes": 588
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/GpuTimers$Snapshot.class",
+        "sha256": "54ed9c85456c6e3e64b23fca7c56df450ea8ca7aea1a78c4a9b7b0b54c5e71f6",
+        "bytes": 3828
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/GpuTimers.class",
+        "sha256": "bd2899ff57a5ee97daeb3112440ea86297728b282efe2c1113ae0ba2f64db4db",
+        "bytes": 17459
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/ShaderInputTracker$Probe.class",
+        "sha256": "0ae4f331e8867c528d28c6996d88abcf043528c37aa5eda3436bcb53b272d4dc",
+        "bytes": 1934
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/ShaderInputTracker$ProbeSnapshot.class",
+        "sha256": "fbae4ad8e3c0a6f29c46ca954cb867e9bc789e8338ad26a5e86fda95fbec9e5f",
+        "bytes": 3217
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/ShaderInputTracker$Snapshot.class",
+        "sha256": "9fd831890e4c8af5c415adfd55fb5df0ed45887eeafa968f6f158844a0ebc05d",
+        "bytes": 3920
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/ShaderInputTracker.class",
+        "sha256": "7cf382f36989d838ec6869e5fc351ccc8785091c081ffe24d22a7223d38bcaf2",
+        "bytes": 5709
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/ShadowCoherenceOracle$ClassSnapshot.class",
+        "sha256": "28050ab1e6b07695d1253c896fd6d01ec26689a2be235978855cff02e12b9aaa",
+        "bytes": 3627
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/ShadowCoherenceOracle$Mismatch.class",
+        "sha256": "4240302dbc92162d1068def8f2fdfb5848fa1a9b3e39e8c469db37e0ad5b9309",
+        "bytes": 5152
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/ShadowCoherenceOracle$OriginalAccess.class",
+        "sha256": "d2bb0fca8ef60bfcbbe36422ec5e0c0f8015e3ea764d1d20f53482e06ce36744",
+        "bytes": 594
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/ShadowCoherenceOracle$ReplayCapture.class",
+        "sha256": "727bcf9469e965865c882ffcea6988576dc35d967fc5bb384dbaae098d9e53e5",
+        "bytes": 8063
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/ShadowCoherenceOracle$ReplayQuery.class",
+        "sha256": "411ffe50c0171ef64cde86eac173e9987c1c87b59e38b47f2e2972a28fa2504e",
+        "bytes": 2048
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/ShadowCoherenceOracle$ReplayTrace.class",
+        "sha256": "5f7108a0f7655d63b4609d1aa48ef4f0aca72f429ec400ac21eedf166c769fd4",
+        "bytes": 6274
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/ShadowCoherenceOracle$Snapshot.class",
+        "sha256": "4f64396ed92a1f213ebb629af77244542167a8aa92cb48814aa3bdcf8e5f21bd",
+        "bytes": 4473
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/ShadowCoherenceOracle.class",
+        "sha256": "e03174d7237633d80f14316c3c0bd5f20fe99309c8c8b86ade81e5b8abe6bffc",
+        "bytes": 9859
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/ShadowInputObserver$Accumulator.class",
+        "sha256": "5c8153050a83fdcbe865d8c5f11b4bbdb3b3a88fbcfeed058842e41a9673cdb7",
+        "bytes": 16653
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/ShadowInputObserver$Blocker.class",
+        "sha256": "a29a4f915806569a2a2cf8dd82e811d2e67417c36ccdfff3b37f7618c0fa2b72",
+        "bytes": 2022
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/ShadowInputObserver$Change.class",
+        "sha256": "791f5f2103682f365b6d9fbe4a8fe9a041635c9b78def9f65d13d7e4178925ff",
+        "bytes": 2636
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/ShadowInputObserver$Snapshot.class",
+        "sha256": "b7bcb740000395bf53df5cf4af6704e28d2f7aa2e29daaa63ecf95ba6101d1f2",
+        "bytes": 6366
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/ShadowInputObserver.class",
+        "sha256": "f7294e1bdd78df5133092240c0c8bbb4d803d75825681ce1d22c06ff07d02474",
+        "bytes": 3225
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/SpatialLayoutEvidence$Codec.class",
+        "sha256": "12d0ecdf32152fc9b9110c5421c850987e616359b21ae19ecdf05176c8522fb5",
+        "bytes": 2468
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/SpatialLayoutEvidence$Completed.class",
+        "sha256": "98f268dbcbd0d01bc41766548bff55e11c820e13e9e5463c1d58f0560f49b429",
+        "bytes": 2461
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/SpatialLayoutEvidence$Contract.class",
+        "sha256": "31fb88c6917e35d87cca56f79fc744a3e2d7be3f81bd606047b7550ac452debd",
+        "bytes": 6344
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/SpatialLayoutEvidence$Draw.class",
+        "sha256": "3b05998a85e6c1fb003d84347254f4fc47233f549099414e812aeac93b74436f",
+        "bytes": 3375
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/SpatialLayoutEvidence$Driver.class",
+        "sha256": "b0fbe7b7790549e820cddb8fb3198071db5dee81a527c5670bf926a46b21a2dc",
+        "bytes": 1163
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/SpatialLayoutEvidence$Image.class",
+        "sha256": "c6ee70457d18763d76d48c6222d8fa2f4a7e2af1e7da207e45c25014fa0347ea",
+        "bytes": 2113
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/SpatialLayoutEvidence$Input.class",
+        "sha256": "d1d3f29987f212c061e10436fa60693d7c80be44a95de4843e8dcf314c29b6de",
+        "bytes": 2452
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/SpatialLayoutEvidence$InputImage.class",
+        "sha256": "2e636e6ca764c1ea396cf0156fb0f611c3982b2e69df60278a43c221332fb7cc",
+        "bytes": 2790
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/SpatialLayoutEvidence$Layout.class",
+        "sha256": "3e4d2960e9812b212317d3877842ef797e55fbd80c15798af761bde205163952",
+        "bytes": 3167
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/SpatialLayoutEvidence$NativeDriver.class",
+        "sha256": "60c44bc76ebbf26785bab56cf08ca3a52d857897c13047a268ac8e44631f21f7",
+        "bytes": 6601
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/SpatialLayoutEvidence$Output.class",
+        "sha256": "4bef79c258b7fad80408e43d88cdd70039e0cda42e160e9b9317e17240096d60",
+        "bytes": 2741
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/SpatialLayoutEvidence$OutputImage.class",
+        "sha256": "003d8b37aa8e6e1d8001ccdfcccdcac47b1c8da27d12ca07af804a6e84af3ea8",
+        "bytes": 2263
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/SpatialLayoutEvidence$Pending.class",
+        "sha256": "6dde0f1fc3901900b569c8c7ce4557ff92c2c60a8e511de7a87e075ae5a483ce",
+        "bytes": 2232
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/SpatialLayoutEvidence$Role.class",
+        "sha256": "d571d47207e175c0d4489ce3738ced929e4cb229669cf05f44e8ec0efa18ff0a",
+        "bytes": 1409
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/SpatialLayoutEvidence$Sampler.class",
+        "sha256": "b5fcf780693bf46a75f2f8e6d439e2df77c8e71e7986c12d64dbe663850c7822",
+        "bytes": 1977
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/SpatialLayoutEvidence$Session$State.class",
+        "sha256": "a2e9a6bf23b31a3f5321f05aab8c6b4d0461428b34d1827a5a1049311cb7f2eb",
+        "bytes": 1679
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/SpatialLayoutEvidence$Session.class",
+        "sha256": "41feed89acf9ea0f0425418bd4cf3c0f94a9726aaf7a5a3c2606be634c21b76e",
+        "bytes": 25264
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/SpatialLayoutEvidence$Stage.class",
+        "sha256": "3ce14e9a2efdc7462af47f88daeb699bdfc874c5e618755e7af74b5ac0891b3f",
+        "bytes": 1374
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/SpatialLayoutEvidence$StageContract.class",
+        "sha256": "1c3d675ee786bdfc9cf222cb791269965d1ac6693bb26a62c9931b966ce92b1f",
+        "bytes": 4332
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/SpatialLayoutEvidence$Tile.class",
+        "sha256": "04b953482da37181e65c166ae76cc3afb99ff4bde7d5023f42754ad959c06f08",
+        "bytes": 1692
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/SpatialLayoutEvidence.class",
+        "sha256": "aa147ec543805058c0ecca6ec7b3b0380efdb059ee6cd3751bf7683055a227fc",
+        "bytes": 11928
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/SpatialLayoutProbe$Capture.class",
+        "sha256": "166c5a922a9def168a0a57bf25d4892333b2c73ad5948988aee11c62fae6448d",
+        "bytes": 1703
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/SpatialLayoutProbe$CompiledStage.class",
+        "sha256": "6efb7993207ba86bc448f28eacb6e8bb190574def5d7496c9efc89f536477628",
+        "bytes": 4364
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/SpatialLayoutProbe$Context.class",
+        "sha256": "7f32cbc327d25bd61ef0cdf94bebe268b48b70b9bbb86a1421cc22a9619e21b0",
+        "bytes": 2473
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/SpatialLayoutProbe$Frame.class",
+        "sha256": "23e43b302e9f13662d55c85a2d996f773d8da74b0df285230b8c132032fa08b5",
+        "bytes": 3166
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/SpatialLayoutProbe$PipelineState.class",
+        "sha256": "4fe04eaca95a234df89b93d36711cf87d2b1f43bcffe34815f5098532ecefc17",
+        "bytes": 840
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/SpatialLayoutProbe$TypedPolicy.class",
+        "sha256": "afa325a520e030ca78f6f6542b4c7b71d6d579da2d0958fe1d4f04a4560fc57d",
+        "bytes": 3312
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/SpatialLayoutProbe$VerifiedPack.class",
+        "sha256": "722d8be64094a88f7c79de3c79dc17c7a432825509354350ef1ce7e17c9255b3",
+        "bytes": 3144
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/SpatialLayoutProbe.class",
+        "sha256": "2f880a2aa0b94e733c4d1c390d0f762239e072ba127c8955e74c3c854bb70c09",
+        "bytes": 38084
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/TimingStatistics$Values.class",
+        "sha256": "0ad62aa324520123fdf8f6dedeb72ce6e8518527566b15bd1d09876070f30bc2",
+        "bytes": 2450
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/TimingStatistics.class",
+        "sha256": "32e86182e5a46527f5ebb85dab235f4f7c7c5499deb215b318f8ce9814d3bc14",
+        "bytes": 2073
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/VisibilityListPhaseObserver$OuterCapture.class",
+        "sha256": "abc702f4fdfacc65938a06a617c307f810a7ebd545ec32ffe2260e5c606971cb",
+        "bytes": 2602
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/VisibilityListPhaseObserver$OuterSummary.class",
+        "sha256": "5a43c22a75860c75597f9bf822ddbcae88b32651c68164bdfb315ba7cda2937d",
+        "bytes": 2637
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/VisibilityListPhaseObserver$Pair.class",
+        "sha256": "67a2adf20da53d2be3cb7d5a0a0bda119fc7995d5156c0a2b982c0db2fee6cb5",
+        "bytes": 6290
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/VisibilityListPhaseObserver$Pending.class",
+        "sha256": "00c55e001cbf6f3c67c9f3cfa7e9277c183064fefe45ee95c98ba071540ef6a6",
+        "bytes": 4237
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/VisibilityListPhaseObserver$RegionBefore.class",
+        "sha256": "c0b3d03ac7ce5b68a6e03571142692ede03740e8417cb0c00b52ab5add5ce14c",
+        "bytes": 3083
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/VisibilityListPhaseObserver$RegionPair.class",
+        "sha256": "d0b864433bb81a0e2d0ef268a0ed87dc3af87865b24b537de5dda271ba7d0a16",
+        "bytes": 4231
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/VisibilityListPhaseObserver$Report.class",
+        "sha256": "b0f7cb5fca50e788e5caf1c8d39b2005b6aee61f7357850b4ffcf8cda2712046",
+        "bytes": 5034
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/VisibilityListPhaseObserver$SpriteModel.class",
+        "sha256": "503eda50144ef738a205a41c0320ff060e0736ff6dd1eb91289fef765e56ddbc",
+        "bytes": 3715
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/VisibilityListPhaseObserver.class",
+        "sha256": "08d64979e1002e08797dd006471eaa38a14295937cbbfc9cfa7fcd0d08c78665",
+        "bytes": 19367
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/WindowStateTracker$FlagCounts.class",
+        "sha256": "757351fd2dec8c5b4c29e14254ecfdf08e9cc70913625964c9c3de1ff52ad86b",
+        "bytes": 1935
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/WindowStateTracker$Observation.class",
+        "sha256": "fa2803df3295c9efdda044f54c824e287f28dc0ae8b4506bf3a76536d3cdb87c",
+        "bytes": 2158
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/WindowStateTracker$Pacing.class",
+        "sha256": "43ec0b7170ef5f7694ec7842aac44a36943c69d5ff48ddc91554454541a33b1e",
+        "bytes": 2040
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/WindowStateTracker$Phase.class",
+        "sha256": "96affddbbe2e0f75b007ec9b607a3cb520c53bfb89ef382222abd17e18125da5",
+        "bytes": 7490
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/WindowStateTracker$PhaseSnapshot.class",
+        "sha256": "69afd006ffa17292ccafced96fae4c0ae80c8da6cd1d7e208945363c06f680b6",
+        "bytes": 5724
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/WindowStateTracker$Snapshot.class",
+        "sha256": "e5c81bfc01bb36dcdad9cbb427363bd83f70ccb6417d807e621c01a906def03b",
+        "bytes": 2495
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/WindowStateTracker$State.class",
+        "sha256": "1b21df0c96838bfbfcc0ef18cc52d8282c1d3c23c866f71d7e129af8442732c3",
+        "bytes": 3164
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/WindowStateTracker$Transition.class",
+        "sha256": "726f4fb233d47649a8f4f4b1fa6624f270a24748106a2564075ae2b50d791eb7",
+        "bytes": 2841
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/WindowStateTracker.class",
+        "sha256": "90ac432441884c6f1e0d861a48e1533ac2b7dc44666b05b1140c53f33fbe117a",
+        "bytes": 4919
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/WorkTraceEvidence$Driver.class",
+        "sha256": "27b22075c2f9c747cddf90d6e368245237e601e81ba231be1b383a8b37b135b1",
+        "bytes": 687
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/WorkTraceEvidence$Image.class",
+        "sha256": "9ae5ddc7d561eecbdf3283a68542de5d07eeddc2e2e3a27c3eb87159fdaedd13",
+        "bytes": 2085
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/WorkTraceEvidence$Metadata.class",
+        "sha256": "12f9533a9eb4d67f31b4b7fa06c931eb520ef4506fd935377d79694a34d733c5",
+        "bytes": 7316
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/WorkTraceEvidence$NativeDriver.class",
+        "sha256": "c42dfaea09fe25fe5ece77bb62565d632d4fd61ea95d021ea3c96ebfa6dae27d",
+        "bytes": 6212
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/WorkTraceEvidence$Session.class",
+        "sha256": "36cde6d8161ff064e724ea525ba3d9a029778a2719d4068dd563c5cad60de3ad",
+        "bytes": 2668
+      },
+      {
+        "path": "com/pp/shaderlod/dev/timing/WorkTraceEvidence.class",
+        "sha256": "8019b9e125bf3e646a86580c3e3e66081bfaa03957f4b5ad7f8d90199c8886d7",
+        "bytes": 27826
+      }
+    ],
+    "/Users/pippo/github/shaderlod/build/resources/devClient": [
+      {
+        "path": "META-INF/neoforge.mods.toml",
+        "sha256": "f0e5ba37e661ad87f5e46572ad20823a33786d5903c18db8061962fc1cc4550d",
+        "bytes": 284
+      },
+      {
+        "path": "shaderlod-dev.mixins.json",
+        "sha256": "c11d66d72df76122e208254910e8732d61835e7b9640276d0ab74e73db79142b",
+        "bytes": 1125
+      }
+    ],
+    "/Users/pippo/github/shaderlod/build/classes/java/main": [
+      {
+        "path": "com/pp/shaderlod/EffectUniformFrame.class",
+        "sha256": "444ba1d73a4552ba8b81a1ab3452a2d2d34be4535ed18c6feb85200d441cebfa",
+        "bytes": 5351
+      },
+      {
+        "path": "com/pp/shaderlod/GeometryCoverageGuard$Scene.class",
+        "sha256": "b0ee74ee811bf61b06d1368dfbb7873c938f9aa6e8fbe80fe169a37d1d73b458",
+        "bytes": 3226
+      },
+      {
+        "path": "com/pp/shaderlod/GeometryCoverageGuard.class",
+        "sha256": "ec47b323011eab1605f96463dbbdc40e85b33f577470ae7cb3226c8529152a32",
+        "bytes": 1445
+      },
+      {
+        "path": "com/pp/shaderlod/GeometryLodController$DhAdapter.class",
+        "sha256": "58edc374d051b16b6b477b2228c9df0180b11f58532f6b4f28026198b8d74abb",
+        "bytes": 3380
+      },
+      {
+        "path": "com/pp/shaderlod/GeometryLodController$DhReadiness.class",
+        "sha256": "7f1a0056de38d95d9d787f0fcf8fe3c7e2080172ac63d30ffaedcefc4f12d511",
+        "bytes": 1861
+      },
+      {
+        "path": "com/pp/shaderlod/GeometryLodController$State.class",
+        "sha256": "5dea30f05300dee8a19957880a82648b54922edf31f3498cdc8f12534f5d4777",
+        "bytes": 2155
+      },
+      {
+        "path": "com/pp/shaderlod/GeometryLodController$Status.class",
+        "sha256": "6077abf7f34e021e0cdd0cd760080458787d97c0fd3cfafa275a2c0d5646ca3e",
+        "bytes": 2540
+      },
+      {
+        "path": "com/pp/shaderlod/GeometryLodController.class",
+        "sha256": "82ae724e24d28beb5bd6e18e66706c46648225354601d34a271ceda66ced3137",
+        "bytes": 9103
+      },
+      {
+        "path": "com/pp/shaderlod/GeometryLodPolicy$Decision.class",
+        "sha256": "a3bd2ee27e77c5e8538a6cd4f5c986b42ec360d967fdbd7950262d1616777563",
+        "bytes": 2009
+      },
+      {
+        "path": "com/pp/shaderlod/GeometryLodPolicy$Inputs.class",
+        "sha256": "c0e346afa9d82a8fb66af86ecf0a265475b9dd6739291e3e58a2b572cfba1f53",
+        "bytes": 2613
+      },
+      {
+        "path": "com/pp/shaderlod/GeometryLodPolicy.class",
+        "sha256": "fa08f849ce2467aadabf236b914ba4362269543fb6395a1cf5e8dda9ab6447e4",
+        "bytes": 1657
+      },
+      {
+        "path": "com/pp/shaderlod/LodPreset.class",
+        "sha256": "469faffc43afb2fdd98cd49b15193b13b4904d2200562c941a3a78410f8f8aba",
+        "bytes": 1143
+      },
+      {
+        "path": "com/pp/shaderlod/LodSettings.class",
+        "sha256": "9ff243460579fb0f029f74c907829cf85a328ce5d9b813a0b53b5a8ee1597674",
+        "bytes": 2472
+      },
+      {
+        "path": "com/pp/shaderlod/ShaderLod.class",
+        "sha256": "a97cc9379cb0e5a0ff0ad9058bcf9bca0de7694e8c8529f0e6739a17f9b8f33b",
+        "bytes": 3766
+      },
+      {
+        "path": "com/pp/shaderlod/ShaderLodCommands.class",
+        "sha256": "7a164918134697bb3b8cc9a6674672861a33a2b328f030a2984720196b191d83",
+        "bytes": 17948
+      },
+      {
+        "path": "com/pp/shaderlod/ShaderLodConfig.class",
+        "sha256": "184badaca25b4e9ef9af0dd7ea5ea10aa4a320ce2aa855c6b4406803039dbc33",
+        "bytes": 5052
+      },
+      {
+        "path": "com/pp/shaderlod/ShaderLodEffectConfig$Control.class",
+        "sha256": "77efc9e369a693c9d91fda5b97057ca424bf3b2c415e0da14fa810401c999a7c",
+        "bytes": 2623
+      },
+      {
+        "path": "com/pp/shaderlod/ShaderLodEffectConfig$Mode.class",
+        "sha256": "cbcaf1b08f655c01cb00f4ce0d20df46c254ae0b8487aad254a302578ae92e0c",
+        "bytes": 1505
+      },
+      {
+        "path": "com/pp/shaderlod/ShaderLodEffectConfig$Values.class",
+        "sha256": "b19e2c6a297dba107563aec09e06c02fa7f0061b81c729f855294d6d91a39193",
+        "bytes": 4184
+      },
+      {
+        "path": "com/pp/shaderlod/ShaderLodEffectConfig.class",
+        "sha256": "0622e3818d1c80f989485bd5991d58b65f4fb32335a93a9f46192d464ddecdf1",
+        "bytes": 14170
+      },
+      {
+        "path": "com/pp/shaderlod/ShadowCullingController$PlaneAccess.class",
+        "sha256": "9f0a8c8c742b95f05ad0b74d20579098ace6852060eb568c04645a38efd9da51",
+        "bytes": 447
+      },
+      {
+        "path": "com/pp/shaderlod/ShadowCullingController.class",
+        "sha256": "96aed06c97cded76a701c5af6b4364a87d6d9a7261a5c9851bb43fce6399991c",
+        "bytes": 872
+      },
+      {
+        "path": "com/pp/shaderlod/ShadowCullingMath.class",
+        "sha256": "27eb1f36829d939ea49c851bc60ce4539dcb5a4b4ba40ffa029f50eeea51ebfc",
+        "bytes": 967
+      },
+      {
+        "path": "com/pp/shaderlod/ShadowCullingRuntime.class",
+        "sha256": "6e70c3cc55e34a08f3821618e30f487db4af47cc39cfe96aa5f6082259162840",
+        "bytes": 2184
+      },
+      {
+        "path": "com/pp/shaderlod/ShadowFrustumCoherence.class",
+        "sha256": "4393f1b48c1f3a121bb39345dc2dd0ec121afb24930634ff9ff485c1288c3640",
+        "bytes": 5659
+      },
+      {
+        "path": "com/pp/shaderlod/ShadowFrustumCoherenceController.class",
+        "sha256": "0e8a9f2e4fd1e40d1400d7d0c195e6a615079cd882a4a898733be97ff4790269",
+        "bytes": 549
+      },
+      {
+        "path": "com/pp/shaderlod/ShadowFrustumCoherenceDiagnostics$Outcome.class",
+        "sha256": "af74515280531cda9b593eeadcfccc6ebc7b544679c8be01d2ab8f665135d30a",
+        "bytes": 1703
+      },
+      {
+        "path": "com/pp/shaderlod/ShadowFrustumCoherenceDiagnostics$PlaneContext.class",
+        "sha256": "47d1d532c509244aa485c896e23f8b1a7b5480c0ebe2dcebe233319c1b0fd8c6",
+        "bytes": 2423
+      },
+      {
+        "path": "com/pp/shaderlod/ShadowFrustumCoherenceDiagnostics$ReplayContext.class",
+        "sha256": "5abf4f8419317ea23e271e4cfefa8ef8bc8a34658d2bc1a1d96bbce6d6d7c3ec",
+        "bytes": 4327
+      },
+      {
+        "path": "com/pp/shaderlod/ShadowFrustumCoherenceDiagnostics$Snapshot.class",
+        "sha256": "df6d557444a28de66aa09cacb617aeb057d047b3b74e046d85699320fb6a160e",
+        "bytes": 4948
+      },
+      {
+        "path": "com/pp/shaderlod/ShadowFrustumCoherenceDiagnostics.class",
+        "sha256": "a7bbcdc4d21f5849170a3ab729b3cde7881453c43c1caf0a123069e6cdff549b",
+        "bytes": 8758
+      },
+      {
+        "path": "com/pp/shaderlod/ShadowListStorage.class",
+        "sha256": "ba21e33ca3d96df60a1cbc7ec1e4e91fc45d642e9a98fdde87ddce6b1c723d8b",
+        "bytes": 1488
+      },
+      {
+        "path": "com/pp/shaderlod/ShadowVisibilityListsController$RegionAccess.class",
+        "sha256": "7be2feb1964b179dfec627194712fd946b98b113644587d2b22197c679e8bab0",
+        "bytes": 443
+      },
+      {
+        "path": "com/pp/shaderlod/ShadowVisibilityListsController.class",
+        "sha256": "91f25ccb546333364a0331ac713252761a06ac8937533b99ddf21d18e1794543",
+        "bytes": 942
+      },
+      {
+        "path": "com/pp/shaderlod/ShadowVisibilityListsRuntime.class",
+        "sha256": "22117ec36e1dd318fc90e2d7e6990aef7d07409250312e84c22d626b7bb40c64",
+        "bytes": 1962
+      },
+      {
+        "path": "com/pp/shaderlod/integration/AdapterRegistration$Sealed.class",
+        "sha256": "460bb2119cb984bf27654fcc773a65243a31710605e9e33bc26276834a65851b",
+        "bytes": 5823
+      },
+      {
+        "path": "com/pp/shaderlod/integration/AdapterRegistration.class",
+        "sha256": "ae5eaa7c705283a59358ec02a41bd54fbe27347079385c7643bdce386c23d183",
+        "bytes": 10640
+      },
+      {
+        "path": "com/pp/shaderlod/integration/AdapterRuntimeBinding$Pack.class",
+        "sha256": "03cfefd91b5ba2ac8890fbe910aa5e74981ca15c68f0e53d547ef34c5ee4dbb9",
+        "bytes": 2549
+      },
+      {
+        "path": "com/pp/shaderlod/integration/AdapterRuntimeBinding$Reason.class",
+        "sha256": "b79959bd591c64c0b68a7157b40e807bedb71321cdc85c0c7e9742c86fad1857",
+        "bytes": 2234
+      },
+      {
+        "path": "com/pp/shaderlod/integration/AdapterRuntimeBinding$RuntimeAccess.class",
+        "sha256": "418c52abfbda4d7427314f206871842ad4d19975f718418d4ccdfd5e4478b2f1",
+        "bytes": 893
+      },
+      {
+        "path": "com/pp/shaderlod/integration/AdapterRuntimeBinding$Snapshot.class",
+        "sha256": "966aaf658080cb71ed481dec565382b44351ec809d1c47288b1b4dbf8a062b65",
+        "bytes": 3308
+      },
+      {
+        "path": "com/pp/shaderlod/integration/AdapterRuntimeBinding$SourceReader.class",
+        "sha256": "d5e32780cc7555a9817b93ab589d91b489a6baeaa07b26eb3b46efc6aaa3151b",
+        "bytes": 496
+      },
+      {
+        "path": "com/pp/shaderlod/integration/AdapterRuntimeBinding$Validated.class",
+        "sha256": "1e36fe354f7e7163165aadcaa66cfaf643bab3a0d661767b750e533f13987c92",
+        "bytes": 1262
+      },
+      {
+        "path": "com/pp/shaderlod/integration/AdapterRuntimeBinding.class",
+        "sha256": "e9e00b960258390f5ea0c79b97f49a4efb83b170500a30b1c5a20c0f22fa4b0e",
+        "bytes": 12247
+      },
+      {
+        "path": "com/pp/shaderlod/integration/CapabilityExport.class",
+        "sha256": "76b376cc0c8b0f18294da569209eb669ddb44bb580a4be5f8ac85431e0d9efe8",
+        "bytes": 5156
+      },
+      {
+        "path": "com/pp/shaderlod/integration/IrisAdapterRuntime$ReferenceComposition.class",
+        "sha256": "160916a5cd20aa70641bacaeaca76c259b0332bbca71c29313ecd1c513446c8f",
+        "bytes": 2219
+      },
+      {
+        "path": "com/pp/shaderlod/integration/IrisAdapterRuntime.class",
+        "sha256": "a2bdd5327ca5949892d71e58feea525fe205493fcd8d567327c87a68b0a2a5f0",
+        "bytes": 4639
+      },
+      {
+        "path": "com/pp/shaderlod/integration/IrisRuntimeAccess.class",
+        "sha256": "583c89a393b6bf7ec470169d7f3d1f1799b6152773cd363145d44b5b113ece80",
+        "bytes": 5991
+      },
+      {
+        "path": "com/pp/shaderlod/integration/LodOperations.class",
+        "sha256": "07cc6844de3bcb8882c52276e533ac19f56f0ba54a9e3a6041b3181595b450c2",
+        "bytes": 840
+      },
+      {
+        "path": "com/pp/shaderlod/integration/PackSourceReader.class",
+        "sha256": "feeb624d8a0a47025e77e2cd7e761bd22b33785035654e45e5c86356fc4ab998",
+        "bytes": 6406
+      },
+      {
+        "path": "com/pp/shaderlod/integration/PhotonReferenceAdapter.class",
+        "sha256": "ebcf9af309b8c79d060ac9dc7a9ae777f7da28e683f5871c616078d8e2e381cf",
+        "bytes": 4754
+      },
+      {
+        "path": "com/pp/shaderlod/integration/PhotonSpatialReferenceAdapter.class",
+        "sha256": "90c696aeec23a4286de351ddc893ff087f0b7f1cdba55e6c42394535ab1e4b10",
+        "bytes": 12436
+      },
+      {
+        "path": "com/pp/shaderlod/integration/RuntimeLayoutRequirement.class",
+        "sha256": "fc51bb2ae51ba7ebbb21f3fd5b0d422dfba58cb5d0be638258596638cddcbed9",
+        "bytes": 3096
+      },
+      {
+        "path": "com/pp/shaderlod/integration/SourceBinding.class",
+        "sha256": "49068e0d34980f18e9e1d5211b0053daac038b7b688c5b087947570b14737e9c",
+        "bytes": 7279
+      },
+      {
+        "path": "com/pp/shaderlod/integration/SourceFingerprint.class",
+        "sha256": "f0e87e271539680b8bd8fa78e343c41aa34052e92f2ad251409dec555c8d37bb",
+        "bytes": 2809
+      },
+      {
+        "path": "com/pp/shaderlod/lod/DistanceBands.class",
+        "sha256": "8b8f2990c391a908775ebe6cafec5deacebc50bd9baa67696082997858f08e34",
+        "bytes": 2559
+      },
+      {
+        "path": "com/pp/shaderlod/lod/Effect.class",
+        "sha256": "554d1e347c79fbd489e24b16771f257a98c39b31b5554cbfb0da8a0a04f8065e",
+        "bytes": 1904
+      },
+      {
+        "path": "com/pp/shaderlod/lod/EffectPolicy.class",
+        "sha256": "426d5b362111f4e22e12e63453f86b4ee6b54df2f3f4a3691dc537d2ecab5800",
+        "bytes": 4367
+      },
+      {
+        "path": "com/pp/shaderlod/lod/WorkBudget$Reason.class",
+        "sha256": "366a69f5518ae76a5337929c97d8fec134c5fdfaa22c8030674c3fe0e00d4452",
+        "bytes": 1452
+      },
+      {
+        "path": "com/pp/shaderlod/lod/WorkBudget.class",
+        "sha256": "13d477d546551deede9804dd4973b128fb0dee6e24e15382aac05749293d17f2",
+        "bytes": 2638
+      },
+      {
+        "path": "com/pp/shaderlod/lod/adapter/AdapterDescriptor.class",
+        "sha256": "58e912b16c0a7ac011c5ad54434234a4ecd914d12cdcff73775826a43e1542dc",
+        "bytes": 4381
+      },
+      {
+        "path": "com/pp/shaderlod/lod/adapter/AdapterIdentity.class",
+        "sha256": "b0cfc025a61304d92918a9d96edef57b2f0a8b173c5613c33de61ed84b5a3e64",
+        "bytes": 2576
+      },
+      {
+        "path": "com/pp/shaderlod/lod/adapter/AdapterRegistry.class",
+        "sha256": "a80f142e72a9ef456da195c7c54702f13c3c323f3a429624ba6644c874456808",
+        "bytes": 8070
+      },
+      {
+        "path": "com/pp/shaderlod/lod/adapter/ProtocolRequirement.class",
+        "sha256": "ea3d7248ed73b59cc352a84ba919ae633bb4ae53bbb03d4901327ea036ba7edb",
+        "bytes": 3043
+      },
+      {
+        "path": "com/pp/shaderlod/lod/adapter/WorkCapability$CountFloor.class",
+        "sha256": "37ed21872d7e71272ccc05a4d6908a3939443122c7c5409f40754de6387f2386",
+        "bytes": 1818
+      },
+      {
+        "path": "com/pp/shaderlod/lod/adapter/WorkCapability$DiscreteRates.class",
+        "sha256": "14465cc5ff3a27fdaf8c46bea54881094b8a91fc77fd6b807c49f89c78ba5666",
+        "bytes": 3045
+      },
+      {
+        "path": "com/pp/shaderlod/lod/adapter/WorkCapability$Domain.class",
+        "sha256": "a8d5bbe0cb4b7438ac155e8fea8fa0cd2eb5f7b2eb1c5f0b1a268797a4960b47",
+        "bytes": 455
+      },
+      {
+        "path": "com/pp/shaderlod/lod/adapter/WorkCapability.class",
+        "sha256": "f9560b9b55297a1a14a0f40c13f15d0f52bc21b7c25254dbdec962a9503fb10b",
+        "bytes": 2655
+      },
+      {
+        "path": "com/pp/shaderlod/lod/adapter/WorkKey.class",
+        "sha256": "7f0ef98ea688a831b58eb07dfb7aadb60c119770fe8df4ab5948e0bdce73064e",
+        "bytes": 2150
+      },
+      {
+        "path": "com/pp/shaderlod/lod/adapter/WorkKind.class",
+        "sha256": "c772757fc0ba5c9b552b04faeb15498527963a684db4d57a5a32b69ff0c692f0",
+        "bytes": 1361
+      },
+      {
+        "path": "com/pp/shaderlod/lod/adapter/WorkNegotiation$Reason.class",
+        "sha256": "1e0c2c0ffca256fae07bb3c7cc3c090f71e7775c7a274da15a4df14dbf5a3ca7",
+        "bytes": 1993
+      },
+      {
+        "path": "com/pp/shaderlod/lod/adapter/WorkNegotiation.class",
+        "sha256": "1ffdc5eef6c7c081716de37016aefa63e36718778422847e5a331438b8e2c248",
+        "bytes": 3053
+      },
+      {
+        "path": "com/pp/shaderlod/lod/adapter/WorkRequest.class",
+        "sha256": "79a16a508ff1c1f9d08bd4c50ae48fa2c326b1354229a6b7ede8dd43b3f496ac",
+        "bytes": 3639
+      },
+      {
+        "path": "com/pp/shaderlod/lod/adapter/layout/AdapterLayout.class",
+        "sha256": "6d8fc6479d6e77aa696cc7a12eb055a86b305a5e01f18b91e55638d565a066de",
+        "bytes": 4181
+      },
+      {
+        "path": "com/pp/shaderlod/lod/adapter/layout/Dimensions.class",
+        "sha256": "9680f76217fe4b0f86db21117a36e77203bd30b34aa54119e306addd3f656cae",
+        "bytes": 1748
+      },
+      {
+        "path": "com/pp/shaderlod/lod/adapter/layout/LayoutValidation$1.class",
+        "sha256": "39e6d2380702de4f22101b7c94ef8cf5685398d20a00abc050c1a60a330ec7bb",
+        "bytes": 1867
+      },
+      {
+        "path": "com/pp/shaderlod/lod/adapter/layout/LayoutValidation$Code.class",
+        "sha256": "218e2a99b52e5270c16afe4439f4bc405a2fadcab3dba7c964ba676c4c932013",
+        "bytes": 1781
+      },
+      {
+        "path": "com/pp/shaderlod/lod/adapter/layout/LayoutValidation$Problem.class",
+        "sha256": "099ab05dbed0da569afdf57ed9bc96b895fa9187712d83abc6a1a3779496177e",
+        "bytes": 2176
+      },
+      {
+        "path": "com/pp/shaderlod/lod/adapter/layout/LayoutValidation.class",
+        "sha256": "e5d4abdb1454229695c057f233e987b5fe9fcfbd48384f3e7dab64d5b8e00fe5",
+        "bytes": 12695
+      },
+      {
+        "path": "com/pp/shaderlod/lod/adapter/layout/PassDeclaration$DrawGroup.class",
+        "sha256": "51ddaed5440ef4ab6b458d789f8a7195a877ff546d05dc496889eb1696bc3ab9",
+        "bytes": 3430
+      },
+      {
+        "path": "com/pp/shaderlod/lod/adapter/layout/PassDeclaration$FeedbackPolicy.class",
+        "sha256": "edaf32a5c67e5915d0ca23b0e2c801c7b25e5284ae9054ac7e34aaa22c09321c",
+        "bytes": 1475
+      },
+      {
+        "path": "com/pp/shaderlod/lod/adapter/layout/PassDeclaration$Fetch.class",
+        "sha256": "0774f635945f2c6f143f9187fffdda9f19b58d5064abeff07a0e8e066d8e5d6d",
+        "bytes": 1518
+      },
+      {
+        "path": "com/pp/shaderlod/lod/adapter/layout/PassDeclaration$Read.class",
+        "sha256": "af056911fba4875e18c872bfd1594202fc217446983669626234780b668564bc",
+        "bytes": 2258
+      },
+      {
+        "path": "com/pp/shaderlod/lod/adapter/layout/PassDeclaration.class",
+        "sha256": "7ff3978100487106f47843e665373426650b40af537d45ecb770def1126e70a1",
+        "bytes": 3788
+      },
+      {
+        "path": "com/pp/shaderlod/lod/adapter/layout/TargetDeclaration$Quantity.class",
+        "sha256": "97210b18ad906b05f3c4e2d351bb7c9301fa6a6177bb18b0988c522057cadefa",
+        "bytes": 3194
+      },
+      {
+        "path": "com/pp/shaderlod/lod/adapter/layout/TargetDeclaration$Role.class",
+        "sha256": "63998f6255b2dcbb74932ec04b818d79d59181824f2f6cfe0e5b5b2b0d0ef96f",
+        "bytes": 1698
+      },
+      {
+        "path": "com/pp/shaderlod/lod/adapter/layout/TargetDeclaration.class",
+        "sha256": "7f3bc29aeefcee23174a7382b0230a51530045be1bc7ce0f9ec4c935d2a59252",
+        "bytes": 5269
+      },
+      {
+        "path": "com/pp/shaderlod/lod/adapter/layout/TargetFormat$NumericClass.class",
+        "sha256": "0d3ed55cbefaf6c8506398f7dbfa029843756cad9e4ba6377b1a5c7e54d8c9e5",
+        "bytes": 1522
+      },
+      {
+        "path": "com/pp/shaderlod/lod/adapter/layout/TargetFormat.class",
+        "sha256": "4c269cfff14b8812c3a2d89ffbc132384af00c35e3a2fdbb7e93d7d339f849b4",
+        "bytes": 5248
+      },
+      {
+        "path": "com/pp/shaderlod/lod/adapter/layout/TargetSize$Absolute.class",
+        "sha256": "9bf74ab8742b1380ce4a1ff4359b81656daaa9e0f0639ace83704b8e627f8020",
+        "bytes": 2054
+      },
+      {
+        "path": "com/pp/shaderlod/lod/adapter/layout/TargetSize$Ratio.class",
+        "sha256": "48acc98432b1d5207f9d5a649d37268b8cb9341eb44d8691cb0b4a10e28e5750",
+        "bytes": 3033
+      },
+      {
+        "path": "com/pp/shaderlod/lod/adapter/layout/TargetSize$Relative.class",
+        "sha256": "4aec536c68c1129c4d8580a97547fdc1550091d2c887a472d9160feaa242ae03",
+        "bytes": 2541
+      },
+      {
+        "path": "com/pp/shaderlod/lod/adapter/layout/TargetSize$Rounding.class",
+        "sha256": "4af3b9a231a0784184b03bd0c8810efa26ec486a9895224f8a7a1796c0496ab0",
+        "bytes": 1356
+      },
+      {
+        "path": "com/pp/shaderlod/lod/adapter/layout/TargetSize.class",
+        "sha256": "5d5750968912ffe2f5c83fe973fa2593c2bd0448ea5ce8fab7ab5d11b8359acb",
+        "bytes": 1611
+      },
+      {
+        "path": "com/pp/shaderlod/mixin/CommonUniformsMixin.class",
+        "sha256": "c8ca410ac17930018e263641a726e91874a6ec57e7694193c3a193f777b0ab45",
+        "bytes": 4369
+      },
+      {
+        "path": "com/pp/shaderlod/mixin/EffectUniformsMixin.class",
+        "sha256": "d65e255415b78e01611fde7ae341c20b4ae0c1a0559143a14600edf8e0d892fa",
+        "bytes": 7488
+      },
+      {
+        "path": "com/pp/shaderlod/mixin/EffectiveRenderDistanceMixin.class",
+        "sha256": "7971d4aadb321e189c3d909bd6dc10ce2f93c140c26f349c0f930633a3890d85",
+        "bytes": 1599
+      },
+      {
+        "path": "com/pp/shaderlod/mixin/ShadowBoxDistanceAccessor.class",
+        "sha256": "7cf29f2a36efafdfa0f197a961b80e60247ef0276738767964b395e88729c4a4",
+        "bytes": 466
+      },
+      {
+        "path": "com/pp/shaderlod/mixin/ShadowCullingFrustumMixin$Reversed.class",
+        "sha256": "450ce66ef111c71f8df6383729655cb52cdc98c6dd902323f1b23ee843959b5b",
+        "bytes": 2076
+      },
+      {
+        "path": "com/pp/shaderlod/mixin/ShadowCullingFrustumMixin.class",
+        "sha256": "a7fb9a5d91332c5845e9d24ad0cd52162e5d76f14579cb09447f4d68ff9b5395",
+        "bytes": 3805
+      },
+      {
+        "path": "com/pp/shaderlod/mixin/ShadowRegionListsMixin.class",
+        "sha256": "2598a25fd4d5d6981cf8b7881532e6d425438a1a2162649fab0c0e87b4ab680f",
+        "bytes": 3259
+      },
+      {
+        "path": "com/pp/shaderlod/mixin/ShadowSpriteListsMixin.class",
+        "sha256": "79ee1facc77410e0e4adb9d7f3c46be590edcabefae1d2c89c789e63b75a120e",
+        "bytes": 2228
+      }
+    ],
+    "/Users/pippo/github/shaderlod/build/resources/main": [
+      {
+        "path": "META-INF/neoforge.mods.toml",
+        "sha256": "8c8c33605a0804841d74d0ff18e0e553ab172502e62ac3ee2ce5daaea60e8354",
+        "bytes": 932
+      },
+      {
+        "path": "shaderlod.mixins.json",
+        "sha256": "13fe59d053dd7462267bd6d422b1df7454f38574f104f060c37dd29afc5efe52",
+        "bytes": 442
+      }
+    ]
+  }
+}

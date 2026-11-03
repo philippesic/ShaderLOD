@@ -36,9 +36,9 @@ def main():
         manifest = json.loads(manifest_path.read_text())
         manifest.update(configuration_only=True, preparation_status='preparing-visibility')
         write_json(manifest_path, manifest)
-        runtime = json.loads((ROOT / 'dev/runtime.lock.json').read_text())
+        runtime = json.loads((ROOT / 'dependencies/runtime.lock.json').read_text())
         original = runtime['artifacts']['photon']['filename']
-        original_file = ROOT / 'dev/upstream' / original
+        original_file = ROOT / 'dependencies/upstream' / original
         if file_hash(original_file) != ORIGINAL_SHA256:
             raise ValueError('Pinned original archive changed')
         common = manifest['quality_options']['high']

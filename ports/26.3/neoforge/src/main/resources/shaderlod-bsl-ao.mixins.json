@@ -1,0 +1,20 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.mixin",
+  "plugin": "com.pp.shaderlod.mixin.BslAoMixinPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "BslAoCompositeMixin",
+    "BslAoCaptureMixin",
+    "BslAoReloadMixin",
+    "BslAoPipelineMixin",
+    "BslAoQuadDrawMixin",
+    "BslAoRenderPassDrawMixin",
+    "BslAoGlDrawMixin",
+    "BslAoPearlDrawMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -3,6 +3,7 @@ import copy
 from datetime import datetime, timedelta, timezone
 import hashlib
 import json
+import math
 from pathlib import Path
 import sys
 import tempfile
@@ -22,7 +23,7 @@ class StackMatrixTests(unittest.TestCase):
         self.addCleanup(self.temporary.cleanup)
         self.root = Path(self.temporary.name)
         self.path = self.root / 'matrix-manifest.json'
-        self.lock_path = SCRIPTS.parent / 'dev/performance-mods.lock.json'
+        self.lock_path = SCRIPTS.parent / 'dependencies/performance-mods.lock.json'
         self.lock = json.loads(self.lock_path.read_text())
         self.manifest, self.reports = self.fixture()
 
@@ -69,7 +70,7 @@ class StackMatrixTests(unittest.TestCase):
                             mod_id = EMBEDDED_MODS[lib['artifact']]
                             mods[mod_id] = lib['version'].split('-')[0]
                             artifacts[mod_id] = {'path': '', 'sha256': lib['sha256']}
-                fps = {'minimal': [100, 50], 'optimized': [125, 100], 'optimized-culling': [200, 125]}[stack][block - 1]
+                fps = {'minimal': [100, 50], 'optimized': [125, 100], 'optimized-culling': [200, 125], 'optimized-moreculling': [150, 110]}[stack][block - 1]
                 supplier = {'supplierReads': 20, 'measurementReads': 10, 'appliedWetness': 0, 'appliedMin': 0, 'appliedMax': 0}
                 wetness = {'mode': 'fixed', 'fixedWetness': 0, 'measurementReads': 10, 'suppliers': [supplier]}
                 report = {'schema': 2, 'status': 'complete', 'profile': 'fixture', 'request': copy.deepcopy(request),
@@ -120,8 +121,8 @@ class StackMatrixTests(unittest.TestCase):
 
     def test_pair_by_block_not_pooled_mean_and_all_three_stack_pairs(self):
         result = self.result()
-        self.assertEqual(result['retained_runs'], 6)
-        self.assertEqual(len(result['stack_comparisons']), 3)
+        self.assertEqual(result['retained_runs'], 2 * len(self.lock['stacks']))
+        self.assertEqual(len(result['stack_comparisons']), len(self.lock['stacks']) - 1)
         effects = result['stack_comparisons'][0]['effects']
         self.assertEqual(effects['frame_ms']['per_block_percent'], [20, 50])
         self.assertEqual(effects['frame_ms']['percent_time_reduction']['median'], 35)
@@ -287,7 +288,7 @@ class StackMatrixTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'base runtime loaded_artifacts'): self.result()
 
     def qualified_fixture(self):
-        registry = SCRIPTS.parent / 'dev/runtime-artifact-equivalences.json'
+        registry = SCRIPTS.parent / 'dependencies/runtime-artifact-equivalences.json'
         entry = load_equivalences(registry)['entry']
         for index, report in enumerate(self.reports):
             report['loaded_mods'].update(EQUIVALENCE_RUNTIME)

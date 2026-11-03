@@ -1,0 +1,6 @@
+// Native default. Independent requests; reuse has priority when both are requested.
+#define SHADERLOD_UNBOUND_SPATIAL_REUSE 0 // [0 1]
+#define SHADERLOD_UNBOUND_SPATIAL_RATE 0 // [0 1]
+#if (SHADERLOD_UNBOUND_SPATIAL_REUSE == 1 || SHADERLOD_UNBOUND_SPATIAL_RATE == 1) && SHADERLOD_REFINEMENT_ADAPTER == 1 && defined IS_IRIS && IRIS_VERSION == 10812 && MC_VERSION == 12101 && defined OVERWORLD && RP_MODE == 1 && COLORED_LIGHTING_INTERNAL == 0 && COLORED_LIGHTING == 0 && !defined GENERATED_NORMALS && !defined COATED_TEXTURES && !defined CUSTOM_PBR && !defined DISTANT_HORIZONS && !defined VOXY && !defined PIXELATED_SHADOWS && !defined PIXELATED_BLOCKLIGHT && !defined PIXELATED_AO && RAIN_PUDDLES == 0 && !defined SNOWY_WORLD && !defined COLOR_CODED_PROGRAMS && SHOW_LIGHT_LEVEL == 0 && defined TAA
+#define SHADERLOD_UNBOUND_SPATIAL_GRAPH 1
+#endif

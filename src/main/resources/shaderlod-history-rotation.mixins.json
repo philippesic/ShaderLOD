@@ -1,0 +1,19 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "compatibilityLevel": "JAVA_21",
+  "package": "com.pp.shaderlod.optimization.framecopy.rotation.mixin",
+  "plugin": "com.pp.shaderlod.optimization.framecopy.rotation.mixin.HistoryRotationMixinPlugin",
+  "client": [
+    "HistoryRotationCompositeMixin",
+    "HistoryRotationSamplerMixin",
+    "HistoryRotationFinalMixin",
+    "HistoryRotationTargetsMixin",
+    "HistoryRotationPipelineMixin",
+    "HistoryRotationFrameMixin",
+    "HistoryRotationDrawMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -59,6 +59,7 @@ struct ShaderlodSpatialPlan {vec3 weights;float requested_ratio;float reconstruc
 
 HOST_ADAPTER = r'''
 ShaderlodSpatialPlan active_plan;
+bool shaderlod_spatial_adapter_has_coarse_demand(){return active_plan.evaluate_medium || active_plan.evaluate_far;}
 ivec2 faulty_pixel(-1), last_representative(-1), last_cache_coordinate(-1);
 int last_cache_side=0;
 int surface_reads=0, evaluations=0, cache_reads=0, fault_kind=0;
@@ -154,6 +155,10 @@ int main(){
 '''
 
 GLSL_ADAPTER = r'''
+bool shaderlod_spatial_adapter_has_coarse_demand() {
+ ShaderlodWorkPolicy p=ShaderlodWorkPolicy(2,2,2,true,2,false,true,vec3(32,96,8),vec2(.25,.0625));
+ return shaderlod_spatial_policy_has_coarse_demand(p,true,true,false,7);
+}
 ShaderlodSpatialPlan shaderlod_spatial_adapter_plan(float d) {
  ShaderlodWorkPolicy p=ShaderlodWorkPolicy(2,2,2,true,2,false,true,vec3(32,96,8),vec2(.25,.0625));
  return shaderlod_spatial_plan_decide(p,true,true,false,d,7);
@@ -212,7 +217,7 @@ class SpatialPipelineTest(unittest.TestCase):
                         source.index('vec4 quantity = shaderlod_spatial_adapter_evaluate_linear'))
 
     def test_actual_pipeline_and_region_source_host_execution(self):
-        compiler = shutil.which('c++')
+        compiler = (shutil.which('clang++') or shutil.which('c++'))
         self.assertIsNotNone(compiler, 'C++ compiler required for actual owned-source fixtures')
         source = HOST_VECTORS + (BASE / 'surface_region_continuity.glsl').read_text() + PIPELINE.read_text() + HOST_ADAPTER
         # GLSL accepts unsuffixed floating constants as float; enforce that on host.

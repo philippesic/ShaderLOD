@@ -129,6 +129,25 @@ class ShaderLodEffectConfigTest {
         }
     }
 
+    @Test void namedTuningRestoresCompleteRequestedPolicyAndProtectionInOneSave() {
+        ShaderLodEffectConfig.setMode(Effect.SHADOW_FILTERING, ShaderLodEffectConfig.Mode.ADAPTIVE);
+        ShaderLodEffectConfig.setRatios(Effect.SHADOW_FILTERING, .5, .25);
+        var saved = ShaderLodEffectConfig.tuningValues();
+        assertEquals("0.25", saved.get("shadow_filtering.low"));
+        assertEquals(1, ShaderLodEffectConfig.snapshot().get(Effect.SHADOW_FILTERING).policy().farWorkRatio());
+        ShaderLodEffectConfig.setProtection(Effect.SHADOW_FILTERING, false);
+        ShaderLodEffectConfig.setMode(EFFECT, ShaderLodEffectConfig.Mode.FULL);
+        int before = loaded.saves;
+        ShaderLodEffectConfig.applyTuningValues(saved);
+        assertEquals(before + 1, loaded.saves);
+        assertEquals(saved, ShaderLodEffectConfig.tuningValues());
+        assertEquals(1, ShaderLodEffectConfig.snapshot().get(Effect.SHADOW_FILTERING).policy().farWorkRatio());
+        var invalid = new java.util.HashMap<>(saved);invalid.remove("opaque_lighting.mode");
+        before = loaded.saves;
+        assertThrows(RuntimeException.class, () -> ShaderLodEffectConfig.applyTuningValues(invalid));
+        assertEquals(before, loaded.saves);assertEquals(saved, ShaderLodEffectConfig.tuningValues());
+    }
+
     @Test void invalidCommandEditsDoNotMutateSaveOrPublish() {
         var before = ShaderLodEffectConfig.snapshot();
         for (double[] bands : new double[][]{{96, 32, 8}, {32, 96, 65}, {0, 96, 8},

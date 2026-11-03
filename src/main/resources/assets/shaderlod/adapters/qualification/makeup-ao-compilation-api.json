@@ -1,0 +1,12 @@
+{
+  "net/irisshaders/iris/gl/GlResource.class": "3a1c7a8a2f0b53aa07f550d00eacb47f3b2083b10cb71534965da0e3bea8c018",
+  "net/irisshaders/iris/gl/program/Program.class": "8252cffe8d7322a3d64fad8036938e07b871cbd5667c0dafec0a3d48fd610d49",
+  "net/irisshaders/iris/gl/program/ProgramBuilder.class": "f2b09d4fe167409349529666ffb33864ac8d473321a3bb271234011cd5afa6aa",
+  "net/irisshaders/iris/gl/shader/GlShader.class": "3c53fa0c3d704ae0383c56b95d1c653eac152069d646b95444c32f46e6b998db",
+  "net/irisshaders/iris/gl/shader/ProgramCreator.class": "0fe4f9c64a4bdd8f544c23099cee9117ad91b0a73caed6429c38e2c560f18e2e",
+  "net/irisshaders/iris/gl/shader/ShaderType.class": "cb4188c8c55a3a30035aea6fff6ebca3b31c06047478ed9b37d586b1c2c9c1cc",
+  "net/irisshaders/iris/pipeline/CompositeRenderer$Pass.class": "e0487ee63567a3224315e15aa37eb46529306d31e71c60c2d4136b9654adc8f3",
+  "net/irisshaders/iris/pipeline/CompositeRenderer.class": "710afa36c1d800b5f83f0ae69cbc52d9707332436c2c9fd32f443490e3eabfbd",
+  "net/irisshaders/iris/pipeline/WorldRenderingPipeline.class": "58cdb6fe06983558ffec27a41fe5105d2f5b5cbf28dfcb1df85afa20ce03f151",
+  "net/irisshaders/iris/pipeline/transform/TransformPatcher.class": "2cc6d66298b0694e1a03c50da198d4d59ad3f63759183909ded86703af36fc47"
+}

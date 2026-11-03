@@ -1,0 +1,8 @@
+{
+  "archive_sha256": "b7dfe4c7353d677a92cc4c86b87bc0633f1014305d927ca6a482c303427bf825",
+  "native_source_digest": "f38d0fb61e858690ce3b40b0dfc8a0bd3212b4f3dbd42d0aa1c354dcdda35640",
+  "generated_source_digest": "07faf4612498bec4cfb1a58e1a9b8cd35957a1ff3c43dd93aaa7ef895e0eb66b",
+  "vertex_roots": 35,
+  "active_vertex_exact": true,
+  "source_only": true
+}

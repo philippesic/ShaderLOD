@@ -1,0 +1,20 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.optimization.photon.mixin",
+  "plugin": "com.pp.shaderlod.optimization.photon.mixin.PhotonSpatialMixinPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "PhotonSpatialCompositeMixin",
+    "PhotonSpatialPipelineMixin",
+    "PhotonSpatialReloadMixin",
+    "PhotonSpatialCaptureMixin",
+    "PhotonSpatialLegacyDrawMixin",
+    "PhotonSpatialModernDrawMixin",
+    "PhotonSpatialDirectDrawMixin",
+    "PhotonSpatialPearlDirectDrawMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

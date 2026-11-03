@@ -77,4 +77,17 @@ ShaderlodSpatialPlan shaderlod_spatial_plan_decide(ShaderlodWorkPolicy policy,
         full_weight > 0.0, medium_weight > 0.0, far_weight > 0.0, SHADERLOD_WORK_POLICY);
 }
 
+// Uniform preflight only: the validated monotone policy reaches its smallest
+// retained ratio at the far transition endpoint. If that endpoint requests no
+// supported coarse tier, no distance can request one. This does not classify a
+// tile, alter transition weights or replace the per-tile all-member decision.
+// Invalid/unresolved/disabled/unsupported policies retain original work.
+bool shaderlod_spatial_policy_has_coarse_demand(ShaderlodWorkPolicy policy,
+    bool capability_valid, bool quality_valid, bool protected_work, int supported_rates) {
+    ShaderlodSpatialPlan endpoint = shaderlod_spatial_plan_decide(policy,
+        capability_valid, quality_valid, protected_work,
+        policy.bands_blocks.y + 0.5 * policy.bands_blocks.z, supported_rates);
+    return endpoint.evaluate_medium || endpoint.evaluate_far;
+}
+
 #endif // SHADERLOD_SPATIAL_PLAN_INCLUDED

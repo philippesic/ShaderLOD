@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Prepare original-high/original-medium/adaptive Photon controls with matched DH data."""
 from __future__ import annotations
+from run_storage import copytree as storage_copytree
 
 import argparse
 from contextlib import ExitStack
@@ -78,9 +79,9 @@ def prepare(args):
     source, output, pack = args.source.resolve(), args.output.resolve() / args.scene, args.pack.resolve()
     if output == source or source in output.parents or output in source.parents:
         raise ValueError('Workload output must be separate from source profile')
-    lock = json.loads((ROOT / 'dev/runtime.lock.json').read_text())
+    lock = json.loads((ROOT / 'dependencies/runtime.lock.json').read_text())
     photon, dh = lock['artifacts']['photon'], lock['artifacts']['distanthorizons']
-    original, dh_jar = ROOT / 'dev/upstream' / photon['filename'], ROOT / 'dev/runtime' / dh['filename']
+    original, dh_jar = ROOT / 'dependencies/upstream' / photon['filename'], ROOT / 'dependencies/runtime' / dh['filename']
     for artifact, path in ((photon, original), (dh, dh_jar)):
         if file_hash(path, 'sha512') != artifact['hashes']['sha512']:
             raise ValueError(f'Pinned artifact checksum mismatch: {path}')
@@ -144,7 +145,7 @@ def prepare(args):
                     backup.parent.mkdir(parents=True, exist_ok=True)
                     target_world.rename(backup)
                 if not target_world.exists():
-                    shutil.copytree(world, target_world, ignore=shutil.ignore_patterns('session.lock'))
+                    storage_copytree(world, target_world, ignore=shutil.ignore_patterns('session.lock'))
                     copied[mode] = world_fingerprint(target_world)
                     if copied[mode] != fingerprint:
                         raise ValueError(f'Copied save differs: {target_world}')

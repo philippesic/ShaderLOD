@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.optimization.bsl.mixin",
+  "plugin": "com.pp.shaderlod.optimization.bsl.mixin.BslResourceMixinPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "BslReceiverProgramMixin",
+    "BslReceiverSodiumMixin",
+    "BslReceiverReloadMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

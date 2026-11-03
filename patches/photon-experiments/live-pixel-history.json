@@ -1,0 +1,357 @@
+{
+  "schema": 1,
+  "experiment": "photon-live-pixel-history",
+  "base_version": "v1.3b",
+  "base_sha256": "120897768eaa8cb1f14a3e98f88dff009ae3204ee3b96904a4fe8586edfc1ead",
+  "license_sha256": "514402d18eedb0afe374344ca9f0fe87b7399779518184b8fc64e31674555fc5",
+  "switch": "SHADERLOD_LIVE_PIXEL_HISTORY",
+  "members": [
+    {
+      "path": "shaders/settings.glsl",
+      "source_sha256": "93401d268fe859cc1df81929ad41156757a98db80f80cf32af80d9cdca96c394",
+      "patched_sha256": "8197ac2ae9f98872433532f3a8f1820fe16334cb01b90e9f5d9ad5f1a33f0617",
+      "replacements": [
+        {
+          "before": "#define SETTINGS_INCLUDED\n",
+          "after": "#define SETTINGS_INCLUDED\n// ShaderLOD private live pixel-history diagnostic; default off.\n//#define SHADERLOD_LIVE_PIXEL_HISTORY\n"
+        }
+      ],
+      "enabled_sha256": "8f63c706c0225769017bac322b93e9e2cc2d167a6fd2af7aba7b40eb71a10e55"
+    },
+    {
+      "path": "shaders/include/global.glsl",
+      "source_sha256": "6235933d0045282ba9d7822d55a40aaff6b76ac862c550e33f9b8a4229d63c3d",
+      "patched_sha256": "63e4d8d102f3808c78d5daea5d78755f854f0632f32428e56c441d8ce115c395",
+      "replacements": [
+        {
+          "before": "#if defined TAA && defined TAAU\nconst float taau_render_scale = TAAU_RENDER_SCALE;\n#else\nconst float taau_render_scale = 1.0;\n#endif",
+          "after": "#ifdef SHADERLOD_LIVE_PIXEL_HISTORY\n#if defined TAA && defined TAAU && !defined VOXY\n#include \"/include/shaderlod/live_pixel_history.glsl\"\n#else // SHADERLOD_LIVE_PIXEL_STAGE\n#if defined TAA && defined TAAU\nconst float taau_render_scale = TAAU_RENDER_SCALE;\n#else\nconst float taau_render_scale = 1.0;\n#endif\n#endif // SHADERLOD_LIVE_PIXEL_STAGE\n#else // SHADERLOD_LIVE_PIXEL_HISTORY\n#if defined TAA && defined TAAU\nconst float taau_render_scale = TAAU_RENDER_SCALE;\n#else\nconst float taau_render_scale = 1.0;\n#endif\n#endif // SHADERLOD_LIVE_PIXEL_HISTORY"
+        }
+      ]
+    },
+    {
+      "path": "shaders/program/gbuffers_all_solid.fsh",
+      "source_sha256": "9ff3f873baf0d651b15aad100af3275b1a745d11fe6aeb37aad6aa94b97285da",
+      "patched_sha256": "87dce75640ca6eb5e2960fad33880458a1c8eb698000d57a50ebc1ff01082daa",
+      "replacements": [
+        {
+          "before": "const float lod_bias = log2(taau_render_scale);",
+          "after": "#ifdef SHADERLOD_LIVE_PIXEL_HISTORY\n#if defined TAA && defined TAAU && !defined VOXY\n#define lod_bias log2(taau_render_scale)\n#else // SHADERLOD_LIVE_PIXEL_STAGE\nconst float lod_bias = log2(taau_render_scale);\n#endif // SHADERLOD_LIVE_PIXEL_STAGE\n#else // SHADERLOD_LIVE_PIXEL_HISTORY\nconst float lod_bias = log2(taau_render_scale);\n#endif // SHADERLOD_LIVE_PIXEL_HISTORY"
+        }
+      ]
+    },
+    {
+      "path": "shaders/program/gbuffers_all_translucent.fsh",
+      "source_sha256": "01c04bc017069cf19c319a0a0875ca706554575dd01e291e17cad8565645b82f",
+      "patched_sha256": "063924d9fa369e5d0fbd4a06cb5c2b9e6af2824637d9e9e5ed4b3f40315bbac8",
+      "replacements": [
+        {
+          "before": "const float lod_bias = log2(taau_render_scale);",
+          "after": "#ifdef SHADERLOD_LIVE_PIXEL_HISTORY\n#if defined TAA && defined TAAU && !defined VOXY\n#define lod_bias log2(taau_render_scale)\n#else // SHADERLOD_LIVE_PIXEL_STAGE\nconst float lod_bias = log2(taau_render_scale);\n#endif // SHADERLOD_LIVE_PIXEL_STAGE\n#else // SHADERLOD_LIVE_PIXEL_HISTORY\nconst float lod_bias = log2(taau_render_scale);\n#endif // SHADERLOD_LIVE_PIXEL_HISTORY"
+        }
+      ]
+    },
+    {
+      "path": "shaders/program/gbuffers_damagedblock.fsh",
+      "source_sha256": "23aee94f94712a1d17bc227c776258a736e915cac8f605f29827d61c9cc64cc3",
+      "patched_sha256": "4329eafed1bfb36ed78b1fa7c114c7f3b5d98c955406e3a3a692844753b99d53",
+      "replacements": [
+        {
+          "before": "const float lod_bias = log2(taau_render_scale);",
+          "after": "#ifdef SHADERLOD_LIVE_PIXEL_HISTORY\n#if defined TAA && defined TAAU && !defined VOXY\n#define lod_bias log2(taau_render_scale)\n#else // SHADERLOD_LIVE_PIXEL_STAGE\nconst float lod_bias = log2(taau_render_scale);\n#endif // SHADERLOD_LIVE_PIXEL_STAGE\n#else // SHADERLOD_LIVE_PIXEL_HISTORY\nconst float lod_bias = log2(taau_render_scale);\n#endif // SHADERLOD_LIVE_PIXEL_HISTORY"
+        }
+      ]
+    },
+    {
+      "path": "shaders/program/gbuffers_armor_glint.fsh",
+      "source_sha256": "0c2d7e3fdd167477ce4980cadd55cbaaf49675a98197bb708a73a56ad100ce24",
+      "patched_sha256": "7d6dd1dfe379231f98ff388e19c8d8327a1de7461411ecd1a7c4102dcb363da1",
+      "replacements": [
+        {
+          "before": "const float lod_bias = log2(taau_render_scale);",
+          "after": "#ifdef SHADERLOD_LIVE_PIXEL_HISTORY\n#if defined TAA && defined TAAU && !defined VOXY\n#define lod_bias log2(taau_render_scale)\n#else // SHADERLOD_LIVE_PIXEL_STAGE\nconst float lod_bias = log2(taau_render_scale);\n#endif // SHADERLOD_LIVE_PIXEL_STAGE\n#else // SHADERLOD_LIVE_PIXEL_HISTORY\nconst float lod_bias = log2(taau_render_scale);\n#endif // SHADERLOD_LIVE_PIXEL_HISTORY"
+        }
+      ]
+    },
+    {
+      "path": "shaders/program/d2_clouds_upscaling.fsh",
+      "source_sha256": "2b026e4bf367527213264b333b267c649a1ac85ba3105155b71085878c3c204a",
+      "patched_sha256": "5b562ffdaa72f36d7f9739b5dbc81626c03548f9bd3ae8669ab2e237cd4dda73",
+      "replacements": [
+        {
+          "before": "    // Find the closest cloud distance between the current frame and a 4x4 area\n",
+          "after": "#ifdef SHADERLOD_LIVE_PIXEL_HISTORY\n#if defined TAA && defined TAAU && !defined VOXY\n    // Reject a previous raster rectangle before any cloud history read.\n    if (shaderlod_live_pixel_history_reset()) {\n        // Preserve upstream terrain/hand output conventions using current data.\n        if (depth != 1.0) {\n            float view_distance_squared =\n                length_squared(screen_to_view_space(vec3(uv, depth), true));\n            if (view_distance_squared < sqr(apparent_distance) || is_hand) {\n                clouds_history = current;\n                clouds_data = vec3(1e6, 0.0, 0.0);\n                return;\n            }\n        }\n        clouds_history = max0(current);\n        clouds_data = vec3(apparent_distance, 1.0, ambient_scattering);\n        return;\n    }\n\n#endif // SHADERLOD_LIVE_PIXEL_STAGE\n#endif // SHADERLOD_LIVE_PIXEL_HISTORY\n    // Find the closest cloud distance between the current frame and a 4x4 area\n"
+        }
+      ]
+    },
+    {
+      "path": "shaders/program/c4_taa_exposure.fsh",
+      "source_sha256": "4d6eae868403a472776a1c393b98a9161fb5aae781bbd3cc1e843f836fd1cba6",
+      "patched_sha256": "3cca988d6b4cdbbc8ff767f346ec79a11e09cee9c16fc55f4ba0783173a9be98",
+      "replacements": [
+        {
+          "before": "    current_color = mix(history_color, current_color, alpha);\n",
+          "after": "#ifdef SHADERLOD_LIVE_PIXEL_HISTORY\n#if defined TAA && defined TAAU && !defined VOXY\n    // Final alpha: confidence, flicker and offcenter cannot undo this reset.\n    if (shaderlod_live_pixel_history_reset()) {\n        alpha = 1.0;\n        pixel_age = 1.0;\n    }\n\n#endif // SHADERLOD_LIVE_PIXEL_STAGE\n#endif // SHADERLOD_LIVE_PIXEL_HISTORY\n    current_color = mix(history_color, current_color, alpha);\n"
+        },
+        {
+          "before": "    result = vec4(current_color, pixel_age * offcenter_rejection);\n",
+          "after": "    result = vec4(current_color, pixel_age * offcenter_rejection);\n#ifdef SHADERLOD_LIVE_PIXEL_HISTORY\n#if defined TAA && defined TAAU && !defined VOXY\n    if (shaderlod_live_pixel_history_reset()) {\n        result.a = 1.0;\n    }\n#endif // SHADERLOD_LIVE_PIXEL_STAGE\n#endif // SHADERLOD_LIVE_PIXEL_HISTORY\n"
+        }
+      ]
+    }
+  ],
+  "addition": {
+    "path": "shaders/include/shaderlod/live_pixel_history.glsl",
+    "source_path": "shaderpacks/photon-live-pixel-history/shaders/include/shaderlod/live_pixel_history.glsl",
+    "sha256": "c9f3ec5cfc9ca6ee217670123ce9f1ec8194fadc44e913eec3fd0dcd3a1f3206"
+  },
+  "source_dependencies": {
+    "shaders/shaders.properties": "f8cc8df60f930612e8817e4176a34886c1a9de778c15427a5468ecbc4f71ee9a",
+    "shaders/include/surface/edge_highlight.glsl": "7b5d60f5333943ed5c5fdb9760ab2d34e0b208ddc3a47e8a03062241534dc51f",
+    "shaders/include/utility/space_conversion.glsl": "7285b08819737ea31eff7867bae4e5dee76f7e7f1b0d6c5abc5d3746fa38aa0c",
+    "shaders/include/lighting/ao/ssao.glsl": "e6107912799a850a49c2c62138d2f2daf542c3dcd3ca7b0e2de15cfc85e04a0c",
+    "shaders/include/lighting/ao/gtao.glsl": "0889647aa827357ba9e5101431b4294299a078055f7f3537468a94fb6430b0d3",
+    "shaders/include/lighting/shadows/ssrt.glsl": "ffb29cc8892ebcf9bfd697467a5adc8239030a3913fac8a8315a4ab39db674b8",
+    "shaders/include/sky/clouds/sampling.glsl": "66ce14d260db584e36dfc028a09a6234251713f0882718eb64a1f4548f6607d2",
+    "shaders/include/buffers.glsl": "203cd05b25adec942bce5ab36fd0b7a9719a4f7790e3fe6983b59a8644124f9f",
+    "shaders/include/misc/lod_mod_support.glsl": "90609391732c88933e73d4b01dd5be957d22f10bd8485085b2c60c32a4525239",
+    "shaders/include/misc/raytracer.glsl": "10aecc98cec4db7828787423000730bb2b16b06bd4730fd72fe72cb46c0d6aba",
+    "shaders/program/d3_ao.vsh": "1469e046de453a13c5521f9b278e0c4f70b69ca2acbf9bd83280d165ad279e1c",
+    "shaders/program/dh_water.vsh": "d02d460da3dd0263ae05abb81a0605b211322f4db7f3e696f1670e6dd703b315",
+    "shaders/program/gbuffers_weather.vsh": "18a50172495c463572594c6f148050452c5343535e0f06b9cd7f8bb829b0bd35",
+    "shaders/program/gbuffers_weather.fsh": "0dce41ae68ba8a608e9ca7a62165c411b849aed835e96a88d37d62a2cd41a57e",
+    "shaders/program/d4_deferred_shading.vsh": "787f03ad720b84af642fd4772e2ae397b6ced1425650be65f860e0a41dcc8d40",
+    "shaders/program/voxy.json": "6e8ed63a9eea9139facbad19b4796ae6b726c179f49be26f714de19f4de9d62a",
+    "shaders/program/gbuffers_basic.vsh": "8ee0a3e6a87fe73459af4c56bf8a8e1b26e6dbef530a1eb2d9e4c63c8bc22fdb",
+    "shaders/program/dh_terrain.fsh": "6ec3a966d897003bae99c411daa549144f21f899899a1a33e3130b4942868a60",
+    "shaders/program/gbuffers_armor_glint.vsh": "0e8a17d358709e43657b9af86d0f4e5d58b0d25436c05aa3deedefeb2a15aeef",
+    "shaders/program/c2_dof.vsh": "d4baca7bc6ea44836f4c64d28ae430b8299d73a252808c87518c0908dce425cb",
+    "shaders/program/c3_taau_prep.vsh": "9cc614ca02514e280808f7c2b54556413484464de94f8881d99c7343480d3cad",
+    "shaders/program/d3_ao.fsh": "5a47a1a64788105b5d197db8bc1a9aff1cdf17727c3c1804c01573c76863c266",
+    "shaders/program/gbuffers_all_translucent.vsh": "c6cce2a1e0d926ababece12880ff368ee824d22f71a4e1aa10d2202fbae3fb71",
+    "shaders/program/dh_terrain.vsh": "90cdc2735593018158bdc789e535f2da4666f64e4714ae888a846fc4567f538d",
+    "shaders/program/gbuffers_damagedblock.vsh": "09cf2d28a983687daf630bc340e8a9e27a73fc2be67c219a04c7909397ef68f2",
+    "shaders/program/gbuffers_basic.fsh": "9774e5bfbee0c1387f831a7dda3f30c3abd1874b6ccd3d41d4a98cee75b6f5af",
+    "shaders/program/c4_taa_exposure.fsh": "4d6eae868403a472776a1c393b98a9161fb5aae781bbd3cc1e843f836fd1cba6",
+    "shaders/program/d1_clouds.vsh": "d2ace6e9c00f07fac94c8854b56a014c34c15147f36ec094a56c73e4e9af9f56",
+    "shaders/program/d2_clouds_upscaling.vsh": "47ea32c3508076f549afcbdbd23b8f5c4989b289ec17c8060668d4570069b34e",
+    "shaders/program/d1_clouds.fsh": "1f0dd330b837becff393380283eb767e3a55fe48e9b04705bf825fde535d0cae",
+    "shaders/program/final.fsh": "073489c9aa7efc625b4c0f0033dceb37614bcd55580826b9517b54d5dcc7dbbc",
+    "shaders/program/c1_blend_layers.fsh": "9a22e67280a57927c9dc8ca7ef194abb64b636de6a736651aa5b743035052cad",
+    "shaders/program/c16_motion_blur.fsh": "f31f56640e9c98c1f0f8209ceb2e4c7ba49918cf9efbecaf5b5e61af1e9231a4",
+    "shaders/program/c14_color_grading.fsh": "622ca89a3986f7f8fae4072cac1b9cc7be70308675fa28803f1ad8c3d509379f",
+    "shaders/program/c3_taau_prep.fsh": "e9d6a3be996021968478d0ce2e6ff93673ffc3dc6113cd2895c355a3c24e8e9a",
+    "shaders/program/c0_vl.fsh": "1a5335ee12e04e74b4f8b2ba62437f3ee27137cf9d2ccf7985f0fbf32bf48729",
+    "shaders/program/d4_deferred_shading.fsh": "212081e707c20c78e17cbfd3380b2f22eb696cc1aa14bdf006c07d59f53f67e0",
+    "shaders/program/gbuffers_skytextured.vsh": "2eb3093d7d972058ecc64f1d12cb89c5d853f8112588330c8e2cdfadbab6ed57",
+    "shaders/program/voxy_translucent.glsl": "839689aad9889a0bb5dc3ca17be5c7cb8ae3e73a7106741ea9a223d5902f7f9a",
+    "shaders/program/c4_taa_exposure.vsh": "229d2ed1139ee91db6b645ec69e098a535a336c82c2cffad7a806b9a23401ff4",
+    "shaders/program/gbuffers_all_solid.vsh": "7e83813943d9b1fdc35af8abf1e1d6956db2913d35a30168516facdadef7d41b",
+    "shaders/program/dh_water.fsh": "e447178fa74d0cb74b5fbc8fe8c8fbb4b1539ef98ac024f030df1df17e312ffb",
+    "shaders/program/d2_clouds_upscaling.fsh": "2b026e4bf367527213264b333b267c649a1ac85ba3105155b71085878c3c204a",
+    "shaders/program/c1_blend_layers.vsh": "0d2d3c37a5f7bf1950922e7ad5c75ff5560b19f43ac7a1f32c4e037f278dd761",
+    "shaders/program/c2_dof.fsh": "0ea66768ef295db197f2210efc9c423369518471ee1810ec681be6a8a0202dbf"
+  },
+  "consumer_lines": {
+    "shaders/shaders.properties": [
+      16,
+      115
+    ],
+    "shaders/settings.glsl": [
+      473
+    ],
+    "shaders/include/surface/edge_highlight.glsl": [
+      28
+    ],
+    "shaders/include/utility/space_conversion.glsl": [
+      41,
+      63
+    ],
+    "shaders/include/lighting/ao/ssao.glsl": [
+      59
+    ],
+    "shaders/include/lighting/ao/gtao.glsl": [
+      41
+    ],
+    "shaders/include/lighting/shadows/ssrt.glsl": [
+      70
+    ],
+    "shaders/include/global.glsl": [
+      81,
+      83
+    ],
+    "shaders/include/sky/clouds/sampling.glsl": [
+      9,
+      13,
+      14,
+      18
+    ],
+    "shaders/include/misc/lod_mod_support.glsl": [
+      42
+    ],
+    "shaders/include/misc/raytracer.glsl": [
+      68,
+      93
+    ],
+    "shaders/program/dh_water.vsh": [
+      120,
+      121
+    ],
+    "shaders/program/gbuffers_weather.vsh": [
+      58,
+      59
+    ],
+    "shaders/program/gbuffers_weather.fsh": [
+      46
+    ],
+    "shaders/program/gbuffers_all_solid.fsh": [
+      148,
+      225,
+      229
+    ],
+    "shaders/program/d4_deferred_shading.vsh": [
+      129
+    ],
+    "shaders/program/voxy.json": [
+      35
+    ],
+    "shaders/program/gbuffers_basic.vsh": [
+      104,
+      105
+    ],
+    "shaders/program/dh_terrain.fsh": [
+      62
+    ],
+    "shaders/program/gbuffers_armor_glint.vsh": [
+      53,
+      54
+    ],
+    "shaders/program/c2_dof.vsh": [
+      19
+    ],
+    "shaders/program/c3_taau_prep.vsh": [
+      19
+    ],
+    "shaders/program/d3_ao.fsh": [
+      89
+    ],
+    "shaders/program/gbuffers_damagedblock.fsh": [
+      33,
+      39
+    ],
+    "shaders/program/gbuffers_all_translucent.vsh": [
+      210,
+      211
+    ],
+    "shaders/program/dh_terrain.vsh": [
+      100,
+      101
+    ],
+    "shaders/program/gbuffers_damagedblock.vsh": [
+      27,
+      28
+    ],
+    "shaders/program/gbuffers_basic.fsh": [
+      54
+    ],
+    "shaders/program/c4_taa_exposure.fsh": [
+      122,
+      271,
+      331,
+      332
+    ],
+    "shaders/program/gbuffers_armor_glint.fsh": [
+      33,
+      39
+    ],
+    "shaders/program/d1_clouds.vsh": [
+      117
+    ],
+    "shaders/program/d2_clouds_upscaling.vsh": [
+      20
+    ],
+    "shaders/program/d1_clouds.fsh": [
+      165,
+      168
+    ],
+    "shaders/program/final.fsh": [
+      299
+    ],
+    "shaders/program/c1_blend_layers.fsh": [
+      308
+    ],
+    "shaders/program/c16_motion_blur.fsh": [
+      54,
+      74
+    ],
+    "shaders/program/c14_color_grading.fsh": [
+      201
+    ],
+    "shaders/program/c0_vl.fsh": [
+      129
+    ],
+    "shaders/program/d4_deferred_shading.fsh": [
+      317
+    ],
+    "shaders/program/gbuffers_skytextured.vsh": [
+      67,
+      68
+    ],
+    "shaders/program/voxy_translucent.glsl": [
+      129
+    ],
+    "shaders/program/c4_taa_exposure.vsh": [
+      100,
+      149
+    ],
+    "shaders/program/gbuffers_all_solid.vsh": [
+      162,
+      163
+    ],
+    "shaders/program/dh_water.fsh": [
+      170
+    ],
+    "shaders/program/d2_clouds_upscaling.fsh": [
+      190,
+      254,
+      276,
+      284,
+      288
+    ],
+    "shaders/program/gbuffers_all_translucent.fsh": [
+      182,
+      357,
+      635
+    ],
+    "shaders/program/c1_blend_layers.vsh": [
+      79
+    ],
+    "shaders/program/c2_dof.fsh": [
+      93,
+      94
+    ]
+  },
+  "iris_option_discovery": {
+    "jar_path": "dependencies/runtime/iris-neoforge-1.8.12+mc1.21.1.jar",
+    "jar_sha256": "3e3f94d2d5cdcb8145c4385d521974aa2d8669b2cc212351f70cf06488182e83"
+  },
+  "active_scale": 0.75,
+  "disabled_scale": 1.0,
+  "unknown_bridge_fallback": "Configured static TAAU_RENDER_SCALE when core/temporal/reset are absent or unknown; reject cloud/TAA history every unknown frame, with unaccepted quality costs",
+  "fixed_graph": "TAA=true,TAAU=true selected externally; never reload or alter options inside timing",
+  "transition_status": "UNACCEPTED quality: known reset or any unknown transport rejects cloud history before previous reads and final TAA alpha/age; repeated fallback reset flash/noise risk",
+  "voxy_status": "excluded: voxy.json renderScale uses compile-time TAAU_RENDER_SCALE",
+  "performance_status": "No measurement for this isolated history derivative; parent owns GPU comparison",
+  "temporal_contract": {
+    "version": 1,
+    "version_uniform": "shaderlodTemporalVersion",
+    "reset_uniform": "shaderlodHistoryReset",
+    "valid_reset_values": [
+      0,
+      1
+    ],
+    "frame_stable_required": true,
+    "unavailable_history": "reject_every_frame"
+  },
+  "revision": 2
+}

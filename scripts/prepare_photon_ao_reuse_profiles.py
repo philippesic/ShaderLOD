@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Prepare fresh Photon AO depth-reuse original/off/on trials; never build or launch."""
 from __future__ import annotations
+from run_storage import copytree as storage_copytree
 
 import argparse
 from contextlib import ExitStack
@@ -176,7 +177,7 @@ def prepare(output, scenes=SCENES, sources=None, probe=PROBE, runtime_lock=None,
     inspector = source_inspector or inspect_scene
     operation = plan(output, scenes, sources, probe, root)
     require_exclusive_runtime()
-    runtime_lock = Path(runtime_lock or Path(root) / 'dev/runtime.lock.json')
+    runtime_lock = Path(runtime_lock or Path(root) / 'dependencies/runtime.lock.json')
     runtime = json.loads(runtime_lock.read_text()); output = Path(operation['output'])
     with ExitStack() as locks:
         for item in operation['scene_operations']:
@@ -200,9 +201,9 @@ def prepare(output, scenes=SCENES, sources=None, probe=PROBE, runtime_lock=None,
                 copies, arms = {}, {}
                 for arm in ARMS:
                     profile = base / arm
-                    shutil.copytree(scene['profile'], profile, ignore=shutil.ignore_patterns(*TRANSIENT))
+                    storage_copytree(scene['profile'], profile, ignore=shutil.ignore_patterns(*TRANSIENT))
                     world = profile / 'saves' / WORLD; world.parent.mkdir()
-                    shutil.copytree(scene['world'], world, ignore=shutil.ignore_patterns('session.lock'))
+                    storage_copytree(scene['world'], world, ignore=shutil.ignore_patterns('session.lock'))
                     copies[arm] = world_fingerprint(world)
                     require(copies[arm] == scene['world_sha256'], 'Copied canonical save differs: ' + arm)
                     dh_path = profile / 'mods' / runtime['artifacts']['distanthorizons']['filename']

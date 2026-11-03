@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run balanced, repeated configurations serially; retain every result and failure."""
+"""Validation and option helpers retained for historical profile tools; no benchmark runner."""
 from __future__ import annotations
 import argparse
 from datetime import datetime, timezone
@@ -25,17 +25,8 @@ CASES = {
     'complementary-high': ('coastalwater/high', 'runClientLodOff'),
     'complementary-water-sky': ('coastalwater/water-sky', 'runClientLodOff'),
     'complementary-water-potato': ('coastalwater/water-potato', 'runClientLodOff'),
-    'miniature-high': ('coastalwater/high', 'runClientLodOff'),
-    'miniature-lower': ('coastalwater/lower', 'runClientLodOff'),
     'bsl-high': ('coastalwater/high', 'runClientLodOff'),
     'bsl-parallax-off': ('coastalwater/parallax-off', 'runClientLodOff'),
-    'miniature-bridge-absent': ('coastalwater/bridge-absent', 'runClientLodOff'),
-    'miniature-bridge-disabled': ('coastalwater/bridge-disabled', 'runClientLodOn'),
-    'miniature-bridge-enabled': ('coastalwater/bridge-enabled', 'runClientLodOn'),
-    'miniature-bridge-bands': ('coastalwater/bridge-bands', 'runClientLodOn'),
-    'miniature-refinement-off': ('coastalwater/refinement-off', 'runClientLodOn'),
-    'miniature-refinement-full': ('coastalwater/refinement-full', 'runClientLodOn'),
-    'miniature-refinement-lod': ('coastalwater/refinement-lod', 'runClientLodOn'),
     'makeup-high': ('coastalwater/high', 'runClientLodOff'),
     'makeup-off': ('coastalwater/adapter-off', 'runClientLodOff'),
     'makeup-on': ('coastalwater/adapter-on', 'runClientLodOff'),
@@ -520,165 +511,5 @@ def preserve_screenshot(profile, output, token, started_ns):
     return {'screenshot': destination.name, 'screenshot_sha256': sha256(destination)}
 
 
-def main():
-    p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument('cases', nargs='+', choices=CASES)
-    p.add_argument('--profiles-root', type=Path, default=ROOT / 'run-workloads')
-    optional_lock = json.loads((ROOT / 'dev/performance-mods.lock.json').read_text())
-    p.add_argument('--stacks', nargs='+', choices=tuple(optional_lock['stacks']), default=['minimal'])
-    p.add_argument('--repeats', type=int, default=3)
-    p.add_argument('--dh', choices=('present', 'absent'), default='present')
-    p.add_argument('--no-gpu-queries', action='store_true')
-    p.add_argument('--tag', default=None)
-    p.add_argument('--sample-interval', type=int, default=1, choices=range(1,61))
-    p.add_argument('--window-scale', type=int, default=1, choices=(1,2), help='Scale comparison window; actual framebuffer/window dimensions remain recorded')
-    p.add_argument('--fullscreen', action='store_true', help='Request true fullscreen; validate sampled fullscreen, pacing and matched actual dimensions')
-    p.add_argument('--expected-framebuffer', nargs=2, type=int, metavar=('WIDTH', 'HEIGHT'), help='Pin dimensions discovered by a separate fullscreen smoke')
-    p.add_argument('--fullscreen-reference', type=Path, help='Pin physical/logical dimensions, focus, pacing and compiled inputs from a successful fresh fullscreen matrix smoke')
-    p.add_argument('--warmup', type=float, default=45)
-    p.add_argument('--duration', type=float, default=30)
-    p.add_argument('--fixed-wetness', type=wetness_value, help='Dev-only artificial shader weather control; real rain/smoother clocks remain unchanged')
-    p.add_argument('--timeout', type=float, default=300)
-    p.add_argument('--skip-build', action='store_true')
-    p.add_argument('--freeze-dev-classes', action='store_true', help='Use the already compiled dev harness; requires --skip-build and retains class hash guards')
-    p.add_argument('--dry-run', action='store_true', help='Print ordering/commands without files, build or client launch')
-    args = p.parse_args()
-    if args.freeze_dev_classes and not args.skip_build: p.error('--freeze-dev-classes requires --skip-build')
-    if args.expected_framebuffer is not None and (not args.fullscreen or min(args.expected_framebuffer) < 1):
-        p.error('--expected-framebuffer requires --fullscreen and positive dimensions')
-    fullscreen_source = None
-    fullscreen_reference = dict(framebuffer=args.expected_framebuffer, window=None, focused=None)
-    if args.fullscreen_reference is not None:
-        if not args.fullscreen: p.error('--fullscreen-reference requires --fullscreen')
-        fullscreen_source = json.loads(args.fullscreen_reference.read_text())
-        reference = fullscreen_source.get('fullscreen_reference', {})
-        if fullscreen_source.get('status') != 'complete' or reference.get('validated') is not True or reference.get('fullscreen') is not True:
-            p.error('Fullscreen reference must be a completed validated fullscreen smoke manifest')
-        if any(not isinstance(reference.get(key), list) or len(reference[key]) != 2 or
-               any(not isinstance(n, int) or isinstance(n, bool) or n < 1 for n in reference[key]) for key in ('framebuffer', 'window')):
-            p.error('Fullscreen reference dimensions are invalid')
-        if reference.get('focused') not in ('true', 'false'):
-            p.error('Fullscreen reference focus is unavailable')
-        if args.expected_framebuffer is not None and args.expected_framebuffer != reference['framebuffer']:
-            p.error('Explicit framebuffer conflicts with fullscreen smoke reference')
-        fullscreen_reference = reference
-    if not 1 <= args.repeats <= 100 or args.warmup < 5 or args.duration < 5: p.error('Invalid repeats/warmup/duration')
-    plan = balanced_plan(args.cases, args.stacks, args.repeats)
-    profiles_root = args.profiles_root.resolve()
-    for row in plan:
-        location, row['task'] = CASES[row['case']]
-        row['profile'] = str(profiles_root / location)
-        row['command'] = ['./gradlew', row['task'], '-PrunDirectory=' + row['profile'],
-                          '-PperformanceStack=' + row['stack'], '-PincludeDh=' + str(args.dh == 'present').lower(),
-                          '-PmeasureWorkload=true', '-PmeasureOnly=true', '-PgpuPassTiming=false', '-PcpuLayerTiming=false',
-                          '-PinitialWarmup=' + str(args.warmup), '-PmeasurementSeconds=' + str(args.duration),
-                          '-PgpuSampleInterval=' + str(args.sample_interval),
-                          '-PbenchmarkWindowScale=' + str(args.window_scale)]
-        row['command'].extend('-P' + name + '=false' for name in
-                              ('cloudSamplerProbe', 'dhDrawEvidence', 'waterSceneSurvey', 'shadowObserve', 'visibilityLists', 'shadowCoherenceOracle'))
-        if args.fullscreen: row['command'].append('-PcomparisonFullscreen=true')
-        row['command'].append('-PgpuTiming=' + str(not args.no_gpu_queries).lower())
-        if args.freeze_dev_classes: row['command'].extend(['-x', 'compileDevClientJava'])
-        if args.fixed_wetness is not None: row['command'].append('-PfixedWetness=' + str(args.fixed_wetness))
-    if args.dry_run:
-        print(json.dumps({'plan': plan, 'minimum_capture_seconds': len(plan) * (args.warmup + args.duration)}, indent=2)); return
-    tag = args.tag or ('matrix-' + datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ'))
-    if Path(tag).name != tag or tag in ('.', '..'): p.error('Tag must be one directory name')
-    output = ROOT / 'dev/logs' / tag
-    output.parent.mkdir(parents=True, exist_ok=True)
-    with (output.parent / '.proof-matrix.lock').open('a+') as lock:
-        try: fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        except BlockingIOError: p.error('Another proof matrix runner is active')
-        if output.exists(): p.error('Output already exists; use a new tag to preserve prior evidence')
-        require_exclusive_runtime()
-        inputs = {case: profile_inputs(profiles_root / CASES[case][0]) for case in args.cases}
-        if args.fullscreen:
-            for row in plan:
-                validate_fullscreen_batch_readiness(row['profile'], not args.no_gpu_queries)
-        output.mkdir()
-        manifest = {'schema': 2, 'created_at_utc': utc_now(), 'status': 'running', 'repeats': args.repeats,
-                    'design': 'Williams order; partial cycles are interleaved, not perfectly position-balanced',
-                    'profiles_root': str(profiles_root), 'include_dh': args.dh == 'present',
-                    'gpu_queries': not args.no_gpu_queries, 'sample_interval': args.sample_interval,
-                    'window_scale': args.window_scale,
-                    'frozen_dev_classes': args.freeze_dev_classes,
-                    'fixed_wetness': args.fixed_wetness,
-                    'source_inputs': inputs, 'runs': plan, 'cases': args.cases, 'stacks': args.stacks,
-                    'git_head': subprocess.run(['git', 'rev-parse', 'HEAD'], cwd=ROOT, capture_output=True, text=True, check=True).stdout.strip(),
-                    'runtime_lock_sha256': sha256(ROOT / 'dev/runtime.lock.json'),
-                    'performance_mods_lock_sha256': sha256(ROOT / 'dev/performance-mods.lock.json'),
-                    'performance_mods_lock': optional_lock}
-        if args.fullscreen:
-            manifest['fullscreen'] = True
-            manifest['fullscreen_reference'] = fullscreen_reference.copy()
-            if args.fullscreen_reference is not None:
-                manifest['fullscreen_reference_source'] = str(args.fullscreen_reference.resolve())
-                manifest['fullscreen_reference_source_sha256'] = sha256(args.fullscreen_reference)
-        write_json(output / 'matrix-manifest.json', manifest)
-        try:
-            if not args.skip_build: subprocess.run(['./gradlew', 'build', 'compileDevClientJava'], cwd=ROOT, check=True)
-            manifest['development_runtime_inputs'] = development_fingerprints()
-            if fullscreen_source is not None and manifest['development_runtime_inputs'] != fullscreen_source.get('development_runtime_inputs'):
-                raise ValueError('Compiled runtime differs from fullscreen smoke reference')
-            write_json(output / 'matrix-manifest.json', manifest)
-            for index, row in enumerate(plan):
-                require_exclusive_runtime()
-                if development_fingerprints() != manifest['development_runtime_inputs']:
-                    raise ValueError('Compiled local runtime changed since matrix start')
-                profile = Path(row['profile'])
-                # Minecraft rewrites options.txt on shutdown; hash stable shader/camera inputs separately.
-                current = profile_inputs(profile)
-                for key in ('shader_sha256', 'semantic_shader_options_sha256', 'control_sha256', 'source_world_sha256', 'shadow_culling_configured'):
-                    if current[key] != inputs[row['case']][key]: raise ValueError('Profile changed since matrix start: ' + key)
-                token = f"{index + 1:03d}-b{row['block']}-{row['case']}-{row['stack']}"
-                request = dict(run_id=str(uuid.uuid4()), case=row['case'], stack=row['stack'], task=row['task'],
-                               include_dh=args.dh == 'present', measurement_seconds=args.duration,
-                               gpu_queries=not args.no_gpu_queries, block=row['block'])
-                request['fixed_wetness'] = args.fixed_wetness
-                if args.fullscreen:
-                    reference = manifest['fullscreen_reference']
-                    request.update(fullscreen=True, expected_framebuffer=reference['framebuffer'],
-                                   expected_window=reference['window'], expected_focus=reference['focused'], sample_interval=args.sample_interval)
-                    validate_fullscreen_batch_readiness(profile, request['gpu_queries'])
-                write_json(profile / 'workload-request.json', request)
-                report = profile / 'workload-measurement.json'
-                if report.exists(): report.replace(output / (token + '-previous.json'))
-                row.update(status='running', request=request, started_at_utc=utc_now(),
-                           console=token + '-console.log', measurement=token + '-measurement.json', summary=token + '-summary.json')
-                write_json(output / 'matrix-manifest.json', manifest)
-                started_ns = time.time_ns()
-                print(f"Starting {token} ({index + 1}/{len(plan)})", flush=True)
-                wait_command(row['command'], output / row['console'], args.timeout)
-                require_exclusive_runtime()
-                if development_fingerprints() != manifest['development_runtime_inputs']:
-                    raise ValueError('Compiled local runtime changed during run')
-                if not report.exists(): raise ValueError('Fresh workload report missing: ' + row['case'])
-                data = json.loads(report.read_text())
-                # Preserve invalid fresh reports too; exclusion is explicit in the manifest.
-                (output / row['measurement']).write_bytes(report.read_bytes())
-                row.update(preserve_screenshot(profile, output, token, started_ns))
-                validate_report(data, request, inputs[row['case']], started_ns, report)
-                if args.fullscreen:
-                    manifest['fullscreen_reference'] = validate_fullscreen_report(data, request)
-                validate_optional_stack(data, row['stack'], optional_lock)
-                row['temporal_observations'] = validate_temporal_inputs(data, request)
-                reference = inputs[row['case']].get('effective_shader_options_sha256')
-                if reference is not None and reference != data['effective_shader_options_sha256']: raise ValueError('Effective shader options differ between repeated launches')
-                inputs[row['case']]['effective_shader_options_sha256'] = data['effective_shader_options_sha256']
-                write_json(output / row['summary'], summarize(report))
-                row.update(status='complete', finished_at_utc=utc_now(), render_fps=data['render_frames'] / data['elapsed_seconds'])
-                write_json(output / 'matrix-manifest.json', manifest)
-                print('Completed', token, row['render_fps'], 'FPS', flush=True)
-            manifest['status'] = 'complete'; manifest['finished_at_utc'] = utc_now()
-            write_json(output / 'matrix-manifest.json', manifest)
-            subprocess.run(['python3', 'scripts/analyze_proof_matrix.py', str(output / 'matrix-manifest.json'), '--output', str(output / 'matrix-analysis.json')], cwd=ROOT, check=True)
-        except BaseException as error:
-            manifest.update(status='failed', error=str(error), finished_at_utc=utc_now())
-            if 'row' in locals() and row.get('status') == 'running':
-                row.update(status='failed', error=str(error))
-                if 'report' in locals() and report.exists(): (output / row['measurement']).write_bytes(report.read_bytes())
-            write_json(output / 'matrix-manifest.json', manifest)
-            raise
-
-
-if __name__ == '__main__': main()
+if __name__ == '__main__':
+    raise SystemExit('This historical matrix runner is retired. Use scripts/run_benchmark.py test for optimization measurements.')

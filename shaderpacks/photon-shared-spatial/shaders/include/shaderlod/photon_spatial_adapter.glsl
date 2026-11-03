@@ -45,13 +45,21 @@ bool shaderlod_photon_cache_contract() {
 float shaderlod_photon_near_guard() {
     return max(0.001, shaderlodOpaqueLightingNear - 0.5 * shaderlodOpaqueLightingTransition);
 }
-ShaderlodSpatialPlan shaderlod_spatial_adapter_plan(float distance_blocks) {
+ShaderlodWorkPolicy shaderlod_photon_work_policy() {
     // INHERIT deliberately unresolved/full; no private distances/preset substitution.
-    ShaderlodWorkPolicy policy = ShaderlodWorkPolicy(shaderlodBridgeVersion,
+    return ShaderlodWorkPolicy(shaderlodBridgeVersion,
         shaderlodEffectsVersion, 2, shaderlodEnabled == 1, shaderlodOpaqueLightingMode,
         false, true, vec3(shaderlodOpaqueLightingNear, shaderlodOpaqueLightingFar,
             shaderlodOpaqueLightingTransition),
         vec2(shaderlodOpaqueLightingMediumWorkRatio, shaderlodOpaqueLightingFarWorkRatio));
+}
+bool shaderlod_spatial_adapter_has_coarse_demand() {
+    return shaderlod_spatial_policy_has_coarse_demand(shaderlod_photon_work_policy(),
+        shaderlodCapabilitiesVersion == 1 && shaderlodOpaqueSpatialAvailable == 1,
+        shaderlod_photon_environment(), false, 3);
+}
+ShaderlodSpatialPlan shaderlod_spatial_adapter_plan(float distance_blocks) {
+    ShaderlodWorkPolicy policy = shaderlod_photon_work_policy();
     return shaderlod_spatial_plan_decide(policy,
         shaderlodCapabilitiesVersion == 1 && shaderlodOpaqueSpatialAvailable == 1,
         shaderlod_photon_environment(), false, distance_blocks, 3); // rates1 and1/4 only

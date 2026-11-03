@@ -1,0 +1,1 @@
+package com.pp.shaderlod.optimization.astraearlyalpha.mixin;import org.spongepowered.asm.mixin.*;import org.spongepowered.asm.mixin.gen.Accessor;import net.irisshaders.iris.pipeline.*;@Mixin(value=IrisRenderingPipeline.class,remap=false)public interface AstraAlphaPipelineView{@Accessor("customTextureManager")CustomTextureManager shaderlod$astraAlphaTextures();}

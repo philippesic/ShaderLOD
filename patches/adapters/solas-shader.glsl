@@ -11,18 +11,29 @@ uniform float shaderlodFar;
 uniform float shaderlodTransition;
 #include "/include/shaderlod/optimization_flags.glsl"
 uniform int shaderlodOptTemporalShadowFilter;
+uniform int shaderlodOptZeroEmissionArithmetic;
 uniform int shaderlodOptSsrProjectedFootprintExit;
 uniform int shaderlodOptReflectionNextEventRefinement;
 bool shaderlodSolasOpaqueRough = false;
 uniform int shaderlodOptSsrProjectionArithmetic;
 uniform int shaderlodOptRoughReflectionGather;
 uniform int shaderlodOptPomHeightCache;
+uniform int shaderlodOptPomEmptyHeightPrefix;
+uniform int shaderlodSolasAoDepthQualified = 0;
 uniform int shaderlodOptReflectionDeferredMetric;
+uniform int shaderlodSolasExactDepthPermission = 0;
 uniform int shaderlodOptWaterParallaxBudget;
 uniform int shaderlodOptSkyAtmosphereOwnership;
 uniform int shaderlodOptWaterShadowZero;
 #include "/lib/shaderlod/refinement_budget.glsl"
 #include "/lib/shaderlod/uniform_sample_budget.glsl"
+// Same actual atlas coordinate with the same explicit gradients is the same
+// immutable texture query. Do not infer equality from a texel key or UV algebra.
+bool shaderlod_solas_same_height_query(float x, float y, float cachedX, float cachedY) {
+    return shaderlod_optimization_enabled(shaderlodOptPomHeightCache) &&
+        x >= 0.0 && x <= 1.0 && y >= 0.0 && y <= 1.0 &&
+        x == cachedX && y == cachedY;
+}
 int shaderlod_solas_volume_budget(int original, int minimum) {
     if (!shaderlod_optimization_enabled(shaderlodOptAuroraBudget)) return original;
     return shaderlod_uniform_sample_budget(shaderlodBridgeVersion, shaderlodEnabled,

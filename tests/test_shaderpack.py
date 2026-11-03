@@ -24,7 +24,7 @@ class ShaderpackTests(unittest.TestCase):
         with zipfile.ZipFile(cls.output) as archive:
             cls.files = {name: archive.read(name) for name in archive.namelist()}
         cls.manifest = json.loads((ROOT / "patches/photon/v1.3b.json").read_text())
-        with zipfile.ZipFile(ROOT / "dev/upstream/photon_v1.3b.zip") as archive:
+        with zipfile.ZipFile(ROOT / "dependencies/upstream/photon_v1.3b.zip") as archive:
             cls.upstream = {entry.filename: archive.read(entry.filename) for entry in archive.infolist() if not entry.is_dir()}
 
     @classmethod
@@ -84,7 +84,7 @@ class ShaderpackTests(unittest.TestCase):
         self.assertEqual("1024.0", defaults["SHADERLOD_CLOUD_FAR"])
         self.assertEqual("64.0", defaults["SHADERLOD_CLOUD_TRANSITION"])
 
-    @unittest.skipUnless(shutil.which("c++"), "C++ compiler unavailable for isolated shader math checks")
+    @unittest.skipUnless((shutil.which("clang++") or shutil.which("c++")), "C++ compiler unavailable for isolated shader math checks")
     def test_actual_cloud_helper_distance_boundaries(self):
         # Execute the actual GLSL helper bodies on CPU with equivalent scalar
         # builtins/vec3 fields. This tests tier math; it is not GPU rendering.
@@ -133,12 +133,12 @@ float smoothstep(float a,float b,float x){ float t=clamp((x-a)/(b-a),0.f,1.f); r
                 path = Path(self.directory.name) / f"cloud-helper-{index}.cpp"
                 executable = path.with_suffix("")
                 path.write_text(definitions + wrappers + functions + "\nint main(){\n" + checks + "\nreturn 0;}\n")
-                result = subprocess.run(["c++", "-std=c++17", str(path), "-o", str(executable)], capture_output=True, text=True)
+                result = subprocess.run([(shutil.which("clang++") or shutil.which("c++")), "-std=c++17", str(path), "-o", str(executable)], capture_output=True, text=True)
                 self.assertEqual(0, result.returncode, result.stdout + result.stderr)
                 executed = subprocess.run([str(executable)], capture_output=True, text=True)
                 self.assertEqual(0, executed.returncode, f"Cloud boundary check {executed.returncode} failed")
 
-    @unittest.skipUnless(shutil.which("c++"), "C++ compiler unavailable for isolated shader math checks")
+    @unittest.skipUnless((shutil.which("clang++") or shutil.which("c++")), "C++ compiler unavailable for isolated shader math checks")
     def test_actual_water_helper_distance_boundaries(self):
         # Execute the actual GLSL helper bodies on CPU with equivalent scalar
         # builtins/vec3 fields. This tests tier math; it is not GPU rendering.
@@ -189,7 +189,7 @@ float smoothstep(float a,float b,float x){ float t=clamp((x-a)/(b-a),0.f,1.f); r
                 path = Path(self.directory.name) / f"water-helper-{index}.cpp"
                 executable = path.with_suffix("")
                 path.write_text(definitions + wrappers + functions + "\nint main(){\n" + checks + "\nreturn 0;}\n")
-                result = subprocess.run(["c++", "-std=c++17", str(path), "-o", str(executable)], capture_output=True, text=True)
+                result = subprocess.run([(shutil.which("clang++") or shutil.which("c++")), "-std=c++17", str(path), "-o", str(executable)], capture_output=True, text=True)
                 self.assertEqual(0, result.returncode, result.stdout + result.stderr)
                 executed = subprocess.run([str(executable)], capture_output=True, text=True)
                 self.assertEqual(0, executed.returncode, f"Water boundary check {executed.returncode} failed")
@@ -218,7 +218,7 @@ float smoothstep(float a,float b,float x){ float t=clamp((x-a)/(b-a),0.f,1.f); r
         settings = self.files["shaders/settings.glsl"].decode()
         self.assertRegex(settings, r"(?m)^//#define SHADERLOD_WATER_ANALYTIC$")
 
-    @unittest.skipUnless(shutil.which("c++"), "C++ compiler unavailable for isolated wave math checks")
+    @unittest.skipUnless((shutil.which("clang++") or shutil.which("c++")), "C++ compiler unavailable for isolated wave math checks")
     def test_actual_static_water_paths_match_original_reference(self):
         # Execute actual specialized GLSL bodies against original full-height,
         # finite-normal and parallax bodies instantiated with the same count.
@@ -387,18 +387,18 @@ case {count}:expected_normal=shaderlod_water_normal_{count}(world,flat,coord,dir
                 path = Path(self.directory.name) / f"water-static-{count}-{variation}-{analytic}-{shadow}.cpp"
                 executable = path.with_suffix("")
                 path.write_text(adapters + definitions + adapt(actual) + adapt(references) + checks)
-                preprocessed = subprocess.run(["c++", "-std=c++17", "-E", "-P", str(path)], capture_output=True, text=True)
+                preprocessed = subprocess.run([(shutil.which("clang++") or shutil.which("c++")), "-std=c++17", "-E", "-P", str(path)], capture_output=True, text=True)
                 self.assertEqual(0, preprocessed.returncode, preprocessed.stderr)
                 reachable = {int(__import__('math').ceil(count * scale)) for scale in (.75, .5, .25, .125)}
                 expected_kernels = (reachable if analytic else reachable - {count}) if effect else set()
                 actual_kernels = {int(n) for n in re.findall(r"double shaderlod_water_height_(\d+)\(", preprocessed.stdout)}
                 self.assertEqual(expected_kernels, actual_kernels)
-                compiled = subprocess.run(["c++", "-std=c++17", str(path), "-o", str(executable)], capture_output=True, text=True)
+                compiled = subprocess.run([(shutil.which("clang++") or shutil.which("c++")), "-std=c++17", str(path), "-o", str(executable)], capture_output=True, text=True)
                 self.assertEqual(0, compiled.returncode, compiled.stdout + compiled.stderr)
                 result = subprocess.run([str(executable)], capture_output=True, text=True)
                 self.assertEqual(0, result.returncode, f"Actual static water math fixture failed: {result.returncode}")
 
-    @unittest.skipUnless(shutil.which("c++"), "C++ compiler unavailable for cloud candidate math")
+    @unittest.skipUnless((shutil.which("clang++") or shutil.which("c++")), "C++ compiler unavailable for cloud candidate math")
     def test_actual_cloud_candidates_bounds_geometry_and_noise(self):
         helper = self.files["shaders/include/shaderlod/lod.glsl"].decode()
         names = ("shaderlod_use_bridge", "shaderlod_enabled", "shaderlod_preset", "shaderlod_budget", "shaderlod_noise",
@@ -519,7 +519,7 @@ return 0;
                         path = Path(self.directory.name) / f"cloud-candidate-{mode}-{overhead}-{cloud}-{zero_width}.cpp"
                         executable = path.with_suffix("")
                         path.write_text(adapters + defs + "\n".join(functions) + checks)
-                        compiled = subprocess.run(["c++", "-std=c++17", str(path), "-o", str(executable)], capture_output=True, text=True)
+                        compiled = subprocess.run([(shutil.which("clang++") or shutil.which("c++")), "-std=c++17", str(path), "-o", str(executable)], capture_output=True, text=True)
                         self.assertEqual(0, compiled.returncode, compiled.stdout + compiled.stderr)
                         result = subprocess.run([str(executable)], capture_output=True, text=True)
                         self.assertEqual(0, result.returncode, f"Cloud candidate fixture failed: {result.returncode}")
@@ -552,7 +552,7 @@ return 0;
         helper = self.files["shaders/include/shaderlod/lod.glsl"].decode()
         self.assertIn("int shaderlod_lighting_tier(int tier) {\n#ifdef SHADERLOD_PRESERVE_LIGHTING\n    return 0;", helper)
 
-    @unittest.skipUnless(shutil.which("c++"), "C++ compiler unavailable for actual lighting/debug fixtures")
+    @unittest.skipUnless((shutil.which("clang++") or shutil.which("c++")), "C++ compiler unavailable for actual lighting/debug fixtures")
     def test_actual_lighting_debug_control_flow_math_and_call_counts(self):
         helper = self.files["shaders/include/shaderlod/lod.glsl"].decode()
         functions = []
@@ -650,7 +650,7 @@ return 0;
                 path = Path(self.directory.name) / f"lighting-tier-{protected}.cpp"
                 executable = path.with_suffix("")
                 path.write_text(adapters + definitions + "\n".join(functions) + reference + candidate + translucent + checks)
-                compiled = subprocess.run(["c++", "-std=c++17", str(path), "-o", str(executable)], capture_output=True, text=True)
+                compiled = subprocess.run([(shutil.which("clang++") or shutil.which("c++")), "-std=c++17", str(path), "-o", str(executable)], capture_output=True, text=True)
                 self.assertEqual(0, compiled.returncode, compiled.stdout + compiled.stderr)
                 result = subprocess.run([str(executable)], capture_output=True, text=True)
                 self.assertEqual(0, result.returncode, f"Actual lighting/debug fixture failed: {result.returncode}")
@@ -678,7 +678,7 @@ return 0;
         self.assertIn("shaderlod_ssr_tier", ssr)
         self.assertNotIn("shaderlod_tier(", ssr)
 
-    @unittest.skipUnless(shutil.which("c++"), "C++ compiler unavailable for effect getter math")
+    @unittest.skipUnless((shutil.which("clang++") or shutil.which("c++")), "C++ compiler unavailable for effect getter math")
     def test_actual_effect_getters_respect_flags_and_bridge_disable(self):
         helper = self.files["shaders/include/shaderlod/lod.glsl"].decode()
         functions = []
@@ -737,11 +737,11 @@ float shaderlodNear=32.,shaderlodFar=96.,shaderlodTransition=8.;
             path = Path(self.directory.name) / ("effect-getters-" + "-".join(variant) + ".cpp")
             executable = path.with_suffix("")
             path.write_text(adapters + definitions + "\n".join(functions) + checks)
-            result = subprocess.run(["c++", "-std=c++17", str(path), "-o", str(executable)], capture_output=True, text=True)
+            result = subprocess.run([(shutil.which("clang++") or shutil.which("c++")), "-std=c++17", str(path), "-o", str(executable)], capture_output=True, text=True)
             self.assertEqual(0, result.returncode, result.stdout + result.stderr)
             self.assertEqual(0, subprocess.run([str(executable)]).returncode, variant)
 
-    @unittest.skipUnless(shutil.which("c++"), "C++ compiler unavailable for isolated bridge checks")
+    @unittest.skipUnless((shutil.which("clang++") or shutil.which("c++")), "C++ compiler unavailable for isolated bridge checks")
     def test_actual_bridge_disable_and_dynamic_budgets(self):
         helper = self.files["shaders/include/shaderlod/lod.glsl"].decode()
         def function(name):
@@ -809,7 +809,7 @@ int main(){
         for options in ("", "#define BORDER_FOG\n", "#define BLOCKY_CLOUDS\n", "#define BORDER_FOG\n#define BLOCKY_CLOUDS\n"):
             with self.subTest(atmosphere_consumers=options):
                 path.write_text(adapters + options + functions + checks)
-                result = subprocess.run(["c++", "-std=c++17", str(path), "-o", str(executable)], capture_output=True, text=True)
+                result = subprocess.run([(shutil.which("clang++") or shutil.which("c++")), "-std=c++17", str(path), "-o", str(executable)], capture_output=True, text=True)
                 self.assertEqual(0, result.returncode, result.stdout + result.stderr)
                 executed = subprocess.run([str(executable)], capture_output=True, text=True)
                 self.assertEqual(0, executed.returncode, f"Dynamic bridge check failed: {executed.returncode}")

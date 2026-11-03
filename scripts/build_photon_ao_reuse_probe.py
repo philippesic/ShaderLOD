@@ -10,7 +10,7 @@ import tempfile
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
-BASE = Path("dev/upstream/photon_v1.3b.zip")
+BASE = Path("dependencies/upstream/photon_v1.3b.zip")
 BASE_SHA256 = "120897768eaa8cb1f14a3e98f88dff009ae3204ee3b96904a4fe8586edfc1ead"
 MANIFEST = Path("patches/photon-experiments/ao-depth-reuse-probe.json")
 EXPERIMENT = "photon-ao-consecutive-depth-reuse-probe"

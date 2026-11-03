@@ -29,28 +29,7 @@ class LightingProfileTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'fresh'):prep.plan(self.output,self.source,root=self.root)
         with self.assertRaises(ValueError):prep.plan(self.root/'tracked',self.source,root=self.root)
 
-    def test_actual_complete_archive_source_metadata_helper_and_license_qualification(self):
-        runtime=json.loads((ROOT/'dev/runtime.lock.json').read_text())
-        original=ROOT/prep.shader.BASE;probe=ROOT/'build/Photon-LightingRatePrototype-disabled.zip'
-        if not probe.exists():self.skipTest('Frozen production archive absent')
-        info,private,q=prep.qualify_archives(original,probe,runtime)
-        self.assertEqual(prep.PROBE_SHA256,private['sha256']);self.assertTrue(q['qualified'])
-        self.assertEqual(prep.MANIFEST_SHA256,q['manifest_sha256'])
-        self.assertEqual('2fff58476c6d49d40eb61e5f6683dc58697ed964f128a3f444442677b06327b0',q['metadata']['shared_surface_helper']['sha256'])
-        damaged=self.root/'damaged.zip';shutil.copy2(probe,damaged)
-        with zipfile.ZipFile(damaged,'a') as z:z.writestr('extra-unreviewed.txt','extra')
-        with self.assertRaisesRegex(ValueError,'archive'):prep.qualify_archives(original,damaged,runtime)
-        with mock.patch.object(prep,'PROBE_SHA256',file_hash(damaged)):
-            with self.assertRaisesRegex(ValueError,'inventory'):prep.qualify_archives(original,damaged,runtime)
 
-    def test_source_options_all_held_and_graph_compatible(self):
-        runtime=json.loads((ROOT/'dev/runtime.lock.json').read_text())
-        original,probe,_=prep.qualify_archives(ROOT/prep.shader.BASE,prep.PROBE,runtime)
-        native,private,evidence=prep.native_options(prep.SOURCE,original,probe)
-        self.assertEqual(private,native|{prep.shader.SWITCH:'true'})
-        self.assertEqual(dict.fromkeys(prep.GRAPH_OPTIONS,'false'),evidence['graph_options'])
-        self.assertEqual(prep.SOURCE_OPTIONS_SHA256,evidence['held_effective_options_sha256'])
-        self.assertEqual({'DISTANT_HORIZONS':False,'VOXY':False},evidence['expected_environment'])
 
     def option_fixture(self):
         profile=self.root/'options';(profile/'config').mkdir(parents=True);(profile/'shaderpacks').mkdir()

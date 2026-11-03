@@ -1,0 +1,13 @@
+{
+  "required": false,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.experiment.makeupquad.mixin",
+  "plugin": "com.pp.shaderlod.experiment.makeupquad.mixin.QuadCoalescerMixinPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "QuadCoalescerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

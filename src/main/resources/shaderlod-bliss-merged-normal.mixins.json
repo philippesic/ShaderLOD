@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.optimization.blissmerged.mixin",
+  "plugin": "com.pp.shaderlod.optimization.blissmerged.mixin.BlissMergedMixinPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "BlissMergedProgramsMixin",
+    "BlissMergedProgramsMixin$BuilderHandle",
+    "BlissMergedChunkRendererMixin",
+    "BlissMergedPipelineDestroyMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

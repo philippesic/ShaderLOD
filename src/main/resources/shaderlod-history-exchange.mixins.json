@@ -1,0 +1,21 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "compatibilityLevel": "JAVA_21",
+  "package": "com.pp.shaderlod.optimization.framecopy.exchange.mixin",
+  "plugin": "com.pp.shaderlod.optimization.framecopy.exchange.mixin.CanonicalExchangeMixinPlugin",
+  "client": [
+    "CanonicalSourceMixin",
+    "CanonicalClearMixin",
+    "CanonicalPipelineMixin",
+    "CanonicalTargetsMixin",
+    "CanonicalTargetMixin",
+    "CanonicalCompositeMixin",
+    "CanonicalFinalMixin",
+    "CanonicalDrawMixin",
+    "CanonicalFrameMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

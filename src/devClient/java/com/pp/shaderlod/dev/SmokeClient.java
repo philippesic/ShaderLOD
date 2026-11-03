@@ -27,7 +27,17 @@ public final class SmokeClient {
     private static final String WORLD = "ShaderLOD-Smoke";
 
     public SmokeClient() {
-        com.pp.shaderlod.dev.timing.WorkTraceEvidence.initialize();
+        BackgroundLaunch.register();
+        if (SolasParserProbeR3.register()) return;
+        if (Boolean.getBoolean("shaderlod.dev.workTrace")) {
+            com.pp.shaderlod.dev.timing.WorkTraceEvidence.initialize();
+        }
+        if (Boolean.getBoolean("shaderlod.dev.spatialLayoutProbe")) {
+            com.pp.shaderlod.dev.timing.SpatialLayoutProbe.initialize();
+        }
+        if (Boolean.getBoolean("shaderlod.dev.pixelCoverage")) {
+            com.pp.shaderlod.dev.timing.PixelCoverageProbe.initialize();
+        }
         ComparisonClient.register();
         if (Boolean.getBoolean("shaderlod.dev.smoke")) {
             NeoForge.EVENT_BUS.addListener(this::tick);

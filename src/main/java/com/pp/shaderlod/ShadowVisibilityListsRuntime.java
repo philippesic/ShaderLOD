@@ -10,13 +10,13 @@ public final class ShadowVisibilityListsRuntime {
     private ShadowVisibilityListsRuntime() {}
 
     public static void onClientTick(ClientTickEvent.Post event) {
-        boolean enabled = ShaderLodConfig.ENABLED.get() && ShaderLodConfig.SEPARATE_SHADOW_VISIBILITY_LISTS.get();
+        boolean enabled = com.pp.shaderlod.integration.makeupquad.MakeUpQuadRuntime.enabled(com.pp.shaderlod.optimization.OptimizationId.SHADOW_VISIBILITY_LISTS);
         if (!enabled || Minecraft.getInstance().level == null) {
             ShadowVisibilityListsController.configure(false);
             return;
         }
         String pack = Iris.getCurrentPackName();
-        boolean photon = "Photon-ShaderLOD.zip".equals(pack) || "photon_v1.3b.zip".equals(pack);
+        boolean photon = com.pp.shaderlod.integration.makeupquad.MakeUpQuadRuntime.nativeGraphAvailable();
         ShadowVisibilityListsController.configure(photon && IrisApi.getInstance().isShaderPackInUse()
                 && !Iris.isFallback());
     }

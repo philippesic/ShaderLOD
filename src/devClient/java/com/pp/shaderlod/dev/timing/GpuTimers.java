@@ -21,6 +21,8 @@ public final class GpuTimers {
     private static final boolean ENABLED = Boolean.parseBoolean(System.getProperty("shaderlod.dev.gpuTiming",
             System.getProperty("shaderlod.dev.compare", "").isEmpty() ? "false" : "true"));
     private static final int QUERY_RING_SIZE = 12;
+    private static boolean recordingRequested = !Boolean.getBoolean("shaderlod.dev.manualProfiling");
+    private static boolean recording = recordingRequested;
     private static final int HISTORY = 240;
     private static final boolean PASS_TIMING = Boolean.parseBoolean(System.getProperty("shaderlod.dev.gpuPassTiming", "true"));
     private static final boolean ATTRIBUTION = Boolean.parseBoolean(System.getProperty("shaderlod.dev.gpuAttribution", "true"));
@@ -48,7 +50,11 @@ public final class GpuTimers {
 
     private GpuTimers() {}
 
+    /** Query work may be suspended without changing the running client or timer backend. */
+    public static void setRecording(boolean enabled) { recordingRequested=enabled; }
+    public static boolean recording() { return ENABLED&&recording; }
     public static void beginTick(boolean world) {
+        recording=recordingRequested;
         inWorld = world;
         frame++;
         tickActive = true;
@@ -69,7 +75,7 @@ public final class GpuTimers {
 
     private static void selectSamplingFrame() {
         var decision = GpuSamplingPolicy.schedule(frame, SAMPLE_INTERVAL, PASS_TIMING, ATTRIBUTION);
-        sampledFrame = decision.permitsQueryWork();
+        sampledFrame = recording && decision.permitsQueryWork();
         category = decision.category();
         if (ENABLED && inWorld && sampledFrame) scheduledSampledFrames++;
     }

@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.optimization.solasfade.mixin",
+  "plugin": "com.pp.shaderlod.optimization.solasfade.mixin.SolasTraceFadePlugin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "SolasTraceFadeProgramsMixin",
+    "SolasTraceFadeDrawMixin",
+    "SolasTraceFadeLifecycleMixin",
+    "SolasTraceFadePipelineMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

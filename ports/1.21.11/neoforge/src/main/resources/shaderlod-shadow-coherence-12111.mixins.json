@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.shadowcoherence12111.mixin",
+  "plugin": "com.pp.shaderlod.shadowcoherence12111.ShadowCoherencePlugin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "ShadowCullingFrustumMixin",
+    "ShadowCullingFrustumMixin$SafeZone",
+    "ShadowBoxDistanceAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

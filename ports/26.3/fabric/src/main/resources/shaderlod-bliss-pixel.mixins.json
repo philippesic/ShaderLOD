@@ -1,0 +1,22 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.optimization.blisspixel.mixin",
+  "plugin": "com.pp.shaderlod.optimization.blisspixel.mixin.BlissPixelMixinPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "BlissPixelUniformsMixin",
+    "BlissPixelPipelineMixin",
+    "BlissPixelPassView",
+    "BlissPixelCompositeView",
+    "BlissPixelReloadMixin",
+    "BlissPixelQuadDrawMixin",
+    "BlissPixelRenderPassDrawMixin",
+    "BlissPixelGlDrawMixin",
+    "BlissPixelPearlDrawMixin",
+    "BlissPixelPrepareMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

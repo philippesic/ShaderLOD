@@ -189,7 +189,7 @@ class SurfaceRegionContinuityTest(unittest.TestCase):
         self.assertTrue(eligible(4,p,n));self.assertFalse(eligible(4,p,n,limits=tight))
 
     def test_actual_iris_guard_and_pinned_glsl41_grammar(self):
-        iris=ROOT/'dev/runtime/iris-neoforge-1.8.12+mc1.21.1.jar'
+        iris=ROOT/'dependencies/runtime/iris-neoforge-1.8.12+mc1.21.1.jar'
         self.assertEqual('3e3f94d2d5cdcb8145c4385d521974aa2d8669b2cc212351f70cf06488182e83',hashlib.sha256(iris.read_bytes()).hexdigest())
         cache=Path.home()/'.gradle/caches/modules-2/files-2.1';dependencies=[]
         for pattern in ('com.google.guava/guava/32.1.2-jre/*/guava-32.1.2-jre.jar',

@@ -38,6 +38,8 @@ struct ShaderlodSpatialResult {
 // Evaluate must not use implicit derivatives in divergent representative paths.
 // Return albedo-independent irradiance or a declared linear shading quantity only.
 // Full-resolution albedo/material/specular/reflections/emission/fog stay outside.
+// Uniform policy/capability/quality preflight, with no surface sampling.
+bool shaderlod_spatial_adapter_has_coarse_demand();
 ShaderlodSpatialSurface shaderlod_spatial_adapter_surface(ivec2 pixel);
 ShaderlodSpatialSpread shaderlod_spatial_adapter_spread(ivec2 origin, int side);
 ShaderlodSpatialPlan shaderlod_spatial_adapter_plan(float distance_blocks);
@@ -77,6 +79,8 @@ ShaderlodSpatialTile shaderlod_spatial_prepare(int side, ivec2 tile_coordinate,
     ivec2 dimensions, float near_blocks, ShaderlodRegionLimits limits) {
     ShaderlodSpatialTile tile = ShaderlodSpatialTile(false, ivec2(0), ivec2(0),
         0.0, shaderlod_spatial_empty_surface());
+    // Covers both quantity production and independent certificate preparation.
+    if (!shaderlod_spatial_adapter_has_coarse_demand()) return tile;
     ivec2 cache_dimensions = shaderlod_spatial_cache_dimensions(dimensions, side);
     if (!shaderlod_spatial_inside(tile_coordinate, cache_dimensions) ||
         !shaderlod_region_limits_valid(limits) || !shaderlod_region_finite(near_blocks) ||

@@ -1,0 +1,138 @@
+[
+  {
+    "tuple": "neoforge1.21.1",
+    "kind": "Legacy",
+    "classes": {
+      "net/irisshaders/iris/pipeline/IrisRenderingPipeline.class": "95b3eb4425306964328cf771c7cc79b8bfffdf90e15bce813ad1a7bd38f34579",
+      "net/irisshaders/iris/shadows/ShadowRenderTargets.class": "4d6f1b3294365738dbcacac691021105a8141b2893441d919aff8b148ff093c5",
+      "net/caffeinemc/mods/sodium/client/gl/device/GLRenderDevice$ImmediateDrawCommandList.class": "60d7958e257a4ee5c22e9ca299dd8ca124c2f113d0d970b731526f510dae538b",
+      "net/irisshaders/iris/pipeline/programs/SodiumPrograms.class": "9fe2bf60a9c6140c90bcf09aeae23e38365f029660385d4dae919fbe6e7481cf"
+    }
+  },
+  {
+    "tuple": "neoforge1.21.11",
+    "kind": "Scalar",
+    "classes": {
+      "net/irisshaders/iris/pipeline/IrisRenderingPipeline.class": "313783af9ce511c40fcb39d246c4322de0120c1031c0cfd2fe3685fdde7c71ca",
+      "net/irisshaders/iris/shadows/ShadowRenderTargets.class": "7f2c1a6eed82fc15a730c0d2892eb91f5324f23a0e1f44defbd3ebc3f197a309",
+      "com/mojang/blaze3d/opengl/GlCommandEncoder.class": "79a5f47b7f7426ab4cf35291a5f581172584ca779424a0d62f653fa05f0e740e",
+      "net/irisshaders/iris/pipeline/programs/ShaderCreator.class": "209435855e901ab9bb4ccd79ea5367c153167041cbc3b8c192863426d726b81c",
+      "net/irisshaders/iris/pipeline/programs/ShaderSupplier.class": "fbb1a4ec6b3ec927a0554cd9dd36553269e65e0e84967dc00bcc18449956dbbe",
+      "com/mojang/blaze3d/opengl/GlStateManager.class": "06b91028538fbfdef641e0b23fad6f440e6276959ed36a3f010f875b92106d6e"
+    }
+  },
+  {
+    "tuple": "neoforge26.1.2",
+    "kind": "Scalar",
+    "classes": {
+      "net/irisshaders/iris/pipeline/IrisRenderingPipeline.class": "5175b6dc1422df3450a142447a4e0570c7bfcd61ebeb12b05cacb4366fb4d2f5",
+      "net/irisshaders/iris/shadows/ShadowRenderTargets.class": "59c59d44f12d3d7cbf805f86537d5289f48dd76b8c63577ae1a7fb127490fde5",
+      "com/mojang/blaze3d/opengl/GlCommandEncoder.class": "dce998f0bae894f109019bd4bfcf6cf763ea9186b033f1da2a57a30e0ca72e83",
+      "net/irisshaders/iris/pipeline/programs/ShaderCreator.class": "08e6001e555cdb3416122e6528869c246a66d4b1119fa956da20e576765b99a4",
+      "net/irisshaders/iris/pipeline/programs/ShaderSupplier.class": "e9c968a564c057a900b0c441a2b914d545634247d929b6d167f7350a62861095",
+      "com/mojang/blaze3d/opengl/GlStateManager.class": "c6451af28adedda9a6b12af40577f39ae9b8d38fc6d822b5f02e97aabd93c3e9"
+    }
+  },
+  {
+    "tuple": "neoforge26.2",
+    "kind": "Modern",
+    "classes": {
+      "net/irisshaders/iris/pipeline/IrisRenderingPipeline.class": "bc9352887ef09159c4680b759b498c7bc80531660b4f4ac893f3f060392064c4",
+      "net/irisshaders/iris/shadows/ShadowRenderTargets.class": "01e611523041352fb73e118f6c83b086cb917f50eea9f011b1c14ce641855b1c",
+      "com/mojang/blaze3d/opengl/GlCommandEncoder.class": "59803aaf5821ac664d5d5cc254e341a2d45f770d080771d197372556baaf79e3",
+      "net/irisshaders/iris/pipeline/programs/ShaderCreator.class": "a1d78ea02b98d9eb9d17b64849e6909109abbb064ed9ac38cdf278afbb4dbacd",
+      "net/irisshaders/iris/pipeline/programs/ShaderSupplier.class": "e9c968a564c057a900b0c441a2b914d545634247d929b6d167f7350a62861095"
+    }
+  },
+  {
+    "tuple": "neoforge26.3",
+    "kind": "Pearl",
+    "classes": {
+      "net/irisshaders/iris/pipeline/IrisRenderingPipeline.class": "53a667ae4114da83f10a19246898afb4ca5e2c1599595a53878559cfa03cee88",
+      "net/irisshaders/iris/shadows/ShadowRenderTargets.class": "302fefbae2c27a64ef0a9e164b4d112571ac4d6e78f748cc43f9c5634610c7a2",
+      "com/mojang/renderpearl/backend/opengl/GlCommandEncoder.class": "51dd6827403a0b754a9e232dc0bebfb312906bafdd0c0a4469c27c97581bb69f",
+      "net/irisshaders/iris/pipeline/programs/ShaderCreator.class": "4bcf5b6f9c83e2f5f30f4c525f44acf469f3ef5fe2326af2448e12bc74db32ea",
+      "net/irisshaders/iris/pipeline/programs/ShaderSupplier.class": "7bce94de44c86cfb3609c2146fa369af8c707366468fb092214b7848bb241944"
+    }
+  },
+  {
+    "tuple": "fabric1.21.1",
+    "kind": "Legacy",
+    "classes": {
+      "net/irisshaders/iris/pipeline/IrisRenderingPipeline.class": "eea6e6cdbca25786177fd69eba632643df6691afe17257f6cbe580351393f3b4",
+      "net/irisshaders/iris/shadows/ShadowRenderTargets.class": "38ec50d46524d1eaefb910793d5faa70a7de4b7145c1bc3bf83a0de45a7a5dbb",
+      "net/caffeinemc/mods/sodium/client/gl/device/GLRenderDevice$ImmediateDrawCommandList.class": "a553eca23bd0ead8582028e057426e80aac26ae7de8444422a7ec7f3a2498693",
+      "net/irisshaders/iris/pipeline/programs/SodiumPrograms.class": "4ba26f97a2a9006d3730962e3c7eb26f620c50cc7d98d82b6235720eac4753fb"
+    }
+  },
+  {
+    "tuple": "fabric1.21.11",
+    "kind": "Scalar",
+    "classes": {
+      "net/irisshaders/iris/pipeline/IrisRenderingPipeline.class": "c9098ede6d1e24c7f85c9bdad6e5a255d0bf1abcb94e3614aa8255fe8ff76b4d",
+      "net/irisshaders/iris/shadows/ShadowRenderTargets.class": "3fed4986f6c5eaca3a63cb248e9b790a63cc8a65fd029720b495eb46cfc8cd99",
+      "com/mojang/blaze3d/opengl/GlCommandEncoder.class": "0daafcb38a70c7047ccf4d792c126c19e358c949757eab3155b25213e5566d3e",
+      "net/irisshaders/iris/pipeline/programs/ShaderCreator.class": "6a2d0a91b9dd118f1a312c20fbbbcab823343ccfde1207e8596f5dbd6c74dc22",
+      "net/irisshaders/iris/pipeline/programs/ShaderSupplier.class": "aab611b9c4184327faf4bdc0a49bc79688c445441bda96acf0a9c0544ec26754",
+      "com/mojang/blaze3d/opengl/GlStateManager.class": "d51f7faedd6485e03dbf568f2482dc9b1243ae5ab5d9549e670266b67aa6cff2"
+    }
+  },
+  {
+    "tuple": "fabric26.1.2",
+    "kind": "Scalar",
+    "classes": {
+      "net/irisshaders/iris/pipeline/IrisRenderingPipeline.class": "5175b6dc1422df3450a142447a4e0570c7bfcd61ebeb12b05cacb4366fb4d2f5",
+      "net/irisshaders/iris/shadows/ShadowRenderTargets.class": "59c59d44f12d3d7cbf805f86537d5289f48dd76b8c63577ae1a7fb127490fde5",
+      "com/mojang/blaze3d/opengl/GlCommandEncoder.class": "5c4320f7a09acab4bba7c77e2b1c7c2c637a1663c41560b511632004a6c8046e",
+      "net/irisshaders/iris/pipeline/programs/ShaderCreator.class": "08e6001e555cdb3416122e6528869c246a66d4b1119fa956da20e576765b99a4",
+      "net/irisshaders/iris/pipeline/programs/ShaderSupplier.class": "e9c968a564c057a900b0c441a2b914d545634247d929b6d167f7350a62861095",
+      "com/mojang/blaze3d/opengl/GlStateManager.class": "6fe91f60341be30b71d855a451dad4483e945cf7cfb305b6e230c2a7d1d6ba5d"
+    }
+  },
+  {
+    "tuple": "fabric26.2",
+    "kind": "Modern",
+    "classes": {
+      "net/irisshaders/iris/pipeline/IrisRenderingPipeline.class": "bc9352887ef09159c4680b759b498c7bc80531660b4f4ac893f3f060392064c4",
+      "net/irisshaders/iris/shadows/ShadowRenderTargets.class": "01e611523041352fb73e118f6c83b086cb917f50eea9f011b1c14ce641855b1c",
+      "com/mojang/blaze3d/opengl/GlCommandEncoder.class": "16359d35b89008f6a90691c44e2fce4c1c01390d107a2dd42c9852594b9d0054",
+      "net/irisshaders/iris/pipeline/programs/ShaderCreator.class": "a1d78ea02b98d9eb9d17b64849e6909109abbb064ed9ac38cdf278afbb4dbacd",
+      "net/irisshaders/iris/pipeline/programs/ShaderSupplier.class": "e9c968a564c057a900b0c441a2b914d545634247d929b6d167f7350a62861095"
+    }
+  },
+  {
+    "tuple": "fabric26.3",
+    "kind": "Pearl",
+    "classes": {
+      "net/irisshaders/iris/pipeline/IrisRenderingPipeline.class": "53a667ae4114da83f10a19246898afb4ca5e2c1599595a53878559cfa03cee88",
+      "net/irisshaders/iris/shadows/ShadowRenderTargets.class": "302fefbae2c27a64ef0a9e164b4d112571ac4d6e78f748cc43f9c5634610c7a2",
+      "com/mojang/renderpearl/backend/opengl/GlCommandEncoder.class": "e8b79c8027869599fcba93dd6731a3a9acae145b5072200210b13c8a10aa21f0",
+      "net/irisshaders/iris/pipeline/programs/ShaderCreator.class": "4bcf5b6f9c83e2f5f30f4c525f44acf469f3ef5fe2326af2448e12bc74db32ea",
+      "net/irisshaders/iris/pipeline/programs/ShaderSupplier.class": "7bce94de44c86cfb3609c2146fa369af8c707366468fb092214b7848bb241944"
+    }
+  },
+  {
+    "tuple": "fabric1.21.1-intermediary",
+    "kind": "Legacy",
+    "classes": {
+      "net/irisshaders/iris/pipeline/IrisRenderingPipeline.class": "006906a07a47313efc873289f9f59de5c2ec2030ed85ffaca39491916e8ab91e",
+      "net/irisshaders/iris/shadows/ShadowRenderTargets.class": "38ec50d46524d1eaefb910793d5faa70a7de4b7145c1bc3bf83a0de45a7a5dbb",
+      "net/caffeinemc/mods/sodium/client/gl/device/GLRenderDevice$ImmediateDrawCommandList.class": "a553eca23bd0ead8582028e057426e80aac26ae7de8444422a7ec7f3a2498693",
+      "net/irisshaders/iris/pipeline/programs/SodiumPrograms.class": "7f49c1da2e12807f0680ca894f631c104b2a8846492e4c116014db11dc3e29b6"
+    },
+    "namespace": "intermediary"
+  },
+  {
+    "tuple": "fabric1.21.11-intermediary",
+    "kind": "Scalar",
+    "classes": {
+      "net/irisshaders/iris/pipeline/IrisRenderingPipeline.class": "b41b371736edda913f735c37e01be07acadc11379a560a4ef6eac1ea81803c18",
+      "net/irisshaders/iris/shadows/ShadowRenderTargets.class": "3fed4986f6c5eaca3a63cb248e9b790a63cc8a65fd029720b495eb46cfc8cd99",
+      "net/minecraft/class_10860.class": "8cab6de1535b544c61f4f44d3f96e8f6860117d0beeaf476dba02e59762473ce",
+      "net/irisshaders/iris/pipeline/programs/ShaderCreator.class": "ef3da698253f2379786ac5ee667d1e95c782014e923df122c8403288bd157384",
+      "net/irisshaders/iris/pipeline/programs/ShaderSupplier.class": "3ced13070c780bc4e95a28a7845148ad2872cd6fa5f9521275deae312e3d59ae",
+      "com/mojang/blaze3d/opengl/GlStateManager.class": "afeff4a0263faf004d4c61083ef2d21848b6058b0d5601e83c40b6cd1b136d78"
+    },
+    "namespace": "intermediary"
+  }
+]

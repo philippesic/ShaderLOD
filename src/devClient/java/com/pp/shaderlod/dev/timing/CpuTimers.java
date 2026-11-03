@@ -15,6 +15,10 @@ public final class CpuTimers {
             System.getProperty("shaderlod.dev.compare", "").isEmpty() ? "false" : "true"));
     private static final boolean LAYERS = Boolean.parseBoolean(System.getProperty("shaderlod.dev.cpuLayerTiming", "true"));
     private static final int CAPACITY = 16384;
+    private static final int LAYER_INTERVAL = Math.max(1,Integer.getInteger("shaderlod.dev.cpuLayerSampleInterval",1));
+    private static boolean recordingRequested = !Boolean.getBoolean("shaderlod.dev.manualProfiling");
+    private static boolean recording = recordingRequested;
+    private static boolean layerFrame = true;
     private static final ThreadMXBean THREAD = ManagementFactory.getThreadMXBean();
     private static final ArrayDeque<Mark> MARKS = new ArrayDeque<>();
     private static final ArrayDeque<String> IRIS_SCOPES = new ArrayDeque<>();
@@ -29,7 +33,12 @@ public final class CpuTimers {
 
     private CpuTimers() {}
 
+    /** Control changes latch at the next frame boundary, keeping nested scopes balanced. */
+    public static void setRecording(boolean enabled) { recordingRequested=enabled; }
+    public static boolean recording() { return ENABLED&&recording; }
     public static void beginFrame(long frameId, boolean hasWorld) {
+        recording=recordingRequested;
+        layerFrame=(frameId-1)%LAYER_INTERVAL==0;
         frame = frameId;
         world = hasWorld;
         if (!ENABLED || initialized) return;
@@ -46,19 +55,19 @@ public final class CpuTimers {
     public static void beginLayer(String scope) { begin(scope, true); }
 
     public static void beginIrisGroup(String name) {
-        if (!ENABLED || !world || !LAYERS) return;
+        if (!ENABLED || !recording || !world || !LAYERS || !layerFrame) return;
         String scope = (IRIS_SCOPES.isEmpty() ? "iris-stage/" : "iris/") + name;
         IRIS_SCOPES.push(scope);
         beginLayer(scope);
     }
 
     public static void endIrisGroup() {
-        if (!ENABLED || !world || !LAYERS || IRIS_SCOPES.isEmpty()) return;
+        if (!ENABLED || !recording || !world || !LAYERS || !layerFrame || IRIS_SCOPES.isEmpty()) return;
         endLayer(IRIS_SCOPES.pop());
     }
 
     private static void begin(String scope, boolean layer) {
-        if (!ENABLED || !world || (layer && !LAYERS)) return;
+        if (!ENABLED || !recording || !world || (layer && (!LAYERS || !layerFrame))) return;
         long wall = System.nanoTime();
         long cpu = threadClock ? THREAD.getCurrentThreadCpuTime() : -1;
         MARKS.push(new Mark(scope, wall, cpu, frame, epoch));
@@ -68,7 +77,7 @@ public final class CpuTimers {
     public static void endLayer(String scope) { end(scope, true); }
 
     private static void end(String scope, boolean layer) {
-        if (!ENABLED || !world || (layer && !LAYERS)) return;
+        if (!ENABLED || !recording || !world || (layer && (!LAYERS || !layerFrame))) return;
         long cpu = threadClock ? THREAD.getCurrentThreadCpuTime() : -1;
         long wall = System.nanoTime();
         if (MARKS.isEmpty() || !MARKS.peek().scope.equals(scope)) {

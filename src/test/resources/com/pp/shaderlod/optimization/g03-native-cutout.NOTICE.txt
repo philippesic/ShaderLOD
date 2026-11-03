@@ -1,0 +1,2 @@
+MakeUp Ultra Fast Shaders 9.5g by Javier Garduno, GNU Lesser General Public License v3.0. Test-only complete native CUTOUT after pinned Iris 1.8.12/Sodium 0.6.13 transformation; generated declarations remain attributed to Iris/glsl-transformer. Native shader archive/license is preserved in the project upstream inputs. This small source fixture locks the complete admitted stage and mutation refusals; it is not a capture or performance log.
+Full retained license terms: patches/makeup/LICENSE.MakeUp and patches/makeup/LICENSE.GPL-3.0.

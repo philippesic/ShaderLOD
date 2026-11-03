@@ -1,0 +1,7 @@
+#include "/lib/shaderlod/sildur_spatial_option.glsl"
+#include "/lib/shaderlod/sildur_pixel_option.glsl"
+#define SHADERLOD_SILDUR_AO_HALF_RES 0 // [0 1]
+#define SHADERLOD_SILDUR_SHADOW_QUERY_GRAPH 0 // [0 1]
+#if SHADERLOD_EFFECT_ADAPTER == 1 && SHADERLOD_SILDUR_PIXEL_GRAPH == 1 && SHADERLOD_SILDUR_SHADOW_QUERY_GRAPH == 0 && SHADERLOD_SILDUR_AO_HALF_RES == 0 && SHADERLOD_SILDUR_SPATIAL_REUSE == 0 && SHADERLOD_SILDUR_LIGHTING_RATE == 0 && defined IS_IRIS && MC_VERSION == 12101 && IRIS_VERSION == 10812 && !defined DISTANT_HORIZONS && !defined VOXY
+#define SHADERLOD_SILDUR_WORLD_GRAPH 1
+#endif

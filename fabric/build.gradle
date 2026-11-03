@@ -1,0 +1,355 @@
+plugins {
+    id 'fabric-loom' version '1.14.10'
+    id 'maven-publish'
+}
+
+version = mod_version
+group = mod_group_id
+base { archivesName = 'shaderlod-fabric' }
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+sourceSets { devClient }
+sourceSets.devClient.compileClasspath += sourceSets.main.output + sourceSets.main.compileClasspath
+sourceSets.devClient.runtimeClasspath += sourceSets.main.output + sourceSets.main.runtimeClasspath
+
+repositories {
+    mavenCentral()
+    exclusiveContent {
+        forRepository { maven { name = 'Modrinth'; url = 'https://api.modrinth.com/maven' } }
+        filter { includeGroup 'maven.modrinth' }
+    }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${minecraft_version}"
+    mappings loom.officialMojangMappings()
+    modImplementation "net.fabricmc:fabric-loader:${loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
+    // Release IDs are immutable; checksummed artifacts recorded in dependencies.lock.json.
+    modImplementation 'maven.modrinth:iris:zsoi0dso'
+    modImplementation 'maven.modrinth:sodium:u1OEbNKx'
+    // Loom removes Iris's nested-JAR discovery metadata in its dev remap. Match every
+    // bundled non-mod library from the pinned release, without CLI/tool transitives.
+    runtimeOnly('org.antlr:antlr4-runtime:4.13.1') { transitive = false }
+    runtimeOnly('io.github.douira:glsl-transformer:2.0.1') { transitive = false }
+    runtimeOnly('org.anarres:jcpp:1.4.14') { transitive = false }
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.14.1'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+// Compile the same source files, without copying policies or importing NeoForge.
+def shared = ['com/pp/shaderlod/GeometryLodPolicy.java', 'com/pp/shaderlod/GeometryCoverageGuard.java', 'com/pp/shaderlod/optimization/**', 'com/pp/shaderlod/measurement/**', 'com/pp/shaderlod/CoreUniformFrame.java', 'com/pp/shaderlod/LodSettings.java',
+              'com/pp/shaderlod/LodPreset.java', 'com/pp/shaderlod/EffectUniformFrame.java',
+              'com/pp/shaderlod/lod/**', 'com/pp/shaderlod/integration/**', 'com/pp/shaderlod/packs/**',
+              'com/pp/shaderlod/mixin/BslAo*.java',
+              'com/pp/shaderlod/mixin/EffectUniformsMixin.java',
+              'com/pp/shaderlod/mixin/IrisWorldCompletionMixin.java',
+              'com/pp/shaderlod/mixin/IrisOptionWriteMixin.java']
+sourceSets.main.java {
+    srcDir '../src/main/java'
+    include shared
+    include 'com/pp/shaderlod/fabric/**'
+    include 'com/pp/shaderlod/ShaderLodEffectConfig.java'
+    // Same FQN loader adapter lives in this module; exclude the NeoForge original by path.
+    exclude { it.file.canonicalPath == file('../src/main/java/com/pp/shaderlod/ShaderLodEffectConfig.java').canonicalPath }
+    // Renderer bootstrap and live loader/config adapter have explicit Fabric pins.
+    exclude { it.file.canonicalPath == file('../src/main/java/com/pp/shaderlod/integration/makeupquad/MakeUpQuadRuntime.java').canonicalPath }
+    exclude { it.file.canonicalPath == file('../src/main/java/com/pp/shaderlod/integration/makeupquad/MakeUpQuadApiPins.java').canonicalPath }
+    exclude { it.file.canonicalPath == file('../src/main/java/com/pp/shaderlod/integration/RasterExperimentRuntime.java').canonicalPath }
+}
+sourceSets.test.java {
+    srcDir '../src/test/java'
+    include 'com/pp/shaderlod/fabric/**'
+    include 'com/pp/shaderlod/optimization/**'; include 'com/pp/shaderlod/measurement/**'; include 'com/pp/shaderlod/CoreUniformFrameTest.java'
+    include 'com/pp/shaderlod/LodSettingsTest.java'
+    include 'com/pp/shaderlod/lod/**'
+    include 'com/pp/shaderlod/packs/**'
+}
+
+loom {
+    accessWidenerPath = file("src/main/resources/shaderlod.accesswidener")
+    mods {
+        shaderlod { sourceSet sourceSets.main }
+        shaderlod_dev { sourceSet sourceSets.devClient }
+    }
+    runs {
+        client {
+            client()
+            source sourceSets.devClient
+            runDir 'run'
+            if (project.findProperty('fabricRoundtrip')?.toString() == 'true') {
+                property 'shaderlod.dev.fabricRoundtrip', 'true'
+                property 'shaderlod.dev.fabricRoundtripOriginal', project.findProperty('fabricRoundtripOriginal')?.toString() ?: ''
+                if (project.findProperty('fabricRoundtripDh')?.toString() == 'true') {
+                    property 'shaderlod.dev.fabricRoundtripDh', 'true'
+                }
+                if (project.findProperty('fabricRoundtripUi')?.toString() == 'true') {
+                    property 'shaderlod.dev.fabricRoundtripUi', 'true'
+                }
+            }
+            if (project.findProperty('fabricControl')?.toString() == 'true') {
+                property 'shaderlod.dev.fabricControl', 'true'
+                property 'shaderlod.dev.gpuTiming', 'false'
+                property 'shaderlod.dev.cpuTiming', 'false'
+            }
+            if (project.findProperty('fabricSmoke')?.toString() == 'true') {
+                property 'shaderlod.dev.fabricSmoke', 'true'
+            }
+            if (project.findProperty('fabricRendererSpeedProbe')?.toString() == 'true') {
+                property 'shaderlod.dev.fabricRendererSpeedProbe', 'true'
+                property 'shaderlod.experimentalFabricRenderer1211', 'true'
+            }
+            if (project.findProperty('fabricRendererSourceProbe')?.toString() == 'true') {
+                property 'shaderlod.dev.fabricRendererSourceProbe', 'true'
+                property 'shaderlod.experimentalFabricRenderer1211', 'true'
+            }
+            if (project.findProperty('fabricOriginalSourceProbe')?.toString() == 'true') {
+                property 'shaderlod.dev.fabricOriginalSourceProbe', 'true'
+                property 'shaderlod.dev.fabricOriginalSourceFamily', project.findProperty('fabricOriginalSourceFamily')?.toString() ?: ''
+                property 'shaderlod.dev.fabricRoundtripOriginal', project.findProperty('fabricRoundtripOriginal')?.toString() ?: ''
+            }
+            if (project.hasProperty('fabricRendererSinglePhase')) {
+                def phase = project.property('fabricRendererSinglePhase').toString()
+                if (!(phase in ['original', 'on', 'original-return']) || project.hasProperty('fabricNativeCostControl')
+                        || project.findProperty('fabricRendererSpeedProbe')?.toString() != 'true'
+                        || project.findProperty('fabricRendererResearchFamily')?.toString() != 'bsl'
+                        || project.findProperty('fabricRendererSourceProbe')?.toString() == 'true'
+                        || project.findProperty('fabricOriginalSourceProbe')?.toString() == 'true'
+                        || project.findProperty('fabricRoundtrip')?.toString() != 'true'
+                        || project.findProperty('fabricRoundtripDh')?.toString() == 'true'
+                        || project.findProperty('fabricRoundtripUi')?.toString() == 'true') {
+                    throw new GradleException('Single BSL window requires immutable original/on/original-return phase and speed only')
+                }
+                property 'shaderlod.dev.fabricRendererSinglePhase', phase
+            }
+            if (project.hasProperty('fabricNativeCostControl')) {
+                if (project.property('fabricNativeCostControl').toString() != 'true'
+                        || project.findProperty('fabricRendererSpeedProbe')?.toString() != 'true'
+                        || project.findProperty('fabricRendererResearchFamily')?.toString() != 'bsl'
+                        || project.findProperty('fabricRendererSourceProbe')?.toString() == 'true'
+                        || project.findProperty('fabricOriginalSourceProbe')?.toString() == 'true'
+                        || project.findProperty('fabricRoundtrip')?.toString() != 'true'
+                        || project.findProperty('fabricRoundtripDh')?.toString() == 'true'
+                        || project.findProperty('fabricRoundtripUi')?.toString() == 'true') {
+                    throw new GradleException('Native cost control requires explicit BSL speed roundtrip, no source/UI/DH')
+                }
+                property 'shaderlod.dev.fabricNativeCostControl', 'true'
+            }
+            if (project.hasProperty('fabricRendererResearchFamily')) {
+                def family = project.property('fabricRendererResearchFamily').toString()
+                def speed = project.findProperty('fabricRendererSpeedProbe')?.toString() == 'true'
+                def source = project.findProperty('fabricRendererSourceProbe')?.toString() == 'true'
+                if (family != 'bsl' || speed == source || project.findProperty('fabricOriginalSourceProbe')?.toString() == 'true'
+                        || project.findProperty('fabricRoundtripDh')?.toString() == 'true'
+                        || project.findProperty('fabricRoundtripUi')?.toString() == 'true') {
+                    throw new GradleException('Named BSL research requires exactly one renderer source/speed probe, no original-only/UI/DH modes')
+                }
+                property 'shaderlod.dev.fabricRendererResearchFamily', 'bsl'
+                property 'shaderlod.experimentalRendererResearch', 'true'
+            }
+        }
+    }
+}
+tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8' }
+tasks.named('test') {
+    useJUnitPlatform()
+    // Shared local archive fixtures are rooted at the repository, not this standalone module.
+    workingDir project.projectDir.parentFile
+}
+tasks.named('processResources') {
+    inputs.property 'version', project.version
+    filesMatching('fabric.mod.json') { expand version: project.version }
+    from('../src/main/resources') {
+        include 'assets/shaderlod/adapters/**'
+        // Complete option maps consumed by the shared strict profile readers.
+        include 'assets/shaderlod/astraao/options.json'
+        include 'assets/shaderlod/sildurpixel/options131.json'
+        include 'assets/shaderlod/solaspixel/options438.json'
+        include 'assets/shaderlod/solaspixel/pbr438.json'
+        include 'assets/shaderlod/*quad/**'; include 'assets/shaderlod/unbounddepth/**'; include 'assets/shaderlod/reimagineddepth/**'; include 'assets/shaderlod/photonspatial/api.json'; include 'assets/shaderlod/photonhistory/**'
+        include 'shaderlod-makeup-quad.mixins.json'
+        include 'shaderlod-photon-early-alpha.mixins.json'
+        include 'assets/shaderlod/photonearlyalpha/**'
+    }
+}
+tasks.named('jar') { from('../LICENSE') { into 'META-INF'; rename { 'LICENSE.shaderlod' } } }
+
+// Modern Iris ShaderSupplier is not present on either MC1.21.1 legacy API.
+def makeupShadowSupplierLegacyExcluded = file("../src/main/java/com/pp/shaderlod/optimization/makeupshadow/mixin/ShadowSupplierMixin.java").canonicalPath
+sourceSets.main.java.exclude { it.file.canonicalPath == makeupShadowSupplierLegacyExcluded }
+
+// Explicit legacy Solas POM prefix owner: actual Fabric1.21.1 API row only.
+sourceSets.main.java.include "com/pp/shaderlod/solasprefix/**"
+
+// Exact Sildur Fabric1.21.1 legacy producer API row.
+sourceSets.main.java.include "com/pp/shaderlod/sildurprefix/**"
+
+// Only NF1.21.1 has the legacy normal early-alpha producer; typed ports remain pending.
+def shaderlodMakeUpEarlyAlphaLegacySource = file("../src/main/java/com/pp/shaderlod/optimization/makeupearlyalpha").canonicalPath + File.separator
+sourceSets.main.java.exclude { it.file.canonicalPath.startsWith(shaderlodMakeUpEarlyAlphaLegacySource) && it.file.name != "MakeUpOpaqueAlphaSpecialization.java" }
+
+// Exact optional DH public API compile dependency; users may run without DH.
+dependencies { compileOnly files("../dev/prism-testing-r1/staging/common/mods/DistantHorizons-3.3.3-1.21.1-fabric-neoforge.jar") }
+
+// MakeUp merged terrain first normal NF1.21.1 ABI; remaining normal adapters pending.
+def shaderlodMakeUpMergedLegacySource = file("../src/main/java/com/pp/shaderlod/optimization/makeupmerged").canonicalPath + File.separator
+sourceSets.main.java.exclude { it.file.canonicalPath.startsWith(shaderlodMakeUpMergedLegacySource) }
+
+// FirstNF1.21.1 native depth-priming API has no source variant for this module yet.
+def shaderlodUnboundPrimeLegacySource = file("../src/main/java/com/pp/shaderlod/optimization/unboundprime").canonicalPath + File.separator
+sourceSets.main.java.exclude { it.file.canonicalPath.startsWith(shaderlodUnboundPrimeLegacySource) }
+
+// Exact Fabric1.21.1 depth-priming variant; shared NeoForge legacy source remains excluded.
+sourceSets.main.java.include "com/pp/shaderlod/optimization/unboundprime/**"
+tasks.named("processResources") { from("../src/main/resources") { include "assets/shaderlod/unboundprime/**" } }
+
+// Fabric1.21.1 uses local typed merged-terrain APIs and the reviewed normal shared configs/helper.
+tasks.named('processResources') { from('../src/main/resources') {
+    include 'shaderlod-makeup-merged-linkage-normal.mixins.json'
+    include 'shaderlod-makeup-merged-normal.mixins.json'
+    include 'shaderlod-makeup-merged-normal-region-offset.glsl'
+} }
+
+// BSL early-alpha first normal NF1211 ABI; other typed ports remain pending.
+def shaderlodBslEarlyAlphaLegacySource = file("../src/main/java/com/pp/shaderlod/optimization/bslearlyalpha").canonicalPath + File.separator
+sourceSets.main.java.exclude { it.file.canonicalPath.startsWith(shaderlodBslEarlyAlphaLegacySource) }
+
+// Explicit Fabric1.21.1 normalUnbound prefix supplier, separatefromNF nativepackage.
+def shaderlodUnboundPrefixLegacySource = file("../src/main/java/com/pp/shaderlod/unboundprefix").canonicalPath + File.separator
+sourceSets.main.java.include "com/pp/shaderlod/unboundprefix/**"
+sourceSets.main.java.exclude { it.file.canonicalPath.startsWith(shaderlodUnboundPrefixLegacySource) }
+
+// Reimagined early alpha firstNF1.21.1 API; explicit other nine adapters pending.
+def shaderlodReimaginedEarlyAlphaLegacySource = file("../src/main/java/com/pp/shaderlod/optimization/reimaginedearlyalpha").canonicalPath + File.separator
+sourceSets.main.java.exclude { it.file.canonicalPath.startsWith(shaderlodReimaginedEarlyAlphaLegacySource) && it.file.name != "ReimaginedCompilationInputs.java" }
+
+// Sildur earlyalpha firstNF1211 nativeAPI; othernine produceradapters pending.
+def shaderlodSildurEarlyAlphaLegacySource = file("../src/main/java/com/pp/shaderlod/optimization/sildurearlyalpha").canonicalPath + File.separator
+sourceSets.main.java.exclude { it.file.canonicalPath.startsWith(shaderlodSildurEarlyAlphaLegacySource) }
+
+// Bliss early-alpha first normal NF1211 ABI.
+def shaderlodBlissEarlyAlphaLegacySource = file("../src/main/java/com/pp/shaderlod/optimization/blissearlyalpha").canonicalPath + File.separator
+sourceSets.main.java.exclude { it.file.canonicalPath.startsWith(shaderlodBlissEarlyAlphaLegacySource) }
+
+// Solas earlyalpha firstNF1211 API; othernine native producers pending.
+def shaderlodSolasEarlyAlphaLegacySource = file("../src/main/java/com/pp/shaderlod/optimization/solasearlyalpha").canonicalPath + File.separator
+sourceSets.main.java.exclude { it.file.canonicalPath.startsWith(shaderlodSolasEarlyAlphaLegacySource) }
+
+// Astra early-alpha first normal NF1211 ABI.
+def shaderlodAstraEarlyAlphaLegacySource = file("../src/main/java/com/pp/shaderlod/optimization/astraearlyalpha").canonicalPath + File.separator
+sourceSets.main.java.exclude { it.file.canonicalPath.startsWith(shaderlodAstraEarlyAlphaLegacySource) }
+
+def shaderlodPhotonEarlyAlphaLegacySource = file("../src/main/java/com/pp/shaderlod/optimization/photonearlyalpha").canonicalPath + File.separator
+sourceSets.main.java.exclude { it.file.canonicalPath.startsWith(shaderlodPhotonEarlyAlphaLegacySource) }
+
+// Unbound early-alpha firstNF1211; other nine exact typed adapters pending.
+def shaderlodUnboundEarlyAlphaLegacySource = file("../src/main/java/com/pp/shaderlod/optimization/unboundearlyalpha").canonicalPath + File.separator
+sourceSets.main.java.exclude { it.file.canonicalPath.startsWith(shaderlodUnboundEarlyAlphaLegacySource) }
+
+// BSL merged terrain first legacy1.21.1 seam; typed local Fabric copy or future ports only.
+def shaderlodBslMergedLegacySource = file("../src/main/java/com/pp/shaderlod/optimization/bslmerged").canonicalPath + File.separator
+sourceSets.main.java.exclude { it.file.canonicalPath.startsWith(shaderlodBslMergedLegacySource) }
+
+// Bliss merged terrain currently has exact MC1.21.1 loader-local implementations.
+def shaderlodBlissMergedLegacySource = file("../src/main/java/com/pp/shaderlod/optimization/blissmerged").canonicalPath + File.separator
+sourceSets.main.java.exclude { it.file.canonicalPath.startsWith(shaderlodBlissMergedLegacySource) }
+
+// Unbound merged terrain has exact MC1.21.1 loader-local implementations.
+def shaderlodUnboundMergedLegacySource = file("../src/main/java/com/pp/shaderlod/optimization/unboundmerged").canonicalPath + File.separator
+sourceSets.main.java.exclude { it.file.canonicalPath.startsWith(shaderlodUnboundMergedLegacySource) }
+
+// Select Fabric local classes and package the actual conservative coverage/profile inputs.
+def shaderlodReimaginedPrimeLegacySource = file("../src/main/java/com/pp/shaderlod/optimization/reimaginedprime").canonicalPath + File.separator
+sourceSets.main.java.exclude { it.file.canonicalPath.startsWith(shaderlodReimaginedPrimeLegacySource) }
+tasks.named("processResources") {
+    from("../src/main/resources") { include "assets/shaderlod/reimaginedprime/**" }
+}
+
+def shaderlodReimaginedMergedLegacySource = file("../src/main/java/com/pp/shaderlod/optimization/reimaginedmerged").canonicalPath + File.separator
+sourceSets.main.java.exclude { it.file.canonicalPath.startsWith(shaderlodReimaginedMergedLegacySource) }
+
+// Sildur merged terrain has exact MC1.21.1 loader-local implementations.
+def shaderlodSildurMergedLegacySource = file("../src/main/java/com/pp/shaderlod/optimization/sildurmerged").canonicalPath + File.separator
+sourceSets.main.java.exclude { it.file.canonicalPath.startsWith(shaderlodSildurMergedLegacySource) }
+
+// Solas merged terrain currently has exact MC1.21.1 loader-local implementations.
+def shaderlodSolasMergedLegacySource = file("../src/main/java/com/pp/shaderlod/optimization/solasmerged").canonicalPath + File.separator
+sourceSets.main.java.exclude { it.file.canonicalPath.startsWith(shaderlodSolasMergedLegacySource) }
+
+// Astra merged terrain currently has exact MC1.21.1 loader-local implementations.
+def shaderlodAstraMergedLegacySource = file("../src/main/java/com/pp/shaderlod/optimization/astramerged").canonicalPath + File.separator
+sourceSets.main.java.exclude { it.file.canonicalPath.startsWith(shaderlodAstraMergedLegacySource) }
+
+// Photon merged terrain currently has exact MC1.21.1 loader-local implementations.
+def shaderlodPhotonMergedLegacySource = file("../src/main/java/com/pp/shaderlod/optimization/photonmerged").canonicalPath + File.separator
+sourceSets.main.java.exclude { it.file.canonicalPath.startsWith(shaderlodPhotonMergedLegacySource) }
+
+// Astra depth priming currently has exact MC1.21.1 loader-local implementations.
+def shaderlodAstraPrimeLegacySource = file("../src/main/java/com/pp/shaderlod/optimization/astraprime").canonicalPath + File.separator
+sourceSets.main.java.exclude { it.file.canonicalPath.startsWith(shaderlodAstraPrimeLegacySource) }
+
+
+def shaderlodBslPrimeLegacySource = file("../src/main/java/com/pp/shaderlod/optimization/bslprime").canonicalPath + File.separator
+sourceSets.main.java.exclude { it.file.canonicalPath.startsWith(shaderlodBslPrimeLegacySource) }
+
+// Solas SOLID rock depth priming currently has exact MC1.21.1 loader-local implementations.
+def shaderlodSolasPrimeLegacySource = file("../src/main/java/com/pp/shaderlod/optimization/solasprime").canonicalPath + File.separator
+sourceSets.main.java.exclude { it.file.canonicalPath.startsWith(shaderlodSolasPrimeLegacySource) }
+
+tasks.named("processResources") { from("../src/main/resources") { include "assets/shaderlod/solasprime/**" } }
+
+// Package the pinned Astra coverage/profile consumed by the local depth implementation.
+tasks.named("processResources") { from("../src/main/resources") { include "assets/shaderlod/astraprime/**" } }
+
+// MakeUp native SOLID whole-pass depth priming currently has exact MC1.21.1 loader-local implementations.
+def shaderlodMakeUpPrimeLegacySource = file("../src/main/java/com/pp/shaderlod/optimization/makeupprime").canonicalPath + File.separator
+sourceSets.main.java.exclude { it.file.canonicalPath.startsWith(shaderlodMakeUpPrimeLegacySource) }
+
+
+// Photon depth priming currently has exact MC1.21.1 loader-local implementations.
+def shaderlodPhotonPrimeLegacySource = file("../src/main/java/com/pp/shaderlod/optimization/photonprime").canonicalPath + File.separator
+sourceSets.main.java.exclude { it.file.canonicalPath.startsWith(shaderlodPhotonPrimeLegacySource) }
+
+// Package the exact Photon coverage/profile consumed by the local depth implementation.
+tasks.named("processResources") { from("../src/main/resources") { include "assets/shaderlod/photonprime/**" } }
+
+sourceSets.main.java.include "com/pp/shaderlod/optimization/sildurprime/**"
+sourceSets.main.java.exclude { it.file.canonicalPath.startsWith(file("../src/main/java/com/pp/shaderlod/optimization/sildurprime").canonicalPath + File.separator) }
+tasks.named("processResources") { from("../src/main/resources") { include "assets/shaderlod/sildurprime/**" } }
+
+// Current Fabric1.21.1 frame-local shadow coherence: unchanged pure NF helpers.
+sourceSets.main.java {
+    include 'com/pp/shaderlod/ShadowFrustumCoherence.java'
+    include 'com/pp/shaderlod/ShadowFrustumCoherenceController.java'
+    include 'com/pp/shaderlod/ShadowFrustumCoherenceDiagnostics.java'
+    include 'com/pp/shaderlod/ShadowCullingController.java'
+    include 'com/pp/shaderlod/ShadowCullingMath.java'
+}
+
+// Bliss depth priming has explicit loader-local MC1.21.1 implementations.
+def shaderlodBlissPrimeLegacySource = file("../src/main/java/com/pp/shaderlod/optimization/blissprime").canonicalPath + File.separator
+sourceSets.main.java.exclude { it.file.canonicalPath.startsWith(shaderlodBlissPrimeLegacySource) }
+tasks.named("processResources") { from("../src/main/resources") { include "assets/shaderlod/blissprime/**" } }
+
+// Fabric uses its pinned loader target for identical-UV BSL depth qualification.
+sourceSets.main.java.exclude { it.file.canonicalPath == file("../src/main/java/com/pp/shaderlod/optimization/bsl/BslAoDepthRuntime.java").canonicalPath }
+
+// Photon receiver ownership uses the exact Fabric Iris/Sodium API certificate.
+sourceSets.main.java.exclude { it.file.canonicalPath == file("../src/main/java/com/pp/shaderlod/optimization/photonreceiver/PhotonReceiverApi.java").canonicalPath }
+
+// Standalone NeoForge26.2 binding-slice CLI is not part of this module's JUnit source set.
+sourceSets.test.java.exclude("com/pp/shaderlod/optimization/BindingSliceChecksMain.java")
+
+// Root-only executable receipt proof; these loaders retain normal reload behavior.
+def shaderlodRootApplySpecialization = file("../src/main/java/com/pp/shaderlod/optimization").canonicalPath + File.separator
+sourceSets.main.java.exclude { detail ->
+    def path = detail.file.canonicalPath
+    path == shaderlodRootApplySpecialization + "NativeCpuApplyProof.java" ||
+    path == shaderlodRootApplySpecialization + "NativeCpuGraphIdentity.java"
+}
+
+// Keep the root native-chain bootstrap gate out of other renderer ABIs.
+sourceSets.main.java.exclude { it.file.canonicalPath == file("../src/main/java/com/pp/shaderlod/optimization/nativechain/NativeChainAdmission.java").canonicalPath }
+
+// Shared neutral measurement clocks moved out of the production main source tree.
+sourceSets.main.java.srcDir("../src/benchmarkCore/java")
+sourceSets.main.java.exclude("com/pp/shaderlod/benchmark/core/**")

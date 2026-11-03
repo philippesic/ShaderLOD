@@ -1,0 +1,57 @@
+{
+  "archive_sha256": "36b0a50ff7918bf10e9422c401d93779f9d0088a26acea975b435243f96930b5",
+  "boundary": "Historical exact ORIGINAL native384 compilation-path source exports; no linked-program or compactor execution proof",
+  "capture": {
+    "path": "/Users/pippo/github/shaderlod/dev/logs/cross-shader-performance-r1/bsl-original-quality-r14/captures/bsl-original-quality-r14.json",
+    "sha256": "da826b49283bb6aa2a94cf7a841481fca1381924affaca309b3da2ff090222f4"
+  },
+  "encoded_draw_translation": "vertex attribute a_LightAndData[3], shifts(5,0,2), masks(7,3,7), *16 blocks and native region offset",
+  "exports": [
+    {
+      "bytes": 27311,
+      "mtime_utc": "2026-10-08T17:09:23.556567+00:00",
+      "path": "/Users/pippo/github/shaderlod/run-workloads/cross-shader-performance-r1/bsl-original-quality-r14/client/patched_shaders/084_sodium_gbuffers_terrain.fsh",
+      "sha256": "78b5ff9d0af586e2a224c16293e1350d1190a346a33b890d5ae43837b6637c61"
+    },
+    {
+      "bytes": 10113,
+      "mtime_utc": "2026-10-08T17:09:23.556415+00:00",
+      "path": "/Users/pippo/github/shaderlod/run-workloads/cross-shader-performance-r1/bsl-original-quality-r14/client/patched_shaders/084_sodium_gbuffers_terrain.vsh",
+      "sha256": "e4875a3495fd411c9821482957628776cbc1c0fd0eeeb1c0994bcb47c8ba2637"
+    },
+    {
+      "bytes": 27414,
+      "mtime_utc": "2026-10-08T17:09:23.570627+00:00",
+      "path": "/Users/pippo/github/shaderlod/run-workloads/cross-shader-performance-r1/bsl-original-quality-r14/client/patched_shaders/085_sodium_gbuffers_terrain.fsh",
+      "sha256": "635aa799f126f70e737e3b1a3e49eccb59bb9b3dd7294bac4f15c7e493f33cce"
+    },
+    {
+      "bytes": 10113,
+      "mtime_utc": "2026-10-08T17:09:23.570477+00:00",
+      "path": "/Users/pippo/github/shaderlod/run-workloads/cross-shader-performance-r1/bsl-original-quality-r14/client/patched_shaders/085_sodium_gbuffers_terrain.vsh",
+      "sha256": "e4875a3495fd411c9821482957628776cbc1c0fd0eeeb1c0994bcb47c8ba2637"
+    }
+  ],
+  "historical_core_enabled": true,
+  "native_contract": "Same region/pass; INTEGER shared quad IBO 4q+[0,1,2,2,3,0]; zero pointers; six-divisible positive counts; preserve common full preflight/growth ceiling268435452; shadow/translucent/custom fallback",
+  "options_sha256": "0aaa1276ea6e24106e6ed062a3bd149d1b53c09693d04a4637dcb19e6c43c394",
+  "plan": {
+    "path": "/Users/pippo/github/shaderlod/dev/logs/cross-shader-performance-r1/bsl-original-quality-r14/plan.json",
+    "sha256": "1c2a08aa6ccac23f323d1da5b0143f18c6b68e17d4f2b03fda0cf4c6b95ec0ab"
+  },
+  "prepare": {
+    "path": "/Users/pippo/github/shaderlod/dev/logs/cross-shader-performance-r1/bsl-original-quality-r14/prepare.json",
+    "sha256": "7909143b7556a34b0bc9451f79afb16735a85e3a6ba869c12fd6a544a5253f23"
+  },
+  "scope": "MC1.21.1/NeoForge21.1.253/pinned Iris+Sodium/Overworld/vanilla+mod_resources/noDH/default ADVANCED_MATERIALS=false",
+  "status": "SOURCE_ADMIT_FINITE_BSL_ORIGINAL_NATIVE384_CANDIDATE",
+  "unverified": [
+    "runtime helper consumption/reduction",
+    "Off/Quality/Cancel/failedApply lifecycle",
+    "quality/motion",
+    "original-relative gain",
+    "PBR/DH/dimensions/resources",
+    "ports/loaders/versions",
+    "shader LOD"
+  ]
+}

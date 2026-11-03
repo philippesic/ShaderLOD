@@ -1,0 +1,21 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.blissprefix.mixin",
+  "plugin": "com.pp.shaderlod.blissprefix.mixin.BlissPrefixPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "BlissPrefixSodiumR8Mixin",
+    "BlissPrefixBuildR8Mixin",
+    "BlissPrefixPipelineR8Mixin",
+    "BlissPrefixAtlasR8Mixin",
+    "BlissPrefixTextureR8Mixin",
+    "BlissPrefixResourceR8Mixin",
+    "BlissPrefixWorldR8Mixin",
+    "BlissPrefixManagerR8Mixin",
+    "BlissPrefixFormatReloadR12Mixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -173,7 +173,7 @@ class MatrixTests(unittest.TestCase):
 
     def test_java_wetness_supplier_preservation_and_clamp(self):
         root = SCRIPTS.parent
-        iris = root / 'dev/runtime/iris-neoforge-1.8.12+mc1.21.1.jar'
+        iris = root / 'dependencies/runtime/iris-neoforge-1.8.12+mc1.21.1.jar'
         if not iris.exists(): self.skipTest('Pinned Iris jar unavailable for standalone tracker test')
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory)

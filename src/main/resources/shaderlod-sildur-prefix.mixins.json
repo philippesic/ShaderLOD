@@ -1,0 +1,21 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.sildurprefix.mixin",
+  "plugin": "com.pp.shaderlod.sildurprefix.mixin.SildurPrefixPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "SildurPrefixSodiumR8Mixin",
+    "SildurPrefixBuildR8Mixin",
+    "SildurPrefixPipelineR8Mixin",
+    "SildurPrefixAtlasR8Mixin",
+    "SildurPrefixTextureR8Mixin",
+    "SildurPrefixResourceR8Mixin",
+    "SildurPrefixWorldR8Mixin",
+    "SildurPrefixManagerR8Mixin",
+    "SildurPrefixFormatReloadR12Mixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

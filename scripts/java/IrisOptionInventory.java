@@ -20,7 +20,7 @@ class IrisOptionInventory {
                 String name = entry.getName();
                 if (!seen.add(name)) throw new IllegalArgumentException("Duplicate archive member: " + name);
                 if (!name.startsWith("shaders/") || entry.isDirectory() ||
-                        !name.matches(".*\\.(glsl|vsh|fsh|csh|gsh|tcs|tes)$")) continue;
+                        !name.matches(".*\\.(glsl|vsh|fsh|csh|gsh|tcs|tes|settings)$")) continue;
                 if (name.contains("\\") || Arrays.asList(name.split("/")).contains(".."))
                     throw new IllegalArgumentException("Unsafe shader member: " + name);
                 try (var input = zip.getInputStream(entry)) {

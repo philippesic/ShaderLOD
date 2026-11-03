@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Prepare pinned Photon targeted quality controls; no client or world edits."""
+from run_storage import copytree as storage_copytree
 import argparse
 from contextlib import ExitStack
 import json
@@ -56,10 +57,10 @@ def prepare(source_root, output, scene, isolations=False):
         for arm in arms:
             target = destination / arm
             source_arm = arm if arm in PINS else 'adaptive'
-            shutil.copytree(base / source_arm, target, ignore=shutil.ignore_patterns('saves', 'logs', 'screenshots', 'camera-quality',
+            storage_copytree(base / source_arm, target, ignore=shutil.ignore_patterns('saves', 'logs', 'screenshots', 'camera-quality',
                             'workload-request.json', 'workload-measurement.json', 'benchmark.json'))
             (target / 'saves').mkdir()
-            shutil.copytree(world, target / 'saves' / WORLD, ignore=shutil.ignore_patterns('session.lock'))
+            storage_copytree(world, target / 'saves' / WORLD, ignore=shutil.ignore_patterns('session.lock'))
             if world_fingerprint(target / 'saves' / WORLD) != fingerprint:
                 raise ValueError('Copied canonical world differs: ' + arm)
             if arm not in PINS:

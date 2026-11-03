@@ -16,7 +16,7 @@ import test_photon_procedural_lod as photon
 
 ROOT=Path(__file__).resolve().parents[1]
 HELPER=ROOT/'shaderpacks/common/shaders/include/shaderlod/normal_error_budget.glsl'
-IRIS=ROOT/'dev/runtime/iris-neoforge-1.8.12+mc1.21.1.jar'
+IRIS=ROOT/'dependencies/runtime/iris-neoforge-1.8.12+mc1.21.1.jar'
 IRIS_SHA='3e3f94d2d5cdcb8145c4385d521974aa2d8669b2cc212351f70cf06488182e83'
 SAFETY=1-1/4096
 

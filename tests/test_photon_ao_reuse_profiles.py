@@ -49,7 +49,7 @@ class PreparationTests(unittest.TestCase):
     def test_private_archive_complete_diff_and_metadata_against_real_reviewed_source(self):
         original_path = ROOT / BASE
         if not original_path.exists(): self.skipTest('Pinned local Photon source absent')
-        runtime = json.loads((ROOT / 'dev/runtime.lock.json').read_text())
+        runtime = json.loads((ROOT / 'dependencies/runtime.lock.json').read_text())
         manifest_bytes = (ROOT / prep.MANIFEST).read_bytes(); manifest = json.loads(manifest_bytes)
         original = prep.archive_members(original_path)
         patched = prep.patch_members(original, manifest, 'disabled')

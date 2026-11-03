@@ -1,0 +1,136 @@
+{
+  "minecraft": "1.21.11",
+  "neoForge": "21.11.45",
+  "fabricLoader": "0.19.5",
+  "fabricApi": "0.141.6+1.21.11",
+  "artifacts": [
+    {
+      "project": "iris",
+      "loader": "fabric",
+      "id": "ka9PDlsN",
+      "version": "1.10.8+1.21.11-fabric",
+      "filename": "iris-fabric-1.10.8+mc1.21.11.jar",
+      "url": "https://cdn.modrinth.com/data/YL57xq9U/versions/ka9PDlsN/iris-fabric-1.10.8%2Bmc1.21.11.jar",
+      "sha256": "5b6b5124c74407ffe4945f8da61491731cbf697f0bba4b14257e0ff977dac087",
+      "sha512": "f0cad4b6af593b6fc25738c4ef5a2b346125f9693d25a0d486858e54798d2ea87b24d1497e1bb4391729d7d9e490f42771f7fb468d4e1420e372d8643f9e2055",
+      "dependencies": [
+        {
+          "version_id": "rkdTcxoT",
+          "project_id": "AANobbMI",
+          "file_name": null,
+          "dependency_type": "required"
+        }
+      ]
+    },
+    {
+      "project": "iris",
+      "loader": "neoforge",
+      "id": "6zJsI0eO",
+      "version": "1.10.8+1.21.11-neoforge",
+      "filename": "iris-neoforge-1.10.8+mc1.21.11.jar",
+      "url": "https://cdn.modrinth.com/data/YL57xq9U/versions/6zJsI0eO/iris-neoforge-1.10.8%2Bmc1.21.11.jar",
+      "sha256": "250e04b77edd0cbfeb78b7e458a18154387ee82998a7aef06429b274ba37be98",
+      "sha512": "980500d0d35f61efd9c061f7503924c4ddc9667d9ae97eb8f14b250341fd9e58b54a3a4999d8cbaa79cb5929b926e8c515731f809ad7c618f497c1a72ee95309",
+      "dependencies": [
+        {
+          "version_id": "sC6wj32u",
+          "project_id": "AANobbMI",
+          "file_name": null,
+          "dependency_type": "required"
+        }
+      ]
+    },
+    {
+      "project": "sodium",
+      "loader": "fabric",
+      "id": "rkdTcxoT",
+      "version": "mc1.21.11-0.8.14-fabric",
+      "filename": "sodium-fabric-0.8.14+mc1.21.11.jar",
+      "url": "https://cdn.modrinth.com/data/AANobbMI/versions/rkdTcxoT/sodium-fabric-0.8.14%2Bmc1.21.11.jar",
+      "sha256": "fd2619eff5da6b9ba6304b8b72ac3fe132c30e0bd5d675e4581eda417a272f5d",
+      "sha512": "04c43f9e8534b87a52c42ffd51b0e344d4ef92dc9cc52da33d13af6a18bf74b05380d2027f1e0db982698d0aff274c42741c1e21b313b0cd75ed3af005fc98d9",
+      "dependencies": []
+    },
+    {
+      "project": "sodium",
+      "loader": "neoforge",
+      "id": "sC6wj32u",
+      "version": "mc1.21.11-0.8.14-neoforge",
+      "filename": "sodium-neoforge-0.8.14+mc1.21.11.jar",
+      "url": "https://cdn.modrinth.com/data/AANobbMI/versions/sC6wj32u/sodium-neoforge-0.8.14%2Bmc1.21.11.jar",
+      "sha256": "949101d0bf301796f89a39d71044736cadd5739b27fabe5ae64be040b10e8cae",
+      "sha512": "1699874a8df3da8475fb372306a948690bb76e95221a617c73f6e81d7b70b6fb43ed7b9e8fefc75c5a1607eba33acca56eed374f8a8b753a8397670b43598e35",
+      "dependencies": []
+    },
+    {
+      "project": "dh",
+      "loader": "fabric",
+      "id": "oNqCUHFk",
+      "version": "3.3.3-1.21.11",
+      "filename": "DistantHorizons-3.3.3-1.21.11-fabric-neoforge.jar",
+      "url": "https://cdn.modrinth.com/data/uCdwusMi/versions/oNqCUHFk/DistantHorizons-3.3.3-1.21.11-fabric-neoforge.jar",
+      "sha256": "96c2e8879dc2168d4979af96107f959a0af2f64f9dfb4847605f2c0bf0aa7468",
+      "sha512": "317bed5ff65a71233959508aded32ef12923a6575c0dc852fc683834d4112113d2130dc1dae0592ed1ed564298a91313d1508e921aff43992a3362eb0f21ee27",
+      "dependencies": []
+    },
+    {
+      "project": "dh",
+      "loader": "neoforge",
+      "id": "oNqCUHFk",
+      "version": "3.3.3-1.21.11",
+      "filename": "DistantHorizons-3.3.3-1.21.11-fabric-neoforge.jar",
+      "url": "https://cdn.modrinth.com/data/uCdwusMi/versions/oNqCUHFk/DistantHorizons-3.3.3-1.21.11-fabric-neoforge.jar",
+      "sha256": "96c2e8879dc2168d4979af96107f959a0af2f64f9dfb4847605f2c0bf0aa7468",
+      "sha512": "317bed5ff65a71233959508aded32ef12923a6575c0dc852fc683834d4112113d2130dc1dae0592ed1ed564298a91313d1508e921aff43992a3362eb0f21ee27",
+      "dependencies": []
+    },
+    {
+      "project": "fabric-api",
+      "loader": "fabric",
+      "id": "6qAuTtLR",
+      "version": "0.141.6+1.21.11",
+      "url": "https://cdn.modrinth.com/data/P7dR8mSH/versions/6qAuTtLR/fabric-api-0.141.6%2B1.21.11.jar",
+      "filename": "fabric-api-0.141.6+1.21.11.jar",
+      "sha256": "bdff7fd7e220085cfad2ff9b1f40dde6534ae0b96cf378f97a374bc54cb9ed0f",
+      "sha512": "852d3682c4f353fd0ca86546af8578513e8bcf628377fa9d49c556bc59c5024c69ab56c92fc6dfba11fed19e4316a3f5636e7e07fd3d96f7043b531aef59b637"
+    },
+    {
+      "project": "fabric-loader",
+      "loader": "fabric",
+      "id": null,
+      "version": "0.19.5",
+      "url": "https://maven.fabricmc.net/net/fabricmc/fabric-loader/0.19.5/fabric-loader-0.19.5.jar",
+      "filename": "fabric-loader-0.19.5.jar",
+      "sha256": "93044e4dd46de5d8136701292f05e868da096d2c9fddb4793e4fdbcc63efc695",
+      "sha512": "11b55302b9b4d7c438808d1fe47981785cf2b22ecba0e87887e107432d2162238ad0d9fe35630e2871043b515d95a611e3cd3f8dfd03b758c444537899b665b6"
+    },
+    {
+      "project": "neoforge-userdev",
+      "loader": "neoforge",
+      "id": null,
+      "version": "21.11.45",
+      "url": "https://maven.neoforged.net/releases/net/neoforged/neoforge/21.11.45/neoforge-21.11.45-userdev.jar",
+      "filename": "neoforge-21.11.45-userdev.jar",
+      "sha256": "787d546a162add664f40d9e26ff3db8d39670392c9132e8626022213a97b53c2",
+      "sha512": "9ac88529f82d5a6eabe8a5de733934aa208b339ba2e90dd4ed8caa5abb0ca0a225b4520d41d7f72f8f09a481108288aff91a84214d2e8980bd4e04afa32954d8"
+    }
+  ],
+  "tooling": {
+    "java": 21,
+    "fabricLoom": "1.16.1",
+    "fabricGradle": "9.4.0",
+    "neoForgeModDev": "2.0.141",
+    "neoForgeGradle": "9.2.1",
+    "mapping": "Official Mojang 1.21.11",
+    "fabricGradleDistributionSha256": "60ea723356d81263e8002fec0fcf9e2b0eee0c0850c7a3d7ab0a63f2ccc601f3"
+  },
+  "mojangVersionMetadata": {
+    "id": "1.21.11",
+    "type": "release",
+    "url": "https://piston-meta.mojang.com/v1/packages/6827f8e998ee6add1b3acff9286b6c95ebeebdc1/1.21.11.json",
+    "time": "2026-10-06T06:36:34+00:00",
+    "releaseTime": "2025-12-09T12:23:30+00:00",
+    "sha1": "6827f8e998ee6add1b3acff9286b6c95ebeebdc1",
+    "complianceLevel": 1
+  }
+}

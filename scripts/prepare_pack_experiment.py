@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Prepare explicit pinned pack experiments from stopped inspected scenes."""
 from __future__ import annotations
+from run_storage import copytree as storage_copytree
 import argparse
 import json
 from pathlib import Path
@@ -16,17 +17,17 @@ def prepare(source, output, family, bridge_cue=True, with_dh=False):
     source, output = source.resolve(), output.resolve()
     if output.exists() or source == output or source in output.parents or output in source.parents:
         raise ValueError('Choose a fresh, separate output directory')
-    scene = 'coastalwater' if family.startswith(('makeup-', 'miniature')) or family in ('bsl', 'complementary') else 'forest'
+    scene = 'coastalwater' if family.startswith('makeup-') or family in ('bsl', 'complementary') else 'forest'
     if source.parent.name != scene: raise ValueError('Source must be the matching inspected scene')
-    runtime = json.loads((ROOT / 'dev/runtime.lock.json').read_text())
+    runtime = json.loads((ROOT / 'dependencies/runtime.lock.json').read_text())
     if with_dh and not family.startswith('makeup-'):
         raise ValueError('DH compatibility override is scoped to pinned MakeUp experiments')
     if family == 'complementary':
-        candidates = json.loads((ROOT / 'dev/shader-candidates.lock.json').read_text())
+        candidates = json.loads((ROOT / 'dependencies/shader-candidates.lock.json').read_text())
         pin = next(p for p in candidates['candidates'] if p['modrinth_project'] == 'complementary-reimagined')['release']
         if pin['version'] != 'r5.9.3' or pin['sha256'] != COMPLEMENTARY_RELEASE_SHA256:
             raise ValueError('Complementary experiment requires the exact r5.9.3 release pin')
-        original = ROOT / 'dev/upstream/other-pack-research' / pin['filename']
+        original = ROOT / 'dependencies/upstream/other-pack-research' / pin['filename']
         if file_hash(original) != COMPLEMENTARY_RELEASE_SHA256:
             raise ValueError('Complementary release differs from pin')
         # Source defaults/HIGH; record the native full-reflection default so
@@ -37,35 +38,17 @@ def prepare(source, output, family, bridge_cue=True, with_dh=False):
                 'water-potato': (original, options | {'WATER_REFLECT_QUALITY': '1'})}
         include_dh = False
     elif family == 'bsl':
-        candidates = json.loads((ROOT / 'dev/shader-candidates.lock.json').read_text())
+        candidates = json.loads((ROOT / 'dependencies/shader-candidates.lock.json').read_text())
         pin = next(p for p in candidates['candidates'] if p['modrinth_project'] == 'bsl-shaders')['release']
-        original = ROOT / 'dev/upstream/other-pack-research' / pin['filename']
+        original = ROOT / 'dependencies/upstream/other-pack-research' / pin['filename']
         if file_hash(original) != pin['sha256']: raise ValueError('BSL release differs from pin')
         options = {'MULTICOLORED_BLOCKLIGHT': 'false', 'MCBL_SS': 'false', 'WATER_PARALLAX': 'true'}
         arms = {'high': (original, options), 'parallax-off': (original, options | {'WATER_PARALLAX': 'false'})}
         include_dh = False
-    elif family.startswith('miniature'):
-        candidates = json.loads((ROOT / 'dev/shader-candidates.lock.json').read_text())
-        pin = next(p for p in candidates['candidates'] if p['modrinth_project'] == 'miniature-shader')['release']
-        original = ROOT / 'dev/upstream/other-pack-research' / pin['filename']
-        if file_hash(original) != pin['sha256']: raise ValueError('Miniature release differs from pin')
-        options = {'SSR_MAX_STEPS': '10', 'SSR_STEP_SIZE': '1.6', 'SSR_BINARY_STEPS': '4',
-                   'REFLECTIONS': '10', 'BLOCK_REFLECTIONS': '5'}
-        arms = {'high': (original, options), 'lower': (original, options | {'SSR_BINARY_STEPS': '2'})}
-        if family == 'miniature-core-bridge':
-            probe = ROOT / 'build/Miniature-ShaderLOD-CoreProbe-2.19.zip'
-            controls = options | {'SHADERLOD_MINIATURE_CORE_PROBE': '1',
-                                  'SHADERLOD_MINIATURE_CORE_CUE': '1' if bridge_cue else '0'}
-            arms = {name: (probe, controls) for name in ('bridge-absent', 'bridge-disabled', 'bridge-enabled', 'bridge-bands')}
-        if family == 'miniature-refinement':
-            probe = ROOT / 'build/Miniature-ShaderLOD-RefinementProbe-2.19.zip'
-            arms.update({name: (probe, options | {'SHADERLOD_MINIATURE_REFINE_MODE': str(mode)})
-                         for name, mode in (('refinement-off', 0), ('refinement-full', 1), ('refinement-lod', 2))})
-        include_dh = False
     elif family.startswith('makeup-'):
-        candidates = json.loads((ROOT / 'dev/shader-candidates.lock.json').read_text())
+        candidates = json.loads((ROOT / 'dependencies/shader-candidates.lock.json').read_text())
         pin = next(p for p in candidates['candidates'] if p['modrinth_project'] == 'makeup-ultra-fast-shaders')['release']
-        original = ROOT / 'dev/upstream/other-pack-research' / pin['filename']
+        original = ROOT / 'dependencies/upstream/other-pack-research' / pin['filename']
         if file_hash(original) != pin['sha256']: raise ValueError('MakeUp release differs from pin')
         adapter = ROOT / 'build/MakeUp-ShaderLOD-Experimental-9.5g.zip'
         with zipfile.ZipFile(original) as archive:
@@ -106,7 +89,7 @@ def prepare(source, output, family, bridge_cue=True, with_dh=False):
                     'secondary-on': (ROOT / 'build/Photon-CloudSecondaryExtentProbe-enabled.zip', options | {'PHOTON_CLOUD_SECONDARY_EXTENT_PROBE': 'true'})}
         include_dh = True
     else:
-        original = ROOT / 'dev/upstream' / runtime['artifacts']['photon']['filename']
+        original = ROOT / 'dependencies/upstream' / runtime['artifacts']['photon']['filename']
         if file_hash(original, 'sha512') != runtime['artifacts']['photon']['hashes']['sha512']:
             raise ValueError('Photon release differs from pin')
         selected = read_option_properties((source / 'config/iris.properties').read_text())['shaderPack']
@@ -119,7 +102,7 @@ def prepare(source, output, family, bridge_cue=True, with_dh=False):
     if with_dh:
         include_dh = True
         dh = runtime['artifacts']['distanthorizons']
-        if file_hash(ROOT / 'dev/runtime' / dh['filename'], 'sha512') != dh['hashes']['sha512']:
+        if file_hash(ROOT / 'dependencies/runtime' / dh['filename'], 'sha512') != dh['hashes']['sha512']:
             raise ValueError('DH artifact differs from runtime lock')
     for pack, options in arms.values():
         with zipfile.ZipFile(pack) as archive:
@@ -135,7 +118,7 @@ def prepare(source, output, family, bridge_cue=True, with_dh=False):
         hashes = {}
         for arm, (pack, options) in arms.items():
             profile = destination / arm
-            shutil.copytree(source, profile, ignore=shutil.ignore_patterns('session.lock', 'logs', 'screenshots', 'crash-reports', 'downloads'))
+            storage_copytree(source, profile, ignore=shutil.ignore_patterns('session.lock', 'logs', 'screenshots', 'crash-reports', 'downloads'))
             if world_fingerprint(profile / 'saves' / WORLD) != fingerprint: raise ValueError('Copied source save differs')
             shutil.rmtree(profile / 'shaderpacks')
             (profile / 'shaderpacks').mkdir()
@@ -145,8 +128,8 @@ def prepare(source, output, family, bridge_cue=True, with_dh=False):
             iris['shaderPack'] = pack.name
             (profile / 'config/iris.properties').write_text(''.join(f'{k}={v}\n' for k,v in iris.items()))
             if not include_dh: (profile / 'mods' / runtime['artifacts']['distanthorizons']['filename']).unlink(missing_ok=True)
-            elif with_dh: shutil.copy2(ROOT / 'dev/runtime' / runtime['artifacts']['distanthorizons']['filename'], profile / 'mods' / runtime['artifacts']['distanthorizons']['filename'])
-            if family in ('makeup-core-bridge', 'miniature-core-bridge', 'miniature-refinement'):
+            elif with_dh: shutil.copy2(ROOT / 'dependencies/runtime' / runtime['artifacts']['distanthorizons']['filename'], profile / 'mods' / runtime['artifacts']['distanthorizons']['filename'])
+            if family == 'makeup-core-bridge':
                 enabled = arm in ('bridge-enabled', 'bridge-bands', 'refinement-off', 'refinement-full', 'refinement-lod')
                 near, far = (8.0, 16.0) if arm == 'bridge-bands' else (96.0, 160.0)
                 (profile / 'config/shaderlod-client.toml').write_text(
@@ -166,7 +149,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--source', required=True, type=Path)
     parser.add_argument('--output', required=True, type=Path)
-    parser.add_argument('--family', required=True, choices=('complementary', 'bsl', 'miniature', 'miniature-core-bridge', 'miniature-refinement', 'makeup-water', 'makeup-probes', 'makeup-core-bridge', 'photon-cloud-consumer', 'photon-cloud-secondary', 'photon-cloud-literal'))
+    parser.add_argument('--family', required=True, choices=('complementary', 'bsl', 'makeup-water', 'makeup-probes', 'makeup-core-bridge', 'photon-cloud-consumer', 'photon-cloud-secondary', 'photon-cloud-literal'))
     parser.add_argument('--no-bridge-cue', action='store_true', help='Prepare normal core-bridge rendering, with diagnostic color compiled out')
     parser.add_argument('--with-dh', action='store_true', help='Pinned MakeUp compatibility experiment; never a support claim')
     args = parser.parse_args()

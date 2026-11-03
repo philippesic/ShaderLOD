@@ -1,0 +1,21 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.reimaginedprefix.mixin",
+  "plugin": "com.pp.shaderlod.reimaginedprefix.mixin.ReimaginedPrefixPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "ReimaginedPrefixSodiumR8Mixin",
+    "ReimaginedPrefixBuildR8Mixin",
+    "ReimaginedPrefixPipelineR8Mixin",
+    "ReimaginedPrefixAtlasR8Mixin",
+    "ReimaginedPrefixTextureR8Mixin",
+    "ReimaginedPrefixResourceR8Mixin",
+    "ReimaginedPrefixWorldR8Mixin",
+    "ReimaginedPrefixManagerR8Mixin",
+    "ReimaginedPrefixFormatReloadR12Mixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

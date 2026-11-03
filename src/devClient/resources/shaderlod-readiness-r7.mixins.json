@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.dev.readiness.mixin",
+  "plugin": "com.pp.shaderlod.dev.readiness.ReadinessMixinPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "BuilderReadinessMixin",
+    "JobReadinessMixin",
+    "ManagerReadinessMixin",
+    "ReloadReadinessMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

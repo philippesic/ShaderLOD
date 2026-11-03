@@ -1,0 +1,100 @@
+[
+  {
+    "tuple": "fabric-1.21.1",
+    "transformer_sha256": "f79728bc0f0cded446753da51f61114daed8988eef4f567bca9e351280874b28",
+    "draw_id_rhs": "a_LightAndData[3]",
+    "input_kind": 0,
+    "producer_class_resource": "net/irisshaders/iris/pipeline/programs/SodiumPrograms.class",
+    "producer_sha256": "4ba26f97a2a9006d3730962e3c7eb26f620c50cc7d98d82b6235720eac4753fb"
+  },
+  {
+    "tuple": "fabric-1.21.11",
+    "transformer_sha256": "8a9736586a37082cf1ba21d742d20542662faabd1e97756e8bf9e06bff6605ac",
+    "draw_id_rhs": "a_LightAndData[3]",
+    "input_kind": 0,
+    "producer_class_resource": "net/irisshaders/iris/pipeline/programs/SodiumPrograms.class",
+    "producer_sha256": "a1a8c3b59e50ce2cfea5e62263632f60a9a93f44417b9d9086ed12882a2238ae"
+  },
+  {
+    "tuple": "fabric-26.1.2",
+    "transformer_sha256": "94e4d8e715e8b05c1a04006e70aacfb23366679b09583f4c9792175aa19b9396",
+    "draw_id_rhs": "a_LightAndData[3]",
+    "input_kind": 1,
+    "producer_class_resource": "net/irisshaders/iris/pipeline/programs/SodiumPrograms.class",
+    "producer_sha256": "dde8eb4bc65bc6da23f2031477b22c410cdd0bf13b70309fe5f8198b1e383717"
+  },
+  {
+    "tuple": "fabric-26.2",
+    "transformer_sha256": "06f5c63c3d50c07a364164745d1cfc038cf28fa4157a5323726a578b4fc977be",
+    "draw_id_rhs": "a_LightAndData[3]",
+    "input_kind": 2,
+    "producer_class_resource": "net/irisshaders/iris/pipeline/programs/ShaderCreator.class",
+    "producer_sha256": "a1d78ea02b98d9eb9d17b64849e6909109abbb064ed9ac38cdf278afbb4dbacd"
+  },
+  {
+    "tuple": "fabric-26.3",
+    "transformer_sha256": "11519cea90ba553ad5ef9498d15b6799333cdeb8a29e6e5c1a8f71bdfc105709",
+    "draw_id_rhs": "a_LightAndData[3]",
+    "input_kind": 3,
+    "producer_class_resource": "net/irisshaders/iris/pipeline/programs/ShaderCreator.class",
+    "producer_sha256": "4bcf5b6f9c83e2f5f30f4c525f44acf469f3ef5fe2326af2448e12bc74db32ea"
+  },
+  {
+    "tuple": "neoforge-1.21.1",
+    "transformer_sha256": "17bbfb7cc7bd5da043f508924c6485c2bc550a123dad94165cc033610803f8ae",
+    "draw_id_rhs": "a_LightAndData[3]",
+    "input_kind": 0,
+    "producer_class_resource": "net/irisshaders/iris/pipeline/programs/SodiumPrograms.class",
+    "producer_sha256": "9fe2bf60a9c6140c90bcf09aeae23e38365f029660385d4dae919fbe6e7481cf"
+  },
+  {
+    "tuple": "neoforge-1.21.11",
+    "transformer_sha256": "02c54dff4a695ad6b233cafb95a0d6a095b829be901fab1a0734a790815844d2",
+    "draw_id_rhs": "a_LightAndData[3]",
+    "input_kind": 0,
+    "producer_class_resource": "net/irisshaders/iris/pipeline/programs/SodiumPrograms.class",
+    "producer_sha256": "09aacd566bb2d1585ea32561447c23567d44c82f12b9beb6a7c5f1d1246832b9"
+  },
+  {
+    "tuple": "neoforge-26.1.2",
+    "transformer_sha256": "94e4d8e715e8b05c1a04006e70aacfb23366679b09583f4c9792175aa19b9396",
+    "draw_id_rhs": "a_LightAndData[3]",
+    "input_kind": 1,
+    "producer_class_resource": "net/irisshaders/iris/pipeline/programs/SodiumPrograms.class",
+    "producer_sha256": "dde8eb4bc65bc6da23f2031477b22c410cdd0bf13b70309fe5f8198b1e383717"
+  },
+  {
+    "tuple": "neoforge-26.2",
+    "transformer_sha256": "06f5c63c3d50c07a364164745d1cfc038cf28fa4157a5323726a578b4fc977be",
+    "draw_id_rhs": "a_LightAndData[3]",
+    "input_kind": 2,
+    "producer_class_resource": "net/irisshaders/iris/pipeline/programs/ShaderCreator.class",
+    "producer_sha256": "a1d78ea02b98d9eb9d17b64849e6909109abbb064ed9ac38cdf278afbb4dbacd"
+  },
+  {
+    "tuple": "neoforge-26.3",
+    "transformer_sha256": "11519cea90ba553ad5ef9498d15b6799333cdeb8a29e6e5c1a8f71bdfc105709",
+    "draw_id_rhs": "a_LightAndData[3]",
+    "input_kind": 3,
+    "producer_class_resource": "net/irisshaders/iris/pipeline/programs/ShaderCreator.class",
+    "producer_sha256": "4bcf5b6f9c83e2f5f30f4c525f44acf469f3ef5fe2326af2448e12bc74db32ea"
+  },
+  {
+    "tuple": "fabric-1.21.1-intermediary",
+    "namespace": "intermediary",
+    "transformer_sha256": "f79728bc0f0cded446753da51f61114daed8988eef4f567bca9e351280874b28",
+    "draw_id_rhs": "a_LightAndData[3]",
+    "input_kind": 0,
+    "producer_class_resource": "net/irisshaders/iris/pipeline/programs/SodiumPrograms.class",
+    "producer_sha256": "7f49c1da2e12807f0680ca894f631c104b2a8846492e4c116014db11dc3e29b6"
+  },
+  {
+    "tuple": "fabric-1.21.11-intermediary",
+    "transformer_sha256": "8a9736586a37082cf1ba21d742d20542662faabd1e97756e8bf9e06bff6605ac",
+    "draw_id_rhs": "a_LightAndData[3]",
+    "input_kind": 0,
+    "producer_class_resource": "net/irisshaders/iris/pipeline/programs/SodiumPrograms.class",
+    "producer_sha256": "dc02ac12e10c5c2862ed2d2a719dcbdaab2212157b0893a30ece886e54e69f8c",
+    "namespace": "intermediary"
+  }
+]

@@ -1,0 +1,18 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.optimization.sildurexact.mixin",
+  "plugin": "com.pp.shaderlod.optimization.sildurexact.mixin.SildurExactPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "SildurExactPipelineView",
+    "SildurExactOwnerMixin",
+    "SildurExactDrawMixin",
+    "SildurExactCopyMixin",
+    "SildurExactLifetimeMixin",
+    "SildurExactReloadMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

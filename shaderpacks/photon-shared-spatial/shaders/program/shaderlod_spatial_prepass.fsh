@@ -295,6 +295,8 @@ void main() {
     if (depth == 1.0)
         shaderlodSkyColor = shaderlod_photon_original_sky(direction_world, atmosphere,
             clouds_and_aurora, clouds_apparent_distance);
+    // Keep original sky/prelude above this uniform idle-work gate.
+    if (!shaderlod_spatial_adapter_has_coarse_demand()) return;
     if (!shaderlod_photon_cache_contract()) return;
     ivec2 pixel = ivec2(gl_FragCoord.xy); ivec2 tile_coordinate = pixel / 2;
     ivec2 lane = pixel % 2;

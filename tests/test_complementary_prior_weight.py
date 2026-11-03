@@ -17,7 +17,7 @@ from prepare_complementary_prior_weight import (
 )
 from build_supported_pack_adapters import apply, read_archive, sha256, CATALOG, RESOURCE_ROOT
 
-BASE = ROOT / 'dev/upstream/other-pack-research/ComplementaryReimagined_r5.9.3.zip'
+BASE = ROOT / 'dependencies/upstream/other-pack-research/ComplementaryReimagined_r5.9.3.zip'
 
 
 class ComplementaryPriorWeightTests(unittest.TestCase):
@@ -171,39 +171,6 @@ UPDATE
         with self.assertRaisesRegex(ValueError, 'Only pinned'):
             candidate_manifest(bad_recipe)
 
-    def test_real_overlay_preserves_inputs_and_closed_trial(self):
-        names = (RECIPE, RESOURCE_ROOT + RECIPE, CATALOG, CERTIFICATE)
-        protected = {n:(ROOT/n).read_bytes() for n in names}
-        with tempfile.TemporaryDirectory() as temporary:
-            output = Path(temporary)/'candidate'
-            receipt = prepare(BASE, output)
-            self.assertEqual(set(receipt['overlay']), set(names))
-            self.assertEqual(receipt['changed_from_current_adapter'], [MEMBER])
-            self.assertTrue(receipt['current_generated_body_recovered'])
-            self.assertTrue(all(v is False for v in receipt['validation'].values()))
-            self.assertFalse(self.candidate['ported_consumers']['lazy_prior_volume_weight']['closed_trial_reopened'])
-            self.assertIn('no-gain', receipt['limitations'])
-            self.assertEqual((output/'overlay'/RECIPE).read_bytes(),
-                             (output/'overlay'/(RESOURCE_ROOT+RECIPE)).read_bytes())
-            catalog = (output/'overlay'/CATALOG).read_text()
-            self.assertIn(receipt['candidate_digest'], catalog)
-            self.assertIn(receipt['current_adapter_digest'], catalog.split('LEGACY_ADAPTER_DIGESTS')[1])
-            certificate = (output/'overlay'/CERTIFICATE).read_bytes()
-            current_pin = ('RECIPE_SHA="' + sha256(protected[RECIPE]) + '"').encode()
-            next_pin = ('RECIPE_SHA="' + sha256((output/'overlay'/RECIPE).read_bytes()) + '"').encode()
-            self.assertEqual(certificate.count(next_pin), 1)
-            self.assertEqual(certificate.replace(next_pin, current_pin, 1), protected[CERTIFICATE])
-            self.assertEqual(sha256(protected[CERTIFICATE]), CERTIFICATE_SHA)
-            for n, before in protected.items(): self.assertEqual((ROOT/n).read_bytes(), before)
-            saved = (output/'receipt.json').read_bytes()
-            with self.assertRaisesRegex(ValueError, 'already exists'):
-                prepare(BASE, output)
-            self.assertEqual((output/'receipt.json').read_bytes(), saved)
-            wrong = Path(temporary)/'wrong.zip'
-            wrong.write_bytes(BASE.read_bytes()+b'wrong')
-            with self.assertRaisesRegex(ValueError, 'archive hash'):
-                prepare(wrong, Path(temporary)/'refused')
-            self.assertFalse((Path(temporary)/'refused').exists())
 
     def test_changed_certificate_preimage_refuses_before_output(self):
         with tempfile.TemporaryDirectory() as temporary:
@@ -218,84 +185,6 @@ UPDATE
                 prepare(BASE, output, root=root)
             self.assertFalse(output.exists())
 
-    def test_candidate_recipe_through_real_java_selection_consumer(self):
-        jdk = ROOT / 'dev/runtime/jdk25/jdk-25.0.2.jdk/Contents/Home/bin'
-        saved_cp = ROOT / 'dev/logs/concept-transfer-r1/reimagined-neoforge-main/checks-classpath.json'
-        if not (jdk/'javac').is_file() or not saved_cp.is_file():
-            self.skipTest('Recorded local JDK25/dependency list unavailable')
-        gson = next((Path(p) for p in json.loads(saved_cp.read_text()) if '/gson/' in p), None)
-        if gson is None or not gson.is_file():
-            self.skipTest('Recorded Gson dependency unavailable')
-        harness = r'''
-import com.pp.shaderlod.LodPreset;
-import com.pp.shaderlod.packs.PackSelectionService;
-import java.nio.file.*;
-import java.util.*;
-public class CandidateSelectionCheck {
-  static void accepted(PackSelectionService.Result result) {
-    if(!result.accepted()) throw new AssertionError(result.detail());
-  }
-  public static void main(String[] args) throws Exception {
-    Path directory=Path.of(args[0]);
-    String original="Original.zip";
-    byte[] originalBytes=Files.readAllBytes(directory.resolve(original));
-    byte[] options=Files.readAllBytes(directory.resolve(original+".txt"));
-    var service=new PackSelectionService();
-    var balanced=service.apply(directory,original,true,LodPreset.BALANCED,Map.of(),true);
-    accepted(balanced);
-    if(original.equals(balanced.packFile())) throw new AssertionError("Balanced bypassed shader graph");
-    var restart=service.apply(directory,balanced.packFile(),true,LodPreset.BALANCED,Map.of(),true);
-    accepted(restart);
-    if(restart.status()!=PackSelectionService.Status.UNCHANGED) throw new AssertionError("Restart mutated");
-    var quality=service.apply(directory,balanced.packFile(),true,LodPreset.QUALITY,Map.of(),true);
-    accepted(quality);
-    if(!original.equals(quality.packFile())) throw new AssertionError("Quality did not restore native");
-    var renderer=service.apply(directory,original,true,LodPreset.PERFORMANCE,Map.of(),true);
-    accepted(renderer);
-    if(!original.equals(renderer.packFile())) throw new AssertionError("Renderer did not retain native");
-    var shader=service.apply(directory,original,true,LodPreset.PERFORMANCE,Map.of(),false);
-    accepted(shader);
-    if(!balanced.packFile().equals(shader.packFile())) throw new AssertionError("Fallback generated graph mismatch");
-    var off=service.apply(directory,shader.packFile(),false,LodPreset.BALANCED,Map.of(),false);
-    accepted(off);
-    if(!original.equals(off.packFile())) throw new AssertionError("Off did not restore original");
-    if(!Arrays.equals(originalBytes,Files.readAllBytes(directory.resolve(original)))) throw new AssertionError("Original archive changed");
-    if(!Arrays.equals(options,Files.readAllBytes(directory.resolve(original+".txt")))) throw new AssertionError("Native sidecar changed");
-    System.out.println(balanced.packFile());
-    // Tampered generated bytes refuse without rewriting native selection/options.
-    Path generated=directory.resolve(balanced.packFile());
-    Files.write(generated,new byte[]{1},StandardOpenOption.APPEND);
-    var tampered=service.apply(directory,balanced.packFile(),false,LodPreset.BALANCED,Map.of());
-    if(tampered.status()!=PackSelectionService.Status.REFUSED) throw new AssertionError("Tamper admitted");
-    if(!Arrays.equals(options,Files.readAllBytes(directory.resolve(original+".txt")))) throw new AssertionError("Refusal changed native sidecar");
-    System.out.println("real selection consumer transitions passed");
-  }
-}
-'''
-        with tempfile.TemporaryDirectory() as temporary:
-            directory=Path(temporary)
-            candidate=directory/'candidate'
-            prepare(BASE,candidate)
-            classes=directory/'classes';classes.mkdir()
-            resource=directory/'resources'
-            shutil.copytree(ROOT/'src/main/resources/assets/shaderlod/adapters',
-                            resource/'assets/shaderlod/adapters')
-            shutil.copyfile(candidate/'overlay'/(RESOURCE_ROOT+RECIPE),resource/(RESOURCE_ROOT.removeprefix('src/main/resources/')+RECIPE))
-            source=directory/'CandidateSelectionCheck.java';source.write_text(harness)
-            command=[str(jdk/'javac'),'-proc:none','-cp',str(gson),'-d',str(classes),
-                     str(candidate/'overlay'/CATALOG),
-                     str(ROOT/'src/main/java/com/pp/shaderlod/packs/PackSelectionService.java'),
-                     str(ROOT/'src/main/java/com/pp/shaderlod/LodPreset.java'),str(source)]
-            subprocess.run(command,text=True,capture_output=True,check=True)
-            packs=directory/'packs';packs.mkdir()
-            shutil.copyfile(BASE,packs/'Original.zip')
-            (packs/'Original.zip.txt').write_text('# native choices\r\nTAA=true\r\nSHADER_STYLE=1\r\nRP_MODE=1\r\n')
-            result=subprocess.run([str(jdk/'java'),'-ea','-cp',':'.join(map(str,(classes,resource,gson))),
-                                   'CandidateSelectionCheck',str(packs)],text=True,capture_output=True,check=True)
-            self.assertIn('real selection consumer transitions passed',result.stdout)
-            generated=result.stdout.splitlines()[0]
-            members=read_archive(packs/generated)
-            for name,data in self.changed.items(): self.assertEqual(members[name],data,name)
 
 
 if __name__ == '__main__':

@@ -1,0 +1,105 @@
+{
+  "schema": 1,
+  "source": "GLFW focus/iconified/visible + cached Minecraft sizes/options, once per existing workload tick",
+  "note": "Read-only sampled states; changes between observations may be missed. Counts are observation counts, not time fractions. Configured pacing is not observed scheduling or host clocks/thermal state.",
+  "warmup": {
+    "observations": 0,
+    "available_observations": 0,
+    "unavailable_observations": 0,
+    "focused": {
+      "true_observations": 0,
+      "false_observations": 0,
+      "unknown_observations": 0
+    },
+    "iconified": {
+      "true_observations": 0,
+      "false_observations": 0,
+      "unknown_observations": 0
+    },
+    "visible": {
+      "true_observations": 0,
+      "false_observations": 0,
+      "unknown_observations": 0
+    },
+    "window_size_counts": {},
+    "framebuffer_size_counts": {},
+    "transition_counts": {},
+    "transitions": [],
+    "dropped_transitions": 0,
+    "unavailable_reasons": {},
+    "max_observation_gap_seconds": 0.0
+  },
+  "capture": {
+    "observations": 2,
+    "available_observations": 2,
+    "unavailable_observations": 0,
+    "start": {
+      "elapsed_workload_seconds": 0.0,
+      "frame_id": 1,
+      "state": {
+        "availability": "available",
+        "focused": "true",
+        "iconified": "false",
+        "visible": "true",
+        "window_width": 1280,
+        "window_height": 720,
+        "framebuffer_width": 2560,
+        "framebuffer_height": 1440,
+        "pacing": {
+          "pause_on_lost_focus": false,
+          "fullscreen": false,
+          "configured_framerate_limit": 260,
+          "vsync": false
+        },
+        "note": "fixture"
+      }
+    },
+    "end": {
+      "elapsed_workload_seconds": 20.0,
+      "frame_id": 601,
+      "state": {
+        "availability": "available",
+        "focused": "true",
+        "iconified": "false",
+        "visible": "true",
+        "window_width": 1280,
+        "window_height": 720,
+        "framebuffer_width": 2560,
+        "framebuffer_height": 1440,
+        "pacing": {
+          "pause_on_lost_focus": false,
+          "fullscreen": false,
+          "configured_framerate_limit": 260,
+          "vsync": false
+        },
+        "note": "fixture"
+      }
+    },
+    "focused": {
+      "true_observations": 2,
+      "false_observations": 0,
+      "unknown_observations": 0
+    },
+    "iconified": {
+      "true_observations": 0,
+      "false_observations": 2,
+      "unknown_observations": 0
+    },
+    "visible": {
+      "true_observations": 2,
+      "false_observations": 0,
+      "unknown_observations": 0
+    },
+    "window_size_counts": {
+      "1280x720": 2
+    },
+    "framebuffer_size_counts": {
+      "2560x1440": 2
+    },
+    "transition_counts": {},
+    "transitions": [],
+    "dropped_transitions": 0,
+    "unavailable_reasons": {},
+    "max_observation_gap_seconds": 20.0
+  }
+}

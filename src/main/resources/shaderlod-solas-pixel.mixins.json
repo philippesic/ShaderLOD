@@ -1,0 +1,18 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.optimization.solaspixel.mixin",
+  "plugin": "com.pp.shaderlod.optimization.solaspixel.mixin.SolasPixelMixinPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "SolasPixelPassView",
+    "SolasPixelCompositeMixin",
+    "SolasPixelPipelineMixin",
+    "SolasPixelPrepareMixin",
+    "SolasPixelReloadMixin",
+    "SolasPixelQuadDrawMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

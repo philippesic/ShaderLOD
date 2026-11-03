@@ -1,0 +1,20 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.optimization.photonearlyalpha.mixin",
+  "plugin": "com.pp.shaderlod.optimization.photonearlyalpha.mixin.PhotonEarlyAlphaPlugin",
+  "compatibilityLevel": "JAVA_25",
+  "client": [
+    "PhotonAlphaProgramsMixin",
+    "PhotonAlphaUniformMixin",
+    "PhotonAlphaDrawMixin",
+    "PhotonAlphaLifecycleMixin",
+    "PhotonAlphaDestroyMixin",
+    "PhotonAlphaTargetsView",
+    "PhotonAlphaProgramCloseMixin",
+    "PhotonAlphaBindMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -37,9 +37,9 @@ def apply_patches(files: dict[str, bytes], manifest: dict) -> dict[str, bytes]:
 
 
 def build(output: Path, base: Path | None = None, root: Path = ROOT) -> dict:
-    lock = json.loads((root / "dev/runtime.lock.json").read_text())
+    lock = json.loads((root / "dependencies/runtime.lock.json").read_text())
     photon = lock["artifacts"]["photon"]
-    base = base or root / "dev/upstream" / photon["filename"]
+    base = base or root / "dependencies/upstream" / photon["filename"]
     source = base.read_bytes()
     for algorithm, expected in photon["hashes"].items():
         if hashlib.new(algorithm, source).hexdigest() != expected:

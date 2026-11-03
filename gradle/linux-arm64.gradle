@@ -1,0 +1,37 @@
+// Minecraft 1.21.1's pinned Linux variant contains x64-only LWJGL natives.
+// Bootstrap's module layer cannot discover ordinary localRuntime ARM jars;
+// use checksum-locked extracted libraries through LWJGL's supported override.
+if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('linux') &&
+        System.getProperty('os.arch') in ['aarch64', 'arm64']) {
+    dependencies.components.withModule('net.neoforged:minecraft-dependencies') { details ->
+        details.withVariant('clientLinuxNatives') { variant ->
+            variant.withDependencies { deps -> deps.removeAll { it.group == 'org.lwjgl' } }
+        }
+    }
+    def nativeDir = file('dependencies/runtime/linux-arm64/natives')
+    def lockedRuntime = new groovy.json.JsonSlurper().parse(file('dependencies/linux-arm64-runtime.lock.json'))
+    def lockedLibraries = lockedRuntime.libraries
+    def testArtifact = lockedRuntime.artifacts.find { it.module == 'lwjgl' }
+    def testArchive = file('dependencies/runtime/linux-arm64/' + testArtifact.url.tokenize('/').last())
+    def testArchiveHash = testArtifact.sha256
+    tasks.named('test').configure {
+        doFirst {
+            if (!testArchive.isFile() || java.security.MessageDigest.getInstance('SHA-256')
+                    .digest(testArchive.bytes).encodeHex().toString() != testArchiveHash) {
+                throw new GradleException('Missing or changed ARM64 test native; run python3 scripts/linux_arm64_runtime.py setup')
+            }
+        }
+    }
+    neoForge.runs.configureEach { jvmArgument "-Dorg.lwjgl.librarypath=${nativeDir.absolutePath}" }
+    tasks.matching { it.name.startsWith('runClient') }.configureEach {
+        doFirst {
+            lockedLibraries.each { name, expected ->
+                def library = new File(nativeDir, name)
+                if (!library.isFile() || java.security.MessageDigest.getInstance('SHA-256')
+                        .digest(library.bytes).encodeHex().toString() != expected) {
+                    throw new GradleException("Missing or changed ARM64 native ${name}; run python3 scripts/linux_arm64_runtime.py setup")
+                }
+            }
+        }
+    }
+}

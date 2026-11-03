@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.optimization.makeupspatial.mixin",
+  "plugin": "com.pp.shaderlod.optimization.makeupspatial.mixin.SpatialPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "SpatialBuilderAccess",
+    "SpatialSodiumProgramsMixin",
+    "SpatialChunkRendererMixin",
+    "SpatialPipelineMixin",
+    "SpatialPrepareMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

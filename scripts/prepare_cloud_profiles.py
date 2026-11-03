@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Prepare fresh, matched cloud-transition controls from stopped original Photon scenes."""
 from __future__ import annotations
+from run_storage import copytree as storage_copytree
 
 import argparse
 import contextlib
@@ -70,9 +71,9 @@ def plan_clouds(args):
 
 def prepare_clouds(args):
     operation = plan_clouds(args)
-    runtime = json.loads((ROOT / 'dev/runtime.lock.json').read_text())
+    runtime = json.loads((ROOT / 'dependencies/runtime.lock.json').read_text())
     photon = runtime['artifacts']['photon']
-    original_path = ROOT / 'dev/upstream' / photon['filename']
+    original_path = ROOT / 'dependencies/upstream' / photon['filename']
     with zipfile.ZipFile(original_path) as original:
         license_bytes = original.read('LICENSE')
         original_allowed = declared_options(original.read('shaders/settings.glsl').decode())
@@ -117,7 +118,7 @@ def prepare_clouds(args):
                     target = base / arm
                     if arm not in ('high', 'patched-off', 'alloff'):
                         if target.exists(): raise ValueError('Cloud profile collision: ' + str(target))
-                        shutil.copytree(alloff, target, ignore=shutil.ignore_patterns(
+                        storage_copytree(alloff, target, ignore=shutil.ignore_patterns(
                             'session.lock', 'screenshots', 'logs', 'workload-measurement.json', 'workload-request.json'))
                         copied = world_fingerprint(target / 'saves' / WORLD)
                         if copied != fingerprint: raise ValueError('Cloud copy differs from stopped source')

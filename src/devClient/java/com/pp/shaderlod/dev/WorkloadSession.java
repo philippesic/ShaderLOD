@@ -31,7 +31,12 @@ final class WorkloadSession {
     private final WindowStateTracker windowState = new WindowStateTracker();
     private final double warmup = Double.parseDouble(System.getProperty("shaderlod.dev.initialWarmup", "60"));
     private final double duration = Double.parseDouble(System.getProperty("shaderlod.dev.measurementSeconds", "30"));
-    private final long started = System.nanoTime();
+    private final JsonObject loadedArtifactEvidence;
+    private final JsonObject productionMainResources = productionMainResources();
+    private final boolean initialHideGui = Minecraft.getInstance().options.hideGui;
+    private final boolean hideWorkloadGui = Boolean.getBoolean("shaderlod.dev.hideWorkloadGui")
+            || Boolean.getBoolean("shaderlod.dev.pixelCoverage");
+    private final long started;
     private long measurementStarted;
     private final JsonObject request;
     private JsonObject inputStart;
@@ -48,15 +53,34 @@ final class WorkloadSession {
         try {
             request = Files.exists(path) ? JsonParser.parseString(Files.readString(path)).getAsJsonObject() : new JsonObject();
         } catch (Exception failure) { throw new IllegalStateException("Invalid workload request", failure); }
-        temporalInitial = temporalInputs();
-        if (ShadowInputObserver.enabled()) {
-            var options = new java.util.TreeMap<String, String>();
-            effectiveOptions().entrySet().forEach(entry -> options.put(entry.getKey(), entry.getValue().getAsString()));
-            ShadowInputObserver.configurePhotonFeatures(options);
+        // Disk/root inspection precedes warmup and never runs in measurement hooks.
+        loadedArtifactEvidence = LoadedArtifactEvidence.capture();
+        if (hideWorkloadGui) Minecraft.getInstance().options.hideGui = true;
+        try {
+            started = System.nanoTime();
+            temporalInitial = temporalInputs();
+            if (ShadowInputObserver.enabled()) {
+                var options = new java.util.TreeMap<String, String>();
+                effectiveOptions().entrySet().forEach(entry -> options.put(entry.getKey(), entry.getValue().getAsString()));
+                ShadowInputObserver.configurePhotonFeatures(options);
+            }
+        } catch (RuntimeException | Error failure) {
+            restoreGui();
+            throw failure;
         }
     }
     String status() { return done ? "Workload capture finished" : measuring ? "Workload measuring CPU/GPU" : "Workload warming"; }
     void tick() {
+        try { tickCapture(); }
+        catch (RuntimeException | Error failure) {
+            restoreGui();
+            throw failure;
+        }
+    }
+    private void restoreGui() {
+        if (hideWorkloadGui) Minecraft.getInstance().options.hideGui = initialHideGui;
+    }
+    private void tickCapture() {
         var gpuSamples = GpuTimers.drainSamples();
         var cpuSamples = CpuTimers.drainSamples();
         if (done) return;
@@ -74,18 +98,23 @@ final class WorkloadSession {
                 return;
             }
             windowState.observeCapture(observedWindow, elapsedWorkloadSeconds, frameId);
-            GpuTimers.resetSamples();
             try { inputStart = inputState(); }
             catch (Exception failure) { throw new IllegalStateException("Cannot fingerprint measurement inputs", failure); }
-            capturedAt = java.time.Instant.now().toString();
             temporalStart = temporalInputs();
             ShaderInputTracker.beginMeasurement();
             ShadowInputObserver.beginMeasurement();
             VisibilityListPhaseObserver.beginMeasurement();
             ShadowCoherenceOracle.beginMeasurement();
-            measuring = true; measurementStarted = now;
-            com.pp.shaderlod.dev.timing.WorkTraceEvidence.beginCapture();
+            if (Boolean.getBoolean("shaderlod.dev.workTrace")) com.pp.shaderlod.dev.timing.WorkTraceEvidence.beginCapture();
+            if (Boolean.getBoolean("shaderlod.dev.spatialLayoutProbe")) com.pp.shaderlod.dev.timing.SpatialLayoutProbe.beginCapture(directory);
+            if (Boolean.getBoolean("shaderlod.dev.pixelCoverage")) com.pp.shaderlod.dev.timing.PixelCoverageProbe.beginCapture(directory);
+            // Start fingerprints/observers are setup, outside the measured interval.
+            // Reset after setup so any already-open GPU query remains in the old epoch.
+            GpuTimers.resetSamples();
             startFrames = (int) GpuTimers.snapshot().renderFrames();
+            measurementStarted = System.nanoTime();
+            capturedAt = java.time.Instant.now().toString();
+            measuring = true;
             LogUtils.getLogger().info("ShaderLOD workload measurement started: {}", directory);
             return;
         }
@@ -93,13 +122,18 @@ final class WorkloadSession {
         gpu.addAll(gpuSamples); cpu.addAll(cpuSamples);
         if ((now - measurementStarted) * 1e-9 >= duration) {
             done = true;
-            com.pp.shaderlod.dev.timing.WorkTraceEvidence.endCapture();
+            if (Boolean.getBoolean("shaderlod.dev.workTrace")) com.pp.shaderlod.dev.timing.WorkTraceEvidence.endCapture();
+            if (Boolean.getBoolean("shaderlod.dev.spatialLayoutProbe")) com.pp.shaderlod.dev.timing.SpatialLayoutProbe.endCapture();
+            if (Boolean.getBoolean("shaderlod.dev.pixelCoverage")) com.pp.shaderlod.dev.timing.PixelCoverageProbe.endCapture();
             write((now - measurementStarted) * 1e-9);
             VisibilityListPhaseObserver.endMeasurement();
             ShadowCoherenceOracle.endMeasurement();
             Screenshot.grab(client.gameDirectory, "workload-final.png", client.getMainRenderTarget(), message -> {
-                LogUtils.getLogger().info("Workload screenshot: {}", message.getString());
-                if (Boolean.getBoolean("shaderlod.dev.measureOnly")) client.execute(client::stop);
+                try { LogUtils.getLogger().info("Workload screenshot: {}", message.getString()); }
+                finally {
+                    restoreGui();
+                    if (Boolean.getBoolean("shaderlod.dev.measureOnly")) client.execute(client::stop);
+                }
             });
         }
     }
@@ -110,11 +144,13 @@ final class WorkloadSession {
             JsonObject report = new JsonObject();
             report.addProperty("status", "complete");
             report.addProperty("schema", 2);
-            if (Boolean.getBoolean("shaderlod.dev.workTrace")) {
+            if (Boolean.getBoolean("shaderlod.dev.workTrace") || Boolean.getBoolean("shaderlod.dev.spatialLayoutProbe") || Boolean.getBoolean("shaderlod.dev.pixelCoverage")) {
                 report.addProperty("performanceEvidence", false);
                 report.addProperty("diagnostic_only", true);
-                report.addProperty("diagnostic_reason", "Synchronous raw work-trace readbacks; frame rows and durations are not performance evidence");
+                report.addProperty("diagnostic_reason", "Synchronous raw draw/layout readbacks; frame rows and durations are not performance evidence");
             }
+            if (Boolean.getBoolean("shaderlod.dev.spatialLayoutProbe")) report.add("spatial_layout_evidence", com.pp.shaderlod.dev.timing.SpatialLayoutProbe.report());
+            if (Boolean.getBoolean("shaderlod.dev.pixelCoverage")) report.add("pixel_coverage_evidence", com.pp.shaderlod.dev.timing.PixelCoverageProbe.report());
             report.add("request", request.deepCopy());
             report.addProperty("measurement_started_at_utc", capturedAt);
             report.addProperty("written_at_utc", java.time.Instant.now().toString());
@@ -126,6 +162,8 @@ final class WorkloadSession {
             report.add("shadow_observation", gson.toJsonTree(ShadowInputObserver.snapshot()));
             report.add("visibility_observation", gson.toJsonTree(VisibilityListPhaseObserver.snapshot()));
             report.add("shadow_coherence_oracle", gson.toJsonTree(ShadowCoherenceOracle.snapshot()));
+            if (Boolean.getBoolean("shaderlod.dev.shadowCoherenceOracle"))
+                report.add("shadow_original_class_resources", LoadedArtifactEvidence.shadowOriginalResources());
             report.add("window_state", gson.toJsonTree(windowState.snapshot()));
             if (DhRenderEvidence.enabled()) report.add("dh_draw_evidence", DhRenderEvidence.captureTerminalSnapshot());
             if (Boolean.getBoolean("shaderlod.dev.waterSceneSurvey")) report.add("water_scene_survey", WaterSceneSurvey.captureTerminalSnapshot(client));
@@ -135,8 +173,11 @@ final class WorkloadSession {
             var mods = new JsonObject();
             for (var mod : ModList.get().getMods()) mods.addProperty(mod.getModId(), mod.getVersion().toString());
             report.add("loaded_mods", mods);
+            report.add("loaded_artifact_evidence", loadedArtifactEvidence.deepCopy());
+            report.add("production_main_resources", productionMainResources.deepCopy());
+            report.add("loaded_artifact_inventory", loadedArtifactEvidence.get("loaded_artifact_inventory").deepCopy());
             var runtimeProperties = new JsonObject();
-            for (String property : List.of("shaderlod.dev.performanceStack", "shaderlod.dev.includeDh", "shaderlod.dev.gpuSampleInterval", "shaderlod.dev.gpuTiming", "shaderlod.dev.cpuLayerTiming", "shaderlod.dev.fixedWetness", "shaderlod.dev.shadowObserve", "shaderlod.dev.visibilityLists", "shaderlod.dev.shadowCoherenceOracle", "shaderlod.dev.benchmarkWindowScale", "shaderlod.dev.cloudSamplerProbe", "shaderlod.dev.dhDrawEvidence", "shaderlod.dev.waterSceneSurvey")) {
+            for (String property : List.of("shaderlod.dev.hideWorkloadGui", "shaderlod.dev.performanceStack", "shaderlod.dev.includeDh", "shaderlod.dev.gpuSampleInterval", "shaderlod.dev.gpuTiming", "shaderlod.dev.cpuTiming", "shaderlod.dev.gpuPassTiming", "shaderlod.dev.gpuAttribution", "shaderlod.dev.fixedShaderAnimationTime", "shaderlod.dev.cpuLayerTiming", "shaderlod.dev.fixedWetness", "shaderlod.dev.shadowObserve", "shaderlod.dev.visibilityLists", "shaderlod.dev.shadowCoherenceOracle", "shaderlod.dev.benchmarkWindowScale", "shaderlod.dev.cloudSamplerProbe", "shaderlod.dev.dhDrawEvidence", "shaderlod.dev.waterSceneSurvey")) {
                 runtimeProperties.addProperty(property, System.getProperty(property, "unspecified"));
             }
             report.add("runtime_properties", runtimeProperties);
@@ -203,8 +244,39 @@ final class WorkloadSession {
         } catch (Exception exception) { LogUtils.getLogger().error("Cannot save workload measurement", exception); }
     }
 
+    /** Resource presence is captured before warmup; never load a production class in the absent arm. */
+    private static JsonObject productionMainResources() {
+        var result = new JsonObject();
+        var loader = WorkloadSession.class.getClassLoader();
+        for (String name : List.of("com/pp/shaderlod/ShaderLod.class", "com/pp/shaderlod/ShaderLodConfig.class", "shaderlod.mixins.json")) {
+            var resources = new com.google.gson.JsonArray();
+            try {
+                var entries = loader.getResources(name);
+                while (entries.hasMoreElements()) resources.add(entries.nextElement().toString());
+            } catch (java.io.IOException failure) {
+                // Keep an explicit error entry; callers must reject unavailable observations.
+                resources.add("ERROR: " + failure);
+            }
+            result.add(name, resources);
+        }
+        return result;
+    }
+
     private static String hash(Path path) throws Exception { return WorkloadInputs.hash(path); }
     private static JsonObject effectiveOptions() { return WorkloadInputs.effectiveOptions(); }
     private JsonObject temporalInputs() { return inputs.temporalInputs(); }
-    private JsonObject inputState() throws Exception { return inputs.inputState(); }
+    private JsonObject inputState() throws Exception {
+        var state = inputs.benchmarkInputState();
+        state.add("configuration_files", ConfigurationFilesEvidence.capture(directory));
+        if (ModList.get().isLoaded("shaderlod")) {
+            var flags = new JsonObject();
+            for (var id : com.pp.shaderlod.optimization.OptimizationId.values())
+                flags.addProperty(id.key(), com.pp.shaderlod.optimization.OptimizationConfig.requested(id));
+            state.add("optimization_requests", flags);
+            state.addProperty("native_graph_admission", com.pp.shaderlod.integration.makeupquad.MakeUpQuadRuntime.admissionCacheStatus());
+            state.addProperty("quad_compaction_admitted", com.pp.shaderlod.integration.makeupquad.MakeUpQuadRuntime.enabled(
+                com.pp.shaderlod.optimization.OptimizationId.QUAD_COMMAND_COMPACTION));
+        }
+        return state;
+    }
 }

@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.optimization.reimaginedprime.mixin",
+  "plugin": "com.pp.shaderlod.optimization.reimaginedprime.mixin.DepthMixinPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "DepthSodiumProgramsMixin",
+    "DepthChunkRendererMixin",
+    "DepthPipelineLifetimeMixin",
+    "DepthBuilderAccess"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

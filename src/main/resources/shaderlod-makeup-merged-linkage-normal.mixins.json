@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.optimization.makeupmerged.mixin",
+  "plugin": "com.pp.shaderlod.optimization.makeupmerged.MergedLinkageGate$Plugin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "MergedProgramsMixin",
+    "MergedProgramsMixin$BuilderHandle",
+    "MergedPipelineDestroyMixin",
+    "MergedPipelineDestroyMixin$Construction"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

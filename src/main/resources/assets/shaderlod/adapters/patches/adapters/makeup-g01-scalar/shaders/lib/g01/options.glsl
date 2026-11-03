@@ -1,0 +1,9 @@
+// Existing controls are repeated before native program/config routing.
+#define SHADERLOD_MAKEUP_DEAD_FRAME_COPY 0 // [0 1]
+#define SHADERLOD_REFINEMENT_ADAPTER 0 // [0 1]
+#define SHADERLOD_MAKEUP_AO_HALF_RES 0 // [0 1]
+#define SHADERLOD_MAKEUP_DEPTH_PRIMING 0 // [0 1]
+#define SHADERLOD_MAKEUP_EARLY_ALPHA 0 // [0 1]
+#define SHADERLOD_MAKEUP_SPATIAL_REUSE 0 // [0 1]
+#define SHADERLOD_MAKEUP_SPATIAL_RATE 0 // [0 1]
+#define SHADERLOD_MAKEUP_WORLD_PIXEL 0 // [0 1]

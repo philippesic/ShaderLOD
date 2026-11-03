@@ -1,0 +1,159 @@
+{
+  "archive_sha256": "824504bc937f9570277c0a809f5059ae4a5fe70c413cf4459b6ccff4dfed7ebe",
+  "common_contract": "Same-region/pass SOLID/CUTOUT only; INTEGER shared quad IBO 4q+[0,1,2,2,3,0]; zero pointer positive six-divisible count adjacent base; common full-batch preflight/native bound268435452; shadows/translucency/custom indices/invalid inputs fall back",
+  "encoded_draw": "_draw_id=a_LightAndData[3] vertex attribute, shifts(5,0,2)/masks(7,3,7)/*16/u_RegionOffset; ordered absolute index stream preserves all attributes",
+  "exports": [
+    {
+      "arm": "original",
+      "bytes": 3170,
+      "mtime_utc": "2026-10-08T23:19:32.683710+00:00",
+      "path": "/Users/pippo/github/shaderlod/run-workloads/cross-shader-performance-r2/sildur-cost-preparation-r1/original/client/patched_shaders/081_sodium_gbuffers_textured.fsh",
+      "sha256": "82f856464b8319dadb4e02d5e1b396d585a213852140cb011daa5510d5437292"
+    },
+    {
+      "arm": "original",
+      "bytes": 11018,
+      "mtime_utc": "2026-10-08T23:19:32.683573+00:00",
+      "path": "/Users/pippo/github/shaderlod/run-workloads/cross-shader-performance-r2/sildur-cost-preparation-r1/original/client/patched_shaders/081_sodium_gbuffers_textured.vsh",
+      "sha256": "92da1558343ab0e0df894c421a2b122cac898991eeec557f07013c9bcb42853d"
+    },
+    {
+      "arm": "original",
+      "bytes": 3273,
+      "mtime_utc": "2026-10-08T23:19:32.689931+00:00",
+      "path": "/Users/pippo/github/shaderlod/run-workloads/cross-shader-performance-r2/sildur-cost-preparation-r1/original/client/patched_shaders/082_sodium_gbuffers_textured.fsh",
+      "sha256": "725a64d9df986a0b1de2a995ca049ae3b47ae3976c1333b169143942067e4d5a"
+    },
+    {
+      "arm": "original",
+      "bytes": 11018,
+      "mtime_utc": "2026-10-08T23:19:32.689823+00:00",
+      "path": "/Users/pippo/github/shaderlod/run-workloads/cross-shader-performance-r2/sildur-cost-preparation-r1/original/client/patched_shaders/082_sodium_gbuffers_textured.vsh",
+      "sha256": "92da1558343ab0e0df894c421a2b122cac898991eeec557f07013c9bcb42853d"
+    },
+    {
+      "arm": "return",
+      "bytes": 3170,
+      "mtime_utc": "2026-10-08T23:26:43.136416+00:00",
+      "path": "/Users/pippo/github/shaderlod/run-workloads/cross-shader-performance-r2/sildur-cost-preparation-r1/return/client/patched_shaders/081_sodium_gbuffers_textured.fsh",
+      "sha256": "82f856464b8319dadb4e02d5e1b396d585a213852140cb011daa5510d5437292"
+    },
+    {
+      "arm": "return",
+      "bytes": 11018,
+      "mtime_utc": "2026-10-08T23:26:43.136314+00:00",
+      "path": "/Users/pippo/github/shaderlod/run-workloads/cross-shader-performance-r2/sildur-cost-preparation-r1/return/client/patched_shaders/081_sodium_gbuffers_textured.vsh",
+      "sha256": "92da1558343ab0e0df894c421a2b122cac898991eeec557f07013c9bcb42853d"
+    },
+    {
+      "arm": "return",
+      "bytes": 3273,
+      "mtime_utc": "2026-10-08T23:26:43.142465+00:00",
+      "path": "/Users/pippo/github/shaderlod/run-workloads/cross-shader-performance-r2/sildur-cost-preparation-r1/return/client/patched_shaders/082_sodium_gbuffers_textured.fsh",
+      "sha256": "725a64d9df986a0b1de2a995ca049ae3b47ae3976c1333b169143942067e4d5a"
+    },
+    {
+      "arm": "return",
+      "bytes": 11018,
+      "mtime_utc": "2026-10-08T23:26:43.142358+00:00",
+      "path": "/Users/pippo/github/shaderlod/run-workloads/cross-shader-performance-r2/sildur-cost-preparation-r1/return/client/patched_shaders/082_sodium_gbuffers_textured.vsh",
+      "sha256": "92da1558343ab0e0df894c421a2b122cac898991eeec557f07013c9bcb42853d"
+    }
+  ],
+  "joins": [
+    {
+      "arm": "original",
+      "capture": {
+        "path": "/Users/pippo/github/shaderlod/dev/logs/cross-shader-performance-r2/sildur-cost-preparation-r1/original/captures/sildur-cost-r1-original.json",
+        "sha256": "efc122995401a437e69fa4e4da8a2b3cbe4e1b5f44ec8b2ba2112fceda5310e6"
+      },
+      "capture_utc": "2026-10-08T23:19:35.399931Z",
+      "console": {
+        "path": "/Users/pippo/github/shaderlod/dev/logs/cross-shader-performance-r2/sildur-cost-preparation-r1/original/console.log",
+        "sha256": "cdb970607061708aaa2b6fa50b1dcc4bb4a3fa814a502e64665a73e5adb2b9b2"
+      },
+      "historical_main_core_enabled": true,
+      "owner": {
+        "path": "/Users/pippo/github/shaderlod/dev/logs/cross-shader-performance-r2/sildur-cost-preparation-r1/original/owner.json",
+        "sha256": "cd92d136921dbcd032ec5459f7c81f00ea1bbe996333196405bcbe7d1bea5f68"
+      },
+      "plan": {
+        "path": "/Users/pippo/github/shaderlod/dev/logs/cross-shader-performance-r2/sildur-cost-preparation-r1/original-plan.json",
+        "sha256": "44411489805d3d011973d2646e797d12b866badd1f578bc5535bf14e96e5b1a8"
+      },
+      "release": {
+        "path": "/Users/pippo/github/shaderlod/dev/logs/cross-shader-performance-r2/sildur-cost-preparation-r1/original/release.json",
+        "sha256": "078ede272e2ce9fdb911bc69cb146e802a2f6d5336d5a4efe3953325c5966b36"
+      },
+      "sodium_family": [
+        "078_sodium_shadow.fsh",
+        "078_sodium_shadow.vsh",
+        "079_sodium_shadow.fsh",
+        "079_sodium_shadow.vsh",
+        "080_sodium_shadow.fsh",
+        "080_sodium_shadow.vsh",
+        "081_sodium_gbuffers_textured.fsh",
+        "081_sodium_gbuffers_textured.vsh",
+        "082_sodium_gbuffers_textured.fsh",
+        "082_sodium_gbuffers_textured.vsh",
+        "083_sodium_gbuffers_water.fsh",
+        "083_sodium_gbuffers_water.vsh"
+      ],
+      "source_directory": "/Users/pippo/github/shaderlod/run-workloads/cross-shader-performance-r2/sildur-cost-preparation-r1/original/client/patched_shaders"
+    },
+    {
+      "arm": "return",
+      "capture": {
+        "path": "/Users/pippo/github/shaderlod/dev/logs/cross-shader-performance-r2/sildur-cost-preparation-r1/return/captures/sildur-cost-r1-return.json",
+        "sha256": "c1627079cf1f03a0e3a39017a89a5983c883b98600511df1efe0421afe9bf592"
+      },
+      "capture_utc": "2026-10-08T23:26:46.338401Z",
+      "console": {
+        "path": "/Users/pippo/github/shaderlod/dev/logs/cross-shader-performance-r2/sildur-cost-preparation-r1/return/console.log",
+        "sha256": "91f65cd9e392d6c4960bcfad6acfc3bd73fad13be67ee809a58c0d97ecf06efa"
+      },
+      "historical_main_core_enabled": true,
+      "owner": {
+        "path": "/Users/pippo/github/shaderlod/dev/logs/cross-shader-performance-r2/sildur-cost-preparation-r1/return/owner.json",
+        "sha256": "4b03912b84f019e59290cb1117451aa0418c39f2cab2e41467be52264a375305"
+      },
+      "plan": {
+        "path": "/Users/pippo/github/shaderlod/dev/logs/cross-shader-performance-r2/sildur-cost-preparation-r1/return-plan.json",
+        "sha256": "d73857fe7368043cc84f082d232a0b78732295f8645b143ff30912a0cbb38c32"
+      },
+      "release": {
+        "path": "/Users/pippo/github/shaderlod/dev/logs/cross-shader-performance-r2/sildur-cost-preparation-r1/return/release.json",
+        "sha256": "5d5c791ab691efc9af5d43ca2f9b9f3a42048f9f1325f563136cf3f376a01a0a"
+      },
+      "sodium_family": [
+        "078_sodium_shadow.fsh",
+        "078_sodium_shadow.vsh",
+        "079_sodium_shadow.fsh",
+        "079_sodium_shadow.vsh",
+        "080_sodium_shadow.fsh",
+        "080_sodium_shadow.vsh",
+        "081_sodium_gbuffers_textured.fsh",
+        "081_sodium_gbuffers_textured.vsh",
+        "082_sodium_gbuffers_textured.fsh",
+        "082_sodium_gbuffers_textured.vsh",
+        "083_sodium_gbuffers_water.fsh",
+        "083_sodium_gbuffers_water.vsh"
+      ],
+      "source_directory": "/Users/pippo/github/shaderlod/run-workloads/cross-shader-performance-r2/sildur-cost-preparation-r1/return/client/patched_shaders"
+    }
+  ],
+  "options_sha256": "795a8b210019380e8d120924aa4ef24555afc8bf9ea5ff9bffe8dafb9d631bd3",
+  "scope": "Pinned original/native115, MC1.21.1/Neo21.1.253/Iris1.8.12/Sodium0.6.13/Overworld/vanilla+mod_resources/noDH; common live API/config/lifecycle gates required",
+  "source_boundary": "Original-only original/return compilation-path sources, not linked-program source readback; historical same-runtime main core On without shader derivative",
+  "source_pass_map": "SOLID -> TERRAIN -> TerrainSolid -> Terrain -> TexturedLit -> Textured; CUTOUT -> TERRAIN_CUTOUT -> TerrainCutout -> Terrain -> TexturedLit -> Textured; absent original intermediates; 081 solid/082 alpha-discard cutout gbuffers_textured",
+  "status": "SOURCE_ADMIT_ONE_FINITE_SILDUR_RENDERER_CANDIDATE; helper consumption/quality/gain unverified",
+  "unverified": [
+    "actual helper execution/reduction",
+    "normal controls/restoration/failedApply",
+    "still/motion/chunk quality",
+    "original-relative FPS/GPU benefit",
+    "PBR/DH",
+    "other resources/dimensions/stack/ports",
+    "actual shader LOD"
+  ]
+}

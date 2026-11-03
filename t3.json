@@ -10,14 +10,14 @@
       "async": false
     },
     {
-      "name": "Project checkpoint",
-      "command": "python3 scripts/project_checkpoint.py show docs/STATUS.md",
+      "name": "Current state",
+      "command": "cat docs/STATUS.md",
       "icon": "play",
       "runOnWorktreeCreate": false
     },
     {
       "name": "Python tests",
-      "command": "python3 -m unittest discover -s tests",
+      "command": "PATH=\"$PWD/dependencies/toolchain/bin:$PATH\" PYTHONPATH=\"scripts:tests:$PWD/dependencies/test-python/usr/lib64/python3.13/site-packages\" python3 -m unittest discover -s tests",
       "icon": "test",
       "runOnWorktreeCreate": false
     },

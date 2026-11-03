@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.optimization.unboundmerged.mixin",
+  "plugin": "com.pp.shaderlod.optimization.unboundmerged.mixin.UnboundMergedMixinPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "UnboundMergedProgramsMixin",
+    "UnboundMergedProgramsMixin$BuilderHandle",
+    "UnboundMergedChunkRendererMixin",
+    "UnboundMergedPipelineDestroyMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -1,0 +1,111 @@
+[
+  {
+    "tuple": "fabric-1.21.1",
+    "classes": {
+      "net/irisshaders/iris/gl/program/Program.class": "bc7720cdd846d4065887f3203d02f4173d2c661c8ef18ee4637b6c585a6f25f8",
+      "net/irisshaders/iris/pipeline/programs/SodiumShader.class": "4b358dd81cb7a1920b1c2bc9745c9cb3941f43a074ecda718e6f6b1fc9805749",
+      "net/irisshaders/iris/uniforms/CommonUniforms.class": "4517de469caffe33fa1c87b6c99b632a6deea582adc82824cd18ead1d6e05e28",
+      "net/irisshaders/iris/Iris.class": "3d77455150d5711af960fb9d85123fb201eb9996d948afcf61c46a6983b7836c"
+    }
+  },
+  {
+    "tuple": "neoforge-1.21.1",
+    "classes": {
+      "net/irisshaders/iris/gl/program/Program.class": "8252cffe8d7322a3d64fad8036938e07b871cbd5667c0dafec0a3d48fd610d49",
+      "net/irisshaders/iris/pipeline/programs/SodiumShader.class": "33e49ddf69f01a86a64ad2e2d33595b81a22a859ba1feda0dda65813e663f356",
+      "net/irisshaders/iris/uniforms/CommonUniforms.class": "9cd8f45f63645cdaef6bbc6e1d5c43ae711078049b6a503fb80fcfb491cf5acf",
+      "net/irisshaders/iris/Iris.class": "4cb88bd1c15635db3845cb4b3db757c611707e1fc2a00af879298c09bb45d3d1"
+    }
+  },
+  {
+    "tuple": "fabric-1.21.1-intermediary",
+    "classes": {
+      "net/irisshaders/iris/gl/program/Program.class": "3bd9620ef9acc624056820927083925febd6558eb8bd8cdb2ed11823f78d42ff",
+      "net/irisshaders/iris/pipeline/programs/SodiumShader.class": "043308b62b7c6feb3626282a8c97e25de83403294871a7668367e43aff51c530",
+      "net/irisshaders/iris/uniforms/CommonUniforms.class": "663e4042399a32c904e50e50b5526fd6389cdf6ad20a38a97488d7e85f7c5e7c",
+      "net/irisshaders/iris/Iris.class": "aafe700b689d93193a4c80bacb98e623f66949720ca0038b6a2da21c498074fd"
+    },
+    "namespace": "intermediary"
+  },
+  {
+    "tuple": "neoforge-1.21.11-primary",
+    "classes": {
+      "net/irisshaders/iris/pipeline/programs/SodiumShader.class": "6b0376f8a15fb3823118c4afd7608cbc8eb5629dc82b1049dc45116cbbc6d262",
+      "net/irisshaders/iris/gl/program/Program.class": "69418b4bea10ef1671c6819535ead839d5344a37133778824fd03b0ff7f223b4",
+      "net/irisshaders/iris/uniforms/CommonUniforms.class": "3894baeaf6f471afbdac8f4636e3c4b6baa1b40e3e6dc1cefbac93b1aa62087b",
+      "net/irisshaders/iris/Iris.class": "e6db6370696e8821da52651bec248602db30b9457e01a54fac3e4ec4452a012c"
+    }
+  },
+  {
+    "tuple": "neoforge-26.1.2-primary",
+    "classes": {
+      "net/irisshaders/iris/pipeline/programs/SodiumShader.class": "9fb5e4c654496793f4cc1c0f8e385d3197fce0b336c7393060f008c744e22070",
+      "net/irisshaders/iris/gl/program/Program.class": "f43e5e4bfca9534bb794cc34c60d3370b45429a8a0c5487639c8497d2ad6e523",
+      "net/irisshaders/iris/uniforms/CommonUniforms.class": "da021e2930c75b719074083da52d830a7f17d7c5bb17e72aac81311f75bd2d61",
+      "net/irisshaders/iris/Iris.class": "089838deb5a7bf72af0bdfa5b02683c5ec0fb05ec2efb5ee70c8da2aca5528ba"
+    }
+  },
+  {
+    "tuple": "neoforge-26.2-primary",
+    "classes": {
+      "net/irisshaders/iris/pipeline/programs/ExtendedShader.class": "9a6ccfbed975d5562bbdf1d8fc38bc74ef90757ece69e847b055c61031b640cc",
+      "net/irisshaders/iris/gl/program/Program.class": "f43e5e4bfca9534bb794cc34c60d3370b45429a8a0c5487639c8497d2ad6e523",
+      "net/irisshaders/iris/uniforms/CommonUniforms.class": "8c01ba2b4de535b142c55f25bb416eb88b57e85a490b1bb2ae33856eb3beea8a",
+      "net/irisshaders/iris/Iris.class": "8056f6f84efebd10f5367bff0ace4d7659641445552bf051d6f0ed56055560a7"
+    }
+  },
+  {
+    "tuple": "neoforge-26.3-primary",
+    "classes": {
+      "net/irisshaders/iris/pipeline/programs/ExtendedShader.class": "cba0aaf079dc868a9385ecc050d04c79d567ffa9657f69e1d459e79f2dca03d9",
+      "net/irisshaders/iris/gl/program/Program.class": "e072e5aa925dcc093bca4db6d6f660b8b733fdf36ffcf6d6c57f74b81dd64bc9",
+      "net/irisshaders/iris/uniforms/CommonUniforms.class": "24c8ae7005d6d2fe099805c45781314dc1367cfca4d48343abd6fa97f7774357",
+      "net/irisshaders/iris/Iris.class": "edc6f8738ed79ac42756068613cbef937a2dea1996d2929148a3ca089ea36071"
+    }
+  },
+  {
+    "tuple": "fabric-1.21.11-primary",
+    "classes": {
+      "net/irisshaders/iris/pipeline/programs/SodiumShader.class": "a7373f714a37d4637259bed11509ec2e79c5cab9fbe3fe946a013f9edde5ef82",
+      "net/irisshaders/iris/gl/program/Program.class": "788a190dd9b164dfb4dbc678ac987a0a1a7388f3cd51fb8df08bf516a08544a0",
+      "net/irisshaders/iris/uniforms/CommonUniforms.class": "428ee39eb28ad59274086da40015e1b64284ff447704844e7b73ca23b1496747",
+      "net/irisshaders/iris/Iris.class": "f29015f17a6e420fd5ec7e8fbad1d104a7141b24c19dbf73adf2f9f5edee66d1"
+    }
+  },
+  {
+    "tuple": "fabric-26.1.2-primary",
+    "classes": {
+      "net/irisshaders/iris/pipeline/programs/SodiumShader.class": "9fb5e4c654496793f4cc1c0f8e385d3197fce0b336c7393060f008c744e22070",
+      "net/irisshaders/iris/gl/program/Program.class": "f43e5e4bfca9534bb794cc34c60d3370b45429a8a0c5487639c8497d2ad6e523",
+      "net/irisshaders/iris/uniforms/CommonUniforms.class": "da021e2930c75b719074083da52d830a7f17d7c5bb17e72aac81311f75bd2d61",
+      "net/irisshaders/iris/Iris.class": "089838deb5a7bf72af0bdfa5b02683c5ec0fb05ec2efb5ee70c8da2aca5528ba"
+    }
+  },
+  {
+    "tuple": "fabric-26.2-primary",
+    "classes": {
+      "net/irisshaders/iris/pipeline/programs/ExtendedShader.class": "9a6ccfbed975d5562bbdf1d8fc38bc74ef90757ece69e847b055c61031b640cc",
+      "net/irisshaders/iris/gl/program/Program.class": "f43e5e4bfca9534bb794cc34c60d3370b45429a8a0c5487639c8497d2ad6e523",
+      "net/irisshaders/iris/uniforms/CommonUniforms.class": "8c01ba2b4de535b142c55f25bb416eb88b57e85a490b1bb2ae33856eb3beea8a",
+      "net/irisshaders/iris/Iris.class": "8056f6f84efebd10f5367bff0ace4d7659641445552bf051d6f0ed56055560a7"
+    }
+  },
+  {
+    "tuple": "fabric-26.3-primary",
+    "classes": {
+      "net/irisshaders/iris/pipeline/programs/ExtendedShader.class": "cba0aaf079dc868a9385ecc050d04c79d567ffa9657f69e1d459e79f2dca03d9",
+      "net/irisshaders/iris/gl/program/Program.class": "e072e5aa925dcc093bca4db6d6f660b8b733fdf36ffcf6d6c57f74b81dd64bc9",
+      "net/irisshaders/iris/uniforms/CommonUniforms.class": "24c8ae7005d6d2fe099805c45781314dc1367cfca4d48343abd6fa97f7774357",
+      "net/irisshaders/iris/Iris.class": "edc6f8738ed79ac42756068613cbef937a2dea1996d2929148a3ca089ea36071"
+    }
+  },
+  {
+    "tuple": "fabric1.21.11-named",
+    "classes": {
+      "net/irisshaders/iris/pipeline/programs/SodiumShader.class": "3f1f601034e85d6867b309af0cb42bf22390db526fab34a8a39c2992d26dd6e0",
+      "net/irisshaders/iris/gl/program/Program.class": "788a190dd9b164dfb4dbc678ac987a0a1a7388f3cd51fb8df08bf516a08544a0",
+      "net/irisshaders/iris/uniforms/CommonUniforms.class": "be90d53f497f20ad7bda1c0d59e5d2e399f66f1846af62ac98ba58c1644499a0",
+      "net/irisshaders/iris/Iris.class": "3fdc8ac841f047ed76a61210132833a1654e317926bae9ca33e0605756582997"
+    }
+  }
+]

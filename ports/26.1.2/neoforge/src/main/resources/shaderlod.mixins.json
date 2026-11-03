@@ -1,0 +1,19 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "client": [
+    "CommonUniformsMixin",
+    "EffectUniformsMixin",
+    "IrisWorldCompletionMixin",
+    "IrisOptionWriteMixin",
+    "MeasurementFrameMixin",
+    "MeasurementCleanupMixin",
+    "MeasurementReloadMixin",
+    "CompileDimensionMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

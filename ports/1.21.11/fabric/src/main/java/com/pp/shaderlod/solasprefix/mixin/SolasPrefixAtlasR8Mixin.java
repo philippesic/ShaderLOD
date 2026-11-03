@@ -1,0 +1,11 @@
+package com.pp.shaderlod.solasprefix.mixin;
+import com.pp.shaderlod.solasprefix.SolasPrefixRuntime;
+import net.irisshaders.iris.pbr.texture.PBRAtlasTexture;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.*;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+@Mixin(value=PBRAtlasTexture.class,remap=false)
+public abstract class SolasPrefixAtlasR8Mixin {
+ @Inject(method={"upload(III)V","uploadInitialContents()V","clearTextureData()V","close()V"},at=@At("HEAD"),require=1)
+ private void mutate(CallbackInfo ci){SolasPrefixRuntime.atlasMutating(this);}
+}

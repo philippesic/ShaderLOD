@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.fabric.dev.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "client": [
+    "PortRendererFramesMixin",
+    "PortRendererCommandMixin",
+    "PortRendererGlConsumerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

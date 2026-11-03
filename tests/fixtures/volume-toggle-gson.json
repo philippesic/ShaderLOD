@@ -1,0 +1,533 @@
+{
+  "config/shaderlod-effects-client.toml_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+  "volume_dh_present": false,
+  "requested_chunks": 24,
+  "effective_chunks": 24,
+  "volume_fov": 70,
+  "hide_gui": true,
+  "mod_present": true,
+  "shaders_in_use": true,
+  "shadow_culling_configured": false,
+  "shadow_coherence_configured": false,
+  "terrain_confirmation": false,
+  "fallback": false,
+  "shadow_lists_active": false,
+  "terrain_configured": false,
+  "shadow_lists_configured": false,
+  "terrain_active": false,
+  "shadow_coherence_active": false,
+  "shadow_culling_active": false,
+  "lod_settings": {
+    "enabled": false,
+    "debug": false
+  },
+  "loaded_semantic_config": {
+    "lod": {
+      "enabled": false,
+      "debug": false
+    },
+    "terrain": {
+      "enabled": false,
+      "warmSourceConfirmed": false
+    },
+    "rendering": {
+      "separateShadowVisibilityLists": false,
+      "optimizeShadowCulling": false,
+      "shadowFrustumCoherence": false
+    },
+    "effects": {
+      "SHADOW_FILTERING": {
+        "mode": "INHERIT",
+        "requested": {
+          "enabled": false,
+          "preserveSalientLighting": true,
+          "bands": {
+            "nearBlocks": 512.0,
+            "farBlocks": 1536.0,
+            "transitionBlocks": 128.0
+          },
+          "mediumWorkRatio": 1.0,
+          "farWorkRatio": 1.0
+        },
+        "policy": {
+          "enabled": false,
+          "preserveSalientLighting": true,
+          "bands": {
+            "nearBlocks": 512.0,
+            "farBlocks": 1536.0,
+            "transitionBlocks": 128.0
+          },
+          "mediumWorkRatio": 1.0,
+          "farWorkRatio": 1.0
+        },
+        "repaired": false
+      },
+      "AMBIENT_OCCLUSION": {
+        "mode": "INHERIT",
+        "requested": {
+          "enabled": false,
+          "preserveSalientLighting": true,
+          "bands": {
+            "nearBlocks": 512.0,
+            "farBlocks": 1536.0,
+            "transitionBlocks": 128.0
+          },
+          "mediumWorkRatio": 1.0,
+          "farWorkRatio": 1.0
+        },
+        "policy": {
+          "enabled": false,
+          "preserveSalientLighting": true,
+          "bands": {
+            "nearBlocks": 512.0,
+            "farBlocks": 1536.0,
+            "transitionBlocks": 128.0
+          },
+          "mediumWorkRatio": 1.0,
+          "farWorkRatio": 1.0
+        },
+        "repaired": false
+      },
+      "REFLECTIONS": {
+        "mode": "INHERIT",
+        "requested": {
+          "enabled": false,
+          "preserveSalientLighting": true,
+          "bands": {
+            "nearBlocks": 512.0,
+            "farBlocks": 1536.0,
+            "transitionBlocks": 128.0
+          },
+          "mediumWorkRatio": 1.0,
+          "farWorkRatio": 1.0
+        },
+        "policy": {
+          "enabled": false,
+          "preserveSalientLighting": true,
+          "bands": {
+            "nearBlocks": 512.0,
+            "farBlocks": 1536.0,
+            "transitionBlocks": 128.0
+          },
+          "mediumWorkRatio": 1.0,
+          "farWorkRatio": 1.0
+        },
+        "repaired": false
+      },
+      "VOLUMETRICS": {
+        "mode": "ADAPTIVE",
+        "requested": {
+          "enabled": true,
+          "preserveSalientLighting": true,
+          "bands": {
+            "nearBlocks": 512.0,
+            "farBlocks": 1536.0,
+            "transitionBlocks": 128.0
+          },
+          "mediumWorkRatio": 0.85,
+          "farWorkRatio": 0.75
+        },
+        "policy": {
+          "enabled": true,
+          "preserveSalientLighting": true,
+          "bands": {
+            "nearBlocks": 512.0,
+            "farBlocks": 1536.0,
+            "transitionBlocks": 128.0
+          },
+          "mediumWorkRatio": 0.85,
+          "farWorkRatio": 0.75
+        },
+        "repaired": false
+      },
+      "WATER_SURFACE": {
+        "mode": "INHERIT",
+        "requested": {
+          "enabled": false,
+          "preserveSalientLighting": true,
+          "bands": {
+            "nearBlocks": 512.0,
+            "farBlocks": 1536.0,
+            "transitionBlocks": 128.0
+          },
+          "mediumWorkRatio": 1.0,
+          "farWorkRatio": 1.0
+        },
+        "policy": {
+          "enabled": false,
+          "preserveSalientLighting": true,
+          "bands": {
+            "nearBlocks": 512.0,
+            "farBlocks": 1536.0,
+            "transitionBlocks": 128.0
+          },
+          "mediumWorkRatio": 1.0,
+          "farWorkRatio": 1.0
+        },
+        "repaired": false
+      },
+      "MATERIALS": {
+        "mode": "INHERIT",
+        "requested": {
+          "enabled": false,
+          "preserveSalientLighting": true,
+          "bands": {
+            "nearBlocks": 512.0,
+            "farBlocks": 1536.0,
+            "transitionBlocks": 128.0
+          },
+          "mediumWorkRatio": 1.0,
+          "farWorkRatio": 1.0
+        },
+        "policy": {
+          "enabled": false,
+          "preserveSalientLighting": true,
+          "bands": {
+            "nearBlocks": 512.0,
+            "farBlocks": 1536.0,
+            "transitionBlocks": 128.0
+          },
+          "mediumWorkRatio": 1.0,
+          "farWorkRatio": 1.0
+        },
+        "repaired": false
+      },
+      "OPAQUE_LIGHTING": {
+        "mode": "INHERIT",
+        "requested": {
+          "enabled": false,
+          "preserveSalientLighting": true,
+          "bands": {
+            "nearBlocks": 512.0,
+            "farBlocks": 1536.0,
+            "transitionBlocks": 128.0
+          },
+          "mediumWorkRatio": 1.0,
+          "farWorkRatio": 1.0
+        },
+        "policy": {
+          "enabled": false,
+          "preserveSalientLighting": true,
+          "bands": {
+            "nearBlocks": 512.0,
+            "farBlocks": 1536.0,
+            "transitionBlocks": 128.0
+          },
+          "mediumWorkRatio": 1.0,
+          "farWorkRatio": 1.0
+        },
+        "repaired": false
+      }
+    }
+  },
+  "volume_effect_controls": {
+    "SHADOW_FILTERING": {
+      "mode": "INHERIT",
+      "requested": {
+        "enabled": false,
+        "preserveSalientLighting": true,
+        "bands": {
+          "nearBlocks": 512.0,
+          "farBlocks": 1536.0,
+          "transitionBlocks": 128.0
+        },
+        "mediumWorkRatio": 1.0,
+        "farWorkRatio": 1.0
+      },
+      "policy": {
+        "enabled": false,
+        "preserveSalientLighting": true,
+        "bands": {
+          "nearBlocks": 512.0,
+          "farBlocks": 1536.0,
+          "transitionBlocks": 128.0
+        },
+        "mediumWorkRatio": 1.0,
+        "farWorkRatio": 1.0
+      },
+      "repaired": false
+    },
+    "AMBIENT_OCCLUSION": {
+      "mode": "INHERIT",
+      "requested": {
+        "enabled": false,
+        "preserveSalientLighting": true,
+        "bands": {
+          "nearBlocks": 512.0,
+          "farBlocks": 1536.0,
+          "transitionBlocks": 128.0
+        },
+        "mediumWorkRatio": 1.0,
+        "farWorkRatio": 1.0
+      },
+      "policy": {
+        "enabled": false,
+        "preserveSalientLighting": true,
+        "bands": {
+          "nearBlocks": 512.0,
+          "farBlocks": 1536.0,
+          "transitionBlocks": 128.0
+        },
+        "mediumWorkRatio": 1.0,
+        "farWorkRatio": 1.0
+      },
+      "repaired": false
+    },
+    "REFLECTIONS": {
+      "mode": "INHERIT",
+      "requested": {
+        "enabled": false,
+        "preserveSalientLighting": true,
+        "bands": {
+          "nearBlocks": 512.0,
+          "farBlocks": 1536.0,
+          "transitionBlocks": 128.0
+        },
+        "mediumWorkRatio": 1.0,
+        "farWorkRatio": 1.0
+      },
+      "policy": {
+        "enabled": false,
+        "preserveSalientLighting": true,
+        "bands": {
+          "nearBlocks": 512.0,
+          "farBlocks": 1536.0,
+          "transitionBlocks": 128.0
+        },
+        "mediumWorkRatio": 1.0,
+        "farWorkRatio": 1.0
+      },
+      "repaired": false
+    },
+    "VOLUMETRICS": {
+      "mode": "ADAPTIVE",
+      "requested": {
+        "enabled": true,
+        "preserveSalientLighting": true,
+        "bands": {
+          "nearBlocks": 512.0,
+          "farBlocks": 1536.0,
+          "transitionBlocks": 128.0
+        },
+        "mediumWorkRatio": 0.85,
+        "farWorkRatio": 0.75
+      },
+      "policy": {
+        "enabled": true,
+        "preserveSalientLighting": true,
+        "bands": {
+          "nearBlocks": 512.0,
+          "farBlocks": 1536.0,
+          "transitionBlocks": 128.0
+        },
+        "mediumWorkRatio": 0.85,
+        "farWorkRatio": 0.75
+      },
+      "repaired": false
+    },
+    "WATER_SURFACE": {
+      "mode": "INHERIT",
+      "requested": {
+        "enabled": false,
+        "preserveSalientLighting": true,
+        "bands": {
+          "nearBlocks": 512.0,
+          "farBlocks": 1536.0,
+          "transitionBlocks": 128.0
+        },
+        "mediumWorkRatio": 1.0,
+        "farWorkRatio": 1.0
+      },
+      "policy": {
+        "enabled": false,
+        "preserveSalientLighting": true,
+        "bands": {
+          "nearBlocks": 512.0,
+          "farBlocks": 1536.0,
+          "transitionBlocks": 128.0
+        },
+        "mediumWorkRatio": 1.0,
+        "farWorkRatio": 1.0
+      },
+      "repaired": false
+    },
+    "MATERIALS": {
+      "mode": "INHERIT",
+      "requested": {
+        "enabled": false,
+        "preserveSalientLighting": true,
+        "bands": {
+          "nearBlocks": 512.0,
+          "farBlocks": 1536.0,
+          "transitionBlocks": 128.0
+        },
+        "mediumWorkRatio": 1.0,
+        "farWorkRatio": 1.0
+      },
+      "policy": {
+        "enabled": false,
+        "preserveSalientLighting": true,
+        "bands": {
+          "nearBlocks": 512.0,
+          "farBlocks": 1536.0,
+          "transitionBlocks": 128.0
+        },
+        "mediumWorkRatio": 1.0,
+        "farWorkRatio": 1.0
+      },
+      "repaired": false
+    },
+    "OPAQUE_LIGHTING": {
+      "mode": "INHERIT",
+      "requested": {
+        "enabled": false,
+        "preserveSalientLighting": true,
+        "bands": {
+          "nearBlocks": 512.0,
+          "farBlocks": 1536.0,
+          "transitionBlocks": 128.0
+        },
+        "mediumWorkRatio": 1.0,
+        "farWorkRatio": 1.0
+      },
+      "policy": {
+        "enabled": false,
+        "preserveSalientLighting": true,
+        "bands": {
+          "nearBlocks": 512.0,
+          "farBlocks": 1536.0,
+          "transitionBlocks": 128.0
+        },
+        "mediumWorkRatio": 1.0,
+        "farWorkRatio": 1.0
+      },
+      "repaired": false
+    }
+  },
+  "effective_shader_options": {
+    "BLOCKY_CLOUDS": "false",
+    "CLOUDS_CUMULUS": "true",
+    "SHADERLOD_VOLUMETRIC_INTEGRATION_LOD": "true"
+  },
+  "actual_shader_sha256": "5de7561dd24cdca80860a1d5f2c60400e74163a489cc163e916f3fd47feb27de",
+  "volume_source_qualification": {
+    "qualified": true,
+    "source_binding": {
+      "adapter": {
+        "id": "shaderlod:photon-volume-integration",
+        "revision": "photon-v1.3b/shared-work-v1"
+      },
+      "sourceSha256": "5de7561dd24cdca80860a1d5f2c60400e74163a489cc163e916f3fd47feb27de",
+      "memberSha256": {
+        "shaders/program/d1_clouds.fsh": "1f0dd330b837becff393380283eb767e3a55fe48e9b04705bf825fde535d0cae",
+        "shaders/world0/deferred1.fsh": "23fc8e1c4a3bad9bf11b68b9d73ffb71db922b9f0438c5991f048e51635edee8",
+        "shaders/include/sky/clouds.glsl": "07bac05a93b29cff55841d6f7425fe46d1555fe1e6b2cfc037d9fb9fee992972",
+        "shaders/include/sky/clouds/cumulus.glsl": "5290d3c0c56693608c6cfe8efec831b67023334729d4f549b3551f430603d8e2",
+        "shaders/settings.glsl": "b9b1c432b484d190c036f7cf243059f1f5d33c5c2c0564a9592c5323e05dd348",
+        "shaders/include/shaderlod/effect_policy.glsl": "5df5427a1cfa51e68446978040235061ab6db60ec3f5079d40ffa0c39bad6943",
+        "shaders/include/shaderlod/work_policy.glsl": "1b70d1b34959778ac34ae9316797c23d858531ff366b55373bae1c7ee55ee309",
+        "shaders/include/shaderlod/photon_volume_adapter.glsl": "74349a36793081be528b34f9f047fc9ed195a8f2b12545caade0d4637af75905",
+        "LICENSE": "514402d18eedb0afe374344ca9f0fe87b7399779518184b8fc64e31674555fc5",
+        "shaders/include/shaderlod/volume_budget.glsl": "cf37ff0af1b3ebb6cc3f3f95ae83c708518a8e48d03545e8665962d14cf731ac"
+      },
+      "requiredOptions": {
+        "BLOCKY_CLOUDS": [
+          "false"
+        ],
+        "SHADERLOD_VOLUMETRIC_INTEGRATION_LOD": [
+          "true"
+        ],
+        "CLOUDS_CUMULUS": [
+          "true"
+        ]
+      }
+    },
+    "source_fingerprint": {
+      "sourceSha256": "5de7561dd24cdca80860a1d5f2c60400e74163a489cc163e916f3fd47feb27de",
+      "memberSha256": {
+        "shaders/program/d1_clouds.fsh": "1f0dd330b837becff393380283eb767e3a55fe48e9b04705bf825fde535d0cae",
+        "shaders/world0/deferred1.fsh": "23fc8e1c4a3bad9bf11b68b9d73ffb71db922b9f0438c5991f048e51635edee8",
+        "shaders/include/sky/clouds.glsl": "07bac05a93b29cff55841d6f7425fe46d1555fe1e6b2cfc037d9fb9fee992972",
+        "shaders/include/sky/clouds/cumulus.glsl": "5290d3c0c56693608c6cfe8efec831b67023334729d4f549b3551f430603d8e2",
+        "shaders/settings.glsl": "b9b1c432b484d190c036f7cf243059f1f5d33c5c2c0564a9592c5323e05dd348",
+        "shaders/include/shaderlod/effect_policy.glsl": "5df5427a1cfa51e68446978040235061ab6db60ec3f5079d40ffa0c39bad6943",
+        "shaders/include/shaderlod/work_policy.glsl": "1b70d1b34959778ac34ae9316797c23d858531ff366b55373bae1c7ee55ee309",
+        "shaders/include/shaderlod/photon_volume_adapter.glsl": "74349a36793081be528b34f9f047fc9ed195a8f2b12545caade0d4637af75905",
+        "LICENSE": "514402d18eedb0afe374344ca9f0fe87b7399779518184b8fc64e31674555fc5",
+        "shaders/include/shaderlod/volume_budget.glsl": "cf37ff0af1b3ebb6cc3f3f95ae83c708518a8e48d03545e8665962d14cf731ac"
+      }
+    }
+  },
+  "volume_adapter_binding": {
+    "reason": "AVAILABLE",
+    "descriptor": {
+      "identity": {
+        "id": "shaderlod:photon-volume-integration",
+        "revision": "photon-v1.3b/shared-work-v1"
+      },
+      "protocols": [
+        {
+          "id": "shaderlod:core",
+          "acceptedVersions": [
+            2
+          ]
+        },
+        {
+          "id": "shaderlod:effects",
+          "acceptedVersions": [
+            2,
+            1
+          ]
+        },
+        {
+          "id": "shaderlod:capabilities",
+          "acceptedVersions": [
+            1
+          ]
+        }
+      ],
+      "capabilities": [
+        {
+          "key": {
+            "effect": "VOLUMETRICS",
+            "operation": "shaderlod:volume_integration",
+            "kind": "COUNT"
+          },
+          "domain": {
+            "minimumRetainedWork": 8
+          }
+        }
+      ]
+    },
+    "operations": [
+      {
+        "effect": "VOLUMETRICS",
+        "operation": "shaderlod:volume_integration",
+        "kind": "COUNT"
+      }
+    ]
+  },
+  "volume_effect_controls_sha256": "20c2fa949b4e95928a49468caa0402854919572879e51f6a6066ac11e685d802",
+  "volume_source_qualification_sha256": "1bf0c135484d36c0d29b0beac2630841c280534dbc986db9d9c454f130f0ee88",
+  "volume_adapter_binding_sha256": "c0435ce561a78639cd9f32d8a93abe48efae2cc0414d9bdee2c8b73b0cc7fa80",
+  "framebuffer_width": 2560,
+  "framebuffer_height": 1440,
+  "volume_camera_type": "FIRST_PERSON",
+  "volume_window_state": {
+    "availability": "available",
+    "focused": "true",
+    "iconified": "false",
+    "visible": "true",
+    "window_width": 1280,
+    "window_height": 720,
+    "framebuffer_width": 2560,
+    "framebuffer_height": 1440,
+    "pacing": {
+      "pause_on_lost_focus": false,
+      "fullscreen": false,
+      "configured_framerate_limit": 260,
+      "vsync": false
+    },
+    "note": "fixture"
+  }
+}

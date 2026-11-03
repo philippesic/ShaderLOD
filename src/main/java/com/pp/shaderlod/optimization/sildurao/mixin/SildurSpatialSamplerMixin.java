@@ -1,0 +1,7 @@
+package com.pp.shaderlod.optimization.sildurao.mixin;
+import com.pp.shaderlod.optimization.sildurspatial.*;import com.google.common.collect.ImmutableSet;import java.util.function.Supplier;import net.irisshaders.iris.gl.sampler.SamplerHolder;import net.irisshaders.iris.targets.RenderTargets;import net.irisshaders.iris.pipeline.WorldRenderingPipeline;import net.irisshaders.iris.shaderpack.programs.ProgramSource;import com.llamalad7.mixinextras.injector.wrapoperation.*;import com.llamalad7.mixinextras.sugar.Local;import org.spongepowered.asm.mixin.Mixin;import org.spongepowered.asm.mixin.injection.At;
+@Mixin(targets="net.irisshaders.iris.pipeline.CompositeRenderer",remap=false)
+public abstract class SildurSpatialSamplerMixin {
+ @WrapOperation(method="createProgram",at=@At(value="INVOKE",target="Lnet/irisshaders/iris/samplers/IrisSamplers;addRenderTargetSamplers(Lnet/irisshaders/iris/gl/sampler/SamplerHolder;Ljava/util/function/Supplier;Lnet/irisshaders/iris/targets/RenderTargets;ZLnet/irisshaders/iris/pipeline/WorldRenderingPipeline;)V"),require=1,allow=1)
+ private void shaderlod$spatialAllocation(SamplerHolder holder,Supplier<ImmutableSet<Integer>> flipped,RenderTargets targets,boolean full,WorldRenderingPipeline pipeline,Operation<Void> original,@Local(argsOnly=true)ProgramSource source){boolean own=full&&SildurSpatialRuntime.samplerAllocation(source);original.call(own?new SildurSpatialSamplerHolder(holder):holder,flipped,targets,full,pipeline);}
+}
