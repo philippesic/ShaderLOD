@@ -41,6 +41,9 @@ The returned desktop version must meet the requested minimum and is recorded in
 it does not supply an independent4.5 result. Keep actual context/configuration
 cohorts and their native baselines separate. Frozen Bliss qualification retains
 its existing native-context protocol and refuses an explicit context override.
+`--expected-renderer 'RTX 5080'` additionally refuses a ready client on a different
+GPU, including a hardware integrated GPU. It validates the observed renderer
+before scoring; it does not select the GPU or change personal driver settings.
 
 `plan` runs the standard test's static checks without compiling, launching or creating the report. It lists the resolved launch plan, schedule, per-check elapsed time, failures and remedies. A stale build is reported; `test` rebuilds it automatically before launch. Native options and canonical profile inputs are checked; preserve unexplained differences before resetting a managed slot. Runtime-only checks still run in the client.
 

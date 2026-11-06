@@ -19,8 +19,11 @@ Completed independent preparation:
   automatically an RTX5080 result.
 - Added real benchmark-only OpenGL context selection to the maintained runner,
   including actual-version proof and owned early-window configuration handling.
-  Local92 benchmark tests (2 skips),55 launcher tests, Java context/sampler
+  Local93 benchmark tests (2 skips),55 launcher tests, Java context/sampler
   regressions and development compilation pass. Live5080 context proof remains.
+- Added an explicit expected-renderer guard so a compatible GL context on the
+  integrated GPU cannot be accepted as an RTX5080 measurement. This guard records
+  the observation and does not modify driver preferences.
 - Preserved seven exact native/PBR option maps and original archive identities
   under versioned benchmarks/profiles/v1. Frozen historical inputs stay in place.
 

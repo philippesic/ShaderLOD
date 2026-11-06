@@ -12,14 +12,21 @@ def validate_request(request, *, frozen_qualification=False):
     return request
 
 
-def observe(request, state):
+def observe(request, state, *, expected_renderer=None):
     validate_request(request)
     actual = state.get('gpu_driver', '')
-    match = re.match(r'^(\d+)\.(\d+)(?:[.\s]|$)', actual)
+    match = re.match(r'^(\d+)\.(\d+)(?:[.\s]|$)', actual) if isinstance(actual, str) else None
     if not match:
         raise ValueError('Actual desktop OpenGL version unavailable: ' + str(actual))
     version = tuple(map(int, match.groups()))
     if request != 'native' and version < tuple(map(int, request.split('.'))):
         raise ValueError('Actual OpenGL context is below request: ' + actual + ' < ' + request)
+    renderer = state.get('gpu_renderer', '')
+    if expected_renderer is not None:
+        if not expected_renderer.strip() or len(expected_renderer) > 128:
+            raise ValueError('Expected renderer must be a nonempty name of at most128 characters')
+        if not isinstance(renderer, str) or expected_renderer.casefold() not in renderer.casefold():
+            raise ValueError('Actual OpenGL renderer differs from requested hardware: ' + str(renderer) + ' != ' + expected_renderer)
     return {'requested': request, 'actual_version': list(version), 'actual_version_string': actual,
+            'expected_renderer': expected_renderer, 'actual_renderer': renderer,
             'scope': 'GLFW requested minimum; actual returned context governs capabilities. Higher returned versions are recorded, never relabeled as the requested lower version.'}

@@ -11,7 +11,7 @@ version must meet the minimum; no capability strings are overridden. Native
 selection remains unchanged, frozen qualification refuses overrides, and the
 sampler bootstrap admits only enumerated requests with the maintained controller.
 
-Local validation:92 benchmark Python tests (2 platform skips),55 launcher tests,
+Local validation:93 benchmark Python tests (2 platform skips),55 launcher tests,
 the Java context-policy and sampler-admission tests, and development compilation
 pass. This is not a live Windows context proof; the first native startup/check
 must verify the mixin, early-window behavior and actual GL version before timing.
