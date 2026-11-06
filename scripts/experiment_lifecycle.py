@@ -63,7 +63,8 @@ def atomic_json(path, value):
         with os.fdopen(fd, 'w') as stream:
             json.dump(value, stream, indent=2); stream.write('\n')
             stream.flush(); os.fsync(stream.fileno())
-        os.replace(temporary, path)
+        from benchmark_file_locks import replace_published
+        replace_published(temporary, path)
         if os.name != 'nt':
             directory = os.open(path.parent, os.O_RDONLY)
             try: os.fsync(directory)
@@ -75,10 +76,10 @@ def atomic_json(path, value):
 @contextmanager
 def operation_lock(output):
     """One writer/recovery owner; lock stays in the durable report root."""
-    import fcntl
+    from benchmark_file_locks import exclusive
     with storage.safe_path(Path(output)/'.operation.lock').open('a+b') as stream:
         try:
-            fcntl.flock(stream, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            exclusive(stream)
         except OSError as error:
             raise ValueError('Experiment has a live operation owner') from error
         yield

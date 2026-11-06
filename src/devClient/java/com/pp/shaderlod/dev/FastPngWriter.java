@@ -3,7 +3,8 @@ package com.pp.shaderlod.dev;
 import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
+import java.nio.channels.Channels;
+import java.nio.channels.FileChannel;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.zip.CRC32;
@@ -41,8 +42,8 @@ final class FastPngWriter {
         byte[] compressed = new byte[CHUNK_BYTES];
         // false selects PNG's required zlib wrapper, including Adler-32.
         Deflater deflater = new Deflater(compressionLevel, false);
-        try (var stream = new DataOutputStream(new BufferedOutputStream(
-                Files.newOutputStream(path, StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE), 64 * 1024))) {
+        try (var channel = FileChannel.open(path, StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE);
+             var stream = new DataOutputStream(new BufferedOutputStream(Channels.newOutputStream(channel), 64 * 1024))) {
             PngChunks chunks = new PngChunks(stream, maximumBytes);
             chunks.signature();
             byte[] header = new byte[13];
@@ -76,6 +77,10 @@ final class FastPngWriter {
             }
             chunks.write(IEND, header, 0);
             stream.flush();
+            // This runs only on the bounded quality writer, never the render
+            // thread. Drain each image's contents rather than accumulate a
+            // multi-gigabyte dirty-file backlog across a capture sequence.
+            channel.force(false);
             return chunks.bytes;
         } finally {
             deflater.end(); // Includes open/write/source-pixel failures.

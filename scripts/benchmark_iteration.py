@@ -8,6 +8,7 @@ import math
 import os
 import shutil
 import stat
+import statistics
 from contextlib import contextmanager, ExitStack
 from pathlib import Path
 
@@ -36,13 +37,12 @@ def profile_map(profile):
 @contextmanager
 def stopped_profiles(*profiles):
     import dev_client as dev
-    import fcntl
+    from benchmark_file_locks import world_lock
     with dev.runtime_lock(),ExitStack() as locks:
         life.require(not dev.clients(dev.process_table()),'Client census is occupied')
         for profile in profiles:
             for path in sorted((Path(profile)/'saves').glob('*/session.lock')):
-                stream=locks.enter_context(storage.safe_path(path).open('r+b'))
-                fcntl.lockf(stream,fcntl.LOCK_EX|fcntl.LOCK_NB)
+                locks.enter_context(world_lock(storage.safe_path(path)))
         yield
 
 
@@ -88,26 +88,54 @@ def finish_profile(op):
     """Restore only owned saves, then verify all eight inputs before one reset."""
     record=op.data.get('iteration_profile')
     if record is None:return
-    life.require(not record.get('reset_attempted'),'A reset was already attempted; preserve evidence without replay')
+    life.require(not record.get('reset_attempted') or record.get('reset_verified') and record.get('restored'),
+                 'A reset was already attempted; preserve evidence without replay')
     life.require(op.data.get('release_verified') and op.data.get('configuration_restored'),'Release/configuration restore must precede whole-profile restoration')
     profile=Path(op.data['profile']);source=Path(record['source']);backup=Path(record['world_backup'])
     with stopped_profiles(profile,source):
         life.require(profile_map(source)==record['canonical'],'Canonical inputs changed; reset refused')
         current=profile_map(profile)
+        if record.get('reset_verified'):
+            info=profile.stat()
+            life.require(current==record['original'] and [info.st_dev,info.st_ino]==record.get('new_profile_identity'),
+                         'Previously verified reset no longer matches; preserve evidence')
+            # A later report/cleanup failure does not authorize another reset.
+            life.atomic_json(op.output/'final-restoration.json',record)
+            return
         life.require({k:v for k,v in current.items() if k!='saves'}=={k:v for k,v in record['original'].items() if k!='saves'},
                      'Non-world original inputs differ; reset refused')
         life.require(tree_map(backup,save_locks=True)==record['original']['saves'],'World backup changed; restoration refused')
         if current['saves']!=record['original']['saves']:
             staged=op.output/'world-restore'
-            storage.copytree(backup,staged,reserve_bytes=storage.MIN_FREE)
+            if not staged.exists():storage.copytree(backup,staged,reserve_bytes=storage.MIN_FREE)
             life.require(tree_map(staged,save_locks=True)==record['original']['saves'] and profile_map(profile)==current,
                          'World changed during stopped restoration')
-            record['post_world']=current['saves'];op.save()
-            (profile/'saves').rename(op.output/'world-after')
-            staged.rename(profile/'saves')
+            if os.name == 'nt':
+                # Windows forbids renaming a directory containing an open lock
+                # handle. Keep the Java locks held and restore its contents.
+                post=op.output/'world-after'
+                if not post.exists():
+                    storage.copytree(profile/'saves',post,ignore=lambda d,n:set(n)&{'session.lock'},reserve_bytes=storage.MIN_FREE)
+                    life.require(tree_map(post,save_locks=True)==current['saves'],'Stopped-world snapshot differs')
+                    record['post_world']=current['saves'];op.save()
+                life.require(tree_map(post,save_locks=True)==record['post_world'],'Retained stopped-world evidence changed')
+                restore_locked_world_contents(staged,profile/'saves')
+            else:
+                record['post_world']=current['saves'];op.save()
+                (profile/'saves').rename(op.output/'world-after')
+                staged.rename(profile/'saves')
         life.require(profile_map(profile)==record['original'],'Full original map verification failed; reset refused')
         life.require(profile_map(source)==record['canonical'],'Canonical changed before reset')
         record['restored']=True;op.save()
+        if os.name == 'nt':
+            # Exact full-map equality already proves the slot canonical. Avoid
+            # a redundant whole-profile rename that cannot retain Windows locks.
+            record.update(reset_attempted=True,reset_verified=True,
+                          reset_strategy='verified-in-place-under-world-locks')
+            info=profile.stat();op.data['profile_identity']=[info.st_dev,info.st_ino]
+            record['new_profile_identity']=op.data['profile_identity'];op.save()
+            life.atomic_json(op.output/'final-restoration.json',record)
+            return
     # checkout obtains its own fresh lane and save locks. No old-inode lock reuse.
     def verify():
         life.require(profile_map(profile)==record['original'] and profile_map(source)==record['canonical'],
@@ -120,6 +148,28 @@ def finish_profile(op):
         info=profile.stat();op.data['profile_identity']=[info.st_dev,info.st_ino]
         record['reset_verified']=True;record['new_profile_identity']=op.data['profile_identity'];op.save()
     life.atomic_json(op.output/'final-restoration.json',record)
+
+
+def restore_locked_world_contents(source, destination):
+    """Restore stopped Windows worlds without releasing their session locks."""
+    source=storage.safe_path(source);destination=storage.safe_path(destination)
+    original={p.name:p for p in source.iterdir()}
+    current={p.name:p for p in destination.iterdir()}
+    life.require(original.keys()==current.keys() and all(p.is_dir() for p in [*original.values(),*current.values()]),
+                 'World roots changed; preserve for explicit recovery')
+    for name,backup in original.items():
+        world=current[name]
+        storage.tree_bytes(world)  # Reject links/special files before mutation.
+        for child in world.iterdir():
+            if child.name=='session.lock':continue
+            if child.is_dir():shutil.rmtree(child)
+            else:child.unlink()
+        for child in backup.iterdir():
+            if child.name=='session.lock':continue
+            target=world/child.name
+            if child.is_dir():storage.copytree(child,target,reserve_bytes=storage.MIN_FREE)
+            else:storage.clone_file(child,target)
+        os.chmod(world,stat.S_IMODE(backup.stat().st_mode))
 
 
 def dispose_worlds(op):
@@ -361,6 +411,11 @@ def activation(state, *, feature, enabled, expected_pack, family, native_options
     return options
 
 
+def original_option_snapshot(state, *, expected_pack, family):
+    """Bind native choices from the observed original before A-first or B-first arms."""
+    return dict(activation(state,feature=(),enabled=False,expected_pack=expected_pack,family=family))
+
+
 def cpu_work(state, *, features, active, before=None, after=None):
     """Require real consumer progress, never equate a request with executed work."""
     installed=state.get('installed',{})
@@ -420,9 +475,55 @@ def arm_metrics(directory, label):
     ordered=sorted(samples)
     return dict(samples=len(samples),excluded_initial_unavailable_interval=excluded,
                 mean_total_frame_ms=sum(samples)/len(samples),
+                variance_total_frame_ms2=statistics.variance(samples) if len(samples)>1 else None,
+                sd_total_frame_ms=statistics.stdev(samples) if len(samples)>1 else None,
                 p95_total_frame_ms=ordered[max(0,math.ceil(.95*len(ordered))-1)],
                 completed_render_frames=frames,wall_seconds=wall/1e9,
                 completed_frame_ms=wall/frames/1e6)
+
+
+def baseline_evaluation(output, *, execution_completed, restored):
+    result={'execution':'COMPLETE' if execution_completed else 'FAILED',
+            'validity':'INVALID','improvement':'NOT_EVALUATED',
+            'limits':'Unmodified native, main mod absent. Frame SD describes jitter; window SD describes within-process variation, neither is a confidence interval.'}
+    if not execution_completed or not restored:return result
+    try:
+        result['arms']={label:arm_metrics(Path(output)/'windows'/label,label) for label in ('native_0','native_1','native_2')}
+        means=[row['mean_total_frame_ms'] for row in result['arms'].values()]
+        result.update(validity='VALID',mean_window_ms=statistics.mean(means),
+                      sd_window_mean_ms=statistics.stdev(means),
+                      variance_window_mean_ms2=statistics.variance(means),
+                      first_to_last_drift_ms=means[-1]-means[0])
+    except (OSError,ValueError,KeyError,TypeError) as error:result['error']=str(error)
+    return result
+
+
+def comparison_sequence(order):
+    life.require(order in ('ABBA','BAAB'),'Balanced comparison order must be ABBA or BAAB')
+    counts={False:0,True:0};sequence=[]
+    for role in order:
+        active=role=='B';index=counts[active];counts[active]+=1
+        sequence.append((('candidate_' if active else 'native_')+str(index),active))
+    return sequence
+
+
+def balanced_evaluation(output, *, order, execution_completed, restored):
+    result={'execution':'COMPLETE' if execution_completed else 'FAILED','validity':'INVALID',
+            'improvement':'DESCRIPTIVE_ONLY','order':order,
+            'limits':'Four order-balanced windows in one process; means, frame jitter and window-mean variation are descriptive. Repeat processes and inspect known-null noise, actual work and quality before any benefit claim.'}
+    if not execution_completed or not restored:return result
+    try:
+        result['arms']={label:arm_metrics(Path(output)/'windows'/label,label) for label,_ in comparison_sequence(order)}
+        groups={role:[r['mean_total_frame_ms'] for label,r in result['arms'].items() if label.startswith(role)] for role in ('native','candidate')}
+        result['group_means_ms']={role:statistics.mean(values) for role,values in groups.items()}
+        result['group_window_mean_sd_ms']={role:statistics.stdev(values) for role,values in groups.items()}
+        result['group_window_mean_variance_ms2']={role:statistics.variance(values) for role,values in groups.items()}
+        a,b=(result['group_means_ms'][role] for role in ('native','candidate'))
+        result.update(validity='VALID',frame_time_reduction_pct=100*(a-b)/a,
+                      native_window_spread_pct=100*abs(groups['native'][1]-groups['native'][0])/a,
+                      candidate_window_spread_pct=100*abs(groups['candidate'][1]-groups['candidate'][0])/b)
+    except (OSError,ValueError,KeyError,TypeError) as error:result['error']=str(error)
+    return result
 
 
 def ownership_diagnostic(control, kind, *, active):
@@ -531,7 +632,57 @@ def combination_copy_work(record, *, active):
     return record
 
 
-CROSS_ALPHA_FAMILIES={'sildurs-vibrant-shaders','solas-shader','astralex'}
+CROSS_ALPHA_FAMILIES={'sildurs-vibrant-shaders','solas-shader','astralex','bsl-shaders','complementary-reimagined','complementary-unbound'}
+
+AO_SCALE_FAMILIES={'bsl-shaders','complementary-reimagined','complementary-unbound'}
+
+DEPTH_REUSE_FAMILIES={'bsl-shaders','complementary-reimagined','complementary-unbound'}
+
+REFLECTION_REUSE_FAMILIES={'makeup-ultra-fast-shaders','bsl-shaders'}
+
+
+def reflection_reuse_work(state,*,family,active,before):
+    row=state.get('installed',{}).get('reflection_reuse_work',{})
+    previous=before.get('installed',{}).get('reflection_reuse_work',{})
+    life.require(family in REFLECTION_REUSE_FAMILIES and row.get('family')==previous.get('family')==family,'Wrong reflection-reuse runtime family')
+    delta={}
+    for key in ('permission_grants','nearest_grants','linear_grants'):
+        now=row.get('counters',{}).get(key);old=previous.get('counters',{}).get(key)
+        life.require(type(now) is int and type(old) is int and now>=old>=0,'Missing or reset reflection-reuse counters')
+        delta[key]=now-old
+    life.require(delta['nearest_grants']>0 and row['counters'].get('owned_programs',0)>0 if active else all(v==0 for v in delta.values()),
+                 'Next-event route requires actual NEAREST draw permission progress; '+str(row.get('status')))
+    return row|{'window_delta':delta,'scope':'Native water draw permissions in the exact recorded window; setup permission0 is expected between draws. No executed branch, avoided-query or GPU-completion count.'}
+
+
+def depth_reuse_work(state,*,family,active,before):
+    row=state.get('installed',{}).get('depth_reuse_work',{})
+    previous=before.get('installed',{}).get('depth_reuse_work',{})
+    life.require(family in DEPTH_REUSE_FAMILIES and row.get('family')==previous.get('family')==family,'Wrong depth-reuse runtime family')
+    now=row.get('counters',{}).get('qualified_draws');old=previous.get('counters',{}).get('qualified_draws')
+    life.require(type(now) is int and type(old) is int and now>=old>=0,'Missing or reset depth-reuse counters')
+    life.require(now>old and row['counters'].get('owned_programs',0)>0 if active else now==old,
+                 'Depth-reuse draw permission progress differs from arm')
+    return row|{'window_qualified_draws':now-old,'scope':'Current source/API/owner/viewport/typed sampler permissions in the exact recorded window; not avoided depth queries or GPU completions'}
+
+
+def ao_scale_work(state,*,family,active,before):
+    row=state.get('installed',{}).get('ao_scale_work',{})
+    previous=before.get('installed',{}).get('ao_scale_work',{})
+    life.require(family in AO_SCALE_FAMILIES and row.get('family')==previous.get('family')==family,
+                 'Wrong AO-scale runtime family')
+    delta={}
+    for key in ('producer_ready','producer_returns','consumer_ready'):
+        now=row.get('counters',{}).get(key);old=previous.get('counters',{}).get(key)
+        life.require(type(now) is int and type(old) is int and now>=old>=0,'Missing or reset AO-scale work counters')
+        delta[key]=now-old
+        life.require(delta[key]>0 if active else delta[key]==0,
+                     'AO-scale producer/consumer progress differs from arm: '+key+'; '+str(row.get('status')))
+    for key in ('native_fallbacks','native_fallback_returns','skipped_native_recovery'):
+        if key in row.get('counters',{}):
+            delta[key]=row['counters'][key]-previous['counters'][key]
+            life.require(delta[key]>=0,'AO-scale fallback counters reset')
+    return row|{'window_delta':delta,'scope':'Completed producer returns and consumer permissions during the exact recorded window; not avoided samples or GPU time'}
 
 
 def family_early_alpha_work(state,*,family,active,before=None):

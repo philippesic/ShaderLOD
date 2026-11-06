@@ -125,6 +125,7 @@ neoForge {
             if(project.hasProperty('nativeTerrainScene'))systemProperty 'shaderlod.dev.nativeTerrainScene',project.property('nativeTerrainScene').toString()
             if(project.hasProperty('privateObservedReload'))systemProperty 'shaderlod.dev.privateObservedReload',project.property('privateObservedReload').toString()
             if(project.hasProperty('mipFamilyRuntime'))systemProperty 'shaderlod.dev.mipFamilyRuntime',project.property('mipFamilyRuntime').toString()
+            if(project.hasProperty('qualityMotionRuntime'))systemProperty 'shaderlod.dev.qualityMotionRuntime',project.property('qualityMotionRuntime').toString()
             if(project.hasProperty('blissAoCoverage'))systemProperty 'shaderlod.dev.blissAoCoverage',project.property('blissAoCoverage').toString()
             if(project.hasProperty('sildurLeanAlpha'))systemProperty 'shaderlod.dev.sildurLeanAlpha',project.property('sildurLeanAlpha').toString()
             if(project.hasProperty('solasLeanAlpha'))systemProperty 'shaderlod.dev.solasLeanAlpha',project.property('solasLeanAlpha').toString()

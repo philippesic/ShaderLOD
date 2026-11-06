@@ -32,8 +32,11 @@ def require_heap(state, expected_bytes):
 
 
 def memory_observation(pid):
-    """Read-only Linux endpoint telemetry. It does not run inside the render loop."""
+    """Read-only endpoint telemetry. It does not run inside the render loop."""
     life.require(type(pid) is int and pid > 0, 'Owned client PID required for memory telemetry')
+    if os.name == 'nt':
+        from benchmark_windows_telemetry import memory_observation as windows_memory
+        return windows_memory(pid)
     started = time.monotonic_ns()
     proc = Path('/proc')/str(pid)
     fields = (proc/'stat').read_text().rpartition(') ')[2].split()
@@ -55,8 +58,23 @@ def memory_observation(pid):
             pressure[kind][category] = {key:int(value) if key == 'total' else float(value)
                                        for key,value in (token.split('=') for token in tokens)}
     vm = dict(line.split() for line in Path('/proc/vmstat').read_text().splitlines())
+    cgroups = {}
+    membership = next((line[3:] for line in (proc/'cgroup').read_text().splitlines()
+                       if line.startswith('0::')), None)
+    if membership is not None:
+        root = Path('/sys/fs/cgroup')
+        current = root / membership.lstrip('/')
+        while current != root:
+            try:
+                cgroups[str(current.relative_to(root))] = {
+                    name: (current/name).read_text().strip()
+                    for name in ('memory.current', 'memory.high', 'memory.max', 'memory.events.local', 'memory.pressure')}
+            except OSError as error:
+                cgroups[str(current.relative_to(root))] = {'unavailable': str(error)}
+            current = current.parent
     return {'started_ns':started,'finished_ns':time.monotonic_ns(),'process':process,'memory':memory,
             'pressure':pressure,'swap_pages':{key:int(vm[key]) for key in ('pswpin','pswpout')},
+            'cgroups':cgroups,
             'page_bytes':os.sysconf('SC_PAGE_SIZE'),
             'scope':'External pre/post brackets include controller/export endpoints. PSI/swap are global host counters, not isolated client/GPU attribution.'}
 
@@ -73,12 +91,24 @@ def memory_delta(before, after):
             delta = after['pressure'][kind][category]['total']-before['pressure'][kind][category]['total']
             life.require(delta >= 0, 'Host pressure counter reset')
             pressure[kind][category+'_stall_percent'] = 100*delta/(elapsed/1000)
-    faults={key:after['process'][key]-before['process'][key] for key in ('minor_faults','major_faults')}
+    faults={key:after['process'][key]-before['process'][key]
+            for key in ('minor_faults','major_faults','page_faults') if key in before['process']}
     swaps={key:(after['swap_pages'][key]-before['swap_pages'][key])*before['page_bytes'] for key in before['swap_pages']}
+    cgroup_events = {}
+    for name, first in before.get('cgroups', {}).items():
+        last = after.get('cgroups', {}).get(name, {})
+        if 'memory.events.local' not in first or 'memory.events.local' not in last:
+            continue
+        parse = lambda text: dict((k, int(v)) for k,v in (line.split() for line in text.splitlines()))
+        old, new = parse(first['memory.events.local']), parse(last['memory.events.local'])
+        cgroup_events[name] = {k:new[k]-v for k,v in old.items() if k in new}
+        life.require(all(v >= 0 for v in cgroup_events[name].values()), 'Cgroup memory event counters reset')
     life.require(all(v >= 0 for v in [*faults.values(),*swaps.values()]), 'Fault/swap telemetry counters reset')
     return {'external_bracket_seconds':elapsed/1e9,'pressure':pressure,
             'client_fault_deltas':faults,'host_swap_bytes':swaps,
-            'scope':'Host-global pressure/swap; no causal attribution or filtering of frame samples.'}
+            'cgroup_memory_events':cgroup_events,
+            'unavailable':before.get('unavailable', []),
+            'scope':'External endpoint deltas; unavailable counters are omitted, not zero. Host pressure/swap are global; no causal attribution or frame filtering.'}
 
 
 def validate_capture(directory, label, *, seconds, delay_ns=0, expected_pack=None, expected_heap_bytes=None):

@@ -115,7 +115,8 @@ def write_json(path, value):
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_suffix(path.suffix + '.tmp')
     temporary.write_text(json.dumps(value, indent=2) + '\n')
-    temporary.replace(path)
+    from benchmark_file_locks import replace_published
+    replace_published(temporary, path)
 
 
 def properties(text):
@@ -407,7 +408,7 @@ def compile_current(*, env=None, timeout=180):
     """One offline producer; retain the old receipt and replace it only by CAS."""
     before=source_fingerprint();receipt=LOGS/'built.json'
     previous=receipt.read_bytes() if receipt.exists() else None
-    result=subprocess.run([str(ROOT/'gradlew'),'compileJava','compileDevClientJava','processResources','processDevClientResources',
+    result=subprocess.run([str(ROOT/('gradlew.bat' if os.name == 'nt' else 'gradlew')),'compileJava','compileDevClientJava','processResources','processDevClientResources',
                            '--offline','--no-daemon','--console=plain'],cwd=ROOT,env=env,timeout=timeout)
     require(result.returncode==0,'Offline build failed; no runtime launched')
     require(source_fingerprint()==before,'Sources changed during build; receipt withheld')
@@ -530,6 +531,12 @@ def neoforge_program_arguments(text):
 
 
 def process_cwd(row):
+    if os.name == 'nt':
+        import psutil
+        try:
+            return Path(psutil.Process(int(row['pid'])).cwd()).resolve()
+        except psutil.Error:
+            return None
     if sys.platform.startswith('linux'):
         try:
             return Path('/proc/' + str(row['pid']) + '/cwd').resolve()
@@ -574,7 +581,12 @@ def neoforge_argfile_profile_matches(row, arguments, profile):
         allowed.update({path: 'net.neoforged.fml.startup.Client' for path in port_paths})
         require(path.is_absolute() and path in allowed and
                 not any(p.is_symlink() for p in (path, *path.parents)), 'Foreign/symlink NeoForge argfile')
-        birth = time.mktime(time.strptime(row['birth'], '%a %b %d %H:%M:%S %Y'))
+        if os.name == 'nt':
+            match = re.fullmatch(r'/Date\((\d+)\)/', row['birth'])
+            require(match is not None, 'Windows process birth unavailable')
+            birth = int(match.group(1)) / 1000
+        else:
+            birth = time.mktime(time.strptime(row['birth'], '%a %b %d %H:%M:%S %Y'))
         # ps birth has one-second resolution. Files produced after that second are unproven.
         data = owned_argfile_bytes(path, birth)
         argv = neoforge_program_arguments(data.decode('utf-8', errors='strict'))
@@ -593,6 +605,8 @@ def neoforge_argfile_profile_matches(row, arguments, profile):
                     'Relative gameDir with native user.dir override')
             vm_path = path.with_name(path.name.replace('ProgramArgs.txt', 'VmArgs.txt'))
             references = [a for a in prefix if a.startswith('@')]
+            if os.name == 'nt':
+                references = ['@' + str(Path(a[1:])) for a in references]
             require(references == ['@' + str(vm_path)], 'Relative gameDir requires its exact generated VM argfile')
             vm_data = owned_argfile_bytes(vm_path, birth)
             vm_args = neoforge_program_arguments(vm_data.decode('utf-8', errors='strict'))
@@ -632,8 +646,18 @@ def associated(row, profile):
         except ValueError:
             pass
     if os.name == 'nt':
-        # Windows fails closed if the profile is only hidden in opaque launcher files.
-        return str(profile).lower() in row['argv'].lower()
+        import psutil
+        try:
+            arguments = psutil.Process(int(row['pid'])).cmdline()
+            current = process_table().get(int(row['pid']))
+            if current is None or identity(current) != identity(row):
+                return False
+            main = 'net.neoforged.devlaunch.Main'
+            if main in arguments and any(a.startswith('@') for a in arguments[arguments.index(main)+1:]):
+                return neoforge_argfile_profile_matches(row, arguments, profile)
+            return argv_profile_matches(arguments, profile)
+        except (psutil.Error, ValueError, OSError):
+            return False
     if sys.platform.startswith('linux'):
         try:
             return Path('/proc/' + str(row['pid']) + '/cwd').resolve() == profile
@@ -691,7 +715,7 @@ def readiness(text, pack, mode, *, apply_lod_settings=False, lod_state=None, pre
     # Iris removes Minecraft formatting from its log display name. Exact
     # configured/archive/runtime identity is verified independently.
     plain=lambda value:re.sub(r'(?i)§[0-9a-fk-or]','',value)
-    result = dict(shader=bool(loaded) and plain(loaded[-1].strip()) == plain(expected_pack),
+    result = dict(shader=bool(loaded) and expected_pack is not None and plain(loaded[-1].strip()) == plain(expected_pack),
                 in_world=bool(re.search(r'ShaderLOD landscape ready: side=' +
                               side, text)),
                 fullscreen=native_fullscreen)
@@ -840,6 +864,28 @@ def retire_source_launcher(session, natural_exit_grace=3.0, signal_exit_grace=3.
     """
     state = json.loads((session / 'owner.json').read_text())
     proof, owned_session = state.get('launcher'), state.get('launcher_session')
+    if os.name == 'nt':
+        require(isinstance(proof, dict) and set(proof) == {'pid', 'birth', 'argv'}
+                and type(proof['pid']) is int and proof['pid'] > 0
+                and all(isinstance(proof[k], str) and proof[k] for k in ('birth', 'argv')),
+                'Exact Windows launcher identity required')
+        require(0 <= natural_exit_grace <= 10, 'Launcher retirement grace must be bounded to 0..10 seconds')
+        receipt = dict(launcher=proof, observations=[], released=False, signalSent=False)
+        path = session / 'source-launcher-retirement.json'
+        end = time.monotonic() + natural_exit_grace
+        while True:
+            table = process_table(); row = table.get(proof['pid'])
+            absent = row is None and not clients(table)
+            receipt['observations'].append(dict(launcherPresent=row is not None,
+                actualIdentity=identity(row) if row else None, remainingClientPids=sorted(clients(table))))
+            receipt['released'] = absent
+            receipt['outcome'] = 'exact-launcher-absent-and-no-clients' if absent else 'waiting-for-natural-exit'
+            write_json(path, receipt)
+            if absent:
+                return receipt
+            require(row is None or identity(row) == proof, 'Windows launcher identity changed; retain ownership')
+            require(time.monotonic() < end, 'Windows launcher or client remains; retain ownership without group termination')
+            time.sleep(.1)
     require(os.name != 'nt' and isinstance(proof, dict) and
             set(proof) == {'pid', 'birth', 'argv'} and type(proof['pid']) is int and proof['pid'] > 0 and
             all(isinstance(proof[key], str) and proof[key] for key in ('birth', 'argv')) and

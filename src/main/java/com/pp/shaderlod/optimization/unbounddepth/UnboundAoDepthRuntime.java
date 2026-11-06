@@ -20,6 +20,7 @@ public final class UnboundAoDepthRuntime {
  private static Object sourcePack;private static String sourceName;private static boolean sourceAdmitted;
  private UnboundAoDepthRuntime(){}
  /** Untimed development readback; never called by admission or the timed draw path. */
+ public static Map<String,Long> costCounters(){return Map.of("qualified_draws",qualifiedDraws,"source_calls",sourceCalls,"owned_programs",(long)owned.size());}
  public static Map<String,Object> controlProof(){var permissions=new ArrayList<Integer>();
   for(var program:owned.keySet())try{int id=program.getProgramId();int location=GL20.glGetUniformLocation(id,QUALIFICATION_UNIFORM);if(location>=0)permissions.add(GL20.glGetUniformi(id,location));}catch(RuntimeException|LinkageError unavailable){}
   return Map.of("source_calls",sourceCalls,"qualified_draws",qualifiedDraws,"permissions",List.copyOf(permissions));

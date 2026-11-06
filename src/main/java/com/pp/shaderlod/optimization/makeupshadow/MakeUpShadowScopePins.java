@@ -7,7 +7,12 @@ public final class MakeUpShadowScopePins {
  private static String status="not checked";
  private static Boolean pinned;
  public static boolean safeProperties(Properties properties){
-  var ordinary=Set.of("shaderlod.dev.compare","shaderlod.dev.performanceStack","shaderlod.dev.benchmarkTunerProbe","shaderlod.dev.comparisonFullscreen","shaderlod.dev.disableGpuQueries","shaderlod.dev.disableShadowSamplerReuse");
+  // Maintained control, scene and read-only observation endpoints do not install
+  // renderer replacements or rewrite shaders. Unknown active flags still refuse.
+  var ordinary=Set.of("shaderlod.dev.compare","shaderlod.dev.performanceStack","shaderlod.dev.benchmarkTunerProbe","shaderlod.dev.comparisonFullscreen","shaderlod.dev.disableGpuQueries","shaderlod.dev.disableShadowSamplerReuse",
+   "shaderlod.dev.benchmarkControlProbe","shaderlod.dev.readinessEvents","shaderlod.dev.savedAuthoredScene",
+   "shaderlod.dev.rendererWorkCounters","shaderlod.dev.nativeTerrainScene","shaderlod.dev.privateObservedReload",
+   "shaderlod.dev.mipFamilyRuntime","shaderlod.dev.qualityMotionRuntime");
   for(var name:properties.stringPropertyNames())if(name.startsWith("shaderlod.dev.")&&!ordinary.contains(name)){
    var value=properties.getProperty(name,"").trim();if(!Set.of("","false","off","0").contains(value))return false;
   }

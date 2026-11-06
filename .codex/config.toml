@@ -1,7 +1,6 @@
 # ShaderLOD provider defaults. T3 owns its thread selection and orchestration.
 # Notifications are host/user settings; project-local notify is ignored.
 [features]
-hooks = true
 goals = true
 
 # Keep development context focused. Enable a plugin for an artifact/native-UI
@@ -32,6 +31,3 @@ enabled = false
 enabled = false
 [mcp_servers.node_repl]
 enabled = false
-
-[agents.shaderlod_reviewer]
-config_file = "agents/shaderlod_reviewer.toml"

@@ -1,28 +1,30 @@
 # Current state
 
-**The resumed shortlist search has reached its stopping condition: ten goals closed and G02 blocked.** Fresh independent Astra/medium reviews support the finite pinned local searches. G02’s viable routes are complete; the remaining Reimagined and Unbound originals cannot start natively on the current runtime, including with ShaderLOD absent. C02 is excluded. No candidate is newly qualified for default enablement.
+Updated 2026-11-05. Current scope remains the cross-shader/cross-machine audit of
+G01–G10, C01–C02 and N01–N04. V1 targets are Complementary Reimagined, Complementary
+Unbound, BSL and MakeUp Ultra Fast; shared renderer/LOD mechanisms remain the goal.
+The [retained direction and audit](STATUS_AUDIT_20261105.md) preserves the exact
+screening/compatibility requirements. This cleanup changes no experimental scope.
 
-**Scheduling:** sustained optimization and review requested on 2026-11-01 for G01–G10 and C01 is finished, with the scoped G02 blocker retained. C02 is excluded. The shortlist contains twelve entries total, eleven after that exclusion. Final evidence: `dev/experiments/shortlist-closure-20261101/checkpoint.json`. Historical quick-test pause is superseded by this request.
+## Latest outcome and next action
 
-| Item | Underlying optimization goal | Evidence and unresolved scope |
-| --- | --- | --- |
-| G01 — framebuffer copies | **CLOSED — scoped promising implementation; default off** | Repeated scoped gains and executed-copy witnesses; current pinned resource/alias/history trace completed. Motion and net setup economics remain unqualified. |
-| G02 — unused mip/pass work | **BLOCKED — remaining Complementary native startup** | BSL native/PBR, Solas and Astra refinements, plus Photon native pass deletion completed with source/executed-work/lifetime evidence. Photon private mean 5.21% lower with stable controls and 42 identical surviving shader stages; private only. Reimagined/Unbound native originals fail sampler allocation even with ShaderLOD absent; cause unproven. [Final review](../dev/experiments/shortlist-closure-20261101/g02-independent-review.json). Default/net/full-image/motion/broad compatibility remain unqualified. |
-| G03 — earlier alpha rejection | **CLOSED — finite local search; default off** | Included in positive MakeUp combinations; later linked/submitted CUTOUT evidence exists. Its individual gain, avoided-fragment count and motion/pixel equivalence remain unresolved. |
-| G04 — translucent fast path | **CLOSED — finite local search; default off** | Singleton results inconclusive; included in the measured four-feature combination. Fixture/source evidence does not establish fragment savings or individual benefit. |
-| G05 — reflection traversal | **CLOSED — local search, keep Off** | Fixed16 hierarchy was slower than both native controls and increased source-query expressions; prior BSL traversal/cache avenues also lost. Independent review supports finite scoped closure. |
-| G06 — AO work | **CLOSED — scoped promising implementation; default off** | Positive singleton/combination observations and selected-source evidence. Executed AO-skip counts, individual combined gain and full quality/economics qualification remain unresolved. |
-| G07 — filter/sample reduction | **CLOSED — finite local search; temporal route still input-blocked** | Admitted BSL alternative was slower and is rejected for that tuple. Original temporal route remains separately blocked by missing accepted archive/strict pin. Neither closes the general idea. |
-| G08 — cloud occupancy/lighting reuse | **CLOSED — finite local search, keep Off** | Three native100 MakeUp variants have positive work and finite opacity/RGB checks but no material gain. Photon completed timing loses; zero-hit diagnostic does not qualify reuse hits. No broad quality or compatibility qualification. |
-| G09 — POM height reuse/prefix | **CLOSED — local search, keep Off** | Both tested implementations slower; private prefix has actual publication and finite GPU sampler/ray checks. Rendered skip counts and broader quality remain unqualified. |
-| G10 — filter tap/sample reuse | **CLOSED — current pinned MakeUp/M1 search; do not enable** | Independent Astra/medium review found no evidence-backed material next avenue: exact reuse removes at most 0.00427% of query expressions, repeated singleton/combo timings do not establish gain, and broader pairing lacks native precision guarantees. No universal rejection or default qualification. [Review](../dev/experiments/shortlist-closure-20261101/g10-independent-review.json). |
-| C01 — additional occlusion | **CLOSED — finite local search, keep Off** | CPU and both GPU query modes tested against real residual work; no qualified net gain. Separate primitive observations verify suppression. Image/motion and broader compatibility remain unqualified. |
-| C02 — hardware shading rate | **EXCLUDED; local capability absent** | Required NV extensions are absent. No eligible-hardware performance conclusion or rejection of the idea. |
+The Asahi pass is complete: 64 cells classified, 36 timed. G01 and exact G06 had
+repeatable local MakeUp gains; broad cross-pack/vendor gains and production
+qualification remain unproven. See [conclusions](../dev/experiments/asahi-four-target-audit-20261104/audit-conclusions.json),
+[results](../dev/experiments/asahi-four-target-audit-20261104/results.json) and
+[terminal restoration](../dev/experiments/asahi-four-target-audit-20261104/terminal-audit.json).
 
-The quick combined **measurement/report is complete**, not the underlying optimization goals. On original MakeUp native100/M1, terrain0, 2560×1600, G01/G03/G04/G06 measured25.243/22.097/25.764ms native/candidate/return:12.46–14.23% less frame time (14.24–16.59% higher FPS from mean time). Native options/AA and restoration/reset/release were verified. This single-scene observation does not establish a uniquely best subset, per-feature gains or default readiness. See [quick result](../dev/experiments/combination-search-20261101/quick-combo-result.json) and [its scoped independent review](../dev/experiments/combination-search-20261101/quick-result-independent-review.json).
+Next research step is second-GPU validation of viable candidates under the existing
+plan. RTX 2080 Ti availability must be renewed; the last record assigns it to another
+task. RTX 5080 was also unavailable. These are dated allocations, not a live census.
+No benchmark is launched or resumed by documentation cleanup.
 
-Historical **CLOSE** verdicts cover the assigned implementation, harness, evidence or evaluation/report scope. They do not certify that an optimization idea is exhausted. The historical twelve-item audit and reviews remain unchanged as evidence; their completed evaluation scopes must not override the current scoped goal dispositions above. Negative results, invalid attempts, corrected targeted reruns and unavailable compiler checks remain recorded. Extra checks/bookkeeping outweighing savings is a hypothesis for several losing routes, not an isolated measured root cause.
+## Find context
 
-Current goal statuses and final resource/storage audits are recorded in [the resumed checkpoint](../dev/experiments/shortlist-closure-20261101/checkpoint.json). All 46 owned operations are terminal/restored/reset/released; both reused managed slots match canonical file bytes and modes. Useful evidence and reusable caches/clients are retained; the bounded [storage inventory](../dev/experiments/shortlist-closure-20261101/storage-inventory.json) records about 92.27 GiB free before and after this final cleanup pass, with no additional deletion. Older experiment rows and frozen checkpoints describe their capture time, not instructions to resume work. See [experiment history](EXPERIMENTS.md) for measurements and evidence.
+- [Benchmark guide](BENCHMARK.md) and [candidate reference](BENCHMARK_CANDIDATES.md): maintained routes.
+- [Experiment history](EXPERIMENTS.md): previous attempts, evidence and reasons to revisit.
+- [Latest audit detail](STATUS_AUDIT_20261105.md) and [earlier campaign snapshot](STATUS_HISTORY_20261105.md): historical results/decisions.
 
-Last updated: 2026-11-02. This page is not a live process census.
+At milestones update objective, latest meaningful result/limits, owner/run evidence
+if active, and next action here. Link detailed records; do not copy every progress
+update or old ownership statement into current state.

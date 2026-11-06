@@ -35,6 +35,8 @@ public final class BenchmarkControlProbe {
     private boolean readyReported,configured;
     private Capture capture;
     private Motion motion;
+    private static final boolean QUALITY_RUNTIME=Boolean.getBoolean("shaderlod.dev.qualityMotionRuntime");
+    private CameraQualitySession quality;
     private JsonObject lastMotion = new JsonObject();
     private static final class Motion {
         final CameraQualitySession.MotionPath path;
@@ -109,7 +111,7 @@ public final class BenchmarkControlProbe {
     private static boolean main(){return ModList.get().isLoaded("shaderlod");}
     public static void beginWorld(){if(owner!=null&&owner.capture!=null)owner.worldFrames++;}
     public static void beginRender(){if(owner==null||owner.capture==null)return;var w=owner.capture;owner.guard(w);w.observed=owner.worldFrames;w.rendering=true;if(w.recording)w.cpuPlacement.begin();w.clock.begin();}
-    public static void endRender(){if(owner==null)return;owner.renderFrames++;com.pp.shaderlod.dev.readiness.ReadinessEvents.frame();if(owner.renderingAgeArmed)owner.markRenderingAge();var w=owner.capture;if(w==null)return;
+    public static void endRender(){if(owner==null)return;owner.renderFrames++;com.pp.shaderlod.dev.readiness.ReadinessEvents.frame();if(owner.renderingAgeArmed)owner.markRenderingAge();if(QUALITY_RUNTIME&&owner.quality!=null)owner.quality.render(Minecraft.getInstance());var w=owner.capture;if(w==null)return;
         if(w.delayNs>0){long end=System.nanoTime()+w.delayNs;while(System.nanoTime()<end)w.spinIterations++;}
         w.clock.end();if(w.rendering&&w.recording)w.cpuPlacement.end();owner.guard(w);if(!w.rendering||owner.worldFrames!=w.observed+1)w.failure="Expected exactly one world render per renderer frame";if(w.rendering){w.completed++;if(w.recording)w.completedRenderEndsNs.add(System.nanoTime());}w.rendering=false;
     }
@@ -129,7 +131,7 @@ public final class BenchmarkControlProbe {
         else if(camera.getX()!=w.x||camera.getY()!=w.y||camera.getZ()!=w.z||camera.getYRot()!=w.yaw||camera.getXRot()!=w.pitch)w.failure="Fixed camera changed";
         else if(main()&&Installed.generation()!=w.generation)w.failure="Optimization generation changed";
     }
-    private void tick(ClientTickEvent.Post event){var c=Minecraft.getInstance();if(closing>0&&--closing==0){c.stop();return;}advanceMotion(c);if(main()&&com.pp.shaderlod.optimization.NativeAdmissionCost.ENABLED)CpuAdmissionCostProbe.tick(renderFrames);
+    private void tick(ClientTickEvent.Post event){var c=Minecraft.getInstance();if(closing>0&&--closing==0){c.stop();return;}advanceMotion(c);if(QUALITY_RUNTIME&&quality!=null)quality.tick(c);if(main()&&com.pp.shaderlod.optimization.NativeAdmissionCost.ENABLED)CpuAdmissionCostProbe.tick(renderFrames);
         if(!configured&&c.getWindow()!=null){org.lwjgl.glfw.GLFW.glfwSetWindowAttrib(c.getWindow().getWindow(),org.lwjgl.glfw.GLFW.GLFW_AUTO_ICONIFY,0);configured=true;}
         if(capture!=null)capture.samples.addAll(capture.clock.drain());
         if(!readyReported&&c.level!=null&&c.levelRenderer.hasRenderedAllSections()&&BackgroundLaunch.qualityWindowReady(c)){
@@ -139,10 +141,12 @@ public final class BenchmarkControlProbe {
         }
         if(!Files.isRegularFile(control))return;
         try{long time=Files.getLastModifiedTime(control).toMillis();if(time==modified)return;modified=time;var r=JsonParser.parseString(Files.readString(control)).getAsJsonObject();String id=r.get("request_id").getAsString();if(!id.matches("[A-Za-z0-9_-]{1,64}"))throw new IllegalArgumentException("Request identity");
-            Path receipt=root.resolve("receipts").resolve(id+".json");Files.createDirectories(receipt.getParent());Files.writeString(receipt,"{\"status\":\"PENDING\"}",StandardOpenOption.CREATE_NEW);var out=new JsonObject();out.addProperty("request_id",id);
+            // Reserve separately: published receipts are immutable, avoiding Windows read/replace races.
+            Path receipt=root.resolve("receipts").resolve(id+".json");Files.createDirectories(receipt.getParent());if(Files.exists(receipt))throw new IllegalStateException("Receipt already published");Files.writeString(receipt.resolveSibling(id+".pending"),"PENDING",StandardOpenOption.CREATE_NEW);var out=new JsonObject();out.addProperty("request_id",id);
             try{String action=r.get("action").getAsString();if(capture!=null&&!Set.of("window_stop","status","cancel").contains(action))throw new IllegalStateException("Capture owns client; stop it before edits");
                 if(main()&&CpuAdmissionCostProbe.active()&&!Set.of("cpu_admission_cost","status","cancel").contains(action))throw new IllegalStateException("Stop untimed CPU admission costs before mutation or timing");
                 if(motion!=null&&!Set.of("motion_stop","status","capture","capture_coast","capture_saved_authored","causal_fragment","cancel").contains(action))throw new IllegalStateException("Quality motion owns client; stop it before edits or timing");
+                if(quality!=null&&!quality.finalized()&&!Set.of("quality_stop","quality_status","status").contains(action))throw new IllegalStateException("Quality image leases own client; stop and drain before edits, timing or restoration");
                 if(com.pp.shaderlod.dev.timing.CloudSamplerStateProbe.quadCapturePresent()&&!Set.of("g06_sampler_observe","status","cancel").contains(action))throw new IllegalStateException("Stop bounded quad observation before mutation or timing");
                 if(Set.of("configure","settings_apply","pack","cancel","open_authored","close_authored","video","background_size","frame_copy_observe","resources").contains(action))HistoryRotationProbe.closeBeforeMutation("DEV_CONTROL_"+action);
                 switch(action){
@@ -155,6 +159,16 @@ public final class BenchmarkControlProbe {
 
                     case "g04_honey_place"->{idle();requireMain();requireSavedAuthored();if(!savedAuthoredReady()||motion!=null||Installed.frameCopyObserving()||Installed.bslMipObserving()||G01TemporalProbe.active()||G01GraphProbe.active())throw new IllegalStateException("Exclusive untimed settled saved scene required");out.add("g04_honey",G04HoneyFixture.place(snapshot(),r.get("ownership_manifest_sha256").getAsString()));}
                     case "status"->{}
+                    case "quality_start"->{idle();requireSavedAuthored();
+                        if(!QUALITY_RUNTIME||!savedAuthoredReady()||motion!=null||CpuTimers.recording()||GpuTimers.recording()
+                            ||MipFamilyProbe.observing()||G01TemporalProbe.active()||G01GraphProbe.active()
+                            ||main()&&(Installed.frameCopyObserving()||Installed.bslMipObserving()))
+                            throw new IllegalStateException("Exclusive untimed settled saved scene required");
+                        quality=CameraQualitySession.createForBenchmark(c,root,r.get("label").getAsString(),r.getAsJsonObject("request"));
+                        out.add("quality",quality.status());}
+                    case "quality_stop","quality_status"->{if(!QUALITY_RUNTIME)throw new IllegalStateException("Quality runtime disabled");
+                        if(quality==null){var q=new JsonObject();q.addProperty("finalized",true);q.addProperty("status","none");out.add("quality",q);}
+                        else{if(action.equals("quality_stop"))quality.cancel(c);out.add("quality",quality.status());}}
                     case "reflection_status"->{idle();requireMain();out.addProperty("bsl_exact_reflection",com.pp.shaderlod.optimization.bslexact.BslExactSsrRuntime.status());}
                     case "ao_depth_status"->{idle();requireMain();var proof=JSON.toJsonTree(com.pp.shaderlod.optimization.bsl.BslAoDepthRuntime.controlProof()).getAsJsonObject();
                         proof.addProperty("status",com.pp.shaderlod.optimization.bsl.BslAoDepthRuntime.status());out.add("ao_depth",proof);}
@@ -365,7 +379,7 @@ public final class BenchmarkControlProbe {
             out.addProperty("motion_active",motion!=null);out.add("motion",lastMotion.deepCopy());
             if(motion!=null){out.getAsJsonObject("motion").addProperty("ticks",motion.ticks);out.getAsJsonObject("motion").addProperty("seconds",motion.ticks/20.0);}
             if(capture==null)out.add("state",snapshot());else{out.addProperty("recording",true);out.addProperty("capture_label",capture.label);}
-            Path tmp=Files.createTempFile(receipt.getParent(),id,".tmp");Files.writeString(tmp,JSON.toJson(out));Files.move(tmp,receipt,StandardCopyOption.ATOMIC_MOVE,StandardCopyOption.REPLACE_EXISTING);
+            Path tmp=Files.createTempFile(receipt.getParent(),id,".tmp");Files.writeString(tmp,JSON.toJson(out));Files.move(tmp,receipt,StandardCopyOption.ATOMIC_MOVE);
         }catch(Exception failure){com.mojang.logging.LogUtils.getLogger().warn("Benchmark control rejected: {}",failure.toString());}
     }
     private static void requireMain(){if(!main())throw new IllegalStateException("Authored world requires main mod");}
@@ -596,13 +610,42 @@ public final class BenchmarkControlProbe {
         static Map<String,Object> familyAlphaSnapshot(){
             String family=com.pp.shaderlod.optimization.OptimizationConfig.activeFamily();
             return switch(family){
+                case "bsl-shaders"->Map.of("family",family,"counters",com.pp.shaderlod.optimization.bslearlyalpha.BslEarlyAlphaRuntime.diagnosticCounters(),"status",com.pp.shaderlod.optimization.bslearlyalpha.BslEarlyAlphaRuntime.status());
+                case "complementary-reimagined"->Map.of("family",family,"counters",com.pp.shaderlod.optimization.reimaginedearlyalpha.ReimaginedEarlyAlphaRuntime.diagnosticCounters(),"status",com.pp.shaderlod.optimization.reimaginedearlyalpha.ReimaginedEarlyAlphaRuntime.status());
+                case "complementary-unbound"->Map.of("family",family,"counters",com.pp.shaderlod.optimization.unboundearlyalpha.UnboundEarlyAlphaRuntime.diagnosticCounters(),"status",com.pp.shaderlod.optimization.unboundearlyalpha.UnboundEarlyAlphaRuntime.status());
                 case "sildurs-vibrant-shaders"->Map.of("family",family,"counters",com.pp.shaderlod.optimization.sildurearlyalpha.SildurEarlyAlphaRuntime.diagnosticCounters(),"status",com.pp.shaderlod.optimization.sildurearlyalpha.SildurEarlyAlphaRuntime.status());
                 case "solas-shader"->Map.of("family",family,"counters",com.pp.shaderlod.optimization.solasearlyalpha.SolasEarlyAlphaRuntime.diagnosticCounters(),"status",com.pp.shaderlod.optimization.solasearlyalpha.SolasEarlyAlphaRuntime.status());
                 case "astralex"->Map.of("family",family,"counters",com.pp.shaderlod.optimization.astraearlyalpha.AstraEarlyAlphaRuntime.diagnosticCounters(),"status",com.pp.shaderlod.optimization.astraearlyalpha.AstraEarlyAlphaRuntime.status());
                 default->Map.of("family",family);
             };
         }
-        static JsonObject snapshot(){var r=new JsonObject();r.add("family_early_alpha",JSON.toJsonTree(familyAlphaSnapshot()));r.add("cpu_admission_cost",JSON.toJsonTree(com.pp.shaderlod.optimization.NativeAdmissionCost.snapshot()));r.addProperty("g10_bloom_observing",G10BloomReceipt.observing());r.add("post_sample_draw_witness",JSON.toJsonTree(com.pp.shaderlod.optimization.makeupearlyalpha.MakeUpPostSampleAlphaWitness.snapshot()));r.add("early_alpha_source_setup",JSON.toJsonTree(com.pp.shaderlod.optimization.makeupearlyalpha.MakeUpPostSampleAlpha.setupSnapshot()));r.add("early_alpha_draw_counters",JSON.toJsonTree(com.pp.shaderlod.optimization.makeupearlyalpha.MakeUpEarlyAlphaRuntime.costCounters()));if("makeup-ultra-fast-shaders".equals(com.pp.shaderlod.optimization.OptimizationConfig.activeFamily())) {
+        static Map<String,Object> aoScaleSnapshot(){
+            String family=com.pp.shaderlod.optimization.OptimizationConfig.activeFamily();
+            return switch(family){
+                case "bsl-shaders"->Map.of("family",family,"counters",com.pp.shaderlod.optimization.bsl.BslAoNormalBridge.costCounters(),"status",com.pp.shaderlod.optimization.bsl.BslAoNormalBridge.status());
+                case "complementary-reimagined"->Map.of("family",family,"counters",com.pp.shaderlod.optimization.reimaginedao.ReimaginedAoRuntime.costCounters(),"status",com.pp.shaderlod.optimization.reimaginedao.ReimaginedAoRuntime.status());
+                case "complementary-unbound"->Map.of("family",family,"counters",com.pp.shaderlod.optimization.unboundao.UnboundAoRuntime.costCounters(),"status",com.pp.shaderlod.optimization.unboundao.UnboundAoRuntime.status());
+                default->Map.of("family",family);
+            };
+        }
+        static Map<String,Object> depthReuseSnapshot(){
+            String family=com.pp.shaderlod.optimization.OptimizationConfig.activeFamily();
+            return switch(family){
+                case "bsl-shaders"->Map.of("family",family,"counters",com.pp.shaderlod.optimization.bsl.BslAoDepthRuntime.costCounters());
+                case "complementary-reimagined"->Map.of("family",family,"counters",com.pp.shaderlod.optimization.reimagineddepth.ReimaginedAoDepthRuntime.costCounters());
+                case "complementary-unbound"->Map.of("family",family,"counters",com.pp.shaderlod.optimization.unbounddepth.UnboundAoDepthRuntime.costCounters());
+                default->Map.of("family",family);
+            };
+        }
+        static Map<String,Object> reflectionReuseSnapshot(){
+            String family=com.pp.shaderlod.optimization.OptimizationConfig.activeFamily();
+            return switch(family){
+                case "makeup-ultra-fast-shaders"->Map.of("family",family,"counters",com.pp.shaderlod.optimization.makeupshadow.MakeUpReflectionRuntime.costCounters(),"status",com.pp.shaderlod.optimization.makeupshadow.MakeUpReflectionRuntime.status());
+                case "bsl-shaders"->Map.of("family",family,"counters",com.pp.shaderlod.optimization.bslexact.BslExactSsrRuntime.costCounters(),"status",com.pp.shaderlod.optimization.bslexact.BslExactSsrRuntime.status());
+                default->Map.of("family",family);
+            };
+        }
+        static JsonObject snapshot(){var r=new JsonObject();r.add("reflection_reuse_work",JSON.toJsonTree(reflectionReuseSnapshot()));r.add("depth_reuse_work",JSON.toJsonTree(depthReuseSnapshot()));r.add("ao_scale_work",JSON.toJsonTree(aoScaleSnapshot()));r.add("family_early_alpha",JSON.toJsonTree(familyAlphaSnapshot()));r.add("cpu_admission_cost",JSON.toJsonTree(com.pp.shaderlod.optimization.NativeAdmissionCost.snapshot()));r.addProperty("g10_bloom_observing",G10BloomReceipt.observing());r.add("post_sample_draw_witness",JSON.toJsonTree(com.pp.shaderlod.optimization.makeupearlyalpha.MakeUpPostSampleAlphaWitness.snapshot()));r.add("early_alpha_source_setup",JSON.toJsonTree(com.pp.shaderlod.optimization.makeupearlyalpha.MakeUpPostSampleAlpha.setupSnapshot()));r.add("early_alpha_draw_counters",JSON.toJsonTree(com.pp.shaderlod.optimization.makeupearlyalpha.MakeUpEarlyAlphaRuntime.costCounters()));if("makeup-ultra-fast-shaders".equals(com.pp.shaderlod.optimization.OptimizationConfig.activeFamily())) {
             var pack=Iris.getCurrentPack().orElse(null);
             if(pack!=null) {
                 var water=pack.getProgramSet(new net.irisshaders.iris.shaderpack.materialmap.NamespacedId("minecraft","overworld")).get(net.irisshaders.iris.shaderpack.loading.ProgramId.Water);

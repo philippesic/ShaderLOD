@@ -35,7 +35,7 @@ def discover(root):
 def outcome(summary):
     evaluation = summary.get('evaluation') or {}
     if not isinstance(evaluation,dict):raise ValueError('Evaluation must be a JSON object')
-    if not evaluation and not summary.get('finished'):
+    if summary.get('finished') is False or (not evaluation and not summary.get('finished')):
         return {'decision':'RUNNING_OR_INTERRUPTED','next_action':'Inspect operation ownership and current process before recovery or retry.'}
     if not summary.get('configuration_restored') or summary.get('release_error') or summary.get('clients_remaining'):
         decision, action = 'RECOVERY_REQUIRED', 'Inspect operation.json and use recover --output on this report; preserve conflicting files.'

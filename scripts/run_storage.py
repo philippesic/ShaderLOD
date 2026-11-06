@@ -43,19 +43,24 @@ def scoped_usage(paths, *, max_entries=100000):
     for path in roots:
         if not any(path.is_relative_to(parent) for parent in selected):
             selected.append(path)
-    result = dict(logical_bytes=0, allocated_bytes=0, files=0, entries=0,
+    result = dict(logical_bytes=0, allocated_bytes=0, files=0, entries=0, vanished_entries=0,
                   categories={}, filesystems={}, roots=list(map(str, selected)),
-                  allocation_note='Per-file blocks; APFS sharing/snapshots are unknown, not reclaim estimates. WSL host backing is unmeasured.')
+                  allocation_note='Live bounded census, not an atomic snapshot; renamed/vanished entries are counted separately. Per-file blocks; APFS sharing/snapshots are unknown, not reclaim estimates. WSL host backing is unmeasured.')
     seen = set()
     pending = list(selected)
     while pending:
         path = pending.pop()
-        if not path.exists():
-            continue
-        safe_path(path)
-        info = path.stat()
         result['entries'] += 1
         require(result['entries'] <= max_entries, 'Scoped storage entry limit exceeded')
+        try:
+            safe_path(path)
+            info = path.lstat()
+        except FileNotFoundError:
+            # Atomic report publication can rename a discovered temporary file
+            # before this metadata read. The next census sees its final name.
+            # This is inventory only: copy and ownership/CAS checks stay strict.
+            result['vanished_entries'] += 1
+            continue
         require(stat.S_ISDIR(info.st_mode) or stat.S_ISREG(info.st_mode), 'Special file refused: ' + str(path))
         if stat.S_ISDIR(info.st_mode):
             with os.scandir(path) as entries:
@@ -231,7 +236,7 @@ def fingerprint(world):
 
 def checkout(source, slot, root=None, *, verify_before_replace=None):
     """Reset one of eight named workspaces from an unchanged canonical profile."""
-    import fcntl
+    from benchmark_file_locks import world_lock
     from contextlib import ExitStack
     import dev_client as client
     source, root = safe_path(source), safe_path(root or ROOT)
@@ -261,8 +266,7 @@ def checkout(source, slot, root=None, *, verify_before_replace=None):
         for world in worlds + list((target / 'client/saves').glob('*')):
             lockfile = safe_path(world / 'session.lock')
             if lockfile.exists():
-                stream = locks.enter_context(lockfile.open('r+b'))
-                fcntl.lockf(stream, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                locks.enter_context(world_lock(lockfile))
         before = {w.name: fingerprint(w) for w in worlds}
         if verify_before_replace:verify_before_replace()
         # Keep the previous slot intact if capacity or source checks fail.
@@ -324,9 +328,11 @@ def checkout(source, slot, root=None, *, verify_before_replace=None):
 
 
 def retired_captures(root, days=14):
-    """Only old frame PNGs; retain metadata and first/middle/last per sequence."""
+    """Only explicitly retired old sequences; retain metadata and three samples."""
     require(days >= 14, 'Capture retention must be at least 14 days')
     root = safe_path(root)
+    if (root / '.storage-keep').exists():
+        return []
     cutoff = time.time() - days * 86400
     result = []
     for base, directories, files in os.walk(root / 'run-workloads', followlinks=False):
@@ -334,6 +340,9 @@ def retired_captures(root, days=14):
             directories[:] = []
             continue
         if 'camera-quality' not in Path(base).parts:
+            continue
+        retirement = Path(base) / '.storage-retire'
+        if not retirement.is_file() or retirement.is_symlink() or not retirement.read_text().strip():
             continue
         frames = sorted(Path(base) / name for name in files
                         if re.fullmatch(r'frame-\d+\.png', name))
@@ -359,12 +368,16 @@ def prune_captures(root=None, days=14, apply=False):
         require(not client.clients(client.process_table()), 'Active Minecraft client; retention refused')
         rows = retired_captures(root, days)
         if not apply or not rows:
-            return dict(apply=False, frames=len(rows), bytes=sum(r['bytes'] for r in rows))
+            return dict(apply=False, frames=len(rows), bytes=sum(r['bytes'] for r in rows),
+                        files=rows, policy='Explicit .storage-retire required; .storage-keep protects ancestors')
         receipt = root / 'dev/logs/storage-retention' / (str(time.time_ns()) + '.jsonl')
         receipt.parent.mkdir(parents=True, exist_ok=True)
         with receipt.open('x') as journal:
             for row in rows:
                 path = safe_path(row['path'])
+                require(not any((d / '.storage-keep').exists() for d in (path.parent, *path.parents)), 'Capture newly protected')
+                retirement = path.parent / '.storage-retire'
+                require(retirement.is_file() and not retirement.is_symlink() and bool(retirement.read_text().strip()), 'Capture retirement withdrawn')
                 info = path.stat()
                 require((info.st_dev, info.st_ino, info.st_size, info.st_mtime_ns) ==
                         (row['device'], row['inode'], row['bytes'], row['mtime_ns']), 'Capture identity changed')
@@ -374,7 +387,7 @@ def prune_captures(root=None, days=14, apply=False):
                 marker = path.parent / 'STORAGE-RETENTION.json'
                 if not marker.exists():
                     marker.write_text(json.dumps(dict(raw_motion_sequence_retired=True,
-                        receipt=str(receipt), policy='14+ days; retain first/middle/last PNG and metadata')) + '\n')
+                        receipt=str(receipt), policy='Explicit retirement; 14+ days; retain three samples and metadata')) + '\n')
                 path.unlink()
         return dict(apply=True, frames=len(rows), bytes=sum(r['bytes'] for r in rows), receipt=str(receipt))
 

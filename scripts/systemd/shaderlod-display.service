@@ -1,0 +1,21 @@
+[Unit]
+Description=ShaderLOD minimal GPU-backed virtual display
+
+[Service]
+Type=simple
+Environment=XDG_CONFIG_HOME=%h/.local/share/shaderlod-display/config
+Environment=XDG_DATA_HOME=%h/.local/share/shaderlod-display/data
+Environment=XDG_CURRENT_DESKTOP=ShaderLOD
+Environment=QT_NO_XDG_DESKTOP_PORTAL=1
+UnsetEnvironment=DISPLAY WAYLAND_DISPLAY XAUTHORITY
+RuntimeDirectory=shaderlod-display
+RuntimeDirectoryMode=0700
+ExecStart=/usr/bin/dbus-run-session -- /usr/bin/kwin_wayland --virtual --width 2560 --height 1600 --scale 1 --output-count 1 --xwayland --socket wayland-shaderlod --no-lockscreen --no-global-shortcuts --no-kactivities "--exit-with-session=/usr/bin/python3 %h/ShaderLOD/scripts/headless_display.py --publish"
+ExecStartPost=/usr/bin/python3 %h/ShaderLOD/scripts/headless_display.py --wait
+Restart=on-failure
+RestartSec=3
+TimeoutStartSec=45
+TimeoutStopSec=15
+
+[Install]
+WantedBy=default.target

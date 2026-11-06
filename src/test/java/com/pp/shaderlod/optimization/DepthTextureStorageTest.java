@@ -7,6 +7,18 @@ import static com.pp.shaderlod.optimization.DepthTextureStorage.*;
 
 /** Pure queried-value and actual binding-record checks; no GL context or rendered claim. */
 class DepthTextureStorageTest {
+    @Test void sampledDepthKeepsExactComponentChecksAndRecognizesObservedBaseD24(){
+        for(var row:new int[][]{{0x81A5,16,UNSIGNED_NORMALIZED},{0x81A6,24,UNSIGNED_NORMALIZED},
+                {0x81A7,32,UNSIGNED_NORMALIZED},{0x8CAC,32,FLOAT},{UNSIZED_DEPTH,24,UNSIGNED_NORMALIZED}})
+            assertTrue(sampledComponent(row[0],row[1],row[2]));
+        for(int bits=-1;bits<=64;bits++)for(int type:new int[]{0,-1,UNSIGNED_NORMALIZED,FLOAT,0x1404,0x1405}){
+            assertEquals(bits==24&&type==UNSIGNED_NORMALIZED,sampledComponent(UNSIZED_DEPTH,bits,type));
+            assertEquals(bits==24&&type==UNSIGNED_NORMALIZED,sampledComponent(0x81A6,bits,type));
+            assertEquals(bits==32&&type==FLOAT,sampledComponent(0x8CAC,bits,type));
+        }
+        for(int format:new int[]{0,-1,0x1908,0x88F0,0x8CAD,0x84F9})
+            assertFalse(sampledComponent(format,24,UNSIGNED_NORMALIZED));
+    }
     @Test void unsizedDepthRequiresKnownPrecisionAndComponentRepresentation(){
         for(int bits=-1;bits<=64;bits++) {
             assertEquals(bits==16||bits==24||bits==32,accepts(UNSIZED_DEPTH,bits,UNSIGNED_NORMALIZED),"normalized bits="+bits);

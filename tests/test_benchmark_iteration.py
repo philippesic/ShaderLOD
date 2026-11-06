@@ -10,6 +10,59 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 import benchmark_iteration as iteration
 import run_benchmark as runner
 from contextlib import nullcontext
+from types import SimpleNamespace
+
+
+class NaturalTerrainControlTest(unittest.TestCase):
+    def test_only_native_cpu_or_empty_native_control_uses_fixed_spawn(self):
+        args=SimpleNamespace(standard_test=True,candidate='native-control',features=None,feature=None,dh=False,saved_pose=0)
+        runner.natural_terrain_inputs(args)
+        self.assertEqual(args.world,'ShaderLOD-Smoke')
+        for key,value in [('feature','dead_frame_copy'),('dh',True),('saved_pose',1)]:
+            bad=SimpleNamespace(**(vars(args)|{key:value}))
+            with self.assertRaisesRegex(ValueError,'Natural terrain requires'):runner.natural_terrain_inputs(bad)
+        args.candidate='public';args.feature='quad_command_compaction'
+        runner.natural_terrain_inputs(args)
+        args.feature='dead_frame_copy'
+        with self.assertRaisesRegex(ValueError,'Natural terrain requires'):runner.natural_terrain_inputs(args)
+
+
+class AoScaleWorkTest(unittest.TestCase):
+    def test_next_event_needs_nearest_permissions_and_native_has_no_grants(self):
+        family='makeup-ultra-fast-shaders'
+        def state(n,linear=0):
+            return {'installed':{'reflection_reuse_work':{'family':family,'status':'cached','counters':{'permission_grants':n+linear,'nearest_grants':n,'linear_grants':linear,'owned_programs':1}}}}
+        before=state(3)
+        receipt=iteration.reflection_reuse_work(state(8),family=family,active=True,before=before)
+        self.assertEqual(receipt['window_delta']['nearest_grants'],5)
+        with self.assertRaisesRegex(ValueError,'NEAREST'):iteration.reflection_reuse_work(state(3,10),family=family,active=True,before=before)
+        iteration.reflection_reuse_work(before,family=family,active=False,before=before)
+        with self.assertRaisesRegex(ValueError,'NEAREST'):iteration.reflection_reuse_work(state(8),family=family,active=False,before=before)
+
+    def test_depth_reuse_requires_actual_permission_progress(self):
+        family='complementary-reimagined'
+        def state(n,owned=1):
+            return {'installed':{'depth_reuse_work':{'family':family,'counters':{'qualified_draws':n,'owned_programs':owned}}}}
+        before=state(3)
+        self.assertEqual(iteration.depth_reuse_work(state(8),family=family,active=True,before=before)['window_qualified_draws'],5)
+        for after in (state(3),state(8,0)):
+            with self.assertRaisesRegex(ValueError,'progress differs'):iteration.depth_reuse_work(after,family=family,active=True,before=before)
+        iteration.depth_reuse_work(before,family=family,active=False,before=before)
+        with self.assertRaisesRegex(ValueError,'progress differs'):iteration.depth_reuse_work(state(8),family=family,active=False,before=before)
+
+    def test_exact_window_requires_producer_returns_and_consumption(self):
+        family='bsl-shaders'
+        def state(n,consumer=None):
+            return {'installed':{'ao_scale_work':{'family':family,'counters':{'producer_ready':n,'producer_returns':n,'consumer_ready':n if consumer is None else consumer},'status':'cached'}}}
+        before=state(10)
+        receipt=iteration.ao_scale_work(state(20),family=family,active=True,before=before)
+        self.assertEqual(receipt['window_delta']['consumer_ready'],10)
+        for after in (state(10),state(20,10)):
+            with self.assertRaisesRegex(ValueError,'progress differs'):
+                iteration.ao_scale_work(after,family=family,active=True,before=before)
+        iteration.ao_scale_work(before,family=family,active=False,before=before)
+        with self.assertRaisesRegex(ValueError,'progress differs'):
+            iteration.ao_scale_work(state(20),family=family,active=False,before=before)
 
 
 class OwnershipDiagnosticTest(unittest.TestCase):
@@ -33,6 +86,65 @@ class OwnershipDiagnosticTest(unittest.TestCase):
 
 
 class StandardCommandTest(unittest.TestCase):
+    def test_b_first_uses_original_snapshot_and_keeps_native_option_guards(self):
+        native={'pack':'original.zip','installed':{'family':'family','master':False,'flags':{}},
+                'effective_options':{'AA':'2','BLOOM':'true'}}
+        baseline=iteration.original_option_snapshot(native,expected_pack='original.zip',family='family')
+        candidate={'pack':'candidate.zip','installed':{'family':'family','master':True,'flags':{'copy':'true'}},
+                   'effective_options':baseline|{'SHADERLOD_COPY':'1'}}
+        fields=dict(feature='copy',enabled=True,expected_pack='candidate.zip',family='family',native_options=baseline,
+                    compile_control={'option':'SHADERLOD_COPY','enabled':'1'})
+        iteration.activation(candidate,**fields)
+        iteration.activation(native,feature='copy',enabled=False,expected_pack='original.zip',family='family',native_options=baseline)
+        with self.assertRaisesRegex(ValueError,'selected pack'):
+            iteration.original_option_snapshot(candidate,expected_pack='original.zip',family='family')
+        candidate['effective_options']['AA']='0'
+        with self.assertRaisesRegex(ValueError,'Original native options changed'):
+            iteration.activation(candidate,**fields)
+        candidate['effective_options']['AA']='2';candidate['effective_options']['UNEXPECTED_NATIVE_OPTION']='1'
+        with self.assertRaisesRegex(ValueError,'Unexpected non-adapter'):
+            iteration.activation(candidate,**fields)
+
+    def test_balanced_orders_cancel_linear_drift_and_keep_roles(self):
+        for order in ('ABBA','BAAB'):
+            sequence=iteration.comparison_sequence(order)
+            self.assertEqual(list(order),['B' if active else 'A' for _,active in sequence])
+            means={label:10+index-(2 if active else 0) for index,(label,active) in enumerate(sequence)}
+            with patch.object(iteration,'arm_metrics',side_effect=lambda path,label:{'mean_total_frame_ms':means[label]}):
+                result=iteration.balanced_evaluation('/tmp/report',order=order,execution_completed=True,restored=True)
+            self.assertEqual('VALID',result['validity'])
+            self.assertAlmostEqual(2,result['group_means_ms']['native']-result['group_means_ms']['candidate'])
+            self.assertAlmostEqual(100*2/11.5,result['frame_time_reduction_pct'])
+        self.assertEqual('INVALID',iteration.balanced_evaluation('/tmp/report',order='ABBA',execution_completed=True,restored=False)['validity'])
+
+    def test_frame_variance_uses_valid_intervals_only(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path=Path(directory)
+            guard={'valid':True,'completed_render_frames':4,'excluded_initial_unavailable_interval':True,
+                   'statistics':{'count':3},'wall_ns':40_000_000}
+            row={'id':'native_0','validity':'VALID','statistics':{'count':3},
+                 'samples':[{'totalFrameNs':None},*({'totalFrameNs':v} for v in (8_000_000,10_000_000,12_000_000))]}
+            (path/'guard.json').write_text(json.dumps(guard))
+            (path/'result.json').write_text(json.dumps({'manifest':{'windows':[row]}}))
+            result=iteration.arm_metrics(path,'native_0')
+            self.assertEqual((10,2,4),tuple(result[k] for k in ('mean_total_frame_ms','sd_total_frame_ms','variance_total_frame_ms2')))
+            row['samples'][2]['totalFrameNs']=None
+            (path/'result.json').write_text(json.dumps({'manifest':{'windows':[row]}}))
+            with self.assertRaisesRegex(ValueError,'Invalid total-frame sample'):iteration.arm_metrics(path,'native_0')
+
+    def test_baseline_is_original_only_with_conditioned_native_windows(self):
+        with patch.object(runner,'preflight',return_value={'errors':[]}),patch.object(runner,'run_operation',return_value=0) as run:
+            self.assertEqual(0,runner.main(['baseline','--pack','/tmp/original.zip','--output','/tmp/report']))
+        args=run.call_args.args[0]
+        self.assertTrue(args.native_baseline and args.native_startup_check and args.standard_test)
+        self.assertEqual(('smoke','absent',20,120,900),(args.suite,args.arm,args.seconds,args.conditioning,args.budget))
+
+    def test_baseline_variance_uses_window_means_and_rejects_partial_runs(self):
+        with patch.object(iteration,'arm_metrics',side_effect=[{'mean_total_frame_ms':10},{'mean_total_frame_ms':12},{'mean_total_frame_ms':14}]):
+            result=iteration.baseline_evaluation('/tmp/report',execution_completed=True,restored=True)
+        self.assertEqual(('VALID',12,2,4),tuple(result[k] for k in ('validity','mean_window_ms','sd_window_mean_ms','variance_window_mean_ms2')))
+        self.assertEqual('INVALID',iteration.baseline_evaluation('/tmp/report',execution_completed=False,restored=True)['validity'])
+
     def test_one_command_owns_protocol_and_sixty_total_seconds(self):
         with patch.object(runner,'preflight',return_value={'errors':[]}),patch.object(runner,'run_operation',return_value=0) as run:
             self.assertEqual(0,runner.main(['test','--pack','/tmp/original.zip','--output','/tmp/report','--feature','unbound_dead_mips']))
@@ -329,6 +441,22 @@ class IterationEvidenceTest(unittest.TestCase):
         with patch.object(iteration.storage,'checkout') as reset:
             with self.assertRaisesRegex(ValueError,'already attempted'):iteration.finish_profile(op)
         reset.assert_not_called()
+
+    def test_verified_reset_rechecks_inputs_without_replaying_or_needing_backups(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory);profile=root/'profile';source=root/'canonical';profile.mkdir();source.mkdir()
+            for p in (profile,source):(p/'options.txt').write_text('original')
+            info=profile.stat()
+            record={'source':str(source),'original':iteration.profile_map(profile),'canonical':iteration.profile_map(source),
+                    'world_backup':str(root/'disposed-backup'),'reset_attempted':True,'reset_verified':True,'restored':True,
+                    'new_profile_identity':[info.st_dev,info.st_ino]}
+            op=Mock(output=root,data={'profile':str(profile),'iteration_profile':record,'release_verified':True,'configuration_restored':True})
+            with patch.object(iteration,'stopped_profiles',return_value=nullcontext()),patch.object(iteration.storage,'checkout') as reset:
+                iteration.finish_profile(op)
+                (profile/'options.txt').write_text('unrelated edit')
+                with self.assertRaisesRegex(ValueError,'no longer matches'):iteration.finish_profile(op)
+            reset.assert_not_called()
+            self.assertEqual('unrelated edit',(profile/'options.txt').read_text())
 
 
 

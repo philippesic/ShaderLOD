@@ -2,6 +2,38 @@
 
 Shared private prototypes are registered once in `PRIVATE_CANDIDATES` in `scripts/run_benchmark.py`: validator/producer module, report key, and whether a settled observation is required. The parser, launch hooks and common observation lifecycle use that definition. Modules retain their exact input admission, staging, activation, source/work validation and assessment. Specialized routes outside this lifecycle retain their existing handlers.
 
+`--candidate native-control` is a known-null control for maintained original
+adapters. B is a byte-identical ZIP alias with the same native options, Master
+Off and no public requests. Actual linked source, directives and logical image
+read/write/copy signatures must agree across arms. It measures reload/session
+noise, never optimization benefit; `check` is functional only. This general
+control does not replace or relax the separately frozen Bliss qualification.
+
+For public comparisons or `native-control`, `--comparison-order ABBA|BAAB`
+selects four standard-duration windows: A native Off, B candidate. Both orders
+balance a linear time trend; neither removes nonlinear drift or thermal effects.
+The report separates frame variance from the variance of the two window means
+per treatment. Repeat in fresh processes for between-run variation. An explicit
+untimed return to original selection, Master Off and empty requests follows the
+fourth window. Other private candidates retain their established schedules.
+
+`--audit-graph` exports the selected graph, linked program inventory and active
+scalar controls after each comparison arm, outside timing. The generic public
+`--untimed-diagnostic selected-work` additionally uses the existing two-frame
+source/physical observation and a next-frame reset after an untimed reload.
+Returned draws and live controls do not count avoided fragments or samples.
+The observer is disarmed before further timing. `g02-family` retains its separate
+executed-mip omission checks.
+
+The development runtime corrects Iris's sampler index budget to the lesser of
+the combined texture-unit namespace and Minecraft's tracked texture-state
+array. Shader linking still enforces per-stage sampler resource limits, and
+Iris allocation and cleanup use the same bound. This preserves original packs,
+options and AA. On Asahi, the old fragment-count budget exhausted after reserved
+unit holes despite 15 active samplers fitting the 16-sampler stage limit;
+the repaired Complementary graph successfully uses binding index16. Treat
+measurements before and after this correction as separate runtime cohorts.
+
 Shared private runs use one atomic selection/source-observation reload per arm under an explicit `privateObservedReload` launch capability, with master Off, empty requests/options, actual dimension and archive-byte checks. Observers are disarmed before capture; the source/physical validators and native options remain required. Frozen Bliss qualification retains its separate launch gate and schedule. Historical multi-reload results remain separate evidence.
 
 For the separately authorized frozen Bliss AO qualification, `test --candidate n04-bliss-sky --scene saved --saved-pose 0|7 --bliss-qualification null|clock|ao --qualification-order ABBA|BAAB` selects a maintained four-window block. A is the original; B is a byte-identical original ZIP alias for `null`/`clock`, or the existing AO candidate for `ao`. Current `atomic-observed-reload-v3` arms actual-source observation before the verified selected-pack reload in one owned action. Every arm drains prior GL work during untimed setup, then performs one successful-path reload; a failed reload disarms observation before rollback. This is a resource-peak experiment, not demonstrated memory reclamation. The earlier two-reload cohorts remain separate evidence. Timing is 60 seconds per window after 20 seconds settling, with initial 180-second conditioning and an 1800-second recovery-inclusive budget. Work counters are disabled; complete observer status must remain false at both timing boundaries. Strict checks reconcile contiguous single-epoch raw samples, render/world-entry counts, duration and returned-render timestamps. Start/render/end duration reconciliation permits a fixed 5ms difference between first/last endpoint bookkeeping. This measures total-frame start intervals, not GPU completion. `clock` declares a 25ms render-thread spin in B only; CPU/GPU overlap can hide some of that added CPU work in total throughput, so it is an instrument check, not an optimization or bandwidth result.
@@ -69,3 +101,44 @@ If the harness or inputs fail, preserve the failure, restore/release owned resou
 Keep reports, worlds, downloads, builds and captures out of Git. Do not kill unrelated processes. If restoration refuses due to unknown changes, preserve the data and inspect ownership and recovery before acting.
 
 Runtime dependencies and original shader-pack inputs are stored under `dependencies/`. Keep active experiment output in `dev/experiments/` and any retained evidence in `experiment-evidence/`; both are local and outside Git. Prepared clients and worlds remain under `run-workloads/`.
+
+## C02: experimental bloom shading rate
+
+`--candidate c02-bloom-vrs` tests the existing NV shading-rate runtime on the
+pinned original BSL10.1.8 with exact non-PBR native384 options and a saved
+Overworld pose. No other feature requests or DH are accepted. This is an
+explicit **quality tradeoff**: 2×2 bloom-prefilter shading, not image equivalence;
+include it only when that scope is authorized. Native options and AA remain
+required. Hardware/context, original selection and actual executed/restored
+VRS draw checks can refuse the comparison; refusal is not zero speedup.
+
+This candidate uses Master On with no public feature requests for both native
+controls, and toggles only the experimental VRS request for its candidate arm.
+The initial conditioning and standard capture durations are unchanged. The
+harness disables the request before exit and restores the owned configuration.
+See [Windows benchmarking](WINDOWS_BENCHMARK.md) for the prepared host.
+
+`check --quality-motion` records a separate untimed native/candidate/native camera
+sequence through the existing bounded lossless recorder. It currently requires a
+public saved-scene check without DH or balanced timing. Each arm warms for30s,
+then follows the same20s eased path at six native-resolution PNG samples/second;
+world day/weather stay frozen while Iris animation and temporal history advance.
+PNG transport uses lossless zlib level0 and flushes each image's contents on the
+writer thread before completion to avoid accumulating a large dirty-file backlog.
+Level1 exceeded the single writer's CPU budget at native resolution on M1.
+Actual camera poses, loaded inputs, file hashes and image-lease accounting are
+retained. Any missing capture slot makes the sequence incomplete. This sampling
+can reveal persistent ghosting, shimmer and abrupt changes; it does not establish
+frame-by-frame temporal equivalence or acceptance of every LOD transition.
+
+The quality-only launch flag is absent from scored comparisons. PNG readback and
+writing can stall rendering, so its short functional windows are never scored as
+performance evidence. The explicit output/capture cap is12GiB with the usual32GiB
+free-space reserve; ordinary benchmark caps remain unchanged. Image leases must
+drain before configuration edits, timing or restoration. The live storage census
+records files that disappear during atomic publication and retries their final
+names on the next scan; copy, symlink and ownership/CAS checks remain strict.
+
+The untimed selected-work observer inventories all active scalar `shaderlod*`
+uniforms at its draw boundary, including implementation permission uniforms.
+Public request flags alone do not prove that a qualified branch saves work.

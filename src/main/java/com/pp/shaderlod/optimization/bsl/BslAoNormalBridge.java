@@ -29,6 +29,8 @@ public final class BslAoNormalBridge {
  /** Cached observations only: no source, option, API-resource or GL query is performed here. Counters are cumulative for this JVM, including warmup. */
  public static String status(){return "BSL half-AO; installed="+installed+"; cachedSetup="+setupStatus+"; cachedSource="+sourceStatus+"; revoked="+revoked+"; activeFrame="+activeFrame+"; graphs="+graphs.size()+"; lastFailure="+lastFailure+"; cumulative callbacks: halfStarts="+halfStarts+", halfQualifiedStarts="+halfQualifiedStarts+", halfReturns="+halfReturns+", halfQualifiedReturns="+halfQualifiedReturns+", skippedNativeRecovery="+skippedNativeRecovery+", readyConsumers="+readyConsumers+", nativeFallbacks="+nativeFallbacks+", nativeFallbackReturns="+nativeFallbackReturns;}
  private BslAoNormalBridge() {}
+ /** Cached cumulative callbacks; producer returns and consumer permissions, not avoided GPU samples. */
+ public static Map<String,Long> costCounters(){return Map.of("producer_ready",halfQualifiedStarts,"producer_returns",halfQualifiedReturns,"consumer_ready",readyConsumers,"native_fallbacks",nativeFallbacks,"native_fallback_returns",nativeFallbackReturns,"skipped_native_recovery",skippedNativeRecovery);}
  public static void install() {
   if(installed)return;installed=true;
   CompileOptionControl.configureAdmission("bsl-shaders",OptimizationId.AO_RENDER_SCALE,BslAoNormalBridge::setup);

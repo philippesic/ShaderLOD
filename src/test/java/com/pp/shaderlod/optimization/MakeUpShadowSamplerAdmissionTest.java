@@ -24,4 +24,15 @@ class MakeUpShadowSamplerAdmissionTest {
   properties.setProperty("shaderlod.dev.compare","on");assertTrue(MakeUpShadowScopePins.safeProperties(properties));
   properties.setProperty("shaderlod.dev.makeupMergedSubmissionR1","true");assertFalse(MakeUpShadowScopePins.safeProperties(properties));
  }
+ @Test void maintainedControllerAndObserversDoNotDisableCompiledProof(){
+  var properties=new Properties();
+  properties.setProperty("shaderlod.dev.benchmarkControlProbe","owned/control.json");
+  properties.setProperty("shaderlod.dev.readinessEvents","owned/readiness.json");
+  for(var key:List.of("savedAuthoredScene","rendererWorkCounters","nativeTerrainScene","privateObservedReload","mipFamilyRuntime","qualityMotionRuntime"))properties.setProperty("shaderlod.dev."+key,"true");
+  assertTrue(MakeUpShadowScopePins.safeProperties(properties));
+  for(var key:List.of("makeupMergedSubmissionR1","makeupDepthPriming","futureUnqualifiedTransform")){
+   properties.setProperty("shaderlod.dev."+key,"true");assertFalse(MakeUpShadowScopePins.safeProperties(properties));properties.remove("shaderlod.dev."+key);
+  }
+  properties.setProperty("shaderlod.experimentalRendererResearch","true");assertFalse(MakeUpShadowScopePins.safeProperties(properties));
+ }
 }

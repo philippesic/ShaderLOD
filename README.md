@@ -1,5 +1,28 @@
 # ShaderLOD
 
+Current development targets shared renderer/LOD improvements for **Complementary
+Reimagined, Complementary Unbound, BSL and MakeUp Ultra Fast**. The current audit
+covers G01–G10, C01–C02 and N01–N04. A completed local audit does not establish
+cross-GPU benefit or default enablement; see [current status](docs/STATUS.md) for
+evidence, availability and unresolved qualification.
+
+Start with the maintained [benchmark guide](docs/BENCHMARK.md):
+
+```sh
+python3 scripts/run_benchmark.py discover
+python3 scripts/run_benchmark.py plan --help
+python3 scripts/run_benchmark.py report --output EXISTING_REPORT
+```
+
+Discovery is read-only inventory; planning checks inputs without launching.
+Use `check` for functional activation/restoration and `test` for a development
+comparison. Neither substitutes for repeated confirmation, motion review or
+cross-machine qualification. [Candidate contracts](docs/BENCHMARK_CANDIDATES.md)
+describe specialized evidence. Current scope takes precedence over the older
+Photon setup and historical measurements below.
+
+## Earlier Photon implementation and development setup
+
 A NeoForge client mod and explicit Photon patch for distance-based shader quality.
 Distance budgets now cover shadow filtering, screen-space shadows, GTAO/SSAO,
 volumetric fog, LPV fog, clouds, SSR, and parallax. Balanced, Performance, and

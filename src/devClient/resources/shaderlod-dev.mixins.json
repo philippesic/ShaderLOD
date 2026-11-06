@@ -5,6 +5,8 @@
   "plugin": "com.pp.shaderlod.dev.mixin.DevEvidenceMixinPlugin",
   "compatibilityLevel": "JAVA_21",
   "client": [
+    "SamplerAllocationFailureMixin",
+    "SamplerUnitBudgetMixin",
     "BackgroundWindowMixin",
     "ShaderAnimationClockMixin",
     "NativeMacroProgramsMixin",

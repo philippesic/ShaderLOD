@@ -80,7 +80,20 @@ public final class MipFamilyProbe {
         if(frame>=0&&!frameCompleted)throw new IllegalStateException("Prior frame final boundary absent");
         lastSystemFrame=now;frame=settled?complete+1:now;frameCompleted=false;var images=new ArrayList<Map<String,Object>>();
         for(int i=0;i<targets.getRenderTargetCount();i++){var t=targets.get(i);if(t!=null)images.add(Map.of("target",i,"main",texture(t.getMainTexture()),"alt",texture(t.getAltTexture())));}
-        event("frame_start",Map.of("images",images));if(complete>=2)stopped=true;
+        event("frame_start",Map.of("images",images,"custom_textures",customTextureInventory(pipeline)));if(complete>=2)stopped=true;
+    }
+    /** Current Iris-owned custom resources, distinct from similarly named render targets. */
+    static List<Map<String,Object>> customTextureInventory(Object owner)throws Exception {
+        var customTextures=new ArrayList<Map<String,Object>>();
+        var custom=(net.irisshaders.iris.pipeline.CustomTextureManager)field(owner,"customTextureManager");
+        for(var stage:custom.getCustomTextureIdMap().entrySet())for(var entry:stage.getValue().entrySet()) {
+            var access=entry.getValue();
+            if(access.getType()!=net.irisshaders.iris.gl.texture.TextureType.TEXTURE_2D)continue;
+            if(customTextures.size()>=128)throw new IllegalStateException("Bounded custom texture ownership inventory");
+            customTextures.add(Map.of("stage",stage.getKey().name(),"name",entry.getKey(),
+                "texture",texture(access.getTextureId().getAsInt())));
+        }
+        return List.copyOf(customTextures);
     }
     public static void enter(Object renderer){try{
         if(!epoch(renderer))return;
@@ -142,7 +155,40 @@ public final class MipFamilyProbe {
             "rasterizer_discard",GL11.glIsEnabled(GL30.GL_RASTERIZER_DISCARD),"blend0",GL30.glIsEnabledi(GL11.GL_BLEND,0));
         var main=net.minecraft.client.Minecraft.getInstance().getMainRenderTarget();
         var presentation=Map.of("texture",main.getColorTextureId(),"framebuffer",main.frameBufferId,"width",main.width,"height",main.height);
-        return Map.of("reads",reads,"writes",writes,"draw_fbo",fbo,"raster_state",raster,"presentation_target",presentation);
+        // Include operative permission uniforms as well as public request flags.
+        // Read only while this explicitly untimed observer owns the current draw.
+        var controls=new TreeMap<String,Number>();
+        var auxiliarySamplers=new ArrayList<Map<String,Object>>();
+        try(var stack=org.lwjgl.system.MemoryStack.stackPush()){
+            var size=stack.mallocInt(1);var type=stack.mallocInt(1);
+            int count=GL20.glGetProgrami(id,GL20.GL_ACTIVE_UNIFORMS);
+            if(count<0||count>4096)throw new IllegalStateException("Bounded current-draw scalar inventory");
+            for(int i=0;i<count;i++){
+                String name=GL20.glGetActiveUniform(id,i,1024,size,type);
+                if(size.get(0)==1&&(type.get(0)==GL20.GL_SAMPLER_2D||type.get(0)==GL20.GL_SAMPLER_2D_SHADOW)){
+                    int location=GL20.glGetUniformLocation(id,name);if(location<0)continue;
+                    int unit=GL20.glGetUniformi(id,location);
+                    if(unit<0||unit>=GL11.glGetInteger(GL20.GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS))throw new IllegalStateException("Auxiliary sampler unit out of range");
+                    try{
+                        GL13.glActiveTexture(GL13.GL_TEXTURE0+unit);
+                        int tex=GL11.glGetInteger(GL11.GL_TEXTURE_BINDING_2D),sampler=GL11.glGetInteger(GL33.GL_SAMPLER_BINDING);
+                        var image=texture(tex);var depth=new TreeMap<String,Integer>();
+                        if(image.get("format") instanceof Integer format&&Set.of(0x1902,0x81A5,0x81A6,0x81A7,0x8CAC,0x88F0,0x8CAD).contains(format)){
+                            depth.put("bits",GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D,0,0x884A));
+                            depth.put("type",GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D,0,0x8C16));
+                        }
+                        auxiliarySamplers.add(Map.of("name",name,"type",type.get(0),"unit",unit,"sampler",sampler,"texture",image,"depth_storage",depth,"sampler_min",sampler==0?0:GL33.glGetSamplerParameteri(sampler,GL11.GL_TEXTURE_MIN_FILTER)));
+                    }finally{GL13.glActiveTexture(active);}
+                }
+                if(!name.startsWith("shaderlod")||size.get(0)!=1)continue;
+                int location=GL20.glGetUniformLocation(id,name);if(location<0)continue;
+                if(type.get(0)==GL20.GL_INT||type.get(0)==GL20.GL_BOOL)controls.put(name,GL20.glGetUniformi(id,location));
+                else if(type.get(0)==GL20.GL_FLOAT)controls.put(name,GL20.glGetUniformf(id,location));
+            }
+        }
+        return Map.of("reads",reads,"writes",writes,"draw_fbo",fbo,"raster_state",raster,"presentation_target",presentation,
+            "scalar_controls",controls,"auxiliary_2d_sampler_bindings",auxiliarySamplers,
+            "auxiliary_scope","Raw bound scalar 2D samplers, including aliases; no executed-fetch, ownership or dead-lifetime certificate");
     }
     public static void terrainReady(Object shader){try{
         if(!observing||stopped||net.irisshaders.iris.shadows.ShadowRenderingState.areShadowsCurrentlyBeingRendered()||!currentEpoch())return;

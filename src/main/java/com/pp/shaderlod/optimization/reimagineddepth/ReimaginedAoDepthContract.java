@@ -8,10 +8,7 @@ public final class ReimaginedAoDepthContract {
  public static boolean sampler(Sampler s){return s!=null&&s.texture()>0&&s.texture()==s.ownedTexture()&&
   s.width()>0&&s.height()>0&&s.width()==s.ownerWidth()&&s.height()==s.ownerHeight()&&
   s.level1Width()==0&&s.level1Height()==0&&
-  ((s.format()==0x81A5&&s.depthBits()==16&&s.depthType()==0x8C17)||
-   (s.format()==0x81A6&&s.depthBits()==24&&s.depthType()==0x8C17)||
-   (s.format()==0x81A7&&s.depthBits()==32&&s.depthType()==0x8C17)||
-   (s.format()==0x8CAC&&s.depthBits()==32&&s.depthType()==0x1406))&&
+  com.pp.shaderlod.optimization.DepthTextureStorage.sampledComponent(s.format(),s.depthBits(),s.depthType())&&
   s.compare()==0&&(s.min()==0x2600||s.min()==0x2601)&&s.min()==s.mag()&&s.base()==0&&s.max()>=0&&
   s.wrapS()==0x812F&&s.wrapT()==0x812F&&s.bias()==0&&s.minLod()<=0&&s.maxLod()>=0&&
   Float.isFinite(s.minLod())&&Float.isFinite(s.maxLod())&&s.anisotropy()==1;}

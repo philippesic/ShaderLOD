@@ -127,3 +127,12 @@ class CompiledCapabilityTests(unittest.TestCase):
             self.assertEqual(1,len(errors));self.assertIn('privateObservedReload',errors[0]['error'])
             self.assertFalse(Path(directory,'report').exists())
         self.assertEqual(original,binary.read_bytes())
+
+
+class IncompleteReportTests(unittest.TestCase):
+    def test_partial_evaluation_does_not_promote_unfinished_operation(self):
+        data={'finished':False,'configuration_restored':True,
+              'evaluation':{'validity':'VALID','improvement':'OBSERVED_LOWER_FRAME_TIME'}}
+        self.assertEqual('RUNNING_OR_INTERRUPTED',workflow.outcome(data)['decision'])
+        data['finished']=True
+        self.assertEqual('OBSERVED_LOWER_FRAME_TIME',workflow.outcome(data)['decision'])

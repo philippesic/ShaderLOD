@@ -195,6 +195,8 @@ class RunStorageTests(unittest.TestCase):
         for i in range(9):
             path = base / f'frame-{i:04}.png'; path.write_bytes(b'png'); os.utime(path, (old, old))
         (base / 'manifest.json').write_text('{}')
+        self.assertEqual(storage.prune_captures(apply=True)['frames'], 0, 'Age alone must preserve motion evidence')
+        (base / '.storage-retire').write_text('Investigation complete; compact evidence retained in manifest.json')
         preview = storage.prune_captures(apply=False)
         self.assertEqual(preview['frames'], 6)
         self.assertEqual(len(list(base.glob('*.png'))), 9)
@@ -213,6 +215,7 @@ class RunStorageTests(unittest.TestCase):
         for i in range(8):
             path = base / f'frame-{i:04}.png'; path.write_bytes(b'png')
             os.utime(path, (1, 1))
+        (base / '.storage-retire').write_text('Retired sequence')
         (base.parent / '.storage-keep').write_text('Active quality evidence')
         self.assertEqual(storage.prune_captures(apply=True)['frames'], 0)
 
@@ -270,6 +273,20 @@ class RunStorageTests(unittest.TestCase):
 
 
 class ScopedUsageTests(unittest.TestCase):
+    def test_atomic_publication_between_discovery_and_stat_is_reported(self):
+        with tempfile.TemporaryDirectory(dir=storage.ROOT) as directory:
+            root=Path(directory).resolve();temporary=root/'manifest.json.tmp';final=root/'manifest.json'
+            temporary.write_text('retained evidence');safe_path=storage.safe_path
+            def publish(path):
+                result=safe_path(path)
+                if Path(path)==temporary and temporary.exists():temporary.rename(final)
+                return result
+            with patch.object(storage,'safe_path',side_effect=publish):
+                report=storage.scoped_usage([root])
+            self.assertEqual(1,report['vanished_entries'])
+            self.assertEqual('retained evidence',final.read_text())
+            self.assertEqual(len('retained evidence'),storage.scoped_usage([root])['logical_bytes'])
+
     def test_exact_roots_categories_overlaps_allocation_and_free_are_separate(self):
         with tempfile.TemporaryDirectory(dir=storage.ROOT) as directory:
             root=Path(directory).resolve()

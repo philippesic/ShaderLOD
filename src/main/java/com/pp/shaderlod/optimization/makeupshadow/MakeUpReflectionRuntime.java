@@ -19,6 +19,9 @@ public final class MakeUpReflectionRuntime {
     private static Map<String,String> sourceOptions=Map.of();
     private static boolean sourceReady;
     private static String last="not consumed";
+ private static long permissionGrants,nearestGrants,linearGrants;
+ /** Cumulative current native-draw permissions, not avoided shader queries. */
+ public static Map<String,Long> costCounters(){return Map.of("permission_grants",permissionGrants,"nearest_grants",nearestGrants,"linear_grants",linearGrants,"owned_programs",(long)OWNERS.size());}
     private MakeUpReflectionRuntime() {}
     public static String status(){return "MakeUp exact query reuse; NEAREST next-cell/unchanged-point events; permission0 outside draw; owned="+OWNERS.size()+"; "+last;}
     public static void invalidate(){epoch++;OWNERS.clear();frame();}
@@ -55,7 +58,7 @@ public final class MakeUpReflectionRuntime {
     /** Immutable actual depthtex1; nonmip equal filters prove native implicit==LOD0. */
     public static boolean sampler(int texture,int expected,int width,int height,int w,int h,int format,int bits,int type,int compare,int min,int mag,int base,float anisotropy){
         return texture>0&&texture==expected&&width==w&&height==h&&w>0&&h>0&&
-            ((format==0x81A5&&bits==16&&type==0x8C17)||(format==0x81A6&&bits==24&&type==0x8C17)||(format==0x81A7&&bits==32&&type==0x8C17)||(format==0x8CAC&&bits==32&&type==0x1406))&&
+            DepthTextureStorage.sampledComponent(format,bits,type)&&
             compare==GL11.GL_NONE&&min==mag&&(min==GL11.GL_LINEAR||min==GL11.GL_NEAREST)&&base==0&&anisotropy==1.0f;
     }
     private static int parameter(int sampler,int key){return sampler==0?GL11.glGetTexParameteri(GL11.GL_TEXTURE_2D,key):GL33.glGetSamplerParameteri(sampler,key);}
@@ -84,7 +87,7 @@ public final class MakeUpReflectionRuntime {
             int[] viewport=new int[4];GL11.glGetIntegerv(GL11.GL_VIEWPORT,viewport);if(!Arrays.equals(viewport,new int[]{0,0,t.getCurrentWidth(),t.getCurrentHeight()})||client.getWindow().getWidth()!=viewport[2]||client.getWindow().getHeight()!=viewport[3])return;
             if(Iris.getCurrentPack().orElse(null)!=pack||Iris.getPipelineManager().getPipelineNullable()!=pipe||GL11.glGetInteger(GL20.GL_CURRENT_PROGRAM)!=program||!Iris.getShaderPackOptionQueue().isEmpty())return;
             int px=com.pp.shaderlod.optimization.sourcecache.LinkedUniformLocations.location(program,"pixelSizeX"),py=com.pp.shaderlod.optimization.sourcecache.LinkedUniformLocations.location(program,"pixelSizeY");if(px<0||py<0||GL20.glGetUniformf(program,px)!=1.0f/t.getCurrentWidth()||GL20.glGetUniformf(program,py)!=1.0f/t.getCurrentHeight())return;
-            GL20.glUniform1i(permission,mode);last="qualified current owned water; permission mode="+mode+" (1 NEAREST cell, 2 LINEAR exact query/point)";
+            GL20.glUniform1i(permission,mode);permissionGrants++;if(mode==1)nearestGrants++;else if(mode==2)linearGrants++;last="qualified current owned water; permission mode="+mode+" (1 NEAREST cell, 2 LINEAR exact query/point)";
         }catch(RuntimeException|LinkageError refused){GL20.glUniform1i(permission,0);last=refused.getClass().getSimpleName();}
     }
     /** Same normal draw boundary used by the existing water sampler supplier. */

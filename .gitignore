@@ -17,9 +17,15 @@ __pycache__/
 *.pyc
 .venv/
 
-# Disposable experiment work and retained local evidence
+# Local experiment work; ignored does not mean disposable.
 /dev/experiments/
-/experiment-evidence/
+# Raw evidence stays local; retained summaries have explicit Git-visible paths.
+/experiment-evidence/**
+!/experiment-evidence/README.md
+!/experiment-evidence/fastpath/
+!/experiment-evidence/fastpath/REPORT.md
+!/experiment-evidence/dependencies/
+!/experiment-evidence/dependencies/moreculling-preparation.json
 
 /dependencies/shortlist-test-inputs/
 

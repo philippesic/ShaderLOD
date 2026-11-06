@@ -1,0 +1,10 @@
+[Unit]
+Description=Keep the headless development host awake when its lid closes
+
+[Service]
+ExecStart=/usr/bin/systemd-inhibit --no-ask-password --what=handle-lid-switch --mode=block --who=ShaderLOD "--why=Headless development: ignore lid close" /usr/bin/sleep infinity
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=default.target

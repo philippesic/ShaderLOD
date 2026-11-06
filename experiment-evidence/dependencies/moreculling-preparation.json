@@ -1,0 +1,43 @@
+{
+  "state": "DEPENDENCIES_PREPARED_NOT_LOADED_OR_QUALIFIED",
+  "artifacts": [
+    {
+      "project": "moreculling",
+      "version": "1.0.8",
+      "version_id": "tFPgktUw",
+      "url": "https://cdn.modrinth.com/data/51shyZVL/versions/tFPgktUw/moreculling-neoforge-1.21.1-1.0.8.jar",
+      "path": "dev/runtime/performance/moreculling-neoforge-1.21.1-1.0.8.jar",
+      "bytes": 332875,
+      "hashes": {
+        "sha512": "efc7e0bfeafe4a659540417796675b1ba8fd2cd4d4f3030a85c7cb675a065da6bd0bea9b79ce4e5bf3d13728f1a85c7c9e523567bfd569a415d92ac227d0b023",
+        "sha1": "fdbfaa5d6d93a11d44020301199dac68de231649",
+        "sha256": "a086b2157458e8e1214232a52a2a92924481fd3fd6620a61a4f23373b557e791"
+      }
+    },
+    {
+      "project": "cloth-config",
+      "version": "15.0.140+neoforge",
+      "version_id": "izKINKFg",
+      "url": "https://cdn.modrinth.com/data/9s6osm5g/versions/izKINKFg/cloth-config-15.0.140-neoforge.jar",
+      "path": "dev/runtime/performance/cloth-config-15.0.140-neoforge.jar",
+      "bytes": 1163890,
+      "hashes": {
+        "sha1": "c3e5733ba4503b102589a026000fd5ce0212f6f2",
+        "sha512": "aaf9b010955b8cd294e5a92f069985b18729fd5e2cf22d351f1dff9680f15488688803ec41e77e941cbde130ceb535014ca4c868047d80ab69c2d508e216654d",
+        "sha256": "65e722e0d98431a07c45f8bdd8d529a217cc8c175fde1740248bd5c1b4f3c0d4"
+      }
+    }
+  ],
+  "basis": "MoreCulling1.0.10/1.0.9 declare Sodium<0.8 incompatible;1.0.8 declares Sodium<0.6.7 incompatible, permitting pinned0.6.13. Cloth required15.0.0+; official matching NeoForge15.0.140 prepared.",
+  "unclosed": "Actual normal client load and full module/version tuple/source/quality/cost still unqualified. No metadata rewrite, loader/Sodium upgrade or project override performed.",
+  "unchanged": "Current optimized stack3mods and BSL private source freeze unaffected; no new runtime install/launch by root.",
+  "negative_artifact": "Rejected1.0.10 binary removed after exact ownership/hash/no-live-consumer/recovery check; official URL/checksums/extracted manifest retained. See rejected-download-cleanup.json. Observed free-byte delta0; no reclamation claim.",
+  "loader_source_resolution": {
+    "class": "net.neoforged.fml.loading.VersionSupportMatrix",
+    "artifact": "/home/philip/.gradle/caches/modules-2/files-2.1/net.neoforged.fancymodloader/loader/4.0.45/4a0968c2ec6234d58e0a9ed97acafc08cc8f33b5/loader-4.0.45.jar",
+    "sha256": "8390398e67df23e72d85ed809685be2752c8ec545b7cbb6ad4b70fdc81e4dcd4",
+    "evidence": "VersionSupportMatrix.javap.txt",
+    "fact": "FML4.0.45 static initializer on Minecraft1.21.1 adds built-in mod.minecraft alias1.21 and mod.neoforge21.0.166; native version-support function accepts a contained built-in alias. Thus published MoreCulling[1.21,1.21.1) can use native compatibility handling rather than a project bypass. Runtime class/artifact binding and actual loader outcome remain required.",
+    "sodium": "No Sodium override in inspected table;1.0.10/1.0.9 incompatibility excludes current0.6.13.1.0.8 is first inspected compatible Sodium manifest."
+  }
+}

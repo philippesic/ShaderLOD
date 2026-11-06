@@ -7,6 +7,16 @@ package com.pp.shaderlod.optimization;
 public final class DepthTextureStorage {
     public static final int UNSIZED_DEPTH=0x1902, UNSIGNED_NORMALIZED=0x8C17, FLOAT=0x1406;
     private DepthTextureStorage() {}
+    /** Strict sampled depth-component representations. Base-format D24 uses the
+     * queried precision/type, as does the existing BSL proof; no GL mutation or
+     * inferred precision. Ownership/filter/LOD checks remain with the consumer.
+     * Other unsized precisions remain outside this sampled-consumer contract. */
+    public static boolean sampledComponent(int rawFormat,int depthBits,int depthType) {
+        return (rawFormat==0x81A5&&depthBits==16&&depthType==UNSIGNED_NORMALIZED)
+            ||((rawFormat==0x81A6||rawFormat==UNSIZED_DEPTH)&&depthBits==24&&depthType==UNSIGNED_NORMALIZED)
+            ||(rawFormat==0x81A7&&depthBits==32&&depthType==UNSIGNED_NORMALIZED)
+            ||(rawFormat==0x8CAC&&depthBits==32&&depthType==FLOAT);
+    }
     /** Complete observed representation, separate from the explicitly sized private allocation. */
     public record Storage(int rawFormat,int depthBits,int depthType,int privateFormat) {}
     /** Null refuses unknown precision/type. Sized cases retain their existing allocation exactly. */

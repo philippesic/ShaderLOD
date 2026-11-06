@@ -24,9 +24,9 @@ class BslAoDepthContractTest {
         assertTrue(found,"Unknown sampler field");
         return Sampler.class.getConstructor(types).newInstance(values);
     }
-    @Test void capturedUnsizedD24IsRecognizedOnlyByBsl() {
+    @Test void capturedUnsizedD24UsesTheSharedRecognition() {
         var sample=captured();
-        assertFalse(UnboundAoDepthContract.sampler(sample));
+        assertTrue(UnboundAoDepthContract.sampler(sample));
         assertTrue(BslAoDepthContract.sampler(sample));
         assertEquals(0x1902,sample.format());
         assertFalse(BslAoDepthContract.sampler(null));
@@ -52,6 +52,7 @@ class BslAoDepthContractTest {
         for(int format:new int[]{0x1902,0x81A6})for(var failure:failures) {
             var sample=changed(changed(captured(),"format",format),(String)failure[0],failure[1]);
             assertFalse(BslAoDepthContract.sampler(sample),format+":"+failure[0]);
+            assertFalse(UnboundAoDepthContract.sampler(sample),format+":"+failure[0]);
         }
     }
     @Test void existingSizedRepresentationsKeepTheirSharedVerdict()throws Exception {

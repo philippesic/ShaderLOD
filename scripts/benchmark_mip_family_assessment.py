@@ -6,7 +6,7 @@ def assess(observations,*,family,states):
     target=0 if family in ('complementary-reimagined','complementary-unbound') else 11 if family=='photon' else 1
     result={'family':family,'target':target,'arms':{},'scope':'Actual selected pass source/directive and per-pass physical mip-return omission, two completed frames plus next-frame reset. Separate source/formal-sampler and full lifetime reasoning still required; no image parity or speed inference.'}
     for label,packet in observations.items():
-        active=label in ('candidate','public');actual=packet['actual'];events=actual['events'];sources=actual['sources']
+        active=label.startswith('candidate') or label=='public';actual=packet['actual'];events=actual['events'];sources=actual['sources']
         options=states[label]['effective_options']
         role=('deferred1' if family in ('complementary-reimagined','complementary-unbound') else 'deferred4' if family=='photon'
               else 'composite13' if family=='astralex' else 'composite16' if family=='solas-shader' and options.get('SHADERLOD_SOLAS_PIXEL_GRAPH')=='1'

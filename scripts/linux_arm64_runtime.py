@@ -107,6 +107,11 @@ def main(argv=None):
         dc.compile_current(env=env)
         print('Offline producer and source/classes receipt verified')
         return 0
+    launches_display = ((args.action == 'benchmark' and forwarded and forwarded[0] in ('test', 'check', 'native-startup', 'baseline'))
+                        or (args.action == 'client' and forwarded and forwarded[0] in ('on', 'off')))
+    if launches_display:
+        import headless_display
+        env = headless_display.environment(env)
     script='run_benchmark.py' if args.action=='benchmark' else 'dev_client.py'
     os.execve(sys.executable, [sys.executable, str(ROOT / 'scripts' / script), *forwarded], env)
 

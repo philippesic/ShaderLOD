@@ -62,6 +62,7 @@ public final class CameraQualitySession {
     private final String sourceHash;
     private final Config config;
     private final WorkloadInputs inputs;
+    private final boolean benchmarkOwned;
     private final JsonObject report = new JsonObject();
     private final JsonArray frames = new JsonArray();
     private final long created = System.nanoTime();
@@ -117,12 +118,45 @@ public final class CameraQualitySession {
         }
     }
 
+    /** Explicit neutral-controller integration; no world/config/presentation edits. */
+    static CameraQualitySession createForBenchmark(Minecraft client, Path operationRoot, String label, JsonObject request) throws Exception {
+        if (!Boolean.getBoolean("shaderlod.dev.qualityMotionRuntime") || !label.matches("[A-Za-z0-9_]{1,48}"))
+            throw new IllegalArgumentException("Explicit bounded benchmark quality runtime required");
+        Config config = Config.parse(request.toString());
+        Path game=client.gameDirectory.toPath().toRealPath(), root=operationRoot.toRealPath();
+        if (Files.isSymbolicLink(operationRoot) || !Files.isRegularFile(root.resolve("control.json")))
+            throw new IllegalStateException("Owned controller root required");
+        if (Files.getFileStore(root).getUsableSpace()<32L*1024*1024*1024)
+            throw new IllegalStateException("Quality capture requires the 32 GiB storage reserve");
+        var server=client.getSingleplayerServer();
+        if (server==null || client.player==null || !server.tickRateManager().isFrozen())
+            throw new IllegalStateException("Existing owned frozen server required");
+        Path output=Files.createDirectory(root.resolve("quality-"+label));
+        Path source=output.resolve("request.json");byte[] bytes=request.toString().getBytes(StandardCharsets.UTF_8);
+        Files.write(source,bytes,java.nio.file.StandardOpenOption.CREATE_NEW);
+        return new CameraQualitySession(game,output,source,hash(bytes),config,true);
+    }
+
+    boolean finalized() { return finalized; }
+    JsonObject status() {
+        var result=new JsonObject();result.addProperty("finalized",finalized);
+        result.addProperty("output_directory",output.toString());
+        result.add("status",report.get("status"));
+        if(failure!=null)result.addProperty("failure",failure);
+        return result;
+    }
+    void cancel(Minecraft client) { if(!finalized)fail(client,new IllegalStateException("Quality recorder cancelled")); }
+
     private CameraQualitySession(Path game, Path output, Path source, String sourceHash, Config config) throws Exception {
+        this(game,output,source,sourceHash,config,false);
+    }
+    private CameraQualitySession(Path game, Path output, Path source, String sourceHash, Config config, boolean benchmarkOwned) throws Exception {
         this.gameDirectory = game;
         this.output = output;
         this.source = source;
         this.sourceHash = sourceHash;
         this.config = config;
+        this.benchmarkOwned = benchmarkOwned;
         inputs = new WorkloadInputs(game);
         writes = new CaptureWriteTracker(config.maximumInFlightImages());
         var queue = new ArrayBlockingQueue<Runnable>(1) {
@@ -147,7 +181,8 @@ public final class CameraQualitySession {
         report.addProperty("output_directory", output.toString());
         report.addProperty("evidence_kind", "unmeasured moving-camera quality; PNG readback/write can stall rendering");
         report.addProperty("clock_policy", "20 Hz eased waypoint ticks; actual Minecraft camera position and rotation recorded per image; Iris clocks and temporal history advance normally");
-        report.addProperty("world_policy", "Existing singleplayer control must freeze daylight/weather; no world rules/time/weather edits by this harness");
+        report.addProperty("world_policy", benchmarkOwned ? "Owned benchmark already freezes the integrated server; actual tick freeze, mode, day/weather observed without edits by this recorder" : "Existing singleplayer control must freeze daylight/weather; no world rules/time/weather edits by this harness");
+        report.addProperty("benchmark_owned",benchmarkOwned);
         report.addProperty("close_owned_client_requested", closeOwnedClient);
         addPngEncoding(report);
         report.addProperty("maximum_png_bytes", MAX_PNG_BYTES);
@@ -211,14 +246,14 @@ public final class CameraQualitySession {
             }
             if (owner == null) {
                 if (seconds(now, created) > 120) throw new IllegalStateException("Prepared spectator/frozen scene did not become ready within 120 seconds");
-                if (client.level == null || client.player == null || client.getSingleplayerServer() == null || !client.player.isSpectator()) return;
+                if (client.level == null || client.player == null || client.getSingleplayerServer() == null || !benchmarkOwned && !client.player.isSpectator()) return;
                 if (client.getCameraEntity() != client.player || client.screen != null || client.isPaused()) return;
                 if (!config.waypoints().getFirst().pose().near(Pose.of(client), 0.05, 0.1)) return;
                 if (worldCheck == null) requestWorldCheck(client, now);
                 if (!worldCheck.isDone()) return;
                 World observed = worldCheck.join();
                 worldCheck = null;
-                if (!observed.daylightFrozen() || !observed.weatherFrozen() || !observed.spectator()) return;
+                if (!acceptableWorld(observed)) return;
                 JsonObject preparedInputs = qualityInputState();
                 // Prepared controls arrive through separate server/player/time packets.
                 // Do not freeze the fingerprint until the client reflects the frozen server scene.
@@ -248,7 +283,7 @@ public final class CameraQualitySession {
             if (worldCheck != null && worldCheck.isDone()) {
                 World observed = worldCheck.join();
                 worldCheck = null;
-                if (!initialWorld.sameFrozenScene(observed)) throw new IllegalStateException("Server frozen scene changed: " + observed);
+                if (!initialWorld.equals(observed) || !acceptableWorld(observed)) throw new IllegalStateException("Server frozen scene changed: " + observed);
                 report.add("server_world_last_observed", GSON.toJsonTree(observed));
                 report.addProperty("server_world_last_observed_at_utc", Instant.now().toString());
             }
@@ -483,6 +518,7 @@ public final class CameraQualitySession {
 
     private void addPngEncoding(JsonObject target) {
         target.addProperty("png_encoding", FastPngWriter.ENCODING);
+        target.addProperty("png_content_flush", "Writer-thread FileChannel.force(false) before successful write; no directory metadata durability claim");
         target.addProperty("png_compression_level", config.pngCompressionLevel());
         target.addProperty("png_bit_depth", 8);
         target.addProperty("png_colour_type", 6);
@@ -513,7 +549,7 @@ public final class CameraQualitySession {
     private void requireOwner(Minecraft client) throws Exception {
         if (!client.gameDirectory.toPath().toRealPath().equals(gameDirectory) || client.player == null || client.level == null
                 || !owner.equals(client.player.getUUID()) || client.getSingleplayerServer() == null
-                || !client.player.isSpectator() || client.getCameraEntity() != client.player) throw new IllegalStateException("Owned local spectator camera changed");
+                || !benchmarkOwned && !client.player.isSpectator() || client.getCameraEntity() != client.player) throw new IllegalStateException("Owned local camera changed");
         if (client.screen != null || client.isPaused()) throw new IllegalStateException("Capture interrupted by screen/pause");
         if (!client.options.getCameraType().isFirstPerson()) throw new IllegalStateException("Capture requires first-person main camera");
         if (client.level != worldReference || Iris.getPipelineManager().getPipelineNullable() != pipelineReference) throw new IllegalStateException("World/pipeline reloaded during quality session");
@@ -551,7 +587,8 @@ public final class CameraQualitySession {
             if (level == null || player == null) throw new IllegalStateException("Owned server scene disappeared");
             return new World(dimension.location().toString(), level.getDayTime(),
                     !level.getGameRules().getBoolean(GameRules.RULE_DAYLIGHT),
-                    !level.getGameRules().getBoolean(GameRules.RULE_WEATHER_CYCLE), player.isSpectator());
+                    !level.getGameRules().getBoolean(GameRules.RULE_WEATHER_CYCLE), player.isSpectator(),
+                    server.tickRateManager().isFrozen(),player.gameMode.getGameModeForPlayer().getName());
         });
         lastWorldCheck = now;
     }
@@ -686,9 +723,11 @@ public final class CameraQualitySession {
     private static String hash(byte[] bytes) throws Exception { return HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(bytes)); }
     private static double seconds(long now, long then) { return (now - then) * 1e-9; }
 
-    private record World(String dimension, long dayTime, boolean daylightFrozen, boolean weatherFrozen, boolean spectator) {
-        boolean sameFrozenScene(World other) { return equals(other) && other.daylightFrozen && other.weatherFrozen && other.spectator; }
+    private boolean acceptableWorld(World value) {
+        return benchmarkOwned ? value.tickFrozen() : value.daylightFrozen() && value.weatherFrozen() && value.spectator();
     }
+    private record World(String dimension, long dayTime, boolean daylightFrozen, boolean weatherFrozen, boolean spectator,
+                         boolean tickFrozen, String gameMode) {}
     private record Pose(double x, double y, double z, double yaw, double pitch) {
         static Pose of(Minecraft client) { var p = client.player; return new Pose(p.getX(), p.getY(), p.getZ(), p.getYRot(), p.getXRot()); }
         boolean near(Pose other, double positionTolerance, double angleTolerance) {

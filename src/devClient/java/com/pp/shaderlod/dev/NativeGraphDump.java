@@ -67,6 +67,7 @@ final class NativeGraphDump {
         manifest.add("programs",rows);manifest.addProperty("source_bytes",bytes);
         manifest.add("linked_programs",linked(directory));
         manifest.add("target_layout",targetLayout());
+        manifest.add("custom_textures",JSON.toJsonTree(MipFamilyProbe.customTextureInventory(Iris.getPipelineManager().getPipelineNullable())));
         Files.writeString(directory.resolve("manifest.json"),JSON.toJson(manifest),StandardOpenOption.CREATE_NEW);
         return directory;
     }
@@ -117,6 +118,27 @@ final class NativeGraphDump {
     }
     private static JsonObject stages(Path directory,String name,int program)throws Exception {
         var row=new JsonObject();row.addProperty("name",name);row.addProperty("program",program);
+        row.addProperty("linked",org.lwjgl.opengl.GL20C.glGetProgrami(program,org.lwjgl.opengl.GL20C.GL_LINK_STATUS)==1);
+        var controls=new JsonObject();var samplers=new JsonObject();
+        try(var stack=org.lwjgl.system.MemoryStack.stackPush()) {
+            var size=stack.mallocInt(1);var type=stack.mallocInt(1);
+            int uniforms=org.lwjgl.opengl.GL20C.glGetProgrami(program,org.lwjgl.opengl.GL20C.GL_ACTIVE_UNIFORMS);
+            if(uniforms>4096)throw new IllegalStateException("Bounded active uniform inventory");
+            for(int i=0;i<uniforms;i++) {
+                String uniform=org.lwjgl.opengl.GL20C.glGetActiveUniform(program,i,1024,size,type);
+                if(size.get(0)!=1)continue;
+                int location=org.lwjgl.opengl.GL20C.glGetUniformLocation(program,uniform),kind=type.get(0);
+                if(location<0)continue;
+                if(kind==org.lwjgl.opengl.GL20C.GL_SAMPLER_2D||kind==org.lwjgl.opengl.GL20C.GL_SAMPLER_2D_SHADOW)
+                    samplers.addProperty(uniform,org.lwjgl.opengl.GL20C.glGetUniformi(program,location));
+                if(!uniform.startsWith("shaderlod"))continue;
+                if(kind==org.lwjgl.opengl.GL20C.GL_INT||kind==org.lwjgl.opengl.GL20C.GL_BOOL)
+                    controls.addProperty(uniform,org.lwjgl.opengl.GL20C.glGetUniformi(program,location));
+                else if(kind==org.lwjgl.opengl.GL20C.GL_FLOAT)
+                    controls.addProperty(uniform,org.lwjgl.opengl.GL20C.glGetUniformf(program,location));
+            }
+        }
+        row.add("scalar_controls",controls);row.add("sampler_units",samplers);
         int count=org.lwjgl.opengl.GL20C.glGetProgrami(program,org.lwjgl.opengl.GL20C.GL_ATTACHED_SHADERS);
         if(count<0||count>8)throw new IllegalStateException("Bounded attached stage inventory");
         var rows=new JsonArray();
