@@ -665,7 +665,7 @@ def supervise_operation(output):
 def release_runtime(op, proc=None, *, preserve_conflicts=False):
  """Use existing exact-client/launcher APIs; preserve custody on any refusal."""
  session=op.output/'session';marker=session/'owner.json'
- owner=json.loads(marker.read_text()) if marker.exists() else {}
+ owner=dev.read_published_json(marker) if marker.exists() else {}
  # Expected shutdown writes are admitted only when stop is deliberately issued
  # from an acknowledged checkpoint. Recovery of a dead controller never adopts
  # previously unrecorded exit writes.
@@ -710,6 +710,7 @@ def recover_main(argv):
  p.add_argument('--output',required=True,type=Path);p.add_argument('--dispose-backups',action='store_true')
  p.add_argument('--preserve-conflicts',action='store_true',help='After exact runtime release, retain conflicting owned configuration files before restoring the original backup; never replay commands')
  p.add_argument('--preserve-optional-configs',action='store_true',help='Explicitly retain known newly generated optional-mod configs before restoring an older operation; existing/unknown edits remain protected')
+ p.add_argument('--preserve-generated-backups',action='store_true',help='Retain known newly generated ShaderLOD FML backups omitted by an older operation; existing and unknown files remain protected')
  a=p.parse_args(argv);op=life.Operation(a.output)
  with life.operation_lock(op.output):
   if op.data['state'] not in life.TERMINAL:
@@ -717,6 +718,7 @@ def recover_main(argv):
    life.process_absent(op.data['processes'].get('controller'),dev.process_table(),dev.identity)
    release_runtime(op,preserve_conflicts=a.preserve_conflicts)
    if a.preserve_optional_configs:performance_stack.preserve_created_configs(op,ROOT)
+   if a.preserve_generated_backups:iteration.preserve_created_config_backups(op)
    if op.data.get('iteration_profile'):iteration.finish_profile(op)
    op.data['state']='failed-restored';op.save()
   if a.dispose_backups:op.dispose_backups()
@@ -747,7 +749,7 @@ class Control:
   until=min(self.end,time.monotonic()+command_seconds) if not self.recovery else time.monotonic()+10
   while time.monotonic()<until:
    marker=op.output/'session/owner.json'
-   if marker.exists() and json.loads(marker.read_text()).get('status') in {'startup-failed','startup-timeout','exited','stopped','timed-out'}:raise RuntimeError('Client terminal; control unavailable')
+   if marker.exists() and dev.read_published_json(marker).get('status') in {'startup-failed','startup-timeout','exited','stopped','timed-out'}:raise RuntimeError('Client terminal; control unavailable')
    if destination.exists():
     try:receipt=json.loads(destination.read_text())
     except json.JSONDecodeError:
@@ -888,7 +890,7 @@ def run_operation(a,admission):
    life.require(not state.get('installed',{}).get('cpu_admission_cost',{}).get('observing',False),'CPU admission-cost observer armed during timing')
    life.require(not state.get('installed',{}).get('g10_bloom_observing',False),'G10 observer armed during timing')
    life.require(not state.get('installed',{}).get('post_sample_draw_witness',{}).get('observing',False),'G03 witness armed during timing')
-   life.runtime_ready(state,op.data.get('runtime_plan',plan),json.loads((out/'session/owner.json').read_text()))
+   life.runtime_ready(state,op.data.get('runtime_plan',plan),dev.read_published_json(out/'session/owner.json'))
    life.require(life.digest(target)==op.data['inputs'][str(a.pack)],'Installed selected archive changed')
    if getattr(a,'bliss_qualification',None):
     selected_archive=a.profile/'shaderpacks'/state['pack']
@@ -991,7 +993,7 @@ def run_operation(a,admission):
     try:return json.loads(initial.read_text())
     except (FileNotFoundError,json.JSONDecodeError):return {}
    while not initial_receipt() or initial_receipt().get('status')=='PENDING':
-    owner=json.loads((session/'owner.json').read_text())
+    owner=dev.read_published_json(session/'owner.json')
     if owner.get('status') in {'startup-failed','startup-timeout','exited'}:raise RuntimeError('Client startup failed: '+owner.get('error',owner['status']))
     control.wait(.5,full=False)
    op.reload()  # Supervisor prepare checkpoint is authoritative; no concurrent manifest writer after startup.
@@ -1021,7 +1023,7 @@ def run_operation(a,admission):
     control.send('configure',distance=12,dh_mode=a.dh_mode);control.ready();control.wait(2)
     life.require(control.send('status')['state'].get('dh_mode')==a.dh_mode,'DH mode did not acknowledge')
    control.send('configure',**options);control.ready();control.send('focus');control.wait(a.warmup)
-   state=control.send('status')['state'];life.runtime_ready(state,plan,json.loads((session/'owner.json').read_text()))
+   state=control.send('status')['state'];life.runtime_ready(state,plan,dev.read_published_json(session/'owner.json'))
    summary['gl_context']=gl_context.observe(getattr(a,'gl_context','native'),state,expected_renderer=getattr(a,'expected_renderer',None))
    summary['performance_stack']=performance_stack.observe(ROOT,getattr(a,'performance_stack','minimal'),state);save()
    if resource_contract is not None:

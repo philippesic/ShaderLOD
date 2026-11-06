@@ -59,6 +59,15 @@ selecting the tuple is not proof that G03 compiled, executed, or helped.
 
 `test` uses the fixed native/candidate/native-return protocol described below. `report` reads existing reports without launching anything, including historical reports. Its decision gives drift comparison precedence over an averaged positive mean, and identifies invalid runs or recovery requirements. It does not grant optimization closure or compatibility qualification. Phase timings in `summary.json` include nested profile preparation/restoration details; do not sum nested details into the total again.
 
+Windows ownership JSON reads and atomic publication retry transient sharing errors
+for at most three seconds; persistent denial still fails the operation. Normal
+configuration restoration includes the five numbered FML backups for each
+ShaderLOD client config. For an older interrupted report that omitted these
+paths, `recover --output REPORT --preserve-generated-backups` retains newly
+created known backups in that report before checking the complete original
+profile map. Existing backups and unknown files retain normal ownership checks;
+recovery never replays measurements.
+
 For optimization iteration use the maintained standard test, on the authorized machine with a prepared managed client slot and authentic original pack and options:
 
 ```sh

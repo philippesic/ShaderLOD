@@ -2,7 +2,7 @@
 
 The task is active and incomplete. All four targets have two valid original-only native baseline processes each;
 one repaired BSL G03 comparison is complete (n1, effect unresolved). The storage blocker is resolved: a fresh native Windows check
-observes63.2GiB free on C:, enough to resume guarded setup while preserving the
+observes60.8GiB free on C:, enough for sequential acquisition while preserving the
 maintained32GiB reserve. The earlier80–100GiB suggestion was conservative headroom,
 not a required campaign minimum. Cleanup remains limited to ShaderLOD as directed;
 NVIDIA caches and other-project checkpoints are untouched.
@@ -121,3 +121,30 @@ bindings were verified and5269 input/output files preserved in the native frozen
 archive. Its receipt is native-before-c02-freeze.json. Native C02 source replacement
 and the12-operation port-validation queue are the next action; no native task is
 currently running at this checkpoint.
+
+
+The canonical7bc497a runtime updates and port-validation definitions are now being
+installed by verified source hashes after the completed source freeze. Active task
+is intended as ShaderLOD-RTX5080-Port-Validation-V1, request
+C:\ShaderLODBench\requests\queue-port-validation-v1.json; verify its launch receipt.
+The first operation is the MakeUp G01 ABBA score, followed by C01 GPU admission,
+C02 real4.5/4.6 checks and separate Complementary GL4.6 original baselines. The
+Windows source tree must remain frozen throughout the queue.
+
+
+Port-validation V1 stopped on its first G01 operation after a transient Windows
+ownership JSON permission error. Two windows are partial evidence only. The client
+was released and configuration restored; whole-profile reset initially refused
+one new FML backup omitted from the old configuration inventory. Native/canonical
+fixes bound ownership reads to three seconds of sharing-error retries and predeclare
+FML's five numbered backups for each ShaderLOD config.101 benchmark tests and30
+lifecycle tests pass on both hosts. Explicit maintained recovery preserves the
+old backup bytes, verifies complete profile restoration and replays no measurements.
+The old5034 build bindings plus scripts/tests/definitions are verified and preserved
+in the native-before-windows-io archive; its compact receipt is tracked here.
+
+Active task is ShaderLOD-RTX5080-Port-Validation-V2, request
+C:\ShaderLODBench\requests\queue-port-validation-v2.json. The first operation uses
+a fresh G01 ABBA output, followed by all remaining C01/C02/context validation jobs.
+No C02 activation/performance claim yet. Keep native inputs frozen while it runs.
+The32GiB reserve and ShaderLOD-only cleanup scope remain unchanged.

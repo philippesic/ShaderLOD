@@ -470,6 +470,25 @@ class IterationEvidenceTest(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,'already attempted'):iteration.finish_profile(op)
         reset.assert_not_called()
 
+    def test_old_generated_backup_recovery_preserves_bytes_and_unknown_files(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory);profile=root/'profile';source=root/'canonical'
+            (profile/'config').mkdir(parents=True);source.mkdir()
+            existing=profile/'config/shaderlod-client-2.toml.bak';existing.write_text('original backup')
+            before=iteration.profile_map(profile)
+            backup=profile/'config/shaderlod-client-1.toml.bak';backup.write_text('new backup')
+            unknown=profile/'config/unknown.bak';unknown.write_text('keep in place')
+            op=Mock(output=root,data={'profile':str(profile),'iteration_profile':{'source':str(source),'original':before},
+                                     'configuration':{},'release_verified':True,'configuration_restored':True})
+            with patch.object(iteration,'stopped_profiles',return_value=nullcontext()):
+                iteration.preserve_created_config_backups(op)
+                iteration.preserve_created_config_backups(op)  # Recheck a retained receipt; no replay.
+            self.assertFalse(backup.exists())
+            self.assertEqual((root/'preserved-generated-backups'/backup.name).read_text(),'new backup')
+            self.assertEqual(existing.read_text(),'original backup');self.assertEqual(unknown.read_text(),'keep in place')
+            op.data['release_verified']=False
+            with self.assertRaisesRegex(ValueError,'Release'):iteration.preserve_created_config_backups(op)
+
     def test_verified_reset_rechecks_inputs_without_replaying_or_needing_backups(self):
         with tempfile.TemporaryDirectory() as directory:
             root=Path(directory);profile=root/'profile';source=root/'canonical';profile.mkdir();source.mkdir()

@@ -11,13 +11,34 @@ from types import SimpleNamespace
 
 SCRIPTS = Path(__file__).resolve().parents[1] / 'scripts'
 sys.path.insert(0, str(SCRIPTS))
-from benchmark_file_locks import world_lock, replace_published
+from benchmark_file_locks import world_lock, replace_published, read_published_json
+import benchmark_file_locks as file_locks
 import benchmark_bliss_qualification as qualification
 import dev_client as dev
 import benchmark_iteration as iteration
 
 
 class BenchmarkPlatformTests(unittest.TestCase):
+    def test_ownership_read_retries_windows_sharing_but_not_bad_json(self):
+        error=PermissionError('sharing');error.winerror=5
+        with patch.object(file_locks,'os',SimpleNamespace(name='nt')), patch.object(file_locks.time,'sleep'):
+            with patch.object(Path,'read_text',side_effect=[error, '{"status":"ready"}']) as read:
+                self.assertEqual(read_published_json('owner.json'),{'status':'ready'})
+                self.assertEqual(read.call_count,2)
+            with patch.object(Path,'read_text',return_value='{broken') as read:
+                with self.assertRaises(json.JSONDecodeError):read_published_json('owner.json')
+                self.assertEqual(read.call_count,1)
+
+    def test_ownership_read_bounds_persistent_windows_denial(self):
+        error=PermissionError('access denied');error.winerror=5
+        with patch.object(file_locks,'os',SimpleNamespace(name='nt')), patch.object(file_locks.time,'monotonic',side_effect=[0,1,4]), patch.object(file_locks.time,'sleep'):
+            with patch.object(Path,'read_text',side_effect=error) as read:
+                with self.assertRaises(PermissionError):read_published_json('owner.json')
+                self.assertEqual(read.call_count,2)
+        with patch.object(file_locks,'os',SimpleNamespace(name='posix')), patch.object(Path,'read_text',side_effect=error) as read:
+            with self.assertRaises(PermissionError):read_published_json('owner.json')
+            self.assertEqual(read.call_count,1)
+
     @unittest.skipUnless(os.name == 'nt', 'Native Windows sharing check')
     def test_publication_survives_brief_reader_lock(self):
         import threading

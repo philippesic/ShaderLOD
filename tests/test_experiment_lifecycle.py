@@ -35,6 +35,13 @@ class LifecycleTests(unittest.TestCase):
   op.begin_mutation('apply');backup.write_text('original flags');op.acknowledge_mutation('apply')
   op.restore();self.assertFalse(backup.exists());self.assertEqual(config.read_text(),'original flags')
   self.assertEqual((config.parent/(config.name+'.bak.1')).read_text(),'older still')
+ def test_numbered_fml_backups_restore_existing_and_remove_acknowledged_creations(self):
+  existing=self.profile/'config/shaderlod-client-1.toml.bak';existing.write_text('older config')
+  new=self.profile/'config/shaderlod-client-2.toml.bak'
+  op=life.Operation.create(self.root/'fml-report',self.profile,{},life.configuration_paths(self.profile,self.root/'pack.zip'))
+  op.begin_mutation('apply');existing.write_text('new backup');new.write_text('rotated backup')
+  op.acknowledge_mutation('apply');op.restore()
+  self.assertEqual(existing.read_text(),'older config');self.assertFalse(new.exists())
  def test_unacknowledged_optimization_backup_is_preserved(self):
   config=self.profile/'config/shaderlod-optimizations.properties';config.write_text('original flags')
   backup=config.parent/(config.name+'.bak')

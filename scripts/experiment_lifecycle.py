@@ -85,6 +85,14 @@ def operation_lock(output):
         yield
 
 
+def generated_config_backups(profile):
+    # FML 4.0.45 ConfigTracker.backUpConfig rotates five numbered .toml.bak
+    # files for these owned ModConfig registrations. Declare absent paths too.
+    return {Path(profile)/'config'/f'{stem}-{number}.toml.bak'
+            for stem in ('shaderlod-client', 'shaderlod-effects-client')
+            for number in range(1, 6)}
+
+
 def configuration_paths(profile, pack):
     profile = storage.safe_path(profile)
     # OptimizationConfig makes one numbered backup on its first write. Track
@@ -100,7 +108,7 @@ def configuration_paths(profile, pack):
             suffix += 1
         future.add(backup)
     # Existing direct config/sidecars only, plus exact targets preparation creates.
-    return sorted(future | set((profile/'config').glob('*')) |
+    return sorted(future | generated_config_backups(profile) | set((profile/'config').glob('*')) |
                   set((profile/'shaderpacks').glob('*.txt')) |
                   {profile/'options.txt', profile.parent/'control.json',
                    profile/'shaderpacks'/Path(pack).name,

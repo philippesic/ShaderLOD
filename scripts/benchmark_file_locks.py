@@ -1,7 +1,25 @@
 """Nonblocking operation and Java-compatible world locks on supported hosts."""
 from contextlib import contextmanager
+import json
 import os
+from pathlib import Path
 import time
+
+
+def read_published_json(path):
+    """Read an atomic publication despite brief Windows rename/delete sharing.
+
+    Retrying only this read never replays an experiment command. Persistent
+    access failures, missing files and invalid JSON still fail closed.
+    """
+    deadline = time.monotonic() + 3
+    while True:
+        try:
+            return json.loads(Path(path).read_text())
+        except PermissionError as error:
+            if os.name != 'nt' or getattr(error, 'winerror', None) not in (5, 32, 33) or time.monotonic() >= deadline:
+                raise
+            time.sleep(.02)
 
 
 def replace_published(source, destination):

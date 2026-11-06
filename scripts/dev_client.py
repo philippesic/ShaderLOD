@@ -18,6 +18,7 @@ import sys
 import time
 import uuid
 import zipfile
+from benchmark_file_locks import read_published_json
 
 ROOT = Path(__file__).resolve().parents[1]
 PROFILES = {
@@ -732,7 +733,7 @@ def readiness(text, pack, mode, *, apply_lod_settings=False, lod_state=None, pre
 
 def supervise(session):
     marker = session / 'owner.json'
-    state = json.loads(marker.read_text())
+    state = read_published_json(marker)
     p = state['plan']
     try:
         with runtime_lock():
@@ -832,7 +833,7 @@ def supervise_locked(session, state):
 
 def stop(session):
     marker = session / 'owner.json'
-    state = json.loads(marker.read_text())
+    state = read_published_json(marker)
     saved = state.get('clients', {})
     require(saved, 'No client ownership recorded; close the game window or inspect ' + str(marker))
     # Validate ALL recorded processes before any signal, and never signal a daemon/launcher/group.
@@ -865,7 +866,7 @@ def retire_source_launcher(session, natural_exit_grace=3.0, signal_exit_grace=3.
     Callers retain ownership on refusal. Historical wrappers are not changed by
     this opt-in operation, and a disappeared PID is checked with a fresh census.
     """
-    state = json.loads((session / 'owner.json').read_text())
+    state = read_published_json(session / 'owner.json')
     proof, owned_session = state.get('launcher'), state.get('launcher_session')
     if os.name == 'nt':
         require(isinstance(proof, dict) and set(proof) == {'pid', 'birth', 'argv'}
@@ -1029,7 +1030,7 @@ def main():
         print('Starting ' + args.mode + ': ' + p['pack_name'] + '\nSession: ' + str(session), flush=True)
         deadline = time.monotonic() + args.ready_timeout + 5
         while time.monotonic() < deadline:
-            state = json.loads(marker.read_text())
+            state = read_published_json(marker)
             if state['status'] == 'ready':
                 if args.apply_lod_settings:
                     applied = state['applied_settings']

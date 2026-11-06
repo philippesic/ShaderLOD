@@ -84,6 +84,39 @@ def prepare_profile(op):
         op.save()
 
 
+def preserve_created_config_backups(op):
+    """Explicit recovery of old reports that did not predeclare FML backups."""
+    life.require(op.data.get('release_verified') and op.data.get('configuration_restored'),
+                 'Release and configuration restoration must precede backup preservation')
+    record=op.data['iteration_profile']
+    profile=Path(op.data['profile']);source=Path(record['source'])
+    with stopped_profiles(profile,source):
+        for path in sorted(life.generated_config_backups(profile)):
+            if path.name in record['original']['config'] or str(path) in op.data['configuration']:
+                continue  # Existing/tracked files retain ordinary CAS protection.
+            path=storage.safe_path(path)
+            saved=storage.safe_path(op.output/'preserved-generated-backups'/path.name)
+            rows=op.data.setdefault('generated_backup_preservation',{})
+            prior=rows.get(str(path))
+            if not path.exists():
+                if prior:
+                    life.require(saved.is_file() and life.digest(saved)==prior['sha256'],
+                                 'Preserved config backup missing or changed')
+                    prior['status']='preserved';op.save()
+                continue
+            life.require(path.is_file() and not saved.exists(),'Config backup preservation collision; keep both files')
+            info=path.stat();digest=life.digest(path)
+            saved.parent.mkdir(exist_ok=True)
+            rows[str(path)]=dict(saved=str(saved),sha256=digest,bytes=info.st_size,status='intent');op.save()
+            now=path.stat()
+            life.require((now.st_dev,now.st_ino,now.st_size,now.st_mtime_ns)==
+                         (info.st_dev,info.st_ino,info.st_size,info.st_mtime_ns) and life.digest(path)==digest,
+                         'Concurrent config backup writer; preservation withheld')
+            path.rename(saved)
+            life.require(life.digest(saved)==digest,'Preserved config backup identity differs')
+            rows[str(path)]['status']='preserved';op.save()
+
+
 def finish_profile(op):
     """Restore only owned saves, then verify all eight inputs before one reset."""
     record=op.data.get('iteration_profile')

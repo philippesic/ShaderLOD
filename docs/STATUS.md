@@ -33,7 +33,10 @@ variation. No optimization-benefit conclusion is available yet. The completed
 are verified/preserved before replacement. Canonical source now has a finite C02
 extension for the separate Complementary bloom outputs, plus balanced order and
 bounded motion support; local tests pass, native activation remains pending.
-Next: native port-validation/scoring and both-order comparison blocks. See the
+The first G01 score was interrupted by Windows ownership-file sharing and an
+untracked generated FML config backup; it is invalid, released and fully restored
+with backup bytes retained. Both hosts pass the maintained harness repairs. A
+fresh port-validation queue is active before the opposite-order comparison blocks. See the
 campaign [working state](../dev/experiments/rtx5080-four-target-audit-20261106/STATE.md),
 [BSL proof](../dev/experiments/rtx5080-four-target-audit-20261106/G03_PORT.md) and
 [C02 port scope](../dev/experiments/rtx5080-four-target-audit-20261106/C02_PORT.md).

@@ -1,9 +1,9 @@
 # RTX 5080 storage cleanup, 2026-11-06
 
-The user authorized cleanup of old ShaderLOD junk. Cleanup completed, but the
-benchmark is still blocked by capacity: Windows C: has **4.925 GiB free**, below
-the maintained 32 GiB reserve before new inputs/builds/captures. No RTX5080
-baseline or optimization timing has been acquired.
+The user authorized cleanup of old ShaderLOD junk. Cleanup completed. The original capacity blocker was subsequently resolved: the
+latest native C: check has **60.8 GiB free**, sufficient for sequential captures
+above the maintained32GiB reserve. Baselines are acquired and optimization testing
+is active. The historical cleanup measurements below describe the earlier state.
 
 ## Removed and preserved
 
@@ -72,4 +72,9 @@ A fresh native C: observation reports67,826,868,224 bytes free (63.2GiB). Storag
 now permits setup above the32GiB reserve. This later increase is not attributed to
 our cleanup. No NVIDIA cache or other-project checkpoint deletion was performed.
 The80–100GiB suggestion was conservative headroom, not a hard benchmark requirement.
-Native setup has resumed; live GPU validation and timings remain outstanding.
+Native setup and all four repeated original baselines have since completed.
+The latest60.8GiB remains sufficient. Capture raw4K motion sequentially, compress/
+transfer completed evidence, and recheck capacity before each admitted copy.
+A363-frame RGBA sequence needs about11.2GiB raw; retaining several such sequences
+simultaneously motivated the old headroom estimate. No fixed100GiB requirement
+exists and cleanup remains ShaderLOD-only.

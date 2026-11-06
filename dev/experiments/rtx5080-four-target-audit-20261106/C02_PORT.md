@@ -39,8 +39,8 @@ Local validation:98 benchmark Python tests pass (2 Asahi platform skips);
 14 relevant Java tests pass, including authentic original/profile cross-binding,
 all required capability/function refusals with zero NV calls, failed-body/setup/
 restoration, resize, prior foreign enable/image/palette preservation and context
-custody. Development compilation passes. The Windows source copy remains frozen
-until its active original-baseline queue is terminal. Live checks will use both
+custody. Development compilation passes. The original-baseline queue is now terminal/restored/released. Its5034 build
+bindings were verified and5269 files preserved before native source replacement. Live checks will use both
 real4.5 and4.6 requests; actual returned versions and capabilities govern admission.
 
 The [NV extension specification](https://registry.khronos.org/OpenGL/extensions/NV/NV_shading_rate_image.txt)

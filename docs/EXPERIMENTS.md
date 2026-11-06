@@ -194,3 +194,20 @@ claim is added. Prior native source/classes were verified and archived before
 replacement. [Current scope/evidence](../dev/experiments/rtx5080-four-target-audit-20261106/C02_PORT.md),
 [source review](../dev/experiments/rtx5080-four-target-audit-20261106/SOURCE_REVIEW.md),
 [baseline variances](../dev/experiments/rtx5080-four-target-audit-20261106/baseline-progress.json).
+
+### 2026-11-06 Windows ownership sharing and FML backup restoration
+
+The first native MakeUp G01 comparison stopped after partial windows when an
+atomic owner.json publication briefly denied the reader. Release succeeded, but
+whole-profile reset correctly refused a newly generated shaderlod-client-1.toml.bak
+outside the old inventory. It is not a performance result. Bounded read-only
+Windows sharing retries now cover all ownership readers; persistent denial still
+fails closed. New operations predeclare FML's five numbered backups for both
+ShaderLOD configs. Explicit old-report recovery retains known new backups without
+adopting unknown files or replaying measurements.101 benchmark and30 lifecycle
+tests pass on both hosts, and the failed operation now verifies full restoration.
+A fresh native queue is active. The previous5034 build bindings and complete
+scripts/tests/definitions were verified/archived before replacement. Latest60.8GiB
+free is sufficient above the32GiB reserve; cleanup remains ShaderLOD-only.
+[Working state](../dev/experiments/rtx5080-four-target-audit-20261106/STATE.md),
+[frozen-input receipt](../dev/experiments/rtx5080-four-target-audit-20261106/native-before-windows-io-freeze.json).
