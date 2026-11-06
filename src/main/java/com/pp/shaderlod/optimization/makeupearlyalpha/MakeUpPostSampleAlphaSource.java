@@ -36,10 +36,22 @@ blockColor.rgb = endPortal();
     private static final String SHADOW_MIX = "shadowValue = mix(shadowValue, vec3(1.0f), shadowDiffuse);\n";
     private MakeUpPostSampleAlphaSource() {}
 
+    public static boolean platform(String os, String arch) {
+        return ("Linux".equals(os) && "aarch64".equals(arch))
+            || (os != null && os.startsWith("Windows") && "amd64".equals(arch));
+    }
+
     public static boolean host(String os, String arch, String renderer, String driver) {
-        return "Linux".equals(os) && "aarch64".equals(arch)
+        boolean asahi = "Linux".equals(os) && "aarch64".equals(arch)
             && "Apple M1 (G13G B1)".equals(renderer)
             && "4.6 (Core Profile) Mesa 25.1.0-asahi20250221".equals(driver);
+        // The RTX5080 native linked CUTOUT is byte-identical to the complete
+        // semantic fixture. Source/alpha/API/stack/link guards remain mandatory.
+        // This finite audit tuple does not authorize arbitrary NVIDIA drivers.
+        boolean rtx5080 = os != null && os.startsWith("Windows") && "amd64".equals(arch)
+            && "NVIDIA GeForce RTX 5080/PCIe/SSE2".equals(renderer)
+            && ("3.2.0 NVIDIA 617.42".equals(driver) || "4.6.0 NVIDIA 617.42".equals(driver));
+        return asahi || rtx5080;
     }
 
     /** Null means native fallback. No partial-source match can authorize the rewrite. */

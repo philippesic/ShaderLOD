@@ -329,9 +329,9 @@ class IterationEvidenceTest(unittest.TestCase):
         state={'installed':{'early_alpha_source_setup':{'rewritten':True,'rewritten_programs':1}}}
         activation={'source_diagnostic':dict.fromkeys(('exact_api','declaration','profile','source','compile_enabled','pack_view','input_present','input_current'),True)}
         receipt=iteration.early_alpha_work(state,before=state,activation=activation)
-        self.assertEqual('asahi_source_setup_only',receipt['route'])
+        self.assertEqual('source_setup_only',receipt['route'])
         self.assertIn('no observed submitted CUTOUT',receipt['limits'])
-        linked=dict(activation,post_sample_draw_witness={'linked_programs':1,'completed_batches':3});self.assertEqual('asahi_linked_cutout_submissions',iteration.early_alpha_work(state,activation=linked)['route'])
+        linked=dict(activation,post_sample_draw_witness={'linked_programs':1,'completed_batches':3});self.assertEqual('linked_cutout_submissions',iteration.early_alpha_work(state,activation=linked)['route'])
         with self.assertRaisesRegex(ValueError,'link witness'):iteration.early_alpha_work(state,activation=dict(activation,post_sample_draw_witness={'linked_programs':0}))
         for key in activation['source_diagnostic']:
             bad={'source_diagnostic':dict(activation['source_diagnostic'],**{key:False})}

@@ -30,7 +30,7 @@ public final class BslPostSampleAlpha {
     private static final Map<Object,Linked> PIPELINES=new WeakHashMap<>();
     private static long rewrites,links;
     private static String last="not consumed";
-    public static boolean platform(String os,String arch){return "Linux".equals(os)&&"aarch64".equals(arch);}
+    public static boolean platform(String os,String arch){return MakeUpPostSampleAlphaSource.platform(os,arch);}
     public static boolean singleton(OptimizationSnapshot flags){
         if(flags==null)return false;
         for(var id:OptimizationId.values())if(flags.enabled(id)!=(id==OptimizationId.EARLY_ALPHA))return false;

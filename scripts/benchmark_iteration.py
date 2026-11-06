@@ -712,7 +712,7 @@ def early_alpha_work(state, *, before=None, activation=None):
             diagnostic.get(key) is True for key in ('exact_api','declaration','profile','source','compile_enabled','pack_view','input_present','input_current')):
         witness=(activation or {}).get('post_sample_draw_witness')
         if witness is not None:life.require(witness.get('linked_programs',0)>0,'G03 rewritten CUTOUT link witness unavailable')
-        return {'route':'asahi_linked_cutout_submissions' if witness is not None and witness.get('completed_batches',0)>0 else 'asahi_source_setup_only','setup':setup,'draw_counters':counters,'post_sample_draw_witness':witness,
+        return {'route':'linked_cutout_submissions' if witness is not None and witness.get('completed_batches',0)>0 else 'source_setup_only','setup':setup,'draw_counters':counters,'post_sample_draw_witness':witness,
                 'limits':'Avoided fragment count unmeasured. Source-only route has no observed submitted CUTOUT batch; linked route counts untimed native submissions, not GPU primitives.'}
     life.require(isinstance(qualified,int) and qualified>0,'Early-alpha actual qualified draw admission unavailable')
     if before is not None:

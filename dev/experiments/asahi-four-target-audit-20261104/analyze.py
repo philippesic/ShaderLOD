@@ -60,7 +60,7 @@ for job in jobs:
         row['work_qualification']='BLOOM_DRAW_AND_FINITE_QUERY_OPPORTUNITIES'
     elif row['goal']=='G03':
         alpha=summary.get('early_alpha_route',{})
-        row['work_qualification']='LINKED_NATIVE_CUTOUT_SUBMISSIONS' if alpha.get('route')=='asahi_linked_cutout_submissions' else 'QUALIFIED_CUTOUT_PROGRESS' if any(k.startswith('candidate') for k in summary.get('family_early_alpha_work',{})) else 'SOURCE_SETUP_OR_UNVERIFIED'
+        row['work_qualification']='LINKED_NATIVE_CUTOUT_SUBMISSIONS' if alpha.get('route') in ('asahi_linked_cutout_submissions','linked_cutout_submissions') else 'QUALIFIED_CUTOUT_PROGRESS' if any(k.startswith('candidate') for k in summary.get('family_early_alpha_work',{})) else 'SOURCE_SETUP_OR_UNVERIFIED'
     if row['goal']=='G06' and row['shader']!='makeup':
         row['ao_exact_window_work_proven']=any(k.startswith('candidate') for k in summary.get('ao_scale_work',{}))
         row['work_qualification']='EXACT_WINDOW_AO_PRODUCER_CONSUMER' if row['ao_exact_window_work_proven'] else 'REQUEST_ONLY_AO_WORK_UNVERIFIED'

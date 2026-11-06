@@ -23,8 +23,13 @@ and idle GPU; previous GPU work is released. A fresh C: check observes63.2GiB fr
 resolving the storage blocker. The32GiB reserve remains; the earlier80–100GiB
 suggestion was conservative headroom, not a fixed minimum. Cleanup remains limited
 to ShaderLOD. Native canonical profiles, two managed slots and an isolated toolchain
-are prepared; initial Gradle setup is running. Native GPU/context proof, baseline
-and optimization acquisitions remain outstanding. See the campaign
+are prepared and native compilation passes. Original MakeUp startup succeeds on
+the actual RTX5080 at3840×2160/GL3.2, restores inputs and leaves zero clients.
+Explicit GL4.6 startup also passes with restoration. MakeUp and Reimagined each have one valid conditioned original-only baseline
+process with three20s windows and restoration. An Asahi-only G03 source gate was
+identified on NVIDIA; a finite source/harness repair is undergoing live functional
+validation, with linked rewritten CUTOUT submissions now observed. No candidate
+performance conclusion is available yet. See the campaign
 [working state](../dev/experiments/rtx5080-four-target-audit-20261106/STATE.md).
 
 RTX2080Ti remains outside this allocation; renew availability before using it.

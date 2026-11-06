@@ -14,7 +14,7 @@ import net.irisshaders.iris.shaderpack.programs.ProgramSource;
 import net.neoforged.fml.ModList;
 import org.lwjgl.opengl.GL11C;
 
-/** Setup-only normal public G03 lowering for the qualified Asahi/native100 tuple.
+/** Setup-only normal public G03 lowering for finite qualified native100 tuples.
  * Complete source matching preserves all native mutable GL inputs. No draw owner,
  * permission uniform or sampler query is introduced. Other tuples stay native. */
 public final class MakeUpPostSampleAlpha {
@@ -22,7 +22,7 @@ public final class MakeUpPostSampleAlpha {
     private static String last = "not consumed";
     private MakeUpPostSampleAlpha() {}
     public static String status() {
-        return "Asahi post-sample source setup; rewrites=" + rewrittenPrograms + "; last=" + last;
+        return "Post-sample source setup; rewrites=" + rewrittenPrograms + "; last=" + last;
     }
     public static void invalidate() { last = "invalidated"; }
     public static Map<String,Object> setupSnapshot() {
@@ -43,7 +43,7 @@ public final class MakeUpPostSampleAlpha {
     }
     public static Map<PatchShaderType,String> adapt(ProgramSource source, AlphaTest alpha,
             ProgramSet set, Map<PatchShaderType,String> stages) {
-        if (!"Linux".equals(System.getProperty("os.name")) || !"aarch64".equals(System.getProperty("os.arch"))
+        if (!MakeUpPostSampleAlphaSource.platform(System.getProperty("os.name"), System.getProperty("os.arch"))
                 || alpha == null || alpha.function() != AlphaTestFunction.GREATER
                 || source == null || !"gbuffers_terrain".equals(source.getName())
                 || !MakeUpEarlyAlphaCompilation.enabled(source, set)) return stages;

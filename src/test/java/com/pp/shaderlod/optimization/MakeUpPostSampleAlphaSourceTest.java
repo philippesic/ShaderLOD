@@ -58,4 +58,19 @@ class MakeUpPostSampleAlphaSourceTest {
         assertFalse(MakeUpPostSampleAlphaSource.host("Linux", "aarch64", renderer, driver + " changed"));
         assertFalse(MakeUpPostSampleAlphaSource.host(null, null, null, null));
     }
+    @Test void rtx5080AuditTupleStillRequiresExactGpuDriverAndDesktopContext() {
+        String renderer = "NVIDIA GeForce RTX 5080/PCIe/SSE2";
+        for (String driver : new String[]{"3.2.0 NVIDIA 617.42", "4.6.0 NVIDIA 617.42"}) {
+            assertTrue(MakeUpPostSampleAlphaSource.host("Windows 11", "amd64", renderer, driver));
+            assertFalse(MakeUpPostSampleAlphaSource.host("Linux", "amd64", renderer, driver));
+            assertFalse(MakeUpPostSampleAlphaSource.host("Windows 11", "aarch64", renderer, driver));
+            assertFalse(MakeUpPostSampleAlphaSource.host("Windows 11", "amd64", renderer.replace("5080", "2080 Ti"), driver));
+            assertFalse(MakeUpPostSampleAlphaSource.host("Windows 11", "amd64", renderer, driver + " changed"));
+        }
+        assertFalse(MakeUpPostSampleAlphaSource.host("Windows 11", "amd64", renderer, "3.1.0 NVIDIA 617.42"));
+        assertFalse(MakeUpPostSampleAlphaSource.host("Windows 11", "amd64", renderer, "4.6.0 NVIDIA 618.00"));
+        assertTrue(MakeUpPostSampleAlphaSource.platform("Windows 11", "amd64"));
+        assertFalse(MakeUpPostSampleAlphaSource.platform(null, null));
+    }
+
 }

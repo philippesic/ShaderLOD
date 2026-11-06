@@ -45,6 +45,14 @@ its existing native-context protocol and refuses an explicit context override.
 GPU, including a hardware integrated GPU. It validates the observed renderer
 before scoring; it does not select the GPU or change personal driver settings.
 
+`--performance-stack optimized` selects the exact pinned ModernFix, FerriteCore
+and ImmediatelyFast tuple for G03 and its matched original-only startup/baselines.
+Default remains `minimal`. Other private/frozen protocols reject this override.
+Preflight verifies every optional JAR, launch uses the maintained stack selector,
+and runtime readiness checks the actual loaded module versions before scoring.
+Optional artifacts are frozen operation inputs. Keep stack cohorts separate;
+selecting the tuple is not proof that G03 compiled, executed, or helped.
+
 `plan` runs the standard test's static checks without compiling, launching or creating the report. It lists the resolved launch plan, schedule, per-check elapsed time, failures and remedies. A stale build is reported; `test` rebuilds it automatically before launch. Native options and canonical profile inputs are checked; preserve unexplained differences before resetting a managed slot. Runtime-only checks still run in the client.
 
 `check` accepts the same candidate arguments and exercises activation, available source/work checks, short captures and restoration without the two-minute conditioning period. It reports no performance or visual qualification. Use it when checking whether a newly integrated candidate runs; use `test` for a development performance comparison. Frozen Bliss qualification cannot use `check`.

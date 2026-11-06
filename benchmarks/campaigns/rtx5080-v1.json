@@ -1,0 +1,585 @@
+{
+  "scope": "Prospective RTX5080 four-target matrix. No historical timings or hardware dispositions inherited.",
+  "width": 3840,
+  "height": 2160,
+  "expected_renderer": "RTX 5080",
+  "default_slot": "rtx5080-baseline",
+  "default_gl_context": "native",
+  "profiles": "benchmarks/profiles/v1/inputs.lock.json",
+  "native_baseline_processes_per_target": 2,
+  "executable_comparisons_minimum": 2,
+  "cells": [
+    {
+      "goal": "G01",
+      "shader": "makeup",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "feature": "dead_frame_copy"
+      }
+    },
+    {
+      "goal": "G01",
+      "shader": "reimagined",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "source_review": true
+      }
+    },
+    {
+      "goal": "G01",
+      "shader": "unbound",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "source_review": true
+      }
+    },
+    {
+      "goal": "G01",
+      "shader": "bsl",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "source_review": true
+      }
+    },
+    {
+      "goal": "G02",
+      "shader": "bsl",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "feature": "dead_mip_chain"
+      }
+    },
+    {
+      "goal": "G02",
+      "shader": "reimagined",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "feature": "dead_mip_chain"
+      }
+    },
+    {
+      "goal": "G02",
+      "shader": "unbound",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "feature": "dead_mip_chain"
+      }
+    },
+    {
+      "goal": "G02",
+      "shader": "makeup",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "source_review": true
+      }
+    },
+    {
+      "goal": "G03",
+      "shader": "makeup",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "feature": "early_alpha",
+        "pose": 1
+      }
+    },
+    {
+      "goal": "G03",
+      "shader": "bsl",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "feature": "early_alpha",
+        "pose": 1,
+        "performance_stack": "optimized"
+      }
+    },
+    {
+      "goal": "G03",
+      "shader": "reimagined",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "feature": "early_alpha",
+        "pose": 1
+      }
+    },
+    {
+      "goal": "G03",
+      "shader": "unbound",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "feature": "early_alpha",
+        "pose": 1
+      }
+    },
+    {
+      "goal": "G04",
+      "shader": "makeup",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "feature": "translucent_fastpath",
+        "pose": 9
+      }
+    },
+    {
+      "goal": "G04",
+      "shader": "bsl",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "source_review": true
+      }
+    },
+    {
+      "goal": "G04",
+      "shader": "reimagined",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "source_review": true
+      }
+    },
+    {
+      "goal": "G04",
+      "shader": "unbound",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "source_review": true
+      }
+    },
+    {
+      "goal": "G05",
+      "shader": "makeup",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "feature": "reflection_next_event_refinement",
+        "pose": 2
+      }
+    },
+    {
+      "goal": "G05",
+      "shader": "bsl",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "feature": "reflection_next_event_refinement",
+        "pose": 2
+      }
+    },
+    {
+      "goal": "G05",
+      "shader": "reimagined",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "feature": "reflection_next_event_refinement",
+        "pose": 2
+      }
+    },
+    {
+      "goal": "G05",
+      "shader": "unbound",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "feature": "reflection_next_event_refinement",
+        "pose": 2
+      }
+    },
+    {
+      "goal": "G06",
+      "shader": "makeup",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "feature": "ao_attenuation"
+      }
+    },
+    {
+      "goal": "G06",
+      "shader": "bsl",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "feature": "ao_render_scale"
+      }
+    },
+    {
+      "goal": "G06",
+      "shader": "reimagined",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "feature": "ao_render_scale"
+      }
+    },
+    {
+      "goal": "G06",
+      "shader": "unbound",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "feature": "ao_render_scale"
+      }
+    },
+    {
+      "goal": "G07",
+      "shader": "makeup",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "feature": "ao_depth_reuse",
+        "pose": 1
+      }
+    },
+    {
+      "goal": "G07",
+      "shader": "bsl",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "feature": "ao_depth_reuse",
+        "pose": 1
+      }
+    },
+    {
+      "goal": "G07",
+      "shader": "reimagined",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "feature": "ao_depth_reuse",
+        "pose": 1
+      }
+    },
+    {
+      "goal": "G07",
+      "shader": "unbound",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "feature": "ao_depth_reuse",
+        "pose": 1
+      }
+    },
+    {
+      "goal": "G08",
+      "shader": "makeup",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "candidate": "g08-native-bound",
+        "pose": 7,
+        "extra": [
+          "--g08-bound-layout",
+          "split"
+        ]
+      }
+    },
+    {
+      "goal": "G08",
+      "shader": "bsl",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "source_review": true
+      }
+    },
+    {
+      "goal": "G08",
+      "shader": "reimagined",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "feature": "volume_light_reuse",
+        "pose": 7
+      }
+    },
+    {
+      "goal": "G08",
+      "shader": "unbound",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "feature": "volume_light_reuse",
+        "pose": 7
+      }
+    },
+    {
+      "goal": "G09",
+      "shader": "bsl",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "feature": "pom_empty_height_prefix",
+        "pose": 11,
+        "slot": "rtx5080-pbr",
+        "options": "benchmarks/profiles/v1/bsl-pbr.properties",
+        "extra": [
+          "--untimed-diagnostic",
+          "g09-functional"
+        ]
+      }
+    },
+    {
+      "goal": "G09",
+      "shader": "makeup",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "source_review": true
+      }
+    },
+    {
+      "goal": "G09",
+      "shader": "reimagined",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "feature": "pom_height_cache",
+        "pose": 11
+      }
+    },
+    {
+      "goal": "G09",
+      "shader": "unbound",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "feature": "pom_height_cache",
+        "pose": 11
+      }
+    },
+    {
+      "goal": "G10",
+      "shader": "makeup",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "candidate": "g10-exact-bloom",
+        "pose": 4
+      }
+    },
+    {
+      "goal": "G10",
+      "shader": "bsl",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "source_review": true
+      }
+    },
+    {
+      "goal": "G10",
+      "shader": "reimagined",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "source_review": true
+      }
+    },
+    {
+      "goal": "G10",
+      "shader": "unbound",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "source_review": true
+      }
+    },
+    {
+      "goal": "C01",
+      "shader": "makeup",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "candidate": "c01-bounds",
+        "pose": 0
+      }
+    },
+    {
+      "goal": "C01",
+      "shader": "bsl",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "source_review": true
+      }
+    },
+    {
+      "goal": "C01",
+      "shader": "reimagined",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "source_review": true
+      }
+    },
+    {
+      "goal": "C01",
+      "shader": "unbound",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "source_review": true
+      }
+    },
+    {
+      "goal": "C02",
+      "shader": "makeup",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "source_review": true,
+        "reason": "Existing bloom consumer pins BSL; establish consumer/source safety before extending to this target"
+      }
+    },
+    {
+      "goal": "C02",
+      "shader": "bsl",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "candidate": "c02-bloom-vrs",
+        "gl_context": "4.6"
+      }
+    },
+    {
+      "goal": "C02",
+      "shader": "reimagined",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "source_review": true,
+        "reason": "Existing bloom consumer pins BSL; establish consumer/source safety before extending to this target"
+      }
+    },
+    {
+      "goal": "C02",
+      "shader": "unbound",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "source_review": true,
+        "reason": "Existing bloom consumer pins BSL; establish consumer/source safety before extending to this target"
+      }
+    },
+    {
+      "goal": "N01",
+      "shader": "makeup",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "features": "quad_command_compaction,shadow_admission_cache,index_scalar_cache",
+        "extra": [
+          "--scene",
+          "natural-terrain"
+        ]
+      }
+    },
+    {
+      "goal": "N01",
+      "shader": "bsl",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "features": "quad_command_compaction,shadow_admission_cache,index_scalar_cache",
+        "extra": [
+          "--scene",
+          "natural-terrain"
+        ]
+      }
+    },
+    {
+      "goal": "N01",
+      "shader": "reimagined",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "features": "quad_command_compaction,shadow_admission_cache,index_scalar_cache",
+        "extra": [
+          "--scene",
+          "natural-terrain"
+        ]
+      }
+    },
+    {
+      "goal": "N01",
+      "shader": "unbound",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "features": "quad_command_compaction,shadow_admission_cache,index_scalar_cache",
+        "extra": [
+          "--scene",
+          "natural-terrain"
+        ]
+      }
+    },
+    {
+      "goal": "N02",
+      "shader": "makeup",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "shared_implementation": "G01",
+        "feature": "dead_frame_copy",
+        "independent_credit": false
+      }
+    },
+    {
+      "goal": "N02",
+      "shader": "bsl",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "source_review": true
+      }
+    },
+    {
+      "goal": "N02",
+      "shader": "reimagined",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "source_review": true
+      }
+    },
+    {
+      "goal": "N02",
+      "shader": "unbound",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "source_review": true
+      }
+    },
+    {
+      "goal": "N03",
+      "shader": "makeup",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "shared_implementation": "G01",
+        "feature": "dead_frame_copy",
+        "independent_credit": false
+      }
+    },
+    {
+      "goal": "N03",
+      "shader": "bsl",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "source_review": true
+      }
+    },
+    {
+      "goal": "N03",
+      "shader": "reimagined",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "source_review": true
+      }
+    },
+    {
+      "goal": "N03",
+      "shader": "unbound",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "source_review": true
+      }
+    },
+    {
+      "goal": "N04",
+      "shader": "makeup",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "feature": "ao_sky_elision",
+        "pose": 7
+      }
+    },
+    {
+      "goal": "N04",
+      "shader": "bsl",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "feature": "ao_sky_elision",
+        "pose": 7
+      }
+    },
+    {
+      "goal": "N04",
+      "shader": "reimagined",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "feature": "zero_emission_arithmetic",
+        "pose": 7
+      }
+    },
+    {
+      "goal": "N04",
+      "shader": "unbound",
+      "status": "UNTESTED_RTX5080",
+      "route": {
+        "feature": "zero_emission_arithmetic",
+        "pose": 7
+      }
+    }
+  ]
+}

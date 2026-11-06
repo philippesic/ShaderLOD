@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse,json,hashlib,os,subprocess,sys,time,math,shutil
 import benchmark_workflow as workflow
 import benchmark_gl_context as gl_context
+import benchmark_performance_stack as performance_stack
 from contextlib import ExitStack
 import experiment_lifecycle as life
 import run_storage as storage
@@ -269,6 +270,7 @@ def argument_parser():
  p.add_argument('--cpu-placement',action='store_true',help='Read-only Linux renderer-boundary CPU census for native CPU standard comparisons')
  p.add_argument('--audit-graph',action='store_true',help='Untimed selected/linked graph and scalar control inventory after each standard comparison arm')
  p.add_argument('--quality-motion',action='store_true',help='Functional check only: bounded lossless native moving-camera sequences after each arm; never a scored timing run')
+ p.add_argument('--performance-stack',choices=performance_stack.CHOICES,default='minimal',help='Finite pinned optimizer tuple for G03 and its matched original baselines; other protocols retain minimal stack')
  p.add_argument('--gl-context',choices=gl_context.CHOICES,default='native',help='Request a real benchmark-only GLFW context; record and validate the actual returned version, keeping context cohorts separate')
  p.add_argument('--expected-renderer',help='Require this observed OpenGL renderer name substring before any scored capture; does not select a GPU or alter driver settings')
  p.add_argument('--comparison-order',choices=('ABBA','BAAB'),help='Four-window balanced public/native-control comparison; A native Off, B candidate. Separate from frozen Bliss qualification.')
@@ -333,6 +335,7 @@ def preflight(a):
    if value is not None:life.require(math.isfinite(value) and value>=0,'Practical criteria must be finite and nonnegative')
  check('bounded_inputs',inputs)
  def public_inputs():
+  performance_stack.validate_request(a)
   gl_context.validate_request(getattr(a,'gl_context','native'),frozen_qualification=bool(getattr(a,'bliss_qualification',None)))
   expected=getattr(a,'expected_renderer',None)
   if expected is not None:life.require(bool(expected.strip()) and len(expected)<=128,'Expected renderer must be a nonempty name of at most128 characters')
@@ -528,6 +531,7 @@ def preflight(a):
    with path.open('rb') as stream:
     for block in iter(lambda:stream.read(life.MIB),b''):actual.update(block)
    life.require(actual.hexdigest()==artifact['hashes']['sha512'],'Pinned runtime artifact differs: '+name)
+  performance_stack.validate_cache(ROOT,getattr(a,'performance_stack','minimal'))
  check('runtime_artifact_pins',runtime_artifacts)
  check('existing_build_binding',dev.validate_built)
  def create_plan():
@@ -537,6 +541,7 @@ def preflight(a):
    control=Path(td)/'control.json';control.write_text('{"request_id":"initial_prepare","action":"prepare"}')
    params=SimpleNamespace(world=a.world,mode='off' if a.arm=='absent' else 'on',profile=a.profile,pack=a.pack,
     pack_options=a.bootstrap_options if a.candidate=='n02-photon-pbr-resources' else a.pack_options,dh=a.dh,already_built=True,ready_timeout=min(180 if getattr(a,'standard_test',False) else 300,a.budget-60),
+    performance_stack=getattr(a,'performance_stack','minimal'),
     benchmark_tuner_probe=None,benchmark_control_probe=control,
     bsl_mip_witness_runtime=getattr(a,'standard_test',False) and (a.feature=='dead_mip_chain' or a.candidate=='g02-native-mips'),
     c01_bounds_runtime=a.candidate=='c01-bounds',
@@ -695,12 +700,14 @@ def release_runtime(op, proc=None):
 def recover_main(argv):
  p=argparse.ArgumentParser(description='Restore/release one interrupted operation; never replay captures or comparisons.')
  p.add_argument('--output',required=True,type=Path);p.add_argument('--dispose-backups',action='store_true')
+ p.add_argument('--preserve-optional-configs',action='store_true',help='Explicitly retain known newly generated optional-mod configs before restoring an older operation; existing/unknown edits remain protected')
  a=p.parse_args(argv);op=life.Operation(a.output)
  with life.operation_lock(op.output):
   if op.data['state'] not in life.TERMINAL:
    # Controller must be absent; a recycled PID is never signaled.
    life.process_absent(op.data['processes'].get('controller'),dev.process_table(),dev.identity)
    release_runtime(op)
+   if a.preserve_optional_configs:performance_stack.preserve_created_configs(op,ROOT)
    if op.data.get('iteration_profile'):iteration.finish_profile(op)
    op.data['state']='failed-restored';op.save()
   if a.dispose_backups:op.dispose_backups()
@@ -791,6 +798,7 @@ def ready_after_apply(control):
 def run_operation(a,admission):
  out=a.output;plan=admission['plan'];target=a.profile/'shaderpacks'/a.pack.name
  paths=life.configuration_paths(a.profile,a.pack)
+ paths+=performance_stack.configuration_paths(ROOT,a.profile,getattr(a,'performance_stack','minimal'))
  if a.untimed_diagnostic=='g08-reuse':paths += [a.profile/'shaderpacks'/(g08_probe.NAME+suffix) for suffix in ('','.txt')]
  identity=getattr(a,'public_identity',None)
  g02_public=getattr(a,'g02_public_identity',None)
@@ -927,7 +935,9 @@ def run_operation(a,admission):
    if a.untimed_diagnostic=='c01-primitives':inputs += [Path(c01_witness.__file__)]
    if a.untimed_diagnostic=='g02-family' or g02_public:inputs += [Path(mip_assessment.__file__)]
    if a.untimed_diagnostic=='c01-cost':inputs += [Path(c01_cost.__file__)]
-   inputs.append(Path(gl_context.__file__))
+   inputs += [Path(gl_context.__file__),Path(performance_stack.__file__)]
+   if getattr(a,'performance_stack','minimal')!='minimal':
+    inputs += [ROOT/'dependencies/performance-mods.lock.json']+[p for p,_ in performance_stack.artifacts(ROOT,a.performance_stack)]
    if plan.get('pack_options'):inputs.append(Path(plan['pack_options']))
    # Retain the actual validated source/classes/resources map as one compact
    # frozen evidence file instead of copying worlds or generated source trees.
@@ -981,7 +991,8 @@ def run_operation(a,admission):
     life.require(control.send('status')['state'].get('dh_mode')==a.dh_mode,'DH mode did not acknowledge')
    control.send('configure',**options);control.ready();control.send('focus');control.wait(a.warmup)
    state=control.send('status')['state'];life.runtime_ready(state,plan,json.loads((session/'owner.json').read_text()))
-   summary['gl_context']=gl_context.observe(getattr(a,'gl_context','native'),state,expected_renderer=getattr(a,'expected_renderer',None));save()
+   summary['gl_context']=gl_context.observe(getattr(a,'gl_context','native'),state,expected_renderer=getattr(a,'expected_renderer',None))
+   summary['performance_stack']=performance_stack.observe(ROOT,getattr(a,'performance_stack','minimal'),state);save()
    if resource_contract is not None:
     resource_baseline=iteration.resource_selection(state,resource_contract)
     summary['resource_contract']=resource_contract | {'actual_ids':resource_baseline}

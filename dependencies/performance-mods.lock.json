@@ -82,7 +82,12 @@
       ],
       "embedded_libraries": [],
       "dependencies": [],
-      "metadata_url": "https://api.modrinth.com/v2/version/5HLHxQ2F"
+      "metadata_url": "https://api.modrinth.com/v2/version/5HLHxQ2F",
+      "runtime_version": "5.27.24+mc1.21.1",
+      "generated_configs": [
+        "modernfix-common.toml",
+        "modernfix-mixins.properties"
+      ]
     },
     "ferritecore": {
       "filename": "ferritecore-7.0.3-neoforge.jar",
@@ -130,7 +135,11 @@
       ],
       "embedded_libraries": [],
       "dependencies": [],
-      "metadata_url": "https://api.modrinth.com/v2/version/x7kQWVju"
+      "metadata_url": "https://api.modrinth.com/v2/version/x7kQWVju",
+      "runtime_version": "7.0.3",
+      "generated_configs": [
+        "ferritecore-mixin.toml"
+      ]
     },
     "immediatelyfast": {
       "filename": "ImmediatelyFast-NeoForge-1.6.14+1.21.1.jar",
@@ -183,7 +192,11 @@
         }
       ],
       "dependencies": [],
-      "metadata_url": "https://api.modrinth.com/v2/version/OUpXxw4n"
+      "metadata_url": "https://api.modrinth.com/v2/version/OUpXxw4n",
+      "runtime_version": "1.6.14+1.21.1",
+      "generated_configs": [
+        "immediatelyfast.json"
+      ]
     },
     "entityculling": {
       "filename": "entityculling-neoforge-1.11.2-mc1.21.1.jar",

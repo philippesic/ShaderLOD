@@ -40,6 +40,7 @@ __pycache__/
 !/dev/experiments/*/*.py
 !/dev/experiments/*.sh
 !/dev/experiments/*/*.sh
+!/dev/experiments/rtx5080-four-target-audit-20261106/*.ps1
 !/dev/experiments/*.md
 !/dev/experiments/*/*.md
 !/dev/experiments/*.patch
