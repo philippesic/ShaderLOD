@@ -34,11 +34,16 @@ pending. No repeated optimization-benefit conclusion is available yet. The compl
 11-operation baseline batch is restored/released and its prior source/classes
 are verified/preserved before replacement. Canonical source now has a finite C02
 extension for the separate Complementary bloom outputs, plus balanced order and
-bounded motion support; local tests pass, native activation remains pending.
+bounded motion support; functional activation/restoration now passes for all three bloom targets on real
+4.5/4.6. Performance and quality remain pending.
 The first G01 score was interrupted by Windows ownership-file sharing and an
 untracked generated FML config backup; it is invalid, released and fully restored
 with backup bytes retained. Both hosts pass the maintained harness repairs. A
-fresh port-validation queue is active before the opposite-order comparison blocks.
+first59-operation scoring queue is active, with remaining modern-context baselines
+and the first comparison/control block. A later ownership-file failure exposed
+plain CRT errno13 without winerror; the minimal bounded-retry correction passes
+103 benchmark tests on both hosts, including a real Windows lock regression.
+The failed baseline is fully recovered with uncertain bytes preserved.
 BSL bloom VRS now passes actual4.5/4.6 activation/restoration. A C01 core-profile
 polygon-state repair also observes real native GPU-query work, with independent
 primitive, timing and quality checks pending. See the

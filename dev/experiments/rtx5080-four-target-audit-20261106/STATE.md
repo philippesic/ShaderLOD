@@ -8,18 +8,27 @@ gets verified runtime inputs. No2080Ti allocation is in use.
 
 ## Current native operation
 
-Task ShaderLOD-RTX5080-Port-Validation-V3 is active in console Session1, request
-C:\ShaderLODBench\requests\queue-port-validation-v3.json, ledger
-queue-port-validation-v3.json. Its10 jobs are a fresh C01 GPU check and separate
-untimed primitive witness, four Complementary C02 checks in real4.5/4.6, and two
-GL4.6 original-only baseline processes for each Complementary target. Verify the
-actual ledger before any source replacement; keep native inputs/classes frozen
-while an owned operation is active. The task has no automatic trigger.
+Task ShaderLOD-RTX5080-Scoring-V1-Block1 is active in console Session1, request
+C:\ShaderLODBench\requests\queue-scoring-v1-block1.json, ledger
+queue-scoring-v1-block1.json. It serializes59 maintained operations: the four
+remaining Complementary GL4.6 original baselines, followed by the first55
+optimization/control comparisons. The first output is
+reimagined-baseline-gl46-r1-retry1, now complete/valid/restored; the independent
+r2 is active. The old r1 is invalid/recovered evidence and
+is never reused. The task has no automatic trigger and a24h outer limit; each
+CLI retains its own900s/conditioning/capture/recovery rules. Keep native sources,
+classes and queue inputs frozen while an operation owns them.
 
-V2 stopped between operations after four restored/released jobs: valid MakeUp
-G01 ABBA, refused C01 GPU check, and valid BSL C02 checks in4.6/4.5. Its owned
-stop-between-jobs flag was verified and removed for V3. Previous manual tasks
-were retired by exact launcher identity. No measurements replay into old outputs.
+V3 completed six valid, restored/released functional operations: repaired C01 GPU
+admission, its separate primitive witness, and both Complementary VRS checks in
+real4.5/4.6. The following Reimagined GL4.6 baseline failed on ownership-file
+access before any scored window. The exact cause was reproduced: CPython's CRT
+file open raises PermissionError(errno13) without winerror, bypassing the earlier
+Windows-number-only retry. The minimal fix includes this error shape in the same
+bounded3s read/publication retry.103 benchmark tests pass on both hosts, including
+a real native exclusive-handle/read-release regression fixture. Explicit recovery
+preserves conflicting owned inputs and verifies configuration/world reset/release
+without replay. See [Windows IO evidence](WINDOWS_IO.md).
 
 ## Measurements and proof retained
 
@@ -45,7 +54,8 @@ were retired by exact launcher identity. No measurements replay into old outputs
 - BSL C02 functional checks pass on actual4.5 and4.6 with NV capabilities,
   one qualified bloom program and advancing actual activation/restoration counts.
   Controls advance neither. This is no performance or quality result. Both
-  Complementary ports remain pending. See [C02 scope](C02_PORT.md).
+  Complementary native ports also pass4.5/4.6 functional validation. Performance
+  and quality remain pending. See [C02 scope](C02_PORT.md).
 
 The descriptive analyzer reads the maintained raw frame samples and keeps
 context/stack/options/camera cohorts separate. Compact baseline-progress.json
@@ -68,25 +78,29 @@ strict depth/raster refusal and exposes last observed state.22 C01 Java tests pl
 compilation pass on both hosts. The fresh native check observes core mask1,
 [0,1] depth and[6914,0] polygon output, confirming the untouched second slot.
 Actual candidate proxy-query progress is positive with zero CPU result reads.
-Final report/restoration still must be checked in the V3 ledger. See [C01 repair](C01_PORT.md).
+The C01 GPU retry and primitive check both finish VALID/restored/reset/released.
+The gallery witness suppresses zero native primitives in32 frames in each of
+GPU no-wait, GPU wait and CPU-decision modes; it establishes no geometry savings
+in that bounded scene. Natural opportunity search and scored timings remain
+pending. See [C01 repair](C01_PORT.md).
 
-Native source/classes were verified and archived before each replacement: three
+Native source/classes were verified and archived before each replacement: four
 tracked freeze receipts identify the complete bindings and retained ZIPs. All
-three ZIPs are also hash-verified under Asahi's ignored frozen/ directory. Full
+four ZIPs are also hash-verified under Asahi's ignored frozen/ directory. Full
 native report images/graphs/logs remain preserved; timing-only transfers are
 independently hash-verified and do not authorize deleting native originals.
 
 ## Capacity and remaining work
 
-Latest C: observation is60.1GiB free. This is sufficient above the32GiB reserve;
+Latest C: observation is59.3GiB free. This is sufficient above the32GiB reserve;
 80–100GiB was conservative headroom for accumulating large captures. Process
 4K motion sequentially (about11.2GiB raw per363-frame capture), then compress and
 transfer verified evidence. Cleanup remains ShaderLOD-only. NVIDIA caches,
 other-project checkpoints, personal profiles and shared settings are untouched.
 The earlier capacity increase is not attributed to our cleanup.
 
-Next: finish C01/Complementary VRS validation, repair concrete failures, execute
-both opposite-order comparison blocks and matched null controls, investigate slow
+Next: complete both opposite-order comparison blocks and matched null controls,
+repair concrete runtime failures, investigate slow
 or inactive routes, acquire bounded quality for plausible survivors, classify
 all64 cells with evidence, publish variance charts and audit final restoration.
 A failed check or this checkpoint does not close the campaign. Source-only/lifetime

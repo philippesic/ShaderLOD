@@ -1,9 +1,18 @@
 """Nonblocking operation and Java-compatible world locks on supported hosts."""
 from contextlib import contextmanager
+import errno
 import json
 import os
 from pathlib import Path
 import time
+
+
+def _sharing_conflict(error):
+    # CPython's CRT-backed file open loses GetLastError and reports EACCES
+    # without winerror. os.replace/CreateFileW retain Windows error numbers.
+    code = getattr(error, 'winerror', None)
+    return os.name == 'nt' and (code in (5, 32, 33) or
+                               code is None and error.errno in (errno.EACCES, errno.EPERM))
 
 
 def read_published_json(path):
@@ -17,7 +26,7 @@ def read_published_json(path):
         try:
             return json.loads(Path(path).read_text())
         except PermissionError as error:
-            if os.name != 'nt' or getattr(error, 'winerror', None) not in (5, 32, 33) or time.monotonic() >= deadline:
+            if not _sharing_conflict(error) or time.monotonic() >= deadline:
                 raise
             time.sleep(.02)
 
@@ -33,7 +42,7 @@ def replace_published(source, destination):
             os.replace(source, destination)
             return
         except PermissionError as error:
-            if os.name != 'nt' or getattr(error, 'winerror', None) not in (5, 32, 33) or time.monotonic() >= deadline:
+            if not _sharing_conflict(error) or time.monotonic() >= deadline:
                 raise
             time.sleep(.02)
 

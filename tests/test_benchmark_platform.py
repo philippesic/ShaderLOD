@@ -19,6 +19,17 @@ import benchmark_iteration as iteration
 
 
 class BenchmarkPlatformTests(unittest.TestCase):
+    def test_crt_access_denial_without_winerror_is_retried_and_bounded(self):
+        error=PermissionError(13,'Access denied')
+        self.assertIsNone(getattr(error,'winerror',None))
+        with patch.object(file_locks,'os',SimpleNamespace(name='nt')), patch.object(file_locks.time,'sleep'):
+            with patch.object(Path,'read_text',side_effect=[error,'{"status":"ready"}']) as read:
+                self.assertEqual(read_published_json('owner.json'),{'status':'ready'})
+                self.assertEqual(read.call_count,2)
+            with patch.object(file_locks.time,'monotonic',side_effect=[0,1,4]), patch.object(Path,'read_text',side_effect=error) as read:
+                with self.assertRaises(PermissionError):read_published_json('owner.json')
+                self.assertEqual(read.call_count,2)
+
     def test_ownership_read_retries_windows_sharing_but_not_bad_json(self):
         error=PermissionError('sharing');error.winerror=5
         with patch.object(file_locks,'os',SimpleNamespace(name='nt')), patch.object(file_locks.time,'sleep'):
@@ -38,6 +49,29 @@ class BenchmarkPlatformTests(unittest.TestCase):
         with patch.object(file_locks,'os',SimpleNamespace(name='posix')), patch.object(Path,'read_text',side_effect=error) as read:
             with self.assertRaises(PermissionError):read_published_json('owner.json')
             self.assertEqual(read.call_count,1)
+
+    @unittest.skipUnless(os.name == 'nt', 'Native Windows sharing check')
+    def test_real_crt_ownership_read_survives_brief_exclusive_windows_handle(self):
+        import ctypes
+        from ctypes import wintypes as w
+        import threading
+        kernel=ctypes.WinDLL('kernel32',use_last_error=True)
+        kernel.CreateFileW.argtypes=[w.LPCWSTR,w.DWORD,w.DWORD,w.LPVOID,w.DWORD,w.DWORD,w.HANDLE]
+        kernel.CreateFileW.restype=w.HANDLE
+        kernel.CloseHandle.argtypes=[w.HANDLE]
+        with tempfile.TemporaryDirectory() as temp:
+            path=Path(temp)/'owner.json';path.write_text('{"status":"ready"}')
+            handle=kernel.CreateFileW(str(path),0x80000000,0,None,3,0x80,None)
+            self.assertNotEqual(handle,ctypes.c_void_p(-1).value)
+            release=None
+            try:
+                with self.assertRaises(PermissionError) as denied:path.read_text()
+                self.assertTrue(file_locks._sharing_conflict(denied.exception))
+                release=threading.Timer(.15,kernel.CloseHandle,args=(handle,));release.start()
+                self.assertEqual(read_published_json(path),{'status':'ready'})
+            finally:
+                if release is not None:release.join()
+                else:kernel.CloseHandle(handle)
 
     @unittest.skipUnless(os.name == 'nt', 'Native Windows sharing check')
     def test_publication_survives_brief_reader_lock(self):

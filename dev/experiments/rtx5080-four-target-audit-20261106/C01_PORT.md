@@ -32,3 +32,14 @@ Only the two C01 source/test files changed on native, with before/after SHA chec
 Active follow-up is the V3 queue: the repaired C01 GPU check, separate untimed primitive
 witness, remaining Complementary4.5/4.6 VRS checks and repeated original GL4.6
 baselines. No C01 performance or quality conclusion yet.
+
+
+Both the repaired GPU check and separate primitive diagnostic finish VALID with
+configuration restored, whole-profile reset verified, exact runtime release and
+zero clients. The32-frame witness sees1124032 expected native primitives and
+zero suppressed native primitives in each GPU no-wait, GPU wait and CPU-decision
+mode. Each mode issues128 proxy queries; GPU modes read zero CPU results, CPU mode
+reads128. This bounded gallery scene provides no occlusion saving even when query
+results are waited/read. It is an opportunity limitation, not evidence of a broken
+GPU conditional path or general impossibility. Natural search and timings remain
+separate pending cases.

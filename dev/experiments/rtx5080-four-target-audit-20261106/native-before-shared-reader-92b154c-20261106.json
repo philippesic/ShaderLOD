@@ -1,0 +1,13 @@
+{
+  "archive": "C:\\ShaderLODBench\\frozen\\native-before-shared-reader-92b154c-20261106.zip",
+  "bytes": 18456861,
+  "sha256": "5053bb1c33606678da7e4c58f82f0b058901f0322b79fdbc41ab3101c549a889",
+  "files": 5508,
+  "build_bindings": 5034,
+  "verified": true,
+  "reports": [
+    "reimagined-baseline-gl46-r1",
+    "unbound-c02-gl45-check-r1"
+  ],
+  "off_host_verified_archive": "frozen/native-before-shared-reader-92b154c-20261106.zip"
+}

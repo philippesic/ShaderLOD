@@ -229,3 +229,25 @@ modes while retaining all depth/bounds/source guards.22 C01 Java tests and compi
 pass on both hosts; fresh native work validation is active. All replaced bindings
 are verified/preserved off-host. [C01 repair](../dev/experiments/rtx5080-four-target-audit-20261106/C01_PORT.md),
 [C02 proof](../dev/experiments/rtx5080-four-target-audit-20261106/C02_PORT.md).
+
+### 2026-11-06 Native validation complete; CRT ownership retry repaired
+
+C01 GPU admission/primitive validation and both Complementary VRS checks in actual
+4.5/4.6 all finish valid/restored/reset/released. The bounded gallery C01 witness
+suppresses zero primitives in GPU no-wait, GPU wait and CPU-decision modes, despite
+actual query work. Natural opportunity search and timings remain separate.
+
+The following original baseline stops before scoring because CRT-backed Python
+file open raises errno13 without winerror. The previous Windows-number-only retry
+missed this shape. Reproduced it with an actual exclusive native handle, repaired
+the existing three-second read/publication retry, and added real read-release plus
+persistent-failure fixtures.103 benchmark tests pass on both hosts. Explicit
+recovery retains conflicting owned bytes and verifies full restoration/reset.
+All5034 bindings and harness inputs are preserved/hash-verified off-host before
+replacement. [Windows IO evidence](../dev/experiments/rtx5080-four-target-audit-20261106/WINDOWS_IO.md).
+
+The first59-operation scoring batch is now active: four remaining GL4.6 original
+baselines and55 optimization/control comparisons. Its fresh replacement baseline
+already completes/restores successfully and the independent repeat is active.
+The full comparison/quality/disposition/chart work remains incomplete; this is no
+campaign closure or general benefit claim.

@@ -1,7 +1,7 @@
 # Native bloom VRS coverage
 
 BSL now passes native RTX5080 functional activation/restoration in both real
-GL4.5 and4.6. Both Complementary targets remain pending. Performance and quality
+GL4.5 and4.6. Both Complementary targets also pass these functional checks. Performance and quality
 validation remain unmeasured; context creation alone is not work proof.
 
 The original BSL contract remains intact. Both Complementary originals also have
@@ -61,3 +61,12 @@ The counters bracket functional work, not isolated timed-window invocation count
 
 No performance, image-equivalence or quarter-fragment-invocation conclusion follows
 from these short functional captures. Per-window controls retain MasterOn/VRSOff.
+
+
+Both Complementary targets now also complete VALID/restored/reset/released in
+real4.5 and4.6: reimagined-c02-gl46-check-r1/gl45 and
+unbound-c02-gl46-check-r1/gl45. Exact native profiles/sole output3 are consumed,
+required NV capabilities are present, qualified candidate scopes advance and
+restore, and native controls advance neither. All six BSL/Complementary checks
+remain functional evidence only; scored balanced comparisons and quality are
+pending.
