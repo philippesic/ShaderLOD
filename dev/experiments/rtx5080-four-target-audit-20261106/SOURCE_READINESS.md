@@ -57,3 +57,16 @@ benchmark needs its own dependency environment once capacity is available.
 Original packs, native sidecars, canonical authored/natural saves and optional
 PBR resources will be transferred/reused by exact identity through maintained
 storage admission, not copied into a live or unverified personal instance.
+
+The seven full native/default and PBR option maps now live in the versioned
+`benchmarks/profiles/v1` directory with original ZIP identities. Their bytes match
+the retained historical inputs; old paths were not moved. Maintained plan-only
+preflight accepts the versioned MakeUp profile and explicit4.6 request at4K,
+without launching or creating an operation. It correctly reports a stale build
+binding after source/resource changes; the maintained execution command owns
+the rebuild. This local plan fixture does not substitute for Windows preflight.
+
+The Iris sampler repair's cleanup was also inspected: it skips already-zero
+sampler slots and uses a single multibind where available. A larger tracked-unit
+bound is therefore not evidence that every slot issues a driver call per draw.
+Its real cost still needs measurement; do not diagnose it from the loop bound.
