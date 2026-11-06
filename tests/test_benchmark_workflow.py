@@ -1,5 +1,6 @@
 import io
 import json
+import os
 from pathlib import Path
 import sys
 import tempfile
@@ -60,9 +61,18 @@ class ProfileReadinessTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,'config/options'):iteration.check_profile_inputs(profile)
             self.assertEqual(b'valuable change',(profile/'config/options').read_bytes())
             (profile/'config/options').write_bytes(b'original')
-            (profile/'config/options').chmod(0o600)
-            (source/'config/options').chmod(0o644)
-            with self.assertRaisesRegex(ValueError,'modes'):iteration.check_profile_inputs(profile)
+            if os.name == 'nt':
+                # Windows chmod exposes the read-only bit, not POSIX owner/group bits.
+                (profile/'config/options').chmod(0o444)
+                (source/'config/options').chmod(0o666)
+            else:
+                (profile/'config/options').chmod(0o600)
+                (source/'config/options').chmod(0o644)
+            try:
+                with self.assertRaisesRegex(ValueError,'modes'):iteration.check_profile_inputs(profile)
+            finally:
+                if os.name == 'nt':(profile/'config/options').chmod(0o666)
+
 
     def test_ongoing_report_does_not_instruct_blind_recovery(self):
         self.assertEqual('RUNNING_OR_INTERRUPTED',workflow.outcome({'cost_seconds':{}})['decision'])

@@ -65,3 +65,11 @@ cannot unblock this campaign. They remain preserved. Evidence is in
 cleanup-retained-size-check.json. No native profile copy or GPU acquisition ran.
 The audit stays incomplete until additional backing-volume capacity is available;
 do not lower the reserve or substitute WSL virtual free space.
+
+## Subsequent capacity update
+
+A fresh native C: observation reports67,826,868,224 bytes free (63.2GiB). Storage
+now permits setup above the32GiB reserve. This later increase is not attributed to
+our cleanup. No NVIDIA cache or other-project checkpoint deletion was performed.
+The80–100GiB suggestion was conservative headroom, not a hard benchmark requirement.
+Native setup has resumed; live GPU validation and timings remain outstanding.

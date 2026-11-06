@@ -1,7 +1,8 @@
 # Source and correctness checks before 5080 acquisition
 
 These are preparation findings and hypotheses, not RTX5080 timing results.
-No acquisition has started while Windows storage remains below reserve.
+Storage now permits native setup and startup validation; no optimization timing
+has yet been acquired.
 
 The canonical source tree has a new maintained `--gl-context` option. Decompiled
 NeoForge1.21.1 `Window` requests GL3.2 and can reuse an early-created window.
@@ -46,7 +47,8 @@ At native3840×2160 the existing lossless quality recorder remains below its
 4096×2160 pixel limit, and three121-frame raw RGBA8 sequences occupy about11.22GiB
 before small metadata overhead, below the12GiB quality report cap. Actual capacity
 checks and zero-missed-slot rules still apply; this is no justification for
-running with the host's current approximately1GiB free.
+lowering the maintained reserve. A later native check observes63.2GiB free,
+which permits setup and one such capture while retaining headroom.
 
 ## Input setup inventory
 
@@ -70,3 +72,22 @@ The Iris sampler repair's cleanup was also inspected: it skips already-zero
 sampler slots and uses a single multibind where available. A larger tracked-unit
 bound is therefore not evidence that every slot issues a driver call per draw.
 Its real cost still needs measurement; do not diagnose it from the loop bound.
+
+## Native Windows setup validation
+
+The Windows runtime now builds successfully with the isolated JDK21 and Gradle9.2.1
+cache; both client run configurations and all3,888 game assets are prepared.
+Capacity-checked transport/copy/checkout verified515 profile files, both canonical
+world maps and all original archive hashes. C: retains about60.7GiB after initial
+setup;80–100GiB was not required. No other-project cleanup was performed.
+
+Native Python benchmark tests initially exposed test-fixture portability problems:
+two G10 tests referenced ignored historical option files, the POSIX-only legacy
+storage module imported fcntl on Windows, and permission tests assumed POSIX chmod
+bits. Tests now use the versioned byte-identical MakeUp profile, explicitly skip
+the unsupported legacy POSIX storage class, and test Windows' supported read-only
+bit while preserving the POSIX checks. The maintained run_storage/lifecycle paths
+are not bypassed. Both hosts now run93 benchmark tests successfully: Asahi skips2
+platform tests; Windows skips11 legacy POSIX tests. No production activation or
+performance guard was relaxed. Actual Windows startup/restoration remains the
+next live check.

@@ -80,3 +80,14 @@ Prism trees total only2.677GiB logically and contain useful recovery/world/runti
 inputs; removing all of them would still fall far short of the reserve. No native
 profile copy or scored acquisition has started. Additional backing-volume capacity
 remains required; this is not a negative optimization result.
+
+## Capacity resolved and native setup resumed
+
+A later native check observes63.2GiB free on C:. This is enough to start; the
+80–100GiB suggestion was an initial allowance for build/cache growth and retained
+4K captures, not a fixed admission minimum. The maintained32GiB reserve stays in
+force. Capacity-checked canonical profiles and managed native/PBR slots now exist;
+original archive identities match and the isolated native toolchain is prepared.
+Initial dependency/build setup is in progress. Keep compact timing records and
+preserve completed large captures off-machine as needed, instead of requiring all
+campaign captures to accumulate on C:. No scope expansion to other-project cleanup.

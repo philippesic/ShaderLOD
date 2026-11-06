@@ -1,5 +1,4 @@
 import contextlib
-import fcntl
 import hashlib
 import io
 import os
@@ -11,9 +10,12 @@ import unittest
 from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]/'scripts'))
-import benchmark_storage as storage
+if os.name != 'nt':
+    import fcntl
+    import benchmark_storage as storage
 
 
+@unittest.skipIf(os.name == 'nt', 'Legacy POSIX storage module; maintained Windows paths use run_storage and experiment_lifecycle')
 class StorageTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory(); self.addCleanup(self.temp.cleanup)

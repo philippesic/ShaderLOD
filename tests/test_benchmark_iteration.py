@@ -1,4 +1,5 @@
 import json
+import os
 import tempfile
 import unittest
 from pathlib import Path
@@ -167,7 +168,7 @@ class G10ContractTest(unittest.TestCase):
         import zipfile
         root=Path(__file__).resolve().parents[1]
         pack=root/'dependencies/shortlist-test-inputs/originals/MakeUpNativeOriginal.zip'
-        options=root/'dev/experiments/shortlist-resume-20261101/makeup-native100.txt'
+        options=root/'benchmarks/profiles/v1/makeup.properties'
         identity=iteration.g10_identity(pack,options,root);original=life.digest(pack)
         with tempfile.TemporaryDirectory() as directory:
             base=Path(directory);profile=base/'slot/client';(profile/'shaderpacks').mkdir(parents=True)
@@ -190,7 +191,7 @@ class G10ContractTest(unittest.TestCase):
         for options in [{'AA':'0','SHADERLOD_G10_BLOOM_PAIRING':'3'},{'AA':'2','SHADERLOD_G10_BLOOM_PAIRING':'1'},{'AA':'2','SHADERLOD_G10_BLOOM_PAIRING':'3','OTHER':'1'}]:
             with self.assertRaises(ValueError):iteration.g10_activation(state|{'effective_options':options},identity,active=True,expected_pack='Candidate.zip')
     def test_native_control_has_its_own_name_and_requires_selector_zero(self):
-        root=Path(__file__).resolve().parents[1];pack=root/'dependencies/shortlist-test-inputs/originals/MakeUpNativeOriginal.zip';options=root/'dev/experiments/shortlist-resume-20261101/makeup-native100.txt'
+        root=Path(__file__).resolve().parents[1];pack=root/'dependencies/shortlist-test-inputs/originals/MakeUpNativeOriginal.zip';options=root/'benchmarks/profiles/v1/makeup.properties'
         identity=iteration.g10_identity(pack,options,root,native_control=True)
         self.assertEqual('0',identity['compile_mode']);self.assertIn('native-',identity['generated'])
         state={'pack':'Control.zip','effective_options':identity['native_options']|{'SHADERLOD_G10_BLOOM_PAIRING':'0'},'installed':{'master':False,'flags':{}}}
@@ -402,7 +403,7 @@ class IterationEvidenceTest(unittest.TestCase):
             profile=Path(directory);(profile/'options.txt').write_text('native');(profile/'options.txt').chmod(0o640)
             actual=iteration.profile_map(profile)
             self.assertEqual(8,len(actual));self.assertEqual({'type':'absent'},actual['optionsof.txt'])
-            self.assertEqual(0o640,actual['options.txt']['.']['mode'])
+            self.assertEqual(0o666 if os.name == 'nt' else 0o640,actual['options.txt']['.']['mode'])
     def test_raw_request_repopulation_and_native_option_changes_are_rejected(self):
         state={'pack':'candidate.zip','effective_options':{'QUALITY':'3','SHADERLOD_ADAPTER':'1'},
                'installed':{'family':'family','master':True,'flags':{'feature':'true'}}}
