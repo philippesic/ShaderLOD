@@ -26,9 +26,27 @@ class BloomVrsTests(unittest.TestCase):
             status=self.status();status['backend'][key]=value
             with self.assertRaises(ValueError):vrs.progress(status,active=True)
 
-    def test_identity_rejects_advanced_material_options(self):
-        with patch.object(vrs.bsl,'validate',return_value={'advanced_material':'true'}):
-            with self.assertRaisesRegex(ValueError,'non-PBR'):vrs.identity('pack','options')
+    def test_identity_binds_each_authentic_archive_to_its_complete_native_profile(self):
+        import json
+        import tempfile
+        root=Path(__file__).resolve().parents[1]
+        inputs=json.loads((root/'benchmarks/profiles/v1/inputs.lock.json').read_text())['profiles']
+        for shader,target in [('bsl',1),('reimagined',3),('unbound',3)]:
+            pack=root/inputs[shader]['original_archive'];options=root/inputs[shader]['options']
+            contract=vrs.identity(pack,options)
+            self.assertEqual(target,contract['output_target'])
+            self.assertEqual('composite4',contract['program'])
+            with self.assertRaisesRegex(ValueError,'non-PBR'):
+                vrs.identity(pack,root/inputs[shader+'-pbr']['options'])
+            # A native profile from the other family cannot borrow the archive proof.
+            other='reimagined' if shader=='bsl' else 'bsl'
+            with self.assertRaisesRegex(ValueError,'complete'):
+                vrs.identity(pack,root/inputs[other]['options'])
+            with tempfile.TemporaryDirectory() as directory:
+                changed=Path(directory)/'options';changed.write_text(options.read_text()+'\nFOREIGN_OPT=1\n')
+                with self.assertRaisesRegex(ValueError,'complete'):vrs.identity(pack,changed)
+        with self.assertRaisesRegex(ValueError,'pinned original'):
+            vrs.identity(root/inputs['makeup']['original_archive'],root/inputs['makeup']['options'])
 
     def test_native_selection_and_no_other_feature_required(self):
         state=dict(pack='original.zip',effective_options={'AA':'native'},installed=dict(master=True,flags={'other':'false'}))

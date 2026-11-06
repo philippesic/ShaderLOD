@@ -1,6 +1,6 @@
 # RTX 5080 audit working state
 
-The task is active and incomplete. Three targets have one valid original-only baseline process each;
+The task is active and incomplete. All four targets have two valid original-only native baseline processes each;
 one repaired BSL G03 comparison is complete (n1, effect unresolved). The storage blocker is resolved: a fresh native Windows check
 observes63.2GiB free on C:, enough to resume guarded setup while preserving the
 maintained32GiB reserve. The earlier80–100GiB suggestion was conservative headroom,
@@ -19,7 +19,9 @@ on the actual RTX5080, returning desktop GL3.2. Configuration/world restoration
 passed and zero clients remain from that operation. Explicit GL4.6 startup also passes on the actual RTX5080, with restoration and
 zero clients. MakeUp, Reimagined and BSL native/GL3.2 baseline r1 processes have all
 completed validly (three20s windows each,120s conditioning), restored and released.
-Unbound and independent baseline repeats remain pending. See baseline-progress.json.
+Both BSL optimized-stack baselines also completed. Explicit4.3 and4.5 original
+startups passed on actual matching desktop versions, with restoration and zero
+clients. Both GL4.6 BSL baseline repeats are now complete. See baseline-progress.json.
 Their original shaders/neutral collector are unchanged by the current G03 patch.
 
 MakeUp G03 functional r1 failed actual work admission, restored and released.
@@ -66,9 +68,9 @@ clients. The repaired BSL G03 optimized/native ABBA comparison r1 is VALID/resto
 zero clients; apparent reduction−0.214594%, unresolved at n1. Native and candidate
 window-mean variance and frame variance are retained in G03_PORT.md/raw samples.
 
-Active native task: ShaderLOD-RTX5080-Baselines-V1, request
+Completed native task: ShaderLOD-RTX5080-Baselines-V1, request
 C:\ShaderLODBench\requests\queue-baselines-v1.json, ledger
-queue-baselines-v1.json. It serializes11 original-only/context operations from
+queue-baselines-v1.json. It serialized11 original-only/context operations from
 benchmarks/campaigns/rtx5080-baselines-v1.json: remaining independent four-target
 baselines, separate optimized-stack/GL4.6 BSL baselines and actual4.3/4.5 startups.
 The existing queue invokes only maintained CLI commands and stops on failed
@@ -90,3 +92,32 @@ was corrected. Windows inheritance flags do not apply a file ACE to protected
 private JSON markers, so both workspace.json files needed direct Modify grants.
 Session1 owns subsequent maintained runtime receipts. The manual Task Scheduler
 launcher has no automatic triggers; retire each owned task once terminal.
+
+
+Canonical-only preparation while Windows remains frozen: the original/target-pinned
+C02 runtime now covers Complementary composite4 target3 as well as BSL target1,
+with native384/398 profiles, actual sole-output and physical attachment checks.
+MakeUp has no equivalent isolated single-output pass.98 Python benchmark tests,
+14 relevant Java tests and development compilation pass; native activation and
+performance remain unverified. Balanced C02 cleanup explicitly disables the VRS
+request; a separate functional motion check is allowed. Native-control calibration
+can now select the exact optimized G03 tuple. These updates have not yet been
+copied into the active Windows source tree. See C02_PORT.md and SOURCE_REVIEW.md.
+
+The next frozen queue is the versioned port-validation list: first MakeUp G01
+scoring, C01 GPU functional admission, C02 real4.5/4.6 checks and separate GL4.6
+Complementary baselines. The larger opposite-order comparison blocks retain
+native/PBR, fallback, natural-terrain and private controls as separate cases.
+The descriptive analyzer recomputes raw frame metrics and refuses to pool different
+actual context/stack/options/camera cohorts. Native2-process baseline statistics
+are now retained in baseline-progress.json; the only scored candidate so far is
+BSL G03 r1. The campaign remains incomplete.
+
+
+The complete baseline batch has exited successfully. All11 operations are
+complete/configuration-restored/released/whole-profile-reset verified; the exact
+native census reports zero clients. Before any source replacement,5034 build
+bindings were verified and5269 input/output files preserved in the native frozen
+archive. Its receipt is native-before-c02-freeze.json. Native C02 source replacement
+and the12-operation port-validation queue are the next action; no native task is
+currently running at this checkpoint.

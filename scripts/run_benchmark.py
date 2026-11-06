@@ -350,9 +350,9 @@ def preflight(a):
    benchmark_quality_motion.validate_request(a)
   if getattr(a,'comparison_order',None):
    life.require(getattr(a,'standard_test',False) and not getattr(a,'native_startup_check',False)
-                and a.candidate in ('public','native-control') and not a.bliss_qualification
+                and a.candidate in ('public','native-control','c02-bloom-vrs') and not a.bliss_qualification
                 and not a.g02_public_contrast and not a.with_g10 and not a.g10_control and not a.dh,
-                'Balanced comparisons require standard public or native-control, no DH/private additions/frozen qualification')
+                'Balanced comparisons require standard public, native-control or bloom VRS, no DH/private additions/frozen qualification')
   if getattr(a,'audit_graph',False):life.require(getattr(a,'standard_test',False) and not getattr(a,'native_startup_check',False) and not getattr(a,'bliss_qualification',None),'Audit graph requires a standard candidate comparison outside frozen qualification')
   if getattr(a,'qualification_client_heap',None):
    life.require(getattr(a,'bliss_qualification',None) and sys.platform in ('linux','win32'),
@@ -1364,6 +1364,7 @@ def run_operation(a,admission):
       control.send('diagnostic_pack',pack=plan['pack_name'],sha256=private_identity['original_sha256'])
       state=native_control.private_off.clear(control,plan['pack_name'],private_identity['original_sha256'])
      else:
+      if c02:control.send('vrs_request',enabled=False)
       restored_apply=control.send('settings_apply',enabled=False,preset='PERFORMANCE')
       life.require(restored_apply.get('success') is True,'Balanced final native Apply failed')
       control.send('configure',master=False,features=[]);state=control.ready()

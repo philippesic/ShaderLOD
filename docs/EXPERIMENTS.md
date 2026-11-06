@@ -169,3 +169,28 @@ also prepared; actual work validation remains pending. Evidence and limitations:
 [BSL repair record](../dev/experiments/rtx5080-four-target-audit-20261106/G03_PORT.md),
 [current working state](../dev/experiments/rtx5080-four-target-audit-20261106/STATE.md),
 [partial baselines](../dev/experiments/rtx5080-four-target-audit-20261106/baseline-progress.json).
+
+
+### 2026-11-06 RTX5080 repeated baselines and expanded bloom test coverage
+
+Two independent original-only native4K/AA baselines per target are complete.
+Actual4.3/4.5 startups also pass; all11 serialized baseline/context operations
+restore/reset/release, with zero clients. Separate BSL optimized/native and GL4.6
+cohorts are retained. Native frame samples, window-mean and process variance are
+recomputed separately, with n1 process variance unavailable. The24 attached
+original terrain stages match Asahi's source bytes and native options; this does
+not transfer GPU/lifetime/performance conclusions.
+
+A finite C02 source/target extension is prepared for both Complementary originals:
+their sole bloom output is composite4/target3, rather than BSL target1. Complete
+native archive/profile, consumed source/replay, shader/link ownership and actual
+physical FBO output remain required. Sample/coverage/per-primitive rate exclusions
+preserve the viewport contract. MakeUp's combined outputs are not coarsened.
+Balanced C02 comparisons explicitly disable the VRS request at final native return;
+separate functional motion is allowed, and optimized G03 can use exact native-null
+controls.98 Python benchmark and14 relevant Java tests plus compilation pass.
+Native C02 activation, quality and timings remain unverified; no candidate benefit
+claim is added. Prior native source/classes were verified and archived before
+replacement. [Current scope/evidence](../dev/experiments/rtx5080-four-target-audit-20261106/C02_PORT.md),
+[source review](../dev/experiments/rtx5080-four-target-audit-20261106/SOURCE_REVIEW.md),
+[baseline variances](../dev/experiments/rtx5080-four-target-audit-20261106/baseline-progress.json).

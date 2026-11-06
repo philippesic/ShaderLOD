@@ -1,0 +1,281 @@
+{
+  "scope": "Exact bytes of captured attached GL shader text and complete native option maps. Same text is frontend parity only: not GPU binary equivalence, physical resource lifetime, correctness or transferable performance.",
+  "targets": {
+    "makeup": {
+      "native_options_equal": true,
+      "asahi_viewport": [
+        2560,
+        1600
+      ],
+      "rtx5080_viewport": [
+        3840,
+        2160
+      ],
+      "asahi_gl": "4.6 (Core Profile) Mesa 25.1.0-asahi20250221",
+      "rtx5080_gl": "3.2.0 NVIDIA 617.42",
+      "stages": [
+        {
+          "program": "sodium_cutout",
+          "stage": 35632,
+          "asahi": "/home/philip/ShaderLOD/dev/experiments/asahi-four-target-audit-20261104/makeup-repaired-baseline-r1/native-graph-q8be872bb_51_graph_dump/linked_sodium_cutout_35632.glsl",
+          "rtx5080": "/home/philip/ShaderLOD/dev/experiments/rtx5080-four-target-audit-20261106/makeup-baseline-native-r1/native-graph-q0a280f6e_50_graph_dump/linked_sodium_cutout_35632.glsl",
+          "asahi_sha256": "4907a2d3622185b18fcd69f1d76f3cf4a3f898b99b403fb340524082f7142ed5",
+          "rtx5080_sha256": "4907a2d3622185b18fcd69f1d76f3cf4a3f898b99b403fb340524082f7142ed5",
+          "status": "IDENTICAL"
+        },
+        {
+          "program": "sodium_cutout",
+          "stage": 35633,
+          "asahi": "/home/philip/ShaderLOD/dev/experiments/asahi-four-target-audit-20261104/makeup-repaired-baseline-r1/native-graph-q8be872bb_51_graph_dump/linked_sodium_cutout_35633.glsl",
+          "rtx5080": "/home/philip/ShaderLOD/dev/experiments/rtx5080-four-target-audit-20261106/makeup-baseline-native-r1/native-graph-q0a280f6e_50_graph_dump/linked_sodium_cutout_35633.glsl",
+          "asahi_sha256": "d9185681f940eb8f1ee4cb9b317cb2467aa9919de94b05b1f457d4f51221daec",
+          "rtx5080_sha256": "d9185681f940eb8f1ee4cb9b317cb2467aa9919de94b05b1f457d4f51221daec",
+          "status": "IDENTICAL"
+        },
+        {
+          "program": "sodium_solid",
+          "stage": 35632,
+          "asahi": "/home/philip/ShaderLOD/dev/experiments/asahi-four-target-audit-20261104/makeup-repaired-baseline-r1/native-graph-q8be872bb_51_graph_dump/linked_sodium_solid_35632.glsl",
+          "rtx5080": "/home/philip/ShaderLOD/dev/experiments/rtx5080-four-target-audit-20261106/makeup-baseline-native-r1/native-graph-q0a280f6e_50_graph_dump/linked_sodium_solid_35632.glsl",
+          "asahi_sha256": "84c0033ff28de958c6c47ec2e6f170d9eb5693f27b88e2acb5ab1c270d400903",
+          "rtx5080_sha256": "84c0033ff28de958c6c47ec2e6f170d9eb5693f27b88e2acb5ab1c270d400903",
+          "status": "IDENTICAL"
+        },
+        {
+          "program": "sodium_solid",
+          "stage": 35633,
+          "asahi": "/home/philip/ShaderLOD/dev/experiments/asahi-four-target-audit-20261104/makeup-repaired-baseline-r1/native-graph-q8be872bb_51_graph_dump/linked_sodium_solid_35633.glsl",
+          "rtx5080": "/home/philip/ShaderLOD/dev/experiments/rtx5080-four-target-audit-20261106/makeup-baseline-native-r1/native-graph-q0a280f6e_50_graph_dump/linked_sodium_solid_35633.glsl",
+          "asahi_sha256": "d9185681f940eb8f1ee4cb9b317cb2467aa9919de94b05b1f457d4f51221daec",
+          "rtx5080_sha256": "d9185681f940eb8f1ee4cb9b317cb2467aa9919de94b05b1f457d4f51221daec",
+          "status": "IDENTICAL"
+        },
+        {
+          "program": "sodium_translucent",
+          "stage": 35632,
+          "asahi": "/home/philip/ShaderLOD/dev/experiments/asahi-four-target-audit-20261104/makeup-repaired-baseline-r1/native-graph-q8be872bb_51_graph_dump/linked_sodium_translucent_35632.glsl",
+          "rtx5080": "/home/philip/ShaderLOD/dev/experiments/rtx5080-four-target-audit-20261106/makeup-baseline-native-r1/native-graph-q0a280f6e_50_graph_dump/linked_sodium_translucent_35632.glsl",
+          "asahi_sha256": "b732845daaa70e3ddf457537f9e2eba86c4e36f0135f6491122286712fa6eeab",
+          "rtx5080_sha256": "b732845daaa70e3ddf457537f9e2eba86c4e36f0135f6491122286712fa6eeab",
+          "status": "IDENTICAL"
+        },
+        {
+          "program": "sodium_translucent",
+          "stage": 35633,
+          "asahi": "/home/philip/ShaderLOD/dev/experiments/asahi-four-target-audit-20261104/makeup-repaired-baseline-r1/native-graph-q8be872bb_51_graph_dump/linked_sodium_translucent_35633.glsl",
+          "rtx5080": "/home/philip/ShaderLOD/dev/experiments/rtx5080-four-target-audit-20261106/makeup-baseline-native-r1/native-graph-q0a280f6e_50_graph_dump/linked_sodium_translucent_35633.glsl",
+          "asahi_sha256": "2f3b7812c85fce87f9af9d48e5c1e7ca735b232279fe98bc777a31330cd6fd3b",
+          "rtx5080_sha256": "2f3b7812c85fce87f9af9d48e5c1e7ca735b232279fe98bc777a31330cd6fd3b",
+          "status": "IDENTICAL"
+        }
+      ]
+    },
+    "bsl": {
+      "native_options_equal": true,
+      "asahi_viewport": [
+        2560,
+        1600
+      ],
+      "rtx5080_viewport": [
+        3840,
+        2160
+      ],
+      "asahi_gl": "4.6 (Core Profile) Mesa 25.1.0-asahi20250221",
+      "rtx5080_gl": "3.2.0 NVIDIA 617.42",
+      "stages": [
+        {
+          "program": "sodium_cutout",
+          "stage": 35632,
+          "asahi": "/home/philip/ShaderLOD/dev/experiments/asahi-four-target-audit-20261104/bsl-repaired-baseline-r1/native-graph-qd538c1b2_51_graph_dump/linked_sodium_cutout_35632.glsl",
+          "rtx5080": "/home/philip/ShaderLOD/dev/experiments/rtx5080-four-target-audit-20261106/bsl-baseline-native-r1/native-graph-q2e02dc2d_51_graph_dump/linked_sodium_cutout_35632.glsl",
+          "asahi_sha256": "48b7a6e125b76352413d816392157f462845bb841786a94306b916086a91d299",
+          "rtx5080_sha256": "48b7a6e125b76352413d816392157f462845bb841786a94306b916086a91d299",
+          "status": "IDENTICAL"
+        },
+        {
+          "program": "sodium_cutout",
+          "stage": 35633,
+          "asahi": "/home/philip/ShaderLOD/dev/experiments/asahi-four-target-audit-20261104/bsl-repaired-baseline-r1/native-graph-qd538c1b2_51_graph_dump/linked_sodium_cutout_35633.glsl",
+          "rtx5080": "/home/philip/ShaderLOD/dev/experiments/rtx5080-four-target-audit-20261106/bsl-baseline-native-r1/native-graph-q2e02dc2d_51_graph_dump/linked_sodium_cutout_35633.glsl",
+          "asahi_sha256": "18203ca3e42387673ee5e4a7a7e96d9322fb1a9d2f1cb88e677b45fc326cb37c",
+          "rtx5080_sha256": "18203ca3e42387673ee5e4a7a7e96d9322fb1a9d2f1cb88e677b45fc326cb37c",
+          "status": "IDENTICAL"
+        },
+        {
+          "program": "sodium_solid",
+          "stage": 35632,
+          "asahi": "/home/philip/ShaderLOD/dev/experiments/asahi-four-target-audit-20261104/bsl-repaired-baseline-r1/native-graph-qd538c1b2_51_graph_dump/linked_sodium_solid_35632.glsl",
+          "rtx5080": "/home/philip/ShaderLOD/dev/experiments/rtx5080-four-target-audit-20261106/bsl-baseline-native-r1/native-graph-q2e02dc2d_51_graph_dump/linked_sodium_solid_35632.glsl",
+          "asahi_sha256": "272c574dbd72d511dd19c03a08553be4c7af10175d75cc27b05f20fb1536a462",
+          "rtx5080_sha256": "272c574dbd72d511dd19c03a08553be4c7af10175d75cc27b05f20fb1536a462",
+          "status": "IDENTICAL"
+        },
+        {
+          "program": "sodium_solid",
+          "stage": 35633,
+          "asahi": "/home/philip/ShaderLOD/dev/experiments/asahi-four-target-audit-20261104/bsl-repaired-baseline-r1/native-graph-qd538c1b2_51_graph_dump/linked_sodium_solid_35633.glsl",
+          "rtx5080": "/home/philip/ShaderLOD/dev/experiments/rtx5080-four-target-audit-20261106/bsl-baseline-native-r1/native-graph-q2e02dc2d_51_graph_dump/linked_sodium_solid_35633.glsl",
+          "asahi_sha256": "18203ca3e42387673ee5e4a7a7e96d9322fb1a9d2f1cb88e677b45fc326cb37c",
+          "rtx5080_sha256": "18203ca3e42387673ee5e4a7a7e96d9322fb1a9d2f1cb88e677b45fc326cb37c",
+          "status": "IDENTICAL"
+        },
+        {
+          "program": "sodium_translucent",
+          "stage": 35632,
+          "asahi": "/home/philip/ShaderLOD/dev/experiments/asahi-four-target-audit-20261104/bsl-repaired-baseline-r1/native-graph-qd538c1b2_51_graph_dump/linked_sodium_translucent_35632.glsl",
+          "rtx5080": "/home/philip/ShaderLOD/dev/experiments/rtx5080-four-target-audit-20261106/bsl-baseline-native-r1/native-graph-q2e02dc2d_51_graph_dump/linked_sodium_translucent_35632.glsl",
+          "asahi_sha256": "e23c7571d80bbc86150f30356cf695ea522159283ec369de6460420464579af4",
+          "rtx5080_sha256": "e23c7571d80bbc86150f30356cf695ea522159283ec369de6460420464579af4",
+          "status": "IDENTICAL"
+        },
+        {
+          "program": "sodium_translucent",
+          "stage": 35633,
+          "asahi": "/home/philip/ShaderLOD/dev/experiments/asahi-four-target-audit-20261104/bsl-repaired-baseline-r1/native-graph-qd538c1b2_51_graph_dump/linked_sodium_translucent_35633.glsl",
+          "rtx5080": "/home/philip/ShaderLOD/dev/experiments/rtx5080-four-target-audit-20261106/bsl-baseline-native-r1/native-graph-q2e02dc2d_51_graph_dump/linked_sodium_translucent_35633.glsl",
+          "asahi_sha256": "d68ed1d46fe196e2352e214e5f9b20e13f0f6b52f5243db773ae92e905511be3",
+          "rtx5080_sha256": "d68ed1d46fe196e2352e214e5f9b20e13f0f6b52f5243db773ae92e905511be3",
+          "status": "IDENTICAL"
+        }
+      ]
+    },
+    "reimagined": {
+      "native_options_equal": true,
+      "asahi_viewport": [
+        2560,
+        1600
+      ],
+      "rtx5080_viewport": [
+        3840,
+        2160
+      ],
+      "asahi_gl": "4.6 (Core Profile) Mesa 25.1.0-asahi20250221",
+      "rtx5080_gl": "3.2.0 NVIDIA 617.42",
+      "stages": [
+        {
+          "program": "sodium_cutout",
+          "stage": 35632,
+          "asahi": "/home/philip/ShaderLOD/dev/experiments/asahi-four-target-audit-20261104/reimagined-repaired-baseline-r1/native-graph-qa0cc4066_51_graph_dump/linked_sodium_cutout_35632.glsl",
+          "rtx5080": "/home/philip/ShaderLOD/dev/experiments/rtx5080-four-target-audit-20261106/reimagined-baseline-native-r1/native-graph-q15e1d28b_51_graph_dump/linked_sodium_cutout_35632.glsl",
+          "asahi_sha256": "909bc576ea0ca8ad4a4d6ed7dabeb847e06daf14616c8d2ca4897adadd717873",
+          "rtx5080_sha256": "909bc576ea0ca8ad4a4d6ed7dabeb847e06daf14616c8d2ca4897adadd717873",
+          "status": "IDENTICAL"
+        },
+        {
+          "program": "sodium_cutout",
+          "stage": 35633,
+          "asahi": "/home/philip/ShaderLOD/dev/experiments/asahi-four-target-audit-20261104/reimagined-repaired-baseline-r1/native-graph-qa0cc4066_51_graph_dump/linked_sodium_cutout_35633.glsl",
+          "rtx5080": "/home/philip/ShaderLOD/dev/experiments/rtx5080-four-target-audit-20261106/reimagined-baseline-native-r1/native-graph-q15e1d28b_51_graph_dump/linked_sodium_cutout_35633.glsl",
+          "asahi_sha256": "93cbde990717e36cd49a978cfb8df5b46ce53f40238d7e1a9469417a51645ff0",
+          "rtx5080_sha256": "93cbde990717e36cd49a978cfb8df5b46ce53f40238d7e1a9469417a51645ff0",
+          "status": "IDENTICAL"
+        },
+        {
+          "program": "sodium_solid",
+          "stage": 35632,
+          "asahi": "/home/philip/ShaderLOD/dev/experiments/asahi-four-target-audit-20261104/reimagined-repaired-baseline-r1/native-graph-qa0cc4066_51_graph_dump/linked_sodium_solid_35632.glsl",
+          "rtx5080": "/home/philip/ShaderLOD/dev/experiments/rtx5080-four-target-audit-20261106/reimagined-baseline-native-r1/native-graph-q15e1d28b_51_graph_dump/linked_sodium_solid_35632.glsl",
+          "asahi_sha256": "a0ac680f35ff3672f086108c35310ecb385c5982bb5fe979269f89300c0f107c",
+          "rtx5080_sha256": "a0ac680f35ff3672f086108c35310ecb385c5982bb5fe979269f89300c0f107c",
+          "status": "IDENTICAL"
+        },
+        {
+          "program": "sodium_solid",
+          "stage": 35633,
+          "asahi": "/home/philip/ShaderLOD/dev/experiments/asahi-four-target-audit-20261104/reimagined-repaired-baseline-r1/native-graph-qa0cc4066_51_graph_dump/linked_sodium_solid_35633.glsl",
+          "rtx5080": "/home/philip/ShaderLOD/dev/experiments/rtx5080-four-target-audit-20261106/reimagined-baseline-native-r1/native-graph-q15e1d28b_51_graph_dump/linked_sodium_solid_35633.glsl",
+          "asahi_sha256": "93cbde990717e36cd49a978cfb8df5b46ce53f40238d7e1a9469417a51645ff0",
+          "rtx5080_sha256": "93cbde990717e36cd49a978cfb8df5b46ce53f40238d7e1a9469417a51645ff0",
+          "status": "IDENTICAL"
+        },
+        {
+          "program": "sodium_translucent",
+          "stage": 35632,
+          "asahi": "/home/philip/ShaderLOD/dev/experiments/asahi-four-target-audit-20261104/reimagined-repaired-baseline-r1/native-graph-qa0cc4066_51_graph_dump/linked_sodium_translucent_35632.glsl",
+          "rtx5080": "/home/philip/ShaderLOD/dev/experiments/rtx5080-four-target-audit-20261106/reimagined-baseline-native-r1/native-graph-q15e1d28b_51_graph_dump/linked_sodium_translucent_35632.glsl",
+          "asahi_sha256": "b9b003b7b258ea2a7f732400b3b804c9edaaed52e3e94dc98f0c368548819ee7",
+          "rtx5080_sha256": "b9b003b7b258ea2a7f732400b3b804c9edaaed52e3e94dc98f0c368548819ee7",
+          "status": "IDENTICAL"
+        },
+        {
+          "program": "sodium_translucent",
+          "stage": 35633,
+          "asahi": "/home/philip/ShaderLOD/dev/experiments/asahi-four-target-audit-20261104/reimagined-repaired-baseline-r1/native-graph-qa0cc4066_51_graph_dump/linked_sodium_translucent_35633.glsl",
+          "rtx5080": "/home/philip/ShaderLOD/dev/experiments/rtx5080-four-target-audit-20261106/reimagined-baseline-native-r1/native-graph-q15e1d28b_51_graph_dump/linked_sodium_translucent_35633.glsl",
+          "asahi_sha256": "94fe4d45d02e932eae9b3f5add8a7775417f9a8a217b544eb9d964a84954e7a4",
+          "rtx5080_sha256": "94fe4d45d02e932eae9b3f5add8a7775417f9a8a217b544eb9d964a84954e7a4",
+          "status": "IDENTICAL"
+        }
+      ]
+    },
+    "unbound": {
+      "native_options_equal": true,
+      "asahi_viewport": [
+        2560,
+        1600
+      ],
+      "rtx5080_viewport": [
+        3840,
+        2160
+      ],
+      "asahi_gl": "4.6 (Core Profile) Mesa 25.1.0-asahi20250221",
+      "rtx5080_gl": "3.2.0 NVIDIA 617.42",
+      "stages": [
+        {
+          "program": "sodium_cutout",
+          "stage": 35632,
+          "asahi": "/home/philip/ShaderLOD/dev/experiments/asahi-four-target-audit-20261104/unbound-repaired-baseline-r1/native-graph-qda5ea5a8_51_graph_dump/linked_sodium_cutout_35632.glsl",
+          "rtx5080": "/home/philip/ShaderLOD/dev/experiments/rtx5080-four-target-audit-20261106/unbound-baseline-native-r1/native-graph-q1fd2c322_54_graph_dump/linked_sodium_cutout_35632.glsl",
+          "asahi_sha256": "c0aa1b97ccfd5ec9b72a7dd02322f37412e8f772a6aa5fcabeef19b660fc5829",
+          "rtx5080_sha256": "c0aa1b97ccfd5ec9b72a7dd02322f37412e8f772a6aa5fcabeef19b660fc5829",
+          "status": "IDENTICAL"
+        },
+        {
+          "program": "sodium_cutout",
+          "stage": 35633,
+          "asahi": "/home/philip/ShaderLOD/dev/experiments/asahi-four-target-audit-20261104/unbound-repaired-baseline-r1/native-graph-qda5ea5a8_51_graph_dump/linked_sodium_cutout_35633.glsl",
+          "rtx5080": "/home/philip/ShaderLOD/dev/experiments/rtx5080-four-target-audit-20261106/unbound-baseline-native-r1/native-graph-q1fd2c322_54_graph_dump/linked_sodium_cutout_35633.glsl",
+          "asahi_sha256": "5bb64cc0938b12d27c02d8b7b2ed58412eafe24ccc6db3abd4dbd885279514a4",
+          "rtx5080_sha256": "5bb64cc0938b12d27c02d8b7b2ed58412eafe24ccc6db3abd4dbd885279514a4",
+          "status": "IDENTICAL"
+        },
+        {
+          "program": "sodium_solid",
+          "stage": 35632,
+          "asahi": "/home/philip/ShaderLOD/dev/experiments/asahi-four-target-audit-20261104/unbound-repaired-baseline-r1/native-graph-qda5ea5a8_51_graph_dump/linked_sodium_solid_35632.glsl",
+          "rtx5080": "/home/philip/ShaderLOD/dev/experiments/rtx5080-four-target-audit-20261106/unbound-baseline-native-r1/native-graph-q1fd2c322_54_graph_dump/linked_sodium_solid_35632.glsl",
+          "asahi_sha256": "2df24a33e553d7600a520cbde5a6fe4f0220f38bdc06309ff70d574ebfb12619",
+          "rtx5080_sha256": "2df24a33e553d7600a520cbde5a6fe4f0220f38bdc06309ff70d574ebfb12619",
+          "status": "IDENTICAL"
+        },
+        {
+          "program": "sodium_solid",
+          "stage": 35633,
+          "asahi": "/home/philip/ShaderLOD/dev/experiments/asahi-four-target-audit-20261104/unbound-repaired-baseline-r1/native-graph-qda5ea5a8_51_graph_dump/linked_sodium_solid_35633.glsl",
+          "rtx5080": "/home/philip/ShaderLOD/dev/experiments/rtx5080-four-target-audit-20261106/unbound-baseline-native-r1/native-graph-q1fd2c322_54_graph_dump/linked_sodium_solid_35633.glsl",
+          "asahi_sha256": "5bb64cc0938b12d27c02d8b7b2ed58412eafe24ccc6db3abd4dbd885279514a4",
+          "rtx5080_sha256": "5bb64cc0938b12d27c02d8b7b2ed58412eafe24ccc6db3abd4dbd885279514a4",
+          "status": "IDENTICAL"
+        },
+        {
+          "program": "sodium_translucent",
+          "stage": 35632,
+          "asahi": "/home/philip/ShaderLOD/dev/experiments/asahi-four-target-audit-20261104/unbound-repaired-baseline-r1/native-graph-qda5ea5a8_51_graph_dump/linked_sodium_translucent_35632.glsl",
+          "rtx5080": "/home/philip/ShaderLOD/dev/experiments/rtx5080-four-target-audit-20261106/unbound-baseline-native-r1/native-graph-q1fd2c322_54_graph_dump/linked_sodium_translucent_35632.glsl",
+          "asahi_sha256": "d1e48924054c62d6c589b3f3c408b816ff735d7b54dd0fa328bcb2f6bdb9333a",
+          "rtx5080_sha256": "d1e48924054c62d6c589b3f3c408b816ff735d7b54dd0fa328bcb2f6bdb9333a",
+          "status": "IDENTICAL"
+        },
+        {
+          "program": "sodium_translucent",
+          "stage": 35633,
+          "asahi": "/home/philip/ShaderLOD/dev/experiments/asahi-four-target-audit-20261104/unbound-repaired-baseline-r1/native-graph-qda5ea5a8_51_graph_dump/linked_sodium_translucent_35633.glsl",
+          "rtx5080": "/home/philip/ShaderLOD/dev/experiments/rtx5080-four-target-audit-20261106/unbound-baseline-native-r1/native-graph-q1fd2c322_54_graph_dump/linked_sodium_translucent_35633.glsl",
+          "asahi_sha256": "fbf0c4d3a18e47dffcfe718dd8001b29b2a7939800e4ca4a5ad56d6f136dee7c",
+          "rtx5080_sha256": "fbf0c4d3a18e47dffcfe718dd8001b29b2a7939800e4ca4a5ad56d6f136dee7c",
+          "status": "IDENTICAL"
+        }
+      ]
+    }
+  }
+}

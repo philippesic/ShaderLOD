@@ -89,7 +89,8 @@
       "route": {
         "feature": "early_alpha",
         "pose": 1,
-        "performance_stack": "optimized"
+        "performance_stack": "optimized",
+        "case": "source-basic-native-optimized"
       }
     },
     {
@@ -315,7 +316,14 @@
       "status": "UNTESTED_RTX5080",
       "route": {
         "feature": "pom_height_cache",
-        "pose": 11
+        "pose": 11,
+        "case": "native-rp3-pbr",
+        "slot": "rtx5080-pbr",
+        "options": "benchmarks/profiles/v1/reimagined-pbr.properties",
+        "extra": [
+          "--untimed-diagnostic",
+          "selected-work"
+        ]
       }
     },
     {
@@ -324,7 +332,14 @@
       "status": "UNTESTED_RTX5080",
       "route": {
         "feature": "pom_height_cache",
-        "pose": 11
+        "pose": 11,
+        "case": "native-rp3-pbr",
+        "slot": "rtx5080-pbr",
+        "options": "benchmarks/profiles/v1/unbound-pbr.properties",
+        "extra": [
+          "--untimed-diagnostic",
+          "selected-work"
+        ]
       }
     },
     {
@@ -366,7 +381,12 @@
       "status": "UNTESTED_RTX5080",
       "route": {
         "candidate": "c01-bounds",
-        "pose": 0
+        "pose": 0,
+        "case": "gpu-authored",
+        "extra": [
+          "--c01-mode",
+          "deferred"
+        ]
       }
     },
     {
@@ -374,7 +394,12 @@
       "shader": "bsl",
       "status": "UNTESTED_RTX5080",
       "route": {
-        "source_review": true
+        "source_review": true,
+        "case": "gpu-authored",
+        "extra": [
+          "--c01-mode",
+          "deferred"
+        ]
       }
     },
     {
@@ -382,7 +407,12 @@
       "shader": "reimagined",
       "status": "UNTESTED_RTX5080",
       "route": {
-        "source_review": true
+        "source_review": true,
+        "case": "gpu-authored",
+        "extra": [
+          "--c01-mode",
+          "deferred"
+        ]
       }
     },
     {
@@ -390,7 +420,12 @@
       "shader": "unbound",
       "status": "UNTESTED_RTX5080",
       "route": {
-        "source_review": true
+        "source_review": true,
+        "case": "gpu-authored",
+        "extra": [
+          "--c01-mode",
+          "deferred"
+        ]
       }
     },
     {
@@ -399,7 +434,7 @@
       "status": "UNTESTED_RTX5080",
       "route": {
         "source_review": true,
-        "reason": "Existing bloom consumer pins BSL; establish consumer/source safety before extending to this target"
+        "reason": "Native composite has three outputs and composite1 combines bloom with full scene color. Existing single-output bloom VRS cannot be applied to these passes without coarsening additional scene work."
       }
     },
     {
@@ -408,7 +443,8 @@
       "status": "UNTESTED_RTX5080",
       "route": {
         "candidate": "c02-bloom-vrs",
-        "gl_context": "4.6"
+        "gl_context": "4.6",
+        "case": "native-gl46-vrs-2x2"
       }
     },
     {
@@ -416,8 +452,9 @@
       "shader": "reimagined",
       "status": "UNTESTED_RTX5080",
       "route": {
-        "source_review": true,
-        "reason": "Existing bloom consumer pins BSL; establish consumer/source safety before extending to this target"
+        "candidate": "c02-bloom-vrs",
+        "gl_context": "4.6",
+        "case": "native-gl46-vrs-2x2"
       }
     },
     {
@@ -425,8 +462,9 @@
       "shader": "unbound",
       "status": "UNTESTED_RTX5080",
       "route": {
-        "source_review": true,
-        "reason": "Existing bloom consumer pins BSL; establish consumer/source safety before extending to this target"
+        "candidate": "c02-bloom-vrs",
+        "gl_context": "4.6",
+        "case": "native-gl46-vrs-2x2"
       }
     },
     {

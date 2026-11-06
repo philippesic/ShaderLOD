@@ -18,22 +18,25 @@ qualification remain unproven. See [conclusions](../dev/experiments/asahi-four-t
 the same four targets, with hardware/GL repairs, work/correctness proof,
 investigation of unexpected regressions, repeated timings and variance charts.
 See the [campaign plan](../dev/experiments/rtx5080-four-target-audit-20261106/PLAN.md).
-Native Windows preflight observes RTX5080/driver617.42, an active3840×2160 console
-and idle GPU; previous GPU work is released. A fresh C: check observes63.2GiB free,
-resolving the storage blocker. The32GiB reserve remains; the earlier80–100GiB
-suggestion was conservative headroom, not a fixed minimum. Cleanup remains limited
-to ShaderLOD. Native canonical profiles, two managed slots and an isolated toolchain
-are prepared and native compilation passes. Original MakeUp startup succeeds on
-the actual RTX5080 at3840×2160/GL3.2, restores inputs and leaves zero clients.
-Explicit GL4.6 startup also passes with restoration. MakeUp, Reimagined and BSL each have one valid conditioned original-only baseline
-process with three20s windows and restoration. An Asahi-only G03 source gate was
-identified on NVIDIA; a finite source/harness repair has passed MakeUp functional validation. BSL source
-ownership and startup-race repairs now pass a balanced comparison with verified
-submissions/restoration. Its n1 apparent reduction is−0.21%, unresolved against
-variation; earlier functional failures remain separate. Independent baselines,
-optimized/context cohorts and actual4.3/4.5 startups are now serialized on the
-native console. No optimization-benefit conclusion is available yet. See the campaign
-[working state](../dev/experiments/rtx5080-four-target-audit-20261106/STATE.md).
+Native Windows runs on RTX5080/driver617.42 at3840×2160. Capacity is sufficient;
+cleanup remains ShaderLOD-only. Two valid120s-conditioned, three20s-window
+original-only native baseline processes are complete for every target. BSL also
+has separate optimized-stack and GL4.6 baselines. Real native3.2 and explicit4.3,
+4.5 and4.6 original startup checks pass with restoration. Baseline frame/window/
+process variances are retained separately in the campaign's compact progress data.
+
+MakeUp G03 passes actual linked rewritten CUTOUT functional admission. BSL source
+ownership and startup-race repairs pass its first balanced comparison with verified
+submissions/restoration; apparent reduction−0.21% at n1 is unresolved against
+variation. No optimization-benefit conclusion is available yet. The completed
+11-operation baseline batch is restored/released and its prior source/classes
+are verified/preserved before replacement. Canonical source now has a finite C02
+extension for the separate Complementary bloom outputs, plus balanced order and
+bounded motion support; local tests pass, native activation remains pending.
+Next: native port-validation/scoring and both-order comparison blocks. See the
+campaign [working state](../dev/experiments/rtx5080-four-target-audit-20261106/STATE.md),
+[BSL proof](../dev/experiments/rtx5080-four-target-audit-20261106/G03_PORT.md) and
+[C02 port scope](../dev/experiments/rtx5080-four-target-audit-20261106/C02_PORT.md).
 
 RTX2080Ti remains outside this allocation; renew availability before using it.
 The active source branch is `rtx5080-audit`; milestone pushes go to user-owned origin.

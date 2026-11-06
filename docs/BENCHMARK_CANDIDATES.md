@@ -105,8 +105,10 @@ Runtime dependencies and original shader-pack inputs are stored under `dependenc
 ## C02: experimental bloom shading rate
 
 `--candidate c02-bloom-vrs` tests the existing NV shading-rate runtime on the
-pinned original BSL10.1.8 with exact non-PBR native384 options and a saved
-Overworld pose. No other feature requests or DH are accepted. This is an
+pinned original BSL10.1.8/native384 or Complementary Reimagined/Unbound5.9.3
+with their exact non-PBR native398 options and a saved Overworld pose. Only the
+owned composite4 bloom output is admitted: BSL target1 or Complementary target3.
+Source/archive/native options and the declared single-output contract must match. No other feature requests or DH are accepted. This is an
 explicit **quality tradeoff**: 2×2 bloom-prefilter shading, not image equivalence;
 include it only when that scope is authorized. Native options and AA remain
 required. Hardware/context, original selection and actual executed/restored
@@ -119,7 +121,8 @@ harness disables the request before exit and restores the owned configuration.
 See [Windows benchmarking](WINDOWS_BENCHMARK.md) for the prepared host.
 
 `check --quality-motion` records a separate untimed native/candidate/native camera
-sequence through the existing bounded lossless recorder. It currently requires a
+sequence through the existing bounded lossless recorder. Public routes and the
+qualified bloom-only C02 route are supported. It requires a
 public saved-scene check without DH or balanced timing. Each arm warms for30s,
 then follows the same20s eased path at six native-resolution PNG samples/second;
 world day/weather stay frozen while Iris animation and temporal history advance.

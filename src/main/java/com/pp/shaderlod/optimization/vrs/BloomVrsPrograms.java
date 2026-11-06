@@ -20,7 +20,7 @@ public final class BloomVrsPrograms {
     private BloomVrsPrograms() {}
     private record Context(Object renderer,WorldRenderingPipeline pipeline,RenderTargets targets,
             ProgramSource source,TextureStage stage,IrisCompiledSource.Certificate certificate,
-            Object textures,Map<?,?> textureValues,Object gl,Object resources,List<String> selected) {}
+            Object textures,Map<?,?> textureValues,Object gl,Object resources,List<String> selected,int outputTarget) {}
     private record Owner(Context context,int id) {}
     private static final ThreadLocal<Scope> COMPILING = new ThreadLocal<>();
     private static final Map<Program,Owner> OWNERS = new IdentityHashMap<>();
@@ -45,7 +45,7 @@ public final class BloomVrsPrograms {
             if (poisoned || chain == null || program == null) return;
             var c = chain.complete(program,program.getProgramId());
             if (c != null && GL20.glGetProgrami(program.getProgramId(),GL20.GL_LINK_STATUS) == GL11.GL_TRUE) {
-                OWNERS.put(program,new Owner(c,program.getProgramId())); published++; last="native BSL bloom source/shader objects/link verified";
+                OWNERS.put(program,new Owner(c,program.getProgramId())); published++; last="native bloom source/shader objects/link verified";
             }
         }
         @Override public void close() { poison(); if(previous==null) COMPILING.remove(); else COMPILING.set(previous); }
@@ -65,7 +65,8 @@ public final class BloomVrsPrograms {
             var client=net.minecraft.client.Minecraft.getInstance();
             var context=new Context(s.renderer,s.pipeline,s.targets,s.source,stage,cert,textures,
                     Collections.unmodifiableMap(new HashMap<>((Map<?,?>)textures)),GL.getCapabilities(),
-                    client.getResourceManager(),List.copyOf(client.getResourcePackRepository().getSelectedIds()));
+                    client.getResourceManager(),List.copyOf(client.getResourcePackRepository().getSelectedIds()),
+                    BloomVrsSourceProof.outputTarget(cert.input().options().values()));
             s.chain=new CompositeCompilationLinkEvidence<>(context);
         } catch(Exception|LinkageError failed) { s.poison(); last="bloom source refused: "+failed.getClass().getSimpleName(); }
     }
@@ -74,7 +75,7 @@ public final class BloomVrsPrograms {
         if (output==null || output.get(PatchShaderType.GEOMETRY)!=null
                 || output.get(PatchShaderType.VERTEX)==null || output.get(PatchShaderType.FRAGMENT)==null) { s.poison(); return; }
         String fragment=output.get(PatchShaderType.FRAGMENT);
-        if (fragment.matches("(?s).*\\b(gl_FragDepth|gl_SampleID|gl_SamplePosition|imageStore|imageAtomic\\w*|atomic\\w*)\\b.*")) { s.poison(); return; }
+        if (fragment.matches("(?s).*\\b(gl_FragDepth|gl_SampleID|gl_SamplePosition|gl_SampleMask|imageStore|imageAtomic\\w*|atomic\\w*)\\b.*")) { s.poison(); return; }
         s.chain.transformed(output.get(PatchShaderType.VERTEX),null,fragment);
     }
     public static void begin(String name,String vertex,String geometry,String fragment) {
@@ -93,7 +94,7 @@ public final class BloomVrsPrograms {
     public static void linked(GlShader[] shaders,int id) { var s=scope();if(s!=null&&s.chain!=null)s.chain.linked(shaders,id); }
     public static void builder(Object builder,int id) {var s=scope();if(s!=null&&s.chain!=null)s.chain.builder(builder,id);}
     public static void built(Object builder,Program program,int id) {var s=scope();if(s!=null&&s.chain!=null)s.chain.built(builder,program,id);}
-    public static boolean qualified(Object renderer,RenderTargets targets,int id) {
+    public static int qualifiedTarget(Object renderer,RenderTargets targets,int id) {
         for(var entry:OWNERS.entrySet()) {
             var o=entry.getValue();var c=o.context();
             if (o.id()!=id || entry.getKey().getProgramId()!=id || c.renderer()!=renderer || c.targets()!=targets) continue;
@@ -102,10 +103,11 @@ public final class BloomVrsPrograms {
                     && c.resources()==client.getResourceManager() && selectedResourcesMatch(c.selected(),client.getResourcePackRepository().getSelectedIds())
                     && c.textures()==c.pipeline().getTextureMap() && c.textureValues().equals(c.pipeline().getTextureMap())
                     && Iris.getShaderPackOptionQueue().isEmpty() && !Iris.isFallback()
-                    && c.certificate().current(Iris.getCurrentPack().orElse(null),Iris.getIrisConfig().getShaderPackName().orElse(null),epoch);
+                    && c.certificate().current(Iris.getCurrentPack().orElse(null),Iris.getIrisConfig().getShaderPackName().orElse(null),epoch) ? c.outputTarget() : -1;
         }
-        return false;
+        return -1;
     }
+    public static boolean qualified(Object renderer,RenderTargets targets,int id){return qualifiedTarget(renderer,targets,id)>=0;}
     // The repository API returns a Collection, not necessarily a List. Preserve exact order/membership.
     static boolean selectedResourcesMatch(List<String> captured,Collection<String> current) {
         if (current == null || captured.size() != current.size()) return false;

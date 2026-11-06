@@ -11,10 +11,14 @@ import benchmark_quality_motion as quality
 
 
 class QualityMotionTest(unittest.TestCase):
-    def test_recording_cannot_be_added_to_scored_or_private_protocols(self):
+    def test_recording_is_separate_and_only_enumerated_routes_are_allowed(self):
         args=dict(functional_check=True,candidate='public',dh=False,scene='saved',comparison_order=None)
         quality.validate_request(SimpleNamespace(**args))
         quality.validate_request(SimpleNamespace(**(args|{'scene':'natural-terrain'})))
+        bloom=args|{'candidate':'c02-bloom-vrs'}
+        quality.validate_request(SimpleNamespace(**bloom))
+        for change in ({'feature':'early_alpha'},{'features':['early_alpha']},{'scene':'natural-terrain'}):
+            with self.assertRaises(ValueError):quality.validate_request(SimpleNamespace(**(bloom|change)))
         for change in ({'functional_check':False},{'candidate':'native-control'},
                        {'dh':True},{'scene':'natural-cave'},{'comparison_order':'ABBA'}):
             with self.assertRaises(ValueError):quality.validate_request(SimpleNamespace(**(args|change)))

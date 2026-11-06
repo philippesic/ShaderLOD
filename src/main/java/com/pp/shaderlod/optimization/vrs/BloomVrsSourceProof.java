@@ -12,7 +12,7 @@ import java.util.zip.ZipFile;
 import net.irisshaders.iris.Iris;
 import net.irisshaders.iris.shaderpack.programs.ProgramSource;
 
-/** Native, unmodified BSL10.1.8 bloom prefilter. No generated pack or shader rewriting. */
+/** Finite original BSL/Complementary bloom-only passes. No pack or shader rewriting. */
 public final class BloomVrsSourceProof {
     public static final String ARCHIVE_SHA = "36b0a50ff7918bf10e9422c401d93779f9d0088a26acea975b435243f96930b5";
     public static final String PROGRAM = "composite4";
@@ -29,13 +29,24 @@ public final class BloomVrsSourceProof {
             return out.size() == 384 ? Map.copyOf(out) : Map.of();
         } catch (Exception unavailable) { return Map.of(); }
     }
-    public static boolean optionsMatch(Map<String,String> actual) {
-        return OPTIONS.size() == 384 && OPTIONS.equals(actual);
+    /** The output is declared by the exact complete native profile and program. */
+    public static int outputTarget(Map<String,String> actual) {
+        if(OPTIONS.size()==384&&OPTIONS.equals(actual))return 1;
+        if(com.pp.shaderlod.integration.reimaginedquad.ReimaginedQuadEligibility.optionsMatch(actual)
+                ||com.pp.shaderlod.integration.unboundquad.UnboundQuadEligibility.optionsMatch(actual))return 3;
+        return -1;
     }
+    public static boolean optionsMatch(Map<String,String> actual) {return outputTarget(actual)>=0;}
     public static boolean nativeArchive(Path path,Map<String,String> actual) {
         try {
-            return optionsMatch(actual) && !Files.isSymbolicLink(path) && Files.isRegularFile(path)
-                    && ARCHIVE_SHA.equals(BloomVrsPins.sha(Files.readAllBytes(path)));
+            if(Files.isSymbolicLink(path)||!Files.isRegularFile(path))return false;
+            String archive=BloomVrsPins.sha(Files.readAllBytes(path));
+            if(ARCHIVE_SHA.equals(archive))return OPTIONS.size()==384&&OPTIONS.equals(actual);
+            if(com.pp.shaderlod.integration.reimaginedquad.ReimaginedQuadEligibility.ARCHIVE_SHA.equals(archive))
+                return com.pp.shaderlod.integration.reimaginedquad.ReimaginedQuadEligibility.optionsMatch(actual);
+            if(com.pp.shaderlod.integration.unboundquad.UnboundQuadEligibility.ARCHIVE_SHA.equals(archive))
+                return com.pp.shaderlod.integration.unboundquad.UnboundQuadEligibility.optionsMatch(actual);
+            return false;
         } catch (Exception unavailable) { return false; }
     }
     public static IrisCompiledSource.Certificate certify(ProgramSource source,long epoch) throws Exception {
@@ -48,7 +59,9 @@ public final class BloomVrsSourceProof {
                 || si.provider() != input.provider() || si.properties() != input.properties()
                 || !"/world0".equals(si.directory().getPathString())
                 || !input.options().current(set.getPack().getShaderPackOptions())
-                || !optionsMatch(input.options().values())) return null;
+                || !optionsMatch(input.options().values())
+                || !java.util.Arrays.equals(source.getDirectives().getDrawBuffers(),
+                    new int[]{outputTarget(input.options().values())})) return null;
         String selected = Iris.getIrisConfig().getShaderPackName().orElse(null);
         if (selected == null || !Path.of(selected).getFileName().toString().equals(selected)) return null;
         Path path = Iris.getShaderpacksDirectory().resolve(selected);

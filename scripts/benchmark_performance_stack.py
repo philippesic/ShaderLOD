@@ -13,12 +13,15 @@ def validate_request(args):
         raise ValueError('Unknown maintained performance stack')
     if selected == 'minimal':
         return
+    candidate=getattr(args,'candidate','public')
+    unchanged_control=candidate=='native-control' and not getattr(args,'feature',None) and not getattr(args,'features',None)
+    g03_or_original=candidate=='public' and (getattr(args,'native_startup_check',False) or getattr(args,'feature',None)=='early_alpha')
     if (not getattr(args, 'standard_test', False) or getattr(args, 'bliss_qualification', None)
-            or getattr(args, 'dh', False) or getattr(args, 'candidate', 'public') != 'public'
+            or getattr(args, 'dh', False) or not (g03_or_original or unchanged_control)
             or getattr(args, 'features', None) or getattr(args, 'with_g10', False)
-            or getattr(args, 'g10_control', False)
-            or not (getattr(args, 'native_startup_check', False) or getattr(args, 'feature', None) == 'early_alpha')):
-        raise ValueError('Optimized stack is scoped to G03 singleton checks/tests and matched original startup/baselines; frozen/private protocols remain minimal')
+            or getattr(args, 'g10_control', False)):
+        raise ValueError('Optimized stack is scoped to G03 singleton checks/tests and matched original startup/baselines or byte-identical native controls; other private/frozen protocols remain minimal')
+
 
 
 def artifacts(root, selected):

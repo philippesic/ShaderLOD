@@ -11,7 +11,7 @@ import net.minecraft.world.level.Level;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.MemoryStack;
 
-/** Experimental 2x2 BSL bloom prefilter only. Native shader options/AA are unchanged. */
+/** Experimental 2x2 qualified native bloom prefilters only. Native shader options/AA are unchanged. */
 public final class BloomVrsRuntime {
     private static final LwjglVrsDriver DRIVER = new LwjglVrsDriver();
     private static final NvBloomVrsBackend BACKEND = new NvBloomVrsBackend(DRIVER);
@@ -45,16 +45,21 @@ public final class BloomVrsRuntime {
         if (!eligible() || !DRIVER.capabilities().supported()) { last="native: hardware/context/profile unavailable";return null; }
         eligibleDraws++;
         int program=GL11.glGetInteger(GL20.GL_CURRENT_PROGRAM);
-        if (!BloomVrsPrograms.qualified(renderer,targets,program)) { last="native: bound bloom program qualification refused";return null; }
+        int outputTarget=BloomVrsPrograms.qualifiedTarget(renderer,targets,program);
+        if (outputTarget<0) { last="native: bound bloom program qualification refused";return null; }
         qualifiedDraws++;
         try (var stack=MemoryStack.stackPush()) {
             int fbo=GL11.glGetInteger(GL30.GL_DRAW_FRAMEBUFFER_BINDING);
             if (fbo==0 || GL11.glIsEnabled(GL11.GL_DEPTH_TEST) || GL11.glIsEnabled(GL11.GL_STENCIL_TEST)
                     || GL11.glIsEnabled(GL40.GL_SAMPLE_SHADING) || GL11.glIsEnabled(GL13.GL_SAMPLE_ALPHA_TO_COVERAGE)
+                    || GL11.glIsEnabled(GL13.GL_SAMPLE_ALPHA_TO_ONE) || GL11.glIsEnabled(GL13.GL_SAMPLE_COVERAGE)
+                    || GL11.glIsEnabled(GL32.GL_SAMPLE_MASK)
+                    || GL.getCapabilities().GL_NV_primitive_shading_rate
+                        && GL11.glIsEnabled(NVPrimitiveShadingRate.GL_SHADING_RATE_IMAGE_PER_PRIMITIVE_NV)
                     || GL11.glIsEnabled(GL30.GL_RASTERIZER_DISCARD) || GL11.glGetInteger(GL13.GL_SAMPLES)!=0
                     || GL30.glIsEnabledi(GL11.GL_BLEND,0)) { last="native: incompatible bloom raster state";return null; }
             var viewport=stack.mallocInt(4);GL11.glGetIntegerv(GL11.GL_VIEWPORT,viewport);
-            var target=targets.get(1);
+            var target=targets.get(outputTarget);
             if (target==null || viewport.get(0)!=0 || viewport.get(1)!=0
                     || viewport.get(2)!=targets.getCurrentWidth() || viewport.get(3)!=targets.getCurrentHeight()) return null;
             int draw=GL11.glGetInteger(GL20.GL_DRAW_BUFFER0);
@@ -67,7 +72,7 @@ public final class BloomVrsRuntime {
             int texture=GL30.glGetFramebufferAttachmentParameteri(GL30.GL_DRAW_FRAMEBUFFER,draw,GL30.GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME);
             if (texture!=target.getMainTexture() && texture!=target.getAltTexture()) return null;
             var result=BACKEND.open(true,fbo,viewport.get(2),viewport.get(3));
-            if(result!=null)last="active experimental BSL composite4 bloom-only 2x2; image-quality tradeoff";
+            if(result!=null)last="active experimental composite4 bloom-only 2x2; image-quality tradeoff";
             return result;
         }
     }
@@ -81,7 +86,7 @@ public final class BloomVrsRuntime {
         out.put("OpenGL45",caps.openGl45());out.put("GL_NV_shading_rate_image",caps.shadingRateImage());
         out.put("GL_NV_framebuffer_mixed_samples",caps.framebufferMixedSamples());
         out.put("renderer",GL11.glGetString(GL11.GL_RENDERER));out.put("gl_version",GL11.glGetString(GL11.GL_VERSION));
-        out.put("scope","BSL10.1.8 native384, Overworld, pinned minimal stack, composite4 bloom prefilter only, 2x2");
+        out.put("scope","Pinned BSL native384 or Complementary native398, Overworld, minimal stack, composite4 bloom-only target1 or target3, 2x2");
         out.put("quality","Experimental lower bloom shading density; native AA/options preserved; not image-equivalent.");
         out.put("draw_attempts",drawAttempts);out.put("eligible_draws",eligibleDraws);out.put("qualified_draws",qualifiedDraws);
         out.put("programs",BloomVrsPrograms.status());out.put("backend",BACKEND.status());out.put("driver",DRIVER.counters());out.put("last",last);

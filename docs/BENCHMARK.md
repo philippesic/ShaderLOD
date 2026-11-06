@@ -46,7 +46,7 @@ GPU, including a hardware integrated GPU. It validates the observed renderer
 before scoring; it does not select the GPU or change personal driver settings.
 
 `--performance-stack optimized` selects the exact pinned ModernFix, FerriteCore
-and ImmediatelyFast tuple for G03 and its matched original-only startup/baselines.
+and ImmediatelyFast tuple for G03 and its matched original-only startup/baselines or byte-identical native controls.
 Default remains `minimal`. Other private/frozen protocols reject this override.
 Preflight verifies every optional JAR, launch uses the maintained stack selector,
 and runtime readiness checks the actual loaded module versions before scoring.

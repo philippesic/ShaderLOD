@@ -4,9 +4,9 @@
     "shader": "makeup",
     "kind": "baseline",
     "goal": null,
-    "case": "primary",
-    "phase": "initial",
-    "variant": "source-port-v1",
+    "case": "original-minimal-native",
+    "phase": "baseline",
+    "variant": "native-original-v1",
     "output": "dev/experiments/rtx5080-four-target-audit-20261106/makeup-baseline-native-r1"
   },
   {
@@ -14,9 +14,9 @@
     "shader": "reimagined",
     "kind": "baseline",
     "goal": null,
-    "case": "primary",
-    "phase": "initial",
-    "variant": "source-port-v1",
+    "case": "original-minimal-native",
+    "phase": "baseline",
+    "variant": "native-original-v1",
     "output": "dev/experiments/rtx5080-four-target-audit-20261106/reimagined-baseline-native-r1"
   },
   {
@@ -24,9 +24,9 @@
     "shader": "bsl",
     "kind": "baseline",
     "goal": null,
-    "case": "primary",
-    "phase": "initial",
-    "variant": "source-port-v1",
+    "case": "original-minimal-native",
+    "phase": "baseline",
+    "variant": "native-original-v1",
     "output": "dev/experiments/rtx5080-four-target-audit-20261106/bsl-baseline-native-r1"
   },
   {
@@ -115,8 +115,8 @@
     "kind": "test",
     "goal": "G03",
     "case": "source-basic-native-optimized",
-    "phase": "initial",
-    "variant": "source-port-v1",
+    "phase": "screening",
+    "variant": "ac0481f-native-windows-v1",
     "output": "dev/experiments/rtx5080-four-target-audit-20261106/bsl-g03-test-optimized-native-abba-r1"
   }
 ]

@@ -11,9 +11,12 @@ import experiment_lifecycle as life
 
 
 def validate_request(args):
-    life.require(getattr(args,'functional_check',False) and args.candidate=='public'
+    public=args.candidate=='public'
+    bloom=(args.candidate=='c02-bloom-vrs' and args.scene in (None,'saved')
+           and not getattr(args,'feature',None) and not getattr(args,'features',None))
+    life.require(getattr(args,'functional_check',False) and (public or bloom)
                  and not args.dh and args.scene in (None,'saved','natural-terrain') and not args.comparison_order,
-                 'Quality motion requires a separate standard public check on an owned saved scene, without DH or balanced timing')
+                 'Quality motion requires a separate public or qualified bloom VRS check on an owned saved scene, without DH or balanced timing')
     # The runner's natural_terrain_inputs still requires the fixed native CPU
     # subset and spawn. The recorder uses that same owned saved-world state.
 

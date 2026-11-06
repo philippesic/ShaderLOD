@@ -19,6 +19,10 @@ class PerformanceStackTest(unittest.TestCase):
         for change in ({'standard_test': False}, {'candidate': 'c02-bloom-vrs'}, {'feature': 'ao_render_scale'},
                        {'bliss_qualification': 'null'}, {'dh': True}, {'features': ['early_alpha']}, {'with_g10': True}):
             with self.assertRaises(ValueError): stack.validate_request(SimpleNamespace(**(args | change)))
+        control=args | {'candidate':'native-control','feature':None}
+        stack.validate_request(SimpleNamespace(**control))
+        for change in ({'feature':'early_alpha'},{'features':['early_alpha']},{'dh':True},{'with_g10':True}):
+            with self.assertRaises(ValueError):stack.validate_request(SimpleNamespace(**(control|change)))
         parser = runner.argument_parser()
         self.assertEqual('minimal', parser.parse_args(['--pack', 'native.zip', '--output', 'report']).performance_stack)
 

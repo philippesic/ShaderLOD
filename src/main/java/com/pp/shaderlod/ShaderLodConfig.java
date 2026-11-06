@@ -55,7 +55,7 @@ public final class ShaderLodConfig {
         builder.pop();
         builder.push("experimental");
         EXPERIMENTAL_BLOOM_VRS = builder.comment(
-                "Default OFF. Experimental 2x2 hardware VRS for pinned BSL10.1.8 bloom prefilter only.",
+                "Default OFF. Experimental 2x2 hardware VRS for qualified BSL/Complementary bloom prefilters only.",
                 "Requires OpenGL4.5, NV_shading_rate_image and NV_framebuffer_mixed_samples with callable entrypoints.",
                 "Lower bloom shading quality; no promise of higher FPS. Unsupported contexts stay native.")
                 .define("bloomVrs", false);
