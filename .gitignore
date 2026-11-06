@@ -18,7 +18,7 @@ __pycache__/
 .venv/
 
 # Local experiment work; ignored does not mean disposable.
-/dev/experiments/
+/dev/experiments/**
 # Raw evidence stays local; retained summaries have explicit Git-visible paths.
 /experiment-evidence/**
 !/experiment-evidence/README.md
@@ -32,3 +32,21 @@ __pycache__/
 /dependencies/toolchain/
 
 /dependencies/test-python/
+
+# Campaign-level authored code/reports stay visible; frozen copies/raw data stay local.
+!/dev/experiments/
+!/dev/experiments/*/
+!/dev/experiments/*.py
+!/dev/experiments/*/*.py
+!/dev/experiments/*.sh
+!/dev/experiments/*/*.sh
+!/dev/experiments/*.md
+!/dev/experiments/*/*.md
+!/dev/experiments/*.patch
+!/dev/experiments/*/*.patch
+!/dev/experiments/*.toml
+!/dev/experiments/*/*.toml
+!/dev/experiments/*.yaml
+!/dev/experiments/*/*.yaml
+!/dev/experiments/*.yml
+!/dev/experiments/*/*.yml
