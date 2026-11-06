@@ -50,13 +50,18 @@ They were exercised on the actual host; Python compilation checks also pass.
 These are campaign-specific procedures requiring their retained manifests, not
 an automatic cleanup service or permission to remove arbitrary ignored files.
 
-## Remaining input
+## User scope decision and remaining capacity
 
-A structured question is pending about expanding scope to NVIDIA's regenerable
-DXCache (~11.7 GiB) and two non-ShaderLOD checkpoint staging directories (~15.8 GiB):
-C:\binary-eagle-component-20261105-01 and
-C:\binary-eagle-dflash2-smoke-20261106-01. No deletion there is authorized yet;
-checkpoint preservation and verification must precede any approved retirement.
-Their size estimates do not guarantee enough headroom for setup and 4K captures.
-Continue checking real backing-volume capacity; do not lower the benchmark reserve
-or mistake WSL virtual free space for native Windows free space.
+The user explicitly selected “Keep cleanup limited to ShaderLOD.” The proposed
+NVIDIA DXCache and both non-ShaderLOD checkpoint staging folders remain untouched;
+there is no pending approval question. Do not revisit their deletion without a
+new user instruction.
+
+A fresh read-only check finds 5,287,284,736 bytes free (about4.924GiB). The five
+retained ShaderLOD Prism trees total2,874,544,700 logical bytes (2.677GiB), including
+worlds, recovery files, packs and reusable Java/world/payload inputs. Even removing
+all these trees would not reach the32GiB reserve, so further small ShaderLOD purges
+cannot unblock this campaign. They remain preserved. Evidence is in
+cleanup-retained-size-check.json. No native profile copy or GPU acquisition ran.
+The audit stays incomplete until additional backing-volume capacity is available;
+do not lower the reserve or substitute WSL virtual free space.

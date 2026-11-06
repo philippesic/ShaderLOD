@@ -74,8 +74,9 @@ is active and its display is3840×2160. No Minecraft client was observed.
 
 The user subsequently authorized cleanup of old ShaderLOD junk. The completed
 [cleanup](CLEANUP.md) recovered3.735GiB physically after verified off-machine
-preservation; about4.925GiB is now free, still below the32GiB reserve. A structured
-question is pending about extending scope to the named NVIDIA cache and other
-project checkpoint staging directories, with preservation before removal. No
-native profile copy or scored acquisition has started. Capacity remains an
-external prerequisite, not a completed benchmark or a negative optimization result.
+preservation; about4.925GiB is now free, still below the32GiB reserve. The user explicitly declined expanding cleanup beyond ShaderLOD. NVIDIA caches
+and other-project checkpoints remain untouched. The known retained ShaderLOD
+Prism trees total only2.677GiB logically and contain useful recovery/world/runtime
+inputs; removing all of them would still fall far short of the reserve. No native
+profile copy or scored acquisition has started. Additional backing-volume capacity
+remains required; this is not a negative optimization result.

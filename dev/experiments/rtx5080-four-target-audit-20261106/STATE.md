@@ -5,10 +5,13 @@ been acquired. The user authorized old ShaderLOD cleanup, now completed with
 3.735GiB of actual capacity recovered and a verified independent archive on
 Asahi. C: has about4.925GiB free, still below the32GiB reserve. See
 [CLEANUP.md](CLEANUP.md) for removal, preservation and recovery evidence.
-A structured question is pending about expanding cleanup to the named NVIDIA
-cache and two other-project checkpoint staging folders, with verified off-machine
-preservation first. Do not infer permission to remove those checkpoints from
-elapsed time. Runtime setup/acquisitions wait for adequate backing-volume capacity.
+The user explicitly limited cleanup to ShaderLOD and declined the proposed
+NVIDIA cache / other-project checkpoint cleanup. Leave those paths untouched;
+there is no pending cleanup-approval question. The retained ShaderLOD Prism trees
+total only2.677GiB logically, including worlds, recovery files and reusable inputs;
+even deleting them all would not meet the reserve. They remain preserved. Native
+runtime setup/acquisitions require additional backing-volume capacity and remain
+blocked. The requested audit is incomplete, not cancelled or completed.
 
 Completed independent preparation:
 
