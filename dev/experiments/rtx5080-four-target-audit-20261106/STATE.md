@@ -1,11 +1,14 @@
 # RTX 5080 audit working state
 
 The task is active and incomplete. No RTX5080 baseline or candidate timing has
-been acquired. The pending user question asks for capacity on Windows C: or a
-review of exact cleanup candidates. Last observed free capacity is about1GiB,
-below the maintained32GiB reserve; source/runtime setup and acquisitions wait
-for this required external input. Do not override the reserve or treat WSL's
-virtual free space as free capacity on the backing Windows volume.
+been acquired. The user authorized old ShaderLOD cleanup, now completed with
+3.735GiB of actual capacity recovered and a verified independent archive on
+Asahi. C: has about4.925GiB free, still below the32GiB reserve. See
+[CLEANUP.md](CLEANUP.md) for removal, preservation and recovery evidence.
+A structured question is pending about expanding cleanup to the named NVIDIA
+cache and two other-project checkpoint staging folders, with verified off-machine
+preservation first. Do not infer permission to remove those checkpoints from
+elapsed time. Runtime setup/acquisitions wait for adequate backing-volume capacity.
 
 Completed independent preparation:
 
@@ -36,4 +39,5 @@ diagnosis, repairs, repeated timing, limited-quality checks and variance charts.
 Source branch: `rtx5080-audit`, tracking the established user-owned origin.
 Preparation checkpoints are committed and pushed; raw host preflight inventories
 remain local in this run directory. No target benchmark processes or background
-jobs were started. Storage/model/world data owned by other work are protected.
+jobs were started. Cleanup transfer/verification processes have completed; other
+projects' model/world data are protected.

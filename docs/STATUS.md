@@ -19,10 +19,13 @@ the same four targets, with hardware/GL repairs, work/correctness proof,
 investigation of unexpected regressions, repeated timings and variance charts.
 See the [campaign plan](../dev/experiments/rtx5080-four-target-audit-20261106/PLAN.md).
 Native Windows preflight observes RTX5080/driver617.42, an active3840×2160 console
-and idle GPU; previous GPU work is released. Windows C: has only about1GiB free,
-below the32GiB reserve. A user question is pending to free capacity or review
-specific cleanup candidates; no native profile copy or benchmark was launched.
-Independent read-only inventory and local maintained-harness preparation continue.
+and idle GPU; previous GPU work is released. User-authorized old ShaderLOD
+[cleanup](../dev/experiments/rtx5080-four-target-audit-20261106/CLEANUP.md) recovered
+3.735GiB after verified preservation on Asahi. C: now has about4.925GiB free,
+still below the32GiB reserve. A structured question is pending to extend cleanup
+to the listed cache and other-project checkpoint staging folders with preservation
+first. No native profile copy or benchmark was launched; preparation is not a
+performance result.
 
 RTX2080Ti remains outside this allocation; renew availability before using it.
 The active source branch is `rtx5080-audit`; milestone pushes go to user-owned origin.

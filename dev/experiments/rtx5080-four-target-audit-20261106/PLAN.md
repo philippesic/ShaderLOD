@@ -72,9 +72,10 @@ and private-key authentication. NVIDIA reports RTX5080/driver617.42,0% utilizati
 The previous GPU owner reports released work. Native Windows console session1
 is active and its display is3840×2160. No Minecraft client was observed.
 
-Windows C: has about1GiB free, below the maintained32GiB reserve. Native setup,
-profile copies and scored acquisitions cannot safely start. User input is pending
-to free roughly80–100GiB or request a review of concrete cleanup candidates.
-Another project's staging/model data, personal saves and shared caches are
-protected. Read-only inventory and local benchmark preparation continue.
-Raw preflight evidence: `windows-storage-preflight.txt` in this run directory.
+The user subsequently authorized cleanup of old ShaderLOD junk. The completed
+[cleanup](CLEANUP.md) recovered3.735GiB physically after verified off-machine
+preservation; about4.925GiB is now free, still below the32GiB reserve. A structured
+question is pending about extending scope to the named NVIDIA cache and other
+project checkpoint staging directories, with preservation before removal. No
+native profile copy or scored acquisition has started. Capacity remains an
+external prerequisite, not a completed benchmark or a negative optimization result.
