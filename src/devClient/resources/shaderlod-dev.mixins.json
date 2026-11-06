@@ -8,6 +8,7 @@
     "SamplerAllocationFailureMixin",
     "SamplerUnitBudgetMixin",
     "BackgroundWindowMixin",
+    "BenchmarkGlContextMixin",
     "ShaderAnimationClockMixin",
     "NativeMacroProgramsMixin",
     "NativeMacroReloadMixin",

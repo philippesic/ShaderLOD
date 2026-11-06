@@ -338,7 +338,10 @@ def prepare(p, backup):
     options = profile / 'options.txt'
     update(options, replace_properties(options.read_text() if options.exists() else '',
                                        {'fullscreen': str(p['fullscreen']).lower(), 'pauseOnLostFocus': 'false'}, ':').encode())
-    if p.get('background_launch'):
+    if p.get('background_launch') or p.get('requested_gl_context', 'native') != 'native':
+        # An early NeoForge window may reuse an already-created context, ignoring
+        # later GLFW hints. Explicit benchmark contexts require a fresh window.
+        # Existing preparation backup/CAS and whole-profile restoration apply.
         fml = profile / 'config/fml.toml'
         text = fml.read_text() if fml.exists() else ''
         text = re.sub(r'(?m)^earlyWindowControl\s*=.*$', 'earlyWindowControl = false', text) if re.search(r'(?m)^earlyWindowControl\s*=', text) else text + '\nearlyWindowControl = false\n'

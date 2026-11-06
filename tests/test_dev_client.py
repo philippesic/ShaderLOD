@@ -229,6 +229,18 @@ class DevClientTest(unittest.TestCase):
         self.assertIn('earlyWindowWidth = 854', fml.read_text())
         self.assertEqual((self.root / 'backup/on/config/fml.toml').read_bytes(), original)
 
+    def test_explicit_context_preparation_disables_reused_early_window_with_backup(self):
+        p = dev.plan(self.args())
+        p['background_launch'] = False
+        p['requested_gl_context'] = '4.6'
+        fml = self.profile / 'config/fml.toml'
+        original = b'earlyWindowControl = true\nearlyWindowWidth = 854\n'
+        fml.write_bytes(original)
+        dev.prepare(p, self.root / 'backup')
+        self.assertIn('earlyWindowControl = false', fml.read_text())
+        self.assertIn('earlyWindowWidth = 854', fml.read_text())
+        self.assertEqual(original, (self.root / 'backup/on/config/fml.toml').read_bytes())
+
     def test_windowed_custom_world_requires_neutral_control_and_safe_existing_save(self):
         world = self.profile / 'saves' / 'ShaderLOD-Smoke'
         world.mkdir()

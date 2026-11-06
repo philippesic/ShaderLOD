@@ -35,4 +35,12 @@ class MakeUpShadowSamplerAdmissionTest {
   }
   properties.setProperty("shaderlod.experimentalRendererResearch","true");assertFalse(MakeUpShadowScopePins.safeProperties(properties));
  }
+ @Test void explicitContextIsValidatedAndRequiresTheMaintainedController(){
+  var properties=new Properties();properties.setProperty("shaderlod.dev.benchmarkGlContext","4.6");
+  assertFalse(MakeUpShadowScopePins.safeProperties(properties));
+  properties.setProperty("shaderlod.dev.benchmarkControlProbe","owned/control.json");
+  assertTrue(MakeUpShadowScopePins.safeProperties(properties));
+  properties.setProperty("shaderlod.dev.benchmarkGlContext","true");
+  assertFalse(MakeUpShadowScopePins.safeProperties(properties));
+ }
 }

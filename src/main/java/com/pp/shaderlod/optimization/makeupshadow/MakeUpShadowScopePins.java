@@ -14,6 +14,11 @@ public final class MakeUpShadowScopePins {
    "shaderlod.dev.rendererWorkCounters","shaderlod.dev.nativeTerrainScene","shaderlod.dev.privateObservedReload",
    "shaderlod.dev.mipFamilyRuntime","shaderlod.dev.qualityMotionRuntime");
   for(var name:properties.stringPropertyNames())if(name.startsWith("shaderlod.dev.")&&!ordinary.contains(name)){
+   if(name.equals("shaderlod.dev.benchmarkGlContext")){
+    try{com.pp.shaderlod.benchmark.GlContextRequest.parse(properties.getProperty(name),!properties.getProperty("shaderlod.dev.benchmarkControlProbe","").isBlank());}
+    catch(IllegalArgumentException invalid){return false;}
+    continue;
+   }
    var value=properties.getProperty(name,"").trim();if(!Set.of("","false","off","0").contains(value))return false;
   }
   return !Boolean.parseBoolean(properties.getProperty("shaderlod.experimentalRendererResearch","false"));

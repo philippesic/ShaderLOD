@@ -3,6 +3,7 @@
 from __future__ import annotations
 import argparse,json,hashlib,os,subprocess,sys,time,math,shutil
 import benchmark_workflow as workflow
+import benchmark_gl_context as gl_context
 from contextlib import ExitStack
 import experiment_lifecycle as life
 import run_storage as storage
@@ -268,6 +269,7 @@ def argument_parser():
  p.add_argument('--cpu-placement',action='store_true',help='Read-only Linux renderer-boundary CPU census for native CPU standard comparisons')
  p.add_argument('--audit-graph',action='store_true',help='Untimed selected/linked graph and scalar control inventory after each standard comparison arm')
  p.add_argument('--quality-motion',action='store_true',help='Functional check only: bounded lossless native moving-camera sequences after each arm; never a scored timing run')
+ p.add_argument('--gl-context',choices=gl_context.CHOICES,default='native',help='Request a real benchmark-only GLFW context; record and validate the actual returned version, keeping context cohorts separate')
  p.add_argument('--comparison-order',choices=('ABBA','BAAB'),help='Four-window balanced public/native-control comparison; A native Off, B candidate. Separate from frozen Bliss qualification.')
  p.add_argument('--render-cpu',type=int,default=-1,help='Diagnostic: constrain only the settled render-thread window to one allowed Linux CPU; requires --cpu-placement')
  p.add_argument('--conditioning',type=float,default=0,help='Finite initial rendered conditioning seconds, at most600')
@@ -330,6 +332,7 @@ def preflight(a):
    if value is not None:life.require(math.isfinite(value) and value>=0,'Practical criteria must be finite and nonnegative')
  check('bounded_inputs',inputs)
  def public_inputs():
+  gl_context.validate_request(getattr(a,'gl_context','native'),frozen_qualification=bool(getattr(a,'bliss_qualification',None)))
   if a.quality_motion:
    import benchmark_quality_motion
    benchmark_quality_motion.validate_request(a)
@@ -540,6 +543,8 @@ def preflight(a):
     stop_at=(datetime.now(timezone.utc)+timedelta(seconds=a.budget)).isoformat(),preset=None,
     apply_lod_settings=False,lod_state=None,consumer_uniforms=None,diagnostic_gpu_pass_timing=False,foreground=True)
    plan=dev.plan(params)
+   plan['requested_gl_context']=getattr(a,'gl_context','native')
+   if plan['requested_gl_context']!='native':plan['command']+=['-PbenchmarkGlContext='+plan['requested_gl_context']]
   final_control=str(a.output/'control.json')
   plan['benchmark_control_probe']=final_control
   plan['command']=[('-PbenchmarkControlProbe='+final_control) if x.startswith('-PbenchmarkControlProbe=') else x for x in plan['command']]
@@ -918,6 +923,7 @@ def run_operation(a,admission):
    if a.untimed_diagnostic=='c01-primitives':inputs += [Path(c01_witness.__file__)]
    if a.untimed_diagnostic=='g02-family' or g02_public:inputs += [Path(mip_assessment.__file__)]
    if a.untimed_diagnostic=='c01-cost':inputs += [Path(c01_cost.__file__)]
+   inputs.append(Path(gl_context.__file__))
    if plan.get('pack_options'):inputs.append(Path(plan['pack_options']))
    # Retain the actual validated source/classes/resources map as one compact
    # frozen evidence file instead of copying worlds or generated source trees.
@@ -971,6 +977,7 @@ def run_operation(a,admission):
     life.require(control.send('status')['state'].get('dh_mode')==a.dh_mode,'DH mode did not acknowledge')
    control.send('configure',**options);control.ready();control.send('focus');control.wait(a.warmup)
    state=control.send('status')['state'];life.runtime_ready(state,plan,json.loads((session/'owner.json').read_text()))
+   summary['gl_context']=gl_context.observe(getattr(a,'gl_context','native'),state);save()
    if resource_contract is not None:
     resource_baseline=iteration.resource_selection(state,resource_contract)
     summary['resource_contract']=resource_contract | {'actual_ids':resource_baseline}

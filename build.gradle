@@ -196,6 +196,9 @@ neoForge {
             if (project.hasProperty('benchmarkWindowScale')) {
                 systemProperty 'shaderlod.dev.benchmarkWindowScale', project.property('benchmarkWindowScale').toString()
             }
+            if (project.hasProperty('benchmarkGlContext')) {
+                systemProperty 'shaderlod.dev.benchmarkGlContext', project.property('benchmarkGlContext').toString()
+            }
             if (project.hasProperty('comparisonDebug')) {
                 systemProperty 'shaderlod.dev.comparisonDebug', project.property('comparisonDebug').toString()
             }

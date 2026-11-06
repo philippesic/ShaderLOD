@@ -31,6 +31,17 @@ variation. Keep absent-mod baselines separate from the matched Master-Off
 controls in optimization comparisons. Startup failure supplies no frame-time
 measurement. `native-startup` remains a short original-only startup diagnostic.
 
+`--gl-context native` preserves Minecraft's normal context request. For explicit
+desktop API coverage, maintained comparisons also accept `3.2`, `4.3`, `4.5` and
+`4.6`. These request real GLFW contexts; they do not override reported versions
+or capabilities. Explicit requests disable NeoForge's reusable early window in
+the owned profile, with the normal configuration backup/CAS/restoration contract.
+The returned desktop version must meet the requested minimum and is recorded in
+`summary.json.gl_context`. A driver returning4.6 for a4.5 request is labeled4.6;
+it does not supply an independent4.5 result. Keep actual context/configuration
+cohorts and their native baselines separate. Frozen Bliss qualification retains
+its existing native-context protocol and refuses an explicit context override.
+
 `plan` runs the standard test's static checks without compiling, launching or creating the report. It lists the resolved launch plan, schedule, per-check elapsed time, failures and remedies. A stale build is reported; `test` rebuilds it automatically before launch. Native options and canonical profile inputs are checked; preserve unexplained differences before resetting a managed slot. Runtime-only checks still run in the client.
 
 `check` accepts the same candidate arguments and exercises activation, available source/work checks, short captures and restoration without the two-minute conditioning period. It reports no performance or visual qualification. Use it when checking whether a newly integrated candidate runs; use `test` for a development performance comparison. Frozen Bliss qualification cannot use `check`.
