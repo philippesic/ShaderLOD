@@ -1,8 +1,8 @@
 # Native bloom VRS coverage
 
-This source/harness extension is prepared and locally tested. Native RTX5080
-activation, quality and performance validation remain pending; an actual4.5/4.6
-context is separate from observing the required NV capabilities and consuming draw.
+BSL now passes native RTX5080 functional activation/restoration in both real
+GL4.5 and4.6. Both Complementary targets remain pending. Performance and quality
+validation remain unmeasured; context creation alone is not work proof.
 
 The original BSL contract remains intact. Both Complementary originals also have
 a separate composite4 bloom-only output, target3 rather than BSL target1. The
@@ -48,3 +48,16 @@ requires desktop GL4.5 and the mixed-samples extension, defines indexed viewport
 enables/palettes and a2×2 rate, and describes sample-state adjustments. These
 requirements were checked against the existing backend rather than inferred from
 the GPU model. Native driver behavior still needs live validation.
+
+
+BSL native functional evidence: bsl-c02-gl46-check-r1 and
+bsl-c02-gl45-check-r1 both complete VALID with full configuration/profile
+restoration, release and zero clients. The NV extension/function requirements
+are available. Each candidate owns one certified bloom program and advances
+actual activated/restored scopes together; native controls advance neither.
+The counters bracket functional work, not isolated timed-window invocation counts.
+- 4.6.0 NVIDIA 617.42: candidate activated scopes 4366→6975, restored=6975, backend failed=False.
+- 4.5.0 NVIDIA 617.42: candidate activated scopes 4500→7101, restored=7101, backend failed=False.
+
+No performance, image-equivalence or quarter-fragment-invocation conclusion follows
+from these short functional captures. Per-window controls retain MasterOn/VRSOff.

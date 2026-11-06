@@ -1,1 +1,10 @@
-{"archive": "C:\\ShaderLODBench\\frozen\\native-before-windows-io-7bc497a-20261106.zip", "bytes": 18435392, "sha256": "58ac0d2f62b48ac89228140eec3eff5a9448c073e53eba3af98e0b4fa0c98a92", "files": 5499, "build_bindings": 5034, "verified": true, "source": "7bc497a"}
+{
+  "archive": "C:\\ShaderLODBench\\frozen\\native-before-windows-io-7bc497a-20261106.zip",
+  "bytes": 18435392,
+  "sha256": "58ac0d2f62b48ac89228140eec3eff5a9448c073e53eba3af98e0b4fa0c98a92",
+  "files": 5499,
+  "build_bindings": 5034,
+  "verified": true,
+  "source": "7bc497a",
+  "off_host_verified_archive": "frozen/native-before-windows-io-7bc497a-20261106.zip"
+}

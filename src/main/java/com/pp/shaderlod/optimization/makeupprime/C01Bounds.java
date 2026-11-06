@@ -32,6 +32,7 @@ public final class C01Bounds {
  private static int preparedGroups,preparedCommands,lastNativeProgram,lastDrawFbo,lastDepthObject;
  private static final double[] depthRange=new double[2];
  private static final int[] polygonMode=new int[2];
+ private static int contextProfile;
  private static boolean completeJoin;
  private static C01AsyncWitness witness;
  private static long frameIndicesStart,frameQueriesStart;
@@ -166,8 +167,14 @@ public final class C01Bounds {
       ||GL11C.glGetBoolean(GL40C.GL_TRANSFORM_FEEDBACK_BUFFER_ACTIVE)){
     frame=false;refusal="native program/query/transform feedback guard";nativeDraw.accept(batch);return;
    }
+   // Core has one polygon mode for both faces; compatibility has two. Some
+   // core drivers write only that one enum. Keep two slots for either ABI, but
+   // never treat an untouched second slot as core raster state (GL3.2+/4.6
+   // core state tables). Sentinels prevent accepting incomplete query output.
+   Arrays.fill(depthRange,Double.NaN);Arrays.fill(polygonMode,0);
+   contextProfile=GL11C.glGetInteger(GL32C.GL_CONTEXT_PROFILE_MASK);
    GL11C.glGetDoublev(GL11C.GL_DEPTH_RANGE,depthRange);GL11C.glGetIntegerv(GL11C.GL_POLYGON_MODE,polygonMode);
-   if(depthRange[0]!=0||depthRange[1]!=1||polygonMode[0]!=GL11C.GL_FILL||polygonMode[1]!=GL11C.GL_FILL){frame=false;refusal="nonconventional depth range/polygon mode";nativeDraw.accept(batch);return;}
+   if(!conventionalRaster(depthRange,polygonMode,contextProfile)){frame=false;refusal="nonconventional depth range/polygon mode: depth="+Arrays.toString(depthRange)+", polygon="+Arrays.toString(polygonMode)+", profile="+contextProfile;nativeDraw.accept(batch);return;}
    for(int i=0;i<8;i++)if(GL11C.glIsEnabled(GL30C.GL_CLIP_DISTANCE0+i)){frame=false;refusal="clip distance enabled";nativeDraw.accept(batch);return;}
    state=MakeUpDepthPriming.State.capture(nativeProgram,false);
    if(state==null||!loadUniform(nativeProgram,"iris_ProjectionMatrix",projection)||!loadUniform(nativeProgram,"iris_ModelViewMatrix",model)||!loadUniform(nativeProgram,"taaOffset",jitter)){
@@ -228,6 +235,11 @@ public final class C01Bounds {
   }
  }finally{C01Cost.end("groups_inclusive_copy_submit_observer_wait",cost);}}
  private static boolean loadUniform(int program,String name,float[] out){int loc=GL20C.glGetUniformLocation(program,name);if(loc<0)return false;GL20C.glGetUniformfv(program,loc,out);for(float v:out)if(!Float.isFinite(v))return false;return true;}
+ static boolean conventionalRaster(double[] range,int[] polygon,int profile){
+  return range.length==2&&polygon.length==2&&range[0]==0&&range[1]==1&&polygon[0]==GL11C.GL_FILL
+    &&(profile==GL32C.GL_CONTEXT_CORE_PROFILE_BIT
+       ||profile==GL32C.GL_CONTEXT_COMPATIBILITY_PROFILE_BIT&&polygon[1]==GL11C.GL_FILL);
+ }
  public static void endFrame(int nativeProgram){try{flushDeferred();if(state!=null){state.assertRestored(nativeProgram);MakeUpDepthPriming.assertNoGlError("C01 bounds restore");}}finally{if(witness!=null)witness.finish(frames,indices-frameIndicesStart,queried-frameQueriesStart,frame&&state!=null&&refusal.isEmpty());frame=false;state=null;}}
  /** Explicit untimed diagnostic of the actual attached native sources and last consumed uniforms. */
  public static Map<String,Object> sources(){
@@ -238,6 +250,8 @@ public final class C01Bounds {
   for(int i=0;i<count[0];i++){int type=GL20C.glGetShaderi(attached[i],GL20C.GL_SHADER_TYPE);x.put(type==GL20C.GL_VERTEX_SHADER?"vertex_source":"fragment_source",GL20C.glGetShaderSource(attached[i]));}return x;
  }
  public static Map<String,Object> snapshot(){
-  var x=new LinkedHashMap<String,Object>();x.put("cost",C01Cost.snapshot());x.put("label",label);x.put("mode",mode);x.put("remaining_frames",remaining);x.put("frames",frames);x.put("refusal",refusal);x.put("source",Map.of("native_program",lastNativeProgram,"position","decoded+regionOffset+sectionTranslation; (Projection*ModelView)*position; exact native taaOffset"));x.put("native_admission",C01Prefix.sourceSnapshot());x.put("draw_fbo",lastDrawFbo);x.put("depth_object",lastDepthObject);x.put("deferred_batch_limit",batchLimit);x.put("audit_available_before_native",auditAvailable);x.put("audit_unavailable_before_native",auditUnavailable);x.put("audit_availability_scope","Untimed audit only; availability read and primitive query can change scheduling. Lean conditional path has neither witness.");x.put("cpu_result_reads",cpuResultReads);x.put("cpu_hidden_commands",cpuHiddenCommands);x.put("cpu_hidden_indices",cpuHiddenIndices);x.put("deferred_regions",deferredRegions);x.put("deferred_flushes",deferredFlushes);x.put("max_deferred_regions",maxDeferred);x.put("pending_deferred_regions",deferredCount);x.put("deferred_scope","Current-frame prefix depth only; preserve native region/group order; copy command metadata, reacquire native tessellation/index buffer and exact region uniforms at replay; no historical query reuse");x.put("native_regions",nativeRegions);x.put("native_commands",commands);x.put("native_indices",indices);x.put("groups",groups);x.put("proxy_queries",queried);x.put("fallback_commands",fallback);x.put("actual_zero_primitive_commands",skippedCommands);x.put("actual_zero_primitive_indices",skippedIndices);x.put("false_hidden_observations",contradictions);x.put("mesh_scans",C01MeshBounds.scans.get());x.put("mesh_admitted",C01MeshBounds.admitted.get());x.put("mesh_waving_excluded",C01MeshBounds.wavingExcluded.get());x.put("records",List.copyOf(records));if(witness!=null)x.put("async_witness",witness.snapshot(remaining<=0));return x;
+  // The last observed admission, without introducing state queries in status.
+  var raster=Map.of("depth_range",Arrays.toString(depthRange),"polygon_modes",List.of(polygonMode[0],polygonMode[1]),"context_profile_mask",contextProfile);
+  var x=new LinkedHashMap<String,Object>();x.put("last_raster_state",raster);x.put("cost",C01Cost.snapshot());x.put("label",label);x.put("mode",mode);x.put("remaining_frames",remaining);x.put("frames",frames);x.put("refusal",refusal);x.put("source",Map.of("native_program",lastNativeProgram,"position","decoded+regionOffset+sectionTranslation; (Projection*ModelView)*position; exact native taaOffset"));x.put("native_admission",C01Prefix.sourceSnapshot());x.put("draw_fbo",lastDrawFbo);x.put("depth_object",lastDepthObject);x.put("deferred_batch_limit",batchLimit);x.put("audit_available_before_native",auditAvailable);x.put("audit_unavailable_before_native",auditUnavailable);x.put("audit_availability_scope","Untimed audit only; availability read and primitive query can change scheduling. Lean conditional path has neither witness.");x.put("cpu_result_reads",cpuResultReads);x.put("cpu_hidden_commands",cpuHiddenCommands);x.put("cpu_hidden_indices",cpuHiddenIndices);x.put("deferred_regions",deferredRegions);x.put("deferred_flushes",deferredFlushes);x.put("max_deferred_regions",maxDeferred);x.put("pending_deferred_regions",deferredCount);x.put("deferred_scope","Current-frame prefix depth only; preserve native region/group order; copy command metadata, reacquire native tessellation/index buffer and exact region uniforms at replay; no historical query reuse");x.put("native_regions",nativeRegions);x.put("native_commands",commands);x.put("native_indices",indices);x.put("groups",groups);x.put("proxy_queries",queried);x.put("fallback_commands",fallback);x.put("actual_zero_primitive_commands",skippedCommands);x.put("actual_zero_primitive_indices",skippedIndices);x.put("false_hidden_observations",contradictions);x.put("mesh_scans",C01MeshBounds.scans.get());x.put("mesh_admitted",C01MeshBounds.admitted.get());x.put("mesh_waving_excluded",C01MeshBounds.wavingExcluded.get());x.put("records",List.copyOf(records));if(witness!=null)x.put("async_witness",witness.snapshot(remaining<=0));return x;
  }
 }

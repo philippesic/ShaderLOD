@@ -211,3 +211,21 @@ scripts/tests/definitions were verified/archived before replacement. Latest60.8G
 free is sufficient above the32GiB reserve; cleanup remains ShaderLOD-only.
 [Working state](../dev/experiments/rtx5080-four-target-audit-20261106/STATE.md),
 [frozen-input receipt](../dev/experiments/rtx5080-four-target-audit-20261106/native-before-windows-io-freeze.json).
+
+### 2026-11-06 RTX5080 first G01 score and native bloom activation
+
+The repaired MakeUp G01 ABBA comparison completes VALID/restored/reset/released:
+2.0292553ms matched native versus1.9628349ms candidate, apparent reduction3.27314%
+at n1. Untimed final-copy witnesses change six→four→six with zero metadata/stream
+errors. Frame and within-process window variances are retained; independent-repeat
+variance, null controls and bounded quality remain pending. This is no repeated
+benefit or generalized history/lifetime claim. [G01 evidence](../dev/experiments/rtx5080-four-target-audit-20261106/G01_PORT.md).
+
+BSL C02 now passes actual GL4.5/4.6 functional activation and restoration with the
+NV backend, a certified bloom program and advancing actual scopes. No performance
+or quality claim. C01's first GPU check instead refused polygon/depth state. A
+profile-aware API repair checks the single core polygon mode or both compatibility
+modes while retaining all depth/bounds/source guards.22 C01 Java tests and compile
+pass on both hosts; fresh native work validation is active. All replaced bindings
+are verified/preserved off-host. [C01 repair](../dev/experiments/rtx5080-four-target-audit-20261106/C01_PORT.md),
+[C02 proof](../dev/experiments/rtx5080-four-target-audit-20261106/C02_PORT.md).

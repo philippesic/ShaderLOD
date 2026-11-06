@@ -28,7 +28,9 @@ process variances are retained separately in the campaign's compact progress dat
 MakeUp G03 passes actual linked rewritten CUTOUT functional admission. BSL source
 ownership and startup-race repairs pass its first balanced comparison with verified
 submissions/restoration; apparent reduction−0.21% at n1 is unresolved against
-variation. No optimization-benefit conclusion is available yet. The completed
+variation. MakeUp G01 now completes its first valid balanced process with actual copy removal,
+a promising lower mean at n1; independent repeats, controls and quality remain
+pending. No repeated optimization-benefit conclusion is available yet. The completed
 11-operation baseline batch is restored/released and its prior source/classes
 are verified/preserved before replacement. Canonical source now has a finite C02
 extension for the separate Complementary bloom outputs, plus balanced order and
@@ -36,7 +38,10 @@ bounded motion support; local tests pass, native activation remains pending.
 The first G01 score was interrupted by Windows ownership-file sharing and an
 untracked generated FML config backup; it is invalid, released and fully restored
 with backup bytes retained. Both hosts pass the maintained harness repairs. A
-fresh port-validation queue is active before the opposite-order comparison blocks. See the
+fresh port-validation queue is active before the opposite-order comparison blocks.
+BSL bloom VRS now passes actual4.5/4.6 activation/restoration. A C01 core-profile
+polygon-state repair also observes real native GPU-query work, with independent
+primitive, timing and quality checks pending. See the
 campaign [working state](../dev/experiments/rtx5080-four-target-audit-20261106/STATE.md),
 [BSL proof](../dev/experiments/rtx5080-four-target-audit-20261106/G03_PORT.md) and
 [C02 port scope](../dev/experiments/rtx5080-four-target-audit-20261106/C02_PORT.md).

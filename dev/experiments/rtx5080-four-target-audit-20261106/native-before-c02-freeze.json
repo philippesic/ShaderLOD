@@ -1,1 +1,10 @@
-{"archive": "C:\\ShaderLODBench\\frozen\\native-before-c02-ac0481f-20261106.zip", "bytes": 19528698, "sha256": "4210f0535c4f7a2f742d69f214035075abfdcb5d0cb0eade9eb178fe4d3c8355", "build_bindings_verified": 5034, "files": 5269, "clients": 0, "baseline_operations_verified": 11}
+{
+  "archive": "C:\\ShaderLODBench\\frozen\\native-before-c02-ac0481f-20261106.zip",
+  "bytes": 19528698,
+  "sha256": "4210f0535c4f7a2f742d69f214035075abfdcb5d0cb0eade9eb178fe4d3c8355",
+  "build_bindings_verified": 5034,
+  "files": 5269,
+  "clients": 0,
+  "baseline_operations_verified": 11,
+  "off_host_verified_archive": "frozen/native-before-c02-ac0481f-20261106.zip"
+}

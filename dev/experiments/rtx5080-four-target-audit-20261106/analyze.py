@@ -21,7 +21,7 @@ def spread(values):
             'variance':stats.variance(values) if len(values)>1 else None}
 
 jobs=[]
-for name in ('rtx5080-observed-v1.json','rtx5080-baselines-v1.json','rtx5080-comparisons-v1.json','rtx5080-port-validation-v2.json'):
+for name in ('rtx5080-observed-v1.json','rtx5080-baselines-v1.json','rtx5080-comparisons-v1.json','rtx5080-port-validation-v2.json','rtx5080-port-validation-v3.json'):
     path=ROOT/'benchmarks/campaigns'/name
     if path.exists():jobs.extend(json.loads(path.read_text()))
 seen=set();runs=[];raw_rows=[]

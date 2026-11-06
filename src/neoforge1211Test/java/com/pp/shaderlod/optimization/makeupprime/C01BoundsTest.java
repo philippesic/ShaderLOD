@@ -5,7 +5,24 @@ import org.joml.Matrix4f;
 import org.joml.Vector4f;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.lwjgl.opengl.GL11C.*;
+import static org.lwjgl.opengl.GL32C.*;
 class C01BoundsTest {
+ @Test void coreHasOnePolygonModeWhileCompatibilityRequiresBothFaces(){
+  var range=new double[]{0,1};
+  assertTrue(C01Bounds.conventionalRaster(range,new int[]{GL_FILL,0},GL_CONTEXT_CORE_PROFILE_BIT));
+  assertTrue(C01Bounds.conventionalRaster(range,new int[]{GL_FILL,GL_FILL},GL_CONTEXT_CORE_PROFILE_BIT));
+  assertTrue(C01Bounds.conventionalRaster(range,new int[]{GL_FILL,GL_FILL},GL_CONTEXT_COMPATIBILITY_PROFILE_BIT));
+  for(int profile:new int[]{GL_CONTEXT_CORE_PROFILE_BIT,GL_CONTEXT_COMPATIBILITY_PROFILE_BIT}){
+   assertFalse(C01Bounds.conventionalRaster(range,new int[]{GL_LINE,GL_FILL},profile));
+   assertFalse(C01Bounds.conventionalRaster(new double[]{0,.5},new int[]{GL_FILL,GL_FILL},profile));
+   assertFalse(C01Bounds.conventionalRaster(new double[]{Double.NaN,1},new int[]{GL_FILL,GL_FILL},profile));
+  }
+  assertFalse(C01Bounds.conventionalRaster(range,new int[]{GL_FILL,0},GL_CONTEXT_COMPATIBILITY_PROFILE_BIT));
+  assertFalse(C01Bounds.conventionalRaster(range,new int[]{GL_FILL,GL_LINE},GL_CONTEXT_COMPATIBILITY_PROFILE_BIT));
+  assertFalse(C01Bounds.conventionalRaster(range,new int[]{GL_FILL,GL_FILL},0));
+  assertFalse(C01Bounds.conventionalRaster(range,new int[]{GL_FILL,GL_FILL},GL_CONTEXT_CORE_PROFILE_BIT|GL_CONTEXT_COMPATIBILITY_PROFILE_BIT));
+ }
  private static ByteBuffer mesh(int material,int section){
   var b=ByteBuffer.allocateDirect(4*28).order(ByteOrder.nativeOrder());
   for(int i=0;i<4;i++){int x=(i&1)==0?262144:786432,y=i<2?262144:786432,z=524288;

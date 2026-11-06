@@ -45,6 +45,7 @@ __pycache__/
 !/dev/experiments/rtx5080-four-target-audit-20261106/frontend-parity.json
 !/dev/experiments/rtx5080-four-target-audit-20261106/native-before-c02-freeze.json
 !/dev/experiments/rtx5080-four-target-audit-20261106/native-before-windows-io-freeze.json
+!/dev/experiments/rtx5080-four-target-audit-20261106/native-before-c01-raster-freeze.json
 !/dev/experiments/*.md
 !/dev/experiments/*/*.md
 !/dev/experiments/*.patch

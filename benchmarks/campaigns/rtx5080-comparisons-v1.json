@@ -1358,7 +1358,7 @@
     "kind": "test",
     "case": "gpu-authored",
     "phase": "screening",
-    "variant": "ac0481f-native-windows-v1",
+    "variant": "c01-profile-polygon-v1",
     "output": "dev/experiments/rtx5080-four-target-audit-20261106/makeup-c01-gpu-authored-test-r1",
     "command": [
       "C:/ShaderLODBench/tools/python/Scripts/python.exe",
@@ -2120,7 +2120,7 @@
     "kind": "test",
     "case": "gpu-natural-cave",
     "phase": "screening",
-    "variant": "ac0481f-native-windows-v1",
+    "variant": "c01-profile-polygon-v1",
     "output": "dev/experiments/rtx5080-four-target-audit-20261106/makeup-c01-gpu-natural-cave-test-r1",
     "command": [
       "C:/ShaderLODBench/tools/python/Scripts/python.exe",
@@ -3603,7 +3603,7 @@
     "kind": "test",
     "case": "gpu-authored",
     "phase": "screening",
-    "variant": "ac0481f-native-windows-v1",
+    "variant": "c01-profile-polygon-v1",
     "output": "dev/experiments/rtx5080-four-target-audit-20261106/makeup-c01-gpu-authored-test-r2",
     "command": [
       "C:/ShaderLODBench/tools/python/Scripts/python.exe",
@@ -4365,7 +4365,7 @@
     "kind": "test",
     "case": "gpu-natural-cave",
     "phase": "screening",
-    "variant": "ac0481f-native-windows-v1",
+    "variant": "c01-profile-polygon-v1",
     "output": "dev/experiments/rtx5080-four-target-audit-20261106/makeup-c01-gpu-natural-cave-test-r2",
     "command": [
       "C:/ShaderLODBench/tools/python/Scripts/python.exe",

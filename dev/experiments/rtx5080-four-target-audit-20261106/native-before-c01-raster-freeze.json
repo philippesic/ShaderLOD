@@ -1,0 +1,10 @@
+{
+  "archive": "C:\\ShaderLODBench\\frozen\\native-before-c01-raster-db5dd15-20261106.zip",
+  "bytes": 18438207,
+  "sha256": "81826a684d5c9ca06f75e75b3f252322c2de239b62388a3b1b69e3719013fc5d",
+  "files": 5500,
+  "build_bindings": 5034,
+  "verified": true,
+  "freeGiB": 60.08486557006836,
+  "off_host_verified_archive": "frozen/native-before-c01-raster-db5dd15-20261106.zip"
+}
