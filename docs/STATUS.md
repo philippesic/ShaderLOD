@@ -1,6 +1,6 @@
 # Current state
 
-Updated 2026-11-05. Current scope remains the cross-shader/cross-machine audit of
+Updated 2026-11-06. Current scope remains the cross-shader/cross-machine audit of
 G01–G10, C01–C02 and N01–N04. V1 targets are Complementary Reimagined, Complementary
 Unbound, BSL and MakeUp Ultra Fast; shared renderer/LOD mechanisms remain the goal.
 The [retained direction and audit](STATUS_AUDIT_20261105.md) preserves the exact
@@ -14,10 +14,18 @@ qualification remain unproven. See [conclusions](../dev/experiments/asahi-four-t
 [results](../dev/experiments/asahi-four-target-audit-20261104/results.json) and
 [terminal restoration](../dev/experiments/asahi-four-target-audit-20261104/terminal-audit.json).
 
-Next research step is second-GPU validation of viable candidates under the existing
-plan. RTX 2080 Ti availability must be renewed; the last record assigns it to another
-task. RTX 5080 was also unavailable. These are dated allocations, not a live census.
-No benchmark is launched or resumed by documentation cleanup.
+**Active user request:** comprehensive RTX5080 rerun of all16 candidates across
+the same four targets, with hardware/GL repairs, work/correctness proof,
+investigation of unexpected regressions, repeated timings and variance charts.
+See the [campaign plan](../dev/experiments/rtx5080-four-target-audit-20261106/PLAN.md).
+Native Windows preflight observes RTX5080/driver617.42, an active3840×2160 console
+and idle GPU; previous GPU work is released. Windows C: has only about1GiB free,
+below the32GiB reserve. A user question is pending to free capacity or review
+specific cleanup candidates; no native profile copy or benchmark was launched.
+Independent read-only inventory and local maintained-harness preparation continue.
+
+RTX2080Ti remains outside this allocation; renew availability before using it.
+The active source branch is `rtx5080-audit`; milestone pushes go to user-owned origin.
 
 ## Find context
 
