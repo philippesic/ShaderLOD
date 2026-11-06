@@ -286,7 +286,8 @@ def supervise(session):
   dev.write_json(session/'owner.json',owner)
   state=dict(game_directory=plan['profile'],client_pid=os.getpid(),pack=plan['pack_name'],pipeline_identity=1,pack_identity=2,
     world_loaded=True,meshes_ready=True,fallback=False,main_mod=plan['mode']=='on',focused=True,fullscreen=True,screen='none',
-    width=1920,height=1200,loaded_stack=plan['runtime_versions'],effective_options={'NATIVE_QUALITY':'3'},
+    width=1920,height=1200,gpu_driver='3.2 fixture simulation',gpu_renderer='Explicit fake fixture renderer',
+    loaded_stack=plan['runtime_versions'],effective_options={'NATIVE_QUALITY':'3'},
     installed={'family':plan.get('fixture_family','fixture-family'),'master':False,'flags':{},'early_alpha_draw_counters':{'qualified_draws':0}})
   if plan.get('combo'):state['installed']['g06_selected_source_skip']=False
   if plan.get('g04_fixture'):state['installed']['g04_selected_source_fastpath']=False
@@ -651,3 +652,30 @@ class ReleaseConflictTest(unittest.TestCase):
                     runner.release_runtime(op,proc)
                 stop.assert_called_once_with(session);retire.assert_called_once_with(session)
                 op.acknowledge_mutation.assert_not_called();op.restore.assert_called_once()
+
+
+class InitialRuntimeSettlingTest(unittest.TestCase):
+    def test_following_callback_write_restarts_initial_stability_boundary(self):
+        import run_benchmark as runner
+        from unittest.mock import Mock, patch
+        with tempfile.TemporaryDirectory() as directory:
+            config=Path(directory)/'config';config.write_text('before family migration')
+            op=Mock(data={'mutation_pending':'initial-runtime-prepare','configuration':{str(config):{}}})
+            elapsed=[0.0];events=[]
+            control=Mock()
+            def status(action):
+                self.assertEqual(action,'status');events.append(elapsed[0])
+                if len(events)==3:config.write_text('migrated family settings')
+            def wait(seconds,**kwargs):elapsed[0]+=seconds
+            control.send.side_effect=status;control.wait.side_effect=wait
+            with patch.object(runner.time,'monotonic',side_effect=lambda:elapsed[0]):
+                result=runner.settle_initial_runtime(control,op)
+            self.assertGreaterEqual(result['status_callbacks'],7)
+            self.assertGreaterEqual(elapsed[0]-events[2],1)
+            self.assertEqual(config.read_text(),'migrated family settings')
+            op.acknowledge_mutation.assert_not_called()
+    def test_initial_settling_requires_owned_startup_mutation(self):
+        import run_benchmark as runner
+        from unittest.mock import Mock
+        with self.assertRaisesRegex(ValueError,'Owned initial preparation'):
+            runner.settle_initial_runtime(Mock(),Mock(data={'mutation_pending':False}))

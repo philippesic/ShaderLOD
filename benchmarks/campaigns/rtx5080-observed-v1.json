@@ -1,0 +1,122 @@
+[
+  {
+    "name": "makeup-baseline-native-r1",
+    "shader": "makeup",
+    "kind": "baseline",
+    "goal": null,
+    "case": "primary",
+    "phase": "initial",
+    "variant": "source-port-v1",
+    "output": "dev/experiments/rtx5080-four-target-audit-20261106/makeup-baseline-native-r1"
+  },
+  {
+    "name": "reimagined-baseline-native-r1",
+    "shader": "reimagined",
+    "kind": "baseline",
+    "goal": null,
+    "case": "primary",
+    "phase": "initial",
+    "variant": "source-port-v1",
+    "output": "dev/experiments/rtx5080-four-target-audit-20261106/reimagined-baseline-native-r1"
+  },
+  {
+    "name": "bsl-baseline-native-r1",
+    "shader": "bsl",
+    "kind": "baseline",
+    "goal": null,
+    "case": "primary",
+    "phase": "initial",
+    "variant": "source-port-v1",
+    "output": "dev/experiments/rtx5080-four-target-audit-20261106/bsl-baseline-native-r1"
+  },
+  {
+    "name": "makeup-g03-check-native-r1",
+    "shader": "makeup",
+    "kind": "check",
+    "goal": "G03",
+    "case": "native-minimal",
+    "phase": "initial",
+    "variant": "source-port-v1",
+    "output": "dev/experiments/rtx5080-four-target-audit-20261106/makeup-g03-check-native-r1"
+  },
+  {
+    "name": "makeup-g03-check-native-r2",
+    "shader": "makeup",
+    "kind": "check",
+    "goal": "G03",
+    "case": "native-minimal",
+    "phase": "initial",
+    "variant": "source-port-v1",
+    "output": "dev/experiments/rtx5080-four-target-audit-20261106/makeup-g03-check-native-r2"
+  },
+  {
+    "name": "bsl-g03-check-optimized-native-r1",
+    "shader": "bsl",
+    "kind": "check",
+    "goal": "G03",
+    "case": "source-basic-native-optimized",
+    "phase": "initial",
+    "variant": "source-port-v1",
+    "output": "dev/experiments/rtx5080-four-target-audit-20261106/bsl-g03-check-optimized-native-r1"
+  },
+  {
+    "name": "bsl-g03-check-optimized-native-r2",
+    "shader": "bsl",
+    "kind": "check",
+    "goal": "G03",
+    "case": "source-basic-native-optimized",
+    "phase": "initial",
+    "variant": "source-port-v1",
+    "output": "dev/experiments/rtx5080-four-target-audit-20261106/bsl-g03-check-optimized-native-r2"
+  },
+  {
+    "name": "bsl-g03-check-optimized-native-r3",
+    "shader": "bsl",
+    "kind": "check",
+    "goal": "G03",
+    "case": "source-basic-native-optimized",
+    "phase": "initial",
+    "variant": "source-port-v1",
+    "output": "dev/experiments/rtx5080-four-target-audit-20261106/bsl-g03-check-optimized-native-r3"
+  },
+  {
+    "name": "bsl-g03-check-optimized-native-r4",
+    "shader": "bsl",
+    "kind": "check",
+    "goal": "G03",
+    "case": "source-basic-native-optimized",
+    "phase": "initial",
+    "variant": "source-port-v1",
+    "output": "dev/experiments/rtx5080-four-target-audit-20261106/bsl-g03-check-optimized-native-r4"
+  },
+  {
+    "name": "bsl-g03-check-optimized-native-r5",
+    "shader": "bsl",
+    "kind": "check",
+    "goal": "G03",
+    "case": "source-basic-native-optimized",
+    "phase": "initial",
+    "variant": "source-port-v1",
+    "output": "dev/experiments/rtx5080-four-target-audit-20261106/bsl-g03-check-optimized-native-r5"
+  },
+  {
+    "name": "bsl-g03-check-optimized-native-r6",
+    "shader": "bsl",
+    "kind": "check",
+    "goal": "G03",
+    "case": "source-basic-native-optimized",
+    "phase": "initial",
+    "variant": "source-port-v1",
+    "output": "dev/experiments/rtx5080-four-target-audit-20261106/bsl-g03-check-optimized-native-r6"
+  },
+  {
+    "name": "bsl-g03-test-optimized-native-abba-r1",
+    "shader": "bsl",
+    "kind": "test",
+    "goal": "G03",
+    "case": "source-basic-native-optimized",
+    "phase": "initial",
+    "variant": "source-port-v1",
+    "output": "dev/experiments/rtx5080-four-target-audit-20261106/bsl-g03-test-optimized-native-abba-r1"
+  }
+]

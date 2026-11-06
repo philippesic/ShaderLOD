@@ -56,7 +56,7 @@ class PackSelectionTransactionTest {
         expected.forEach((name, value) -> assertArrayEquals(value, actual.get(name), name));
     }
     @Test void ownedSourceMismatchReloadsEvenWhenOriginalArchiveAndOptionsDoNotChange() throws Exception {
-        Path fixture=Path.of("dependencies/upstream/other-pack-research/BSL_v10.1.8.zip");
+        Path fixture=Path.of("dependencies/shortlist-test-inputs/originals/BSL_v10.1.8.zip");
         assertTrue(Files.isRegularFile(fixture), "Pinned BSL input for the affected route must exist");
         Files.copy(fixture,directory.resolve("Photon.zip"));
         var backend=new Backend();
@@ -184,7 +184,7 @@ class PackSelectionTransactionTest {
         assertEquals("Photon.zip", backend.selected);
     }
     @Test void bslOriginalRendererRetainsGraphAndQueuedNativeWriterOwnership() throws Exception {
-        Path fixture = Path.of("dependencies/upstream/other-pack-research/BSL_v10.1.8.zip");
+        Path fixture = Path.of("dependencies/shortlist-test-inputs/originals/BSL_v10.1.8.zip");
         assumeTrue(Files.isRegularFile(fixture), "Pinned BSL fixture required");
         var backend = new Backend(); backend.selected = "Bsl.zip"; backend.rendererAvailable = true;
         Files.copy(fixture, directory.resolve(backend.selected));

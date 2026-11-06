@@ -25,11 +25,14 @@ suggestion was conservative headroom, not a fixed minimum. Cleanup remains limit
 to ShaderLOD. Native canonical profiles, two managed slots and an isolated toolchain
 are prepared and native compilation passes. Original MakeUp startup succeeds on
 the actual RTX5080 at3840×2160/GL3.2, restores inputs and leaves zero clients.
-Explicit GL4.6 startup also passes with restoration. MakeUp and Reimagined each have one valid conditioned original-only baseline
+Explicit GL4.6 startup also passes with restoration. MakeUp, Reimagined and BSL each have one valid conditioned original-only baseline
 process with three20s windows and restoration. An Asahi-only G03 source gate was
-identified on NVIDIA; a finite source/harness repair is undergoing live functional
-validation, with linked rewritten CUTOUT submissions now observed. No candidate
-performance conclusion is available yet. See the campaign
+identified on NVIDIA; a finite source/harness repair has passed MakeUp functional validation. BSL source
+ownership and startup-race repairs now pass a balanced comparison with verified
+submissions/restoration. Its n1 apparent reduction is−0.21%, unresolved against
+variation; earlier functional failures remain separate. Independent baselines,
+optimized/context cohorts and actual4.3/4.5 startups are now serialized on the
+native console. No optimization-benefit conclusion is available yet. See the campaign
 [working state](../dev/experiments/rtx5080-four-target-audit-20261106/STATE.md).
 
 RTX2080Ti remains outside this allocation; renew availability before using it.

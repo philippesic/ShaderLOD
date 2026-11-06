@@ -91,3 +91,17 @@ original archive identities match and the isolated native toolchain is prepared.
 Initial dependency/build setup is in progress. Keep compact timing records and
 preserve completed large captures off-machine as needed, instead of requiring all
 campaign captures to accumulate on C:. No scope expansion to other-project cleanup.
+
+
+## Native serialized acquisition
+
+The Session1 launcher can serialize maintained commands using the existing
+campaign queue helper. The versioned
+[original/context queue](../../../benchmarks/campaigns/rtx5080-baselines-v1.json)
+contains the remaining independent native baselines, separate optimized-stack and
+GL4.6 BSL baselines, and actual4.3/4.5 startup checks. It contains no alternative
+measurement code. The interactive launcher checks fresh owned outputs and exact
+maintained CLI commands; the queue stops on failed restoration or remaining
+clients. Its optional manual task time limit must cover the full serialized list.
+Each operation retains the harness's own fixed timing, budget, storage and recovery
+checks. The full source tree stays frozen on Windows while the queue is active.

@@ -173,6 +173,42 @@ class Operation:
         for value, row in self.data['configuration'].items():
             require(digest(value) == row['expected'], 'Configuration differs from last owned checkpoint: '+value)
 
+    def preserve_conflicting_configuration(self):
+        """Explicit stopped-runtime recovery: retain uncertain bytes, then restore.
+
+        Normal restoration still refuses every unacknowledged change. This path
+        is available only through explicit recover after verified process release
+        and while the runtime/world locks are held; no science commands replay.
+        """
+        require(self.data.get('process_release_verified'), 'Verified process release required before conflict preservation')
+        for value, row in self.data['configuration'].items():
+            if row.get('restored'):continue
+            path=storage.safe_path(value)
+            records=self.data.setdefault('preserved_configuration_conflicts',{})
+            prior=records.get(value)
+            current=digest(path)
+            if current is None and prior and prior.get('status')=='intent':
+                saved=storage.safe_path(prior['saved'])
+                require(saved.is_file() and digest(saved)==prior['observed_sha256'], 'Interrupted config preservation is uncertain')
+                row['expected']=None;prior['status']='preserved';self.save();continue
+            if current in (row['before'],row['expected']):continue
+            require(path.is_file(), 'Missing/special conflicting configuration retained for inspection')
+            relative=path.relative_to(Path(self.data['profile']).parent)
+            saved=storage.safe_path(self.output/'configuration-conflicts-preserved'/relative)
+            require(not saved.exists(), 'Configuration preservation collision; keep all evidence')
+            saved.parent.mkdir(parents=True,exist_ok=True)
+            info=path.stat()
+            records[value]=dict(saved=str(saved),observed_sha256=current,previous_expected=row['expected'],
+                                original_sha256=row['before'],bytes=info.st_size,status='intent')
+            self.save()
+            after=path.stat()
+            require((info.st_dev,info.st_ino,info.st_size,info.st_mtime_ns)==
+                    (after.st_dev,after.st_ino,after.st_size,after.st_mtime_ns) and digest(path)==current,
+                    'Concurrent configuration writer; conflict preserved in place')
+            path.rename(saved)
+            require(digest(saved)==current,'Preserved conflicting bytes changed')
+            row['expected']=None;records[value]['status']='preserved';self.save()
+
     def begin_mutation(self, action):
         self.assert_expected()
         require(not self.data['mutation_pending'], 'Unresolved configuration mutation; recover without replay')

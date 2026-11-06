@@ -49,3 +49,74 @@ the new files before restoring the original profile/world maps. Existing or
 unknown edits remain protected. Frozen old harness inputs were preserved before
 the recovery implementation was installed. Recovery completed failed-restored
 with zero replayed commands; BSL optimized r2 is now running.
+
+
+## BSL source path and startup recovery
+
+BSL original-only baseline r1 is valid on native GL3.2 at3840×2160, after120s
+conditioning and three20s windows. It is a minimal-stack baseline; the G03
+optimized tuple needs its own controls and baseline. This supplies no candidate
+performance verdict.
+
+The native BSL CUTOUT text is byte-identical to the complete existing semantic
+fixture. Windows still selected the legacy generated adapter, bypassing the
+pure source lowering. Selection now keeps the unchanged original only for the
+finite verified Windows host and the exact BSL singleton; source, native384,
+module/API and resource checks remain independent. Actual shader text/type,
+compile status, successful linked program and immutable terrain-slot ownership
+are checked. The terrain slot is read explicitly: Iris's general CUTOUT lookup
+returns the shadow program during shadow rendering and had invalidated a valid
+terrain certificate in r3. The pinned Iris API/reflection test covers that slot.
+
+R4 failed before any capture on a startup file-checkpoint race. Family migration
+atomically appended the BSL flag map after the initial prepare receipt and after
+the controller acknowledged startup. The maintained harness now keeps that same
+startup mutation open through subsequent read-only callbacks and one second of
+stable tracked file bytes. Explicit stopped-runtime recovery retained the late
+configuration under configuration-conflicts-preserved before restoring its
+original backup; zero commands were replayed. Recovery requires verified exact
+process absence and runtime/world locks. Ordinary restoration still refuses
+unacknowledged changes. R4 is failed-restored; the preserved file and old frozen
+Python inputs are retained in its report. R5 passed the repaired startup boundary.
+
+R5 established immutable linked terrain ownership but its observation counted no
+submissions. R6 untimed diagnostics found the real candidate program was submitted,
+but a no-op family persistence incremented the global request generation after
+linking. That mutable counter is not the immutable program lifetime. The observer
+now requires actual current program/context/pipeline, exact flags, selected pack,
+world and resource identity; the comparison separately pins request generation
+across each scored window. Compile/link generation matching remains enforced.
+The observer grants no runtime permission and is disarmed before timing.
+
+The fresh BSL G03 optimized/native ABBA process completed VALID and restored
+all configuration/world inputs with zero clients. Both candidate windows retain
+current rewritten CUTOUT ownership and untimed completed native submissions; the
+observer is disarmed during timing. R1–R6 functional failures are not performance
+regressions. No BSL candidate gain is claimed from this single process.
+Frozen pre-repair sources/classes remain in the corresponding reports. Relevant
+Java source/policy/fallback tests and compilation pass;98 benchmark Python tests
+pass (2 Asahi skips),29 lifecycle tests pass, and focused real-process startup/
+restoration checks pass. The full169-test Python benchmark/smoke suite also passes (2 Asahi skips),
+including real fixture-process restoration and deliberate refusal paths. Its fake
+client now reports explicit simulated GPU metadata; real GL validation is intact.
+
+
+First BSL G03 timing (one process, exact optimized tuple, native GL3.2, saved pose1,
+3840×2160/native AA;120s conditioning, four20s balanced windows):
+
+| Window | Mean ms | Frame variance ms² | Frame SD ms |
+| --- | ---: | ---: | ---: |
+| Native0 | 2.986397 | 0.010977 | 0.104769 |
+| Candidate0 | 2.997879 | 0.027997 | 0.167323 |
+| Candidate1 | 3.008409 | 0.010564 | 0.102784 |
+| Native1 | 3.007030 | 0.010888 | 0.104346 |
+
+Native group mean2.996713ms, candidate3.003144ms: apparent reduction−0.214594%.
+Native window-mean variance0.000212859ms²; candidate0.0000554442ms².
+Between-process variance is unavailable (n1), never zero. The small difference is
+unresolved against within-process drift; independent opposite-order repetition
+and known-null controls remain required. This is not a visual qualification.
+Raw [summary](bsl-g03-test-optimized-native-abba-r1/summary.json) and original
+samples are retained off-machine. Initial MakeUp G03 still inspection shows no
+obvious missing foliage/geometry; clouds/temporal detail differ between captures,
+and moving-camera quality remains untested.

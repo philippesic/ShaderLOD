@@ -22,7 +22,7 @@ public final class MakeUpDeadCopySetup {
     }
     private static MakeUpDeadCopyAdmission.Context context() {
         try {
-            if (!MakeUpDeadCopyAdmission.platformQualified(System.getProperty("os.name"),
+            if (!MakeUpDeadCopyAdmission.platformQualified(System.getProperty("os.name"),System.getProperty("os.arch"),
                     org.lwjgl.opengl.GL11.glGetString(org.lwjgl.opengl.GL11.GL_RENDERER),
                     org.lwjgl.opengl.GL11.glGetString(org.lwjgl.opengl.GL11.GL_VERSION)))
                 return rejected("unqualified platform/renderer/driver; native graph retained");

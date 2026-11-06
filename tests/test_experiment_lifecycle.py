@@ -54,6 +54,35 @@ class LifecycleTests(unittest.TestCase):
   reopened=life.Operation(self.out)
   with self.assertRaisesRegex(ValueError,'Uncertain'):reopened.restore()
   self.assertEqual(self.file.read_text(),'uncertain')
+ def test_explicit_stopped_recovery_retains_conflict_then_restores_original(self):
+  self.mutate();self.file.write_text('late owned initialization')
+  with self.assertRaisesRegex(ValueError,'Verified process release'):self.op.preserve_conflicting_configuration()
+  with self.assertRaisesRegex(ValueError,'Uncertain'):self.op.restore()
+  self.op.data['process_release_verified']=True
+  self.op.preserve_conflicting_configuration()
+  record=self.op.data['preserved_configuration_conflicts'][str(self.file)]
+  self.assertEqual(Path(record['saved']).read_text(),'late owned initialization')
+  self.assertFalse(self.file.exists());self.op.restore()
+  self.assertEqual(self.file.read_text(),'original');self.assertTrue(self.op.data['configuration_restored'])
+  self.assertEqual(Path(record['saved']).read_text(),'late owned initialization')
+ def test_conflict_preservation_collision_keeps_both_versions(self):
+  self.mutate();self.file.write_text('uncertain');self.op.data['process_release_verified']=True
+  saved=self.out/'configuration-conflicts-preserved/client/config/iris.properties'
+  saved.parent.mkdir(parents=True);saved.write_text('earlier evidence')
+  with self.assertRaisesRegex(ValueError,'collision'):self.op.preserve_conflicting_configuration()
+  self.assertEqual(self.file.read_text(),'uncertain');self.assertEqual(saved.read_text(),'earlier evidence')
+ def test_interrupted_conflict_rename_resumes_only_with_exact_retained_bytes(self):
+  self.mutate();self.file.write_text('uncertain');self.op.data['process_release_verified']=True
+  saved=self.out/'configuration-conflicts-preserved/client/config/iris.properties'
+  saved.parent.mkdir(parents=True)
+  self.op.data['preserved_configuration_conflicts']={str(self.file):dict(saved=str(saved),observed_sha256=life.digest(self.file),status='intent')}
+  self.file.rename(saved);self.op.save();self.op=life.Operation(self.out)
+  self.op.preserve_conflicting_configuration();self.op.restore()
+  self.assertEqual(self.file.read_text(),'original');self.assertEqual(saved.read_text(),'uncertain')
+ def test_missing_conflict_is_not_silently_adopted(self):
+  self.mutate();self.file.unlink();self.op.data['process_release_verified']=True
+  with self.assertRaisesRegex(ValueError,'Missing/special'):self.op.preserve_conflicting_configuration()
+  self.assertFalse(self.file.exists())
  def test_missing_original_file_is_restored_only_if_owned_deletion_acknowledged(self):
   self.op.begin_mutation('owned-delete');self.file.unlink();self.op.acknowledge_mutation('owned-delete');self.op.restore()
   self.assertEqual(self.file.read_text(),'original')

@@ -16,7 +16,9 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 
 @Mixin(value=SodiumPrograms.class,remap=false)
-public abstract class BslAlphaProgramsMixin {
+public abstract class BslAlphaProgramsMixin implements BslTerrainProgramView {
+ @Shadow @Final private EnumMap<SodiumPrograms.Pass,GlProgram<?>> shaders;
+ @Override public Object shaderlod$bslTerrainCutout(){return shaders.get(SodiumPrograms.Pass.TERRAIN_CUTOUT);}
  @ModifyArgs(method="transformShaders",at=@At(value="INVOKE",target="Lnet/irisshaders/iris/pipeline/transform/TransformPatcher;patchSodium(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lnet/irisshaders/iris/gl/blending/AlphaTest;Lit/unimi/dsi/fastutil/objects/Object2ObjectMap;)Ljava/util/Map;"),require=1,allow=1)
  private void prepare(Args a,@Local(argsOnly=true)ProgramSource source,@Local(argsOnly=true)ProgramSet set) {
   BslEarlyAlphaRuntime.prepared(source,false);

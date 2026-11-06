@@ -587,6 +587,15 @@ def untimed_work(control, *, feature, family):
     BSL requires observed compilation, hence an explicitly untimed reload.
     Raw witness completeness is retained, never inferred from request flags.
     """
+    if family == 'bsl-shaders' and feature == 'early_alpha':
+        try:
+            control.send('bsl_public_state', observe=True, reset=True)
+            control.wait(2)
+            result=control.send('bsl_public_state')
+            life.require('bsl_post_sample' in result,'BSL post-sample observation missing')
+        finally:
+            control.send('bsl_public_state', observe=False, reset=False)
+        return result['bsl_post_sample'] | {'source_status': result['bsl_public_status']}
     if family == 'makeup-ultra-fast-shaders' and feature == 'early_alpha':
         try:
             control.send('early_alpha_status',observe=True,reset=True)
@@ -688,6 +697,18 @@ def ao_scale_work(state,*,family,active,before):
 def family_early_alpha_work(state,*,family,active,before=None):
     row=state.get('installed',{}).get('family_early_alpha',{})
     life.require(family in CROSS_ALPHA_FAMILIES and row.get('family')==family,'Wrong early-alpha runtime family')
+    post=row.get('post_sample',{})
+    if family=='bsl-shaders' and post.get('active') is True:
+        life.require(active,'Native control unexpectedly retains rewritten BSL CUTOUT')
+        life.require(all(type(post.get(key)) is int and post[key]>0 for key in ('linked_programs','program','completed_batches','submitted_commands'))
+                     and post.get('observing') is False,
+                     'BSL rewritten CUTOUT has no completed native submission evidence')
+        if before is not None:
+            prior=before['installed']['family_early_alpha'].get('post_sample',{})
+            life.require(prior.get('active') is True and all(prior.get(key)==post.get(key)
+                         for key in ('program','pipeline_identity','generation')),
+                         'BSL rewritten CUTOUT ownership changed during timing')
+        return row | {'route':'linked_cutout_submissions','scope':post['scope']}
     counters=row.get('counters',{});qualified=counters.get('qualified_draws')
     life.require(type(qualified) is int and qualified>=0,'Missing family early-alpha permission counters')
     if active:

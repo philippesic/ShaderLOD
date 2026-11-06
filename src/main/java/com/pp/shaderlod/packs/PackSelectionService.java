@@ -313,7 +313,13 @@ public final class PackSelectionService {
     /** Source-only exact requests fail back to the selected original for unsupported tuples/options. */
     static boolean asahiAlphaOriginalFallback(String os,String arch,String id,boolean enabled,LodPreset preset,
             Map<String,String> effective,BslLeanGraph.Route route,boolean generated) {
-        return "Linux".equals(os)&&"aarch64".equals(arch)&&"bsl-shaders".equals(id)
+        return asahiAlphaOriginalFallback(os,arch,id,enabled,preset,effective,route,generated,false);
+    }
+    static boolean asahiAlphaOriginalFallback(String os,String arch,String id,boolean enabled,LodPreset preset,
+            Map<String,String> effective,BslLeanGraph.Route route,boolean generated,boolean qualifiedWindowsHost) {
+        return (("Linux".equals(os)&&"aarch64".equals(arch))
+                ||qualifiedWindowsHost&&com.pp.shaderlod.optimization.makeupearlyalpha.MakeUpPostSampleAlphaSource.platform(os,arch))
+            &&"bsl-shaders".equals(id)
             &&com.pp.shaderlod.optimization.bslearlyalpha.BslPostSampleAlpha.singleton(route.requests())
             ||"Linux".equals(os)&&"aarch64".equals(arch)&&"makeup-ultra-fast-shaders".equals(id)
             &&com.pp.shaderlod.optimization.makeupearlyalpha.MakeUpEarlyAlphaLeanGraph.onlyEarlyAlpha(route.requests())
@@ -324,7 +330,10 @@ public final class PackSelectionService {
     private static boolean exactOriginalFallback(String id, boolean enabled, LodPreset preset,
             Map<String,String> effective, BslLeanGraph.Route route, boolean generated) {
         return asahiAlphaOriginalFallback(System.getProperty("os.name"),System.getProperty("os.arch"),
-                id,enabled,preset,effective,route,generated)
+                id,enabled,preset,effective,route,generated,
+                "bsl-shaders".equals(id)
+                    &&com.pp.shaderlod.optimization.bslearlyalpha.BslPostSampleAlpha.singleton(route.requests())
+                    &&com.pp.shaderlod.optimization.bslearlyalpha.BslPostSampleAlpha.hostAvailable())
             ||"makeup-ultra-fast-shaders".equals(id)
             && com.pp.shaderlod.optimization.makeupexact.MakeUpExactGraph.singleton(route.requests())
             && (!com.pp.shaderlod.optimization.makeupexact.MakeUpExactGraph.eligible(route,enabled,preset)

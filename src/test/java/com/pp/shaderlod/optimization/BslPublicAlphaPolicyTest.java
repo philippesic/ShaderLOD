@@ -28,4 +28,12 @@ class BslPublicAlphaPolicyTest {
   stack.put("iris","changed");assertFalse(BslPostSampleAlpha.stackMatches(stack));
   assertFalse(BslPostSampleAlpha.platform("Mac OS X","aarch64"));assertFalse(BslPostSampleAlpha.platform("Linux","amd64"));
  }
+ @Test void stableTerrainSlotAccessRequiresThePinnedIrisMap() throws Exception {
+  var field=net.irisshaders.iris.pipeline.programs.SodiumPrograms.class.getDeclaredField("shaders");
+  assertEquals(java.util.EnumMap.class,field.getType());
+  assertTrue(java.lang.reflect.Modifier.isFinal(field.getModifiers()));
+  assertEquals(Object.class,com.pp.shaderlod.optimization.bslearlyalpha.BslTerrainProgramView.class
+      .getMethod("shaderlod$bslTerrainCutout").getReturnType());
+ }
+
 }

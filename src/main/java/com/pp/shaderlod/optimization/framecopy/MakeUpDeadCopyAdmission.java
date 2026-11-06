@@ -19,6 +19,12 @@ public final class MakeUpDeadCopyAdmission {
         return name.equals("linux") && "Apple M1 (G13G B1)".equals(renderer)
             && "4.6 (Core Profile) Mesa 25.1.0-asahi20250221".equals(driver);
     }
+    /** Additional finite native Windows experiment; graph/source/option proof is independent. */
+    public static boolean platformQualified(String os,String arch,String renderer,String driver) {
+        return platformQualified(os,renderer,driver)
+            || os!=null&&os.startsWith("Windows")
+                &&com.pp.shaderlod.optimization.makeupearlyalpha.MakeUpPostSampleAlphaSource.host(os,arch,renderer,driver);
+    }
     /** Recorded labels only; callers must independently enforce the raw engine class pins. */
     public static String canonicalIrisMetadata(String actual) {
         return Set.of("1.8.12","1.8.12+mc1.21.1","1.8.12-snapshot+mc1.21.1-local").contains(actual)?"1.8.12":actual;

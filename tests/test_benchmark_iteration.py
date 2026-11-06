@@ -356,6 +356,33 @@ class IterationEvidenceTest(unittest.TestCase):
             with self.assertRaises(ValueError):iteration.combination_copy_work(bad,active=True)
         iteration.combination_copy_work(dict(record,executedSwapCopies=12),active=False)
 
+    def test_bsl_source_requires_submissions_and_unchanged_owned_program_outside_observation(self):
+        post={'active':True,'linked_programs':1,'program':7,'completed_batches':3,'submitted_commands':9,
+              'pipeline_identity':12,'generation':4,'observing':False,'scope':'Untimed native submissions; exact timed batches unmeasured'}
+        state={'installed':{'family_early_alpha':{'family':'bsl-shaders','post_sample':post}}}
+        receipt=iteration.family_early_alpha_work(state,family='bsl-shaders',active=True,before=state)
+        self.assertEqual('linked_cutout_submissions',receipt['route'])
+        for change in ({'completed_batches':0},{'linked_programs':0},{'observing':True},{'submitted_commands':False}):
+            bad={'installed':{'family_early_alpha':{'family':'bsl-shaders','post_sample':post|change}}}
+            with self.assertRaises(ValueError):iteration.family_early_alpha_work(bad,family='bsl-shaders',active=True)
+        changed={'installed':{'family_early_alpha':{'family':'bsl-shaders','post_sample':post|{'program':8}}}}
+        with self.assertRaisesRegex(ValueError,'ownership changed'):
+            iteration.family_early_alpha_work(changed,family='bsl-shaders',active=True,before=state)
+        with self.assertRaisesRegex(ValueError,'Native control'):
+            iteration.family_early_alpha_work(state,family='bsl-shaders',active=False)
+        control=Mock();control.send.return_value={'bsl_post_sample':post,'bsl_public_status':'linked BASIC'}
+        self.assertEqual(3,iteration.untimed_work(control,feature='early_alpha',family='bsl-shaders')['completed_batches'])
+        self.assertEqual({'observe':False,'reset':False},control.send.call_args.kwargs)
+
+    def test_native_bsl_source_archive_exception_is_only_the_declared_singleton_stack(self):
+        from types import SimpleNamespace
+        a=SimpleNamespace(candidate='public',feature='early_alpha',performance_stack='optimized',dh=False)
+        self.assertTrue(runner.bsl_source_alpha(a,{'family':'bsl-shaders'}))
+        self.assertFalse(runner.bsl_source_alpha(a,{'family':'complementary-unbound'}))
+        for field,value in [('performance_stack','minimal'),('dh',True),('candidate','g10-exact-bloom'),('feature','ao_render_scale')]:
+            b=SimpleNamespace(**(vars(a)|{field:value}))
+            self.assertFalse(runner.bsl_source_alpha(b,{'family':'bsl-shaders'}))
+
     def test_unrelated_feature_has_no_observation_or_reload(self):
         control=Mock()
         self.assertIsNone(iteration.untimed_work(control,feature='ao_attenuation',family='makeup-ultra-fast-shaders'))

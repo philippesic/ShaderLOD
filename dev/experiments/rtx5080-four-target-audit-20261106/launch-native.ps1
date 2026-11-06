@@ -1,7 +1,8 @@
 param(
     [Parameter(Mandatory=$true)][string]$Name,
     [Parameter(Mandatory=$true)][string]$Request,
-    [string]$PreviousName
+    [string]$PreviousName,
+    [ValidateRange(1,1440)][int]$TimeLimitMinutes=30
 )
 $ErrorActionPreference='Stop'
 $ProgressPreference='SilentlyContinue'
@@ -23,7 +24,7 @@ if($PreviousName){
 if(Get-ScheduledTask -TaskName $Name -ErrorAction SilentlyContinue){throw 'Existing task preserved'}
 $action=New-ScheduledTaskAction -Execute $python -Argument ($runner+' '+$Request) -WorkingDirectory 'C:\ShaderLODBench\ShaderLOD'
 $principal=New-ScheduledTaskPrincipal -UserId 'DESKTOP-E78LJSI\philip' -LogonType Interactive -RunLevel Limited
-$settings=New-ScheduledTaskSettingsSet -ExecutionTimeLimit (New-TimeSpan -Minutes 30) -MultipleInstances IgnoreNew
+$settings=New-ScheduledTaskSettingsSet -ExecutionTimeLimit (New-TimeSpan -Minutes $TimeLimitMinutes) -MultipleInstances IgnoreNew
 Register-ScheduledTask -TaskName $Name -Action $action -Principal $principal -Settings $settings | Out-Null
 Start-ScheduledTask -TaskName $Name
 Get-ScheduledTask -TaskName $Name | Select-Object TaskName,State | ConvertTo-Json -Compress

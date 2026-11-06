@@ -27,6 +27,15 @@ public class MakeUpDeadCopyAdmissionTest {
         assertFalse(MakeUpDeadCopyAdmission.platformQualified("Windows",renderer,driver));
         assertFalse(MakeUpDeadCopyAdmission.platformQualified(null,renderer,driver));
     }
+    @Test void windowsAdmissionRequiresTheActualFiniteRendererDriverAndArchitecture() {
+        String renderer="NVIDIA GeForce RTX 5080/PCIe/SSE2";
+        for(String driver:Set.of("3.2.0 NVIDIA 617.42","4.6.0 NVIDIA 617.42")) {
+            assertTrue(MakeUpDeadCopyAdmission.platformQualified("Windows 11","amd64",renderer,driver));
+            assertFalse(MakeUpDeadCopyAdmission.platformQualified("Windows 11","aarch64",renderer,driver));
+            assertFalse(MakeUpDeadCopyAdmission.platformQualified("Windows 11","amd64","NVIDIA GeForce RTX 2080 Ti/PCIe/SSE2",driver));
+            assertFalse(MakeUpDeadCopyAdmission.platformQualified("Windows 11","amd64",renderer,driver+" unknown"));
+        }
+    }
     @Test void inactiveNewOptionPreservesExistingShadowProfiles() {
         var options=new TreeMap<>(com.pp.shaderlod.optimization.makeupao.MakeUpAoContract.generated("0"));
         assertEquals(114,options.size());

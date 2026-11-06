@@ -1,0 +1,173 @@
+{
+  "scope": "Partial original-only RTX5080 baselines; native3840x2160, main mod absent, one process per listed target. Unbound and independent repeats remain pending. No optimization benefit conclusion.",
+  "runs": [
+    {
+      "shader": "makeup",
+      "report": "makeup-baseline-native-r1/summary.json",
+      "processes": 1,
+      "context": {
+        "requested": "native",
+        "actual_version": [
+          3,
+          2
+        ],
+        "actual_version_string": "3.2.0 NVIDIA 617.42",
+        "expected_renderer": "RTX 5080",
+        "actual_renderer": "NVIDIA GeForce RTX 5080/PCIe/SSE2",
+        "scope": "GLFW requested minimum; actual returned context governs capabilities. Higher returned versions are recorded, never relabeled as the requested lower version."
+      },
+      "mean_ms": 2.0256931648579033,
+      "window_mean_variance_ms2": 5.399245365040221e-06,
+      "window_mean_sd_ms": 0.00232362763046066,
+      "between_process_variance_ms2": null,
+      "between_process_sd_ms": null,
+      "frame_windows": {
+        "native_0": {
+          "samples": 9976,
+          "excluded_initial_unavailable_interval": true,
+          "mean_total_frame_ms": 2.0279385024057737,
+          "variance_total_frame_ms2": 0.009438305467792073,
+          "sd_total_frame_ms": 0.09715094167218387,
+          "p95_total_frame_ms": 2.1345,
+          "completed_render_frames": 9977,
+          "wall_seconds": 20.2489872,
+          "completed_frame_ms": 2.0295667234639674
+        },
+        "native_1": {
+          "samples": 10017,
+          "excluded_initial_unavailable_interval": true,
+          "mean_total_frame_ms": 2.025842537685934,
+          "variance_total_frame_ms2": 0.00397428066340775,
+          "sd_total_frame_ms": 0.06304189609622914,
+          "p95_total_frame_ms": 2.1164,
+          "completed_render_frames": 10018,
+          "wall_seconds": 20.2998013,
+          "completed_frame_ms": 2.026332731084049
+        },
+        "native_2": {
+          "samples": 10029,
+          "excluded_initial_unavailable_interval": true,
+          "mean_total_frame_ms": 2.023298454482002,
+          "variance_total_frame_ms2": 0.0052185742606745585,
+          "sd_total_frame_ms": 0.07223970003173157,
+          "p95_total_frame_ms": 2.1202,
+          "completed_render_frames": 10030,
+          "wall_seconds": 20.2987118,
+          "completed_frame_ms": 2.023799780658026
+        }
+      }
+    },
+    {
+      "shader": "reimagined",
+      "report": "reimagined-baseline-native-r1/summary.json",
+      "processes": 1,
+      "context": {
+        "requested": "native",
+        "actual_version": [
+          3,
+          2
+        ],
+        "actual_version_string": "3.2.0 NVIDIA 617.42",
+        "expected_renderer": "RTX 5080",
+        "actual_renderer": "NVIDIA GeForce RTX 5080/PCIe/SSE2",
+        "scope": "GLFW requested minimum; actual returned context governs capabilities. Higher returned versions are recorded, never relabeled as the requested lower version."
+      },
+      "mean_ms": 3.236616055968419,
+      "window_mean_variance_ms2": 2.1412770539842141e-07,
+      "window_mean_sd_ms": 0.0004627393493084648,
+      "between_process_variance_ms2": null,
+      "between_process_sd_ms": null,
+      "frame_windows": {
+        "native_0": {
+          "samples": 6251,
+          "excluded_initial_unavailable_interval": true,
+          "mean_total_frame_ms": 3.237126987681971,
+          "variance_total_frame_ms2": 0.01713887853714849,
+          "sd_total_frame_ms": 0.1309155397084261,
+          "p95_total_frame_ms": 3.3552,
+          "completed_render_frames": 6252,
+          "wall_seconds": 20.2458698,
+          "completed_frame_ms": 3.238302911068458
+        },
+        "native_1": {
+          "samples": 6270,
+          "excluded_initial_unavailable_interval": true,
+          "mean_total_frame_ms": 3.2362251674641147,
+          "variance_total_frame_ms2": 0.010487762808833014,
+          "sd_total_frame_ms": 0.10240977887307937,
+          "p95_total_frame_ms": 3.3681,
+          "completed_render_frames": 6271,
+          "wall_seconds": 20.2987918,
+          "completed_frame_ms": 3.236930601180035
+        },
+        "native_2": {
+          "samples": 6270,
+          "excluded_initial_unavailable_interval": true,
+          "mean_total_frame_ms": 3.236496012759171,
+          "variance_total_frame_ms2": 0.00747566100499585,
+          "sd_total_frame_ms": 0.08646190493503975,
+          "p95_total_frame_ms": 3.3585,
+          "completed_render_frames": 6271,
+          "wall_seconds": 20.3007317,
+          "completed_frame_ms": 3.237239945782172
+        }
+      }
+    },
+    {
+      "shader": "bsl",
+      "report": "bsl-baseline-native-r1/summary.json",
+      "processes": 1,
+      "context": {
+        "requested": "native",
+        "actual_version": [
+          3,
+          2
+        ],
+        "actual_version_string": "3.2.0 NVIDIA 617.42",
+        "expected_renderer": "RTX 5080",
+        "actual_renderer": "NVIDIA GeForce RTX 5080/PCIe/SSE2",
+        "scope": "GLFW requested minimum; actual returned context governs capabilities. Higher returned versions are recorded, never relabeled as the requested lower version."
+      },
+      "mean_ms": 2.862842718982298,
+      "window_mean_variance_ms2": 2.2601383704547872e-08,
+      "window_mean_sd_ms": 0.00015033756584615794,
+      "between_process_variance_ms2": null,
+      "between_process_sd_ms": null,
+      "frame_windows": {
+        "native_0": {
+          "samples": 7067,
+          "excluded_initial_unavailable_interval": true,
+          "mean_total_frame_ms": 2.862679807556247,
+          "variance_total_frame_ms2": 0.00974516050219902,
+          "sd_total_frame_ms": 0.09871757949929191,
+          "p95_total_frame_ms": 2.997,
+          "completed_render_frames": 7068,
+          "wall_seconds": 20.2475854,
+          "completed_frame_ms": 2.864683842671194
+        },
+        "native_1": {
+          "samples": 7088,
+          "excluded_initial_unavailable_interval": true,
+          "mean_total_frame_ms": 2.8629761004514673,
+          "variance_total_frame_ms2": 0.005394473987782768,
+          "sd_total_frame_ms": 0.07344708290860004,
+          "p95_total_frame_ms": 2.9765,
+          "completed_render_frames": 7089,
+          "wall_seconds": 20.3007796,
+          "completed_frame_ms": 2.863701452955283
+        },
+        "native_2": {
+          "samples": 7070,
+          "excluded_initial_unavailable_interval": true,
+          "mean_total_frame_ms": 2.8628722489391794,
+          "variance_total_frame_ms2": 0.00890369233204723,
+          "sd_total_frame_ms": 0.09435937861202366,
+          "p95_total_frame_ms": 2.9916,
+          "completed_render_frames": 7071,
+          "wall_seconds": 20.2492075,
+          "completed_frame_ms": 2.8636978503747703
+        }
+      }
+    }
+  ]
+}

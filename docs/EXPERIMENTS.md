@@ -149,3 +149,23 @@ These are historical Asahi campaign dispositions, not instructions to run, stop,
 | C02 | Hardware variable-rate shading | Excluded from the last Asahi campaign; no conclusion for this item. |
 
 Additional pre-cleanup development summaries and source are preserved in `/home/philip/shaderlod-experiment-records/remaining-dev-records-20261031.tar.gz`. Historical image references in those reports no longer resolve.
+
+
+### 2026-11-06 RTX5080 BSL G03 and native platform admission
+
+Scope remains all16 candidates/four targets on native Windows RTX5080. Three
+original-only native4K baselines are valid (MakeUp/Reimagined/BSL, n1 each);
+independent repeats and Unbound remain pending. BSL's exact native CUTOUT matches
+the existing semantic fixture. Fixed source selection on the finite Windows host,
+shadow-phase-dependent terrain lookup, and a startup family-config checkpoint
+race. Explicit stopped recovery preserves the conflicting settings bytes before
+restoring the original; ordinary restoration stays strict and no commands replay.
+Untimed BSL diagnostics additionally found valid candidate submissions rejected
+by a no-op request-generation increment; immutable actual program/context/flags
+and pack/world/resource identities now define that observation, with window
+request generation pinned separately. A fresh balanced process is active; no BSL
+candidate performance conclusion yet. G01/private C01 finite host admission is
+also prepared; actual work validation remains pending. Evidence and limitations:
+[BSL repair record](../dev/experiments/rtx5080-four-target-audit-20261106/G03_PORT.md),
+[current working state](../dev/experiments/rtx5080-four-target-audit-20261106/STATE.md),
+[partial baselines](../dev/experiments/rtx5080-four-target-audit-20261106/baseline-progress.json).

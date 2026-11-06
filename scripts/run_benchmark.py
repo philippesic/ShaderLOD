@@ -201,6 +201,12 @@ def selected_features(a):
  return getattr(a,'features',None) or ([a.feature] if getattr(a,'feature',None) else [])
 
 
+def bsl_source_alpha(a,identity):
+ return bool(identity and identity.get('family')=='bsl-shaders'
+             and getattr(a,'candidate','public')=='public' and selected_features(a)==['early_alpha']
+             and getattr(a,'performance_stack','minimal')=='optimized' and not getattr(a,'dh',False))
+
+
 def cpu_features(a):
  features=set(selected_features(a))
  return bool(features) and features <= {'quad_command_compaction','shadow_admission_cache','index_scalar_cache'}
@@ -488,7 +494,7 @@ def preflight(a):
  if getattr(a,'standard_test',False) and translucent_scene(a):hook_actions+=('prepare_feature_scene',)
  if getattr(a,'standard_test',False) and a.feature in ('reflection_next_event_refinement','reflection_projected_refinement'):hook_actions+=('reflection_status',)
  if getattr(a,'standard_test',False) and a.feature=='ao_depth_reuse':hook_actions+=('ao_depth_status',)
- if getattr(a,'standard_test',False) and 'early_alpha' in selected_features(a):hook_actions+=('early_alpha_status',)
+ if getattr(a,'standard_test',False) and 'early_alpha' in selected_features(a):hook_actions+=('early_alpha_status','bsl_public_state')
  if a.with_g10 or a.g10_control:hook_actions+=('g10_bloom_status',)
  if a.candidate=='g08-native-bound':hook_actions+=('g08_bound_status','g08_bound_queue','g08_bound_read','diagnostic_pack','diagnostic_empty_requests')
  if a.candidate=='c02-bloom-vrs':hook_actions+=('vrs_request','vrs_status')
@@ -656,7 +662,7 @@ def supervise_operation(output):
  finally:dev.prepare=original
 
 
-def release_runtime(op, proc=None):
+def release_runtime(op, proc=None, *, preserve_conflicts=False):
  """Use existing exact-client/launcher APIs; preserve custody on any refusal."""
  session=op.output/'session';marker=session/'owner.json'
  owner=json.loads(marker.read_text()) if marker.exists() else {}
@@ -693,6 +699,8 @@ def release_runtime(op, proc=None):
    for path in (Path(op.data['profile'])/'saves').glob('*/session.lock'):
     locks.enter_context(world_lock(storage.safe_path(path)))
    if shutdown:op.acknowledge_mutation('runtime-shutdown')
+   op.data['process_release_verified']=True;op.save()
+   if preserve_conflicts:op.preserve_conflicting_configuration()
    op.restore()
  op.data['release_verified']=True;op.save()
 
@@ -700,13 +708,14 @@ def release_runtime(op, proc=None):
 def recover_main(argv):
  p=argparse.ArgumentParser(description='Restore/release one interrupted operation; never replay captures or comparisons.')
  p.add_argument('--output',required=True,type=Path);p.add_argument('--dispose-backups',action='store_true')
+ p.add_argument('--preserve-conflicts',action='store_true',help='After exact runtime release, retain conflicting owned configuration files before restoring the original backup; never replay commands')
  p.add_argument('--preserve-optional-configs',action='store_true',help='Explicitly retain known newly generated optional-mod configs before restoring an older operation; existing/unknown edits remain protected')
  a=p.parse_args(argv);op=life.Operation(a.output)
  with life.operation_lock(op.output):
   if op.data['state'] not in life.TERMINAL:
    # Controller must be absent; a recycled PID is never signaled.
    life.process_absent(op.data['processes'].get('controller'),dev.process_table(),dev.identity)
-   release_runtime(op)
+   release_runtime(op,preserve_conflicts=a.preserve_conflicts)
    if a.preserve_optional_configs:performance_stack.preserve_created_configs(op,ROOT)
    if op.data.get('iteration_profile'):iteration.finish_profile(op)
    op.data['state']='failed-restored';op.save()
@@ -781,6 +790,26 @@ class Control:
   raise TimeoutError('World/pipeline readiness')
 
 
+def settle_initial_runtime(control,op):
+ """Keep the existing startup mutation open through following client ticks.
+
+ The prepare receipt can precede the last asynchronous family-config rename.
+ Read-only callbacks and the normal one-second byte-stability boundary complete
+ that same owned startup; ordinary later mutation/CAS checks remain unchanged.
+ """
+ life.require(op.data.get('mutation_pending')=='initial-runtime-prepare','Owned initial preparation required')
+ until=time.monotonic()+10;previous=None;stable_since=time.monotonic();callbacks=0
+ while True:
+  control.send('status');callbacks+=1
+  current={path:life.digest(path) for path in op.data['configuration']}
+  if current!=previous:previous=current;stable_since=time.monotonic()
+  if callbacks>=2 and time.monotonic()-stable_since>=1:
+   return {'status_callbacks':callbacks,'stable_seconds':time.monotonic()-stable_since,
+           'scope':'Same owned initial startup, after subsequent client callbacks and stable tracked configuration bytes'}
+  life.require(time.monotonic()<until,'Initial configuration did not settle')
+  control.wait(.2,full=False)
+
+
 def ready_after_apply(control):
  """Apply already waited for rendered readiness; verify its boundary remains current."""
  previous=getattr(control,'acknowledged_ready',None)
@@ -801,6 +830,7 @@ def run_operation(a,admission):
  paths+=performance_stack.configuration_paths(ROOT,a.profile,getattr(a,'performance_stack','minimal'))
  if a.untimed_diagnostic=='g08-reuse':paths += [a.profile/'shaderpacks'/(g08_probe.NAME+suffix) for suffix in ('','.txt')]
  identity=getattr(a,'public_identity',None)
+ source_bsl=bsl_source_alpha(a,identity)
  g02_public=getattr(a,'g02_public_identity',None)
  if g02_public:
   paths += [a.profile/'shaderpacks'/g02_public[key] for key in ('generated','state','legacy_state')]
@@ -966,6 +996,7 @@ def run_operation(a,admission):
     control.wait(.5,full=False)
    op.reload()  # Supervisor prepare checkpoint is authoritative; no concurrent manifest writer after startup.
    receipt=json.loads(initial.read_text());life.require(receipt.get('success') is True and receipt.get('request_id')=='initial_prepare','Initial preparation failed or mismatched')
+   op.data['initial_runtime_settling']=settle_initial_runtime(control,op)
    op.acknowledge_mutation('initial-runtime-prepare')
    op.data['state']='running';op.save()
    costs['preparation_startup']=time.monotonic()-clock;phase=time.monotonic()
@@ -1153,8 +1184,11 @@ def run_operation(a,admission):
       state=control.ready()
       life.require(native_options is not None,'Observed original options must be captured before any public arm')
       options=iteration.activation(state,feature=selected_features(a),enabled=active,
-       expected_pack=identity['generated'] if active and not cpu_features(a) else plan['pack_name'],family=identity['family'],native_options=native_options,
-       compile_control=None if cpu_features(a) else candidate_compile_contract(identity,selected_features(a)),program_markers={} if cpu_features(a) else identity.get('program_markers',{}))
+       expected_pack=identity['generated'] if active and not (cpu_features(a) or source_bsl) else plan['pack_name'],family=identity['family'],native_options=native_options,
+       compile_control=None if cpu_features(a) or source_bsl else candidate_compile_contract(identity,selected_features(a)),program_markers={} if cpu_features(a) or source_bsl else identity.get('program_markers',{}))
+      if source_bsl:
+       life.require(options==native_options,'Source-only BSL route changed native options')
+       if active:life.require(state['installed'].get('family_early_alpha',{}).get('post_sample',{}).get('active') is True,'BSL native source lowering unavailable: '+str(state['installed'].get('family_early_alpha',{}).get('post_sample_status')))
       if cpu_features(a):
        life.require(options==native_options,'CPU route changed the exact native option map')
        cpu_identity=control.send('cpu_graph_identity')['cpu_graph_identity']
@@ -1167,13 +1201,15 @@ def run_operation(a,admission):
      if summary.get('feature_scene'):
       life.require(state.get('standard_feature_scene_ready') is True,'Matched feature scene changed before arm')
      if active and (not private_identity or identity is not None):
-      life.require((state['pack']==plan['pack_name']) if cpu_features(a) else (state['pack']!=plan['pack_name']), 'Candidate archive selection differs from planned route')
+      life.require((state['pack']==plan['pack_name']) if cpu_features(a) or source_bsl else (state['pack']!=plan['pack_name']), 'Candidate archive selection differs from planned route')
       life.require(state['installed'].get('master') is True and all(state['installed'].get('flags',{}).get(feature)=='true' for feature in selected_features(a)), 'Requested public candidate is not active')
       if identity and not cpu_features(a):
-       archive=a.profile/'shaderpacks'/identity['generated'];saved=out/'selected-candidate.zip'
+       archive=a.profile/'shaderpacks'/(plan['pack_name'] if source_bsl else identity['generated']);saved=out/'selected-candidate.zip'
        shutil.copy2(archive,saved)
        life.require(life.digest(archive)==life.digest(saved),'Actual candidate archive changed while preserving evidence')
-       op.pin([saved]);summary['selected_features']=selected_features(a);summary['public_identity']=identity|{'actual_generated_sha256':life.digest(saved)}
+       op.pin([saved]);summary['selected_features']=selected_features(a)
+       summary['public_identity']=identity|{'actual_selected_sha256':life.digest(saved),'actual_selected_name':state['pack'],'archive_role':'unchanged original with source lowering' if source_bsl else 'generated adapter'}
+       if not source_bsl:summary['public_identity']['actual_generated_sha256']=life.digest(saved)
      elif not label.startswith('control') and not (g10 or g02 or g05 or g08 or bliss):life.require(state['pack']==plan['pack_name'],'Native control did not return to original pack')
      op.data['runtime_plan']=dict(plan,pack_name=state['pack'])
      if a.candidate=='n02-photon-pbr-resources':op.data['runtime_plan']['requested_options']=private_identity['native_options']
@@ -1232,6 +1268,9 @@ def run_operation(a,admission):
      if cpu_features(a):cpu_before=control.send('cpu_graph_identity')
      cross_alpha=identity and identity['family'] in iteration.CROSS_ALPHA_FAMILIES and 'early_alpha' in selected_features(a)
      if cross_alpha:
+      if identity['family']=='bsl-shaders':
+       summary.setdefault('bsl_post_sample_observations',{})[label]=iteration.untimed_work(control,feature='early_alpha',family='bsl-shaders');save()
+       control.wait(a.warmup)  # Same settling after disarming the observer in every BSL G03 arm.
       cross_alpha_before=control.send('status')['state']
       iteration.family_early_alpha_work(cross_alpha_before,family=identity['family'],active=active)
      if c02:
