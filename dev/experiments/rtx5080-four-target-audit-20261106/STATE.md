@@ -26,13 +26,12 @@ actual-archive regression passing on Windows and all17 adapter tests locally.
 MakeUp G04's first corrected hardware check now also completes VALID/restored/
 reset/released. The context-only transition stopped after that check; no active
 source/classes were modified. Task ShaderLOD-RTX5080-Scoring-V3-Contexts-Retry1 is now
-running the MakeUp G05 reflection hardware check in console Session1, request C:\ShaderLODBench\requests\queue-scoring-v3-contexts-retry1.json,
+running in console Session1, request C:\ShaderLODBench\requests\queue-scoring-v3-contexts-retry1.json,
 ledger queue-scoring-v3-contexts.json. Its fresh97 operations contain six remaining
 functional checks and91 baseline/control/timing operations: repaired first orders,
 remaining first-pass cases, MakeUp GL4.6 baselines/null controls and57 opposite-order
 comparisons. BSL G09's functional proof and both timing orders now request OpenGL4.6
-because the native3.2 failure lacks its required4.3 compute support. Hardware
-validation of G09 remains pending. Queue restoration failures stop execution;
+because the native3.2 failure lacks its required4.3 compute support. BSL G09 functional validation and its first4.6 timing process both pass/restored. Queue restoration failures stop execution;
 restored invalid cases remain evidence and do not terminate unrelated cases.
 The first context-continuation task rejected a malformed new check command before
 creating a ledger or operation. Its input is retained on Windows. Corrected the
@@ -55,6 +54,31 @@ bounded3s read/publication retry.103 benchmark tests pass on both hosts, includi
 a real native exclusive-handle/read-release regression fixture. Explicit recovery
 preserves conflicting owned inputs and verifies configuration/world reset/release
 without replay. See [Windows IO evidence](WINDOWS_IO.md).
+
+## Latest live inspection
+
+The active97-operation continuation has33 finished:27 VALID, six INVALID;
+all33 restored, with no restoration-blocked queue. MakeUp G04's saved-water
+first-order comparison is running at this inspection.64 operations remain including
+that active operation. Latest C: free space46.8GiB remains above the32GiB reserve.
+
+Five of the six repair checks pass: MakeUp G06/G08, the separate G04 water case,
+BSL G06 and BSL G09. BSL G09's first4.6 timing process also passes. MakeUp G05
+still refuses actual nearest-sampler permission progress in4.6; the context change
+alone is insufficient. Both its check and first timing attempt are invalid.
+All four N01 first-order attempts refuse actual selected-pack identity after their
+first native window, before candidate timing; these are no CPU performance results.
+The unrelated remaining cases continue while these routes require repair/retries.
+
+Source inspection finds MakeUpReflectionRuntime.source() compares the packaged
+recipe to MakeUpAoSourceProof.RECIPE_SHA; that constant still pins the old recipe
+while the current resource differs after the Windows entry changes. This is a
+concrete additional refusal candidate, not yet a hardware-confirmed repair.
+For N01, retain exact-original selection and unchanged option-map requirements;
+inspect the ordinary configure/selection path rather than accepting an unexpected
+adapter. No native source/classes have been changed during the active queue.
+Final independent-repeat analysis, regression investigation, bounded quality and
+all64-cell variance charts remain incomplete.
 
 ## Measurements and proof retained
 
