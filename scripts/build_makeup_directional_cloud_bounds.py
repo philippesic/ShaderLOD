@@ -16,7 +16,7 @@ DEBUG='SHADERLOD_G08_DIRECTIONAL_DEBUG'
 ATLAS='shaders/textures/shaderlod_g08_directional.png'
 GATE=f'{OPTION} > 0 && defined IS_IRIS && IRIS_VERSION == 10812 && MC_VERSION == 12101 && defined MC_OS_MAC && defined DEFERRED_SHADER && !defined THE_END && !defined NETHER && !defined UNKNOWN_DIM && !defined DISTANT_HORIZONS && !defined VOXY && !defined VOXY_PATCH && V_CLOUDS == 2 && CLOUD_VOL_STYLE == 0 && CLOUD_SPEED == 0'
 
-NATIVE100_GATE=GATE.replace('defined MC_OS_MAC','defined MC_OS_LINUX').replace('V_CLOUDS == 2','V_CLOUDS == 1 && CLOUD_STEPS_AVG == 10')
+NATIVE100_GATE=GATE.replace('defined MC_OS_MAC','(defined MC_OS_LINUX || defined MC_OS_WINDOWS)').replace('V_CLOUDS == 2','V_CLOUDS == 1 && CLOUD_STEPS_AVG == 10')
 
 def interval(case):
     """Native start tile16 plus signed bin4/8/12/16, 3-texel apron."""

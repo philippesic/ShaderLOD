@@ -6,6 +6,17 @@ sys.path[:0]=[str(ROOT/'scripts'),str(ROOT/'tests')]
 import build_makeup_native_cloud_bound as b
 import test_makeup_unused_sky as shader
 class NativeCloudBoundTests(unittest.TestCase):
+ def test_windows_native_work_shader_contains_the_actual_diagnostic_writer(self):
+  native=b.read_archive(shader.BASE)
+  candidate=b.m.patch(native,tail_steps=4,native_queries=True,native100=True,split_tail=True)
+  work=b.work_files(candidate,native,layout='split')
+  options=json.loads((ROOT/'src/main/resources/assets/shaderlod/makeupquad/native100.json').read_text())
+  macros=dict(shader.MACROS);macros.pop('MC_OS_MAC',None);macros['MC_OS_WINDOWS']=1
+  text=shader.preprocess(work,'shaders/world0/deferred.fsh',native_options=options|{b.m.OPTION:2,b.m.DEBUG:1},macros=macros)
+  compact=shader.normalized(text)
+  self.assertIn('shaderlodG08DirectionalSchema=1023.0',compact)
+  self.assertIn('gl_FragData[2]=vec4(',compact)
+  self.assertIn('shaderlodG08NativeReferenceCloud(',compact)
  def test_native_queries_guards_and_diagnostic_compile(self):
   native=b.read_archive(shader.BASE);patched=b.m.patch(native,tail_steps=4,native_queries=True,native100=True)
   options=json.loads((ROOT/'src/main/resources/assets/shaderlod/makeupquad/native100.json').read_text())

@@ -10,14 +10,21 @@ gets verified runtime inputs. No2080Ti allocation is in use.
 
 Task ShaderLOD-RTX5080-Scoring-V1-Block1 is active in console Session1, request
 C:\ShaderLODBench\requests\queue-scoring-v1-block1.json, ledger
-queue-scoring-v1-block1.json. It serializes59 maintained operations: the four
-remaining Complementary GL4.6 original baselines, followed by the first55
-optimization/control comparisons. The first output is
-reimagined-baseline-gl46-r1-retry1, now complete/valid/restored; the independent
-r2 is active. The old r1 is invalid/recovered evidence and
-is never reused. The task has no automatic trigger and a24h outer limit; each
-CLI retains its own900s/conditioning/capture/recovery rules. Keep native sources,
-classes and queue inputs frozen while an operation owns them.
+queue-scoring-v1-block1.json. It contains59 maintained operations. The four
+additional Complementary GL4.6 baselines complete valid/restored. At the latest
+inspection34 operations finished; a boundary pause is requested after the active
+Unbound native-PBR G09 run so four first-pass failures can be repaired. Do not
+replace native sources/classes until the actual ledger and exact release are
+verified. The source used by the live batch remains unchanged.
+
+The initial31 finished included27 valid and four invalid, all restored. Two
+failures used native3.2 where their backend requires3.3/4.1; two remaining shader
+gates excluded Windows. Canonical fixes and six functional checks are prepared
+and locally tested, not yet deployed. See [repair evidence](FIRST_PASS_REPAIRS.md).
+Old MakeUp G06 timings need separation from the corrected entry implementation.
+The old failed Reimagined4.6 r1 remains invalid/recovered evidence; its fresh retry
+and independent repeat both complete successfully. The task has no trigger and
+its outer24h limit does not close the campaign.
 
 V3 completed six valid, restored/released functional operations: repaired C01 GPU
 admission, its separate primitive witness, and both Complementary VRS checks in

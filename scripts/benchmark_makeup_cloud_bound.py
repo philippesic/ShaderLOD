@@ -67,6 +67,10 @@ def diagnose(control,identity,artifact,*,original):
             if not queued.get('active'):break
             control.wait(.25)
         rows=queued.get('captures',[])
+        if queued.get('active') or len(rows)!=16:
+            probe=control.send('g08_bound_status')['g08_bound']
+            current={key:probe.get(key) for key in ('qualified','observing','draws','program_source','sampler_error','last')}
+            raise ValueError('Cloud diagnostic capture incomplete: '+str(len(rows))+'/16; active='+str(queued.get('active'))+'; writer='+str(current))
         life.require(len(rows)==16 and {r.get('checkerboard_phase') for r in rows}==set(range(16))
                      and all(r.get('state_restored') is True and r.get('pixels',0)>0
                              and r.get('nonzero_native_opacity_pixels')==0
