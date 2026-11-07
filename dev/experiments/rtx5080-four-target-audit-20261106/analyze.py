@@ -23,7 +23,7 @@ def spread(values):
 jobs=[]
 # New continuation definitions supersede the unexecuted historical plans for
 # identical output paths (notably their repaired contexts and implementation).
-for name in ('rtx5080-scoring-v3-contexts.json','rtx5080-scoring-v2-continuation.json','rtx5080-post-repair-v2.json','rtx5080-repairs-v2-checks.json','rtx5080-observed-v1.json','rtx5080-baselines-v1.json','rtx5080-comparisons-v1.json','rtx5080-port-validation-v2.json','rtx5080-port-validation-v3.json','rtx5080-scoring-v1-block1.json'):
+for name in ('rtx5080-runtime-v4-timings.json','rtx5080-runtime-v4-checks.json','rtx5080-scoring-v3-contexts.json','rtx5080-scoring-v2-continuation.json','rtx5080-post-repair-v2.json','rtx5080-repairs-v2-checks.json','rtx5080-observed-v1.json','rtx5080-baselines-v1.json','rtx5080-comparisons-v1.json','rtx5080-port-validation-v2.json','rtx5080-port-validation-v3.json','rtx5080-scoring-v1-block1.json'):
     path=ROOT/'benchmarks/campaigns'/name
     if path.exists():jobs.extend(json.loads(path.read_text()))
 seen=set();runs=[];raw_rows=[]
@@ -98,6 +98,14 @@ for job in jobs:
     # Separate actual contexts, stacks, options and scenes before pooling repeats.
     signature={k:row['context'][k] for k in ('native_viewport','dimension','preset','camera','day_time','rain_level','native_options','loaded_stack','gpu_renderer','gpu_driver','main_mod','render_distance_chunks')}
     signature['requested_gl_context']=row['gl_context'].get('requested')
+    if row['shader']=='makeup' and row['goal'] in ('G03','G05','G06','G07'):
+        binding=json.loads((output/'build-binding.json').read_text())
+        normalized={key.replace('\\','/'):value for key,value in binding.items()}
+        source='src/main/java/com/pp/shaderlod/optimization/makeupao/MakeUpAoSourceProof.java'
+        recipe='src/main/resources/assets/shaderlod/adapters/patches/adapters/makeup-ultra-fast-shaders.json'
+        row['runtime_admission_revision']=normalized.get(source,'UNVERIFIED')
+        signature['runtime_admission_revision']=row['runtime_admission_revision']
+        signature['runtime_recipe_revision']=normalized.get(recipe,'UNVERIFIED')
     if row['shader']=='makeup' and row['goal'] in ('G04','G06'):
         # Use the actual bound source, not the planned variant name, to keep
         # the formerly unreachable Windows entry distinct from its repair.
@@ -157,6 +165,13 @@ for cell in matrix['cells']:
         valid=[r for r in valid if r.get('implementation_revision')==current]
         cell['valid_runs']=len(valid)
         cell['implementation_selection_note']='Current Windows entry only; older timings remain in every-attempt evidence and separate variance cohorts.'
+    if cell['shader']=='makeup' and cell['goal'] in ('G03','G05','G06','G07'):
+        current=hashlib.sha256((ROOT/'src/main/java/com/pp/shaderlod/optimization/makeupao/MakeUpAoSourceProof.java').read_bytes()).hexdigest()
+        superseded=[r['output'] for r in valid if r.get('runtime_admission_revision')!=current]
+        cell['superseded_implementation_runs']=sorted(set(cell.get('superseded_implementation_runs',[])+superseded))
+        valid=[r for r in valid if r.get('runtime_admission_revision')==current]
+        cell['valid_runs']=len(valid)
+        cell['implementation_selection_note']='Current runtime recipe admission only; older requests remain separate and never enter repaired-implementation variance.'
     if valid:
         cases={r.get('case') or 'primary' for r in valid}
         cell['case_effects']={case:{phase:{work:spread([r['frame_time_reduction_pct'] for r in valid

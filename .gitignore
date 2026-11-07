@@ -53,6 +53,7 @@ __pycache__/
 !/dev/experiments/rtx5080-four-target-audit-20261106/package-source-sync.json
 !/dev/experiments/rtx5080-four-target-audit-20261106/native-before-runtime-pin-v4-20261107.json
 !/dev/experiments/rtx5080-four-target-audit-20261106/runtime-v4-source-sync.json
+!/dev/experiments/rtx5080-four-target-audit-20261106/terminal-world-copies-v1-verification.json
 !/dev/experiments/*.md
 !/dev/experiments/*/*.md
 !/dev/experiments/*.patch

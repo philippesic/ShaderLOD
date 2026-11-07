@@ -290,3 +290,20 @@ revalidation/separate implementation cohorts. N01's source/Apply certificate
 requires GL4.1, while failed cases used actual3.2: next test is real4.6 functional
 admission retaining all original-pack/native-work guards. No bypass is added.
 [Working state](../dev/experiments/rtx5080-four-target-audit-20261106/STATE.md).
+
+
+### 2026-11-07 All runtime repair checks pass; focused repeats start
+
+All eight functional checks pass/restored: MakeUp G03/G05/G06/G07 and the four
+N01 families. Repinning the current recipe restores the affected MakeUp admission;
+real4.6 permits CPU native-graph proof with original-pack/options guards retained.
+These checks are not speed or quality claims. The24-operation follow-up contains
+16 independent/order-balanced comparisons and8 matching-context controls; it is
+active. Exact-process passive waiting chains artifact collection and descriptive
+chart generation after the queue. Final quality/applicability work remains.
+
+Archived178 terminal world-restore copies off-host and verified every file and
+unchanged native preimage before retiring only those recovery copies. Measured
+reclamation10.37GiB; free44.48GiB. Native live/canonical worlds and result files are
+unchanged. The old copies remain recoverable from the verified3.22GiB archive.
+[Receipt](../dev/experiments/rtx5080-four-target-audit-20261106/terminal-world-copies-v1-verification.json).

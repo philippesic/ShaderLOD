@@ -55,12 +55,15 @@ that scoring queue is complete. All completed timing datasets are verified off-h
 descriptive analysis includes32 measured cells; work/quality qualification is
 incomplete. MakeUp G03/G05 and all four N01 CPU cases need repair/retest. The
 canonical stale-recipe-pin correction passes its new Java resource regression,
-and is now deployed after verified preservation. Eight focused maintained hardware
-checks are running; qualification is pending. N01's native certificate requires4.1;
+and is now deployed after verified preservation. All eight focused hardware checks pass with restoration. A24-operation affected
+comparison/control queue is now running; expected duration about3 hours. Automatic
+collection and descriptive chart generation follow its completion. Old MakeUp
+runtime/source cohorts are separated from repaired implementation statistics. N01's native certificate requires4.1;
 failed runs used3.2 and need4.6 admission tests. Final repairs, independent
 measurement qualification, regression investigation, quality and charts remain.
-Native35.4GiB free requires ShaderLOD-only artifact preservation before large motion
-captures. The earlier7–8-hour ETA covered the completed queue, not the final audit.
+Verified off-host preservation of178 terminal restoration copies recovers10.37GiB,
+leaving44.48GiB free before the new timing batch. Live worlds/results remain intact.
+Further capacity checks apply before large motion captures. The earlier7–8-hour ETA covered the completed queue, not the final audit.
 BSL bloom VRS now passes actual4.5/4.6 activation/restoration. A C01 core-profile
 polygon-state repair also observes real native GPU-query work, with independent
 primitive, timing and quality checks pending. See the

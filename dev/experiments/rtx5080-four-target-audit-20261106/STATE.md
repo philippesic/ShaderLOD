@@ -88,15 +88,44 @@ families while retaining original-pack/options/actual CPU-work requirements. Thi
 is a concrete next test, not an established complete fix. Obtain matching context
 controls and independent orders after functional proof.
 
-Active task ShaderLOD-RTX5080-Runtime-V4-Checks uses the existing maintained
-queue and eight fresh check operations, ledger queue-runtime-v4-checks.json. It
-checks MakeUp G03/G05/G06/G07 and all four N01 families; G05/N01 request4.6.
-The first G03 check is running and the actual queue ledger is verified. Estimate
-30–45 minutes for this functional phase; full-deliverable ETA remains uncertain.
-No source/classes are modified during these checks.
+All eight Runtime-V4 checks completed VALID/restored in about26 minutes:
+MakeUp G03/G05/G06/G07 and N01 for all four packs. The pin repair and real4.6
+CPU contexts now have functional hardware proof. The next phase had not been
+chained to these checks, leaving about4¾ hours idle before the status inspection.
+This gap is not benchmark execution and is not included in an acquisition ETA.
 
-Next: validate hardware and modern-context CPU cases, retry only affected
-measurements/controls with separate implementation cohorts, preserve
+Capacity repair:178 fully restored/released world-restore copies were streamed
+to Asahi without a native staging archive. Every archive file hash was verified;
+native terminal states and every source hash were rechecked before retirement.
+Canonical/live worlds and all report metadata/results remain intact. The ignored
+3.22GiB archive and source manifest retain all10.35GiB of restoration preimages.
+Measured reclamation10.37GiB; native free space44.48GiB afterward. See the
+[verification receipt](terminal-world-copies-v1-verification.json). No other
+project, personal profile or NVIDIA cache was touched.
+
+Task ShaderLOD-RTX5080-Runtime-V4-Timings is now running, ledger
+queue-runtime-v4-timings.json:16 affected comparisons (both orders for eight
+cases) plus8 native-equivalent natural-terrain4.6 controls. First operation is
+makeup-g03-primary-test-abba-runtime-v4. Existing baseline/unaffected results are
+retained. Expected acquisition duration about3 hours; this is not a final audit ETA.
+
+The local continue-runtime-v4.py process (unified execution session41795) waits
+on the exact native queue process handle without polling/transferring during
+windows. After completion it automatically pulls terminal evidence, reduces
+within/between variance and produces descriptive PNG/SVG/HTML charts. Its stages
+and failures are recorded in ignored runtime-v4-continuation-status.json and
+runtime-v4-continuation.log. Do not replay it or overwrite active definitions.
+The actual timing ledger/START is verified. Native sources/classes remain frozen.
+
+The analyzer now uses actual build-bound runtime-admission and recipe identities
+for affected MakeUp G03/G05/G06/G07. Prior requests remain in every-attempt data;
+they cannot contribute to repaired-implementation primary means or repeat variance.
+The mirrored176 reports include151 valid;29 current primary cells are measured
+until repaired timings arrive. Current/old source separation is verified against
+actual bound files and all eight new check records. No final quality/benefit claim.
+
+Next: collect the active affected timings/controls, investigate regressions and
+remaining applicability/proof gaps, preserve
 large ShaderLOD artifacts before motion, investigate regressions and publish the
 bounded quality/variance report. A reliable full-deliverable ETA is not established.
 The previous7–8-hour estimate applied only to the now-completed timing queue.
