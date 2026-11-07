@@ -2,6 +2,12 @@ package com.pp.shaderlod.optimization.makeupao;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 class MakeUpAoCompiledInputsTest {
+ @Test void sourceAdmissionPinsTheActualPackagedRecipe() throws Exception {
+  try(var in=MakeUpAoSourceProof.class.getResourceAsStream("/assets/shaderlod/adapters/patches/adapters/makeup-ultra-fast-shaders.json")) {
+   assertNotNull(in);
+   assertEquals(MakeUpAoSourceProof.RECIPE_SHA,java.util.HexFormat.of().formatHex(java.security.MessageDigest.getInstance("SHA-256").digest(in.readAllBytes())));
+  }
+ }
  @Test void bothFailedCapturesOnSupportedCompilerRefuseWithoutLegacyFallback(){
   var before=MakeUpAoCompiledInputs.status();
   var lookup=MakeUpAoCompiledInputs.lookup(true,null,null,new Object(),new Object(),new Object());

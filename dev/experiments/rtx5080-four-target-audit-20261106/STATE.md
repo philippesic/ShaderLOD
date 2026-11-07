@@ -55,30 +55,43 @@ a real native exclusive-handle/read-release regression fixture. Explicit recover
 preserves conflicting owned inputs and verifies configuration/world reset/release
 without replay. See [Windows IO evidence](WINDOWS_IO.md).
 
-## Latest live inspection
+## Latest live inspection — 2026-11-07
 
-The active97-operation continuation has33 finished:27 VALID, six INVALID;
-all33 restored, with no restoration-blocked queue. MakeUp G04's saved-water
-first-order comparison is running at this inspection.64 operations remain including
-that active operation. Latest C: free space46.8GiB remains above the32GiB reserve.
+The97-operation continuation finished:85 VALID,12 INVALID; all97 restored.
+No GPU operation is active. Completion was about two hours before the latest status
+inspection; no repair/retest continuation had automatically started in that gap.
+All97 terminal timing datasets (1619 files) are independently hash-verified on
+Asahi; full native images/graphs/logs remain preserved. Descriptive reduction now
+includes168 reports,143 valid and32 measured cells. These are operation counts,
+not proof that every optimization is active, beneficial or quality-qualified.
 
-Five of the six repair checks pass: MakeUp G06/G08, the separate G04 water case,
-BSL G06 and BSL G09. BSL G09's first4.6 timing process also passes. MakeUp G05
-still refuses actual nearest-sampler permission progress in4.6; the context change
-alone is insufficient. Both its check and first timing attempt are invalid.
-All four N01 first-order attempts refuse actual selected-pack identity after their
-first native window, before candidate timing; these are no CPU performance results.
-The unrelated remaining cases continue while these routes require repair/retries.
+Invalids: MakeUp G05 functional check and both timing orders; MakeUp G03's second
+order; all four N01 CPU cases in both orders. All failed cases restored safely.
+The last native capacity observation is35.4GiB free, above the32GiB reserve but
+insufficient for an11.2GiB raw4K motion capture without further ShaderLOD-only
+artifact preservation/reclamation. Keep other projects and NVIDIA caches untouched.
 
-Source inspection finds MakeUpReflectionRuntime.source() compares the packaged
-recipe to MakeUpAoSourceProof.RECIPE_SHA; that constant still pins the old recipe
-while the current resource differs after the Windows entry changes. This is a
-concrete additional refusal candidate, not yet a hardware-confirmed repair.
-For N01, retain exact-original selection and unchanged option-map requirements;
-inspect the ordinary configure/selection path rather than accepting an unexpected
-adapter. No native source/classes have been changed during the active queue.
-Final independent-repeat analysis, regression investigation, bounded quality and
-all64-cell variance charts remain incomplete.
+Canonical repair preparation: MakeUpAoSourceProof.RECIPE_SHA still referenced the
+old packaged recipe. Both MakeUp early-alpha and reflection runtime checks use this
+pin. Updated it to the actual, already-tested current packaged recipe, retaining
+all graph/options/native guards. Added an actual-resource digest regression;
+the selected compiled-input Java test class passes locally. This source repair
+is NOT deployed or hardware-validated yet. Native source/classes remain frozen.
+MakeUp G06/G07 also consume shared source admission; check/reacquire affected
+implementation cohorts after this repair rather than assuming prior work active.
+
+The N01 native source/Apply certificate explicitly requires OpenGL4.1 (both
+MakeUpQuadRuntime.nativeGraphAvailable and NativeCpuApplyProof.read). All failed
+N01 operations used native3.2. Retry functional admission in real4.6 for all four
+families while retaining original-pack/options/actual CPU-work requirements. This
+is a concrete next test, not an established complete fix. Obtain matching context
+controls and independent orders after functional proof.
+
+Next: safely freeze/release/deploy the prepared pin repair, validate hardware and
+modern-context CPU cases, retry only affected measurements/controls, preserve
+large ShaderLOD artifacts before motion, investigate regressions and publish the
+bounded quality/variance report. A reliable full-deliverable ETA is not established.
+The previous7–8-hour estimate applied only to the now-completed timing queue.
 
 ## Measurements and proof retained
 

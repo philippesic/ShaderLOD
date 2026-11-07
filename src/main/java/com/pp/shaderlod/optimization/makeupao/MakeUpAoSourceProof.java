@@ -3,7 +3,7 @@ import java.nio.file.Path;import java.io.InputStream;import java.util.*;import j
 import com.pp.shaderlod.packs.PackSelectionService;
 /** Real packaged recipe and complete generated archive/state/owned-map proof. No size/mtime cache. */
 public final class MakeUpAoSourceProof {
- public static final String RECIPE_SHA="80260ee772f9231fc2159aab76812e4254ae8f090a213b5ec0214050067cf5e9";
+ public static final String RECIPE_SHA="ef6c557d5fb0f1fb1fc6b59bcd2e5c1792df28f2a900f9284aee63013621f074";
  private MakeUpAoSourceProof(){}
  public static boolean verify(Path p,Supplier<InputStream> recipe){return verify(p,recipe,PackSelectionService::verifyGeneratedRendererGraph);}
  public static boolean verify(Path p,Supplier<InputStream> recipe,BiFunction<Path,Map<String,String>,String> reader){

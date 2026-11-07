@@ -50,12 +50,16 @@ BSL G06 and MakeUp G08 functional retries pass. Actual-archive tests and maintai
 resource/catalog synchronization repair a stale authored helper copy that refused
 three checks before launch. MakeUp G04 hardware validation also passes. A fresh97-operation continuation
 is running with the remaining repair checks, baselines, controls and both timing
-orders. BSL G09 now requests real4.6 for its required compute sampler proof. Latest continuation inspection:33/97 finished,27 valid/six invalid, all restored;
-BSL G09's4.6 functional proof and first timing now pass. MakeUp reflections still
-refuse permissions and all four N01 CPU cases refuse selected-pack identity before
-candidate timing. These require further repairs; unrelated cases continue.
-Remaining comparisons, regression investigation, quality and final variance
-charts are incomplete.
+orders. BSL G09 now requests real4.6 for its required compute sampler proof. The97-operation continuation has now finished:85 valid/12 invalid, all restored;
+no GPU run is active. All completed timing datasets are verified off-host. Current
+descriptive analysis includes32 measured cells; work/quality qualification is
+incomplete. MakeUp G03/G05 and all four N01 CPU cases need repair/retest. The
+canonical stale-recipe-pin correction passes its new Java resource regression,
+but is not deployed or hardware-validated. N01's native certificate requires4.1;
+failed runs used3.2 and need4.6 admission tests. Final repairs, independent
+measurement qualification, regression investigation, quality and charts remain.
+Native35.4GiB free requires ShaderLOD-only artifact preservation before large motion
+captures. The earlier7–8-hour ETA covered the completed queue, not the final audit.
 BSL bloom VRS now passes actual4.5/4.6 activation/restoration. A C01 core-profile
 polygon-state repair also observes real native GPU-query work, with independent
 primitive, timing and quality checks pending. See the

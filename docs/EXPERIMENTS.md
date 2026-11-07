@@ -273,3 +273,20 @@ retiring native evidence. Current source identities separate old MakeUp G06 timi
 from corrected-entry results. Broad first/opposite-order comparisons continue;
 this is not completion or a repeated-benefit/quality claim.
 [Repair evidence](../dev/experiments/rtx5080-four-target-audit-20261106/FIRST_PASS_REPAIRS.md).
+
+
+### 2026-11-07 RTX timing queue finished; remaining admission repairs
+
+The97-operation queue finishes85 valid/12 invalid, all restored. All97 timing
+reports (1619 files) are hash-verified on Asahi, with native originals retained.
+MakeUp G03's repeat, all G05 attempts and both orders of the four N01 cases remain
+invalid. No benefit or complete quality/report conclusion is established.
+
+MakeUp early-alpha/reflection share MakeUpAoSourceProof.RECIPE_SHA, which still
+pins the recipe before Windows source changes. Canonical pin repair and an actual
+packaged-resource digest regression now pass the selected Java test class; native
+deployment/admission remain pending. Shared MakeUp G06/G07 admission also needs
+revalidation/separate implementation cohorts. N01's source/Apply certificate
+requires GL4.1, while failed cases used actual3.2: next test is real4.6 functional
+admission retaining all original-pack/native-work guards. No bypass is added.
+[Working state](../dev/experiments/rtx5080-four-target-audit-20261106/STATE.md).
