@@ -44,9 +44,14 @@ and the first comparison/control block. A later ownership-file failure exposed
 plain CRT errno13 without winerror; the minimal bounded-retry correction passes
 103 benchmark tests on both hosts, including a real Windows lock regression.
 The failed baseline is fully recovered with uncertain bytes preserved.
-First-pass inspection finds27 valid/4 invalid among31 finished, all restored.
-A safe boundary pause is requested to deploy prepared Windows shader-gate and
-modern-context retries; remaining comparisons and quality are not complete.
+The first batch stopped safely at35/59 operations:30 valid, five invalid, all
+restored/released. Windows source-gate and context repairs are deployed; native
+BSL G06 and MakeUp G08 functional retries pass. Actual-archive tests and maintained
+resource/catalog synchronization repair a stale authored helper copy that refused
+three checks before launch. MakeUp G04 hardware validation also passes. A fresh97-operation continuation
+is running with the remaining repair checks, baselines, controls and both timing
+orders. BSL G09 now requests real4.6 for its required compute sampler proof. Remaining comparisons, regression
+investigation, quality and final variance charts are incomplete.
 BSL bloom VRS now passes actual4.5/4.6 activation/restoration. A C01 core-profile
 polygon-state repair also observes real native GPU-query work, with independent
 primitive, timing and quality checks pending. See the

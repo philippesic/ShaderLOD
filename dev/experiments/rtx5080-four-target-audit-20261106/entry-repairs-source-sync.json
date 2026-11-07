@@ -1,0 +1,32 @@
+[
+  {
+    "path": "scripts/build_makeup_directional_cloud_bounds.py",
+    "before": "6e76b551ea7f2d7098c6fef08a9401ac4f7d2280e76d006f62ad6a458e8c5028",
+    "after": "11842cb09edb149a51dc13180c9ebd411f7fd3d649a5683948e8f5058ae95223"
+  },
+  {
+    "path": "scripts/benchmark_makeup_cloud_bound.py",
+    "before": "dddb43cef1d2b1b9ed8e0eca776fc9c9700f35b7229bc4b5eb46c9c4fa4f7b73",
+    "after": "f99ac69c54c40b953068e6d5bb34e6d124aace8061782a0bfc434c30b85b2c3f"
+  },
+  {
+    "path": "src/main/resources/assets/shaderlod/adapters/patches/adapters/makeup-ultra-fast-shaders.json",
+    "before": "80260ee772f9231fc2159aab76812e4254ae8f090a213b5ec0214050067cf5e9",
+    "after": "ef6c557d5fb0f1fb1fc6b59bcd2e5c1792df28f2a900f9284aee63013621f074"
+  },
+  {
+    "path": "src/main/resources/assets/shaderlod/adapters/patches/adapters/makeup-exact/shaders/lib/g04/water_blocks_fragment.glsl",
+    "before": "fb23b2b2b2669b596b9ff707bd95971c6f01c345aee17ee73da0c26b1500a007",
+    "after": "6d828e22ccb7ab0a7c1268ffef42970ea04351c54325d8989f7e64b6536b68a4"
+  },
+  {
+    "path": "src/neoforge1211Test/java/com/pp/shaderlod/optimization/MakeUpExactGraphTest.java",
+    "before": "fd46030e5f313af3964f6921c054ba91f1011b6c0ed04904717c313d44cad6a9",
+    "after": "99256c387f070c5465a052f0b632e31bfff96bde031acd1812cb0454a6fd9576"
+  },
+  {
+    "path": "tests/test_makeup_native_cloud_bound.py",
+    "before": "2c4cd07100bb0ded184c770aa04b130962a88c3689bd52cd70706cc804089b9f",
+    "after": "62f79baf04e27b867b922773d068c2e392fbc920532ac1e57aadd076c8624ba7"
+  }
+]

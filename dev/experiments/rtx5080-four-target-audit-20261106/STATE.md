@@ -8,23 +8,42 @@ gets verified runtime inputs. No2080Ti allocation is in use.
 
 ## Current native operation
 
-Task ShaderLOD-RTX5080-Scoring-V1-Block1 is active in console Session1, request
-C:\ShaderLODBench\requests\queue-scoring-v1-block1.json, ledger
-queue-scoring-v1-block1.json. It contains59 maintained operations. The four
-additional Complementary GL4.6 baselines complete valid/restored. At the latest
-inspection34 operations finished; a boundary pause is requested after the active
-Unbound native-PBR G09 run so four first-pass failures can be repaired. Do not
-replace native sources/classes until the actual ledger and exact release are
-verified. The source used by the live batch remains unchanged.
+The first59-operation queue stopped safely after35 completed operations:
+30 VALID and five INVALID, all restored/reset/released with zero remaining clients.
+The four additional Complementary GL4.6 original baselines are complete. All35
+completed timing records are hash-verified on Asahi; full native evidence remains.
+The local descriptive reduction now includes71 reports/58 valid/21 measured cells.
+Those counts include earlier baselines/checks; they are not64-cell completion.
 
-The initial31 finished included27 valid and four invalid, all restored. Two
-failures used native3.2 where their backend requires3.3/4.1; two remaining shader
-gates excluded Windows. Canonical fixes and six functional checks are prepared
-and locally tested, not yet deployed. See [repair evidence](FIRST_PASS_REPAIRS.md).
-Old MakeUp G06 timings need separation from the corrected entry implementation.
-The old failed Reimagined4.6 r1 remains invalid/recovered evidence; its fresh retry
-and independent repeat both complete successfully. The task has no trigger and
-its outer24h limit does not close the campaign.
+Windows entry/source and required-context repairs were installed only after exact
+release and a verified source freeze. Native103 Python tests, exact-graph Java
+tests and offline compilation pass. BSL G06 in actual4.6 and the16-phase MakeUp
+G08 diagnostic both finish VALID/restored/released. MakeUp's authored helper and
+packaged resource were initially out of sync; this refused three checks before
+launch. Maintained resource/catalog synchronization fixes both consumers, with an
+actual-archive regression passing on Windows and all17 adapter tests locally.
+
+MakeUp G04's first corrected hardware check now also completes VALID/restored/
+reset/released. The context-only transition stopped after that check; no active
+source/classes were modified. Task ShaderLOD-RTX5080-Scoring-V3-Contexts-Retry1 is now
+running the MakeUp G05 reflection hardware check in console Session1, request C:\ShaderLODBench\requests\queue-scoring-v3-contexts-retry1.json,
+ledger queue-scoring-v3-contexts.json. Its fresh97 operations contain six remaining
+functional checks and91 baseline/control/timing operations: repaired first orders,
+remaining first-pass cases, MakeUp GL4.6 baselines/null controls and57 opposite-order
+comparisons. BSL G09's functional proof and both timing orders now request OpenGL4.6
+because the native3.2 failure lacks its required4.3 compute support. Hardware
+validation of G09 remains pending. Queue restoration failures stop execution;
+restored invalid cases remain evidence and do not terminate unrelated cases.
+The first context-continuation task rejected a malformed new check command before
+creating a ledger or operation. Its input is retained on Windows. Corrected the
+check's CLI argument position, validated all97 command lines and launched the
+fresh retry request; its ledger and live START console record are verified.
+The local supported-pack catalog Java test also passes after resource sync.
+
+See [first-pass repair evidence](FIRST_PASS_REPAIRS.md). The analyzer excludes old
+MakeUp G06 from the current implementation's primary result and separates actual
+build-bound implementation identities in variance cohorts. Remaining comparison,
+regression investigation, quality and final charts are incomplete.
 
 V3 completed six valid, restored/released functional operations: repaired C01 GPU
 admission, its separate primitive witness, and both Complementary VRS checks in
@@ -91,15 +110,15 @@ GPU no-wait, GPU wait and CPU-decision modes; it establishes no geometry savings
 in that bounded scene. Natural opportunity search and scored timings remain
 pending. See [C01 repair](C01_PORT.md).
 
-Native source/classes were verified and archived before each replacement: four
+Native source/classes were verified and archived before each replacement: six
 tracked freeze receipts identify the complete bindings and retained ZIPs. All
-four ZIPs are also hash-verified under Asahi's ignored frozen/ directory. Full
+six ZIPs are also hash-verified under Asahi's ignored frozen/ directory. Full
 native report images/graphs/logs remain preserved; timing-only transfers are
 independently hash-verified and do not authorize deleting native originals.
 
 ## Capacity and remaining work
 
-Latest C: observation is59.3GiB free. This is sufficient above the32GiB reserve;
+Latest C: observation is52.2GiB free. This is sufficient above the32GiB reserve;
 80–100GiB was conservative headroom for accumulating large captures. Process
 4K motion sequentially (about11.2GiB raw per363-frame capture), then compress and
 transfer verified evidence. Cleanup remains ShaderLOD-only. NVIDIA caches,

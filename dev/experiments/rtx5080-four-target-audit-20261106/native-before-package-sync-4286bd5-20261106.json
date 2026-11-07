@@ -1,0 +1,11 @@
+{
+  "archive": "C:\\ShaderLODBench\\frozen\\native-before-package-sync-4286bd5-20261106.zip",
+  "bytes": 18462118,
+  "sha256": "d94c0d97590a4ab30d05cacfd50cf138f1b73c67494fe70d7fa1a582375a365f",
+  "files": 5510,
+  "build_bindings": 5034,
+  "verified": true,
+  "reports": [
+    "makeup-g08-primary-check-r1-repair-v2"
+  ]
+}

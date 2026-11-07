@@ -1,0 +1,11 @@
+{
+  "archive": "C:\\ShaderLODBench\\frozen\\native-before-entry-repairs-2a47ba0-20261106.zip",
+  "bytes": 18460636,
+  "sha256": "e30722be15497cea9ed0a62dc6a521c5a3108f6ce1a189e8ecb60075251011d4",
+  "files": 5509,
+  "build_bindings": 5034,
+  "verified": true,
+  "reports": [
+    "unbound-g09-native-rp3-pbr-test-abba-r1"
+  ]
+}

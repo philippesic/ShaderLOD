@@ -1,9 +1,8 @@
 # First scoring pass repairs
 
-At inspection31/59 operations had finished,27 valid and four invalid. All31
-restored/released with zero remaining clients. These failures are not performance
-results. Later the ledger reached34 finished; a stop-between-jobs request waits
-for the active Unbound native-PBR G09 operation to release before source changes.
+The first batch stopped safely after35/59 operations:30 valid and five invalid.
+All35 restored/released with zero remaining clients. Invalid attempts are not
+performance results. Replaced native inputs were archived and verified off-host.
 
 - MakeUp G04: the finite Windows constructor capability already exists, but the
   fragment gate and63 shared adapter clauses still restricted that capability to
@@ -29,9 +28,41 @@ route. Preserve its old first-pass timing as the old implementation; reacquire
 corrected timings and do not pool implementations into between-process variance.
 
 Local validation:103 benchmark Python tests, three native-cloud builder tests,
-and the six selected exact/composition Java tests pass. Native deployment and
-functional proof of these new repairs remain pending until the current operation
-is fully released and its exact inputs are archived. The running Windows source
-has not been overwritten. The authored six-check list is
-benchmarks/campaigns/rtx5080-repairs-v2-checks.json. Performance retries and the
-remaining comparison cases follow successful hardware checks, with fresh outputs.
+and the six selected exact/composition Java tests pass. Native103 Python tests
+and exact-graph Java tests pass after safe deployment. BSL G06 in actual4.6 and
+MakeUp G08 both finish VALID/restored/released. The cloud check now completes its
+required diagnostic coverage rather than timing an inactive writer.
+
+Three MakeUp checks stopped before launch because the shipped recipe referenced
+the new fragment helper but Python still read the older authored copy. Corrected
+the authored recipe/helper, then used maintained `sync_resources` to verify the
+packaged mirrors and update the assembled catalog identity while retaining the
+old identity for restoration. A regression test assembles both recipes against
+the actual native archive and requires an idempotent resource/catalog sync.
+All17 adapter Python tests pass locally; the new actual-archive regression passes
+on Windows, followed by a successful offline build and current receipt validation.
+No shader/input files were replaced during an operation.
+
+A fifth first-pass failure, BSL G09, requires an OpenGL4.3 compute sampler probe;
+the failed process used actual3.2. Its actual image storage already passes the
+storage checks. Retry the functional proof and both timing orders in actual4.6,
+retaining all sampler/numerical/state-restoration requirements. This does not yet
+establish native sampler equivalence or a performance benefit.
+
+MakeUp G04's corrected first hardware check now also passes with restoration.
+The fresh97-operation continuation is running, including six remaining functional
+checks and91 timing/baseline/control operations. Previous attempts and both
+opposite-order timing definitions remain preserved. The analyzer reads newer definitions first and uses actual build-bound
+source identities to separate old MakeUp G04/G06 implementations. Old MakeUp G06
+timings cannot contribute to the repaired implementation's between-process variance.
+All results remain descriptive until repeats, actual work, null controls and
+bounded quality have been checked.
+
+
+The first GL-context continuation launch rejected a malformed new PBR check's
+argument order before creating any operation/ledger. Corrected `-u` and the
+maintained `check` subcommand positions, validated all97 commands and launched a
+fresh owned request. The real queue ledger and START console confirm execution.
+The malformed definition is retained as native `scoring-v3-contexts.before-argv-fix.json`;
+it has no timing result. The current canonical definition contains only valid CLI
+forms. The supported-pack catalog Java regression passes after synchronization.

@@ -1,0 +1,22 @@
+[
+  {
+    "path": "patches/adapters/makeup-ultra-fast-shaders.json",
+    "before": "80260ee772f9231fc2159aab76812e4254ae8f090a213b5ec0214050067cf5e9",
+    "after": "ef6c557d5fb0f1fb1fc6b59bcd2e5c1792df28f2a900f9284aee63013621f074"
+  },
+  {
+    "path": "patches/adapters/makeup-exact/shaders/lib/g04/water_blocks_fragment.glsl",
+    "before": "fb23b2b2b2669b596b9ff707bd95971c6f01c345aee17ee73da0c26b1500a007",
+    "after": "6d828e22ccb7ab0a7c1268ffef42970ea04351c54325d8989f7e64b6536b68a4"
+  },
+  {
+    "path": "src/main/java/com/pp/shaderlod/packs/SupportedPackCatalog.java",
+    "before": "152aead5eb92633e0db73b5ebe9f16510b04cc517c6a8beef7a644ed2dd28955",
+    "after": "aa27060c9ee7e69cf843ea4562782b8e0998f44d8fb312ef5d25a1da626b7a03"
+  },
+  {
+    "path": "tests/test_supported_pack_adapters.py",
+    "before": "335d29fa1d5053b7ed01dc93caa3e349ff0930b912536579eb9ec2a022eadfd2",
+    "after": "d862d5b42dae0ac920cd0d1e9c811a133b4632909f7e560742e6e1d483aa709f"
+  }
+]

@@ -14,6 +14,18 @@ from build_supported_pack_adapters import (apply, build, read_archive, shader_so
     sync_resources, catalog_update, CATALOG, RESOURCE_ROOT)
 
 class SupportedPackAdapterTests(unittest.TestCase):
+    def test_makeup_public_preflight_and_packaged_recipe_share_current_helpers(self):
+        # Public preflight assembles the shipped recipe using authored helper
+        # paths, while Java consumes the packaged copies. Exercise both against
+        # the actual native archive so updating only one copy cannot pass.
+        base = ROOT/'dependencies/shortlist-test-inputs/originals/MakeUpNativeOriginal.zip'
+        recipe = 'patches/adapters/makeup-ultra-fast-shaders.json'
+        authored = json.loads((ROOT/recipe).read_bytes())
+        shipped = json.loads((ROOT/RESOURCE_ROOT/recipe).read_bytes())
+        native = read_archive(base)
+        self.assertEqual(apply(native, authored), apply(native, shipped))
+        self.assertEqual(sync_resources(base, 'makeup-ultra-fast-shaders')['changed_files'], [])
+
     def test_reimagined_ao_budget_uses_supported_radial_caller_and_native_fallbacks(self):
         manifest=json.loads((ROOT/'patches/adapters/complementary-reimagined.json').read_text())
         stock=read_archive(ROOT/'dependencies/upstream/other-pack-research/ComplementaryReimagined_r5.9.3.zip')

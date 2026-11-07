@@ -251,3 +251,25 @@ baselines and55 optimization/control comparisons. Its fresh replacement baseline
 already completes/restores successfully and the independent repeat is active.
 The full comparison/quality/disposition/chart work remains incomplete; this is no
 campaign closure or general benefit claim.
+
+
+### 2026-11-06 Windows shader entry and actual-context repairs
+
+The first scoring batch stopped safely at35 operations:30 valid/five invalid,
+all restored/reset/released. G04 and the private cloud diagnostic retained Linux-only
+source gates despite finite Windows constructor admission. Corrected the scoped
+Windows entries and native helper pins. BSL G06 requires GL3.3, MakeUp G05 requires
+GL4.1 and BSL G09's private compute sampler proof requires GL4.3; native3.2 is an
+incorrect test context for these routes. Keep all capability/numerical guards and
+retry in actual4.6. BSL G06 and MakeUp G08 functional retries now pass on hardware.
+
+A packaged MakeUp helper initially diverged from Python's authored helper path;
+three checks refused before launch. Maintained source/resource/catalog sync and
+an actual-original assembly regression repair this. All17 adapter Python tests
+pass locally, the regression passes on Windows, and native offline build/current
+receipt validation passes. Previous source/class bindings are hash-verified in two
+additional off-host archives. Completed first-batch timings are mirrored without
+retiring native evidence. Current source identities separate old MakeUp G06 timing
+from corrected-entry results. Broad first/opposite-order comparisons continue;
+this is not completion or a repeated-benefit/quality claim.
+[Repair evidence](../dev/experiments/rtx5080-four-target-audit-20261106/FIRST_PASS_REPAIRS.md).

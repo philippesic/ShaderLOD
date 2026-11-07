@@ -21,7 +21,9 @@ def spread(values):
             'variance':stats.variance(values) if len(values)>1 else None}
 
 jobs=[]
-for name in ('rtx5080-observed-v1.json','rtx5080-baselines-v1.json','rtx5080-comparisons-v1.json','rtx5080-port-validation-v2.json','rtx5080-port-validation-v3.json','rtx5080-scoring-v1-block1.json'):
+# New continuation definitions supersede the unexecuted historical plans for
+# identical output paths (notably their repaired contexts and implementation).
+for name in ('rtx5080-scoring-v3-contexts.json','rtx5080-scoring-v2-continuation.json','rtx5080-post-repair-v2.json','rtx5080-repairs-v2-checks.json','rtx5080-observed-v1.json','rtx5080-baselines-v1.json','rtx5080-comparisons-v1.json','rtx5080-port-validation-v2.json','rtx5080-port-validation-v3.json','rtx5080-scoring-v1-block1.json'):
     path=ROOT/'benchmarks/campaigns'/name
     if path.exists():jobs.extend(json.loads(path.read_text()))
 seen=set();runs=[];raw_rows=[]
@@ -96,6 +98,14 @@ for job in jobs:
     # Separate actual contexts, stacks, options and scenes before pooling repeats.
     signature={k:row['context'][k] for k in ('native_viewport','dimension','preset','camera','day_time','rain_level','native_options','loaded_stack','gpu_renderer','gpu_driver','main_mod','render_distance_chunks')}
     signature['requested_gl_context']=row['gl_context'].get('requested')
+    if row['shader']=='makeup' and row['goal'] in ('G04','G06'):
+        # Use the actual bound source, not the planned variant name, to keep
+        # the formerly unreachable Windows entry distinct from its repair.
+        binding=json.loads((output/'build-binding.json').read_text())
+        fragment='src/main/resources/assets/shaderlod/adapters/patches/adapters/makeup-exact/shaders/lib/g04/water_blocks_fragment.glsl'
+        normalized={key.replace('\\','/'):value for key,value in binding.items()}
+        row['implementation_revision']=normalized.get(fragment,'UNVERIFIED')
+        signature['implementation_revision']=row['implementation_revision']
     row['cohort_id']=hashlib.sha256(json.dumps(signature,sort_keys=True).encode()).hexdigest()[:16]
     row['cohort_signature']=signature
     operation=json.loads((output/'operation.json').read_text())
@@ -141,6 +151,12 @@ for cell in matrix['cells']:
     cell['attempt_failures']=[{'name':r['name'],'case':r.get('case'),'phase':r.get('phase'),'error':r['error'],'validity':r['validity']} for r in matches if r['validity'] not in ('VALID','RUNNING')]
     valid=[r for r in matches if r['validity']=='VALID' and r['restored'] and r['kind']=='test' and r['measurement_qualified']]
     cell['runs']=[r['output'] for r in matches];cell['valid_runs']=len(valid)
+    if cell['shader']=='makeup' and cell['goal'] in ('G04','G06'):
+        current='6d828e22ccb7ab0a7c1268ffef42970ea04351c54325d8989f7e64b6536b68a4'
+        cell['superseded_implementation_runs']=[r['output'] for r in valid if r.get('implementation_revision')!=current]
+        valid=[r for r in valid if r.get('implementation_revision')==current]
+        cell['valid_runs']=len(valid)
+        cell['implementation_selection_note']='Current Windows entry only; older timings remain in every-attempt evidence and separate variance cohorts.'
     if valid:
         cases={r.get('case') or 'primary' for r in valid}
         cell['case_effects']={case:{phase:{work:spread([r['frame_time_reduction_pct'] for r in valid
@@ -181,7 +197,7 @@ for cell in matrix['cells']:
                                'mean_within_window_variance_ms2':stats.mean(r['variance_total_frame_ms2'] for r in metrics),
                                'mean_p95_ms':stats.mean(r['p95_total_frame_ms'] for r in metrics)}
     elif matches:
-        cell['status']=cell.get('audit_disposition') or ('RUNNING' if any(r['validity']=='RUNNING' for r in matches) else 'INVALID_OR_REFUSED')
+        cell['status']=cell.get('audit_disposition') or ('CURRENT_IMPLEMENTATION_UNMEASURED' if cell.get('superseded_implementation_runs') else 'RUNNING' if any(r['validity']=='RUNNING' for r in matches) else 'INVALID_OR_REFUSED')
         cell['errors']=[r['error'] for r in matches]
 
 baselines={}
