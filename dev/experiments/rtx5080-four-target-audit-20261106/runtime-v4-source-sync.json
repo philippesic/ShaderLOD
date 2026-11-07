@@ -1,0 +1,12 @@
+[
+  {
+    "path": "src/main/java/com/pp/shaderlod/optimization/makeupao/MakeUpAoSourceProof.java",
+    "before": "6f10664d7cf5b9232b37061033330a5122a1d78bf435261a62003981ac5e1273",
+    "after": "6880b9f9ec975b55ebb40d35627fe6d629802ecbc57c01783810183bdbe70532"
+  },
+  {
+    "path": "src/test/java/com/pp/shaderlod/optimization/makeupao/MakeUpAoCompiledInputsTest.java",
+    "before": "85382c22814f8c3bf173b6cfc24a7a844da3011f0aa93567e0809d75f53febb1",
+    "after": "f93d19c84492a1d51cd1d68efcfd19e043f076d92f79fe36a6bcb963db036a39"
+  }
+]

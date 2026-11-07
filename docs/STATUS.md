@@ -51,11 +51,12 @@ resource/catalog synchronization repair a stale authored helper copy that refuse
 three checks before launch. MakeUp G04 hardware validation also passes. A fresh97-operation continuation
 is running with the remaining repair checks, baselines, controls and both timing
 orders. BSL G09 now requests real4.6 for its required compute sampler proof. The97-operation continuation has now finished:85 valid/12 invalid, all restored;
-no GPU run is active. All completed timing datasets are verified off-host. Current
+that scoring queue is complete. All completed timing datasets are verified off-host. Current
 descriptive analysis includes32 measured cells; work/quality qualification is
 incomplete. MakeUp G03/G05 and all four N01 CPU cases need repair/retest. The
 canonical stale-recipe-pin correction passes its new Java resource regression,
-but is not deployed or hardware-validated. N01's native certificate requires4.1;
+and is now deployed after verified preservation. Eight focused maintained hardware
+checks are running; qualification is pending. N01's native certificate requires4.1;
 failed runs used3.2 and need4.6 admission tests. Final repairs, independent
 measurement qualification, regression investigation, quality and charts remain.
 Native35.4GiB free requires ShaderLOD-only artifact preservation before large motion

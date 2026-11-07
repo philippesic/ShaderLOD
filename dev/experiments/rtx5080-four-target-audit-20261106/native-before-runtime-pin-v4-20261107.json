@@ -1,0 +1,11 @@
+{
+  "archive": "C:\\ShaderLODBench\\frozen\\native-before-runtime-pin-v4-20261107.zip",
+  "bytes": 18472486,
+  "sha256": "f739ee649d310ddc218f3b5401c5cb331d40002d955cccdc0bbf1a33dbf57741",
+  "files": 5512,
+  "build_bindings": 5034,
+  "verified": true,
+  "reports": [
+    "unbound-null-original-null-gl46-control-baab-r2"
+  ]
+}

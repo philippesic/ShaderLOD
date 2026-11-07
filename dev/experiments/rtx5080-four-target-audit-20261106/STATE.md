@@ -58,8 +58,9 @@ without replay. See [Windows IO evidence](WINDOWS_IO.md).
 ## Latest live inspection — 2026-11-07
 
 The97-operation continuation finished:85 VALID,12 INVALID; all97 restored.
-No GPU operation is active. Completion was about two hours before the latest status
-inspection; no repair/retest continuation had automatically started in that gap.
+Completion was about two hours before the status inspection; no repair/retest
+continuation had automatically started in that gap. A focused validation phase is
+now running as described below.
 All97 terminal timing datasets (1619 files) are independently hash-verified on
 Asahi; full native images/graphs/logs remain preserved. Descriptive reduction now
 includes168 reports,143 valid and32 measured cells. These are operation counts,
@@ -75,8 +76,8 @@ Canonical repair preparation: MakeUpAoSourceProof.RECIPE_SHA still referenced th
 old packaged recipe. Both MakeUp early-alpha and reflection runtime checks use this
 pin. Updated it to the actual, already-tested current packaged recipe, retaining
 all graph/options/native guards. Added an actual-resource digest regression;
-the selected compiled-input Java test class passes locally. This source repair
-is NOT deployed or hardware-validated yet. Native source/classes remain frozen.
+the selected compiled-input Java test class passes locally. This source repair is now deployed after exact release and a verified source
+freeze; hardware qualification is pending. All prior5034 bindings are preserved.
 MakeUp G06/G07 also consume shared source admission; check/reacquire affected
 implementation cohorts after this repair rather than assuming prior work active.
 
@@ -87,8 +88,15 @@ families while retaining original-pack/options/actual CPU-work requirements. Thi
 is a concrete next test, not an established complete fix. Obtain matching context
 controls and independent orders after functional proof.
 
-Next: safely freeze/release/deploy the prepared pin repair, validate hardware and
-modern-context CPU cases, retry only affected measurements/controls, preserve
+Active task ShaderLOD-RTX5080-Runtime-V4-Checks uses the existing maintained
+queue and eight fresh check operations, ledger queue-runtime-v4-checks.json. It
+checks MakeUp G03/G05/G06/G07 and all four N01 families; G05/N01 request4.6.
+The first G03 check is running and the actual queue ledger is verified. Estimate
+30–45 minutes for this functional phase; full-deliverable ETA remains uncertain.
+No source/classes are modified during these checks.
+
+Next: validate hardware and modern-context CPU cases, retry only affected
+measurements/controls with separate implementation cohorts, preserve
 large ShaderLOD artifacts before motion, investigate regressions and publish the
 bounded quality/variance report. A reliable full-deliverable ETA is not established.
 The previous7–8-hour estimate applied only to the now-completed timing queue.
