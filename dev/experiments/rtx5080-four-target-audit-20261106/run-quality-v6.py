@@ -1,4 +1,5 @@
 """Continue maintained untimed checks after recorder repair; preserve each arm."""
+import argparse
 import hashlib
 import json
 from pathlib import Path
@@ -27,12 +28,22 @@ def call(code, timeout=120):
 
 
 def main():
+    global STATUS
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--plan',default='benchmarks/campaigns/rtx5080-quality-v6-plan.json')
+    parser.add_argument('--previous-task',default='ShaderLOD-RTX5080-Quality-V5-06')
+    parser.add_argument('--status',default='quality-v6-status.json')
+    parser.add_argument('--outcomes',default='quality-v6-outcomes.json')
+    parser.add_argument('--index-offset',type=int,default=0)
+    args=parser.parse_args()
+    assert Path(args.status).name==args.status and Path(args.outcomes).name==args.outcomes
+    STATUS=HERE/args.status
     assert not STATUS.exists(), 'Fresh acquisition status required'
-    plan = json.loads((ROOT/'benchmarks/campaigns/rtx5080-quality-v6-plan.json').read_text())
-    previous = 'ShaderLOD-RTX5080-Quality-V5-06'
+    plan = json.loads((ROOT/args.plan).read_text())
+    previous = args.previous_task
     outcomes = []
-    for index, job in enumerate(plan, 1):
-        stage('launching-check', job=job['name'], index=index, total=len(plan))
+    for index, job in enumerate(plan, 1+args.index_offset):
+        stage('launching-check', job=job['name'], index=index, total=len(plan)+args.index_offset)
         task = f'ShaderLOD-RTX5080-Quality-V6-{index:02}'
         code = r'''
 import ctypes,json,shutil,subprocess,time
@@ -67,7 +78,7 @@ print(json.dumps(dict(name=job['name'],returncode=json.loads(result.read_text())
 '''.replace('JOB', repr(job)).replace('TASK', task).replace('PREVIOUS', previous)
         outcome = json.loads(call(code, timeout=1900))
         outcomes.append(outcome)
-        (HERE/'quality-v6-outcomes.json').write_text(json.dumps(outcomes, indent=2)+'\n')
+        (HERE/args.outcomes).write_text(json.dumps(outcomes, indent=2)+'\n')
         previous = task
         stage('preserving-completed-check', job=job['name'], validity=outcome['validity'])
         subprocess.run(['python', str(HERE/'pull-timings.py'), job['name']], cwd=ROOT, check=True)

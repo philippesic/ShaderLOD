@@ -1,0 +1,65 @@
+{
+  "scope": "Verified redundant native source-freeze ZIPs only; all source bindings remain recoverable in independently rehashed off-host archives",
+  "files": [
+    {
+      "path": "C:\\ShaderLODBench\\frozen\\native-before-c01-raster-db5dd15-20261106.zip",
+      "bytes": 18438207,
+      "sha256": "81826a684d5c9ca06f75e75b3f252322c2de239b62388a3b1b69e3719013fc5d",
+      "local_archive": "/home/philip/ShaderLOD/dev/experiments/rtx5080-four-target-audit-20261106/frozen/native-before-c01-raster-db5dd15-20261106.zip"
+    },
+    {
+      "path": "C:\\ShaderLODBench\\frozen\\native-before-c02-ac0481f-20261106.zip",
+      "bytes": 19528698,
+      "sha256": "4210f0535c4f7a2f742d69f214035075abfdcb5d0cb0eade9eb178fe4d3c8355",
+      "local_archive": "/home/philip/ShaderLOD/dev/experiments/rtx5080-four-target-audit-20261106/frozen/native-before-c02-ac0481f-20261106.zip"
+    },
+    {
+      "path": "C:\\ShaderLODBench\\frozen\\native-before-entry-repairs-2a47ba0-20261106.zip",
+      "bytes": 18460636,
+      "sha256": "e30722be15497cea9ed0a62dc6a521c5a3108f6ce1a189e8ecb60075251011d4",
+      "local_archive": "/home/philip/ShaderLOD/dev/experiments/rtx5080-four-target-audit-20261106/frozen/native-before-entry-repairs-2a47ba0-20261106.zip"
+    },
+    {
+      "path": "C:\\ShaderLODBench\\frozen\\native-before-package-sync-4286bd5-20261106.zip",
+      "bytes": 18462118,
+      "sha256": "d94c0d97590a4ab30d05cacfd50cf138f1b73c67494fe70d7fa1a582375a365f",
+      "local_archive": "/home/philip/ShaderLOD/dev/experiments/rtx5080-four-target-audit-20261106/frozen/native-before-package-sync-4286bd5-20261106.zip"
+    },
+    {
+      "path": "C:\\ShaderLODBench\\frozen\\native-before-quality-clock-v6-20261107.zip",
+      "bytes": 18479161,
+      "sha256": "b5753b958dd3542b92ba2c25d42caf0eb803c2a863099b2fc63e08e524f2c5d2",
+      "local_archive": "/home/philip/ShaderLOD/dev/experiments/rtx5080-four-target-audit-20261106/frozen/native-before-quality-clock-v6-20261107.zip"
+    },
+    {
+      "path": "C:\\ShaderLODBench\\frozen\\native-before-quality-v5-20261107.zip",
+      "bytes": 18475297,
+      "sha256": "d6d70414b3c8d80696da39df2edcaf7e165f78034f5a2e62224abad17797b514",
+      "local_archive": "/home/philip/ShaderLOD/dev/experiments/rtx5080-four-target-audit-20261106/frozen/native-before-quality-v5-20261107.zip"
+    },
+    {
+      "path": "C:\\ShaderLODBench\\frozen\\native-before-runtime-pin-v4-20261107.zip",
+      "bytes": 18472486,
+      "sha256": "f739ee649d310ddc218f3b5401c5cb331d40002d955cccdc0bbf1a33dbf57741",
+      "local_archive": "/home/philip/ShaderLOD/dev/experiments/rtx5080-four-target-audit-20261106/frozen/native-before-runtime-pin-v4-20261107.zip"
+    },
+    {
+      "path": "C:\\ShaderLODBench\\frozen\\native-before-shared-reader-92b154c-20261106.zip",
+      "bytes": 18456861,
+      "sha256": "5053bb1c33606678da7e4c58f82f0b058901f0322b79fdbc41ab3101c549a889",
+      "local_archive": "/home/philip/ShaderLOD/dev/experiments/rtx5080-four-target-audit-20261106/frozen/native-before-shared-reader-92b154c-20261106.zip"
+    },
+    {
+      "path": "C:\\ShaderLODBench\\frozen\\native-before-windows-io-7bc497a-20261106.zip",
+      "bytes": 18435392,
+      "sha256": "58ac0d2f62b48ac89228140eec3eff5a9448c073e53eba3af98e0b4fa0c98a92",
+      "local_archive": "/home/philip/ShaderLOD/dev/experiments/rtx5080-four-target-audit-20261106/frozen/native-before-windows-io-7bc497a-20261106.zip"
+    }
+  ],
+  "verified": true,
+  "retired": true,
+  "retirement": {
+    "free_before": 39670919168,
+    "free_after": 39838142464
+  }
+}

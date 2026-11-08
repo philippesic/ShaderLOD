@@ -1,0 +1,174 @@
+{
+  "scope": "All2178 successful PNGs decoded/hashed and all121 paired slots per case compared in final RGB8. Selected frames0/60/120 reviewed visually; supplemental unscaled crops retained. Shader clocks/history and small rendered pose differences remain uncontrolled. RGB differences are descriptive against native-return variation, not deterministic equivalence. The logical20s path holds for rendering/writer capacity and may take longer in real time; these captures never supply performance bars. Brief shimmer/ghosting, HDR, all scenes/transitions, DH and broad PBR compatibility remain unqualified.",
+  "cases": [
+    {
+      "shader": "makeup",
+      "goal": "G01",
+      "report": "makeup-copy-motion-quality-v5",
+      "captures": 363,
+      "aggregate": {
+        "candidate_vs_native": {
+          "slots": 121,
+          "mean_absolute_rgb_u8": 4.138389913377781,
+          "median_absolute_rgb_u8": 4.0707970437885805,
+          "max_absolute_rgb_u8": 4.642812942065329
+        },
+        "candidate_vs_return": {
+          "slots": 121,
+          "mean_absolute_rgb_u8": 4.5052267632395075,
+          "median_absolute_rgb_u8": 4.362759170846193,
+          "max_absolute_rgb_u8": 5.526667108731996
+        },
+        "return_vs_native": {
+          "slots": 121,
+          "mean_absolute_rgb_u8": 2.4518483143328273,
+          "median_absolute_rgb_u8": 2.4329879999356994,
+          "max_absolute_rgb_u8": 3.078038515946502
+        }
+      },
+      "analysis": "makeup-copy-quality-v5-analysis.json",
+      "visual_review": "No gross scene loss or obvious routing/block artifact in reviewed slots0/60/120; overview and unscaled crop review, not a full temporal acceptance test."
+    },
+    {
+      "shader": "bsl",
+      "goal": "G02",
+      "report": "bsl-mips-motion-quality-v6",
+      "captures": 363,
+      "aggregate": {
+        "candidate_vs_native": {
+          "slots": 121,
+          "mean_absolute_rgb_u8": 1.5060217946510561,
+          "median_absolute_rgb_u8": 1.5201935442386831,
+          "max_absolute_rgb_u8": 2.133117565264918
+        },
+        "candidate_vs_return": {
+          "slots": 121,
+          "mean_absolute_rgb_u8": 0.7997941054989074,
+          "median_absolute_rgb_u8": 0.8020027568801441,
+          "max_absolute_rgb_u8": 1.2723840583204733
+        },
+        "return_vs_native": {
+          "slots": 121,
+          "mean_absolute_rgb_u8": 1.3869024229962716,
+          "median_absolute_rgb_u8": 1.390185948752572,
+          "max_absolute_rgb_u8": 1.8580080536265433
+        }
+      },
+      "analysis": "bsl-mips-quality-v6-analysis/quality-analysis.json",
+      "visual_review": "No gross scene loss or obvious routing/block artifact in reviewed slots0/60/120; overview and unscaled crop review, not a full temporal acceptance test."
+    },
+    {
+      "shader": "bsl",
+      "goal": "C02",
+      "report": "bsl-bloom-motion-quality-v6",
+      "captures": 363,
+      "aggregate": {
+        "candidate_vs_native": {
+          "slots": 121,
+          "mean_absolute_rgb_u8": 1.2724434578183985,
+          "median_absolute_rgb_u8": 1.2943694942772634,
+          "max_absolute_rgb_u8": 1.6544207738554526
+        },
+        "candidate_vs_return": {
+          "slots": 121,
+          "mean_absolute_rgb_u8": 1.6508208229841554,
+          "median_absolute_rgb_u8": 1.6715821116255145,
+          "max_absolute_rgb_u8": 2.0888983330118314
+        },
+        "return_vs_native": {
+          "slots": 121,
+          "mean_absolute_rgb_u8": 1.8863636071361767,
+          "median_absolute_rgb_u8": 1.9129469280478395,
+          "max_absolute_rgb_u8": 2.4689890367798353
+        }
+      },
+      "analysis": "bsl-bloom-motion-quality-v6-analysis-v7/quality-analysis.json",
+      "visual_review": "No gross scene loss or obvious routing/block artifact in reviewed slots0/60/120; overview and unscaled crop review, not a full temporal acceptance test."
+    },
+    {
+      "shader": "reimagined",
+      "goal": "C02",
+      "report": "reimagined-bloom-motion-quality-v6",
+      "captures": 363,
+      "aggregate": {
+        "candidate_vs_native": {
+          "slots": 121,
+          "mean_absolute_rgb_u8": 0.66445603545716,
+          "median_absolute_rgb_u8": 0.6679845839763374,
+          "max_absolute_rgb_u8": 0.8831968155221194
+        },
+        "candidate_vs_return": {
+          "slots": 121,
+          "mean_absolute_rgb_u8": 0.693591514763587,
+          "median_absolute_rgb_u8": 0.7026216081532922,
+          "max_absolute_rgb_u8": 0.8977467528292181
+        },
+        "return_vs_native": {
+          "slots": 121,
+          "mean_absolute_rgb_u8": 0.6415458473226584,
+          "median_absolute_rgb_u8": 0.6640168467078189,
+          "max_absolute_rgb_u8": 0.7920941840277778
+        }
+      },
+      "analysis": "reimagined-bloom-motion-quality-v6-analysis-v7/quality-analysis.json",
+      "visual_review": "No gross scene loss or obvious routing/block artifact in reviewed slots0/60/120; overview and unscaled crop review, not a full temporal acceptance test."
+    },
+    {
+      "shader": "unbound",
+      "goal": "C02",
+      "report": "unbound-bloom-motion-quality-v6",
+      "captures": 363,
+      "aggregate": {
+        "candidate_vs_native": {
+          "slots": 121,
+          "mean_absolute_rgb_u8": 1.1592961463062867,
+          "median_absolute_rgb_u8": 1.2073201597865226,
+          "max_absolute_rgb_u8": 1.6440516894933128
+        },
+        "candidate_vs_return": {
+          "slots": 121,
+          "mean_absolute_rgb_u8": 1.1299991892701213,
+          "median_absolute_rgb_u8": 1.1599856529706791,
+          "max_absolute_rgb_u8": 1.601005859375
+        },
+        "return_vs_native": {
+          "slots": 121,
+          "mean_absolute_rgb_u8": 1.1044298788734355,
+          "median_absolute_rgb_u8": 1.1597026909722221,
+          "max_absolute_rgb_u8": 1.6092898823302468
+        }
+      },
+      "analysis": "unbound-bloom-motion-quality-v6-analysis-v7/quality-analysis.json",
+      "visual_review": "No gross scene loss or obvious routing/block artifact in reviewed slots0/60/120; overview and unscaled crop review, not a full temporal acceptance test."
+    },
+    {
+      "shader": "makeup",
+      "goal": "N04",
+      "report": "makeup-sky-motion-quality-v6",
+      "captures": 363,
+      "aggregate": {
+        "candidate_vs_native": {
+          "slots": 121,
+          "mean_absolute_rgb_u8": 3.312209274457538,
+          "median_absolute_rgb_u8": 3.4296818335262347,
+          "max_absolute_rgb_u8": 3.9925182452417696
+        },
+        "candidate_vs_return": {
+          "slots": 121,
+          "mean_absolute_rgb_u8": 3.0285188642660827,
+          "median_absolute_rgb_u8": 3.218304759837963,
+          "max_absolute_rgb_u8": 3.6882406603652265
+        },
+        "return_vs_native": {
+          "slots": 121,
+          "mean_absolute_rgb_u8": 5.0811330174243485,
+          "median_absolute_rgb_u8": 5.352395712770061,
+          "max_absolute_rgb_u8": 5.6146502057613175
+        }
+      },
+      "analysis": "makeup-sky-motion-quality-v6-analysis-v7/quality-analysis.json",
+      "visual_review": "No gross scene loss or obvious routing/block artifact in reviewed slots0/60/120; overview and unscaled crop review, not a full temporal acceptance test."
+    }
+  ],
+  "successful_images": 2178
+}

@@ -31,6 +31,7 @@ def main():
     a=p.parse_args()
     life.require(os.name=='nt','Use the actual native Windows allocation')
     life.require(re.fullmatch('[a-z0-9-]{4,100}',a.tag) is not None,'Safe unique archive tag required')
+    life.require(not (HERE/(a.tag+'.json')).exists(),'Fresh source-freeze receipt required; never replay a tag after retiring its archive')
     reports=[]
     for name in a.report:
         life.require(re.fullmatch('[a-z0-9-]{4,120}',name) is not None,'Safe campaign report name required')

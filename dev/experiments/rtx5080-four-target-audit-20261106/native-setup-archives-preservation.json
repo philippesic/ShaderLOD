@@ -1,0 +1,23 @@
+{
+  "scope": "Redundant ShaderLOD setup ZIP/TAR only; installed JDK, managed/canonical profiles and reusable dependency caches retained",
+  "files": [
+    {
+      "path": "C:\\ShaderLODBench\\tools\\jdk21.zip",
+      "bytes": 201450315,
+      "sha256": "c5706a9cf482ef1a0622a86eea5b13d557b07f04554572af061e2d02b58c0f99",
+      "local_archive": "/home/philip/ShaderLOD/dev/experiments/rtx5080-four-target-audit-20261106/setup-archives/jdk21.zip"
+    },
+    {
+      "path": "C:\\ShaderLODBench\\runtime-inputs.tar.gz",
+      "bytes": 84357102,
+      "sha256": "c9dd436a364f504900315451754f8613c0c32efb012699a208740fdd4acfe6b7",
+      "local_archive": "/home/philip/ShaderLOD/dev/experiments/rtx5080-four-target-audit-20261106/setup-archives/runtime-inputs.tar.gz"
+    }
+  ],
+  "verified": true,
+  "retired": true,
+  "retirement": {
+    "free_before": 39385010176,
+    "free_after": 39670820864
+  }
+}

@@ -1,4 +1,5 @@
 """Chain two explicit modern-context comparisons after released quality checks."""
+import argparse
 import json
 from pathlib import Path
 import runpy
@@ -17,17 +18,25 @@ def stage(name, **fields):
 
 
 def main():
+    global STATUS
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--quality-status',default='quality-v6-status.json')
+    parser.add_argument('--quality-outcomes',nargs='+',default=['quality-v6-outcomes.json'])
+    parser.add_argument('--status',default='modern-regression-v7-status.json')
+    args=parser.parse_args()
+    assert all(Path(name).name==name for name in [args.quality_status,args.status,*args.quality_outcomes])
+    STATUS=HERE/args.status
     assert not STATUS.exists(), 'Fresh orchestration status required'
     stage('waiting-for-quality-checks')
     deadline = time.monotonic()+5400
     while True:
-        current = json.loads((HERE/'quality-v6-status.json').read_text())
+        current = json.loads((HERE/args.quality_status).read_text())
         if current['stage'] == 'captures-ready-analysis-pending':
             break
         assert current['stage'] != 'failed', 'Quality continuation needs repair before diagnostics'
         assert time.monotonic() < deadline, 'Quality continuation deadline exceeded'
         time.sleep(5)
-    outcomes = json.loads((HERE/'quality-v6-outcomes.json').read_text())
+    outcomes = [row for filename in args.quality_outcomes for row in json.loads((HERE/filename).read_text())]
     assert len(outcomes) == 5 and all(row['restored'] for row in outcomes)
     relative = 'benchmarks/campaigns/rtx5080-modern-regression-v7-plan.json'
     subprocess.run(['scp', '-q', '-o', 'BatchMode=yes', '-o', 'RemoteCommand=none',

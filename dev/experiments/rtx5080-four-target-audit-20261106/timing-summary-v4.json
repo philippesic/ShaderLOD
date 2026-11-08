@@ -2411,16 +2411,466 @@
       ]
     }
   },
+  "baselineGroups": {
+    "OpenGL 4.6 / minimal": {
+      "makeup": {
+        "process_means_ms": {
+          "n": 2,
+          "mean": 2.0242770431671695,
+          "sd": 0.00010716671595118669,
+          "variance": 1.1484705007762333e-08
+        },
+        "runs": [
+          {
+            "name": "makeup-baseline-gl46-r1",
+            "arms": {
+              "native_0": {
+                "mean_total_frame_ms": 2.02660465627498,
+                "sd_total_frame_ms": 0.08868672287288558,
+                "variance_total_frame_ms2": 0.007865334813932005
+              },
+              "native_1": {
+                "mean_total_frame_ms": 2.0247195358607586,
+                "sd_total_frame_ms": 0.06678656439388131,
+                "variance_total_frame_ms2": 0.004460445183538054
+              },
+              "native_2": {
+                "mean_total_frame_ms": 2.0217342723004696,
+                "sd_total_frame_ms": 0.0660626840727084,
+                "variance_total_frame_ms2": 0.0043642782268904804
+              }
+            }
+          },
+          {
+            "name": "makeup-baseline-gl46-r2",
+            "arms": {
+              "native_0": {
+                "mean_total_frame_ms": 2.026477662025443,
+                "sd_total_frame_ms": 0.10503278645774905,
+                "variance_total_frame_ms2": 0.011031886231079112
+              },
+              "native_1": {
+                "mean_total_frame_ms": 2.0246594292556375,
+                "sd_total_frame_ms": 0.0715143295696224,
+                "variance_total_frame_ms2": 0.00511429933379257
+              },
+              "native_2": {
+                "mean_total_frame_ms": 2.0214667032857285,
+                "sd_total_frame_ms": 0.0669348087435954,
+                "variance_total_frame_ms2": 0.0044802686215416965
+              }
+            }
+          }
+        ]
+      },
+      "bsl": {
+        "process_means_ms": {
+          "n": 2,
+          "mean": 2.8749117894206213,
+          "sd": 0.00676368489793842,
+          "variance": 4.5747433398600246e-05
+        },
+        "runs": [
+          {
+            "name": "bsl-baseline-gl46-r1",
+            "arms": {
+              "native_0": {
+                "mean_total_frame_ms": 2.8696338581560283,
+                "sd_total_frame_ms": 0.07131337495582064,
+                "variance_total_frame_ms2": 0.005085597447589467
+              },
+              "native_1": {
+                "mean_total_frame_ms": 2.8706119411431805,
+                "sd_total_frame_ms": 0.09119520525169178,
+                "variance_total_frame_ms2": 0.00831656546089819
+              },
+              "native_2": {
+                "mean_total_frame_ms": 2.8701416265912307,
+                "sd_total_frame_ms": 0.06919432157110039,
+                "variance_total_frame_ms2": 0.00478785413768485
+              }
+            }
+          },
+          {
+            "name": "bsl-baseline-gl46-r2",
+            "arms": {
+              "native_0": {
+                "mean_total_frame_ms": 2.878899829254411,
+                "sd_total_frame_ms": 0.0793372664101774,
+                "variance_total_frame_ms2": 0.006294401841439463
+              },
+              "native_1": {
+                "mean_total_frame_ms": 2.880654897785349,
+                "sd_total_frame_ms": 0.09002464450395922,
+                "variance_total_frame_ms2": 0.008104436618064235
+              },
+              "native_2": {
+                "mean_total_frame_ms": 2.8795285835935283,
+                "sd_total_frame_ms": 0.07760175367629141,
+                "variance_total_frame_ms2": 0.006022032173635807
+              }
+            }
+          }
+        ]
+      },
+      "reimagined": {
+        "process_means_ms": {
+          "n": 2,
+          "mean": 3.2363062948111185,
+          "sd": 0.000646605509900789,
+          "variance": 4.180986854340593e-07
+        },
+        "runs": [
+          {
+            "name": "reimagined-baseline-gl46-r2",
+            "arms": {
+              "native_0": {
+                "mean_total_frame_ms": 3.236859229046705,
+                "sd_total_frame_ms": 0.2291908948666833,
+                "variance_total_frame_ms2": 0.052528466289791076
+              },
+              "native_1": {
+                "mean_total_frame_ms": 3.236744249481576,
+                "sd_total_frame_ms": 0.1852768893788587,
+                "variance_total_frame_ms2": 0.03432752573790584
+              },
+              "native_2": {
+                "mean_total_frame_ms": 3.2366870633274845,
+                "sd_total_frame_ms": 0.1972909218548494,
+                "variance_total_frame_ms2": 0.03892370784633629
+              }
+            }
+          },
+          {
+            "name": "reimagined-baseline-gl46-r1-retry1",
+            "arms": {
+              "native_0": {
+                "mean_total_frame_ms": 3.2357619664268586,
+                "sd_total_frame_ms": 0.2264090483750395,
+                "variance_total_frame_ms2": 0.051261057186090975
+              },
+              "native_1": {
+                "mean_total_frame_ms": 3.2359161377770693,
+                "sd_total_frame_ms": 0.20331268576377906,
+                "variance_total_frame_ms2": 0.04133604819248117
+              },
+              "native_2": {
+                "mean_total_frame_ms": 3.235869122807017,
+                "sd_total_frame_ms": 0.19864604380596157,
+                "variance_total_frame_ms2": 0.03946025071976
+              }
+            }
+          }
+        ]
+      },
+      "unbound": {
+        "process_means_ms": {
+          "n": 2,
+          "mean": 3.371516645487662,
+          "sd": 0.001284378702751198,
+          "variance": 1.6496286520808504e-06
+        },
+        "runs": [
+          {
+            "name": "unbound-baseline-gl46-r1",
+            "arms": {
+              "native_0": {
+                "mean_total_frame_ms": 3.3704332447250374,
+                "sd_total_frame_ms": 0.08134855485802613,
+                "variance_total_frame_ms2": 0.006617587377489286
+              },
+              "native_1": {
+                "mean_total_frame_ms": 3.371256388104336,
+                "sd_total_frame_ms": 0.1751802071545473,
+                "variance_total_frame_ms2": 0.030688104978710103
+              },
+              "native_2": {
+                "mean_total_frame_ms": 3.370135724962631,
+                "sd_total_frame_ms": 0.09907476138309074,
+                "variance_total_frame_ms2": 0.009815808343116367
+              }
+            }
+          },
+          {
+            "name": "unbound-baseline-gl46-r2",
+            "arms": {
+              "native_0": {
+                "mean_total_frame_ms": 3.372526112314614,
+                "sd_total_frame_ms": 0.0795801170291092,
+                "variance_total_frame_ms2": 0.006332995026366717
+              },
+              "native_1": {
+                "mean_total_frame_ms": 3.3725881668605617,
+                "sd_total_frame_ms": 0.09225822838299265,
+                "variance_total_frame_ms2": 0.00851158070436843
+              },
+              "native_2": {
+                "mean_total_frame_ms": 3.3721602359587903,
+                "sd_total_frame_ms": 0.09688698797311089,
+                "variance_total_frame_ms2": 0.009387088438501735
+              }
+            }
+          }
+        ]
+      }
+    },
+    "OpenGL 3.2 / minimal": {
+      "makeup": {
+        "process_means_ms": {
+          "n": 2,
+          "mean": 2.025619136517628,
+          "sd": 0.00010469188281676667,
+          "variance": 1.0960390327719605e-08
+        },
+        "runs": [
+          {
+            "name": "makeup-baseline-native-r1",
+            "arms": {
+              "native_0": {
+                "mean_total_frame_ms": 2.0279385024057737,
+                "sd_total_frame_ms": 0.09715094167218387,
+                "variance_total_frame_ms2": 0.009438305467792073
+              },
+              "native_1": {
+                "mean_total_frame_ms": 2.025842537685934,
+                "sd_total_frame_ms": 0.06304189609622914,
+                "variance_total_frame_ms2": 0.00397428066340775
+              },
+              "native_2": {
+                "mean_total_frame_ms": 2.023298454482002,
+                "sd_total_frame_ms": 0.07223970003173157,
+                "variance_total_frame_ms2": 0.0052185742606745585
+              }
+            }
+          },
+          {
+            "name": "makeup-baseline-native-r2",
+            "arms": {
+              "native_0": {
+                "mean_total_frame_ms": 2.027809751453197,
+                "sd_total_frame_ms": 0.09095605366673072,
+                "variance_total_frame_ms2": 0.008273003698625199
+              },
+              "native_1": {
+                "mean_total_frame_ms": 2.025574929943955,
+                "sd_total_frame_ms": 0.07131016223729669,
+                "variance_total_frame_ms2": 0.005085139238309575
+              },
+              "native_2": {
+                "mean_total_frame_ms": 2.023250643134909,
+                "sd_total_frame_ms": 0.07160837585266726,
+                "variance_total_frame_ms2": 0.0051277594922568585
+              }
+            }
+          }
+        ]
+      },
+      "reimagined": {
+        "process_means_ms": {
+          "n": 2,
+          "mean": 3.2406542899343975,
+          "sd": 0.005710925242722595,
+          "variance": 3.2614667127966134e-05
+        },
+        "runs": [
+          {
+            "name": "reimagined-baseline-native-r1",
+            "arms": {
+              "native_0": {
+                "mean_total_frame_ms": 3.237126987681971,
+                "sd_total_frame_ms": 0.1309155397084261,
+                "variance_total_frame_ms2": 0.01713887853714849
+              },
+              "native_1": {
+                "mean_total_frame_ms": 3.2362251674641147,
+                "sd_total_frame_ms": 0.10240977887307937,
+                "variance_total_frame_ms2": 0.010487762808833014
+              },
+              "native_2": {
+                "mean_total_frame_ms": 3.236496012759171,
+                "sd_total_frame_ms": 0.08646190493503975,
+                "variance_total_frame_ms2": 0.00747566100499585
+              }
+            }
+          },
+          {
+            "name": "reimagined-baseline-native-r2",
+            "arms": {
+              "native_0": {
+                "mean_total_frame_ms": 3.245079634381013,
+                "sd_total_frame_ms": 0.10292886271616297,
+                "variance_total_frame_ms2": 0.010594350780042725
+              },
+              "native_1": {
+                "mean_total_frame_ms": 3.2446332587144227,
+                "sd_total_frame_ms": 0.1331702252340339,
+                "variance_total_frame_ms2": 0.01773430888888332
+              },
+              "native_2": {
+                "mean_total_frame_ms": 3.2443646786056926,
+                "sd_total_frame_ms": 0.112865862175572,
+                "variance_total_frame_ms2": 0.012738702844635215
+              }
+            }
+          }
+        ]
+      },
+      "bsl": {
+        "process_means_ms": {
+          "n": 2,
+          "mean": 2.8623152294727996,
+          "sd": 0.000745982818342219,
+          "variance": 5.564903652618003e-07
+        },
+        "runs": [
+          {
+            "name": "bsl-baseline-native-r1",
+            "arms": {
+              "native_0": {
+                "mean_total_frame_ms": 2.862679807556247,
+                "sd_total_frame_ms": 0.09871757949929191,
+                "variance_total_frame_ms2": 0.00974516050219902
+              },
+              "native_1": {
+                "mean_total_frame_ms": 2.8629761004514673,
+                "sd_total_frame_ms": 0.07344708290860004,
+                "variance_total_frame_ms2": 0.005394473987782768
+              },
+              "native_2": {
+                "mean_total_frame_ms": 2.8628722489391794,
+                "sd_total_frame_ms": 0.09435937861202366,
+                "variance_total_frame_ms2": 0.00890369233204723
+              }
+            }
+          },
+          {
+            "name": "bsl-baseline-native-r2",
+            "arms": {
+              "native_0": {
+                "mean_total_frame_ms": 2.8612166124699563,
+                "sd_total_frame_ms": 0.08762044878643678,
+                "variance_total_frame_ms2": 0.0076773430455365915
+              },
+              "native_1": {
+                "mean_total_frame_ms": 2.862101452955283,
+                "sd_total_frame_ms": 0.09195353588478698,
+                "variance_total_frame_ms2": 0.008455452761714808
+              },
+              "native_2": {
+                "mean_total_frame_ms": 2.862045154464664,
+                "sd_total_frame_ms": 0.08814611605718796,
+                "variance_total_frame_ms2": 0.0077697377759672484
+              }
+            }
+          }
+        ]
+      },
+      "unbound": {
+        "process_means_ms": {
+          "n": 2,
+          "mean": 3.3778510453602726,
+          "sd": 0.0025234325455388215,
+          "variance": 6.367711811884538e-06
+        },
+        "runs": [
+          {
+            "name": "unbound-baseline-native-r1",
+            "arms": {
+              "native_0": {
+                "mean_total_frame_ms": 3.3954351079859366,
+                "sd_total_frame_ms": 0.09773894063808694,
+                "variance_total_frame_ms2": 0.009552900517055483
+              },
+              "native_1": {
+                "mean_total_frame_ms": 3.3718764373546026,
+                "sd_total_frame_ms": 0.09748799858705022,
+                "variance_total_frame_ms2": 0.009503909868508706
+              },
+              "native_2": {
+                "mean_total_frame_ms": 3.3715945995347294,
+                "sd_total_frame_ms": 0.09842715225094223,
+                "variance_total_frame_ms2": 0.00968790430023016
+              }
+            }
+          },
+          {
+            "name": "unbound-baseline-native-r2",
+            "arms": {
+              "native_0": {
+                "mean_total_frame_ms": 3.3761652986319652,
+                "sd_total_frame_ms": 0.231271779245849,
+                "variance_total_frame_ms2": 0.05348663587554071
+              },
+              "native_1": {
+                "mean_total_frame_ms": 3.3759797870570623,
+                "sd_total_frame_ms": 0.19537334661635514,
+                "variance_total_frame_ms2": 0.03817074456807445
+              },
+              "native_2": {
+                "mean_total_frame_ms": 3.376055041597338,
+                "sd_total_frame_ms": 0.2051702467711463,
+                "variance_total_frame_ms2": 0.042094830160133066
+              }
+            }
+          }
+        ]
+      }
+    },
+    "OpenGL 3.2 / optimized": {
+      "bsl": {
+        "process_means_ms": {
+          "n": 2,
+          "mean": 2.860606316681776,
+          "sd": 0.0017963975317415988,
+          "variance": 3.227044092047309e-06
+        },
+        "runs": [
+          {
+            "name": "bsl-baseline-optimized-native-r1",
+            "arms": {
+              "native_0": {
+                "mean_total_frame_ms": 2.861846357334842,
+                "sd_total_frame_ms": 0.10987639191169912,
+                "variance_total_frame_ms2": 0.012072821499533301
+              },
+              "native_1": {
+                "mean_total_frame_ms": 2.861811225788209,
+                "sd_total_frame_ms": 0.10088304146646723,
+                "variance_total_frame_ms2": 0.010177388055524947
+              },
+              "native_2": {
+                "mean_total_frame_ms": 2.8619721015514807,
+                "sd_total_frame_ms": 0.1028421429288947,
+                "variance_total_frame_ms2": 0.010576506362207206
+              }
+            }
+          },
+          {
+            "name": "bsl-baseline-optimized-native-r2",
+            "arms": {
+              "native_0": {
+                "mean_total_frame_ms": 2.859740961646926,
+                "sd_total_frame_ms": 0.21057090223205807,
+                "variance_total_frame_ms2": 0.04434010486682296
+              },
+              "native_1": {
+                "mean_total_frame_ms": 2.858933605748908,
+                "sd_total_frame_ms": 0.1983487317166279,
+                "variance_total_frame_ms2": 0.039342219373594826
+              },
+              "native_2": {
+                "mean_total_frame_ms": 2.8593336480202907,
+                "sd_total_frame_ms": 0.20238271776779376,
+                "variance_total_frame_ms2": 0.04095876445107846
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
   "controls": {
     "reimagined": {
-      "original-null-primary": {
-        "effects_pct": {
-          "n": 2,
-          "mean": -0.18031321608526438,
-          "sd": 0.13052033709284558,
-          "variance": 0.01703555839483004
-        }
-      },
       "original-null-gl46": {
         "effects_pct": {
           "n": 2,
@@ -2444,17 +2894,17 @@
           "sd": 0.050293817235133376,
           "variance": 0.002529468052080999
         }
-      }
-    },
-    "unbound": {
+      },
       "original-null-primary": {
         "effects_pct": {
           "n": 2,
-          "mean": 0.00018912500512804215,
-          "sd": 0.02152891834375032,
-          "variance": 0.00046349432505186905
+          "mean": -0.18031321608526438,
+          "sd": 0.13052033709284558,
+          "variance": 0.01703555839483004
         }
-      },
+      }
+    },
+    "unbound": {
       "original-null-gl46": {
         "effects_pct": {
           "n": 2,
@@ -2478,15 +2928,23 @@
           "sd": 0.0240217127799599,
           "variance": 0.0005770426848828887
         }
+      },
+      "original-null-primary": {
+        "effects_pct": {
+          "n": 2,
+          "mean": 0.00018912500512804215,
+          "sd": 0.02152891834375032,
+          "variance": 0.00046349432505186905
+        }
       }
     },
     "bsl": {
-      "original-null-natural-terrain": {
+      "original-null-optimized-pose1": {
         "effects_pct": {
           "n": 2,
-          "mean": -0.07497733164309428,
-          "sd": 0.10673848546083585,
-          "variance": 0.011393104278473067
+          "mean": -0.11548476827868163,
+          "sd": 0.10096137325552529,
+          "variance": 0.010193198889641496
         }
       },
       "original-null-primary": {
@@ -2497,14 +2955,6 @@
           "variance": 0.0015722506437906886
         }
       },
-      "original-null-gl46": {
-        "effects_pct": {
-          "n": 2,
-          "mean": -0.046776381869670994,
-          "sd": 0.024549620820984656,
-          "variance": 0.0006026838824541234
-        }
-      },
       "original-null-natural-terrain-gl46": {
         "effects_pct": {
           "n": 2,
@@ -2513,22 +2963,38 @@
           "variance": 0.00797807615138034
         }
       },
-      "original-null-optimized-pose1": {
+      "original-null-natural-terrain": {
         "effects_pct": {
           "n": 2,
-          "mean": -0.11548476827868163,
-          "sd": 0.10096137325552529,
-          "variance": 0.010193198889641496
+          "mean": -0.07497733164309428,
+          "sd": 0.10673848546083585,
+          "variance": 0.011393104278473067
+        }
+      },
+      "original-null-gl46": {
+        "effects_pct": {
+          "n": 2,
+          "mean": -0.046776381869670994,
+          "sd": 0.024549620820984656,
+          "variance": 0.0006026838824541234
         }
       }
     },
     "makeup": {
-      "g10-native-control": {
+      "original-null-primary": {
         "effects_pct": {
           "n": 2,
-          "mean": -0.01781897228428605,
-          "sd": 0.024198514312104333,
-          "variance": 0.0005855680949131183
+          "mean": 0.06456123358188447,
+          "sd": 0.010153523180292771,
+          "variance": 0.00010309403297274263
+        }
+      },
+      "original-null-natural-terrain-gl46": {
+        "effects_pct": {
+          "n": 2,
+          "mean": 0.02173598711987037,
+          "sd": 0.04510147405553279,
+          "variance": 0.002034142961981897
         }
       },
       "original-null-natural-terrain": {
@@ -2539,14 +3005,6 @@
           "variance": 0.0006110962278202426
         }
       },
-      "original-null-primary": {
-        "effects_pct": {
-          "n": 2,
-          "mean": 0.06456123358188447,
-          "sd": 0.010153523180292771,
-          "variance": 0.00010309403297274263
-        }
-      },
       "original-null-gl46": {
         "effects_pct": {
           "n": 2,
@@ -2555,17 +3013,79 @@
           "variance": 0.016413129069698922
         }
       },
-      "original-null-natural-terrain-gl46": {
+      "g10-native-control": {
         "effects_pct": {
           "n": 2,
-          "mean": 0.02173598711987037,
-          "sd": 0.04510147405553279,
-          "variance": 0.002034142961981897
+          "mean": -0.01781897228428605,
+          "sd": 0.024198514312104333,
+          "variance": 0.0005855680949131183
         }
       }
     }
   },
   "runs": [
+    {
+      "name": "reimagined-g03-gl46-regression-abba-v7",
+      "shader": "reimagined",
+      "goal": "G03",
+      "kind": "test",
+      "phase": "diagnosis",
+      "case": "gl46-regression-diagnostic",
+      "validity": "VALID",
+      "restored": true,
+      "plot_arms": {
+        "native": {
+          "mean_total_frame_ms": 3.4316943141555596,
+          "sd_total_frame_ms": 0.0927365398947735,
+          "variance_total_frame_ms2": 0.008600065831654917
+        },
+        "candidate": {
+          "mean_total_frame_ms": 3.66775797189107,
+          "sd_total_frame_ms": 0.14649515075316308,
+          "variance_total_frame_ms2": 0.02156370730465961
+        },
+        "return": {
+          "mean_total_frame_ms": 3.4246311437145716,
+          "sd_total_frame_ms": 0.09871302927239689,
+          "variance_total_frame_ms2": 0.009744262148133086
+        }
+      },
+      "frame_time_reduction_pct": -6.989027706699114,
+      "comparison_order": "ABBA",
+      "work_qualification": "QUALIFIED_CUTOUT_PROGRESS",
+      "actual_gl_context": "4.6"
+    },
+    {
+      "name": "unbound-g03-gl46-regression-abba-v7",
+      "shader": "unbound",
+      "goal": "G03",
+      "kind": "test",
+      "phase": "diagnosis",
+      "case": "gl46-regression-diagnostic",
+      "validity": "VALID",
+      "restored": true,
+      "plot_arms": {
+        "native": {
+          "mean_total_frame_ms": 3.5474968253968253,
+          "sd_total_frame_ms": 0.12532204974312483,
+          "variance_total_frame_ms2": 0.01570561615181825
+        },
+        "candidate": {
+          "mean_total_frame_ms": 3.916018815291453,
+          "sd_total_frame_ms": 0.1190100063774401,
+          "variance_total_frame_ms2": 0.014178924290037549
+        },
+        "return": {
+          "mean_total_frame_ms": 3.5207430579362358,
+          "sd_total_frame_ms": 0.08103269645887558,
+          "variance_total_frame_ms2": 0.006566297895396266
+        }
+      },
+      "frame_time_reduction_pct": -10.80605298995133,
+      "comparison_order": "ABBA",
+      "work_qualification": "QUALIFIED_CUTOUT_PROGRESS",
+      "actual_gl_context": "4.6"
+    },
     {
       "name": "makeup-g03-primary-test-abba-runtime-v4",
       "shader": "makeup",
@@ -2594,7 +3114,8 @@
       },
       "frame_time_reduction_pct": 0.05675551529995964,
       "comparison_order": "ABBA",
-      "work_qualification": "LINKED_NATIVE_CUTOUT_SUBMISSIONS"
+      "work_qualification": "LINKED_NATIVE_CUTOUT_SUBMISSIONS",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "makeup-g03-primary-test-baab-runtime-v4",
@@ -2624,7 +3145,8 @@
       },
       "frame_time_reduction_pct": -0.006547763716097827,
       "comparison_order": "BAAB",
-      "work_qualification": "LINKED_NATIVE_CUTOUT_SUBMISSIONS"
+      "work_qualification": "LINKED_NATIVE_CUTOUT_SUBMISSIONS",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "makeup-g05-primary-test-abba-runtime-v4",
@@ -2654,7 +3176,8 @@
       },
       "frame_time_reduction_pct": -3.8021873341485577,
       "comparison_order": "ABBA",
-      "work_qualification": "EXACT_WINDOW_NEAREST_WATER_PERMISSION"
+      "work_qualification": "EXACT_WINDOW_NEAREST_WATER_PERMISSION",
+      "actual_gl_context": "4.6"
     },
     {
       "name": "makeup-g05-primary-test-baab-runtime-v4",
@@ -2684,7 +3207,8 @@
       },
       "frame_time_reduction_pct": -3.768604062263213,
       "comparison_order": "BAAB",
-      "work_qualification": "EXACT_WINDOW_NEAREST_WATER_PERMISSION"
+      "work_qualification": "EXACT_WINDOW_NEAREST_WATER_PERMISSION",
+      "actual_gl_context": "4.6"
     },
     {
       "name": "makeup-g06-primary-test-abba-runtime-v4",
@@ -2714,7 +3238,8 @@
       },
       "frame_time_reduction_pct": 0.03810248590310161,
       "comparison_order": "ABBA",
-      "work_qualification": "SEE_WORK_EVIDENCE"
+      "work_qualification": "SEE_WORK_EVIDENCE",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "makeup-g06-primary-test-baab-runtime-v4",
@@ -2744,7 +3269,8 @@
       },
       "frame_time_reduction_pct": 0.0680395334750951,
       "comparison_order": "BAAB",
-      "work_qualification": "SEE_WORK_EVIDENCE"
+      "work_qualification": "SEE_WORK_EVIDENCE",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "makeup-g07-primary-test-abba-runtime-v4",
@@ -2774,7 +3300,8 @@
       },
       "frame_time_reduction_pct": -3.1872999081912523,
       "comparison_order": "ABBA",
-      "work_qualification": "SEE_WORK_EVIDENCE"
+      "work_qualification": "SEE_WORK_EVIDENCE",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "makeup-g07-primary-test-baab-runtime-v4",
@@ -2804,7 +3331,8 @@
       },
       "frame_time_reduction_pct": -3.3142508941049273,
       "comparison_order": "BAAB",
-      "work_qualification": "SEE_WORK_EVIDENCE"
+      "work_qualification": "SEE_WORK_EVIDENCE",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "makeup-n01-primary-test-abba-runtime-v4",
@@ -2834,7 +3362,8 @@
       },
       "frame_time_reduction_pct": -0.03148460306373656,
       "comparison_order": "ABBA",
-      "work_qualification": "NATIVE_CPU_CONSUMER_PROGRESS"
+      "work_qualification": "NATIVE_CPU_CONSUMER_PROGRESS",
+      "actual_gl_context": "4.6"
     },
     {
       "name": "makeup-n01-primary-test-baab-runtime-v4",
@@ -2864,7 +3393,8 @@
       },
       "frame_time_reduction_pct": -0.13086469250487429,
       "comparison_order": "BAAB",
-      "work_qualification": "NATIVE_CPU_CONSUMER_PROGRESS"
+      "work_qualification": "NATIVE_CPU_CONSUMER_PROGRESS",
+      "actual_gl_context": "4.6"
     },
     {
       "name": "bsl-n01-primary-test-abba-runtime-v4",
@@ -2894,7 +3424,8 @@
       },
       "frame_time_reduction_pct": 0.02476022768473388,
       "comparison_order": "ABBA",
-      "work_qualification": "NATIVE_CPU_CONSUMER_PROGRESS"
+      "work_qualification": "NATIVE_CPU_CONSUMER_PROGRESS",
+      "actual_gl_context": "4.6"
     },
     {
       "name": "bsl-n01-primary-test-baab-runtime-v4",
@@ -2924,7 +3455,8 @@
       },
       "frame_time_reduction_pct": -0.12353032731608014,
       "comparison_order": "BAAB",
-      "work_qualification": "NATIVE_CPU_CONSUMER_PROGRESS"
+      "work_qualification": "NATIVE_CPU_CONSUMER_PROGRESS",
+      "actual_gl_context": "4.6"
     },
     {
       "name": "reimagined-n01-primary-test-abba-runtime-v4",
@@ -2954,7 +3486,8 @@
       },
       "frame_time_reduction_pct": -0.3448150093935069,
       "comparison_order": "ABBA",
-      "work_qualification": "NATIVE_CPU_CONSUMER_PROGRESS"
+      "work_qualification": "NATIVE_CPU_CONSUMER_PROGRESS",
+      "actual_gl_context": "4.6"
     },
     {
       "name": "reimagined-n01-primary-test-baab-runtime-v4",
@@ -2984,7 +3517,8 @@
       },
       "frame_time_reduction_pct": -0.235766479695392,
       "comparison_order": "BAAB",
-      "work_qualification": "NATIVE_CPU_CONSUMER_PROGRESS"
+      "work_qualification": "NATIVE_CPU_CONSUMER_PROGRESS",
+      "actual_gl_context": "4.6"
     },
     {
       "name": "unbound-n01-primary-test-abba-runtime-v4",
@@ -3014,7 +3548,8 @@
       },
       "frame_time_reduction_pct": 0.2576106338730669,
       "comparison_order": "ABBA",
-      "work_qualification": "NATIVE_CPU_CONSUMER_PROGRESS"
+      "work_qualification": "NATIVE_CPU_CONSUMER_PROGRESS",
+      "actual_gl_context": "4.6"
     },
     {
       "name": "unbound-n01-primary-test-baab-runtime-v4",
@@ -3044,7 +3579,8 @@
       },
       "frame_time_reduction_pct": 0.3655155298827752,
       "comparison_order": "BAAB",
-      "work_qualification": "NATIVE_CPU_CONSUMER_PROGRESS"
+      "work_qualification": "NATIVE_CPU_CONSUMER_PROGRESS",
+      "actual_gl_context": "4.6"
     },
     {
       "name": "makeup-null-natural-terrain-gl46-abba-runtime-v4",
@@ -3074,7 +3610,8 @@
       },
       "frame_time_reduction_pct": 0.05362754526604674,
       "comparison_order": "ABBA",
-      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL"
+      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL",
+      "actual_gl_context": "4.6"
     },
     {
       "name": "makeup-null-natural-terrain-gl46-baab-runtime-v4",
@@ -3104,7 +3641,8 @@
       },
       "frame_time_reduction_pct": -0.010155571026306005,
       "comparison_order": "BAAB",
-      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL"
+      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL",
+      "actual_gl_context": "4.6"
     },
     {
       "name": "bsl-null-natural-terrain-gl46-abba-runtime-v4",
@@ -3134,7 +3672,8 @@
       },
       "frame_time_reduction_pct": -0.09306976511249161,
       "comparison_order": "ABBA",
-      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL"
+      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL",
+      "actual_gl_context": "4.6"
     },
     {
       "name": "bsl-null-natural-terrain-gl46-baab-runtime-v4",
@@ -3164,7 +3703,8 @@
       },
       "frame_time_reduction_pct": -0.21938742936718197,
       "comparison_order": "BAAB",
-      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL"
+      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL",
+      "actual_gl_context": "4.6"
     },
     {
       "name": "reimagined-null-natural-terrain-gl46-abba-runtime-v4",
@@ -3194,7 +3734,8 @@
       },
       "frame_time_reduction_pct": 0.18102145573148656,
       "comparison_order": "ABBA",
-      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL"
+      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL",
+      "actual_gl_context": "4.6"
     },
     {
       "name": "reimagined-null-natural-terrain-gl46-baab-runtime-v4",
@@ -3224,7 +3765,8 @@
       },
       "frame_time_reduction_pct": -0.039318413571730965,
       "comparison_order": "BAAB",
-      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL"
+      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL",
+      "actual_gl_context": "4.6"
     },
     {
       "name": "unbound-null-natural-terrain-gl46-abba-runtime-v4",
@@ -3254,7 +3796,8 @@
       },
       "frame_time_reduction_pct": 0.030320272575480273,
       "comparison_order": "ABBA",
-      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL"
+      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL",
+      "actual_gl_context": "4.6"
     },
     {
       "name": "unbound-null-natural-terrain-gl46-baab-runtime-v4",
@@ -3284,7 +3827,8 @@
       },
       "frame_time_reduction_pct": -0.049511087704892084,
       "comparison_order": "BAAB",
-      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL"
+      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL",
+      "actual_gl_context": "4.6"
     },
     {
       "name": "bsl-g09-primary-test-abba-r1-gl46-v3",
@@ -3314,7 +3858,8 @@
       },
       "frame_time_reduction_pct": -8.255952499380252,
       "comparison_order": "ABBA",
-      "work_qualification": "EXACT_WINDOW_POM_PREFIX_SETUP_ADMISSION"
+      "work_qualification": "EXACT_WINDOW_POM_PREFIX_SETUP_ADMISSION",
+      "actual_gl_context": "4.6"
     },
     {
       "name": "makeup-null-original-null-gl46-control-abba-r1",
@@ -3344,7 +3889,8 @@
       },
       "frame_time_reduction_pct": 0.06190547323659329,
       "comparison_order": "ABBA",
-      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL"
+      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL",
+      "actual_gl_context": "4.6"
     },
     {
       "name": "makeup-null-original-null-gl46-control-baab-r2",
@@ -3374,7 +3920,8 @@
       },
       "frame_time_reduction_pct": -0.1192747081834446,
       "comparison_order": "BAAB",
-      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL"
+      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL",
+      "actual_gl_context": "4.6"
     },
     {
       "name": "makeup-g04-primary-test-abba-r1-repair-v2",
@@ -3404,7 +3951,8 @@
       },
       "frame_time_reduction_pct": 0.3019135080141368,
       "comparison_order": "ABBA",
-      "work_qualification": "SEE_WORK_EVIDENCE"
+      "work_qualification": "SEE_WORK_EVIDENCE",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "makeup-g05-primary-test-abba-r1-repair-v2",
@@ -3418,7 +3966,8 @@
       "plot_arms": null,
       "frame_time_reduction_pct": null,
       "comparison_order": null,
-      "work_qualification": "TRANSIENT_REFLECTION_PERMISSION_UNVERIFIED"
+      "work_qualification": "TRANSIENT_REFLECTION_PERMISSION_UNVERIFIED",
+      "actual_gl_context": "4.6"
     },
     {
       "name": "makeup-g06-primary-test-abba-r1-repair-v2",
@@ -3448,7 +3997,8 @@
       },
       "frame_time_reduction_pct": 0.11553789804460056,
       "comparison_order": "ABBA",
-      "work_qualification": "SEE_WORK_EVIDENCE"
+      "work_qualification": "SEE_WORK_EVIDENCE",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "bsl-g06-primary-test-abba-r1-repair-v2",
@@ -3478,7 +4028,8 @@
       },
       "frame_time_reduction_pct": -13.979087981409146,
       "comparison_order": "ABBA",
-      "work_qualification": "EXACT_WINDOW_AO_PRODUCER_CONSUMER"
+      "work_qualification": "EXACT_WINDOW_AO_PRODUCER_CONSUMER",
+      "actual_gl_context": "4.6"
     },
     {
       "name": "makeup-g08-primary-test-r1-repair-v2",
@@ -3508,7 +4059,8 @@
       },
       "frame_time_reduction_pct": -0.45439259358191275,
       "comparison_order": null,
-      "work_qualification": "SEE_WORK_EVIDENCE"
+      "work_qualification": "SEE_WORK_EVIDENCE",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "makeup-g10-primary-test-r1",
@@ -3538,7 +4090,8 @@
       },
       "frame_time_reduction_pct": -0.2905971588196777,
       "comparison_order": null,
-      "work_qualification": "SEE_WORK_EVIDENCE"
+      "work_qualification": "SEE_WORK_EVIDENCE",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "makeup-c01-gpu-authored-test-r1",
@@ -3568,7 +4121,8 @@
       },
       "frame_time_reduction_pct": 0.01876317388740127,
       "comparison_order": null,
-      "work_qualification": "SEE_WORK_EVIDENCE"
+      "work_qualification": "SEE_WORK_EVIDENCE",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "bsl-c02-native-gl46-vrs-2x2-test-r1",
@@ -3598,7 +4152,8 @@
       },
       "frame_time_reduction_pct": 2.3228568977568136,
       "comparison_order": "ABBA",
-      "work_qualification": "SEE_WORK_EVIDENCE"
+      "work_qualification": "SEE_WORK_EVIDENCE",
+      "actual_gl_context": "4.6"
     },
     {
       "name": "makeup-n01-primary-test-abba-r1",
@@ -3612,7 +4167,8 @@
       "plot_arms": null,
       "frame_time_reduction_pct": null,
       "comparison_order": null,
-      "work_qualification": "SEE_WORK_EVIDENCE"
+      "work_qualification": "SEE_WORK_EVIDENCE",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "bsl-n01-primary-test-abba-r1",
@@ -3626,7 +4182,8 @@
       "plot_arms": null,
       "frame_time_reduction_pct": null,
       "comparison_order": null,
-      "work_qualification": "SEE_WORK_EVIDENCE"
+      "work_qualification": "SEE_WORK_EVIDENCE",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "reimagined-n01-primary-test-abba-r1",
@@ -3640,7 +4197,8 @@
       "plot_arms": null,
       "frame_time_reduction_pct": null,
       "comparison_order": null,
-      "work_qualification": "SEE_WORK_EVIDENCE"
+      "work_qualification": "SEE_WORK_EVIDENCE",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "unbound-n01-primary-test-abba-r1",
@@ -3654,7 +4212,8 @@
       "plot_arms": null,
       "frame_time_reduction_pct": null,
       "comparison_order": null,
-      "work_qualification": "SEE_WORK_EVIDENCE"
+      "work_qualification": "SEE_WORK_EVIDENCE",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "makeup-n04-primary-test-abba-r1",
@@ -3684,7 +4243,8 @@
       },
       "frame_time_reduction_pct": 0.9278205300087681,
       "comparison_order": "ABBA",
-      "work_qualification": "SEE_WORK_EVIDENCE"
+      "work_qualification": "SEE_WORK_EVIDENCE",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "bsl-n04-primary-test-abba-r1",
@@ -3714,7 +4274,8 @@
       },
       "frame_time_reduction_pct": -1.5173029706659482,
       "comparison_order": "ABBA",
-      "work_qualification": "SEE_WORK_EVIDENCE"
+      "work_qualification": "SEE_WORK_EVIDENCE",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "reimagined-n04-primary-test-abba-r1",
@@ -3744,7 +4305,8 @@
       },
       "frame_time_reduction_pct": -0.9521388788692571,
       "comparison_order": "ABBA",
-      "work_qualification": "SEE_WORK_EVIDENCE"
+      "work_qualification": "SEE_WORK_EVIDENCE",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "unbound-n04-primary-test-abba-r1",
@@ -3774,7 +4336,8 @@
       },
       "frame_time_reduction_pct": -5.1708336372352335,
       "comparison_order": "ABBA",
-      "work_qualification": "SEE_WORK_EVIDENCE"
+      "work_qualification": "SEE_WORK_EVIDENCE",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "reimagined-g09-native-rp1-fallback-test-abba-r1",
@@ -3804,7 +4367,8 @@
       },
       "frame_time_reduction_pct": -4.937900584693862,
       "comparison_order": "ABBA",
-      "work_qualification": "NO_POM_COMPILED_FALLBACK"
+      "work_qualification": "NO_POM_COMPILED_FALLBACK",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "unbound-g09-native-rp1-fallback-test-abba-r1",
@@ -3834,7 +4398,8 @@
       },
       "frame_time_reduction_pct": -5.077284358663743,
       "comparison_order": "ABBA",
-      "work_qualification": "NO_POM_COMPILED_FALLBACK"
+      "work_qualification": "NO_POM_COMPILED_FALLBACK",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "makeup-null-original-null-natural-terrain-control-abba-r1",
@@ -3864,7 +4429,8 @@
       },
       "frame_time_reduction_pct": -0.131114884045328,
       "comparison_order": "ABBA",
-      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL"
+      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "bsl-null-original-null-natural-terrain-control-abba-r1",
@@ -3894,7 +4460,8 @@
       },
       "frame_time_reduction_pct": -0.15045283852603303,
       "comparison_order": "ABBA",
-      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL"
+      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "reimagined-null-original-null-natural-terrain-control-abba-r1",
@@ -3924,7 +4491,8 @@
       },
       "frame_time_reduction_pct": 0.25923599320094626,
       "comparison_order": "ABBA",
-      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL"
+      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "unbound-null-original-null-natural-terrain-control-abba-r1",
@@ -3954,7 +4522,8 @@
       },
       "frame_time_reduction_pct": -0.00019439743557918938,
       "comparison_order": "ABBA",
-      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL"
+      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "makeup-g04-saved-water-no-fixture-test-abba-r1",
@@ -3984,7 +4553,8 @@
       },
       "frame_time_reduction_pct": -0.03751500752493483,
       "comparison_order": "ABBA",
-      "work_qualification": "SEE_WORK_EVIDENCE"
+      "work_qualification": "SEE_WORK_EVIDENCE",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "makeup-g10-g10-native-control-control-r1",
@@ -4014,7 +4584,8 @@
       },
       "frame_time_reduction_pct": -0.0007080387195573488,
       "comparison_order": null,
-      "work_qualification": "NATIVE_EQUIVALENT_PRIVATE_G10_CONTROL"
+      "work_qualification": "NATIVE_EQUIVALENT_PRIVATE_G10_CONTROL",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "makeup-c01-gpu-natural-cave-test-r1",
@@ -4044,7 +4615,8 @@
       },
       "frame_time_reduction_pct": -0.0041892614039705815,
       "comparison_order": null,
-      "work_qualification": "SEE_WORK_EVIDENCE"
+      "work_qualification": "SEE_WORK_EVIDENCE",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "reimagined-c02-native-gl46-vrs-2x2-test-abba-r1",
@@ -4074,7 +4646,8 @@
       },
       "frame_time_reduction_pct": 2.0393843381400933,
       "comparison_order": "ABBA",
-      "work_qualification": "SEE_WORK_EVIDENCE"
+      "work_qualification": "SEE_WORK_EVIDENCE",
+      "actual_gl_context": "4.6"
     },
     {
       "name": "reimagined-null-original-null-gl46-control-abba-r1",
@@ -4104,7 +4677,8 @@
       },
       "frame_time_reduction_pct": -0.010310265936120102,
       "comparison_order": "ABBA",
-      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL"
+      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL",
+      "actual_gl_context": "4.6"
     },
     {
       "name": "unbound-c02-native-gl46-vrs-2x2-test-abba-r1",
@@ -4134,7 +4708,8 @@
       },
       "frame_time_reduction_pct": 1.823984232337988,
       "comparison_order": "ABBA",
-      "work_qualification": "SEE_WORK_EVIDENCE"
+      "work_qualification": "SEE_WORK_EVIDENCE",
+      "actual_gl_context": "4.6"
     },
     {
       "name": "unbound-null-original-null-gl46-control-abba-r1",
@@ -4164,7 +4739,8 @@
       },
       "frame_time_reduction_pct": -0.35054452109847106,
       "comparison_order": "ABBA",
-      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL"
+      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL",
+      "actual_gl_context": "4.6"
     },
     {
       "name": "makeup-null-original-null-primary-control-baab-r2",
@@ -4194,7 +4770,8 @@
       },
       "frame_time_reduction_pct": 0.05738160848816465,
       "comparison_order": "BAAB",
-      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL"
+      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "bsl-null-original-null-primary-control-baab-r2",
@@ -4224,7 +4801,8 @@
       },
       "frame_time_reduction_pct": 0.03902201112389245,
       "comparison_order": "BAAB",
-      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL"
+      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "reimagined-null-original-null-primary-control-baab-r2",
@@ -4254,7 +4832,8 @@
       },
       "frame_time_reduction_pct": -0.27260503152636956,
       "comparison_order": "BAAB",
-      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL"
+      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "unbound-null-original-null-primary-control-baab-r2",
@@ -4284,7 +4863,8 @@
       },
       "frame_time_reduction_pct": -0.015034119147349265,
       "comparison_order": "BAAB",
-      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL"
+      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "bsl-null-original-null-optimized-pose1-control-baab-r2",
@@ -4314,7 +4894,8 @@
       },
       "frame_time_reduction_pct": -0.044094296611793565,
       "comparison_order": "BAAB",
-      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL"
+      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "bsl-null-original-null-gl46-control-baab-r2",
@@ -4344,7 +4925,8 @@
       },
       "frame_time_reduction_pct": -0.029417178511594286,
       "comparison_order": "BAAB",
-      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL"
+      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL",
+      "actual_gl_context": "4.6"
     },
     {
       "name": "makeup-g01-primary-test-baab-r2",
@@ -4374,7 +4956,8 @@
       },
       "frame_time_reduction_pct": 3.21483212555201,
       "comparison_order": "BAAB",
-      "work_qualification": "COPY_WITNESSES_RETAINED"
+      "work_qualification": "COPY_WITNESSES_RETAINED",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "bsl-g02-primary-test-baab-r2",
@@ -4404,7 +4987,8 @@
       },
       "frame_time_reduction_pct": 3.8684428790558747,
       "comparison_order": "BAAB",
-      "work_qualification": "OBSERVED_MIP_OMISSION"
+      "work_qualification": "OBSERVED_MIP_OMISSION",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "reimagined-g02-primary-test-baab-r2",
@@ -4434,7 +5018,8 @@
       },
       "frame_time_reduction_pct": -5.509044589505868,
       "comparison_order": "BAAB",
-      "work_qualification": "OBSERVED_MIP_OMISSION"
+      "work_qualification": "OBSERVED_MIP_OMISSION",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "unbound-g02-primary-test-baab-r2",
@@ -4464,7 +5049,8 @@
       },
       "frame_time_reduction_pct": -9.84865458232676,
       "comparison_order": "BAAB",
-      "work_qualification": "OBSERVED_MIP_OMISSION"
+      "work_qualification": "OBSERVED_MIP_OMISSION",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "makeup-g03-primary-test-baab-r2",
@@ -4478,7 +5064,8 @@
       "plot_arms": null,
       "frame_time_reduction_pct": null,
       "comparison_order": null,
-      "work_qualification": "SOURCE_SETUP_OR_UNVERIFIED"
+      "work_qualification": "SOURCE_SETUP_OR_UNVERIFIED",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "bsl-g03-source-basic-native-optimized-test-baab-r2",
@@ -4508,7 +5095,8 @@
       },
       "frame_time_reduction_pct": 0.07563942895348558,
       "comparison_order": "BAAB",
-      "work_qualification": "QUALIFIED_CUTOUT_PROGRESS"
+      "work_qualification": "QUALIFIED_CUTOUT_PROGRESS",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "reimagined-g03-primary-test-baab-r2",
@@ -4538,7 +5126,8 @@
       },
       "frame_time_reduction_pct": -7.371748810086631,
       "comparison_order": "BAAB",
-      "work_qualification": "QUALIFIED_CUTOUT_PROGRESS"
+      "work_qualification": "QUALIFIED_CUTOUT_PROGRESS",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "unbound-g03-primary-test-baab-r2",
@@ -4568,7 +5157,8 @@
       },
       "frame_time_reduction_pct": -11.027351505244173,
       "comparison_order": "BAAB",
-      "work_qualification": "QUALIFIED_CUTOUT_PROGRESS"
+      "work_qualification": "QUALIFIED_CUTOUT_PROGRESS",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "makeup-g04-primary-test-baab-r2",
@@ -4598,7 +5188,8 @@
       },
       "frame_time_reduction_pct": 0.21108940494100953,
       "comparison_order": "BAAB",
-      "work_qualification": "SEE_WORK_EVIDENCE"
+      "work_qualification": "SEE_WORK_EVIDENCE",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "makeup-g05-primary-test-baab-r2",
@@ -4612,7 +5203,8 @@
       "plot_arms": null,
       "frame_time_reduction_pct": null,
       "comparison_order": null,
-      "work_qualification": "TRANSIENT_REFLECTION_PERMISSION_UNVERIFIED"
+      "work_qualification": "TRANSIENT_REFLECTION_PERMISSION_UNVERIFIED",
+      "actual_gl_context": "4.6"
     },
     {
       "name": "bsl-g05-primary-test-baab-r2",
@@ -4642,7 +5234,8 @@
       },
       "frame_time_reduction_pct": -18.27514822759445,
       "comparison_order": "BAAB",
-      "work_qualification": "EXACT_WINDOW_NEAREST_WATER_PERMISSION"
+      "work_qualification": "EXACT_WINDOW_NEAREST_WATER_PERMISSION",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "reimagined-g05-primary-test-baab-r2",
@@ -4672,7 +5265,8 @@
       },
       "frame_time_reduction_pct": -8.912874558936027,
       "comparison_order": "BAAB",
-      "work_qualification": "SEE_WORK_EVIDENCE"
+      "work_qualification": "SEE_WORK_EVIDENCE",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "unbound-g05-primary-test-baab-r2",
@@ -4702,7 +5296,8 @@
       },
       "frame_time_reduction_pct": -13.136085993441528,
       "comparison_order": "BAAB",
-      "work_qualification": "SEE_WORK_EVIDENCE"
+      "work_qualification": "SEE_WORK_EVIDENCE",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "makeup-g06-primary-test-baab-r2",
@@ -4732,7 +5327,8 @@
       },
       "frame_time_reduction_pct": -0.04028908097761753,
       "comparison_order": "BAAB",
-      "work_qualification": "SEE_WORK_EVIDENCE"
+      "work_qualification": "SEE_WORK_EVIDENCE",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "bsl-g06-primary-test-baab-r2",
@@ -4762,7 +5358,8 @@
       },
       "frame_time_reduction_pct": -13.818138976619135,
       "comparison_order": "BAAB",
-      "work_qualification": "EXACT_WINDOW_AO_PRODUCER_CONSUMER"
+      "work_qualification": "EXACT_WINDOW_AO_PRODUCER_CONSUMER",
+      "actual_gl_context": "4.6"
     },
     {
       "name": "reimagined-g06-primary-test-baab-r2",
@@ -4792,7 +5389,8 @@
       },
       "frame_time_reduction_pct": -10.873008737776047,
       "comparison_order": "BAAB",
-      "work_qualification": "EXACT_WINDOW_AO_PRODUCER_CONSUMER"
+      "work_qualification": "EXACT_WINDOW_AO_PRODUCER_CONSUMER",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "unbound-g06-primary-test-baab-r2",
@@ -4822,7 +5420,8 @@
       },
       "frame_time_reduction_pct": -17.701541529299767,
       "comparison_order": "BAAB",
-      "work_qualification": "EXACT_WINDOW_AO_PRODUCER_CONSUMER"
+      "work_qualification": "EXACT_WINDOW_AO_PRODUCER_CONSUMER",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "makeup-g07-primary-test-baab-r2",
@@ -4852,7 +5451,8 @@
       },
       "frame_time_reduction_pct": -3.2668925882690933,
       "comparison_order": "BAAB",
-      "work_qualification": "SEE_WORK_EVIDENCE"
+      "work_qualification": "SEE_WORK_EVIDENCE",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "bsl-g07-primary-test-baab-r2",
@@ -4882,7 +5482,8 @@
       },
       "frame_time_reduction_pct": -17.51013554866526,
       "comparison_order": "BAAB",
-      "work_qualification": "EXACT_WINDOW_DEPTH_REUSE_PERMISSION"
+      "work_qualification": "EXACT_WINDOW_DEPTH_REUSE_PERMISSION",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "reimagined-g07-primary-test-baab-r2",
@@ -4912,7 +5513,8 @@
       },
       "frame_time_reduction_pct": -7.352428811655341,
       "comparison_order": "BAAB",
-      "work_qualification": "EXACT_WINDOW_DEPTH_REUSE_PERMISSION"
+      "work_qualification": "EXACT_WINDOW_DEPTH_REUSE_PERMISSION",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "unbound-g07-primary-test-baab-r2",
@@ -4942,7 +5544,8 @@
       },
       "frame_time_reduction_pct": -11.085194900953509,
       "comparison_order": "BAAB",
-      "work_qualification": "EXACT_WINDOW_DEPTH_REUSE_PERMISSION"
+      "work_qualification": "EXACT_WINDOW_DEPTH_REUSE_PERMISSION",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "makeup-g08-primary-test-r2",
@@ -4972,7 +5575,8 @@
       },
       "frame_time_reduction_pct": -0.3312965393218835,
       "comparison_order": null,
-      "work_qualification": "SEE_WORK_EVIDENCE"
+      "work_qualification": "SEE_WORK_EVIDENCE",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "reimagined-g08-primary-test-baab-r2",
@@ -5002,7 +5606,8 @@
       },
       "frame_time_reduction_pct": -1.312178544174202,
       "comparison_order": "BAAB",
-      "work_qualification": "SEE_WORK_EVIDENCE"
+      "work_qualification": "SEE_WORK_EVIDENCE",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "unbound-g08-primary-test-baab-r2",
@@ -5032,7 +5637,8 @@
       },
       "frame_time_reduction_pct": -5.275106317738123,
       "comparison_order": "BAAB",
-      "work_qualification": "SEE_WORK_EVIDENCE"
+      "work_qualification": "SEE_WORK_EVIDENCE",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "bsl-g09-primary-test-baab-r2-gl46-v3",
@@ -5062,7 +5668,8 @@
       },
       "frame_time_reduction_pct": -8.339901527836043,
       "comparison_order": "BAAB",
-      "work_qualification": "EXACT_WINDOW_POM_PREFIX_SETUP_ADMISSION"
+      "work_qualification": "EXACT_WINDOW_POM_PREFIX_SETUP_ADMISSION",
+      "actual_gl_context": "4.6"
     },
     {
       "name": "reimagined-g09-native-rp3-pbr-test-baab-r2",
@@ -5092,7 +5699,8 @@
       },
       "frame_time_reduction_pct": -16.506446951545442,
       "comparison_order": "BAAB",
-      "work_qualification": "NATIVE_POM_CACHE_CONTROL_OBSERVED"
+      "work_qualification": "NATIVE_POM_CACHE_CONTROL_OBSERVED",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "unbound-g09-native-rp3-pbr-test-baab-r2",
@@ -5122,7 +5730,8 @@
       },
       "frame_time_reduction_pct": -11.521855056610386,
       "comparison_order": "BAAB",
-      "work_qualification": "NATIVE_POM_CACHE_CONTROL_OBSERVED"
+      "work_qualification": "NATIVE_POM_CACHE_CONTROL_OBSERVED",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "makeup-g10-primary-test-r2",
@@ -5152,7 +5761,8 @@
       },
       "frame_time_reduction_pct": -0.12808795672329562,
       "comparison_order": null,
-      "work_qualification": "BLOOM_DRAW_AND_FINITE_QUERY_OPPORTUNITIES"
+      "work_qualification": "BLOOM_DRAW_AND_FINITE_QUERY_OPPORTUNITIES",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "makeup-c01-gpu-authored-test-r2",
@@ -5182,7 +5792,8 @@
       },
       "frame_time_reduction_pct": -0.03592071819299503,
       "comparison_order": null,
-      "work_qualification": "SEE_WORK_EVIDENCE"
+      "work_qualification": "SEE_WORK_EVIDENCE",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "bsl-c02-native-gl46-vrs-2x2-test-r2",
@@ -5212,7 +5823,8 @@
       },
       "frame_time_reduction_pct": 2.1646271404361506,
       "comparison_order": "BAAB",
-      "work_qualification": "SEE_WORK_EVIDENCE"
+      "work_qualification": "SEE_WORK_EVIDENCE",
+      "actual_gl_context": "4.6"
     },
     {
       "name": "makeup-n01-primary-test-baab-r2",
@@ -5226,7 +5838,8 @@
       "plot_arms": null,
       "frame_time_reduction_pct": null,
       "comparison_order": null,
-      "work_qualification": "SEE_WORK_EVIDENCE"
+      "work_qualification": "SEE_WORK_EVIDENCE",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "bsl-n01-primary-test-baab-r2",
@@ -5240,7 +5853,8 @@
       "plot_arms": null,
       "frame_time_reduction_pct": null,
       "comparison_order": null,
-      "work_qualification": "SEE_WORK_EVIDENCE"
+      "work_qualification": "SEE_WORK_EVIDENCE",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "reimagined-n01-primary-test-baab-r2",
@@ -5254,7 +5868,8 @@
       "plot_arms": null,
       "frame_time_reduction_pct": null,
       "comparison_order": null,
-      "work_qualification": "SEE_WORK_EVIDENCE"
+      "work_qualification": "SEE_WORK_EVIDENCE",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "unbound-n01-primary-test-baab-r2",
@@ -5268,7 +5883,8 @@
       "plot_arms": null,
       "frame_time_reduction_pct": null,
       "comparison_order": null,
-      "work_qualification": "SEE_WORK_EVIDENCE"
+      "work_qualification": "SEE_WORK_EVIDENCE",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "makeup-n04-primary-test-baab-r2",
@@ -5298,7 +5914,8 @@
       },
       "frame_time_reduction_pct": 1.3125294813066732,
       "comparison_order": "BAAB",
-      "work_qualification": "SEE_WORK_EVIDENCE"
+      "work_qualification": "SEE_WORK_EVIDENCE",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "bsl-n04-primary-test-baab-r2",
@@ -5328,7 +5945,8 @@
       },
       "frame_time_reduction_pct": -2.5315877748827242,
       "comparison_order": "BAAB",
-      "work_qualification": "SEE_WORK_EVIDENCE"
+      "work_qualification": "SEE_WORK_EVIDENCE",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "reimagined-n04-primary-test-baab-r2",
@@ -5358,7 +5976,8 @@
       },
       "frame_time_reduction_pct": -1.5132788738229122,
       "comparison_order": "BAAB",
-      "work_qualification": "SEE_WORK_EVIDENCE"
+      "work_qualification": "SEE_WORK_EVIDENCE",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "unbound-n04-primary-test-baab-r2",
@@ -5388,7 +6007,8 @@
       },
       "frame_time_reduction_pct": -5.145363702973726,
       "comparison_order": "BAAB",
-      "work_qualification": "SEE_WORK_EVIDENCE"
+      "work_qualification": "SEE_WORK_EVIDENCE",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "reimagined-g09-native-rp1-fallback-test-baab-r2",
@@ -5418,7 +6038,8 @@
       },
       "frame_time_reduction_pct": -4.934014381731213,
       "comparison_order": "BAAB",
-      "work_qualification": "NO_POM_COMPILED_FALLBACK"
+      "work_qualification": "NO_POM_COMPILED_FALLBACK",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "unbound-g09-native-rp1-fallback-test-baab-r2",
@@ -5448,7 +6069,8 @@
       },
       "frame_time_reduction_pct": -5.096985750781523,
       "comparison_order": "BAAB",
-      "work_qualification": "NO_POM_COMPILED_FALLBACK"
+      "work_qualification": "NO_POM_COMPILED_FALLBACK",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "makeup-null-original-null-natural-terrain-control-baab-r2",
@@ -5478,7 +6100,8 @@
       },
       "frame_time_reduction_pct": -0.09615501482874647,
       "comparison_order": "BAAB",
-      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL"
+      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "bsl-null-original-null-natural-terrain-control-baab-r2",
@@ -5508,7 +6131,8 @@
       },
       "frame_time_reduction_pct": 0.0004981752398444557,
       "comparison_order": "BAAB",
-      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL"
+      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "reimagined-null-original-null-natural-terrain-control-baab-r2",
@@ -5538,7 +6162,8 @@
       },
       "frame_time_reduction_pct": 0.18810979476350692,
       "comparison_order": "BAAB",
-      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL"
+      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "unbound-null-original-null-natural-terrain-control-baab-r2",
@@ -5568,7 +6193,8 @@
       },
       "frame_time_reduction_pct": -0.03416622944042958,
       "comparison_order": "BAAB",
-      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL"
+      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "makeup-g04-saved-water-no-fixture-test-baab-r2",
@@ -5598,7 +6224,8 @@
       },
       "frame_time_reduction_pct": 0.09025430305635831,
       "comparison_order": "BAAB",
-      "work_qualification": "SEE_WORK_EVIDENCE"
+      "work_qualification": "SEE_WORK_EVIDENCE",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "makeup-g10-g10-native-control-control-r2",
@@ -5628,7 +6255,8 @@
       },
       "frame_time_reduction_pct": -0.034929905849014745,
       "comparison_order": null,
-      "work_qualification": "NATIVE_EQUIVALENT_PRIVATE_G10_CONTROL"
+      "work_qualification": "NATIVE_EQUIVALENT_PRIVATE_G10_CONTROL",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "makeup-c01-gpu-natural-cave-test-r2",
@@ -5658,7 +6286,8 @@
       },
       "frame_time_reduction_pct": -0.04263509275375364,
       "comparison_order": null,
-      "work_qualification": "SEE_WORK_EVIDENCE"
+      "work_qualification": "SEE_WORK_EVIDENCE",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "reimagined-c02-native-gl46-vrs-2x2-test-baab-r2",
@@ -5688,7 +6317,8 @@
       },
       "frame_time_reduction_pct": 1.971344981663609,
       "comparison_order": "BAAB",
-      "work_qualification": "SEE_WORK_EVIDENCE"
+      "work_qualification": "SEE_WORK_EVIDENCE",
+      "actual_gl_context": "4.6"
     },
     {
       "name": "reimagined-null-original-null-gl46-control-baab-r2",
@@ -5718,7 +6348,8 @@
       },
       "frame_time_reduction_pct": 0.0030484419554390398,
       "comparison_order": "BAAB",
-      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL"
+      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL",
+      "actual_gl_context": "4.6"
     },
     {
       "name": "unbound-c02-native-gl46-vrs-2x2-test-baab-r2",
@@ -5748,7 +6379,8 @@
       },
       "frame_time_reduction_pct": 1.715101948431986,
       "comparison_order": "BAAB",
-      "work_qualification": "SEE_WORK_EVIDENCE"
+      "work_qualification": "SEE_WORK_EVIDENCE",
+      "actual_gl_context": "4.6"
     },
     {
       "name": "unbound-null-original-null-gl46-control-baab-r2",
@@ -5778,7 +6410,8 @@
       },
       "frame_time_reduction_pct": 0.02662954112719988,
       "comparison_order": "BAAB",
-      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL"
+      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL",
+      "actual_gl_context": "4.6"
     },
     {
       "name": "bsl-g03-test-optimized-native-abba-r1",
@@ -5808,7 +6441,8 @@
       },
       "frame_time_reduction_pct": -0.2145940148436715,
       "comparison_order": "ABBA",
-      "work_qualification": "QUALIFIED_CUTOUT_PROGRESS"
+      "work_qualification": "QUALIFIED_CUTOUT_PROGRESS",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "makeup-g01-primary-test-abba-r1",
@@ -5822,7 +6456,8 @@
       "plot_arms": null,
       "frame_time_reduction_pct": null,
       "comparison_order": null,
-      "work_qualification": "SEE_WORK_EVIDENCE"
+      "work_qualification": "SEE_WORK_EVIDENCE",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "makeup-null-original-null-primary-control-abba-r1",
@@ -5852,7 +6487,8 @@
       },
       "frame_time_reduction_pct": 0.07174085867560429,
       "comparison_order": "ABBA",
-      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL"
+      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "bsl-null-original-null-primary-control-abba-r1",
@@ -5882,7 +6518,8 @@
       },
       "frame_time_reduction_pct": -0.017053841857416516,
       "comparison_order": "ABBA",
-      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL"
+      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "reimagined-null-original-null-primary-control-abba-r1",
@@ -5912,7 +6549,8 @@
       },
       "frame_time_reduction_pct": -0.08802140064415921,
       "comparison_order": "ABBA",
-      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL"
+      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "unbound-null-original-null-primary-control-abba-r1",
@@ -5942,7 +6580,8 @@
       },
       "frame_time_reduction_pct": 0.01541236915760535,
       "comparison_order": "ABBA",
-      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL"
+      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "bsl-null-original-null-optimized-pose1-control-abba-r1",
@@ -5972,7 +6611,8 @@
       },
       "frame_time_reduction_pct": -0.1868752399455697,
       "comparison_order": "ABBA",
-      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL"
+      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "bsl-null-original-null-gl46-control-abba-r1",
@@ -6002,7 +6642,8 @@
       },
       "frame_time_reduction_pct": -0.0641355852277477,
       "comparison_order": "ABBA",
-      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL"
+      "work_qualification": "BYTE_IDENTICAL_NATIVE_CONTROL",
+      "actual_gl_context": "4.6"
     },
     {
       "name": "bsl-g02-primary-test-abba-r1",
@@ -6032,7 +6673,8 @@
       },
       "frame_time_reduction_pct": 4.036785034682938,
       "comparison_order": "ABBA",
-      "work_qualification": "OBSERVED_MIP_OMISSION"
+      "work_qualification": "OBSERVED_MIP_OMISSION",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "reimagined-g02-primary-test-abba-r1",
@@ -6062,7 +6704,8 @@
       },
       "frame_time_reduction_pct": -5.827654913227476,
       "comparison_order": "ABBA",
-      "work_qualification": "OBSERVED_MIP_OMISSION"
+      "work_qualification": "OBSERVED_MIP_OMISSION",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "unbound-g02-primary-test-abba-r1",
@@ -6092,7 +6735,8 @@
       },
       "frame_time_reduction_pct": -10.169569408489153,
       "comparison_order": "ABBA",
-      "work_qualification": "OBSERVED_MIP_OMISSION"
+      "work_qualification": "OBSERVED_MIP_OMISSION",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "makeup-g03-primary-test-abba-r1",
@@ -6122,7 +6766,8 @@
       },
       "frame_time_reduction_pct": 0.06966806360723109,
       "comparison_order": "ABBA",
-      "work_qualification": "LINKED_NATIVE_CUTOUT_SUBMISSIONS"
+      "work_qualification": "LINKED_NATIVE_CUTOUT_SUBMISSIONS",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "reimagined-g03-primary-test-abba-r1",
@@ -6152,7 +6797,8 @@
       },
       "frame_time_reduction_pct": -7.26212045048237,
       "comparison_order": "ABBA",
-      "work_qualification": "QUALIFIED_CUTOUT_PROGRESS"
+      "work_qualification": "QUALIFIED_CUTOUT_PROGRESS",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "unbound-g03-primary-test-abba-r1",
@@ -6182,7 +6828,8 @@
       },
       "frame_time_reduction_pct": -11.123788058083013,
       "comparison_order": "ABBA",
-      "work_qualification": "QUALIFIED_CUTOUT_PROGRESS"
+      "work_qualification": "QUALIFIED_CUTOUT_PROGRESS",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "makeup-g04-primary-test-abba-r1",
@@ -6196,7 +6843,8 @@
       "plot_arms": null,
       "frame_time_reduction_pct": null,
       "comparison_order": null,
-      "work_qualification": "SEE_WORK_EVIDENCE"
+      "work_qualification": "SEE_WORK_EVIDENCE",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "makeup-g05-primary-test-abba-r1",
@@ -6210,7 +6858,8 @@
       "plot_arms": null,
       "frame_time_reduction_pct": null,
       "comparison_order": null,
-      "work_qualification": "TRANSIENT_REFLECTION_PERMISSION_UNVERIFIED"
+      "work_qualification": "TRANSIENT_REFLECTION_PERMISSION_UNVERIFIED",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "bsl-g05-primary-test-abba-r1",
@@ -6240,7 +6889,8 @@
       },
       "frame_time_reduction_pct": -18.19244555810189,
       "comparison_order": "ABBA",
-      "work_qualification": "EXACT_WINDOW_NEAREST_WATER_PERMISSION"
+      "work_qualification": "EXACT_WINDOW_NEAREST_WATER_PERMISSION",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "reimagined-g05-primary-test-abba-r1",
@@ -6270,7 +6920,8 @@
       },
       "frame_time_reduction_pct": -8.494331449055755,
       "comparison_order": "ABBA",
-      "work_qualification": "SEE_WORK_EVIDENCE"
+      "work_qualification": "SEE_WORK_EVIDENCE",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "unbound-g05-primary-test-abba-r1",
@@ -6300,7 +6951,8 @@
       },
       "frame_time_reduction_pct": -12.909671802394012,
       "comparison_order": "ABBA",
-      "work_qualification": "SEE_WORK_EVIDENCE"
+      "work_qualification": "SEE_WORK_EVIDENCE",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "makeup-g06-primary-test-abba-r1",
@@ -6330,7 +6982,8 @@
       },
       "frame_time_reduction_pct": 0.07852616845544287,
       "comparison_order": "ABBA",
-      "work_qualification": "SEE_WORK_EVIDENCE"
+      "work_qualification": "SEE_WORK_EVIDENCE",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "bsl-g06-primary-test-abba-r1",
@@ -6344,7 +6997,8 @@
       "plot_arms": null,
       "frame_time_reduction_pct": null,
       "comparison_order": null,
-      "work_qualification": "REQUEST_ONLY_AO_WORK_UNVERIFIED"
+      "work_qualification": "REQUEST_ONLY_AO_WORK_UNVERIFIED",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "reimagined-g06-primary-test-abba-r1",
@@ -6374,7 +7028,8 @@
       },
       "frame_time_reduction_pct": -10.85944963774856,
       "comparison_order": "ABBA",
-      "work_qualification": "EXACT_WINDOW_AO_PRODUCER_CONSUMER"
+      "work_qualification": "EXACT_WINDOW_AO_PRODUCER_CONSUMER",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "unbound-g06-primary-test-abba-r1",
@@ -6404,7 +7059,8 @@
       },
       "frame_time_reduction_pct": -17.455959972381542,
       "comparison_order": "ABBA",
-      "work_qualification": "EXACT_WINDOW_AO_PRODUCER_CONSUMER"
+      "work_qualification": "EXACT_WINDOW_AO_PRODUCER_CONSUMER",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "makeup-g07-primary-test-abba-r1",
@@ -6434,7 +7090,8 @@
       },
       "frame_time_reduction_pct": -3.2166951194550135,
       "comparison_order": "ABBA",
-      "work_qualification": "SEE_WORK_EVIDENCE"
+      "work_qualification": "SEE_WORK_EVIDENCE",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "bsl-g07-primary-test-abba-r1",
@@ -6464,7 +7121,8 @@
       },
       "frame_time_reduction_pct": -16.725018299830946,
       "comparison_order": "ABBA",
-      "work_qualification": "EXACT_WINDOW_DEPTH_REUSE_PERMISSION"
+      "work_qualification": "EXACT_WINDOW_DEPTH_REUSE_PERMISSION",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "reimagined-g07-primary-test-abba-r1",
@@ -6494,7 +7152,8 @@
       },
       "frame_time_reduction_pct": -7.610525462173764,
       "comparison_order": "ABBA",
-      "work_qualification": "EXACT_WINDOW_DEPTH_REUSE_PERMISSION"
+      "work_qualification": "EXACT_WINDOW_DEPTH_REUSE_PERMISSION",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "unbound-g07-primary-test-abba-r1",
@@ -6524,7 +7183,8 @@
       },
       "frame_time_reduction_pct": -11.039010203192625,
       "comparison_order": "ABBA",
-      "work_qualification": "EXACT_WINDOW_DEPTH_REUSE_PERMISSION"
+      "work_qualification": "EXACT_WINDOW_DEPTH_REUSE_PERMISSION",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "makeup-g08-primary-test-r1",
@@ -6538,7 +7198,8 @@
       "plot_arms": null,
       "frame_time_reduction_pct": null,
       "comparison_order": null,
-      "work_qualification": "SEE_WORK_EVIDENCE"
+      "work_qualification": "SEE_WORK_EVIDENCE",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "reimagined-g08-primary-test-abba-r1",
@@ -6568,7 +7229,8 @@
       },
       "frame_time_reduction_pct": -0.9279937153606471,
       "comparison_order": "ABBA",
-      "work_qualification": "SEE_WORK_EVIDENCE"
+      "work_qualification": "SEE_WORK_EVIDENCE",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "unbound-g08-primary-test-abba-r1",
@@ -6598,7 +7260,8 @@
       },
       "frame_time_reduction_pct": -5.249081336585702,
       "comparison_order": "ABBA",
-      "work_qualification": "SEE_WORK_EVIDENCE"
+      "work_qualification": "SEE_WORK_EVIDENCE",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "bsl-g09-primary-test-abba-r1",
@@ -6612,7 +7275,8 @@
       "plot_arms": null,
       "frame_time_reduction_pct": null,
       "comparison_order": null,
-      "work_qualification": "PREFIX_SETUP_UNVERIFIED"
+      "work_qualification": "PREFIX_SETUP_UNVERIFIED",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "reimagined-g09-native-rp3-pbr-test-abba-r1",
@@ -6642,7 +7306,8 @@
       },
       "frame_time_reduction_pct": -16.50891597022265,
       "comparison_order": "ABBA",
-      "work_qualification": "NATIVE_POM_CACHE_CONTROL_OBSERVED"
+      "work_qualification": "NATIVE_POM_CACHE_CONTROL_OBSERVED",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "unbound-g09-native-rp3-pbr-test-abba-r1",
@@ -6672,7 +7337,8 @@
       },
       "frame_time_reduction_pct": -11.574870649669458,
       "comparison_order": "ABBA",
-      "work_qualification": "NATIVE_POM_CACHE_CONTROL_OBSERVED"
+      "work_qualification": "NATIVE_POM_CACHE_CONTROL_OBSERVED",
+      "actual_gl_context": "3.2"
     },
     {
       "name": "makeup-g01-primary-test-abba-r2",
@@ -6702,8 +7368,9 @@
       },
       "frame_time_reduction_pct": 3.2731397533358257,
       "comparison_order": "ABBA",
-      "work_qualification": "COPY_WITNESSES_RETAINED"
+      "work_qualification": "COPY_WITNESSES_RETAINED",
+      "actual_gl_context": "3.2"
     }
   ],
-  "scope": "Provisional RTX5080 native4K screen; 40 measured cells with two processes each, 22 source-held/no-certified-route cells, two shared G01 routes. Quality/regression review incomplete. Positive effect means lower frame time. Sample frame variance and independent-process variance are separate; no IID-frame confidence interval."
+  "scope": "RTX5080 native4K scoped screen; 40 measured cells with two processes each, 22 source-held/no-certified-route cells, two shared G01 routes. Bounded RGB8 review and modern-context regression checks complete; no production/default or universal temporal/HDR/DH/PBR qualification. Positive effect means lower frame time. Sample frame variance and independent-process variance are separate; no IID-frame confidence interval."
 }

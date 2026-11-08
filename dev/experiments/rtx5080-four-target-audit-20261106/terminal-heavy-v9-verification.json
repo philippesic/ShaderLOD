@@ -1,0 +1,31 @@
+{
+  "kind": "heavy",
+  "archive": "/home/philip/ShaderLOD/dev/experiments/rtx5080-four-target-audit-20261106/terminal-heavy-v9.zip",
+  "archive_bytes": 157083780,
+  "archive_sha256": "e2c5cf7c6d9106d762a679daec8143f529c4aa9060fee741ae157e9fe1b46b23",
+  "source_bytes": 16816767,
+  "files": 321,
+  "roots": [
+    "bsl-bloom-motion-quality-v6/candidate.png",
+    "bsl-bloom-motion-quality-v6/native.png",
+    "bsl-bloom-motion-quality-v6/return.png",
+    "bsl-bloom-motion-quality-v6/world-restore",
+    "reimagined-bloom-motion-quality-v6/candidate.png",
+    "reimagined-bloom-motion-quality-v6/native.png",
+    "reimagined-bloom-motion-quality-v6/return.png",
+    "reimagined-bloom-motion-quality-v6/world-restore",
+    "unbound-bloom-motion-quality-v6/candidate.png",
+    "unbound-bloom-motion-quality-v6/native.png",
+    "unbound-bloom-motion-quality-v6/return.png",
+    "unbound-bloom-motion-quality-v6/world-restore"
+  ],
+  "verified": true,
+  "retired": true,
+  "format": "content-addressed-zip",
+  "restore": "For each files[] row in PRESERVATION-MANIFEST.json, write objects/<sha256> independently to its original path.",
+  "retirement": {
+    "free_before": 39056490496,
+    "free_after": 39385018368,
+    "retired_roots": 12
+  }
+}

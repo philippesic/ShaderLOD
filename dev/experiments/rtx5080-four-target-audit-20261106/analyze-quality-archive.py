@@ -44,6 +44,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('archives', nargs='+', type=Path)
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--selected-only', action='store_true', help='Supplemental slots 0/60/120 only; not an all-frame analysis')
     args = parser.parse_args()
     assert not args.output.exists(), 'Fresh analysis output required'
     args.output.mkdir(parents=True)
@@ -90,10 +91,13 @@ def main():
             and m['skipped_capture_slots'] == 0 and m['writer_pending_at_finalization'] is False
             for m in manifests.values())
         common = sorted(set.intersection(*(set(frames) for frames in frame_maps.values())))
+        selected = [slot for slot in common if slot in (0, 60, 120)] if args.selected_only else common
         rows = []
         sheet = Image.new('RGB', (640 * 3, 390 * 3), '#181818')
         draw = ImageDraw.Draw(sheet)
-        for slot in common:
+        detail = Image.new('RGB', (768 * 3, 600 * 3), '#181818')
+        detail_draw = ImageDraw.Draw(detail)
+        for slot in selected:
             images = {}
             row = {'slot': slot, 'poses': {}, 'differences': {}}
             for column, (arm, frames) in enumerate(frame_maps.items()):
@@ -113,6 +117,12 @@ def main():
                     thumbnail.thumbnail((640, 360), Image.Resampling.LANCZOS)
                     sheet.paste(thumbnail, (column * 640, top + 25))
                     draw.text((column * 640 + 8, top + 7), f'{arm} / slot {slot}', fill='white')
+                    left = 1536 if slot == 60 else 1920
+                    crop = image.crop((left, 864, left + 768, 1440))
+                    top_detail = (slot // 60) * 600
+                    detail.paste(crop, (column * 768, top_detail + 24))
+                    detail_draw.text((column * 768 + 8, top_detail + 5),
+                                     f'{arm} / slot {slot} / unscaled 768x576 crop', fill='white')
             for left, right in (('candidate', 'native'), ('return', 'native'), ('candidate', 'return')):
                 if left in images and right in images:
                     metrics = difference(images[left], images[right])
@@ -137,10 +147,12 @@ def main():
         report = dict(
             scope='Untimed final RGB8 framebuffer only. Native animation/history and capture stalls advance; slot pairing is not deterministic pixel equivalence. Inspect actual poses and native-return variation. No HDR, DH, PBR, all-scene or performance qualification.',
             archives=[str(path) for path in args.archives], captures_complete=complete, manifests=manifests,
-            common_written_slots=len(common), aggregate=aggregate, frames=rows,
+            common_written_slots=len(common), analyzed_slots=len(selected), selected_only=args.selected_only,
+            aggregate=aggregate, frames=rows,
         )
         (args.output/'quality-analysis.json').write_text(json.dumps(report, indent=2)+'\n')
         sheet.save(args.output/'contact-sheet.jpg', quality=95)
+        detail.save(args.output/'detail-sheet.png')
         print(json.dumps(dict(captures_complete=complete, common_written_slots=len(common), aggregate=aggregate)))
 
 

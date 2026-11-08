@@ -23,7 +23,7 @@ def spread(values):
 jobs=[]
 # New continuation definitions supersede the unexecuted historical plans for
 # identical output paths (notably their repaired contexts and implementation).
-for name in ('rtx5080-runtime-v4-timings.json','rtx5080-runtime-v4-checks.json','rtx5080-scoring-v3-contexts.json','rtx5080-scoring-v2-continuation.json','rtx5080-post-repair-v2.json','rtx5080-repairs-v2-checks.json','rtx5080-observed-v1.json','rtx5080-baselines-v1.json','rtx5080-comparisons-v1.json','rtx5080-port-validation-v2.json','rtx5080-port-validation-v3.json','rtx5080-scoring-v1-block1.json'):
+for name in ('rtx5080-modern-regression-v7-plan.json','rtx5080-runtime-v4-timings.json','rtx5080-runtime-v4-checks.json','rtx5080-scoring-v3-contexts.json','rtx5080-scoring-v2-continuation.json','rtx5080-post-repair-v2.json','rtx5080-repairs-v2-checks.json','rtx5080-observed-v1.json','rtx5080-baselines-v1.json','rtx5080-comparisons-v1.json','rtx5080-port-validation-v2.json','rtx5080-port-validation-v3.json','rtx5080-scoring-v1-block1.json'):
     path=ROOT/'benchmarks/campaigns'/name
     if path.exists():jobs.extend(json.loads(path.read_text()))
 seen=set();runs=[];raw_rows=[]
@@ -155,7 +155,14 @@ for job in jobs:
 
 matrix=json.loads((ROOT/'benchmarks/campaigns/rtx5080-v1.json').read_text())
 source_review_path=HERE/'source-review-findings.json'
-source_findings={(r['shader'],r['goal']):r for r in json.loads(source_review_path.read_text())['cells']} if source_review_path.exists() else {}
+source_findings={}
+if source_review_path.exists():
+    review=json.loads(source_review_path.read_text())
+    for shader,binding in review['source_identity'].items():
+        for name,expected in ((binding['archive'],binding['sha256']),(binding['options'],binding['options_sha256'])):
+            with (ROOT/name).open('rb') as stream:actual=hashlib.file_digest(stream,'sha256').hexdigest()
+            if actual!=expected:raise ValueError('Source applicability review is stale for '+shader+': '+name+'; re-review changed inputs before publishing dispositions')
+    source_findings={(r['shader'],r['goal']):r for r in review['cells']}
 for cell in matrix['cells']:
     route=cell.get('route',{})
     if route.get('shared_implementation')=='G01':

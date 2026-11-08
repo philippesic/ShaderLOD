@@ -1,6 +1,6 @@
 # RTX regression diagnosis
 
-Active; no generic performance fix is established by this record.
+The scoped investigation is complete; no generic performance fix is established by this record.
 
 The repaired timings have two independent processes per measured primary cell.
 The [compact work audit](regression-work-summary.json) compares finite untimed
@@ -45,9 +45,13 @@ from intrusive untimed observation. No JFR was attached during performance tests
 Original/native settings, AA, viewport, selected native PBR resources and source
 admission are retained; passing a source/permission guard is not a saved-query count.
 
-Two further comparisons are prepared for Complementary G03 in explicit OpenGL4.6,
+Two further comparisons complete VALID/restored for Complementary G03 in explicit OpenGL4.6,
 with matched in-process native controls. These are separate diagnostic contexts,
 not pooled replacements for native3.2 primary timings. The orchestration waits for
 all quality operations and their archival work to finish before starting scored
-windows. A material context effect requires independent confirmation before any
-new primary claim. No result is available for these comparisons yet.
+windows. The candidates remain6.989%/10.806% slower on Reimagined/Unbound, close to the
+primary native-context regressions; context selection does not explain the large
+loss. These n1 diagnostics are not pooled into primary n2 estimates. The
+572-window chronological audit flags no2% quarter/pair drift and trims no samples.
+This narrows simple setup explanations without proving an optimal implementation
+or isolating every regression bottleneck.

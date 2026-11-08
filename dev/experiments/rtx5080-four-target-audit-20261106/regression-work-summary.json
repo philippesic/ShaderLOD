@@ -2,6 +2,134 @@
   "scope": "Untimed finite observed native events and Iris colour/custom texture inventory only; two completed frames per packet, excluding partial next frame. Physical object names are excluded from storage comparison. This does not enumerate every custom mod allocation, infer GPU duration, or prove lifetime/image equivalence. Earlier implementation attempts remain separately identified by report/context.",
   "rows": [
     {
+      "run": "reimagined-g03-gl46-regression-abba-v7",
+      "shader": "reimagined",
+      "goal": "G03",
+      "label": "candidate_0",
+      "case": "gl46-regression-diagnostic",
+      "effect_pct": -6.989027706699114,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "reimagined-g03-gl46-regression-abba-v7",
+      "shader": "reimagined",
+      "goal": "G03",
+      "label": "candidate_1",
+      "case": "gl46-regression-diagnostic",
+      "effect_pct": -6.989027706699114,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "unbound-g03-gl46-regression-abba-v7",
+      "shader": "unbound",
+      "goal": "G03",
+      "label": "candidate_0",
+      "case": "gl46-regression-diagnostic",
+      "effect_pct": -10.80605298995133,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "unbound-g03-gl46-regression-abba-v7",
+      "shader": "unbound",
+      "goal": "G03",
+      "label": "candidate_1",
+      "case": "gl46-regression-diagnostic",
+      "effect_pct": -10.80605298995133,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
       "run": "makeup-g05-primary-test-abba-runtime-v4",
       "shader": "makeup",
       "goal": "G05",

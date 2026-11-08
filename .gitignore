@@ -70,6 +70,10 @@ __pycache__/
 !/dev/experiments/rtx5080-four-target-audit-20261106/terminal-heavy-v8-verification.json
 !/dev/experiments/rtx5080-four-target-audit-20261106/regression-work-summary.json
 !/dev/experiments/rtx5080-four-target-audit-20261106/transport-retirement.json
+!/dev/experiments/rtx5080-four-target-audit-20261106/native-freeze-retirement.json
+!/dev/experiments/rtx5080-four-target-audit-20261106/native-setup-archives-preservation.json
+!/dev/experiments/rtx5080-four-target-audit-20261106/terminal-heavy-v9-verification.json
+!/dev/experiments/rtx5080-four-target-audit-20261106/time-trend-summary.json
 !/dev/experiments/*.md
 !/dev/experiments/*/*.md
 !/dev/experiments/*.patch
@@ -80,3 +84,8 @@ __pycache__/
 !/dev/experiments/*/*.yaml
 !/dev/experiments/*.yml
 !/dev/experiments/*/*.yml
+
+!/dev/experiments/rtx5080-four-target-audit-20261106/terminal-audit-v7.json
+!/dev/experiments/rtx5080-four-target-audit-20261106/scheduled-task-cleanup.json
+!/dev/experiments/rtx5080-four-target-audit-20261106/quality-summary.json
+!/dev/experiments/rtx5080-four-target-audit-20261106/audit-conclusions.json

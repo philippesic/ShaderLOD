@@ -363,3 +363,22 @@ clock/writer repair. BSL G02 image differences are comparable to native-return
 variation in this bounded path; viewed contact sheets show no gross defect.
 Temporal clocks remain unmatched, so no deterministic image equivalence, brief
 ghosting/shimmer or all-scene qualification is claimed. Remaining checks continue.
+
+
+### 2026-11-07 RTX5080 current screening audit complete
+
+40 measured n2 cells,22 source-held/no-certified-route dispositions and two shared
+G01 rows cover the64-cell matrix. Nine baseline cohorts have n2. MakeUp G01/BSL G02
+retain3.24%/3.95% scoped reductions; NVIDIA bloom VRS1.77–2.24% over three packs is
+a vendor/quality tradeoff. No broadly useful shared/default candidate qualifies.
+Two final4.6 G03 comparisons remain6.99%/10.81% slower; contexts are kept separate.
+All572 measured windows pass the exploratory2% chronological-quarter/pair review
+without sample trimming. Cost attribution/hardware-optimal variants remain open.
+
+All six planned quality triplets complete2,178 lossless images; all frames decoded/
+hashed and121 paired slots/case compared, with selected overview/unscaled visual
+review. No gross defect seen; clocks/history and brief temporal/HDR/DH/PBR limits
+remain explicit. All217 native operations are terminal/restored/released, both
+managed profiles match canonical sources and no Minecraft clients remain. The
+final owned scheduled task is removed. ShaderLOD-only cleanup retains verified
+backups and the32GiB reserve. [Final report](../dev/experiments/rtx5080-four-target-audit-20261106/REPORT.md).
