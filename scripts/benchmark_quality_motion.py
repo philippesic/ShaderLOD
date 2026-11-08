@@ -14,9 +14,11 @@ def validate_request(args):
     public=args.candidate=='public'
     bloom=(args.candidate=='c02-bloom-vrs' and args.scene in (None,'saved')
            and not getattr(args,'feature',None) and not getattr(args,'features',None))
-    life.require(getattr(args,'functional_check',False) and (public or bloom)
+    native_mips=(args.candidate=='g02-native-mips' and args.scene in (None,'saved')
+                 and not getattr(args,'feature',None) and not getattr(args,'features',None))
+    life.require(getattr(args,'functional_check',False) and (public or bloom or native_mips)
                  and not args.dh and args.scene in (None,'saved','natural-terrain') and not args.comparison_order,
-                 'Quality motion requires a separate public or qualified bloom VRS check on an owned saved scene, without DH or balanced timing')
+                 'Quality motion requires a separate public, finite native-mip or qualified bloom VRS check on an owned saved scene, without DH or balanced timing')
     # The runner's natural_terrain_inputs still requires the fixed native CPU
     # subset and spawn. The recorder uses that same owned saved-world state.
 
@@ -28,9 +30,9 @@ def capture(control, output, label):
     middle=pose|{'x':pose['x']+.5,'z':pose['z']+.5,
                  'yaw':pose['yaw']+12,'pitch':min(85,max(-85,pose['pitch']+4))}
     path={'schema':1,'label':'audit_'+label,'warmupSeconds':30,'fps':6,
-          # Uncompressed lossless transport fits the single writer's CPU budget.
-          # The writer drains each image's contents before completing its lease.
-          'pngCompressionLevel':0,'maximumInFlightImages':2,
+          # Lossless compression bounds native disk use; the recorder holds its
+          # logical path for render/callback capacity instead of dropping slots.
+          'pngCompressionLevel':1,'maximumInFlightImages':2,
           'rejectFullBlockCamera':True,
           'waypoints':[pose|{'seconds':0},middle|{'seconds':10},pose|{'seconds':20}]}
     destination=Path(output).resolve()/('quality-'+label)
@@ -54,4 +56,4 @@ def capture(control, output, label):
     life.require(len(files)==121 and all(p.is_file() and p.stat().st_size>0 for p in files),
                  'Quality lossless image sequence missing')
     return {'manifest':str(destination/'manifest.json'),'images':len(files),
-            'scope':'Untimed 20s camera path, six lossless native framebuffer samples per second. Native animation/history advance. Readback and PNG writing can stall rendering; no timing or exact deterministic pixel parity claim.'}
+            'scope':'Untimed 20s logical camera path, six lossless native framebuffer samples per path second. Path holds for render/writer capacity; wall duration can be longer. Native animation/history advance. No timing or exact deterministic pixel parity claim.'}

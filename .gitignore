@@ -54,6 +54,16 @@ __pycache__/
 !/dev/experiments/rtx5080-four-target-audit-20261106/native-before-runtime-pin-v4-20261107.json
 !/dev/experiments/rtx5080-four-target-audit-20261106/runtime-v4-source-sync.json
 !/dev/experiments/rtx5080-four-target-audit-20261106/terminal-world-copies-v1-verification.json
+!/dev/experiments/rtx5080-four-target-audit-20261106/terminal-heavy-v2-verification.json
+!/dev/experiments/rtx5080-four-target-audit-20261106/native-before-quality-v5-20261107.json
+!/dev/experiments/rtx5080-four-target-audit-20261106/quality-v5-source-sync.json
+!/dev/experiments/rtx5080-four-target-audit-20261106/native-before-quality-clock-v6-20261107.json
+!/dev/experiments/rtx5080-four-target-audit-20261106/quality-clock-v6-source-sync.json
+!/dev/experiments/rtx5080-four-target-audit-20261106/terminal-world-copies-v1-migration.json
+!/dev/experiments/rtx5080-four-target-audit-20261106/terminal-graphs-v3-verification.json
+!/dev/experiments/rtx5080-four-target-audit-20261106/terminal-world-copies-v4-verification.json
+!/dev/experiments/rtx5080-four-target-audit-20261106/timing-summary-v4.json
+!/dev/experiments/rtx5080-four-target-audit-20261106/png-transport-v6.json
 !/dev/experiments/*.md
 !/dev/experiments/*/*.md
 !/dev/experiments/*.patch

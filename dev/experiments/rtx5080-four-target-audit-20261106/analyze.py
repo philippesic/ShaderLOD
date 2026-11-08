@@ -155,6 +155,13 @@ for job in jobs:
 
 matrix=json.loads((ROOT/'benchmarks/campaigns/rtx5080-v1.json').read_text())
 for cell in matrix['cells']:
+    route=cell.get('route',{})
+    if route.get('shared_implementation')=='G01':
+        cell['status']='CONSOLIDATED_WITH_G01'
+        cell['scope_note']='Same MakeUp G01 implementation; no independent or additive optimization credit.'
+    elif route.get('source_review'):
+        cell['status']='SOURCE_REVIEW_PENDING'
+        cell['scope_note']=route.get('reason','No qualified runtime measurement; source/applicability review remains separate from measured outcomes.')
     matches=[r for r in runs if r['shader']==cell['shader'] and r['goal']==cell['goal']]
     cell['attempt_failures']=[{'name':r['name'],'case':r.get('case'),'phase':r.get('phase'),'error':r['error'],'validity':r['validity']} for r in matches if r['validity'] not in ('VALID','RUNNING')]
     valid=[r for r in matches if r['validity']=='VALID' and r['restored'] and r['kind']=='test' and r['measurement_qualified']]
@@ -179,9 +186,9 @@ for cell in matrix['cells']:
                                          for work in {r['work_qualification'] for r in valid if (r.get('case') or 'primary')==case and (r.get('phase') or 'discovery')==phase}}
                                   for phase in {r.get('phase') or 'discovery' for r in valid if (r.get('case') or 'primary')==case}}
                              for case in cases}
-        preferred=cell.get('preferred_case','primary')
+        preferred=cell.get('preferred_case',cell.get('route',{}).get('case','primary'))
         primary=[r for r in valid if (r.get('case') or 'primary')==preferred]
-        if not primary and cell.get('preferred_case'):
+        if not primary and (cell.get('preferred_case') or cell.get('route',{}).get('case')):
             cell['status']='PREFERRED_CASE_UNMEASURED'
             cell['preferred_case_note']='No valid timing in the declared primary case; other valid cases remain separate in case_effects and every-attempt charts.'
             continue
@@ -202,6 +209,8 @@ for cell in matrix['cells']:
             cell['status']='COHORT_SELECTION_REQUIRED';cell['cohorts']=sorted(cohorts);continue
         confirmed=[r for r in primary if r.get('phase')=='confirmation']
         valid=confirmed or primary
+        version=valid[0]['gl_context'].get('actual_version')
+        cell['plotted_gl_context']='.'.join(map(str,version)) if version else valid[0]['gl_context'].get('actual_version_string','unverified')
         cell['plotted_phase']='confirmation' if confirmed else valid[0].get('phase','screening');cell['plotted_runs']=len(valid)
         cell['status']=cell.get('case_dispositions',{}).get(cell['plotted_case']) or cell.get('audit_disposition') or 'MEASURED';cell['effects_pct']=spread([r['frame_time_reduction_pct'] for r in valid]);cell['screens']=[r['screen'] for r in valid]
         cell['arms']={}

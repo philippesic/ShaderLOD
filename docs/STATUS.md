@@ -1,6 +1,6 @@
 # Current state
 
-Updated 2026-11-06. Current scope remains the cross-shader/cross-machine audit of
+Updated 2026-11-07. Current scope remains the cross-shader/cross-machine audit of
 G01–G10, C01–C02 and N01–N04. V1 targets are Complementary Reimagined, Complementary
 Unbound, BSL and MakeUp Ultra Fast; shared renderer/LOD mechanisms remain the goal.
 The [retained direction and audit](STATUS_AUDIT_20261105.md) preserves the exact
@@ -25,51 +25,35 @@ has separate optimized-stack and GL4.6 baselines. Real native3.2 and explicit4.3
 4.5 and4.6 original startup checks pass with restoration. Baseline frame/window/
 process variances are retained separately in the campaign's compact progress data.
 
-MakeUp G03 passes actual linked rewritten CUTOUT functional admission. BSL source
-ownership and startup-race repairs pass its first balanced comparison with verified
-submissions/restoration; apparent reduction−0.21% at n1 is unresolved against
-variation. MakeUp G01 now completes its first valid balanced process with actual copy removal,
-a promising lower mean at n1; independent repeats, controls and quality remain
-pending. No repeated optimization-benefit conclusion is available yet. The completed
-11-operation baseline batch is restored/released and its prior source/classes
-are verified/preserved before replacement. Canonical source now has a finite C02
-extension for the separate Complementary bloom outputs, plus balanced order and
-bounded motion support; functional activation/restoration now passes for all three bloom targets on real
-4.5/4.6. Performance and quality remain pending.
-The first G01 score was interrupted by Windows ownership-file sharing and an
-untracked generated FML config backup; it is invalid, released and fully restored
-with backup bytes retained. Both hosts pass the maintained harness repairs. A
-first59-operation scoring queue is active, with remaining modern-context baselines
-and the first comparison/control block. A later ownership-file failure exposed
-plain CRT errno13 without winerror; the minimal bounded-retry correction passes
-103 benchmark tests on both hosts, including a real Windows lock regression.
-The failed baseline is fully recovered with uncertain bytes preserved.
-The first batch stopped safely at35/59 operations:30 valid, five invalid, all
-restored/released. Windows source-gate and context repairs are deployed; native
-BSL G06 and MakeUp G08 functional retries pass. Actual-archive tests and maintained
-resource/catalog synchronization repair a stale authored helper copy that refused
-three checks before launch. MakeUp G04 hardware validation also passes. A fresh97-operation continuation
-is running with the remaining repair checks, baselines, controls and both timing
-orders. BSL G09 now requests real4.6 for its required compute sampler proof. The97-operation continuation has now finished:85 valid/12 invalid, all restored;
-that scoring queue is complete. All completed timing datasets are verified off-host. Current
-descriptive analysis includes32 measured cells; work/quality qualification is
-incomplete. MakeUp G03/G05 and all four N01 CPU cases need repair/retest. The
-canonical stale-recipe-pin correction passes its new Java resource regression,
-and is now deployed after verified preservation. All eight focused hardware checks pass with restoration. A24-operation affected
-comparison/control queue is now running; expected duration about3 hours. Automatic
-collection and descriptive chart generation follow its completion. Old MakeUp
-runtime/source cohorts are separated from repaired implementation statistics. N01's native certificate requires4.1;
-failed runs used3.2 and need4.6 admission tests. Final repairs, independent
-measurement qualification, regression investigation, quality and charts remain.
-Verified off-host preservation of178 terminal restoration copies recovers10.37GiB,
-leaving44.48GiB free before the new timing batch. Live worlds/results remain intact.
-Further capacity checks apply before large motion captures. The earlier7–8-hour ETA covered the completed queue, not the final audit.
-BSL bloom VRS now passes actual4.5/4.6 activation/restoration. A C01 core-profile
-polygon-state repair also observes real native GPU-query work, with independent
-primitive, timing and quality checks pending. See the
-campaign [working state](../dev/experiments/rtx5080-four-target-audit-20261106/STATE.md),
-[BSL proof](../dev/experiments/rtx5080-four-target-audit-20261106/G03_PORT.md) and
-[C02 port scope](../dev/experiments/rtx5080-four-target-audit-20261106/C02_PORT.md).
+The main97-operation queue and all24 repaired comparison/control operations are
+complete and restored. All eight preceding Runtime-V4 admission checks pass.
+The verified timing reduction contains200 reports,175 valid and40 measured cells,
+with two independent timing processes per measured primary cell. The other24 rows
+are22 source/applicability reviews and two shared MakeUp G01 routes; this is not
+complete64-cell qualification. Original-only baselines and matching-context null
+controls retain within-window, between-window and between-process variance.
+
+Provisional reductions include MakeUp G01 about3.24%, BSL G02 about3.95% and C02
+bloom VRS about1.77–2.24% over its three qualified packs. These are descriptive
+means from repeated comparisons, pending visual/correctness and regression review.
+BSL G02's measured route is the public singleton dead_mip_chain request; it is
+not the separate private native-derived candidate. Several adapter routes regress,
+including roughly7–18% on some BSL/Complementary cases; no cause or fix is yet
+established. Repaired MakeUp G03 and all four N01 CPU routes show no clear gain.
+The interactive provisional charts and standalone PNG/SVG are generated locally.
+
+Untimed quality/profile acquisition continues through maintained check commands.
+MakeUp G01 has all363 native/candidate/return frames. BSL mip and bloom captures
+are incomplete and remain invalid/restored; missed render slots need diagnosis and
+fresh retries. A renderer/writer-bounded logical camera clock now passes native
+regression tests and starts five fresh checks, retaining121-frame completeness.
+The earlier batch stopped safely at capacity. Full raw PNG bytes are retained in independently verified archives.
+Preserving terminal ShaderLOD recovery/evidence copies off-host reclaimed another
+12.59GiB before captures. No NVIDIA cache, other project or personal profile was
+touched. See the campaign [working state](../dev/experiments/rtx5080-four-target-audit-20261106/STATE.md)
+and [source review](../dev/experiments/rtx5080-four-target-audit-20261106/SOURCE_REVIEW.md).
+A reliable ETA for the complete quality/regression/applicability audit is not yet
+established; acquisition completion is not the final deliverable.
 
 RTX2080Ti remains outside this allocation; renew availability before using it.
 The active source branch is `rtx5080-audit`; milestone pushes go to user-owned origin.

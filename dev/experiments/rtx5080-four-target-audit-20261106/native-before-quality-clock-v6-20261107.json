@@ -1,0 +1,11 @@
+{
+  "archive": "C:\\ShaderLODBench\\frozen\\native-before-quality-clock-v6-20261107.zip",
+  "bytes": 18479161,
+  "sha256": "b5753b958dd3542b92ba2c25d42caf0eb803c2a863099b2fc63e08e524f2c5d2",
+  "files": 5516,
+  "build_bindings": 5034,
+  "verified": true,
+  "reports": [
+    "reimagined-bloom-motion-quality-v5"
+  ]
+}

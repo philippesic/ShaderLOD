@@ -1,0 +1,25 @@
+{
+  "kind": "world-restore",
+  "archive": "/home/philip/ShaderLOD/dev/experiments/rtx5080-four-target-audit-20261106/terminal-world-copies-v4.zip",
+  "archive_bytes": 19402456,
+  "archive_sha256": "bf0825939f2b1ecc8e979a4a3d00097ca8e9433742da213e2fe8bf5a8f45dac5",
+  "source_bytes": 212,
+  "files": 624,
+  "roots": [
+    "bsl-bloom-motion-quality-v5/world-restore",
+    "bsl-mips-motion-quality-v5/world-restore",
+    "makeup-copy-motion-quality-v5/world-restore",
+    "reimagined-alpha-profile-quality-v5/world-restore",
+    "reimagined-bloom-motion-quality-v5/world-restore",
+    "reimagined-native-profile-quality-v5/world-restore"
+  ],
+  "verified": true,
+  "retired": true,
+  "format": "content-addressed-zip",
+  "restore": "For each files[] row in PRESERVATION-MANIFEST.json, write objects/<sha256> independently to its original path.",
+  "retirement": {
+    "free_before": 47205310464,
+    "free_after": 47589109760,
+    "retired_roots": 6
+  }
+}

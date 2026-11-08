@@ -2,166 +2,83 @@
 
 Active and incomplete. The user requests all16 candidates/four targets, hardware
 and GL repairs, work/correctness evidence, independent timings, variance and charts.
-No comprehensive optimization-benefit conclusion or final64-cell chart exists yet.
+Provisional64-row charts exist; comprehensive optimization-benefit qualification is incomplete.
 Canonical source is /home/philip/ShaderLOD on branch rtx5080-audit; native Windows
 gets verified runtime inputs. No2080Ti allocation is in use.
 
-## Current native operation
+## Current evidence — 2026-11-07
 
-The first59-operation queue stopped safely after35 completed operations:
-30 VALID and five INVALID, all restored/reset/released with zero remaining clients.
-The four additional Complementary GL4.6 original baselines are complete. All35
-completed timing records are hash-verified on Asahi; full native evidence remains.
-The local descriptive reduction now includes71 reports/58 valid/21 measured cells.
-Those counts include earlier baselines/checks; they are not64-cell completion.
+The main97-operation continuation finishes85 VALID/12 INVALID, all restored.
+All eight Runtime-V4 hardware admission checks pass/restored after the recipe pin
+and correctGL4.6 repairs. All24 follow-up comparisons/controls finish VALID and
+restored. Automatic collection verifies456 transferred files and generates the
+variance data and charts. There is no active performance acquisition.
 
-Windows entry/source and required-context repairs were installed only after exact
-release and a verified source freeze. Native103 Python tests, exact-graph Java
-tests and offline compilation pass. BSL G06 in actual4.6 and the16-phase MakeUp
-G08 diagnostic both finish VALID/restored/released. MakeUp's authored helper and
-packaged resource were initially out of sync; this refused three checks before
-launch. Maintained resource/catalog synchronization fixes both consumers, with an
-actual-archive regression passing on Windows and all17 adapter tests locally.
+The current descriptive reduction contains200 reports,175 valid and40 measured
+primary cells, each with two independent processes and opposite comparison order.
+22 rows still need source/applicability review; two MakeUp N02/N03 rows share G01
+and receive no additive or independent gain. Missing rows have explicit review
+states and no fabricated timing bars. Actual contexts/cases/implementation pins
+remain separate. Old MakeUp admission code cannot contribute to repaired cohorts.
 
-MakeUp G04's first corrected hardware check now also completes VALID/restored/
-reset/released. The context-only transition stopped after that check; no active
-source/classes were modified. Task ShaderLOD-RTX5080-Scoring-V3-Contexts-Retry1 is now
-running in console Session1, request C:\ShaderLODBench\requests\queue-scoring-v3-contexts-retry1.json,
-ledger queue-scoring-v3-contexts.json. Its fresh97 operations contain six remaining
-functional checks and91 baseline/control/timing operations: repaired first orders,
-remaining first-pass cases, MakeUp GL4.6 baselines/null controls and57 opposite-order
-comparisons. BSL G09's functional proof and both timing orders now request OpenGL4.6
-because the native3.2 failure lacks its required4.3 compute support. BSL G09 functional validation and its first4.6 timing process both pass/restored. Queue restoration failures stop execution;
-restored invalid cases remain evidence and do not terminate unrelated cases.
-The first context-continuation task rejected a malformed new check command before
-creating a ledger or operation. Its input is retained on Windows. Corrected the
-check's CLI argument position, validated all97 command lines and launched the
-fresh retry request; its ledger and live START console record are verified.
-The local supported-pack catalog Java test also passes after resource sync.
+MakeUp G01 mean frame-time reduction is3.244% (process SD0.041 percentage points),
+BSL G02 is3.953% (SD0.119pp), and C02 bloom is2.244%/2.005%/1.770% for BSL/Reimagined/
+Unbound (SD0.112/0.048/0.077pp). BSL G02 is the public singleton request, not the
+separate private original-derived prototype. MakeUp N04's1.120% (SD0.272pp) is a
+small preliminary screen. Several other routes have substantial regressions;
+none has yet been established to be a hardware bug or irreducible cost. No final
+quality/benefit qualification follows from these means.
 
-See [first-pass repair evidence](FIRST_PASS_REPAIRS.md). The analyzer excludes old
-MakeUp G06 from the current implementation's primary result and separates actual
-build-bound implementation identities in variance cohorts. Remaining comparison,
-regression investigation, quality and final charts are incomplete.
+`run-quality-v5.py` attempted eight maintained untimed checks: two separately
+labeled JFR diagnostics, MakeUp G01, BSL G02, three C02 packs and MakeUp N04.
+Both profile checks pass/restored; MakeUp G01 captures all363 requested frames.
+BSL G02 and BSL C02 are INVALID/restored because a sequence is incomplete.
+The G02 native arm writes119 frames and misses slots107/108 during a render
+stall, with no writer pressure or errors. It is not a quality pass. A fresh retry
+must retain121-frame completeness and preserve the failed attempt. Reimagined C02 is also incomplete; all three failures are missed render slots,
+not write errors. The batch stopped at capacity before Unbound/N04. The failed
+attempts and full raw bytes remain preserved. `run-quality-v6.py` now runs five
+fresh checks after a recorder repair: BSL G02, the three C02 packs and MakeUp N04.
+The ignored quality-v6-status.json/outcomes.json/log identify the exact live phase.
+No source/classes used by active native checks may be changed.
 
-V3 completed six valid, restored/released functional operations: repaired C01 GPU
-admission, its separate primitive witness, and both Complementary VRS checks in
-real4.5/4.6. The following Reimagined GL4.6 baseline failed on ownership-file
-access before any scored window. The exact cause was reproduced: CPython's CRT
-file open raises PermissionError(errno13) without winerror, bypassing the earlier
-Windows-number-only retry. The minimal fix includes this error shape in the same
-bounded3s read/publication retry.103 benchmark tests pass on both hosts, including
-a real native exclusive-handle/read-release regression fixture. Explicit recovery
-preserves conflicting owned inputs and verifies configuration/world reset/release
-without replay. See [Windows IO evidence](WINDOWS_IO.md).
+Recorder repair: benchmark camera catch-up ticks and full image leases hold the
+logical path until a render/write slot is available. All121 frames remain required;
+real motion wall duration can grow, while shader clocks/history continue. Lossless
+PNG level1 reduces disk use; the native standalone transport test round-trips all
+RGBA pixels but takes about0.25s/image, so writer holds are necessary. Three Java
+clock regression tests, two Python admission tests and dev compilation pass on
+both hosts. Existing timing inputs are unchanged by this untimed recorder repair.
 
-## Latest live inspection — 2026-11-07
+JFR diagnostics are outside performance runs. The initial15s recordings overlap
+post-window observer reload; unfiltered samples cannot isolate candidate costs.
+They do not establish a dominant Java hotspot or any GPU cost explanation.
+Filter by the operation's candidate-window command times before interpretation.
 
-The97-operation continuation finished:85 VALID,12 INVALID; all97 restored.
-Completion was about two hours before the status inspection; no repair/retest
-continuation had automatically started in that gap. A focused validation phase is
-now running as described below.
-All97 terminal timing datasets (1619 files) are independently hash-verified on
-Asahi; full native images/graphs/logs remain preserved. Descriptive reduction now
-includes168 reports,143 valid and32 measured cells. These are operation counts,
-not proof that every optimization is active, beneficial or quality-qualified.
+## Timing interpretation and artifacts
 
-Invalids: MakeUp G05 functional check and both timing orders; MakeUp G03's second
-order; all four N01 CPU cases in both orders. All failed cases restored safely.
-The last native capacity observation is35.4GiB free, above the32GiB reserve but
-insufficient for an11.2GiB raw4K motion capture without further ShaderLOD-only
-artifact preservation/reclamation. Keep other projects and NVIDIA caches untouched.
+All four main baselines are original-only/minimal/native3.2, two independent
+processes each with120s conditioning and three20s windows. Native3840×2160/AA is
+preserved. Separate GL4.6 and BSL optimized-stack cohorts are not pooled with these
+cards. Rows use their actual required context and matched in-process control.
+Actual3.2/4.3/4.5/4.6 startup/restoration checks pass where requested.
 
-Canonical repair preparation: MakeUpAoSourceProof.RECIPE_SHA still referenced the
-old packaged recipe. Both MakeUp early-alpha and reflection runtime checks use this
-pin. Updated it to the actual, already-tested current packaged recipe, retaining
-all graph/options/native guards. Added an actual-resource digest regression;
-the selected compiled-input Java test class passes locally. This source repair is now deployed after exact release and a verified source
-freeze; hardware qualification is pending. All prior5034 bindings are preserved.
-MakeUp G06/G07 also consume shared source admission; check/reacquire affected
-implementation cohorts after this repair rather than assuming prior work active.
+`analyze.py` generates results.json, frame-variance.csv, between-run-variance.csv,
+standalone candidate-frametimes.png/.svg and charts.html. `render-report.py`
+generates interactive-charts.html with all64 matrix rows and exact timing data.
+Within-window frame jitter, window-mean variation and equal-weight independent
+process variation stay separate. No IID-frame confidence interval is claimed.
+The40 measured rows include declared gpu-authored and native-rp3-pbr cases;
+previous primary-case selection wrongly omitted these three rows and is repaired.
 
-The N01 native source/Apply certificate explicitly requires OpenGL4.1 (both
-MakeUpQuadRuntime.nativeGraphAvailable and NativeCpuApplyProof.read). All failed
-N01 operations used native3.2. Retry functional admission in real4.6 for all four
-families while retaining original-pack/options/actual CPU-work requirements. This
-is a concrete next test, not an established complete fix. Obtain matching context
-controls and independent orders after functional proof.
-
-All eight Runtime-V4 checks completed VALID/restored in about26 minutes:
-MakeUp G03/G05/G06/G07 and N01 for all four packs. The pin repair and real4.6
-CPU contexts now have functional hardware proof. The next phase had not been
-chained to these checks, leaving about4¾ hours idle before the status inspection.
-This gap is not benchmark execution and is not included in an acquisition ETA.
-
-Capacity repair:178 fully restored/released world-restore copies were streamed
-to Asahi without a native staging archive. Every archive file hash was verified;
-native terminal states and every source hash were rechecked before retirement.
-Canonical/live worlds and all report metadata/results remain intact. The ignored
-3.22GiB archive and source manifest retain all10.35GiB of restoration preimages.
-Measured reclamation10.37GiB; native free space44.48GiB afterward. See the
-[verification receipt](terminal-world-copies-v1-verification.json). No other
-project, personal profile or NVIDIA cache was touched.
-
-Task ShaderLOD-RTX5080-Runtime-V4-Timings is now running, ledger
-queue-runtime-v4-timings.json:16 affected comparisons (both orders for eight
-cases) plus8 native-equivalent natural-terrain4.6 controls. First operation is
-makeup-g03-primary-test-abba-runtime-v4. Existing baseline/unaffected results are
-retained. Expected acquisition duration about3 hours; this is not a final audit ETA.
-
-The local continue-runtime-v4.py process (unified execution session41795) waits
-on the exact native queue process handle without polling/transferring during
-windows. After completion it automatically pulls terminal evidence, reduces
-within/between variance and produces descriptive PNG/SVG/HTML charts. Its stages
-and failures are recorded in ignored runtime-v4-continuation-status.json and
-runtime-v4-continuation.log. Do not replay it or overwrite active definitions.
-The actual timing ledger/START is verified. Native sources/classes remain frozen.
-
-The analyzer now uses actual build-bound runtime-admission and recipe identities
-for affected MakeUp G03/G05/G06/G07. Prior requests remain in every-attempt data;
-they cannot contribute to repaired-implementation primary means or repeat variance.
-The mirrored176 reports include151 valid;29 current primary cells are measured
-until repaired timings arrive. Current/old source separation is verified against
-actual bound files and all eight new check records. No final quality/benefit claim.
-
-Next: collect the active affected timings/controls, investigate regressions and
-remaining applicability/proof gaps, preserve
-large ShaderLOD artifacts before motion, investigate regressions and publish the
-bounded quality/variance report. A reliable full-deliverable ETA is not established.
-The previous7–8-hour estimate applied only to the now-completed timing queue.
-
-## Measurements and proof retained
-
-- All four native/minimal original-only baselines have two independent processes,
-  each120s-conditioned with three20s windows. Native viewport3840×2160/AA is
-  preserved. Main mod is absent for these baselines. Frame variance, window-mean
-  variance and equal-weight process variance remain separate.
-- Separate BSL optimized-stack/native and minimal/GL4.6 baselines each have two
-  processes. Do not pool these with the primary native/minimal baseline cards.
-  Native3.2 and actual4.3/4.5/4.6 original startup/restoration checks pass.
-- BSL G03 has one valid optimized-stack/native ABBA score. Apparent reduction
-  −0.21459% is unresolved at n1. Its rewritten actual CUTOUT submissions are
-  proven untimed, with observer disabled during scoring. Independent BAAB remains
-  required. See [G03 repair/proof](G03_PORT.md).
-- MakeUp G03 functional admission passes, including actual linked rewritten CUTOUT
-  submissions and restoration. It has no scored repeat yet.
-- MakeUp G01 has its first valid ABBA process: matched native/candidate means
-  2.0292553/1.9628349ms, apparent reduction3.27314% at n1. Actual final swap copies
-  fall from six to four and return to six. This is a promising screen, pending
-  independent BAAB, null controls and bounded quality. Frame/window variance and
-  limitations are in [G01 evidence](G01_PORT.md). N02/N03 share this route without
-  independent or additive credit.
-- BSL C02 functional checks pass on actual4.5 and4.6 with NV capabilities,
-  one qualified bloom program and advancing actual activation/restoration counts.
-  Controls advance neither. This is no performance or quality result. Both
-  Complementary native ports also pass4.5/4.6 functional validation. Performance
-  and quality remain pending. See [C02 scope](C02_PORT.md).
-
-The descriptive analyzer reads the maintained raw frame samples and keeps
-context/stack/options/camera cohorts separate. Compact baseline-progress.json
-includes BSL GL4.6 as a separate cohort. Every failed attempt is retained; no
-missing or refused cell receives an invented timing bar. The observed/port and
-comparison manifests identify acquisition; comparison blocks remain pending.
+`analyze-quality-archive.py` processes full-resolution preserved PNG bytes without
+extracting all raw frames. RGB8 differences require actual-pose and native-return
+variation review; they are not HDR equivalence, all-scene or timing evidence.
+Capturing a complete sequence alone does not establish acceptable quality.
+MakeUp G01 RGB8 diagnostics cover all121 paired slots. Candidate/native MAE4.14
+levels exceeds native/return2.45; their shader animation clocks differ substantially.
+Reviewed contact sheets show differently positioned clouds, with no obvious gross
+scene loss, but this is not deterministic equivalence or final visual qualification.
 
 ## Repairs and recovery
 
@@ -184,24 +101,31 @@ GPU no-wait, GPU wait and CPU-decision modes; it establishes no geometry savings
 in that bounded scene. Natural opportunity search and scored timings remain
 pending. See [C01 repair](C01_PORT.md).
 
-Native source/classes were verified and archived before each replacement: six
+Native source/classes were verified and archived before each replacement: nine
 tracked freeze receipts identify the complete bindings and retained ZIPs. All
-six ZIPs are also hash-verified under Asahi's ignored frozen/ directory. Full
-native report images/graphs/logs remain preserved; timing-only transfers are
+nine ZIPs are also hash-verified under Asahi's ignored frozen/ directory. Terminal report image/graph bytes remain preserved in verified archives; logs and
+compact native report evidence remain in place. Timing-only transfers are
 independently hash-verified and do not authorize deleting native originals.
 
 ## Capacity and remaining work
 
-Latest C: observation is52.2GiB free. This is sufficient above the32GiB reserve;
-80–100GiB was conservative headroom for accumulating large captures. Process
-4K motion sequentially (about11.2GiB raw per363-frame capture), then compress and
-transfer verified evidence. Cleanup remains ShaderLOD-only. NVIDIA caches,
-other-project checkpoints, personal profiles and shared settings are untouched.
-The earlier capacity increase is not attributed to our cleanup.
+The verified world-restore archive preserves10.35GiB of source recovery copies and
+reclaims10.37GiB. A second independently verified archive preserves12.59GiB of
+terminal report PNG/world-before/world-after/world-restore evidence and retires
+only those copies, leaving52.74GiB native free before quality capture. Both are
+ShaderLOD-only; live/canonical worlds and report metadata remain. Native graph
+evidence is now preserved off-host in a separately verified content-addressed
+archive:994 terminal roots,3.61GiB logical bytes,24MiB archive; reclaim4.12GiB
+including allocation overhead. Every file is rehashed before retirement.
+See terminal-world-copies-v1-verification.json and terminal-heavy-v2-verification.json.
+The first world-copy archive is migrated to a verified content-addressed ZIP
+preserving all18512 paths with62 unique files, recovering3.20GiB on Asahi. Its
+linked migration receipt supersedes the old retired TAR location. Six new terminal
+world copies are likewise preserved/reclaimed separately.
+Raw motion bytes remain recoverable in per-case/per-arm ZIPs, kept native or mirrored
+according to measured capacity. Failed captures are preserved too.
 
-Next: complete both opposite-order comparison blocks and matched null controls,
-repair concrete runtime failures, investigate slow
-or inactive routes, acquire bounded quality for plausible survivors, classify
-all64 cells with evidence, publish variance charts and audit final restoration.
-A failed check or this checkpoint does not close the campaign. Source-only/lifetime
-reviews remain in [current review](SOURCE_REVIEW.md), distinct from measurements.
+Next: finish active quality checks, diagnose/retry incomplete captures, inspect
+pixels and actual poses, investigate regressions and remaining source opportunities,
+classify all64 cells, update final charts, and audit restoration/owned cleanup.
+The campaign remains active and incomplete. No full-deliverable ETA is established.

@@ -1,0 +1,11 @@
+{
+  "archive": "C:\\ShaderLODBench\\frozen\\native-before-quality-v5-20261107.zip",
+  "bytes": 18475297,
+  "sha256": "d6d70414b3c8d80696da39df2edcaf7e165f78034f5a2e62224abad17797b514",
+  "files": 5514,
+  "build_bindings": 5034,
+  "verified": true,
+  "reports": [
+    "unbound-null-natural-terrain-gl46-baab-runtime-v4"
+  ]
+}

@@ -17,6 +17,12 @@ class QualityMotionTest(unittest.TestCase):
         quality.validate_request(SimpleNamespace(**(args|{'scene':'natural-terrain'})))
         bloom=args|{'candidate':'c02-bloom-vrs'}
         quality.validate_request(SimpleNamespace(**bloom))
+        native_mips=args|{'candidate':'g02-native-mips'}
+        quality.validate_request(SimpleNamespace(**native_mips))
+        for change in ({'feature':'early_alpha'},{'features':['early_alpha']},
+                       {'scene':'natural-terrain'},{'functional_check':False},
+                       {'dh':True},{'comparison_order':'ABBA'}):
+            with self.assertRaises(ValueError):quality.validate_request(SimpleNamespace(**(native_mips|change)))
         for change in ({'feature':'early_alpha'},{'features':['early_alpha']},{'scene':'natural-terrain'}):
             with self.assertRaises(ValueError):quality.validate_request(SimpleNamespace(**(bloom|change)))
         for change in ({'functional_check':False},{'candidate':'native-control'},

@@ -1,0 +1,12 @@
+[
+  {
+    "path": "scripts/benchmark_quality_motion.py",
+    "before": "152362072eaa16f5bf46b2c54bef8c7a4d23670b80a6da0675d3de8738d964c7",
+    "after": "c7aabaae21913a1fea318492b2eac7694e09b1dc62b9b7fe924ad0368cfa0562"
+  },
+  {
+    "path": "tests/test_benchmark_quality_motion.py",
+    "before": "0f1e3d64c239fc00724ff1ba46ed717b45f4df134e53c5a4db5c8bc0d1d950b8",
+    "after": "7bc56c7ab4d75b48dbea3f649f0e981a35a81d3d5804e8aa524e7c723a052e73"
+  }
+]

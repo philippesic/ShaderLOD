@@ -307,3 +307,33 @@ unchanged native preimage before retiring only those recovery copies. Measured
 reclamation10.37GiB; free44.48GiB. Native live/canonical worlds and result files are
 unchanged. The old copies remain recoverable from the verified3.22GiB archive.
 [Receipt](../dev/experiments/rtx5080-four-target-audit-20261106/terminal-world-copies-v1-verification.json).
+
+
+### 2026-11-07 RTX repaired repeats complete; quality acquisition
+
+All24 Runtime-V4 comparisons/controls finish VALID/restored after eight passing
+admission checks. Descriptive reduction now has40 measured cells with n2 independent
+processes; the64-row chart retains22 pending source reviews and two shared G01
+routes. Baseline/frame/window/process variances and actual GL contexts are exposed.
+MakeUp G01 and BSL G02 show about3.24% and3.95% lower means; bloom VRS shows1.77–2.24%
+over three packs, with quality still pending. BSL G02 is a public singleton request,
+not the separate private prototype. Other regressions remain under investigation.
+
+Separate untimed quality checks preserve full native framebuffer bytes. MakeUp G01
+captures363/363 frames; BSL G02/bloom are incomplete and invalid/restored. G02 misses
+two render slots while its writer is idle; preserve/retry rather than relaxing
+completeness. JFR sampling overlaps observer reload and is not GPU-cost evidence.
+A verified off-host archive reclaims12.59GiB of terminal ShaderLOD recovery/evidence
+copies; no other projects/caches/live worlds are touched. The campaign remains
+active. [Current evidence](../dev/experiments/rtx5080-four-target-audit-20261106/STATE.md).
+
+Recorder follow-up: render catch-up ticks could jump over requested camera slots
+after a0.7s stall while the image writer was idle. A benchmark-only logical clock
+now holds for renders and writer capacity, keeping all121 requested samples while
+allowing longer wall duration. Shader animation/history remain live; this is
+untimed evidence. Three clock tests, two Python request tests and compilation pass
+on both hosts. A native standalone4K encoder check verifies exact RGBA round trips
+at PNG levels0/1; level1 is about0.25s/image, motivating writer holds. Five fresh
+quality checks are active. A content-addressed migration preserves every world
+backup path/byte while reclaiming3.2GiB on Asahi; separately verified terminal graph
+preservation reclaims4.12GiB natively. Raw evidence is recoverable, not discarded.

@@ -63,6 +63,7 @@ public final class CameraQualitySession {
     private final Config config;
     private final WorkloadInputs inputs;
     private final boolean benchmarkOwned;
+    private final com.pp.shaderlod.benchmark.core.CaptureMotionClock motionClock;
     private final JsonObject report = new JsonObject();
     private final JsonArray frames = new JsonArray();
     private final long created = System.nanoTime();
@@ -76,7 +77,7 @@ public final class CameraQualitySession {
     private JsonObject initialInputs, captureInputs;
     private Object worldReference, pipelineReference;
     private long warmedAt, motionStarted, drainingAt, lastWorldCheck, lastFingerprint;
-    private int warmedTicks, motionTick, nextSlot, renderedFrames, completedWrites, skippedFrames;
+    private int warmedTicks, motionTick, nextSlot, renderedFrames, completedWrites, skippedFrames, writerWaitFrames;
     private long completedBytes;
     private boolean moving, draining, drainTimeoutReported, finalized;
     private String failure;
@@ -157,6 +158,7 @@ public final class CameraQualitySession {
         this.sourceHash = sourceHash;
         this.config = config;
         this.benchmarkOwned = benchmarkOwned;
+        motionClock = new com.pp.shaderlod.benchmark.core.CaptureMotionClock(benchmarkOwned);
         inputs = new WorkloadInputs(game);
         writes = new CaptureWriteTracker(config.maximumInFlightImages());
         var queue = new ArrayBlockingQueue<Runnable>(1) {
@@ -180,7 +182,9 @@ public final class CameraQualitySession {
         report.addProperty("request_sha256", sourceHash);
         report.addProperty("output_directory", output.toString());
         report.addProperty("evidence_kind", "unmeasured moving-camera quality; PNG readback/write can stall rendering");
-        report.addProperty("clock_policy", "20 Hz eased waypoint ticks; actual Minecraft camera position and rotation recorded per image; Iris clocks and temporal history advance normally");
+        report.addProperty("clock_policy", benchmarkOwned
+                ? "20 Hz logical eased waypoint ticks, at most one path tick between renders; catch-up ticks and full PNG leases hold the path, so wall duration can exceed path duration. Actual rendered camera recorded; Iris clocks/history advance normally. Untimed only."
+                : "20 Hz eased waypoint ticks; actual Minecraft camera position and rotation recorded per image; Iris clocks and temporal history advance normally");
         report.addProperty("world_policy", benchmarkOwned ? "Owned benchmark already freezes the integrated server; actual tick freeze, mode, day/weather observed without edits by this recorder" : "Existing singleplayer control must freeze daylight/weather; no world rules/time/weather edits by this harness");
         report.addProperty("benchmark_owned",benchmarkOwned);
         report.addProperty("close_owned_client_requested", closeOwnedClient);
@@ -311,7 +315,7 @@ public final class CameraQualitySession {
                 return;
             }
             if (seconds(now, motionStarted) > 60) throw new IllegalStateException("Motion exceeded 60 seconds of real time");
-            motionTick++;
+            motionTick = motionClock.advanceTick(writes.hasCapacity());
             apply(client, config.poseAt(Math.min(config.duration(), motionTick / 20.0)));
             // The extra tick lets the final target appear in normal camera interpolation.
         } catch (Exception exception) { fail(client, exception); }
@@ -326,17 +330,22 @@ public final class CameraQualitySession {
             renderedFrames++;
             float partial = CapturedRenderingState.INSTANCE.getTickDelta();
             if (!Float.isFinite(partial) || partial < 0 || partial > 1) throw new IllegalStateException("Invalid rendered tick delta");
-            double pathSeconds = motionTick == 0 ? 0 : Math.min(config.duration(), (motionTick - 1 + partial) / 20.0);
+            double pathSeconds = motionClock.pathSeconds(config.duration(), partial);
+            motionClock.rendered();
             int due = Math.min(config.slotCount() - 1, (int)Math.floor(pathSeconds * config.fps() + 1e-6));
             while (nextSlot < due) skipped(nextSlot++, "missed_render_slot");
             if (nextSlot <= due && nextSlot < config.slotCount()) {
-                int slot = nextSlot++;
-                if (!writes.hasCapacity()) skipped(slot, "writer_backpressure");
-                else capture(client, slot, pathSeconds, partial);
+                if (!writes.hasCapacity()) {
+                    if (benchmarkOwned) writerWaitFrames++;
+                    else skipped(nextSlot++, "writer_backpressure");
+                } else capture(client, nextSlot++, pathSeconds, partial);
             }
             if (motionTick > config.duration() * 20 && nextSlot >= config.slotCount()) {
                 report.addProperty("actual_motion_wall_seconds", seconds(System.nanoTime(), motionStarted));
                 report.addProperty("actual_motion_ticks", motionTick);
+                report.addProperty("held_path_ticks", motionClock.heldTicks());
+                report.addProperty("held_writer_ticks", motionClock.writerHeldTicks());
+                report.addProperty("writer_capacity_wait_render_frames", writerWaitFrames);
                 JsonObject end = qualityInputState();
                 report.add("input_state_capture_end", end);
                 if (!captureInputs.get("actual_shader_sha256").equals(end.get("actual_shader_sha256"))) throw new IllegalStateException("Shader archive changed during capture");

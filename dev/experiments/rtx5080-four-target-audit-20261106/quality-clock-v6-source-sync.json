@@ -1,0 +1,22 @@
+[
+  {
+    "path": "src/devClient/java/com/pp/shaderlod/dev/CameraQualitySession.java",
+    "before": "a4a5adaf010c05211e61ea1f705b9cdbefe06dfe9c1939ffa5d838ecd6c8b92c",
+    "after": "957ab72d79fcb9c4c7d4c6857abdd678a9a7c2e061bf7c031c89c259a50748df"
+  },
+  {
+    "path": "src/benchmarkCore/java/com/pp/shaderlod/benchmark/core/CaptureMotionClock.java",
+    "before": null,
+    "after": "0b10924e1839fd703a8979fa8ed7b68292730668d6657dd4a21674e988ce7ec6"
+  },
+  {
+    "path": "src/test/java/com/pp/shaderlod/benchmark/CaptureMotionClockTest.java",
+    "before": null,
+    "after": "9dcc3390b5980fcd8b672adc7a3776d6e861d96d272d58bd7b3fdfe08070ea9c"
+  },
+  {
+    "path": "scripts/benchmark_quality_motion.py",
+    "before": "c7aabaae21913a1fea318492b2eac7694e09b1dc62b9b7fe924ad0368cfa0562",
+    "after": "e6995cf83e861d9190d241a5c05942aed50db6ee91cdbc040e8a02f151b7465b"
+  }
+]

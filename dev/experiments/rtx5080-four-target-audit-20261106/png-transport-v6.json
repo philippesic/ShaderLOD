@@ -1,0 +1,44 @@
+{
+  "scope": "Standalone CPU encoder transport only, actual BSL native screenshot; not runtime timing or NativeImage throughput",
+  "source_archive": "C:\\ShaderLODBench\\quality-archives\\bsl-bloom-motion-quality-v5.zip",
+  "source_frame": "quality-native/frame-0060.png",
+  "source_sha256": "5cb5efccb5c393c3385f243a21d45a196d765579bb09c3a56b28e0f19b2ba965",
+  "results": [
+    {
+      "level": 0,
+      "bytes": 33192080,
+      "encode_flush_seconds": 0.0909676,
+      "rgba_roundtrip": true
+    },
+    {
+      "level": 1,
+      "bytes": 12174262,
+      "encode_flush_seconds": 0.2534759,
+      "rgba_roundtrip": true
+    },
+    {
+      "level": 1,
+      "bytes": 12174262,
+      "encode_flush_seconds": 0.2514304,
+      "rgba_roundtrip": true
+    },
+    {
+      "level": 0,
+      "bytes": 33192080,
+      "encode_flush_seconds": 0.0417324,
+      "rgba_roundtrip": true
+    },
+    {
+      "level": 0,
+      "bytes": 33192080,
+      "encode_flush_seconds": 0.0330482,
+      "rgba_roundtrip": true
+    },
+    {
+      "level": 1,
+      "bytes": 12174262,
+      "encode_flush_seconds": 0.2618834,
+      "rgba_roundtrip": true
+    }
+  ]
+}

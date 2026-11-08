@@ -1,0 +1,14 @@
+{
+  "source_archive": "/home/philip/ShaderLOD/dev/experiments/rtx5080-four-target-audit-20261106/terminal-world-copies-v1.tar.gz",
+  "source_sha256": "3d5f4717feee03d6d23599c40447a94257a1b4db12bc42780014602af703a5de",
+  "archive": "/home/philip/ShaderLOD/dev/experiments/rtx5080-four-target-audit-20261106/terminal-world-copies-v1-content.zip",
+  "archive_sha256": "ed778570fc5f464cd2648d186281c60aff847a821dff07ad4df2a45a63cdd195",
+  "archive_bytes": 19495873,
+  "files": 18512,
+  "unique_files": 62,
+  "source_bytes": 11116657674,
+  "verified": true,
+  "old_archive_retired": true,
+  "restore": "For each files[] row in PRESERVATION-MANIFEST.json, write objects/<sha256> to its path as an independent file. Do not hardlink mutable recovery worlds.",
+  "reclaimed_bytes": 3434314540
+}
