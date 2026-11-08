@@ -7,7 +7,13 @@ Record meaningful attempts rather than every monitoring update.
 
 Search for relevant prior attempts before optimization work. Add a row for a meaningful result, not every run. Scope and evidence limit each result; a prior outcome does not prohibit a changed approach. Historical records were archived during the 2026-10-31 documentation cleanup at `/home/philip/shaderlod-doc-archive-20261031/docs-and-agent-setup.tar.gz`; this index is not yet exhaustive. The archive is local to this machine and is not in Git.
 
-**Current direction (2026-11-04):** v1 support targets are Complementary Reimagined, Complementary Unbound, BSL and MakeUp Ultra Fast. The current task audits all 16 candidates (G01–G10, C01–C02, N01–N04) for cross-shader/cross-machine applicability, repairs viable general mechanisms/test setup, and measures gains/regressions. Shared renderer/LOD mechanisms and small unobtrusive quality tradeoffs are in scope; niche/vendor-specific implementations can be deferred with reasons. [STATUS](STATUS.md) is authoritative; older campaign closures/exclusions below are evidence, not current scheduling instructions.
+**Current direction (2026-11-08 Pacific):** [STATUS](STATUS.md#latest-outcome-and-next-action)
+is authoritative. Retention requires a positive result across all four supported
+shaders and both completed machines (Asahi and RTX 5080). None qualified;
+G01–G10, C01–C02 and N01–N04 are all parked, with no default enablement.
+Historical gains, implementations and evidence remain preserved. The next useful
+engineering direction is the [cost-map extension sketch](COST_MAP.md), not more
+G-number optimizations. This documentation decision adds no measurements.
 
 **Historical campaign disposition (2026-11-01; superseded as current direction):** the user resumed sustained optimization/review, excluding C02. Ten finite local searches (G01/G03/G04/G05/G06/G07/G08/G09/G10/C01) are independently closed; G02’s viable routes are complete and its remaining Complementary native startup is blocked, with a fresh independent CLOSE stopping review. Default enablement remains unqualified; [STATUS](STATUS.md) is authoritative. Historical “CLOSE” and “complete” labels refer to the assigned implementation/evaluation/report scope, not exhausted optimization potential. Rejected routes retain their negative evidence; inconclusive and hardware/input/compatibility-blocked items are not blanket net-negative results. Historical rows describing active work or pending checks reflect their capture time. That historical quick-test pause was superseded by the later sustained-work request.
 
