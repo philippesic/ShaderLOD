@@ -36,10 +36,12 @@ public final class GpuTimers {
     private static String status = ENABLED ? "awaiting world/render context" : "disabled";
     private static long frame;
     private static long epoch;
+    private static long queueEvictions, unresolvedTail;
     private static boolean inWorld;
     private static boolean fullFrame;
     private static boolean tickActive;
     private static boolean sampledFrame = true;
+    private static boolean operationFrame;
     private static long scheduledSampledFrames;
     private static long lastPolledFrame = -1;
     private static GpuSamplingPolicy.Category category = GpuSamplingPolicy.Category.FRAME;
@@ -54,9 +56,12 @@ public final class GpuTimers {
     public static void setRecording(boolean enabled) { recordingRequested=enabled; }
     public static boolean recording() { return ENABLED&&recording; }
     public static void beginTick(boolean world) {
-        recording=recordingRequested;
+        if(com.pp.shaderlod.measurement.RuntimeMeasurement.requested() && !SCOPES.isEmpty())suspendQueries("scored runtime owner");
+        recording=recordingRequested && !com.pp.shaderlod.measurement.RuntimeMeasurement.requested();
+        if (elapsedActive != null || !GROUPS.isEmpty() || !CATEGORY_GROUPS.isEmpty()) suspendQueries("unbalanced frame boundary");
         inWorld = world;
         frame++;
+        CostMapSession.frame(frame,world);
         tickActive = true;
         selectSamplingFrame();
     }
@@ -66,7 +71,7 @@ public final class GpuTimers {
     public static int sampleInterval() { return SAMPLE_INTERVAL; }
     public static boolean isSampledFrame() { return ENABLED && inWorld && sampledFrame; }
     public static String samplingPolicy() {
-        String cadence = "; sample interval=" + SAMPLE_INTERVAL + " render frames, poll only sampled frames";
+        String cadence = (Boolean.getBoolean("shaderlod.dev.costMap")?"; alternate Iris leaf/operation visits over 14 sampled frames":"")+"; sample interval=" + SAMPLE_INTERVAL + " render frames, poll only sampled frames";
         if (!PASS_TIMING) return "frame only, every sampled frame" + cadence;
         if (backend == Backend.TIMESTAMP) return "timestamp intervals, nested every sampled frame" + cadence;
         return (ATTRIBUTION ? "elapsed rotates 7 sampled frames: FRAME,IRIS,TERRAIN,DH_DRAW,DH_TOTAL,BUFFER_DRAWS,RENDER_AND_BLIT"
@@ -77,6 +82,7 @@ public final class GpuTimers {
         var decision = GpuSamplingPolicy.schedule(frame, SAMPLE_INTERVAL, PASS_TIMING, ATTRIBUTION);
         sampledFrame = recording && decision.permitsQueryWork();
         category = decision.category();
+        operationFrame=Boolean.getBoolean("shaderlod.dev.costMap") && ATTRIBUTION && category==GpuSamplingPolicy.Category.IRIS && GpuSamplingPolicy.operationVisit(decision.sampleOrdinal());
         if (ENABLED && inWorld && sampledFrame) scheduledSampledFrames++;
     }
 
@@ -126,8 +132,9 @@ public final class GpuTimers {
         String scope = leaf ? "iris/" + name : "iris-stage/" + name;
         Slot slot = null;
         try {
-            if (backend == Backend.TIMESTAMP || (category == GpuSamplingPolicy.Category.IRIS && leaf)) slot = begin(scope);
+            if (backend == Backend.TIMESTAMP || (category == GpuSamplingPolicy.Category.IRIS && leaf && !operationFrame)) slot = begin(scope);
         } catch (RuntimeException exception) { fail("Iris pass query start failed", exception); }
+        if (GROUPS.size()>=128) { fail("group depth limit",null); return; }
         if (supported()) GROUPS.push(new Group(scope, slot));
     }
 
@@ -142,7 +149,7 @@ public final class GpuTimers {
     public static void beginStandalonePass(String name) {
         if (!ENABLED || !PASS_TIMING || !inWorld || !sampledFrame || !supported()) return;
         Slot slot = null;
-        try { if (backend == Backend.TIMESTAMP || category == GpuSamplingPolicy.Category.IRIS) slot = begin("iris/" + name); }
+        try { if (backend == Backend.TIMESTAMP || category == GpuSamplingPolicy.Category.IRIS && !operationFrame) slot = begin("iris/" + name); }
         catch (RuntimeException exception) { fail("standalone pass start failed", exception); }
         if (supported()) GROUPS.push(new Group("iris/" + name, slot));
     }
@@ -155,8 +162,9 @@ public final class GpuTimers {
         Slot slot = null;
         try {
             prepare();
-            if (supported() && PASS_TIMING && (backend == Backend.TIMESTAMP || category == target)) slot = begin(name);
+            if (supported() && PASS_TIMING && (backend == Backend.TIMESTAMP || (category == target && (name.startsWith("operation/") ? operationFrame : !operationFrame)))) slot = begin(name);
         } catch (RuntimeException exception) { fail("attribution query start failed", exception); }
+        if(CATEGORY_GROUPS.size()>=128) { fail("category depth limit",null); return; }
         CATEGORY_GROUPS.push(new Group(name, slot));
     }
 
@@ -214,9 +222,17 @@ public final class GpuTimers {
         return String.format(Locale.ROOT, "GPU %.2f ms | median %.2f | p95 %.2f", gpu.meanMs(), gpu.medianMs(), gpu.p95Ms());
     }
 
+    public static void suspendQueries(String reason) {
+        recordingRequested=recording=false;
+        for (Scope scope:SCOPES.values()) for(Slot slot:scope.slots) if(slot.pending || slot.active)unresolvedTail++;
+        close();backend=Backend.UNINITIALIZED;status="disarmed: "+reason;
+    }
+    public static long queueEvictions(){return queueEvictions;}
+    public static long unresolvedTail(){return unresolvedTail;}
+
     public static void close() {
         // A failed backend can still own query names from earlier successful frames.
-        if (SCOPES.isEmpty()) return;
+        recordingRequested=recording=false;
         if (elapsedActive != null) GL15.glEndQuery(GL33.GL_TIME_ELAPSED);
         elapsedActive = null;
         for (Scope scope : SCOPES.values()) for (Slot slot : scope.slots) {
@@ -256,6 +272,7 @@ public final class GpuTimers {
 
     private static Slot begin(String name) {
         if (!sampledFrame) return null;
+        if (!SCOPES.containsKey(name) && SCOPES.size() >= 256) { fail("global scope/query allocation limit", null); return null; }
         Scope scope = SCOPES.computeIfAbsent(name, unused -> new Scope());
         Slot slot = null;
         for (Slot candidate : scope.slots) if (!candidate.pending && !candidate.active) { slot = candidate; break; }
@@ -268,6 +285,7 @@ public final class GpuTimers {
             GL15.glBeginQuery(GL33.GL_TIME_ELAPSED, slot.start);
             elapsedActive = slot;
         } else GL33.glQueryCounter(slot.start, GL33.GL_TIMESTAMP);
+        slot.eventId=CostMapSession.issueGpu(name,backend==Backend.TIMESTAMP,backend==Backend.TIMESTAMP?timestampBits:elapsedBits);
         slot.active = true;
         slot.frame = frame;
         slot.epoch = epoch;
@@ -298,20 +316,23 @@ public final class GpuTimers {
             }
             if (backend == Backend.TIMESTAMP && GL15.glGetQueryObjecti(slot.start, GL15.GL_QUERY_RESULT_AVAILABLE) == GL11.GL_FALSE) continue;
             long nanoseconds = GL33.glGetQueryObjectui64(lastQuery, GL15.GL_QUERY_RESULT);
+            Long gpuEnd=backend==Backend.TIMESTAMP?nanoseconds:null;Long gpuBegin=null;
             if (backend == Backend.TIMESTAMP) {
-                nanoseconds -= GL33.glGetQueryObjectui64(slot.start, GL15.GL_QUERY_RESULT);
+                gpuBegin=GL33.glGetQueryObjectui64(slot.start, GL15.GL_QUERY_RESULT);
+                nanoseconds -= gpuBegin;
                 if (timestampBits < 64) nanoseconds &= (1L << timestampBits) - 1;
             }
             slot.pending = false;
             // Reject wrap/invalid results rather than turning them into credible-looking data.
             if (nanoseconds < 0 || nanoseconds > 10_000_000_000L) { scope.dropped++; continue; }
+            CostMapSession.resolveGpu(slot.eventId,gpuBegin,gpuEnd,nanoseconds);slot.eventId=null;
             if (slot.epoch == epoch) {
                 if (entry.getKey().equals(FRAME)) {
                     scope.zeroResults = nanoseconds == 0 ? scope.zeroResults + 1 : 0;
                     if (scope.zeroResults >= 16) { fail("driver returned 16 consecutive zero frame durations", null); return; }
                 }
                 scope.history.add(nanoseconds);
-                if (COMPLETED.size() == SAMPLE_QUEUE_LIMIT) COMPLETED.removeFirst();
+                if (COMPLETED.size() == SAMPLE_QUEUE_LIMIT) { COMPLETED.removeFirst(); queueEvictions++; }
                 COMPLETED.addLast(new Sample(entry.getKey(), nanoseconds / 1_000_000.0, slot.frame, epoch));
             }
         }
@@ -347,6 +368,7 @@ public final class GpuTimers {
     private static final class Slot {
         final int start;
         final int finish;
+        Long eventId;
         boolean pending;
         boolean active;
         long frame;

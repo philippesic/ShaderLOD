@@ -1,0 +1,469 @@
+{
+  "schema_version": 1,
+  "revision": "source-inventory-20261108",
+  "packs": [
+    {
+      "pack_revision": "reimagined-r5.9.3",
+      "archive": "ComplementaryReimagined_r5.9.3.zip",
+      "archive_sha256": "fed6c879e732cf7fc7bc6570ebb1def43235aa7e96f62859fbdbdbfa0b484b38",
+      "dimension": "world0",
+      "source_members": {
+        "shaders/world0/composite.fsh": {
+          "sha256": "ff5d41aac408a2b889fb5b4445af567b26442f6382dc6e2268285f885ce13b7d",
+          "bytes": 110
+        },
+        "shaders/world0/composite.vsh": {
+          "sha256": "bc7cc123310c0c5cdf8a3d68a5402d47e537227971eb3811e7336ff7c71b4620",
+          "bytes": 108
+        },
+        "shaders/world0/composite1.fsh": {
+          "sha256": "caf4237c9f3a53d78b18c5ae73650a301e3fd2ba5220d8458614c370156b4c8f",
+          "bytes": 119
+        },
+        "shaders/world0/composite1.vsh": {
+          "sha256": "eb54c4158af328c6515d0294141b9e26d7d76742fab868f3aafb74e5cc71b1cb",
+          "bytes": 117
+        },
+        "shaders/world0/composite4.fsh": {
+          "sha256": "a03c530eac8057bfe9c1ece1c5399d861499a4ea147a095f857b669d6ee48cf7",
+          "bytes": 112
+        },
+        "shaders/world0/composite4.vsh": {
+          "sha256": "072e0cc342f37ebeeb2198c10a31e2c298f734cb95a19e8ec48873ebf30b36e3",
+          "bytes": 110
+        },
+        "shaders/world0/composite5.fsh": {
+          "sha256": "e9fbe55792c31d9d16955211bb06c247bc26fe3fde9c59bd209ec9997235846e",
+          "bytes": 112
+        },
+        "shaders/world0/composite5.vsh": {
+          "sha256": "7cc755600bc366db391e21d4cfd781ea5add9aa0521be7215b2f0fe604d40d7a",
+          "bytes": 110
+        },
+        "shaders/world0/composite6.fsh": {
+          "sha256": "51a19d3ad1c2419ec6299a0848690f5e97c9b82f5db33875dae890f971dc5f01",
+          "bytes": 112
+        },
+        "shaders/world0/composite6.vsh": {
+          "sha256": "7c7f861932121514b62c23084c37ceb8ec226c21260e0ecca35a97fe6fc42fb2",
+          "bytes": 110
+        },
+        "shaders/world0/composite7.fsh": {
+          "sha256": "9b45a98b7cf672b5c2f5bb56746c553b919b5fab007eeb85d5018970945ef9fc",
+          "bytes": 112
+        },
+        "shaders/world0/composite7.vsh": {
+          "sha256": "6d2330d12cc3f64af988df2025f1bab709cc7fff4b857f433e9b14ddb4a75bbe",
+          "bytes": 110
+        },
+        "shaders/world0/deferred1.fsh": {
+          "sha256": "0a16c4a2252ff3c8d9cfdb45d04b5050553d3a708bd8221d953c9a87bd733154",
+          "bytes": 110
+        },
+        "shaders/world0/deferred1.vsh": {
+          "sha256": "b2c36d0425578891b81bb1a8e4c74ed5b859231ea48cffc3c754bb438de43773",
+          "bytes": 108
+        },
+        "shaders/world0/dh_terrain.fsh": {
+          "sha256": "4e886f58170cf843958656afe0cd8354807dab9556198f99218b9692d4d703f3",
+          "bytes": 119
+        },
+        "shaders/world0/dh_terrain.vsh": {
+          "sha256": "3fd4e482b6ce9d5ca81e19a349a2a53f5de54370032ddb0a4b841ff38f1fbddb",
+          "bytes": 117
+        },
+        "shaders/world0/dh_water.fsh": {
+          "sha256": "6e6c6ab7d00e175ee2aa71395a988e3fad5b7389e1ae380466871ea77dca623e",
+          "bytes": 115
+        },
+        "shaders/world0/dh_water.vsh": {
+          "sha256": "8c3fb62d9c830afd0d819dbbf5f4f57828db6022e63a0b988aaaeb2498dc6ac8",
+          "bytes": 113
+        }
+      },
+      "source_features": {
+        "deferred1": [
+          "AO",
+          "atmosphere",
+          "materials"
+        ],
+        "composite": [
+          "clouds",
+          "reflections",
+          "materials"
+        ],
+        "composite1": [
+          "volumetric-light",
+          "shadow-consumer",
+          "water-fog",
+          "refraction",
+          "reflection-blur"
+        ],
+        "composite4": [
+          "bloom-tiles"
+        ],
+        "composite5": [
+          "bloom-combine"
+        ],
+        "composite6": [
+          "TAA"
+        ],
+        "composite7": [
+          "conditional-FXAA"
+        ]
+      },
+      "dh_program_members": [
+        "shaders/world0/dh_terrain.fsh",
+        "shaders/world0/dh_terrain.vsh",
+        "shaders/world0/dh_water.fsh",
+        "shaders/world0/dh_water.vsh"
+      ],
+      "dh_shadow_source": "not supplied under world0/dh_shadow; runtime support unknown",
+      "states": {
+        "ABSENT": "dedicated DH render rows not_applicable; raw shared graph still requires observation",
+        "ENABLED_READY": "terrain/water source present; preprocessed source, attachments, compatibility and runtime invocations unverified"
+      },
+      "confidence": "source inventory only; mixed source seeds; no feature execution proof"
+    },
+    {
+      "pack_revision": "unbound-r5.9.3",
+      "archive": "ComplementaryUnbound_r5.9.3.zip",
+      "archive_sha256": "98ac741dee294d2a3c82d153349148c3bb7fb688c30eb3b49c3b9ac37e968c5a",
+      "dimension": "world0",
+      "source_members": {
+        "shaders/world0/composite.fsh": {
+          "sha256": "ff5d41aac408a2b889fb5b4445af567b26442f6382dc6e2268285f885ce13b7d",
+          "bytes": 110
+        },
+        "shaders/world0/composite.vsh": {
+          "sha256": "bc7cc123310c0c5cdf8a3d68a5402d47e537227971eb3811e7336ff7c71b4620",
+          "bytes": 108
+        },
+        "shaders/world0/composite1.fsh": {
+          "sha256": "caf4237c9f3a53d78b18c5ae73650a301e3fd2ba5220d8458614c370156b4c8f",
+          "bytes": 119
+        },
+        "shaders/world0/composite1.vsh": {
+          "sha256": "eb54c4158af328c6515d0294141b9e26d7d76742fab868f3aafb74e5cc71b1cb",
+          "bytes": 117
+        },
+        "shaders/world0/composite4.fsh": {
+          "sha256": "a03c530eac8057bfe9c1ece1c5399d861499a4ea147a095f857b669d6ee48cf7",
+          "bytes": 112
+        },
+        "shaders/world0/composite4.vsh": {
+          "sha256": "072e0cc342f37ebeeb2198c10a31e2c298f734cb95a19e8ec48873ebf30b36e3",
+          "bytes": 110
+        },
+        "shaders/world0/composite5.fsh": {
+          "sha256": "e9fbe55792c31d9d16955211bb06c247bc26fe3fde9c59bd209ec9997235846e",
+          "bytes": 112
+        },
+        "shaders/world0/composite5.vsh": {
+          "sha256": "7cc755600bc366db391e21d4cfd781ea5add9aa0521be7215b2f0fe604d40d7a",
+          "bytes": 110
+        },
+        "shaders/world0/composite6.fsh": {
+          "sha256": "51a19d3ad1c2419ec6299a0848690f5e97c9b82f5db33875dae890f971dc5f01",
+          "bytes": 112
+        },
+        "shaders/world0/composite6.vsh": {
+          "sha256": "7c7f861932121514b62c23084c37ceb8ec226c21260e0ecca35a97fe6fc42fb2",
+          "bytes": 110
+        },
+        "shaders/world0/composite7.fsh": {
+          "sha256": "9b45a98b7cf672b5c2f5bb56746c553b919b5fab007eeb85d5018970945ef9fc",
+          "bytes": 112
+        },
+        "shaders/world0/composite7.vsh": {
+          "sha256": "6d2330d12cc3f64af988df2025f1bab709cc7fff4b857f433e9b14ddb4a75bbe",
+          "bytes": 110
+        },
+        "shaders/world0/deferred1.fsh": {
+          "sha256": "0a16c4a2252ff3c8d9cfdb45d04b5050553d3a708bd8221d953c9a87bd733154",
+          "bytes": 110
+        },
+        "shaders/world0/deferred1.vsh": {
+          "sha256": "b2c36d0425578891b81bb1a8e4c74ed5b859231ea48cffc3c754bb438de43773",
+          "bytes": 108
+        },
+        "shaders/world0/dh_terrain.fsh": {
+          "sha256": "4e886f58170cf843958656afe0cd8354807dab9556198f99218b9692d4d703f3",
+          "bytes": 119
+        },
+        "shaders/world0/dh_terrain.vsh": {
+          "sha256": "3fd4e482b6ce9d5ca81e19a349a2a53f5de54370032ddb0a4b841ff38f1fbddb",
+          "bytes": 117
+        },
+        "shaders/world0/dh_water.fsh": {
+          "sha256": "6e6c6ab7d00e175ee2aa71395a988e3fad5b7389e1ae380466871ea77dca623e",
+          "bytes": 115
+        },
+        "shaders/world0/dh_water.vsh": {
+          "sha256": "8c3fb62d9c830afd0d819dbbf5f4f57828db6022e63a0b988aaaeb2498dc6ac8",
+          "bytes": 113
+        }
+      },
+      "source_features": {
+        "deferred1": [
+          "AO",
+          "atmosphere",
+          "materials"
+        ],
+        "composite": [
+          "clouds",
+          "reflections",
+          "materials"
+        ],
+        "composite1": [
+          "volumetric-light",
+          "shadow-consumer",
+          "water-fog",
+          "refraction",
+          "reflection-blur"
+        ],
+        "composite4": [
+          "bloom-tiles"
+        ],
+        "composite5": [
+          "bloom-combine"
+        ],
+        "composite6": [
+          "TAA"
+        ],
+        "composite7": [
+          "conditional-FXAA"
+        ]
+      },
+      "dh_program_members": [
+        "shaders/world0/dh_terrain.fsh",
+        "shaders/world0/dh_terrain.vsh",
+        "shaders/world0/dh_water.fsh",
+        "shaders/world0/dh_water.vsh"
+      ],
+      "dh_shadow_source": "not supplied under world0/dh_shadow; runtime support unknown",
+      "states": {
+        "ABSENT": "dedicated DH render rows not_applicable; raw shared graph still requires observation",
+        "ENABLED_READY": "terrain/water source present; preprocessed source, attachments, compatibility and runtime invocations unverified"
+      },
+      "confidence": "source inventory only; mixed source seeds; no feature execution proof"
+    },
+    {
+      "pack_revision": "bsl-10.1.8",
+      "archive": "BSL_v10.1.8.zip",
+      "archive_sha256": "36b0a50ff7918bf10e9422c401d93779f9d0088a26acea975b435243f96930b5",
+      "dimension": "world0",
+      "source_members": {
+        "shaders/world0/composite.fsh": {
+          "sha256": "ee5a3caaad4b9e3ede5bf7be38b2d054479585ad3463191dedfe6f2a4fde6006",
+          "bytes": 211
+        },
+        "shaders/world0/composite.vsh": {
+          "sha256": "cc7ef3e068c5afabcaad6b4834268227bfcd152c74e923f419d03eccdf549613",
+          "bytes": 162
+        },
+        "shaders/world0/composite4.fsh": {
+          "sha256": "d6ac06cc380e1ffb0396cbb3cd920e8c709bc697dfb4ed911e8604285a9d3aa6",
+          "bytes": 163
+        },
+        "shaders/world0/composite4.vsh": {
+          "sha256": "97723efa080095e726683ab7bc5c69d56214d00ebaa06881b5f69a57e081aae1",
+          "bytes": 163
+        },
+        "shaders/world0/composite5.fsh": {
+          "sha256": "132d6696242760bf158dba51993fc0e5ec87bbcf3313019bd8ebcc51548cd681",
+          "bytes": 212
+        },
+        "shaders/world0/composite5.vsh": {
+          "sha256": "6a921122c10b878540b12aba9a26350b92b1e4d9b20b2e5b783ff434ef56989c",
+          "bytes": 163
+        },
+        "shaders/world0/composite6.fsh": {
+          "sha256": "de5fc1328661d5d69adbfed28e509dee60d2ae2aa13a95300f59e19de3466df9",
+          "bytes": 212
+        },
+        "shaders/world0/composite6.vsh": {
+          "sha256": "2dd6bb9ff4b0a7e37087ac29b14027142014ce4cf1269c81d914f86805d98217",
+          "bytes": 163
+        },
+        "shaders/world0/composite7.fsh": {
+          "sha256": "0e88896de10887834fb92bb4f50816c9aa2f88c023216f36615faffb84a49637",
+          "bytes": 212
+        },
+        "shaders/world0/composite7.vsh": {
+          "sha256": "0eee5b463b294d9ec6cf43d19cd543b4435a925829e688be64936bf497ff67d5",
+          "bytes": 163
+        },
+        "shaders/world0/deferred.fsh": {
+          "sha256": "ee78c8d053617ce5e21c8824df86a542d4fe58d36ef1fad8e138a7e2da3d910d",
+          "bytes": 210
+        },
+        "shaders/world0/deferred.vsh": {
+          "sha256": "70dcd0409d23f9e801c62f9aec4782a1e829d340c37962660b5dc91fda12d7db",
+          "bytes": 161
+        },
+        "shaders/world0/deferred1.fsh": {
+          "sha256": "3095370970d6ced710c8d859f44908b7c12a3f946fddcb53a274aee3660579d3",
+          "bytes": 211
+        },
+        "shaders/world0/deferred1.vsh": {
+          "sha256": "3b33fa49e0d76d9fc79650d60e8a98387f2fde737bea3c70c18e08af669da650",
+          "bytes": 162
+        },
+        "shaders/world0/dh_terrain.fsh": {
+          "sha256": "00a3d557a51b49d616541c4fa46b06950f028f62fdf7e4e7a9d6b23425f65330",
+          "bytes": 212
+        },
+        "shaders/world0/dh_terrain.vsh": {
+          "sha256": "ec9541c1c8409324a92a14d262e4e687428c23b46cd39a23900ea0cd16817073",
+          "bytes": 163
+        },
+        "shaders/world0/dh_water.fsh": {
+          "sha256": "54421e58f0a795970d5132d98f1993d512e275b1359f3ee7fcbf7553c3e96da5",
+          "bytes": 210
+        },
+        "shaders/world0/dh_water.vsh": {
+          "sha256": "144fa2af52cac16e55af9b1fe41df66f2e4f04acfdfb6c17498890ad011698d4",
+          "bytes": 161
+        }
+      },
+      "source_features": {
+        "deferred": [
+          "AO-producer"
+        ],
+        "deferred1": [
+          "AO-consumer",
+          "atmosphere",
+          "clouds"
+        ],
+        "composite": [
+          "light-shafts",
+          "water-fog"
+        ],
+        "composite4": [
+          "bloom-tiles"
+        ],
+        "composite5": [
+          "bloom",
+          "post"
+        ],
+        "composite6": [
+          "FXAA"
+        ],
+        "composite7": [
+          "conditional-TAA"
+        ]
+      },
+      "dh_program_members": [
+        "shaders/world0/dh_terrain.fsh",
+        "shaders/world0/dh_terrain.vsh",
+        "shaders/world0/dh_water.fsh",
+        "shaders/world0/dh_water.vsh"
+      ],
+      "dh_shadow_source": "not supplied under world0/dh_shadow; runtime support unknown",
+      "states": {
+        "ABSENT": "dedicated DH render rows not_applicable; raw shared graph still requires observation",
+        "ENABLED_READY": "terrain/water source present; preprocessed source, attachments, compatibility and runtime invocations unverified"
+      },
+      "confidence": "source inventory only; mixed source seeds; no feature execution proof"
+    },
+    {
+      "pack_revision": "makeup-9.5g",
+      "archive": "MakeUp-UltraFast-9.5g.zip",
+      "archive_sha256": "0036da17e0c7158e1c669593e6322d53fce3f5a42fb5124b935e9e21a5719db8",
+      "dimension": "world0",
+      "source_members": {
+        "shaders/world0/final.vsh": {
+          "sha256": "61d2622b0d74d5ee4b4dabfafff50294c988936abca078abf14b54b62749f31e",
+          "bytes": 225
+        },
+        "shaders/world0/composite2.vsh": {
+          "sha256": "2c0cd2408a2de15303a05000c36d5b8930883ad76c98b5bf39af68867670a9ec",
+          "bytes": 254
+        },
+        "shaders/world0/dh_terrain.vsh": {
+          "sha256": "b84b71e6b92ba445d5726b3024d1ec31da7c81dcf75eefea2e8e9bf9a58e6e84",
+          "bytes": 232
+        },
+        "shaders/world0/composite1.fsh": {
+          "sha256": "b47fe0cbccc20e9196d166f3fd006049ee6a566b562d4a7155fe7657cf0a3f8e",
+          "bytes": 240
+        },
+        "shaders/world0/composite2.fsh": {
+          "sha256": "59de4b36fe60c292e12dc19c17457ad2f8e9ba0d9905d1243dbd756db0bda3d6",
+          "bytes": 275
+        },
+        "shaders/world0/dh_water.fsh": {
+          "sha256": "5e32f35c2ad18424f04ac9dab86d3fc648428dd73532cb07b1e27a61619d9e1d",
+          "bytes": 229
+        },
+        "shaders/world0/composite1.vsh": {
+          "sha256": "405a85c6db3fa75517d931a8ff6994df2e9728cd813fdd556e937d1c7a332136",
+          "bytes": 239
+        },
+        "shaders/world0/dh_water.vsh": {
+          "sha256": "1b0d6d03b783336982c3c903bfde0bb7e78d7a37c57db4c55825827c642a33d3",
+          "bytes": 227
+        },
+        "shaders/world0/final.fsh": {
+          "sha256": "ab8dd0b8f3111ecd46a0fa960a6571fba8c70ca37087c38d36f66ee924249dc6",
+          "bytes": 246
+        },
+        "shaders/world0/composite.fsh": {
+          "sha256": "0197b2fe0d5de9aceb0b6ca171eb26c219f58a8366490c9d215368184d88abe7",
+          "bytes": 250
+        },
+        "shaders/world0/deferred.vsh": {
+          "sha256": "d5e9fa072676bfcc9c55134813b02780e922350a192aa040de1d5103c1ee9626",
+          "bytes": 256
+        },
+        "shaders/world0/dh_terrain.fsh": {
+          "sha256": "605fffd0ecc5ce4886e71d0f453dcaaa30a92b1b8fdc385e07a9ea2198a58aaa",
+          "bytes": 234
+        },
+        "shaders/world0/composite.vsh": {
+          "sha256": "a54344c081efcc5e02a353465da38f1ad022a2319034c917378610cf1a5fa294",
+          "bytes": 249
+        },
+        "shaders/world0/deferred.fsh": {
+          "sha256": "2e6c131506665f08745df2825070f7eb5529a4804882d56fb192568c8d00d661",
+          "bytes": 277
+        }
+      },
+      "source_features": {
+        "deferred": [
+          "AO",
+          "volumetric-clouds"
+        ],
+        "composite": [
+          "volumetric-light",
+          "bloom-source"
+        ],
+        "composite1": [
+          "bloom",
+          "blur"
+        ],
+        "composite2": [
+          "TAA",
+          "motion-blur"
+        ],
+        "final": [
+          "tone-mapping",
+          "optional-final-effects"
+        ]
+      },
+      "dh_program_members": [
+        "shaders/world0/dh_terrain.vsh",
+        "shaders/world0/dh_water.fsh",
+        "shaders/world0/dh_water.vsh",
+        "shaders/world0/dh_terrain.fsh"
+      ],
+      "dh_shadow_source": "not supplied under world0/dh_shadow; runtime support unknown",
+      "states": {
+        "ABSENT": "dedicated DH render rows not_applicable; raw shared graph still requires observation",
+        "ENABLED_READY": "terrain/water source present; preprocessed source, attachments, compatibility and runtime invocations unverified"
+      },
+      "confidence": "source inventory only; mixed source seeds; no feature execution proof"
+    }
+  ]
+}

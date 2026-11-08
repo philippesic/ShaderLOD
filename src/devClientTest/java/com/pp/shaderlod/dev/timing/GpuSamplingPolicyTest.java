@@ -37,6 +37,16 @@ public final class GpuSamplingPolicyTest {
         for (long frame = 1; frame <= 700; frame++)
             if (GpuSamplingPolicy.schedule(frame, 1, true, true).category() != GpuSamplingPolicy.category(frame, true, true))
                 throw new AssertionError("default interval1 changed historical schedule");
+        for(int interval:new int[]{1,7,60}) {
+            int passes=0,operations=0;
+            for(long f=1;f<=140L*interval;f++) {
+                var d=GpuSamplingPolicy.schedule(f,interval,true,true);
+                if(d.sampled() && d.category()==GpuSamplingPolicy.Category.IRIS) {
+                    if(GpuSamplingPolicy.operationVisit(d.sampleOrdinal()))operations++;else passes++;
+                }
+            }
+            if(passes!=10 || operations!=10)throw new AssertionError("leaf/operation rotation aliased");
+        }
         for (int invalid : new int[] {0, 61}) {
             boolean rejected = false;
             try { GpuSamplingPolicy.schedule(1, invalid, true, true); }

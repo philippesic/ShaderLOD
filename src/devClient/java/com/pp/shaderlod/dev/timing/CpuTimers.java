@@ -37,7 +37,8 @@ public final class CpuTimers {
     public static void setRecording(boolean enabled) { recordingRequested=enabled; }
     public static boolean recording() { return ENABLED&&recording; }
     public static void beginFrame(long frameId, boolean hasWorld) {
-        recording=recordingRequested;
+        recording=recordingRequested && !com.pp.shaderlod.measurement.RuntimeMeasurement.requested();
+        if (!MARKS.isEmpty()) { queueDrops+=MARKS.size(); MARKS.clear(); IRIS_SCOPES.clear(); }
         layerFrame=(frameId-1)%LAYER_INTERVAL==0;
         frame = frameId;
         world = hasWorld;
@@ -57,6 +58,7 @@ public final class CpuTimers {
     public static void beginIrisGroup(String name) {
         if (!ENABLED || !recording || !world || !LAYERS || !layerFrame) return;
         String scope = (IRIS_SCOPES.isEmpty() ? "iris-stage/" : "iris/") + name;
+        if(IRIS_SCOPES.size()>=128){queueDrops++;return;}
         IRIS_SCOPES.push(scope);
         beginLayer(scope);
     }
@@ -70,7 +72,8 @@ public final class CpuTimers {
         if (!ENABLED || !recording || !world || (layer && (!LAYERS || !layerFrame))) return;
         long wall = System.nanoTime();
         long cpu = threadClock ? THREAD.getCurrentThreadCpuTime() : -1;
-        MARKS.push(new Mark(scope, wall, cpu, frame, epoch));
+        if (MARKS.size()>=128 || (!HISTORIES.containsKey(scope) && HISTORIES.size()>=512)) { queueDrops++; return; }
+        MARKS.push(new Mark(scope, wall, cpu, frame, epoch, CostMapSession.beginCpu(scope,wall,cpu<0?null:cpu)));
     }
 
     public static void end(String scope) { end(scope, false); }
@@ -86,9 +89,11 @@ public final class CpuTimers {
             return;
         }
         Mark mark = MARKS.pop();
+        CostMapSession.endCpu(mark.eventId,wall,cpu<0?null:cpu);
         if (mark.epoch != epoch) return;
         long wallNs = Math.max(0, wall - mark.wall);
         Long cpuNs = cpu >= mark.cpu && mark.cpu >= 0 ? cpu - mark.cpu : null;
+        if(!HISTORIES.containsKey(scope) && HISTORIES.size()>=512){queueDrops++;return;}
         History history = HISTORIES.computeIfAbsent(scope, ignored -> new History());
         history.wall.add(wallNs);
         if (cpuNs != null) history.thread.add(cpuNs);
@@ -96,6 +101,8 @@ public final class CpuTimers {
         COMPLETED.addLast(new Sample(scope, wallNs / 1_000_000.0,
                 cpuNs == null ? null : cpuNs / 1_000_000.0, mark.frame, epoch));
     }
+
+    public static void disarm() { recordingRequested=recording=false; queueDrops+=MARKS.size(); MARKS.clear(); IRIS_SCOPES.clear(); }
 
     public static void resetSamples() {
         epoch++;
@@ -135,7 +142,7 @@ public final class CpuTimers {
                              Double meanThreadMs, Double medianThreadMs, Double p95ThreadMs) {}
     public record Snapshot(String status, boolean currentThreadCpuSupported, long frameId,
                            Map<String, ScopeStats> scopes, long queueDrops) {}
-    private record Mark(String scope, long wall, long cpu, long frame, long epoch) {}
+    private record Mark(String scope, long wall, long cpu, long frame, long epoch, Long eventId) {}
     private static final class History {
         final TimingStatistics wall = new TimingStatistics(240);
         final TimingStatistics thread = new TimingStatistics(240);

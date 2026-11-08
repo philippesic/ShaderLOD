@@ -18,9 +18,10 @@ final class BottleneckProbe {
         (JsonSerializer<Double>)(v,t,c)->Double.isFinite(v)?new JsonPrimitive(v):JsonNull.INSTANCE).create();
     private static final Map<Object,Object> previous=new LinkedHashMap<>(),last=new LinkedHashMap<>();
     private static final Map<String,Object> configs=new HashMap<>();
-    private static Integer originalDistance;
+    private static Integer originalDistance, ownedDistance;
     private static SceneLease lease;
     private static Window window;
+    private static boolean ownsGuard;
     private static final ThreadMXBean THREAD=ManagementFactory.getThreadMXBean();
     private record Window(String label,Path root,long firstFrame,long started,JsonObject before,
         List<CpuTimers.Sample> cpu,List<GpuTimers.Sample> gpu) {}
@@ -36,6 +37,7 @@ final class BottleneckProbe {
     private static void set(Object c,Object v)throws Exception {
         if(!previous.containsKey(c)){previous.put(c,value(c,"getApiValue"));last.put(c,previous.get(c));}
         if(!Objects.equals(last.get(c),value(c,"getApiValue")))throw new IllegalStateException("External DH override changed");
+        last.put(c,v);
         boolean ok=(Boolean)api("interfaces.config.IDhApiConfigValue").getMethod("setValue",Object.class).invoke(c,v);
         last.put(c,value(c,"getApiValue"));if(!ok||!Objects.equals(v,value(c,"getValue")))throw new IllegalStateException("DH override refused");
     }
@@ -44,14 +46,29 @@ final class BottleneckProbe {
         window.cpu().addAll(CpuTimers.drainSamples());window.gpu().addAll(GpuTimers.drainSamples());
         if(window.cpu().size()>600000||window.gpu().size()>100000)throw new IllegalStateException("Diagnostic sample cap exceeded");
     }
-    @SuppressWarnings({"unchecked","rawtypes"}) static JsonObject consume(JsonObject request,Path receipts)throws Exception {
+    static JsonObject consume(JsonObject request,Path receipts)throws Exception {
+        try { return consumeInternal(request,receipts); }
+        catch(Exception failure) {
+            if(window==null && previous.isEmpty() && lease==null && originalDistance==null && !CostMapSession.active() && !ownsGuard)throw failure;
+            try { CostMapSession.abort(window==null?receipts.getParent().resolve("profiles").resolve("failed-"+System.nanoTime()):window.root(),"probe error: "+failure); }
+            catch(Exception exportFailure){failure.addSuppressed(exportFailure);}
+            CpuTimers.disarm();GpuTimers.suspendQueries("probe error");
+            if(ownsGuard){BenchmarkMeasurementGuard.disarm();ownsGuard=false;}RendererWorkDiagnostics.endWindow();window=null;
+            try { var restore=new JsonObject();restore.addProperty("op","restore");consumeInternal(restore,receipts); }
+            catch(Exception cleanup){failure.addSuppressed(cleanup);}
+            throw failure;
+        }
+    }
+    @SuppressWarnings({"unchecked","rawtypes"}) private static JsonObject consumeInternal(JsonObject request,Path receipts)throws Exception {
         String op=request.get("op").getAsString();var client=Minecraft.getInstance();boolean dh=ModList.get().isLoaded("distanthorizons");
         if(op.equals("profile_off")) {
             if(window==null)throw new IllegalStateException("No diagnostic window");
-            tick();var w=window;long lastFrame=GpuTimers.frameId(),stopped=System.nanoTime();BenchmarkMeasurementGuard.disarm();
+            tick();var w=window;long lastFrame=GpuTimers.frameId(),stopped=System.nanoTime();BenchmarkMeasurementGuard.disarm();ownsGuard=false;
             var guard=JSON.toJsonTree(BenchmarkMeasurementGuard.status());RendererWorkDiagnostics.endWindow();
-            GpuTimers.setRecording(false);CpuTimers.setRecording(false);window=null;
+            GpuTimers.suspendQueries("profile stop; bounded unresolved tail");CpuTimers.disarm();window=null;
             var end=snapshot();var dir=w.root();Files.createDirectories(dir);
+            CostMapSession.evidence(w.before(),end,guard);
+            CostMapSession.finish(dir,"profile stop; unresolved tail retained");
             try(var out=Files.newBufferedWriter(dir.resolve("cpu.csv"))){out.write("frame,epoch,scope,wall_ms,thread_ms\n");
                 for(var s:w.cpu())out.write(s.frameId()+","+s.epoch()+","+s.scope()+","+s.wallMilliseconds()+","+(s.threadMilliseconds()==null?"":s.threadMilliseconds())+"\n");}
             try(var out=Files.newBufferedWriter(dir.resolve("gpu.csv"))){out.write("frame,epoch,scope,gpu_ms\n");
@@ -62,36 +79,51 @@ final class BottleneckProbe {
             result.addProperty("limits","Diagnostic instrumentation; GPU timeline elapsed is not busy time. Aggregate repeated CPU invocations by frame; sparse layers are not zero on unsampled frames. Pending GPU tail/first and last partial frame excluded explicitly.");
             Files.writeString(dir.resolve("report.json"),JSON.toJson(result));result.addProperty("report",dir.resolve("report.json").toString());return result;
         }
-        if(RuntimeMeasurement.requested()||window!=null)throw new IllegalStateException("An existing timing owner must stop first");
+        if(!op.equals("restore") && (RuntimeMeasurement.requested()||window!=null))throw new IllegalStateException("An existing timing owner must stop first");
         if(op.equals("prepare")) {
             if(THREAD.isThreadCpuTimeSupported()&&!THREAD.isThreadCpuTimeEnabled())THREAD.setThreadCpuTimeEnabled(true);
-            if(dh){set(config("generation"),false);set(config("chunkRenderDistance"),128);set(config("renderingMode"),Enum.valueOf((Class)api("enums.rendering.EDhApiRendererMode"),"DISABLED"));}
+            // Preparation observes native settings; overrides require explicit configure inputs.
         } else if(op.equals("configure")) {
             if(client.level==null||client.getSingleplayerServer()==null||client.getSingleplayerServer().isPublished())throw new IllegalStateException("Private benchmark world required");
-            if(originalDistance==null)originalDistance=client.options.renderDistance().get();
+            if(request.has("distance") && originalDistance==null)originalDistance=client.options.renderDistance().get();
             if(lease==null){lease=SceneLease.prepare();lease.freeze();}
-            int distance=request.has("distance")?request.get("distance").getAsInt():12;
-            if(distance!=12&&distance!=24)throw new IllegalArgumentException("RD12/24 only");client.options.renderDistance().set(distance);
-            if(dh){String mode=request.get("mode").getAsString();if(!Set.of("DEFAULT","DISABLED").contains(mode))throw new IllegalArgumentException("DH mode");
-                set(config("generation"),false);set(config("chunkRenderDistance"),request.has("radius")?request.get("radius").getAsInt():128);
-                set(config("renderingMode"),Enum.valueOf((Class)api("enums.rendering.EDhApiRendererMode"),mode));}
+            int distance=request.has("distance")?request.get("distance").getAsInt():client.options.renderDistance().get();
+            if(request.has("distance")){if(distance<2||distance>32)throw new IllegalArgumentException("Vanilla distance outside 2..32");ownedDistance=distance;client.options.renderDistance().set(distance);}
+            if(dh){String mode=request.has("mode")?request.get("mode").getAsString():null;if(mode!=null && !Set.of("DEFAULT","DISABLED").contains(mode))throw new IllegalArgumentException("DH mode");
+                if(request.has("generation"))set(config("generation"),request.get("generation").getAsBoolean());
+                if(request.has("radius"))set(config("chunkRenderDistance"),request.get("radius").getAsInt());
+                if(mode!=null)set(config("renderingMode"),Enum.valueOf((Class)api("enums.rendering.EDhApiRendererMode"),mode));}
             else if(request.has("mode")&&!request.get("mode").getAsString().equals("DISABLED"))throw new IllegalStateException("DH absent");
         } else if(op.equals("profile_on")) {
             if(!Boolean.getBoolean("shaderlod.dev.manualProfiling"))throw new IllegalStateException("Manual profiling launch required");
             String label=request.get("label").getAsString();if(!label.matches("[A-Za-z0-9_-]{1,64}"))throw new IllegalArgumentException("Diagnostic label");
             Path dir=receipts.getParent().resolve("profiles").resolve(label);if(Files.exists(dir))throw new IllegalStateException("Existing diagnostic label");
-            var before=snapshot();BenchmarkMeasurementGuard.arm();RendererWorkDiagnostics.beginWindow();GpuTimers.resetSamples();
+            GpuTimers.suspendQueries("new diagnostic owner");CpuTimers.disarm();
+            if(request.has("capture"))CostMapSession.start(request);
+            var before=snapshot();BenchmarkMeasurementGuard.armDiagnostic();ownsGuard=true;RendererWorkDiagnostics.beginWindow();GpuTimers.resetSamples();
             window=new Window(label,dir,GpuTimers.frameId(),System.nanoTime(),before,new ArrayList<>(),new ArrayList<>());
             CpuTimers.setRecording(true);GpuTimers.setRecording(true);
         } else if(op.equals("restore")) {
-            CpuTimers.setRecording(false);GpuTimers.setRecording(false);
-            for(var e:previous.entrySet()){
-                if(!Objects.equals(last.get(e.getKey()),value(e.getKey(),"getApiValue")))throw new IllegalStateException("External DH override changed before restore");
-                boolean ok=(Boolean)(e.getValue()==null?api("interfaces.config.IDhApiConfigValue").getMethod("clearValue").invoke(e.getKey()):api("interfaces.config.IDhApiConfigValue").getMethod("setValue",Object.class).invoke(e.getKey(),e.getValue()));
-                if(!ok||!Objects.equals(e.getValue(),value(e.getKey(),"getApiValue")))throw new IllegalStateException("DH restore failed");
+            if(window!=null)CostMapSession.finish(window.root(),"restore/Cancel");
+            CpuTimers.disarm();GpuTimers.suspendQueries("restore");if(ownsGuard){BenchmarkMeasurementGuard.disarm();ownsGuard=false;}RendererWorkDiagnostics.endWindow();window=null;
+            Exception restorationFailure=null;
+            for(var e:new ArrayList<>(previous.entrySet())){
+                try {
+                    if(!Objects.equals(last.get(e.getKey()),value(e.getKey(),"getApiValue")))throw new IllegalStateException("External DH override changed before restore");
+                    boolean ok=(Boolean)(e.getValue()==null?api("interfaces.config.IDhApiConfigValue").getMethod("clearValue").invoke(e.getKey()):api("interfaces.config.IDhApiConfigValue").getMethod("setValue",Object.class).invoke(e.getKey(),e.getValue()));
+                    if(!ok||!Objects.equals(e.getValue(),value(e.getKey(),"getApiValue")))throw new IllegalStateException("DH restore failed");
+                    previous.remove(e.getKey());last.remove(e.getKey());
+                } catch(Exception failure) {if(restorationFailure==null)restorationFailure=failure;else restorationFailure.addSuppressed(failure);}
             }
-            previous.clear();last.clear();if(originalDistance!=null){client.options.renderDistance().set(originalDistance);originalDistance=null;}
-            if(lease!=null){lease.close();lease=null;}
+            try {
+                if(originalDistance!=null){
+                    if(ownedDistance!=null && !Objects.equals(client.options.renderDistance().get(),ownedDistance))throw new IllegalStateException("External vanilla distance edit preserved");
+                    client.options.renderDistance().set(originalDistance);originalDistance=ownedDistance=null;
+                }
+            }catch(Exception failure){if(restorationFailure==null)restorationFailure=failure;else restorationFailure.addSuppressed(failure);}
+            try {if(lease!=null){lease.close();lease=null;}}
+            catch(Exception failure){if(restorationFailure==null)restorationFailure=failure;else restorationFailure.addSuppressed(failure);}
+            if(restorationFailure!=null)throw restorationFailure;
         } else if(op.equals("reload")) Iris.reload();
         else if(!op.equals("snapshot"))throw new IllegalArgumentException("Unknown diagnostic operation");
         return snapshot();
@@ -102,6 +134,8 @@ final class BottleneckProbe {
         if(monitor!=null){monitor.refreshVideoModes();for(int i=0;i<monitor.getModeCount();i++){var mode=monitor.getMode(i);var x=new JsonObject();x.addProperty("width",mode.getWidth());x.addProperty("height",mode.getHeight());x.addProperty("refresh",mode.getRefreshRate());modes.add(x);}}r.add("monitor_modes",modes);
         r.addProperty("framebuffer_width",c.getWindow().getWidth());r.addProperty("framebuffer_height",c.getWindow().getHeight());
         r.addProperty("profiling_gpu",GpuTimers.recording());r.addProperty("profiling_cpu",CpuTimers.recording());r.addProperty("profile_active",window!=null);
+        r.addProperty("generation_policy",ModList.get().isLoaded("distanthorizons")?String.valueOf(value(config("generation"),"getValue")):"not_applicable");
+        r.addProperty("gpu_queue_evictions",GpuTimers.queueEvictions());r.addProperty("gpu_unresolved_tail",GpuTimers.unresolvedTail());
         r.addProperty("distance",c.options.renderDistance().get());r.addProperty("simulation_owned",lease!=null);r.addProperty("gpu_renderer",org.lwjgl.opengl.GL11.glGetString(org.lwjgl.opengl.GL11.GL_RENDERER));
         var pack=Iris.getCurrentPack().orElse(null);boolean macro=false;
         if(pack instanceof com.pp.shaderlod.optimization.sourcecache.IrisCompiledSource.PackView view&&view.shaderlod$makeupPackInput()!=null){

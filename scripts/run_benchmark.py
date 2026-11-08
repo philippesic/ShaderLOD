@@ -1534,6 +1534,9 @@ def run_operation(a,admission):
 
 def main(argv=None):
  argv=list(sys.argv[1:] if argv is None else argv)
+ if argv and argv[0] in ('profile','profile-plan','profile-report'):
+  import cost_map
+  return cost_map.command(argv)
  if argv and argv[0] in ('discover','report'):return workflow.command(argv,sys.modules[__name__])
  planning=bool(argv and argv[0]=='plan')
  if planning:argv=['test',*argv[1:]]

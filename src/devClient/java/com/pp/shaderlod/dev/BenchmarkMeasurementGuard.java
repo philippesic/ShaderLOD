@@ -20,6 +20,13 @@ public final class BenchmarkMeasurementGuard {
     private BenchmarkMeasurementGuard() {}
 
     static void arm() {
+        if(com.pp.shaderlod.dev.timing.CostMapSession.active())throw new IllegalStateException("Canonical diagnostic owner must finalize before scored timing");
+        com.pp.shaderlod.dev.timing.GpuTimers.suspendQueries("scored owner");
+        com.pp.shaderlod.dev.timing.CpuTimers.disarm();
+        armDiagnostic();
+    }
+
+    static void armDiagnostic() {
         if(armed)throw new IllegalStateException("A manual benchmark window is already guarded");
         var c=Minecraft.getInstance();var camera=c.getCameraEntity();
         if(c.level==null||camera==null||c.screen!=null||!c.isWindowActive())

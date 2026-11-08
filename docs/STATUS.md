@@ -47,9 +47,9 @@ together; isolated effects from other routes must not be added either.
 **Next useful engineering:** extend the existing measurement system into a
 [cost map](COST_MAP.md) of named Iris passes, CPU work, GPU intervals and waits,
 with native-pack baselines for all four targets on both machines and first-class
-absent/enabled-DH cohorts, LOD CPU/GPU coverage and horizon scenes. This is a
-measurement design; stages 2+ and all clients, benchmarks, training, Nsight and
-new timings remain unauthorized. The cost map should identify large slices to
+absent/enabled-DH cohorts, LOD CPU/GPU coverage and horizon scenes. Philip authorized stages 2–4 implementation and bounded Asahi end-to-end testing
+on 2026-11-08 (“go build the whole thing and test it well e2e”). The section 10
+capture program, RTX/Nsight calibration, training and stage 6 review remain unauthorized. The cost map should identify large slices to
 investigate; the maintained A/B total-frame protocol remains the proof method.
 Do not start another G-number optimization campaign from the parked shortlist.
 
@@ -58,8 +58,12 @@ integer scope registry, frame/epoch/graph/invocation ownership, explicit missing
 (including DH identity), bounded buffers and loss health. CPU-only synthetic checks
 cover all eight stage-1 acceptance items; adjacent sampling-policy/statistics checks
 also pass. No runtime timing or client was run. See the [stage-1 contract notes](COST_MAP_STAGE1.md)
-for the test command and stage-2 seams. Timer/probe integration, hooks, catalog,
-exports/report and machine validation remain unimplemented and unauthorized.
+for the test command and stage-2 seams. The subsequent [implementation checkpoint](COST_MAP_IMPLEMENTATION.md) adds timer/probe
+lifecycle changes, optional canonical live-hook records, source seeds and an offline
+export pipeline. Stages 2–4 are **partially implemented, not accepted complete**;
+that note lists remaining authorized work. Stage-1 checks and synthetic pipeline
+e2e pass; no live client was launched (no display variables; free space at the
+32 GiB reserve before runtime growth). Machine qualification remains unperformed.
 
 ## Completed audit context (2026-11-07)
 

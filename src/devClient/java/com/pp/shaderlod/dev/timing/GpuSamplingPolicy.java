@@ -14,6 +14,12 @@ public final class GpuSamplingPolicy {
         return new Decision(sampled, ordinal, category(ordinal, passTiming, extended));
     }
 
+    /** Split Iris leaf and operation surveys on alternating visits, preserving the legacy rotation. */
+    public static boolean operationVisit(long sampledOrdinal) {
+        if(sampledOrdinal<1)throw new IllegalArgumentException("positive sampled ordinal required");
+        return ((sampledOrdinal-1)/7)%2==1;
+    }
+
     /** A false decision prohibits issuing queries and polling pending query results. */
     public record Decision(boolean sampled, long sampleOrdinal, Category category) {
         public boolean permitsQueryWork() { return sampled; }

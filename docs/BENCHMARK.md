@@ -124,3 +124,28 @@ and retained evidence location. `python3 scripts/run_storage.py prune-captures`
 previews exact eligible files; `--apply` uses the existing ownership/restoration
 checks. Age alone is not permission to discard motion evidence. `.storage-keep`
 on an ancestor protects a subtree. Unknown or still-needed evidence stays intact.
+
+
+## Cost-map diagnostic checkpoint
+
+These commands never launch a client or enter scored A/B timing:
+
+```sh
+python3 scripts/run_benchmark.py profile-plan --fps 60 --seconds 20 --windows 3 --processes 2 --cadence 4 --scope-sets 7
+python3 scripts/run_benchmark.py profile --input /absolute/path/capture.json --output /absolute/path/new-report
+python3 scripts/run_benchmark.py profile-report --input /absolute/path/capture.json --output /absolute/path/new-report
+```
+
+`profile` currently imports an existing schema-1 canonical cohort; it is not yet
+an owned live launcher. `profile-report` regenerates offline exports. Output must
+be a new directory; existing finalized output is never overwritten. Legacy
+unversioned `report.json` is read and labeled duration-only without inventing
+endpoints. `profile-plan` estimates regularly active observations per scope set
+using `floor(fps * seconds * windows * processes / cadence / scope_sets)` and exits
+1 below `--minimum` (default 100). It does not inspect a live slot or qualify overhead.
+
+CSV/JSON/HTML and separate CPU/GPU trace exports preserve missing values. Elapsed
+GPU data has no timeline positions; uncorrelated GPU timestamps never share a CPU
+trace. Cost labels and inclusive hierarchy are nonadditive. See
+[COST_MAP_IMPLEMENTATION](COST_MAP_IMPLEMENTATION.md) for exact implemented scope,
+test evidence and remaining stage 2–4 work. No four-pack capture study is implied.
