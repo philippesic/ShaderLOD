@@ -46,7 +46,8 @@ together; isolated effects from other routes must not be added either.
 
 **Next useful engineering:** extend the existing measurement system into a
 [cost map](COST_MAP.md) of named Iris passes, CPU work, GPU intervals and waits,
-with native-pack baselines for all four targets on both machines. This is a
+with native-pack baselines for all four targets on both machines and first-class
+absent/enabled-DH cohorts, LOD CPU/GPU coverage and horizon scenes. This is a
 design sketch, not implementation or authorization to run clients, benchmarks,
 training, Nsight or new timings. The cost map should identify large slices to
 investigate; the maintained A/B total-frame protocol remains the proof method.

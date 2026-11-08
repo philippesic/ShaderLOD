@@ -5,7 +5,10 @@ runtime-validated.** This expands the existing cost-map sketch in place. No
 Minecraft client, benchmark, GPU workload, Nsight capture or training was run to
 prepare it. Research comprised repository/source inspection and primary profiler
 documentation. All overhead numbers below are proposed acceptance budgets, not
-measurements.
+measurements. The same-day Sol source review identified missing DH identity,
+worker/upload boundaries, stage joins, horizon scenes, sample feasibility,
+lifecycle invalidation and a selectable DH report. This revision incorporates
+those findings; it does not establish implementation or live DH coverage.
 
 [STATUS](STATUS.md#latest-outcome-and-next-action) owns current direction, allocation
 and retention decisions. [BENCHMARK](BENCHMARK.md) owns supported commands and
@@ -25,7 +28,10 @@ The first screen should answer: **which named stages cost the most, what feature
 do they contain, how repeatable is that cost, and what remains unknown?** Philip
 should be able to expand “shadows,” “fog,” “terrain,” or “post-processing” into
 actual passes and submission work, select an area for investigation, and see the
-same categories across the four packs. A cost map is a way to choose work, not an
+same categories across the four packs. **Distant Horizons is a v1 measurement
+target**, alongside vanilla terrain: both absent-DH and enabled-DH cohorts, CPU
+LOD work, GPU draws, shadows and shader-pack consumers must be visible. DH is not
+merely a later compatibility checkbox. A cost map is a way to choose work, not an
 automatic optimization selector or evidence of an achievable speedup.
 
 Provide three related views with explicit units and denominators:
@@ -93,10 +99,42 @@ already separates development/controller/neutral benchmark jars from main.
 | `MinecraftFrameTimingMixin`, `GameRendererTimingMixin` | `run-tick`, `game-render`, `render-and-blit`, `swap-and-events`, limiter and frame identity | Record frame-start intervals with the benchmark's boundary convention. Split swap from event polling. `game-render` is not the whole submitted frame and neither GPU root measures scanout. |
 | Sodium terrain/command/draw timing mixins | World vs shadow, opaque+cutout vs translucent, command fill vs execution wrapper vs native submission | Resolve active program/material group where practical. The existing opaque+cutout grouping must not be presented as individually measured opaque and cutout. CPU around `setupTerrain` is useful; a GPU interval around CPU-only setup is not terrain shading. |
 | `EntityBuildTimingMixin`, `BufferedDrawTimingMixin` | Entity vertex building is CPU-only; actual buffered flushes carry GPU scopes | Do not assign the GPU flush to each entity callback. Add batch/program tags where available; retain mixed entity/block-entity groups when inseparable. |
-| DH terrain/total/render-list timing mixins | Separate opaque/translucent, main/deferred, world/shadow and CPU list work | Parent/child accounting and graph-specific availability. Missing DH is `not_applicable`, not a measured zero or compatibility certificate. |
+| DH terrain/total/render-list timing mixins | Totals identify main/deferred + world/shadow; terrain leaves identify opaque/translucent + world/shadow; list CPU identifies world/shadow | Join stage context to each invocation even when its parent is unsampled. These hooks do not yet provide the full cross-product, worker generation or upload timing. See the required DH coverage contract below. |
 | [`BottleneckProbe`](../src/devClient/java/com/pp/shaderlod/dev/BottleneckProbe.java) | Explicit manual profiling, scene/configuration ownership, independent windows and `cpu.csv`/`gpu.csv`/`report.json` export | Define exact start/stop fences, bounded tail drain and per-record validity. Current before/after snapshots and textual partial-frame warning are not a complete event contract. Heavy work witnesses need their own inventory phase. |
 | [ComparisonClient](../src/devClient/java/com/pp/shaderlod/dev/ComparisonClient.java), [README landscape notes](../README.md#landscape-comparison-and-gpu-timings) | Existing GPU/pass-ms display and asynchronous elapsed-query warning | Reuse labels/schema where sensible; simultaneous landscape windows share a GPU and cannot supply isolated baselines. No always-on new overlay required. |
 | [`run_benchmark.py`](../scripts/run_benchmark.py), [`analyze_render_jfr.py`](../scripts/analyze_render_jfr.py) | Lifecycle/protocol and existing JFR limitations | Add a diagnostic command and offline report path, not a parallel launcher. Keep JFR CPU samples, native samples, waits and GC categories separate. |
+
+### Production DH integration and observation limits
+
+The inspected NeoForge integration is not a replacement DH renderer.
+[`GeometryLodController`](../src/main/java/com/pp/shaderlod/GeometryLodController.java)
+can cap vanilla distance only under an explicit terrain policy, after Iris DH
+terrain shader/compatibility checks, DH DEFAULT rendering/world/distance readiness,
+warmup and manual scene coverage confirmation. It invalidates on input/lifecycle,
+pipeline, camera/travel and dimension changes. **Keep that policy inactive during
+native cost mapping**; observing readiness does not authorize reducing vanilla
+terrain. Its checks do not prove distant pixels or complete replacement coverage.
+The Fabric/port `DhTerrainInputs` adapters are pinned optional API readers, not
+proof that the current NeoForge timing mixins cover those loaders/versions.
+
+Reuse [`BenchmarkLiveObservations`](../src/main/java/com/pp/shaderlod/benchmark/BenchmarkLiveObservations.java)
+for pinned DH state and loading/conversion/propagation/file/world-generation queue
+availability. [`BenchmarkDhMaintenance`](../src/main/java/com/pp/shaderlod/benchmark/BenchmarkDhMaintenance.java)
+recognizes only observed beacon cooldown sleeps; it neither hides all file work
+nor measures worker cost. Queue size/running counts and average executor runtime
+are context, not a per-frame duration or GPU queue signal.
+[`DhRenderEvidence`](../src/devClient/java/com/pp/shaderlod/dev/timing/DhRenderEvidence.java)
+records cumulative CPU submissions after the pinned positive-index draw delegate,
+not GPU completion or visible LOD pixels. Its last render-list counters are not
+draw counts; a terminal snapshot freezes counters and cannot be reused as a live
+census. Inventory-only observers must be disabled before capture/scoring, or be
+explicitly owned, calibrated diagnostic collectors with frame/window deltas.
+
+`BottleneckProbe.prepare/configure` currently disables distant generation and
+changes DH mode/radius and vanilla distance. Extending it must replace implicit
+RD12/24/radius128 assumptions with declared requested/effective inputs and owned
+restoration. A generation-disabled steady capture cannot answer generation cost.
+Do not enable a parked route or copy its eligibility verdict as measurement truth.
 
 These are implementation requirements, not fixes made by this document.
 
@@ -213,6 +251,35 @@ program. Likewise, do not call all of shadow-map generation “shadow filtering.
 | Copies / blits / clears / mips | Actual operation sites, grouped by source/destination/role | Hardware bandwidth or “wasted” work; a long copy interval may include dependencies |
 | CPU renderer / submission / presentation | Sodium setup/fill/execute/submit, Iris orchestration, swap, event poll, limiter; explicit known waits | Driver-internal execution, worker critical path and GPU idle without further evidence |
 
+### Coverage ledger beyond the named shader features
+
+Inventory the full submitted graph, including prepare/setup/shadow/deferred/
+composite/final stages, compute dispatches and barriers where present, terrain,
+entities, particles, weather, sky and GUI/presentation. Presence is conditional on
+the pinned graph: keep unknown/uncovered stages rather than forcing everything
+under a fullscreen pass. Include framebuffer/texture copies, uploads, readbacks,
+resource allocation and history clears as operation kinds; group by resource role
+and extent. A barrier or API call's elapsed interval may expose dependencies rather
+than execution uniquely caused by that call.
+
+For CPU, require a coverage ledger for game/client ticks, integrated-server work,
+Sodium culling/list/command building, chunk rebuild workers and uploads, Iris
+orchestration/uniform/state work, entity building, DH tasks, driver submission,
+known synchronization, swap, events and limiter. Existing render wrappers do not
+isolate all of these. Keep untimed worker/driver/GC/JIT/unattributed work explicit,
+with separate focused sampling as the fallback; report render-thread time outside
+observed children without assigning it to ticks or waits by subtraction. Record
+thread identity and clock availability; never run render-thread-only timers on DH
+or Sodium workers. Window-level CPU and task counters need owned, thread-safe
+collection with bounded cost. No new global lock on renderer or worker hot paths.
+
+Each catalog revision needs a four-pack × feature × DH-state coverage checklist:
+source/graph match, enabled/disabled, observed invocation, timing boundary, mixed
+consumers, missing evidence and evidence location. Unknown versions invalidate
+matches rather than the raw data; regenerating a report with a new catalog records
+both revisions and preserves the original interpretation. Counts/metadata must
+explain whether a cheap feature is absent, rarely exercised, or actually cheap.
+
 ### Mixed and spanning features
 
 A dedicated feature pass can contribute its measured interval once to that
@@ -236,6 +303,61 @@ in the default tier. A focused capture may inspect selected draw invocations;
 it must not expand or split a multidraw to manufacture individual timings. Full
 hardware draw/wave attribution belongs to supported external tools.
 
+### Distant Horizons: required v1 coverage contract
+
+Each supported pack needs a reviewed **DH-enabled graph mapping**, not an inherited
+no-DH catalog. Record DH program availability (terrain, water/translucent and
+shadow where actually supplied), selected/preprocessed sources and DH defines,
+Iris DH compatibility/deferred path, resource producers/consumers, depth merges,
+attachments, formats and dimensions. Verify actual invocations separately from
+source presence. Fog, lighting, AO, reflections, shadow filtering and composite
+work over LOD depth/color may live in shared passes: link them as **DH consumers,
+mixed with vanilla**, never assign all that pass time to DH. Inventory relevant
+copies/blits/resolves/clears/mips, including vanilla/DH depth/color handoffs and
+history use, with source/destination roles. Byte counts, if derivable from formats
+and extents, are logical transfer sizes, not measured bandwidth or traffic.
+
+Keep these rows in every cost map, including unavailable rows:
+
+| Concern | Required v1 boundary/evidence | Limit or fallback |
+| --- | --- | --- |
+| Vanilla vs DH world terrain | Separate CPU submission and GPU elapsed groups; preserve vanilla opaque+cutout grouping and DH opaque/translucent | No per-material, per-pixel or near/far cost inferred from draw counts |
+| DH main vs deferred | `LodRenderer.render` / `renderDeferred` totals; carry parent-stage context on terrain/list invocations | Totals are wrappers, not pure draws; no double counting with leaves; elapsed parent and child sampled on different frames stay separate |
+| DH vs vanilla shadows | Separate shadow roots and terrain groups, opaque/translucent when executed; identify DH shadow program/targets and downstream shadow consumers | `ShadowRenderer.ACTIVE` is hook-time classification, not proof every path uses the right shadow source; verify graph; unsupported/not executed paths remain visible |
+| DH list construction | CPU wall/thread time around `buildRenderList`, world/shadow + calling stage | List/culling work is not generation, upload, or GPU shading |
+| LOD generation, chunk-to-LOD conversion, propagation, disk loading | Queue/readiness snapshots outside hot paths, worker identity and window CPU deltas where attributable; separate focused sampled stacks or validated task scopes | Existing hooks do not time these tasks. Unavailable APIs/shared pools yield `unknown` or `unsupported` with reason; worker totals are not frame-exclusive or additive to render-thread wall |
+| Upload and buffer lifecycle | Inventory actual buffer allocation/update/transfer/deletion sites; time bounded render-thread upload groups and existing waits where safe/version-verified | Current terrain wrapper cannot isolate uploads. Mark `uncovered` via coverage metadata + unknown duration until a validated boundary exists. GPU transfer intervals only on the GL context that issues them; async driver copy execution may remain unknown |
+| DH shader interaction and transfers | Link dedicated DH programs, depth/color handoffs and mixed deferred/composite/fog/lighting consumers to physical intervals | Shared consumer cost is not incremental DH overhead; enabling DH changes scene/graph and may displace vanilla work |
+| Workload and residency | Visible/cull/list counts, submitted draws/indices, task counts/backlog and upload bytes if observable; timestamp/owner each observation | Counts describe workload, not visible pixels, executed primitives, hardware traffic or saved time; unsupported counters stay null |
+
+**Identity is independent of ShaderLOD's absent/installed-Off state.** Manifest DH
+state must distinguish absent, installed-rendering-disabled, enabled-ready,
+enabled-not-ready, unsupported integration, failed renderer and unknown/uninitialized,
+with reason and
+evidence time. Absent-DH rows are `not_applicable`, never fake zeros. Disabled
+rendering does not prove DH workers are idle; retain worker applicability based on
+observed generation/loading state. For enabled DH, distinguish verified disabled
+features, observed no execution, unsampled, hook not exercised and unknown coverage.
+Do not manufacture every world/shadow × main/deferred × opacity combination;
+retain only graph-valid paths with explicit unavailable/structural-absence reasons.
+
+Record loaded DH artifact/version, loader, Iris/Sodium versions and compatibility
+status; requested/effective vanilla and DH distances (units), horizontal/vertical
+quality and detail/dropoff settings, transparency, fog, shadows, culling, distant
+generation and worker limits where supported. Record config/API override provenance,
+unknown fields, prepared LOD database/cache identity and residency/backlog evidence.
+Settings names vary by version: store exact keys/values and semantic descriptions,
+not assumed defaults. A graph or effective setting change creates a new cohort.
+Rendering disabled with DH installed may still compile a DH-aware shader graph;
+it must not be relabeled absent-DH.
+
+V1 must deliver these dimensions, statuses, enabled-DH catalog and render/list/draw
+scopes on **both** timer backends. Generation task timing and GPU upload execution
+are not promised where current hooks/API/context cannot isolate them. Their v1
+fallback is a mandatory coverage row plus queue/window-worker evidence or a focused
+CPU investigation request, never omission or zero. Per-task dependency tracing and
+full driver transfer attribution may come later; the DH concern itself may not.
+
 ## 6. Measurement semantics and data contract
 
 ### Records
@@ -245,9 +367,9 @@ nanoseconds until display. Exported IDs must be joinable without parsing names.
 
 | Record | Minimum fields |
 | --- | --- |
-| Capture/cohort | Schema/tool/source versions, capture/run/process ID, operation receipt, native/absent/installed-Off identity, archive/options/resource-pack identity, preset, dimension, scene/world/camera, native resolution/AA, Iris/Sodium/DH/mod/JDK versions, GPU/driver/OS/Mesa/kernel, actual GL context, vsync/cap/display/compositor, graph/catalog revision, tier and sampling seed/cadence, restoration status |
+| Capture/cohort | Schema/tool/source versions, capture/run/process ID, operation receipt, native/absent/installed-Off identity, archive/options/resource-pack identity, preset, dimension, scene/world/camera, native resolution/AA, Iris/Sodium/DH/mod/JDK versions, GPU/driver/OS/Mesa/kernel, actual GL context, vsync/cap/display/compositor, graph/catalog revision, tier and sampling seed/cadence, restoration status; explicit DH state/settings/residency/compatibility identity from section 5 |
 | Window/frame | Window/epoch/frame ID; frame-start and next-start monotonic times; root boundaries; graph generation; warmup/partial/transition flags; sampled scope-set IDs and eligibility; end reason |
-| Scope/invocation | Registered ID/name, parent/event ID, execution ordinal, stage/program identity, operation kind, thread/context ID, feature links and confidence, expected/observed status |
+| Scope/invocation | Registered ID/name, parent/event ID, execution ordinal, stage/program identity, operation kind, thread/context ID, feature links and confidence, expected/observed status; DH stage/world-shadow/opacity context independent of whether parent was queried |
 | CPU event | Wall start/end, thread CPU delta or null, clock source/resolution, sampling state; known wait-site classification and evidence level |
 | GPU event | Issue frame/epoch, retrieval frame, begin/end query values when timestamps exist, elapsed duration, clock domain/counter width, backend, context, scope/invocation, availability/validity reason |
 | Coverage/health | Eligible/executed/scheduled/issued/completed counts, scope and query-pool limits, conflicts, queue evictions, timeout/reset/disjoint indicators if available, unresolved tail, imbalanced scopes, timer overhead diagnostics, dropped bytes/events |
@@ -373,6 +495,36 @@ capture windows. Move completed data into bounded storage; if full, record loss
 and stop/degrade the diagnostic explicitly. No unbounded queues or asynchronous
 writer competing unnoticed with measured CPU work.
 
+### Sampling feasibility before capture
+
+Dry-run planning must join duration, cadence, scope-set rotation and caps. With
+capture time `T`, planning FPS `F`, cadence `K`, `S` equally rotated sets, eligibility
+fraction `e`, within-set selection fraction `q` and completion fraction `r`, expected
+observations per scope are approximately `T*F*e*q*r/(K*S)`. This is planning arithmetic,
+not new timing or a guarantee. List per-window/process contributions; do not solve
+low counts by pooling different graphs/scenes or treating invocations as frames.
+
+| Illustrative plan: 120 capture seconds, 1-in-16, always-active uncapped scope, no losses | Expected frame observations | Consequence |
+| --- | --- | --- |
+| Timestamp, scope selected every sampled frame, assumed 60 FPS | 450 | Depth/caps can still reduce coverage |
+| Elapsed, seven sets, assumed 60 FPS | about 64 | Below the proposed 100-frame minimum |
+| Elapsed, fourteen sets after DH/pass subdivision, assumed 60 FPS | about 32 | Narrow scope sets or separately authorize more capture |
+| Elapsed, seven sets, assumed 300 FPS | about 321 | Feasibility only; overhead must still pass |
+
+The saved plan must list backend, all scope sets (including DH totals/leaves),
+selection fractions, expected counts and loss margin, query objects/endpoints,
+maximum pending intervals, availability-check/result-read budgets per poll frame,
+bounded drain timeout, CPU event capacity and estimated bytes/window. Pool sizing
+must account for repeated invocations and delayed results across sampled frames;
+the current per-name 12-slot ring is not a global capacity plan. Define numeric
+limits before launch and export actual high-water marks. Insufficient capacity
+must produce counted loss/partial status, not block or allocate without bound.
+If coverage is insufficient, return a useful partial report and propose a narrower
+focused capture or revised authorized schedule between windows. Do not silently
+raise cadence/depth, extend the runtime budget, or certify a full map from counts
+it cannot collect. Calibrate the DH-enabled graphs separately: no-DH overhead
+approval does not validate their extra hooks or scope pressure.
+
 ### Proposed acceptance budgets and later calibration
 
 Survey target: **at most 1% mean total-frame perturbation** and at most 3% p95
@@ -423,11 +575,40 @@ poll while no new samples issue, but it must finish before any scored operation.
 Keep first/last partial frames explicit. A textual warning alone is insufficient;
 the analyzer must enforce exclusions and give counts/reasons.
 
+HEAD/RETURN hooks do not guarantee paired exits on exceptions. Implementation
+must either use verified exception-safe wrappers or detect an open scope at the
+next boundary, invalidate affected records and disarm; it must never silently
+reattach that scope to another frame. Test reentrancy, early/exceptional returns,
+missing optional mixins, duplicate hooks and changed pinned descriptors. A hook
+installation receipt plus invocation evidence is required to distinguish absent
+work from a failed observer.
+
 On timer faults, unavailable counters, context loss or scope imbalance, close only
 owned queries safely, disarm and preserve the failure receipt. A CPU-only result
 can remain useful but must be labeled partial; it cannot pass GPU capture
 acceptance. Keep hardware/context capability decisions local. Do not force a
 higher GL context just to make a chart available.
+
+DH lifecycle needs its own generation in addition to the Iris graph epoch.
+Terminate/disarm the current steady cohort on effective mode, radius, quality,
+transparency/shadow/generation setting changes, world/server disconnect, pipeline
+replacement, renderer failure or readiness loss. Preserve partial results/reasons;
+re-inventory and recondition before a new cohort. Track residency/backlog changes
+and uploads per window/frame where observable. Unexpected loading in a prepared
+steady scene invalidates that steady window; it is not silently trimmed. In a
+separately declared streaming workload those transitions are the subject, with
+route/progress/task generations retained. Pause/menu, resize/minimize/focus loss,
+resource reload, teleport and camera changes must also be classified as transition
+or end conditions, never merged into ordinary steady statistics. Context loss must
+not trigger unsafe query operations on a dead context.
+
+Late worker callbacks and GPU returns retain their original capture owner, world,
+DH/graph generation and task/submission identity; old work cannot be charged to a
+new scene. Recovery restores DH API overrides (including clearing an originally
+absent override), underlying owned config, vanilla distance, generation policy and
+scene leases with CAS checks. Do not delete valuable generated LOD databases or
+clear caches to manufacture readiness. Test failure between each override and its
+receipt, callback-after-Cancel, disconnect/reconnect and reload with queries pending.
 
 Statistics must distinguish:
 
@@ -495,6 +676,21 @@ Required views:
   Inclusive parents are context, not additional stacked cost. Keep gaps visible.
   On elapsed-only captures, show observed slices/distributions and a clearly
   labeled cross-frame summary, not a completed stacked frame.
+- **LOD/DH coverage:** selectable vanilla/DH → world/shadow → main/deferred →
+  opacity paths where valid, with list CPU, generation/conversion/loading workers,
+  upload/submission, known waits, transfers and shared shader consumers alongside.
+  Show disabled/not-applicable/unsupported/uncovered rows and reasons, current DH
+  identity, residency/queue context and horizon evidence. CPU wall, thread CPU,
+  worker CPU and GPU elapsed stay separate; totals do not sum overlapping paths.
+  Compare pack/machine/DH cohorts side by side with absolute ms and uncertainty;
+  no combined DH “tax” from adding wrappers, children and consumer tags.
+- **Coverage and investigation queue:** separate physical timing, semantic mapping
+  and workload coverage; show not-yet-instrumented work and observer health. Rank
+  separately by absolute recurring cost and hitch/rare-event cost. Include occurrence
+  rate, per-frame vs conditional cost, between-process spread, evidence quality and
+  next useful measurement. Low-count p95s cannot outrank stable means by precision
+  they do not have. A large mixed pass calls for graph/CPU diagnosis, not a feature
+  saving estimate. If ranks overlap within uncertainty, present them as unresolved.
 - **Flame view:** instrumented CPU wall hierarchy or optional sampled CPU stacks,
   with units and source clearly distinguished. A sample-count flame graph must
   not be labeled milliseconds or GPU percentage.
@@ -521,7 +717,9 @@ optimization, or retention decision based solely on a cost ranking.
 **This section is a prospective study, requiring later runtime authorization.
 It does not reopen or repeat the completed candidate audits.**
 
-Use eight primary pack/machine cohorts: Reimagined, Unbound, BSL and MakeUp on
+Use two first-class DH families for each pack/machine: DH absent (or explicitly
+labeled installed-disabled if absence cannot be prepared) and DH enabled. The
+no-DH family has eight pack/machine cohorts: Reimagined, Unbound, BSL and MakeUp on
 Asahi at 2560×1600, then the native Windows RTX 5080 at 3840×2160 when allocated.
 Record the actual future driver; 617.42 describes the completed RTX audit, not an
 assumed immutable environment. RTX 2080 Ti is outside allocation and contributes
@@ -535,7 +733,7 @@ no planned runs. Historical availability language elsewhere does not override ST
    must produce a useful report without NVIDIA features. Then validate timestamp
    behavior and very-short-frame overhead on RTX. Backend selection is by observed
    capability/counter health, not vendor-name assumptions.
-3. Begin with one existing representative saved Overworld pose per pack/machine
+3. For the no-DH family, begin with one existing saved Overworld pose per pack/machine
    tied to the prior audit identity. Proposed initial schedule: the existing
    120-second conditioning discipline, three 20-second diagnostic windows in
    each of two fresh processes, with declared sampling phase variation. Keep
@@ -544,20 +742,46 @@ no planned runs. Historical availability language elsewhere does not override ST
    not automatically “main mod absent.” Prove any neutral/profiling artifact's
    dependency requirements before claiming an absent-mod diagnostic cohort.
 4. Retain prospective disarmed controls for overhead, not a fresh rerun of all
-   historic baselines or optimizations. With eight primary cohorts and two
-   processes, the initial profile matrix is 16 sessions. Conditioning plus three
+   historic baselines or optimizations. With eight no-DH cohorts and two
+   processes, that subset is 16 sessions. Conditioning plus three
    windows alone is 48 minutes in total; startup, settling, controls, drain,
    recovery and calibration add time. This is a planning estimate, not an
    authorization, fixed completion promise or measured runtime.
-5. After Philip sees the first map, use only the missing feature coverage to choose
-   additional scenes: water/translucency, sky/clouds, dense entities or interior
+5. Beyond the required DH horizon scenes below, use the first map's missing
+   coverage to choose additional scenes: water/translucency, sky/clouds, dense entities or interior
    shadow/filtering. Run identical scene definitions where meaningful, keep results
    separate, and declare unobserved features. One pose is not a game-wide profile.
-6. DH-enabled terrain and PBR/resource-pack modes are separate compatibility and
-   graph cohorts after authorization and readiness evidence. Keep vocabulary/hooks
-   in v1, but do not claim live DH/PBR coverage from the no-DH native matrix. Other
-   dimensions, dynamic traversal and loading hitches are later studies.
-7. Stop each operation with a capture-health and restoration receipt. Retain raw
+6. Include an enabled-DH family for **all four packs on both machines** in the
+   prospective v1 program, after authorization, per-stack readiness and original
+   pack compatibility evidence. Asahi validates first; RTX follows when allocated.
+   If a pinned pack/DH tuple cannot run, retain the blocked cell/reason rather than
+   substituting another pack/version or claiming complete DH coverage. PBR remains
+   a separately scoped resource-pack study. No past no-DH audit supplies DH data.
+   An enabled horizon scene per cell adds eight cohorts/two processes = 16 more
+   sessions, so the minimum two-family program is 32 sessions, before controls,
+   extra scenes or focused sampling. The same conditioning/window arithmetic alone
+   would be 96 minutes; DH preparation/readiness and coverage may require more.
+   This is a planning estimate, not authorized runtime or a fixed completion budget.
+7. Enabled-DH acceptance requires a saved **horizon view** with clearly documented
+   vanilla distance and visible LOD terrain beyond it, near/far transition coverage,
+   camera/FOV/day/weather identity, prepared LOD data and residency evidence. Add a
+   distant water/translucency view and a DH-shadow case where the actual pack graph
+   supports them; otherwise mark those features unobserved/unsupported. A prior
+   close Overworld pose cannot stand in for this coverage. Collect image and
+   positive-index submission evidence separately from timing: neither alone proves
+   all distant pixels or compatibility. Preserve original settings; choose a scene
+   exposing enabled work instead of toggling effects to manufacture attribution.
+   A matched horizon view with DH disabled can describe overall scene/graph change,
+   but is not an isolated removable DH cost or an optimization A/B proof.
+8. Separate **prepared steady rendering** from a bounded streaming/generation case.
+   V1 must represent both workload types and report generation coverage/limits;
+   do not promise a worker-cost map from idle queues. A future generation capture
+   needs its own authorization, route/distance progression, starting LOD/database
+   state, generation policy, backlog/task and upload observations, hitch metrics
+   and recovery/capacity plan. If not run or not instrumentable, show that gap in
+   the first DH report. Other dimensions and broader traversal remain additional
+   studies; no cache purge or world duplication is implicit.
+9. Stop each operation with a capture-health and restoration receipt. Retain raw
    evidence locally, track compact findings/catalog revisions and link completed
    results through EXPERIMENTS. Update STATUS only with actual completion/limits.
 
@@ -600,14 +824,16 @@ All steps below are future work. This design does not authorize starting them.
 | Stage | Deliverable | Acceptance evidence |
 | --- | --- | --- |
 | 1. Event contract and registry | Versioned records, frame/epoch/invocation identity, complete missingness, bounded buffers | CPU-only synthetic tests for repeated names, scope balance, graph changes, late results, counter wrap/reset, partial boundaries, overflow and malformed records |
-| 2. Timers and lifecycle | Extend existing timers/probe; disarmed/scored ownership gate; non-nesting leaf rotation; stop/drain/recovery | Mock query tests prove no queries/polls on unsampled ordinary frames, no nested elapsed query, no late cross-epoch contamination; error/Cancel/Off cleanup tests; production jar contents reject dev timers/mixins/resources |
-| 3. Named coverage and catalog | Actual passes plus copy/mip/blit/clear and CPU swap/event splits; reviewed four-pack mappings | Static source/graph fixtures, unknown-version fallback, disabled/mixed feature cases; later runtime invocation and graph coverage checks |
+| 2. Timers and lifecycle | Extend existing timers/probe; disarmed/scored ownership gate; non-nesting leaf rotation; stop/drain/recovery | Mock query tests prove no queries/polls on unsampled ordinary frames, no nested elapsed query, no late cross-epoch contamination; error/Cancel/Off cleanup tests, DH override rollback, late worker ownership, disconnect/readiness/residency transitions; production jar contents reject dev timers/mixins/resources |
+| 3. Named coverage and catalog | Actual passes plus copy/mip/blit/clear and CPU swap/event splits; reviewed four-pack absent/enabled-DH mappings, required DH stage joins and coverage rows | Static source/graph fixtures, DH absent/disabled/enabled/failed/unsupported cases, unknown-version fallback, disabled/mixed feature cases; later runtime invocation and graph coverage checks |
 | 4. Offline report/export | Tables, frame hierarchy, variance, CPU flame option and honest backend-specific trace | Fixture round trips and golden numeric summaries; no double counting, sparse zero fill, fabricated clock alignment or false GPU stack; existing reports still readable |
 | 5. Authorized machine validation | Asahi then RTX capture/overhead evidence and representative external calibration | Per-cohort budgets, coverage/sample counts, query health, repeatability, native identity and verified restoration; unsupported capability stays explicit |
-| 6. Philip's first review | Eight-cohort native cost map and selected next questions | Philip can trace each named cost to measured scopes and see unknowns; no optimization or promotion happens automatically |
+| 6. Philip's first review | Four-pack/two-machine absent/enabled-DH map and selected next questions (blocked cells explicit) | Philip can trace each named cost to measured scopes and see unknowns; no optimization or promotion happens automatically |
 
 V1 includes the existing two GPU backends, named passes/groups and CPU scopes,
-feature metadata for the four pinned targets, mixed/unmapped accounting, capture
+feature metadata for the four pinned targets and their DH-enabled graphs, first-class
+DH identity/lifecycle, terrain/shadow/list/draw scopes, generation/upload coverage
+with explicit fallbacks, horizon-scene requirements, mixed/unmapped accounting, capture
 health, sparse survey/focused tiers, harness ownership and offline CSV/JSON/HTML/
 trace exports. JFR remains an optional separate diagnostic attachment using the
 existing analyzer. First-class integration of every external tool is unnecessary.
@@ -617,7 +843,7 @@ worker dependency traces, per-draw selected capture, richer resource-dependency
 views, optional native Perfetto/Tracy adapters, broader graph/version mapping and
 purpose-designed feature ablations. Hardware counters/ISA/occupancy remain
 external specialist evidence unless separately scoped. None is required to get
-an honest first pass-cost map to Philip.
+an honest first pass-cost map to Philip. They do not defer the v1 DH requirements.
 
 ## 12. Risks, non-goals and the proof boundary
 
@@ -629,8 +855,8 @@ alter batching or tile behavior even without blocking; a low CPU overhead number
 alone does not validate GPU pass attribution. Missing instrumentation is a result
 to show, not a reason to fill the graph with estimates.
 
-This system will not claim pixel/HDR equivalence, motion quality, DH/PBR
-compatibility, occupancy, ISA cost, memory bandwidth, per-pixel feature cost,
+Measurements alone will not claim pixel/HDR equivalence, motion quality, broad
+DH/PBR compatibility, occupancy, ISA cost, memory bandwidth, per-pixel feature cost,
 end-to-end input/display latency or a universal CPU/GPU bottleneck from timer
 ratios. It will not change original shaders, native resolution/AA, enable an
 optimization by default, train models, lock clocks, require a vendor SDK in the
