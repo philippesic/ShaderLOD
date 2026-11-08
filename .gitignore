@@ -64,6 +64,12 @@ __pycache__/
 !/dev/experiments/rtx5080-four-target-audit-20261106/terminal-world-copies-v4-verification.json
 !/dev/experiments/rtx5080-four-target-audit-20261106/timing-summary-v4.json
 !/dev/experiments/rtx5080-four-target-audit-20261106/png-transport-v6.json
+!/dev/experiments/rtx5080-four-target-audit-20261106/source-review-findings.json
+!/dev/experiments/rtx5080-four-target-audit-20261106/cpu-profile-filtered-v5.json
+!/dev/experiments/rtx5080-four-target-audit-20261106/terminal-timing-raw-v7-verification.json
+!/dev/experiments/rtx5080-four-target-audit-20261106/terminal-heavy-v8-verification.json
+!/dev/experiments/rtx5080-four-target-audit-20261106/regression-work-summary.json
+!/dev/experiments/rtx5080-four-target-audit-20261106/transport-retirement.json
 !/dev/experiments/*.md
 !/dev/experiments/*/*.md
 !/dev/experiments/*.patch

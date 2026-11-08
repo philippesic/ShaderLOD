@@ -16,7 +16,7 @@ variance data and charts. There is no active performance acquisition.
 
 The current descriptive reduction contains200 reports,175 valid and40 measured
 primary cells, each with two independent processes and opposite comparison order.
-22 rows still need source/applicability review; two MakeUp N02/N03 rows share G01
+22 rows now have explicit source-held/no-certified-route dispositions; two MakeUp N02/N03 rows share G01
 and receive no additive or independent gain. Missing rows have explicit review
 states and no fabricated timing bars. Actual contexts/cases/implementation pins
 remain separate. Old MakeUp admission code cannot contribute to repaired cohorts.
@@ -39,7 +39,9 @@ must retain121-frame completeness and preserve the failed attempt. Reimagined C0
 not write errors. The batch stopped at capacity before Unbound/N04. The failed
 attempts and full raw bytes remain preserved. `run-quality-v6.py` now runs five
 fresh checks after a recorder repair: BSL G02, the three C02 packs and MakeUp N04.
-The ignored quality-v6-status.json/outcomes.json/log identify the exact live phase.
+Both fresh BSL checks now finish VALID/restored with363/363 captures each; the
+Complementary/N04 checks continue. The ignored quality-v6-status.json/outcomes.json/log
+identify the exact live phase.
 No source/classes used by active native checks may be changed.
 
 Recorder repair: benchmark camera catch-up ticks and full image leases hold the
@@ -53,7 +55,9 @@ both hosts. Existing timing inputs are unchanged by this untimed recorder repair
 JFR diagnostics are outside performance runs. The initial15s recordings overlap
 post-window observer reload; unfiltered samples cannot isolate candidate costs.
 They do not establish a dominant Java hotspot or any GPU cost explanation.
-Filter by the operation's candidate-window command times before interpretation.
+Filtered exact candidate-window evidence is now retained in
+cpu-profile-filtered-v5.json and REGRESSION_DIAGNOSIS.md. Sparse samples establish
+no dominant Java hotspot or GPU cost explanation.
 
 ## Timing interpretation and artifacts
 
@@ -125,7 +129,20 @@ world copies are likewise preserved/reclaimed separately.
 Raw motion bytes remain recoverable in per-case/per-arm ZIPs, kept native or mirrored
 according to measured capacity. Failed captures are preserved too.
 
-Next: finish active quality checks, diagnose/retry incomplete captures, inspect
+Two OpenGL4.6 G03 diagnostic comparisons are prepared for Complementary, separately
+from native3.2 primary timings. run-modern-regression-v7.py automatically waits for
+the full quality/archive phase before launching any scored window. Material
+context changes need fresh confirmation before primary promotion.
+
+Next: finish active quality checks, inspect
 pixels and actual poses, investigate regressions and remaining source opportunities,
 classify all64 cells, update final charts, and audit restoration/owned cleanup.
 The campaign remains active and incomplete. No full-deliverable ETA is established.
+
+Further owned storage preservation: terminal timing windows/receipts are archived
+off-host and every file rehashed before native retirement (2.49GiB reclaimed).
+A small final terminal PNG/world-copy group likewise reclaims0.63GiB. Report
+metadata/build bindings, extracted timing mirrors, source inputs and raw quality
+archives remain. Retiring17 local transport ZIPs recovers0.48GiB only after every
+extracted byte re-verifies against its original transfer manifest. No other
+projects/shared caches are touched.

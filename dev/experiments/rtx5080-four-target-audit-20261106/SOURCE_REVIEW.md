@@ -32,6 +32,12 @@ adjustment. This is not a missing NVIDIA capability. Their geometry needs its ow
 conservative bounds/material and raster proof before reusing the MakeUp query
 permission. A simple host-list expansion would be incorrect.
 
+BSL G01 also needs a complete bank/alpha/history certificate. Native FXAA=true
+makes composite6 real AA work; deleting that stage as a pure copy would violate
+the native AA constraint. MOTION_BLUR=false makes composite2 a potential copy
+branch, but its physical bank/alpha/history equivalence is not certified. Native
+composite3/5/7 also update temporal data. This is not a measured zero result.
+
 BSL's native composite4 bloom kernel uses a6×6 offset grid; both Complementary
 kernels use7×7 grids. Distinct offsets have nonzero pixel spacing at4K. The MakeUp
 G10 exact-coordinate reuse proof does not establish duplicate queries in these
@@ -56,5 +62,14 @@ The overlapping MakeUp copy route gets no additional independent credit.
 C02 now has a finite source/target extension for the two separate Complementary
 bloom outputs. See [port scope and validation](C02_PORT.md). MakeUp's multiple/full
 scene outputs require a different isolated producer; the BSL pass predicate cannot
-be broadened by name alone. Actual NV capability/work, quality and timing remain
-pending on all three executable bloom targets.
+be broadened by name alone. Actual NV activation/restoration and two-process timing now pass for all three
+executable bloom targets. Quality remains under investigation through fresh bounded
+motion captures; these are vendor-specific prototypes, not shared v1 qualification.
+
+The compact [22 source dispositions](source-review-findings.json) bind each reviewed
+cell to original archive/options and selected source-member hashes. Held lifetime,
+geometry and general-route rows are not measured zero, unsupported hardware or
+production impossibility. Current scope screens existing mechanisms and repairs
+viable general contracts; it does not authorize four unrelated new pack-specific
+algorithms to fill timing bars. These source dispositions do not close pending
+regression, quality or runtime audit work.

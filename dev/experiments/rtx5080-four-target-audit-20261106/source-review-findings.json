@@ -1,0 +1,276 @@
+{
+  "scope": "Current original archives/full native profiles at4K Overworld; source applicability only. Held rows are not measured zero, hardware unsupported, production impossibility or new implemented ports. General-route scope defers separate pack-specific algorithms. Runtime/quality/timing evidence is separate.",
+  "source_identity": {
+    "makeup": {
+      "archive": "dependencies/shortlist-test-inputs/originals/MakeUpNativeOriginal.zip",
+      "sha256": "0036da17e0c7158e1c669593e6322d53fce3f5a42fb5124b935e9e21a5719db8",
+      "options": "benchmarks/profiles/v1/makeup.properties",
+      "options_sha256": "87d286147fa41836efdc7efb8b32638336b9d636230e07a9c721cb768e5f4ae1"
+    },
+    "bsl": {
+      "archive": "dependencies/shortlist-test-inputs/originals/BSL_v10.1.8.zip",
+      "sha256": "36b0a50ff7918bf10e9422c401d93779f9d0088a26acea975b435243f96930b5",
+      "options": "benchmarks/profiles/v1/bsl.properties",
+      "options_sha256": "99ad100c8c85c9747e52015d488c50f6ae30484be8c7b51e06e12b58310a1cc1"
+    },
+    "reimagined": {
+      "archive": "dependencies/upstream/other-pack-research/ComplementaryReimagined_r5.9.3.zip",
+      "sha256": "fed6c879e732cf7fc7bc6570ebb1def43235aa7e96f62859fbdbdbfa0b484b38",
+      "options": "benchmarks/profiles/v1/reimagined.properties",
+      "options_sha256": "578165810ef82b60cef9d53344650b3b6f825ca414bd7ba063537805bd73893b"
+    },
+    "unbound": {
+      "archive": "dependencies/upstream/other-pack-research/ComplementaryUnbound_r5.9.3.zip",
+      "sha256": "98ac741dee294d2a3c82d153349148c3bb7fb688c30eb3b49c3b9ac37e968c5a",
+      "options": "benchmarks/profiles/v1/unbound.properties",
+      "options_sha256": "2ffe039b0fb1ca8915b8c2c63d450d847d95d5c87387b250f10bd9f5d6d387a4"
+    }
+  },
+  "cells": [
+    {
+      "shader": "reimagined",
+      "goal": "G01",
+      "status": "HELD_NATIVE_LIFETIME_PROOF",
+      "scope_note": "Native WORLD_BLUR=0 composite3 has a genuine RGB identity-copy opportunity. Removing it still needs certified physical bank permutation, clear/history, mip regeneration and next-frame image equivalence. Current MakeUp cancellation certificate does not cover this graph; no timing/zero-gain or NVIDIA-blocker claim.",
+      "evidence": "SOURCE_REVIEW.md",
+      "source_members_sha256": {
+        "shaders/program/composite3.glsl": "d606f9a7ab7f95bd890f7b45d76d088fceb0283f2c37da0f473b2870ab162fa8",
+        "shaders/program/composite4.glsl": "c19352bcd5b5db30a5540e06ddfc4a13b34e0bd75ae0ed117dbfe715c628027d",
+        "shaders/shaders.properties": "b29be050d6296bc5df769a66e351adbaaa9108eec801eb0442137a7a81266ab7"
+      }
+    },
+    {
+      "shader": "unbound",
+      "goal": "G01",
+      "status": "HELD_NATIVE_LIFETIME_PROOF",
+      "scope_note": "Native WORLD_BLUR=0 composite3 has a genuine RGB identity-copy opportunity. Removing it still needs certified physical bank permutation, clear/history, mip regeneration and next-frame image equivalence. Current MakeUp cancellation certificate does not cover this graph; no timing/zero-gain or NVIDIA-blocker claim.",
+      "evidence": "SOURCE_REVIEW.md",
+      "source_members_sha256": {
+        "shaders/program/composite3.glsl": "d606f9a7ab7f95bd890f7b45d76d088fceb0283f2c37da0f473b2870ab162fa8",
+        "shaders/program/composite4.glsl": "c19352bcd5b5db30a5540e06ddfc4a13b34e0bd75ae0ed117dbfe715c628027d",
+        "shaders/shaders.properties": "b29be050d6296bc5df769a66e351adbaaa9108eec801eb0442137a7a81266ab7"
+      }
+    },
+    {
+      "shader": "bsl",
+      "goal": "G01",
+      "status": "HELD_NATIVE_LIFETIME_PROOF",
+      "scope_note": "BSL native FXAA=true makes composite6 real AA work, so omitting it would violate the native-AA requirement. Other possible copy-only branches (including MOTION_BLUR=false composite2) lack a complete physical bank/alpha/history certificate; composite3/5/7 also update temporal data. No certified reusable omission was found.",
+      "evidence": "SOURCE_REVIEW.md",
+      "source_members_sha256": {
+        "shaders/program/composite2.glsl": "d4b0585ed8170aae7f79d69e3208cca25110d4cf4d5fcca401d5a8fea4230f2d",
+        "shaders/program/composite3.glsl": "6025ee14c9756387952418ad5ebdad2bea34d1a7374c54eb525c3ee138495a37",
+        "shaders/program/composite5.glsl": "45fa9656734f037299a308a9d0c35cf3dfb167377387dc3f76112de1b72ee621",
+        "shaders/program/composite6.glsl": "ed05d328124273cb80ef7cfc89f4757550871c7f09a3ff72b71c6f7743a84b03",
+        "shaders/program/composite7.glsl": "a5ccbc5e132b8c43d9195ddb3c3b0f9c292dcf13e2aad9d0f4ba9e0a084d5c0a"
+      }
+    },
+    {
+      "shader": "makeup",
+      "goal": "G02",
+      "status": "NATIVE_MIP_CONSUMERS_REQUIRED",
+      "scope_note": "Both MakeUp native mip families have positive-LOD consumers: colortex1 exposure in the vertex path at log2(min(viewWidth,viewHeight))-1, and colortex0 soft-LOD bloom. At native4K these are not dead chains. No omission is justified while preserving the present settings.",
+      "evidence": "SOURCE_REVIEW.md",
+      "source_members_sha256": {
+        "shaders/common/composite_vertex.glsl": "794b9c07dbacb61924c0e085c724aa2b3cebe319c2ebdfcdfeda6e51c7b2de44",
+        "shaders/common/composite_fragment.glsl": "4ba0ebc93fcdb9f06799de1916128ddee279464284c4209071d8a71c27459715",
+        "shaders/common/composite1_fragment.glsl": "d938314defbd44530d55a45ae09c170cb74ba1ab9b6955029fa436feee381c30",
+        "shaders/lib/bloom.glsl": "4af5eeb624de3452b2a3868731aa14544b37c4e94c2766c119ad7d6f848fb72c"
+      }
+    },
+    {
+      "shader": "bsl",
+      "goal": "G04",
+      "status": "HELD_NO_QUALIFIED_GENERAL_ROUTE",
+      "scope_note": "The qualified MakeUp ordinary translucent contribution/normal guard is not a general proof for this native shader. Its material/lighting/translucency graph has no certified equivalent zero-work predicate in the current implementation. Defer a new pack-specific algorithm; this is not measured zero or a missing NVIDIA capability.",
+      "evidence": "SOURCE_REVIEW.md",
+      "source_members_sha256": {
+        "shaders/program/gbuffers_water.glsl": "637f7135c810f33d8c0ea1f5b87096486417ed85a623c65e5d96de4227c2fb5f"
+      }
+    },
+    {
+      "shader": "reimagined",
+      "goal": "G04",
+      "status": "HELD_NO_QUALIFIED_GENERAL_ROUTE",
+      "scope_note": "The qualified MakeUp ordinary translucent contribution/normal guard is not a general proof for this native shader. Its material/lighting/translucency graph has no certified equivalent zero-work predicate in the current implementation. Defer a new pack-specific algorithm; this is not measured zero or a missing NVIDIA capability.",
+      "evidence": "SOURCE_REVIEW.md",
+      "source_members_sha256": {
+        "shaders/program/gbuffers_water.glsl": "8c2afedb074b06d36a760cc359d42340cfe7bd17312820027111384928d0a849"
+      }
+    },
+    {
+      "shader": "unbound",
+      "goal": "G04",
+      "status": "HELD_NO_QUALIFIED_GENERAL_ROUTE",
+      "scope_note": "The qualified MakeUp ordinary translucent contribution/normal guard is not a general proof for this native shader. Its material/lighting/translucency graph has no certified equivalent zero-work predicate in the current implementation. Defer a new pack-specific algorithm; this is not measured zero or a missing NVIDIA capability.",
+      "evidence": "SOURCE_REVIEW.md",
+      "source_members_sha256": {
+        "shaders/program/gbuffers_water.glsl": "8c2afedb074b06d36a760cc359d42340cfe7bd17312820027111384928d0a849"
+      }
+    },
+    {
+      "shader": "bsl",
+      "goal": "G08",
+      "status": "HELD_NO_QUALIFIED_GENERAL_ROUTE",
+      "scope_note": "The present BSL volume_light_reuse route has no operative qualified native consumer. The historical Balanced clear-weather cloud-bound prototype has different source/profile/API conditions and cannot substitute for this native tuple.",
+      "evidence": "SOURCE_REVIEW.md",
+      "source_members_sha256": {
+        "shaders/program/composite.glsl": "43cc8317bdebf3f7e03021a0817b3b8870074b014d895d367cbaaf11dce62a07",
+        "shaders/program/composite1.glsl": "03417fc005cb25528aa7e85c3448b1d44573080c8f95f8da531b4e5e82ffa445"
+      }
+    },
+    {
+      "shader": "makeup",
+      "goal": "G09",
+      "status": "NO_NATIVE_POM_WORK",
+      "scope_note": "This MakeUp profile has no native material POM traversal or height-map consumer. A parallax-cache request therefore cannot remove native POM work here. The other families use separately measured native-PBR cases.",
+      "evidence": "SOURCE_REVIEW.md",
+      "source_members_sha256": {
+        "shaders/shaders.properties": "4788ee3bc2ee467a4dfc8aa3c6afe3190b00e5151462d9edb909ffae7b609261"
+      }
+    },
+    {
+      "shader": "bsl",
+      "goal": "G10",
+      "status": "NO_CERTIFIED_IDENTICAL_QUERY_REUSE",
+      "scope_note": "BSL native bloom uses a6x6 grid of distinct offsets. At4K these are nonzero distinct pixel offsets, so the MakeUp identical-coordinate reuse certificate does not port. Approximate bilinear pairing/clamp/derivative changes would be a different implementation needing quality proof; no universal impossibility is claimed.",
+      "evidence": "SOURCE_REVIEW.md",
+      "source_members_sha256": {
+        "shaders/program/composite4.glsl": "1b68abbddc3c0e8b65da5979a0d96a7ef889b07cb1ac8047974ef5af08df84af"
+      }
+    },
+    {
+      "shader": "reimagined",
+      "goal": "G10",
+      "status": "NO_CERTIFIED_IDENTICAL_QUERY_REUSE",
+      "scope_note": "Complementary native bloom uses a7x7 grid of distinct offsets. At4K these are nonzero distinct pixel offsets, so the MakeUp identical-coordinate reuse certificate does not port. Approximate bilinear pairing/clamp/derivative changes would be a different implementation needing quality proof; no universal impossibility is claimed.",
+      "evidence": "SOURCE_REVIEW.md",
+      "source_members_sha256": {
+        "shaders/program/composite4.glsl": "c19352bcd5b5db30a5540e06ddfc4a13b34e0bd75ae0ed117dbfe715c628027d"
+      }
+    },
+    {
+      "shader": "unbound",
+      "goal": "G10",
+      "status": "NO_CERTIFIED_IDENTICAL_QUERY_REUSE",
+      "scope_note": "Complementary native bloom uses a7x7 grid of distinct offsets. At4K these are nonzero distinct pixel offsets, so the MakeUp identical-coordinate reuse certificate does not port. Approximate bilinear pairing/clamp/derivative changes would be a different implementation needing quality proof; no universal impossibility is claimed.",
+      "evidence": "SOURCE_REVIEW.md",
+      "source_members_sha256": {
+        "shaders/program/composite4.glsl": "c19352bcd5b5db30a5540e06ddfc4a13b34e0bd75ae0ed117dbfe715c628027d"
+      }
+    },
+    {
+      "shader": "bsl",
+      "goal": "C01",
+      "status": "HELD_CONSERVATIVE_GEOMETRY_PROOF",
+      "scope_note": "BSL WavingBlocks changes native SOLID vertices. The MakeUp proxy bounds/source certificate cannot certify conservative occlusion of these positions. Query hardware works on this GPU; extending only the target list would be unsafe. No culling benefit is claimed.",
+      "evidence": "SOURCE_REVIEW.md",
+      "source_members_sha256": {
+        "shaders/program/gbuffers_terrain.glsl": "c47d350132261e8f7b271f99ba8d060e4b38ee12a5da50597b664245f212c8d7"
+      }
+    },
+    {
+      "shader": "reimagined",
+      "goal": "C01",
+      "status": "HELD_CONSERVATIVE_GEOMETRY_PROOF",
+      "scope_note": "Complementary DoWave and material depth adjustments change native SOLID vertices. The MakeUp proxy bounds/source certificate cannot certify conservative occlusion of these positions. Query hardware works on this GPU; extending only the target list would be unsafe. No culling benefit is claimed.",
+      "evidence": "SOURCE_REVIEW.md",
+      "source_members_sha256": {
+        "shaders/program/gbuffers_terrain.glsl": "1189f81fbfacde4749d28925f705b136f070ee83cd103c24580bc905b0e6f68f"
+      }
+    },
+    {
+      "shader": "unbound",
+      "goal": "C01",
+      "status": "HELD_CONSERVATIVE_GEOMETRY_PROOF",
+      "scope_note": "Complementary DoWave and material depth adjustments change native SOLID vertices. The MakeUp proxy bounds/source certificate cannot certify conservative occlusion of these positions. Query hardware works on this GPU; extending only the target list would be unsafe. No culling benefit is claimed.",
+      "evidence": "SOURCE_REVIEW.md",
+      "source_members_sha256": {
+        "shaders/program/gbuffers_terrain.glsl": "1189f81fbfacde4749d28925f705b136f070ee83cd103c24580bc905b0e6f68f"
+      }
+    },
+    {
+      "shader": "makeup",
+      "goal": "C02",
+      "status": "NO_ISOLATED_BLOOM_VRS_ROUTE",
+      "scope_note": "MakeUp native composite writes multiple outputs (including full scene color); composite1 combines scene and bloom. The measured single-output bloom VRS contract would coarsen additional scene work here. A new isolated producer/quality contract is required; this is not an absent NVIDIA VRS capability.",
+      "evidence": "SOURCE_REVIEW.md",
+      "source_members_sha256": {
+        "shaders/common/composite_fragment.glsl": "4ba0ebc93fcdb9f06799de1916128ddee279464284c4209071d8a71c27459715",
+        "shaders/common/composite1_fragment.glsl": "d938314defbd44530d55a45ae09c170cb74ba1ab9b6955029fa436feee381c30"
+      }
+    },
+    {
+      "shader": "bsl",
+      "goal": "N02",
+      "status": "HELD_NATIVE_LIFETIME_PROOF",
+      "scope_note": "Current native attachments/history/custom texture ownership lack a complete multi-frame read/write/clear/bank-lifetime certificate for safe storage removal. Sampler names or one-frame inactivity cannot prove dead resources. No independent timing or saved-allocation claim; retain native storage until a shared safe mechanism is demonstrated.",
+      "evidence": "SOURCE_REVIEW.md",
+      "source_members_sha256": {
+        "shaders/shaders.properties": "8856162fcf6846e1b56f5c092e6eaee04af687875f85e87cde87e1bd0a0d3169",
+        "shaders/program/composite3.glsl": "6025ee14c9756387952418ad5ebdad2bea34d1a7374c54eb525c3ee138495a37",
+        "shaders/program/composite5.glsl": "45fa9656734f037299a308a9d0c35cf3dfb167377387dc3f76112de1b72ee621"
+      }
+    },
+    {
+      "shader": "reimagined",
+      "goal": "N02",
+      "status": "HELD_NATIVE_LIFETIME_PROOF",
+      "scope_note": "Current native attachments/history/custom texture ownership lack a complete multi-frame read/write/clear/bank-lifetime certificate for safe storage removal. Sampler names or one-frame inactivity cannot prove dead resources. No independent timing or saved-allocation claim; retain native storage until a shared safe mechanism is demonstrated.",
+      "evidence": "SOURCE_REVIEW.md",
+      "source_members_sha256": {
+        "shaders/shaders.properties": "b29be050d6296bc5df769a66e351adbaaa9108eec801eb0442137a7a81266ab7",
+        "shaders/program/composite3.glsl": "d606f9a7ab7f95bd890f7b45d76d088fceb0283f2c37da0f473b2870ab162fa8",
+        "shaders/program/composite5.glsl": "58e08235521b53ee9baf40bbc7512eb387ef2200496843d36eebeae0f7a46a9f"
+      }
+    },
+    {
+      "shader": "unbound",
+      "goal": "N02",
+      "status": "HELD_NATIVE_LIFETIME_PROOF",
+      "scope_note": "Current native attachments/history/custom texture ownership lack a complete multi-frame read/write/clear/bank-lifetime certificate for safe storage removal. Sampler names or one-frame inactivity cannot prove dead resources. No independent timing or saved-allocation claim; retain native storage until a shared safe mechanism is demonstrated.",
+      "evidence": "SOURCE_REVIEW.md",
+      "source_members_sha256": {
+        "shaders/shaders.properties": "b29be050d6296bc5df769a66e351adbaaa9108eec801eb0442137a7a81266ab7",
+        "shaders/program/composite3.glsl": "d606f9a7ab7f95bd890f7b45d76d088fceb0283f2c37da0f473b2870ab162fa8",
+        "shaders/program/composite5.glsl": "58e08235521b53ee9baf40bbc7512eb387ef2200496843d36eebeae0f7a46a9f"
+      }
+    },
+    {
+      "shader": "bsl",
+      "goal": "N03",
+      "status": "HELD_NATIVE_LIFETIME_PROOF",
+      "scope_note": "Current native attachments/history/custom texture ownership lack a complete multi-frame read/write/clear/bank-lifetime certificate for safe copy/history removal. Sampler names or one-frame inactivity cannot prove dead resources. No independent timing or saved-allocation claim; retain native storage until a shared safe mechanism is demonstrated.",
+      "evidence": "SOURCE_REVIEW.md",
+      "source_members_sha256": {
+        "shaders/shaders.properties": "8856162fcf6846e1b56f5c092e6eaee04af687875f85e87cde87e1bd0a0d3169",
+        "shaders/program/composite3.glsl": "6025ee14c9756387952418ad5ebdad2bea34d1a7374c54eb525c3ee138495a37",
+        "shaders/program/composite5.glsl": "45fa9656734f037299a308a9d0c35cf3dfb167377387dc3f76112de1b72ee621"
+      }
+    },
+    {
+      "shader": "reimagined",
+      "goal": "N03",
+      "status": "HELD_NATIVE_LIFETIME_PROOF",
+      "scope_note": "Current native attachments/history/custom texture ownership lack a complete multi-frame read/write/clear/bank-lifetime certificate for safe copy/history removal. Sampler names or one-frame inactivity cannot prove dead resources. No independent timing or saved-allocation claim; retain native storage until a shared safe mechanism is demonstrated.",
+      "evidence": "SOURCE_REVIEW.md",
+      "source_members_sha256": {
+        "shaders/shaders.properties": "b29be050d6296bc5df769a66e351adbaaa9108eec801eb0442137a7a81266ab7",
+        "shaders/program/composite3.glsl": "d606f9a7ab7f95bd890f7b45d76d088fceb0283f2c37da0f473b2870ab162fa8",
+        "shaders/program/composite5.glsl": "58e08235521b53ee9baf40bbc7512eb387ef2200496843d36eebeae0f7a46a9f"
+      }
+    },
+    {
+      "shader": "unbound",
+      "goal": "N03",
+      "status": "HELD_NATIVE_LIFETIME_PROOF",
+      "scope_note": "Current native attachments/history/custom texture ownership lack a complete multi-frame read/write/clear/bank-lifetime certificate for safe copy/history removal. Sampler names or one-frame inactivity cannot prove dead resources. No independent timing or saved-allocation claim; retain native storage until a shared safe mechanism is demonstrated.",
+      "evidence": "SOURCE_REVIEW.md",
+      "source_members_sha256": {
+        "shaders/shaders.properties": "b29be050d6296bc5df769a66e351adbaaa9108eec801eb0442137a7a81266ab7",
+        "shaders/program/composite3.glsl": "d606f9a7ab7f95bd890f7b45d76d088fceb0283f2c37da0f473b2870ab162fa8",
+        "shaders/program/composite5.glsl": "58e08235521b53ee9baf40bbc7512eb387ef2200496843d36eebeae0f7a46a9f"
+      }
+    }
+  ]
+}

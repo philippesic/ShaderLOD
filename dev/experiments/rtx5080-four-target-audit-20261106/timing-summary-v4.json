@@ -54,22 +54,22 @@
     {
       "shader": "reimagined",
       "goal": "G01",
-      "status": "SOURCE_REVIEW_PENDING",
-      "scope_note": "No qualified runtime measurement; source/applicability review remains separate from measured outcomes.",
+      "status": "HELD_NATIVE_LIFETIME_PROOF",
+      "scope_note": "Native WORLD_BLUR=0 composite3 has a genuine RGB identity-copy opportunity. Removing it still needs certified physical bank permutation, clear/history, mip regeneration and next-frame image equivalence. Current MakeUp cancellation certificate does not cover this graph; no timing/zero-gain or NVIDIA-blocker claim.",
       "implementation": ""
     },
     {
       "shader": "unbound",
       "goal": "G01",
-      "status": "SOURCE_REVIEW_PENDING",
-      "scope_note": "No qualified runtime measurement; source/applicability review remains separate from measured outcomes.",
+      "status": "HELD_NATIVE_LIFETIME_PROOF",
+      "scope_note": "Native WORLD_BLUR=0 composite3 has a genuine RGB identity-copy opportunity. Removing it still needs certified physical bank permutation, clear/history, mip regeneration and next-frame image equivalence. Current MakeUp cancellation certificate does not cover this graph; no timing/zero-gain or NVIDIA-blocker claim.",
       "implementation": ""
     },
     {
       "shader": "bsl",
       "goal": "G01",
-      "status": "SOURCE_REVIEW_PENDING",
-      "scope_note": "No qualified runtime measurement; source/applicability review remains separate from measured outcomes.",
+      "status": "HELD_NATIVE_LIFETIME_PROOF",
+      "scope_note": "BSL native FXAA=true makes composite6 real AA work, so omitting it would violate the native-AA requirement. Other possible copy-only branches (including MOTION_BLUR=false composite2) lack a complete physical bank/alpha/history certificate; composite3/5/7 also update temporal data. No certified reusable omission was found.",
       "implementation": ""
     },
     {
@@ -228,8 +228,8 @@
     {
       "shader": "makeup",
       "goal": "G02",
-      "status": "SOURCE_REVIEW_PENDING",
-      "scope_note": "No qualified runtime measurement; source/applicability review remains separate from measured outcomes.",
+      "status": "NATIVE_MIP_CONSUMERS_REQUIRED",
+      "scope_note": "Both MakeUp native mip families have positive-LOD consumers: colortex1 exposure in the vertex path at log2(min(viewWidth,viewHeight))-1, and colortex0 soft-LOD bloom. At native4K these are not dead chains. No omission is justified while preserving the present settings.",
       "implementation": ""
     },
     {
@@ -490,22 +490,22 @@
     {
       "shader": "bsl",
       "goal": "G04",
-      "status": "SOURCE_REVIEW_PENDING",
-      "scope_note": "No qualified runtime measurement; source/applicability review remains separate from measured outcomes.",
+      "status": "HELD_NO_QUALIFIED_GENERAL_ROUTE",
+      "scope_note": "The qualified MakeUp ordinary translucent contribution/normal guard is not a general proof for this native shader. Its material/lighting/translucency graph has no certified equivalent zero-work predicate in the current implementation. Defer a new pack-specific algorithm; this is not measured zero or a missing NVIDIA capability.",
       "implementation": ""
     },
     {
       "shader": "reimagined",
       "goal": "G04",
-      "status": "SOURCE_REVIEW_PENDING",
-      "scope_note": "No qualified runtime measurement; source/applicability review remains separate from measured outcomes.",
+      "status": "HELD_NO_QUALIFIED_GENERAL_ROUTE",
+      "scope_note": "The qualified MakeUp ordinary translucent contribution/normal guard is not a general proof for this native shader. Its material/lighting/translucency graph has no certified equivalent zero-work predicate in the current implementation. Defer a new pack-specific algorithm; this is not measured zero or a missing NVIDIA capability.",
       "implementation": ""
     },
     {
       "shader": "unbound",
       "goal": "G04",
-      "status": "SOURCE_REVIEW_PENDING",
-      "scope_note": "No qualified runtime measurement; source/applicability review remains separate from measured outcomes.",
+      "status": "HELD_NO_QUALIFIED_GENERAL_ROUTE",
+      "scope_note": "The qualified MakeUp ordinary translucent contribution/normal guard is not a general proof for this native shader. Its material/lighting/translucency graph has no certified equivalent zero-work predicate in the current implementation. Defer a new pack-specific algorithm; this is not measured zero or a missing NVIDIA capability.",
       "implementation": ""
     },
     {
@@ -1174,8 +1174,8 @@
     {
       "shader": "bsl",
       "goal": "G08",
-      "status": "SOURCE_REVIEW_PENDING",
-      "scope_note": "No qualified runtime measurement; source/applicability review remains separate from measured outcomes.",
+      "status": "HELD_NO_QUALIFIED_GENERAL_ROUTE",
+      "scope_note": "The present BSL volume_light_reuse route has no operative qualified native consumer. The historical Balanced clear-weather cloud-bound prototype has different source/profile/API conditions and cannot substitute for this native tuple.",
       "implementation": ""
     },
     {
@@ -1334,8 +1334,8 @@
     {
       "shader": "makeup",
       "goal": "G09",
-      "status": "SOURCE_REVIEW_PENDING",
-      "scope_note": "No qualified runtime measurement; source/applicability review remains separate from measured outcomes.",
+      "status": "NO_NATIVE_POM_WORK",
+      "scope_note": "This MakeUp profile has no native material POM traversal or height-map consumer. A parallax-cache request therefore cannot remove native POM work here. The other families use separately measured native-PBR cases.",
       "implementation": ""
     },
     {
@@ -1494,22 +1494,22 @@
     {
       "shader": "bsl",
       "goal": "G10",
-      "status": "SOURCE_REVIEW_PENDING",
-      "scope_note": "No qualified runtime measurement; source/applicability review remains separate from measured outcomes.",
+      "status": "NO_CERTIFIED_IDENTICAL_QUERY_REUSE",
+      "scope_note": "BSL native bloom uses a6x6 grid of distinct offsets. At4K these are nonzero distinct pixel offsets, so the MakeUp identical-coordinate reuse certificate does not port. Approximate bilinear pairing/clamp/derivative changes would be a different implementation needing quality proof; no universal impossibility is claimed.",
       "implementation": ""
     },
     {
       "shader": "reimagined",
       "goal": "G10",
-      "status": "SOURCE_REVIEW_PENDING",
-      "scope_note": "No qualified runtime measurement; source/applicability review remains separate from measured outcomes.",
+      "status": "NO_CERTIFIED_IDENTICAL_QUERY_REUSE",
+      "scope_note": "Complementary native bloom uses a7x7 grid of distinct offsets. At4K these are nonzero distinct pixel offsets, so the MakeUp identical-coordinate reuse certificate does not port. Approximate bilinear pairing/clamp/derivative changes would be a different implementation needing quality proof; no universal impossibility is claimed.",
       "implementation": ""
     },
     {
       "shader": "unbound",
       "goal": "G10",
-      "status": "SOURCE_REVIEW_PENDING",
-      "scope_note": "No qualified runtime measurement; source/applicability review remains separate from measured outcomes.",
+      "status": "NO_CERTIFIED_IDENTICAL_QUERY_REUSE",
+      "scope_note": "Complementary native bloom uses a7x7 grid of distinct offsets. At4K these are nonzero distinct pixel offsets, so the MakeUp identical-coordinate reuse certificate does not port. Approximate bilinear pairing/clamp/derivative changes would be a different implementation needing quality proof; no universal impossibility is claimed.",
       "implementation": ""
     },
     {
@@ -1566,29 +1566,29 @@
     {
       "shader": "bsl",
       "goal": "C01",
-      "status": "SOURCE_REVIEW_PENDING",
-      "scope_note": "No qualified runtime measurement; source/applicability review remains separate from measured outcomes.",
+      "status": "HELD_CONSERVATIVE_GEOMETRY_PROOF",
+      "scope_note": "BSL WavingBlocks changes native SOLID vertices. The MakeUp proxy bounds/source certificate cannot certify conservative occlusion of these positions. Query hardware works on this GPU; extending only the target list would be unsafe. No culling benefit is claimed.",
       "implementation": ""
     },
     {
       "shader": "reimagined",
       "goal": "C01",
-      "status": "SOURCE_REVIEW_PENDING",
-      "scope_note": "No qualified runtime measurement; source/applicability review remains separate from measured outcomes.",
+      "status": "HELD_CONSERVATIVE_GEOMETRY_PROOF",
+      "scope_note": "Complementary DoWave and material depth adjustments change native SOLID vertices. The MakeUp proxy bounds/source certificate cannot certify conservative occlusion of these positions. Query hardware works on this GPU; extending only the target list would be unsafe. No culling benefit is claimed.",
       "implementation": ""
     },
     {
       "shader": "unbound",
       "goal": "C01",
-      "status": "SOURCE_REVIEW_PENDING",
-      "scope_note": "No qualified runtime measurement; source/applicability review remains separate from measured outcomes.",
+      "status": "HELD_CONSERVATIVE_GEOMETRY_PROOF",
+      "scope_note": "Complementary DoWave and material depth adjustments change native SOLID vertices. The MakeUp proxy bounds/source certificate cannot certify conservative occlusion of these positions. Query hardware works on this GPU; extending only the target list would be unsafe. No culling benefit is claimed.",
       "implementation": ""
     },
     {
       "shader": "makeup",
       "goal": "C02",
-      "status": "SOURCE_REVIEW_PENDING",
-      "scope_note": "Native composite has three outputs and composite1 combines bloom with full scene color. Existing single-output bloom VRS cannot be applied to these passes without coarsening additional scene work.",
+      "status": "NO_ISOLATED_BLOOM_VRS_ROUTE",
+      "scope_note": "MakeUp native composite writes multiple outputs (including full scene color); composite1 combines scene and bloom. The measured single-output bloom VRS contract would coarsen additional scene work here. A new isolated producer/quality contract is required; this is not an absent NVIDIA VRS capability.",
       "implementation": ""
     },
     {
@@ -1958,22 +1958,22 @@
     {
       "shader": "bsl",
       "goal": "N02",
-      "status": "SOURCE_REVIEW_PENDING",
-      "scope_note": "No qualified runtime measurement; source/applicability review remains separate from measured outcomes.",
+      "status": "HELD_NATIVE_LIFETIME_PROOF",
+      "scope_note": "Current native attachments/history/custom texture ownership lack a complete multi-frame read/write/clear/bank-lifetime certificate for safe storage removal. Sampler names or one-frame inactivity cannot prove dead resources. No independent timing or saved-allocation claim; retain native storage until a shared safe mechanism is demonstrated.",
       "implementation": ""
     },
     {
       "shader": "reimagined",
       "goal": "N02",
-      "status": "SOURCE_REVIEW_PENDING",
-      "scope_note": "No qualified runtime measurement; source/applicability review remains separate from measured outcomes.",
+      "status": "HELD_NATIVE_LIFETIME_PROOF",
+      "scope_note": "Current native attachments/history/custom texture ownership lack a complete multi-frame read/write/clear/bank-lifetime certificate for safe storage removal. Sampler names or one-frame inactivity cannot prove dead resources. No independent timing or saved-allocation claim; retain native storage until a shared safe mechanism is demonstrated.",
       "implementation": ""
     },
     {
       "shader": "unbound",
       "goal": "N02",
-      "status": "SOURCE_REVIEW_PENDING",
-      "scope_note": "No qualified runtime measurement; source/applicability review remains separate from measured outcomes.",
+      "status": "HELD_NATIVE_LIFETIME_PROOF",
+      "scope_note": "Current native attachments/history/custom texture ownership lack a complete multi-frame read/write/clear/bank-lifetime certificate for safe storage removal. Sampler names or one-frame inactivity cannot prove dead resources. No independent timing or saved-allocation claim; retain native storage until a shared safe mechanism is demonstrated.",
       "implementation": ""
     },
     {
@@ -1986,22 +1986,22 @@
     {
       "shader": "bsl",
       "goal": "N03",
-      "status": "SOURCE_REVIEW_PENDING",
-      "scope_note": "No qualified runtime measurement; source/applicability review remains separate from measured outcomes.",
+      "status": "HELD_NATIVE_LIFETIME_PROOF",
+      "scope_note": "Current native attachments/history/custom texture ownership lack a complete multi-frame read/write/clear/bank-lifetime certificate for safe copy/history removal. Sampler names or one-frame inactivity cannot prove dead resources. No independent timing or saved-allocation claim; retain native storage until a shared safe mechanism is demonstrated.",
       "implementation": ""
     },
     {
       "shader": "reimagined",
       "goal": "N03",
-      "status": "SOURCE_REVIEW_PENDING",
-      "scope_note": "No qualified runtime measurement; source/applicability review remains separate from measured outcomes.",
+      "status": "HELD_NATIVE_LIFETIME_PROOF",
+      "scope_note": "Current native attachments/history/custom texture ownership lack a complete multi-frame read/write/clear/bank-lifetime certificate for safe copy/history removal. Sampler names or one-frame inactivity cannot prove dead resources. No independent timing or saved-allocation claim; retain native storage until a shared safe mechanism is demonstrated.",
       "implementation": ""
     },
     {
       "shader": "unbound",
       "goal": "N03",
-      "status": "SOURCE_REVIEW_PENDING",
-      "scope_note": "No qualified runtime measurement; source/applicability review remains separate from measured outcomes.",
+      "status": "HELD_NATIVE_LIFETIME_PROOF",
+      "scope_note": "Current native attachments/history/custom texture ownership lack a complete multi-frame read/write/clear/bank-lifetime certificate for safe copy/history removal. Sampler names or one-frame inactivity cannot prove dead resources. No independent timing or saved-allocation claim; retain native storage until a shared safe mechanism is demonstrated.",
       "implementation": ""
     },
     {
@@ -2413,12 +2413,12 @@
   },
   "controls": {
     "reimagined": {
-      "original-null-natural-terrain": {
+      "original-null-primary": {
         "effects_pct": {
           "n": 2,
-          "mean": 0.2236728939822266,
-          "sd": 0.050293817235133376,
-          "variance": 0.002529468052080999
+          "mean": -0.18031321608526438,
+          "sd": 0.13052033709284558,
+          "variance": 0.01703555839483004
         }
       },
       "original-null-gl46": {
@@ -2437,22 +2437,22 @@
           "variance": 0.02427482900227949
         }
       },
-      "original-null-primary": {
+      "original-null-natural-terrain": {
         "effects_pct": {
           "n": 2,
-          "mean": -0.18031321608526438,
-          "sd": 0.13052033709284558,
-          "variance": 0.01703555839483004
+          "mean": 0.2236728939822266,
+          "sd": 0.050293817235133376,
+          "variance": 0.002529468052080999
         }
       }
     },
     "unbound": {
-      "original-null-natural-terrain": {
+      "original-null-primary": {
         "effects_pct": {
           "n": 2,
-          "mean": -0.017180313438004385,
-          "sd": 0.0240217127799599,
-          "variance": 0.0005770426848828887
+          "mean": 0.00018912500512804215,
+          "sd": 0.02152891834375032,
+          "variance": 0.00046349432505186905
         }
       },
       "original-null-gl46": {
@@ -2471,12 +2471,12 @@
           "variance": 0.0031865230421073065
         }
       },
-      "original-null-primary": {
+      "original-null-natural-terrain": {
         "effects_pct": {
           "n": 2,
-          "mean": 0.00018912500512804215,
-          "sd": 0.02152891834375032,
-          "variance": 0.00046349432505186905
+          "mean": -0.017180313438004385,
+          "sd": 0.0240217127799599,
+          "variance": 0.0005770426848828887
         }
       }
     },
@@ -2497,6 +2497,14 @@
           "variance": 0.0015722506437906886
         }
       },
+      "original-null-gl46": {
+        "effects_pct": {
+          "n": 2,
+          "mean": -0.046776381869670994,
+          "sd": 0.024549620820984656,
+          "variance": 0.0006026838824541234
+        }
+      },
       "original-null-natural-terrain-gl46": {
         "effects_pct": {
           "n": 2,
@@ -2512,17 +2520,17 @@
           "sd": 0.10096137325552529,
           "variance": 0.010193198889641496
         }
-      },
-      "original-null-gl46": {
-        "effects_pct": {
-          "n": 2,
-          "mean": -0.046776381869670994,
-          "sd": 0.024549620820984656,
-          "variance": 0.0006026838824541234
-        }
       }
     },
     "makeup": {
+      "g10-native-control": {
+        "effects_pct": {
+          "n": 2,
+          "mean": -0.01781897228428605,
+          "sd": 0.024198514312104333,
+          "variance": 0.0005855680949131183
+        }
+      },
       "original-null-natural-terrain": {
         "effects_pct": {
           "n": 2,
@@ -2539,14 +2547,6 @@
           "variance": 0.00010309403297274263
         }
       },
-      "original-null-natural-terrain-gl46": {
-        "effects_pct": {
-          "n": 2,
-          "mean": 0.02173598711987037,
-          "sd": 0.04510147405553279,
-          "variance": 0.002034142961981897
-        }
-      },
       "original-null-gl46": {
         "effects_pct": {
           "n": 2,
@@ -2555,12 +2555,12 @@
           "variance": 0.016413129069698922
         }
       },
-      "g10-native-control": {
+      "original-null-natural-terrain-gl46": {
         "effects_pct": {
           "n": 2,
-          "mean": -0.01781897228428605,
-          "sd": 0.024198514312104333,
-          "variance": 0.0005855680949131183
+          "mean": 0.02173598711987037,
+          "sd": 0.04510147405553279,
+          "variance": 0.002034142961981897
         }
       }
     }
@@ -6705,5 +6705,5 @@
       "work_qualification": "COPY_WITNESSES_RETAINED"
     }
   ],
-  "scope": "Provisional RTX5080 native4K screen; 40 measured cells with two processes each, 22 source reviews pending, two shared G01 routes. Quality/regression review incomplete. Positive effect means lower frame time. Sample frame variance and independent-process variance are separate; no IID-frame confidence interval."
+  "scope": "Provisional RTX5080 native4K screen; 40 measured cells with two processes each, 22 source-held/no-certified-route cells, two shared G01 routes. Quality/regression review incomplete. Positive effect means lower frame time. Sample frame variance and independent-process variance are separate; no IID-frame confidence interval."
 }

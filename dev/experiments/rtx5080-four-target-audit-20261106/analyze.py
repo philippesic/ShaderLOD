@@ -154,14 +154,17 @@ for job in jobs:
     runs.append(row)
 
 matrix=json.loads((ROOT/'benchmarks/campaigns/rtx5080-v1.json').read_text())
+source_review_path=HERE/'source-review-findings.json'
+source_findings={(r['shader'],r['goal']):r for r in json.loads(source_review_path.read_text())['cells']} if source_review_path.exists() else {}
 for cell in matrix['cells']:
     route=cell.get('route',{})
     if route.get('shared_implementation')=='G01':
         cell['status']='CONSOLIDATED_WITH_G01'
         cell['scope_note']='Same MakeUp G01 implementation; no independent or additive optimization credit.'
     elif route.get('source_review'):
-        cell['status']='SOURCE_REVIEW_PENDING'
-        cell['scope_note']=route.get('reason','No qualified runtime measurement; source/applicability review remains separate from measured outcomes.')
+        finding=source_findings.get((cell['shader'],cell['goal']))
+        cell['status']=finding['status'] if finding else 'SOURCE_REVIEW_PENDING'
+        cell['scope_note']=finding['scope_note'] if finding else route.get('reason','No qualified runtime measurement; source/applicability review remains separate from measured outcomes.')
     matches=[r for r in runs if r['shader']==cell['shader'] and r['goal']==cell['goal']]
     cell['attempt_failures']=[{'name':r['name'],'case':r.get('case'),'phase':r.get('phase'),'error':r['error'],'validity':r['validity']} for r in matches if r['validity'] not in ('VALID','RUNNING')]
     valid=[r for r in matches if r['validity']=='VALID' and r['restored'] and r['kind']=='test' and r['measurement_qualified']]

@@ -12,7 +12,7 @@ import run_storage as storage
 native=runpy.run_path(str(HERE/'preserve-old-runs.py'))['native']
 parser=argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--tag',default='terminal-world-copies-v1')
-parser.add_argument('--kind',choices=['world-restore','heavy','quality','graphs'],default='world-restore')
+parser.add_argument('--kind',choices=['world-restore','heavy','quality','graphs','timing-raw'],default='world-restore')
 parser.add_argument('--content-addressed',action='store_true',help='Store unique file bytes once; preserve all original paths in the manifest')
 parser.add_argument('--resume-inventory',action='store_true',help='Reuse a completed inventory after a failed transport; native originals are still rehashed before any retirement')
 parser.add_argument('--reports',nargs='*')
@@ -34,7 +34,7 @@ def inventory(roots):
  paths=[]
  for name in roots:
   directory=here/name;assert directory.parent.parent==here
-  allowed=directory.name in ('world-restore','world-before','world-after','quality-native','quality-candidate','quality-return') or re.fullmatch('native-graph-[a-zA-Z0-9_-]+',directory.name) or directory.is_file() and directory.suffix=='.png'
+  allowed=directory.name in ('world-restore','world-before','world-after','quality-native','quality-candidate','quality-return','receipts','windows') or re.fullmatch('native-graph-[a-zA-Z0-9_-]+',directory.name) or directory.is_file() and directory.suffix=='.png'
   assert allowed,str(directory)
   qualified(directory.parent);assert not directory.is_symlink() and not os.path.isjunction(directory)
   walk=os.walk(directory,followlinks=False) if directory.is_dir() else [(directory.parent,[],[directory.name])]
@@ -62,7 +62,7 @@ for report in sorted(here.iterdir()):
  if not report.is_dir() or not (report/'operation.json').exists() or reports and report.name not in reports:continue
  try:qualified(report)
  except (AssertionError,KeyError,ValueError):continue
- selected=[report/'world-restore'] if kind=='world-restore' else list(report.glob('quality-*')) if kind=='quality' else list(report.glob('native-graph-*')) if kind=='graphs' else [*report.glob('*.png'),report/'world-before',report/'world-after',report/'world-restore']
+ selected=[report/'world-restore'] if kind=='world-restore' else list(report.glob('quality-*')) if kind=='quality' else list(report.glob('native-graph-*')) if kind=='graphs' else [report/'receipts',report/'windows'] if kind=='timing-raw' else [*report.glob('*.png'),report/'world-before',report/'world-after',report/'world-restore']
  roots.extend(p.relative_to(here).as_posix() for p in selected if p.exists())
 rows=inventory(roots);data=dict(roots=roots,files=rows)
 target=here/(tag+'-source.json');assert not target.exists();target.write_text(json.dumps(data,indent=2)+'\n');print(json.dumps(data))

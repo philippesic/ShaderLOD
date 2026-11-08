@@ -337,3 +337,29 @@ at PNG levels0/1; level1 is about0.25s/image, motivating writer holds. Five fres
 quality checks are active. A content-addressed migration preserves every world
 backup path/byte while reclaiming3.2GiB on Asahi; separately verified terminal graph
 preservation reclaims4.12GiB natively. Raw evidence is recoverable, not discarded.
+
+
+### 2026-11-07 RTX source/work audit and repaired motion evidence
+
+22 unmeasured cells now have original-archive/options/member-bound source reasons:
+live MakeUp mips, no native MakeUp POM, distinct bloom offsets, native AA work, or
+held geometry/lifetime/general-route proof. Two MakeUp rows share G01. These are
+not hardware failures or invented zero-gain timings. The compact source review
+retains real Complementary identity-copy opportunities as held lifetime work, not
+universal impossibility. Existing general-route scope does not become four new
+pack-specific implementations.
+
+A90-packet finite native-work audit finds actual Complementary mip omissions with
+unchanged observed copy/draw/storage counts; other inspected G03/G05/G07/G09
+regressions also lack extra observed native passes/colour targets. G06 intentionally
+adds a native-size target with half viewport and an extra quad per frame; full-size
+sentinel clear/storage is part of its current safety contract, not failed resizing.
+Filtered untimed JFR candidate windows provide no dominant Java/GPU cost diagnosis.
+Two explicit4.6 G03 diagnostic comparisons are prepared after the quality phase;
+no result is yet available. [Diagnosis](../dev/experiments/rtx5080-four-target-audit-20261106/REGRESSION_DIAGNOSIS.md).
+
+Both fresh BSL quality checks pass363/363 images and restore, after the logical
+clock/writer repair. BSL G02 image differences are comparable to native-return
+variation in this bounded path; viewed contact sheets show no gross defect.
+Temporal clocks remain unmatched, so no deterministic image equivalence, brief
+ghosting/shimmer or all-scene qualification is claimed. Remaining checks continue.

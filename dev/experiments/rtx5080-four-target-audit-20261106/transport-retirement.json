@@ -1,0 +1,91 @@
+{
+  "retired": [
+    {
+      "archive": "timings-export-133003fe349a46d091d1c48e0c2f1152.zip",
+      "bytes": 1047706,
+      "verified_files": 7
+    },
+    {
+      "archive": "timings-export-18480433eb714b8291f3fd304ba4776d.zip",
+      "bytes": 3033375,
+      "verified_files": 37
+    },
+    {
+      "archive": "timings-export-1cc7ecc976c44872a2e44d3ca3798c83.zip",
+      "bytes": 2258347,
+      "verified_files": 15
+    },
+    {
+      "archive": "timings-export-1f879eef2cec4f46840d7daec9be60e0.zip",
+      "bytes": 77823756,
+      "verified_files": 456
+    },
+    {
+      "archive": "timings-export-30537687ffce453f9a3a934f509700f3.zip",
+      "bytes": 1027469,
+      "verified_files": 11
+    },
+    {
+      "archive": "timings-export-3c14e3477017402f89576c4df275a2c7.zip",
+      "bytes": 5677965,
+      "verified_files": 84
+    },
+    {
+      "archive": "timings-export-3c1692d833a646c382869290361804b9.zip",
+      "bytes": 5980000,
+      "verified_files": 47
+    },
+    {
+      "archive": "timings-export-55cc6eafc2cb422c9fcb28a0c74b513e.zip",
+      "bytes": 16259925,
+      "verified_files": 120
+    },
+    {
+      "archive": "timings-export-831155693448498d961ce57d812bb693.zip",
+      "bytes": 5181742,
+      "verified_files": 15
+    },
+    {
+      "archive": "timings-export-9512b0adf3744098a0a33b3cf0b655af.zip",
+      "bytes": 1842473,
+      "verified_files": 15
+    },
+    {
+      "archive": "timings-export-9dcca1b25c214a039d5c90ebb93b4d4a.zip",
+      "bytes": 99749363,
+      "verified_files": 589
+    },
+    {
+      "archive": "timings-export-a19eaa9487284af1ad2e7c698fb26f7e.zip",
+      "bytes": 7450628,
+      "verified_files": 93
+    },
+    {
+      "archive": "timings-export-bdad78c21f214e6b82aaa0761de98b76.zip",
+      "bytes": 2050432,
+      "verified_files": 15
+    },
+    {
+      "archive": "timings-export-cad64fb99ed747e8b7b9088a6c63574e.zip",
+      "bytes": 6484656,
+      "verified_files": 45
+    },
+    {
+      "archive": "timings-export-d313cbaccd2d48e2ad48fd6b84665928.zip",
+      "bytes": 740012,
+      "verified_files": 7
+    },
+    {
+      "archive": "timings-export-d3a8ad8ec8f84f528c4cce162a5d7465.zip",
+      "bytes": 5315770,
+      "verified_files": 19
+    },
+    {
+      "archive": "timings-export-eb9dbcd34ebf4773916397b747874ef9.zip",
+      "bytes": 276798047,
+      "verified_files": 1619
+    }
+  ],
+  "reclaimed_bytes": 518721666,
+  "extracted_evidence_retained": true
+}

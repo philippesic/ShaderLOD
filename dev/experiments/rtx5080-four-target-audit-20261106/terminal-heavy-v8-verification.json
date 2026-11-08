@@ -1,0 +1,42 @@
+{
+  "kind": "heavy",
+  "archive": "/home/philip/ShaderLOD/dev/experiments/rtx5080-four-target-audit-20261106/terminal-heavy-v8.zip",
+  "archive_bytes": 255702325,
+  "archive_sha256": "56cc6f6ed661f90f8ddcfea3f4333e4743444faf498d51c9cd427fbaab99e60d",
+  "source_bytes": 16200188,
+  "files": 744,
+  "roots": [
+    "bsl-bloom-motion-quality-v5/candidate.png",
+    "bsl-bloom-motion-quality-v5/native.png",
+    "bsl-bloom-motion-quality-v5/world-before",
+    "bsl-bloom-motion-quality-v5/world-after",
+    "bsl-mips-motion-quality-v5/native.png",
+    "bsl-mips-motion-quality-v5/world-before",
+    "bsl-mips-motion-quality-v5/world-after",
+    "bsl-mips-motion-quality-v6/candidate.png",
+    "bsl-mips-motion-quality-v6/native.png",
+    "bsl-mips-motion-quality-v6/return.png",
+    "bsl-mips-motion-quality-v6/world-restore",
+    "makeup-copy-motion-quality-v5/candidate.png",
+    "makeup-copy-motion-quality-v5/native.png",
+    "makeup-copy-motion-quality-v5/return.png",
+    "reimagined-alpha-profile-quality-v5/candidate.png",
+    "reimagined-alpha-profile-quality-v5/native.png",
+    "reimagined-alpha-profile-quality-v5/return.png",
+    "reimagined-bloom-motion-quality-v5/native.png",
+    "reimagined-bloom-motion-quality-v5/world-before",
+    "reimagined-bloom-motion-quality-v5/world-after",
+    "reimagined-native-profile-quality-v5/candidate.png",
+    "reimagined-native-profile-quality-v5/native.png",
+    "reimagined-native-profile-quality-v5/return.png"
+  ],
+  "verified": true,
+  "retired": true,
+  "format": "content-addressed-zip",
+  "restore": "For each files[] row in PRESERVATION-MANIFEST.json, write objects/<sha256> independently to its original path.",
+  "retirement": {
+    "free_before": 51968143360,
+    "free_after": 52641910784,
+    "retired_roots": 23
+  }
+}

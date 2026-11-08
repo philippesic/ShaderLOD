@@ -29,7 +29,7 @@ The main97-operation queue and all24 repaired comparison/control operations are
 complete and restored. All eight preceding Runtime-V4 admission checks pass.
 The verified timing reduction contains200 reports,175 valid and40 measured cells,
 with two independent timing processes per measured primary cell. The other24 rows
-are22 source/applicability reviews and two shared MakeUp G01 routes; this is not
+are22 source-held/no-certified-route dispositions and two shared MakeUp G01 routes; this is not
 complete64-cell qualification. Original-only baselines and matching-context null
 controls retain within-window, between-window and between-process variance.
 
@@ -47,6 +47,8 @@ MakeUp G01 has all363 native/candidate/return frames. BSL mip and bloom captures
 are incomplete and remain invalid/restored; missed render slots need diagnosis and
 fresh retries. A renderer/writer-bounded logical camera clock now passes native
 regression tests and starts five fresh checks, retaining121-frame completeness.
+Both fresh BSL checks now pass363/363 captures/restoration; the other three continue.
+Two further modern-context G03 comparisons are chained after quality archival.
 The earlier batch stopped safely at capacity. Full raw PNG bytes are retained in independently verified archives.
 Preserving terminal ShaderLOD recovery/evidence copies off-host reclaimed another
 12.59GiB before captures. No NVIDIA cache, other project or personal profile was

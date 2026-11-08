@@ -1,0 +1,168 @@
+{
+  "scope": "Untimed functional checks only; exact ~3s candidate windows. Reloads excluded. Event sampling periods differ, so event types are not pooled. Sparse inclusive counts overlap; neither CPU durations nor GPU percentages are inferred.",
+  "profiles": {
+    "reimagined-native-profile-quality-v5": {
+      "candidate_start": "2026-11-08T02:59:38.346415+00:00",
+      "candidate_stop": "2026-11-08T02:59:41.438044+00:00",
+      "candidate_window_seconds": 3.091629,
+      "by_event_type": {
+        "jdk.NativeMethodSample": {
+          "samples": 32,
+          "leaf": [
+            [
+              "org.lwjgl.system.JNI.invokePV",
+              29
+            ],
+            [
+              "org.lwjgl.system.JNI.invokeD",
+              1
+            ],
+            [
+              "org.lwjgl.opengl.GL30C.glBindFramebuffer",
+              1
+            ],
+            [
+              "org.lwjgl.opengl.GL11C.nglDrawElements",
+              1
+            ]
+          ],
+          "project_inclusive": [],
+          "swap_samples": 29
+        },
+        "jdk.ExecutionSample": {
+          "samples": 11,
+          "leaf": [
+            [
+              "net.irisshaders.iris.shadows.frustum.advanced.AdvancedShadowCullingFrustum.checkCornerVisibility",
+              3
+            ],
+            [
+              "net.minecraft.client.renderer.LevelRenderer.renderLevel",
+              1
+            ],
+            [
+              "net.caffeinemc.mods.sodium.client.render.viewport.frustum.SimpleFrustum.testAab",
+              1
+            ],
+            [
+              "net.caffeinemc.mods.sodium.client.render.chunk.occlusion.OcclusionCuller.findVisible",
+              1
+            ],
+            [
+              "java.lang.Number.<init>",
+              1
+            ],
+            [
+              "net.minecraft.world.level.lighting.LightEngine.runLightUpdates",
+              1
+            ],
+            [
+              "net.minecraft.world.level.chunk.SingleValuePalette.valueFor",
+              1
+            ],
+            [
+              "net.caffeinemc.mods.sodium.client.render.chunk.lists.ChunkRenderList.sortSections",
+              1
+            ],
+            [
+              "it.unimi.dsi.fastutil.longs.Long2ReferenceOpenHashMap.get",
+              1
+            ]
+          ],
+          "project_inclusive": [],
+          "swap_samples": 0
+        }
+      }
+    },
+    "reimagined-alpha-profile-quality-v5": {
+      "candidate_start": "2026-11-08T03:03:20.154586+00:00",
+      "candidate_stop": "2026-11-08T03:03:23.240198+00:00",
+      "candidate_window_seconds": 3.085612,
+      "by_event_type": {
+        "jdk.NativeMethodSample": {
+          "samples": 31,
+          "leaf": [
+            [
+              "org.lwjgl.system.JNI.invokePV",
+              22
+            ],
+            [
+              "org.lwjgl.opengl.GL30C.glBindFramebuffer",
+              3
+            ],
+            [
+              "org.lwjgl.opengl.GL20C.nglGetUniformLocation",
+              1
+            ],
+            [
+              "org.lwjgl.opengl.GL30C.glBlitFramebuffer",
+              1
+            ],
+            [
+              "org.lwjgl.opengl.GL11C.glCopyTexSubImage2D",
+              1
+            ],
+            [
+              "org.lwjgl.opengl.GL20C.glUniform1i",
+              1
+            ],
+            [
+              "org.lwjgl.opengl.GL11C.glClear",
+              1
+            ],
+            [
+              "org.lwjgl.system.JNI.invokeV",
+              1
+            ]
+          ],
+          "project_inclusive": [
+            [
+              "com.pp.shaderlod.optimization.reimaginedspatial.ReimaginedExactSsrRuntime.lambda$currentDraw$1",
+              1
+            ],
+            [
+              "com.pp.shaderlod.optimization.reimaginedspatial.ReimaginedExactSsrRuntime.revokeProgram",
+              1
+            ],
+            [
+              "com.pp.shaderlod.optimization.reimaginedearlyalpha.ReimaginedEarlyAlphaRuntime.revokeCurrent",
+              1
+            ],
+            [
+              "com.pp.shaderlod.optimization.reimaginedearlyalpha.ReimaginedEarlyAlphaRuntime.revoke",
+              1
+            ]
+          ],
+          "swap_samples": 22
+        },
+        "jdk.ExecutionSample": {
+          "samples": 6,
+          "leaf": [
+            [
+              "org.joml.FrustumIntersection.testAab",
+              2
+            ],
+            [
+              "net.caffeinemc.mods.sodium.client.render.chunk.lists.VisibleChunkCollector.visit",
+              1
+            ],
+            [
+              "net.caffeinemc.mods.sodium.client.render.SodiumWorldRenderer.setupTerrain",
+              1
+            ],
+            [
+              "java.util.IdentityHashMap.get",
+              1
+            ],
+            [
+              "net.minecraft.world.level.chunk.LevelChunkSection.getFluidState",
+              1
+            ]
+          ],
+          "project_inclusive": [],
+          "swap_samples": 0
+        }
+      }
+    }
+  }
+}
