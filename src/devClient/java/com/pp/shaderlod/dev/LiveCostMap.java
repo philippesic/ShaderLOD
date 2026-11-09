@@ -86,8 +86,10 @@ public final class LiveCostMap {
             if(boundaries.observe(next,nextContext)) {
                 GpuTimers.suspendQueries("cohort transition");CpuTimers.disarm();
                 if(CostMapSession.active())finish("pipeline/dimension/settings/readiness transition");
+                BenchmarkMeasurementGuard.disarm();
                 boolean graphChanged=graph!=boundaries.graphGeneration();context=nextContext;
                 if(c.level==null||next==null||Iris.isFallback())return;
+                BenchmarkMeasurementGuard.armDiagnostic();
                 if(graphChanged||graphEvidence==null){graph=boundaries.graphGeneration();graphEvidence=NativeGraphDump.write(root.resolve("graph-"+graph),observation());}
                 cohort++;var facts=new EnumMap<CaptureField,Fact>(CaptureField.class);
                 for(var key:CaptureField.values())facts.put(key,new Fact("unknown","not observed by this adapter"));

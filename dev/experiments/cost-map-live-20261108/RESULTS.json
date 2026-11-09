@@ -832,12 +832,173 @@
           ]
         }
       ]
+    },
+    {
+      "path": "dev/experiments/cost-map-live-20261108/run-07-guard",
+      "operation_state": "complete",
+      "execution": "passed",
+      "configuration_restored": true,
+      "save_restored": true,
+      "cohorts": [
+        {
+          "path": "dev/experiments/cost-map-live-20261108/run-07-guard/live-cost-map/cohort-1/capture.json",
+          "sha256": "b94596b2571e78209791504f16331a8711d2a70911872143c4e3c1a1c4138872",
+          "dh_state": "ENABLED_NOT_READY",
+          "graph": 1,
+          "frames": 52,
+          "events": 5710,
+          "health": {
+            "scopeLimit": 512,
+            "eventLimit": 100000,
+            "activeLimit": 128,
+            "pendingLimit": 4096,
+            "queryPoolLimit": null,
+            "conflicts": 0,
+            "queueEvictions": 0,
+            "droppedEvents": 0,
+            "droppedBytes": null,
+            "unresolvedTail": 39,
+            "imbalancedScopes": 0,
+            "timeouts": null,
+            "resets": null,
+            "disjoints": null,
+            "timerOverheadNs": null,
+            "outcome": {
+              "status": "UNKNOWN",
+              "reason": "closed; consult per-event validity"
+            }
+          },
+          "guard": {
+            "render_boundary_observations": 104,
+            "failure": "pack/reload/optimization ownership changed",
+            "completed_render_frames": 52,
+            "completed_world_renders": 52,
+            "scope": "render-boundary focus/world/GUI/ownership, pack/reload/flag generation, viewport/target/pacing/distance/FOV/camera; one world render per frame; no per-frame GL queries or full shader-option comparison",
+            "armed": true,
+            "valid": false
+          }
+        },
+        {
+          "path": "dev/experiments/cost-map-live-20261108/run-07-guard/live-cost-map/cohort-2/capture.json",
+          "sha256": "d4bf3ecced2034531cfb590bbe0dafd784124c674a5bc4779126124614d9ab6e",
+          "dh_state": "ENABLED_NOT_READY",
+          "graph": 2,
+          "frames": 35,
+          "events": 3416,
+          "health": {
+            "scopeLimit": 512,
+            "eventLimit": 100000,
+            "activeLimit": 128,
+            "pendingLimit": 4096,
+            "queryPoolLimit": null,
+            "conflicts": 0,
+            "queueEvictions": 0,
+            "droppedEvents": 0,
+            "droppedBytes": null,
+            "unresolvedTail": 35,
+            "imbalancedScopes": 0,
+            "timeouts": null,
+            "resets": null,
+            "disjoints": null,
+            "timerOverheadNs": null,
+            "outcome": {
+              "status": "UNKNOWN",
+              "reason": "closed; consult per-event validity"
+            }
+          },
+          "guard": {
+            "render_boundary_observations": 70,
+            "failure": "pack/reload/optimization ownership changed",
+            "completed_render_frames": 35,
+            "completed_world_renders": 35,
+            "scope": "render-boundary focus/world/GUI/ownership, pack/reload/flag generation, viewport/target/pacing/distance/FOV/camera; one world render per frame; no per-frame GL queries or full shader-option comparison",
+            "armed": true,
+            "valid": false
+          }
+        },
+        {
+          "path": "dev/experiments/cost-map-live-20261108/run-07-guard/live-cost-map/cohort-3/capture.json",
+          "sha256": "06f4ac794dae4f961251c138a218278bf75aa07e63ec5a8d5e88108a9aeec3b2",
+          "dh_state": "INSTALLED_RENDERING_DISABLED",
+          "graph": 3,
+          "frames": 64,
+          "events": 6273,
+          "health": {
+            "scopeLimit": 512,
+            "eventLimit": 100000,
+            "activeLimit": 128,
+            "pendingLimit": 4096,
+            "queryPoolLimit": null,
+            "conflicts": 0,
+            "queueEvictions": 0,
+            "droppedEvents": 0,
+            "droppedBytes": null,
+            "unresolvedTail": 39,
+            "imbalancedScopes": 0,
+            "timeouts": null,
+            "resets": null,
+            "disjoints": null,
+            "timerOverheadNs": null,
+            "outcome": {
+              "status": "UNKNOWN",
+              "reason": "closed; consult per-event validity"
+            }
+          },
+          "guard": {
+            "render_boundary_observations": 128,
+            "failure": "pack/reload/optimization ownership changed",
+            "completed_render_frames": 64,
+            "completed_world_renders": 64,
+            "scope": "render-boundary focus/world/GUI/ownership, pack/reload/flag generation, viewport/target/pacing/distance/FOV/camera; one world render per frame; no per-frame GL queries or full shader-option comparison",
+            "armed": true,
+            "valid": false
+          }
+        },
+        {
+          "path": "dev/experiments/cost-map-live-20261108/run-07-guard/live-cost-map/cohort-4/capture.json",
+          "sha256": "2ce7b1c4ecb2ed6a3c2ac279d9ff2c54f3291f4648f4a8686b3ed848e883a7c4",
+          "dh_state": "ENABLED_NOT_READY",
+          "graph": 4,
+          "frames": 67,
+          "events": 7055,
+          "health": {
+            "scopeLimit": 512,
+            "eventLimit": 100000,
+            "activeLimit": 128,
+            "pendingLimit": 4096,
+            "queryPoolLimit": null,
+            "conflicts": 0,
+            "queueEvictions": 0,
+            "droppedEvents": 0,
+            "droppedBytes": null,
+            "unresolvedTail": 43,
+            "imbalancedScopes": 1,
+            "timeouts": null,
+            "resets": null,
+            "disjoints": null,
+            "timerOverheadNs": null,
+            "outcome": {
+              "status": "UNKNOWN",
+              "reason": "closed; consult per-event validity"
+            }
+          },
+          "guard": {
+            "render_boundary_observations": 132,
+            "failure": "",
+            "completed_render_frames": 66,
+            "completed_world_renders": 66,
+            "scope": "render-boundary focus/world/GUI/ownership, pack/reload/flag generation, viewport/target/pacing/distance/FOV/camera; one world render per frame; no per-frame GL queries or full shader-option comparison",
+            "armed": true,
+            "valid": true
+          }
+        }
+      ]
     }
   ],
   "disk": {
     "initial_free_bytes": 33917800448,
     "observed_free_after_cleanup_bytes": 36331495424,
-    "free_at_record_bytes": 34953678848,
+    "free_at_record_bytes": 34635366400,
     "deleted_measured_bytes_excluding_daemon_logs": 2341635814,
     "deleted_paths": [
       "~/.gradle/caches/build-cache-1",
@@ -851,7 +1012,7 @@
     "note": "Btrfs statfs changed asynchronously; rebuilt intermediates and new artifacts consume part of the recovered space."
   },
   "tests": {
-    "cost_map_python": 9,
+    "cost_map_python": 10,
     "stage1_checks": 82,
     "capture_owner_checks": 44,
     "lifecycle": 30,
@@ -859,6 +1020,27 @@
     "workflow": 14,
     "production_jar_entries": 2736,
     "production_dev_entries": 0,
-    "benchmark_regressions": "running"
+    "benchmark_regressions": {
+      "passed": 63,
+      "seconds": 603.363
+    },
+    "live_report_roundtrip": "identical report JSON from run-06-final cohort-1 finalized capture"
+  },
+  "verification_logs": {
+    "dev/experiments/cost-map-live-20261108/verification/cost-map-build.log": "16ec5c4bff0a9a36a49e59971bff8ef7acdc232b73f02492536dec8938de91ff",
+    "dev/experiments/cost-map-live-20261108/verification/cost-map-final-build.log": "b434a72febf61e1152adb9a0489536a067abd2125aef3037a8e0c5c1c3db3ba6",
+    "dev/experiments/cost-map-live-20261108/verification/cost-map-live.log": "84baa4d57bfde5aaa615b53399a9413a8ff9aa698c29834a66337a26203efb79",
+    "dev/experiments/cost-map-live-20261108/verification/cost-map-live2.log": "ad1cfa261b1b9f6bdb8f01c2a3f2fb3adc00ab65ca7db637d05d876b53a1e599",
+    "dev/experiments/cost-map-live-20261108/verification/cost-map-live3.log": "ad1cfa261b1b9f6bdb8f01c2a3f2fb3adc00ab65ca7db637d05d876b53a1e599",
+    "dev/experiments/cost-map-live-20261108/verification/cost-map-live4.log": "ad1cfa261b1b9f6bdb8f01c2a3f2fb3adc00ab65ca7db637d05d876b53a1e599",
+    "dev/experiments/cost-map-live-20261108/verification/cost-map-live5.log": "ad1cfa261b1b9f6bdb8f01c2a3f2fb3adc00ab65ca7db637d05d876b53a1e599",
+    "dev/experiments/cost-map-live-20261108/verification/cost-map-live6.log": "ad1cfa261b1b9f6bdb8f01c2a3f2fb3adc00ab65ca7db637d05d876b53a1e599",
+    "dev/experiments/cost-map-live-20261108/verification/cost-map-live7.log": "ad1cfa261b1b9f6bdb8f01c2a3f2fb3adc00ab65ca7db637d05d876b53a1e599",
+    "dev/experiments/cost-map-live-20261108/verification/cost-map-tests.log": "15d4db47d892ceb32427847fe7471400fa08dd2fdbd57f70cd52fdc8e54fb54d",
+    "dev/experiments/cost-map-live-20261108/verification/cost-map-workflow.log": "0666872637c01b4cb6966c301e8ac71c7452a96142615270f75f1f301f505297",
+    "dev/experiments/cost-map-live-20261108/verification/cost-map-benchmark.log": "db6c8e477cf55da8784a28769650bbdea7727dd0ec77da3c83a6482f65c9a1f6",
+    "dev/experiments/cost-map-live-20261108/verification/cost-map-lifecycle.log": "591440197c189a0a7d3f8b9303ac25fd4583a346bf57f9a97f091a12c73d9bd6",
+    "dev/experiments/cost-map-live-20261108/verification/cost-map-dev-client.log": "960af484e0981c8ee3e1dd2d709addad458767c2caeae58341fe465b255c7248",
+    "dev/experiments/cost-map-live-20261108/verification/cost-map-roundtrip.log": "5c5d0c6befa74965b4500dc356a0d26c6bc2f1b2baadc011bf03e4cf280b6652"
   }
 }
