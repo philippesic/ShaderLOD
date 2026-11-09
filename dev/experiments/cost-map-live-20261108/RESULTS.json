@@ -1,0 +1,864 @@
+{
+  "scope": "bounded live functional checks; no performance qualification",
+  "runs": [
+    {
+      "path": "dev/experiments/cost-map-live-20261108/run-01",
+      "operation_state": "complete",
+      "configuration_restored": true,
+      "save_restored": null,
+      "cohorts": [],
+      "execution": "failed: missing main-mod RuntimeMeasurement dependency; no world entry; saved world verified unchanged"
+    },
+    {
+      "path": "dev/experiments/cost-map-live-20261108/run-02",
+      "operation_state": "complete",
+      "configuration_restored": true,
+      "save_restored": true,
+      "cohorts": [
+        {
+          "path": "dev/experiments/cost-map-live-20261108/run-02/live-cost-map/cohort-1/capture.json",
+          "sha256": "cbb28ca381c143e76a96e6446efff5231aab32f1f98138b93436b9d195290c1b",
+          "dh_state": "ABSENT",
+          "graph": 1,
+          "frames": 35,
+          "events": 3375,
+          "health": {
+            "scopeLimit": 512,
+            "eventLimit": 100000,
+            "activeLimit": 128,
+            "pendingLimit": 4096,
+            "queryPoolLimit": null,
+            "conflicts": 0,
+            "queueEvictions": 0,
+            "droppedEvents": 0,
+            "droppedBytes": null,
+            "unresolvedTail": 32,
+            "imbalancedScopes": 0,
+            "timeouts": null,
+            "resets": null,
+            "disjoints": null,
+            "timerOverheadNs": null,
+            "outcome": {
+              "status": "UNKNOWN",
+              "reason": "closed; consult per-event validity"
+            }
+          },
+          "physical_scopes": [
+            "terrain-setup/shadow",
+            "terrain/shadow/opaque+cutout",
+            "terrain/shadow/translucent",
+            "terrain-setup/world",
+            "terrain/world/opaque+cutout",
+            "terrain/world/translucent"
+          ]
+        },
+        {
+          "path": "dev/experiments/cost-map-live-20261108/run-02/live-cost-map/cohort-2/capture.json",
+          "sha256": "f5bdaa4a6ae6a1c4c968f17d0a19e391e3c05d07fa43c13dc47accbdeb03afeb",
+          "dh_state": "ABSENT",
+          "graph": 2,
+          "frames": 1,
+          "events": 84,
+          "health": {
+            "scopeLimit": 512,
+            "eventLimit": 100000,
+            "activeLimit": 128,
+            "pendingLimit": 4096,
+            "queryPoolLimit": null,
+            "conflicts": 0,
+            "queueEvictions": 0,
+            "droppedEvents": 0,
+            "droppedBytes": null,
+            "unresolvedTail": 0,
+            "imbalancedScopes": 0,
+            "timeouts": null,
+            "resets": null,
+            "disjoints": null,
+            "timerOverheadNs": null,
+            "outcome": {
+              "status": "UNKNOWN",
+              "reason": "closed; consult per-event validity"
+            }
+          },
+          "physical_scopes": [
+            "terrain-setup/shadow",
+            "terrain/shadow/opaque+cutout",
+            "terrain/shadow/translucent",
+            "terrain-setup/world",
+            "terrain/world/opaque+cutout",
+            "terrain/world/translucent"
+          ]
+        },
+        {
+          "path": "dev/experiments/cost-map-live-20261108/run-02/live-cost-map/cohort-3/capture.json",
+          "sha256": "3c83b29a70008dfb79cc1f9fcb1852bdaf4c8a01933c78f3fada3be3ed120a61",
+          "dh_state": "ABSENT",
+          "graph": 3,
+          "frames": 379,
+          "events": 45460,
+          "health": {
+            "scopeLimit": 512,
+            "eventLimit": 100000,
+            "activeLimit": 128,
+            "pendingLimit": 4096,
+            "queryPoolLimit": null,
+            "conflicts": 0,
+            "queueEvictions": 0,
+            "droppedEvents": 0,
+            "droppedBytes": null,
+            "unresolvedTail": 31,
+            "imbalancedScopes": 1,
+            "timeouts": null,
+            "resets": null,
+            "disjoints": null,
+            "timerOverheadNs": null,
+            "outcome": {
+              "status": "UNKNOWN",
+              "reason": "closed; consult per-event validity"
+            }
+          },
+          "physical_scopes": [
+            "terrain-setup/shadow",
+            "terrain/shadow/opaque+cutout",
+            "terrain/shadow/translucent",
+            "terrain-setup/world",
+            "terrain/world/opaque+cutout",
+            "terrain/world/translucent"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "dev/experiments/cost-map-live-20261108/run-03-dh",
+      "operation_state": "complete",
+      "configuration_restored": true,
+      "save_restored": true,
+      "cohorts": [
+        {
+          "path": "dev/experiments/cost-map-live-20261108/run-03-dh/live-cost-map/cohort-1/capture.json",
+          "sha256": "a1fb8bcecaa48cfaecb2f06c46d6beb3b21c7fc5c6e5cf25c6e45315b215a1ce",
+          "dh_state": "ENABLED_NOT_READY",
+          "graph": 1,
+          "frames": 35,
+          "events": 3658,
+          "health": {
+            "scopeLimit": 512,
+            "eventLimit": 100000,
+            "activeLimit": 128,
+            "pendingLimit": 4096,
+            "queryPoolLimit": null,
+            "conflicts": 0,
+            "queueEvictions": 0,
+            "droppedEvents": 0,
+            "droppedBytes": null,
+            "unresolvedTail": 36,
+            "imbalancedScopes": 0,
+            "timeouts": null,
+            "resets": null,
+            "disjoints": null,
+            "timerOverheadNs": null,
+            "outcome": {
+              "status": "UNKNOWN",
+              "reason": "closed; consult per-event validity"
+            }
+          },
+          "physical_scopes": [
+            "terrain-setup/shadow",
+            "terrain/shadow/opaque+cutout",
+            "terrain/shadow/translucent",
+            "terrain-setup/world",
+            "dh-total/world/main",
+            "dh-render-list/world",
+            "dh/world/opaque",
+            "terrain/world/opaque+cutout",
+            "dh-total/world/deferred",
+            "dh/world/translucent",
+            "terrain/world/translucent"
+          ]
+        },
+        {
+          "path": "dev/experiments/cost-map-live-20261108/run-03-dh/live-cost-map/cohort-2/capture.json",
+          "sha256": "45ca2c5b998ae27177221a2b2f0378e9571209ed7f1c804368ea50c1ea4555c9",
+          "dh_state": "ENABLED_NOT_READY",
+          "graph": 2,
+          "frames": 1,
+          "events": 89,
+          "health": {
+            "scopeLimit": 512,
+            "eventLimit": 100000,
+            "activeLimit": 128,
+            "pendingLimit": 4096,
+            "queryPoolLimit": null,
+            "conflicts": 0,
+            "queueEvictions": 0,
+            "droppedEvents": 0,
+            "droppedBytes": null,
+            "unresolvedTail": 0,
+            "imbalancedScopes": 0,
+            "timeouts": null,
+            "resets": null,
+            "disjoints": null,
+            "timerOverheadNs": null,
+            "outcome": {
+              "status": "UNKNOWN",
+              "reason": "closed; consult per-event validity"
+            }
+          },
+          "physical_scopes": [
+            "terrain-setup/shadow",
+            "terrain/shadow/opaque+cutout",
+            "terrain/shadow/translucent",
+            "terrain-setup/world",
+            "dh-total/world/main",
+            "dh-render-list/world",
+            "dh/world/opaque",
+            "terrain/world/opaque+cutout",
+            "dh-total/world/deferred",
+            "dh/world/translucent",
+            "terrain/world/translucent"
+          ]
+        },
+        {
+          "path": "dev/experiments/cost-map-live-20261108/run-03-dh/live-cost-map/cohort-3/capture.json",
+          "sha256": "965f85135ae211e6c8400b2ff789ea8892e058796f05d585879b6bf6d2e598f9",
+          "dh_state": "ENABLED_NOT_READY",
+          "graph": 3,
+          "frames": 153,
+          "events": 19405,
+          "health": {
+            "scopeLimit": 512,
+            "eventLimit": 100000,
+            "activeLimit": 128,
+            "pendingLimit": 4096,
+            "queryPoolLimit": null,
+            "conflicts": 0,
+            "queueEvictions": 0,
+            "droppedEvents": 0,
+            "droppedBytes": null,
+            "unresolvedTail": 35,
+            "imbalancedScopes": 0,
+            "timeouts": null,
+            "resets": null,
+            "disjoints": null,
+            "timerOverheadNs": null,
+            "outcome": {
+              "status": "UNKNOWN",
+              "reason": "closed; consult per-event validity"
+            }
+          },
+          "physical_scopes": [
+            "terrain-setup/shadow",
+            "terrain/shadow/opaque+cutout",
+            "terrain/shadow/translucent",
+            "terrain-setup/world",
+            "dh-total/world/main",
+            "dh-render-list/world",
+            "dh/world/opaque",
+            "terrain/world/opaque+cutout",
+            "dh-total/world/deferred",
+            "dh/world/translucent",
+            "terrain/world/translucent"
+          ]
+        },
+        {
+          "path": "dev/experiments/cost-map-live-20261108/run-03-dh/live-cost-map/cohort-4/capture.json",
+          "sha256": "1306a5a6a2ea0ef247c163290cb64b1ab7349e9505799c158d89afb4a14a9fe0",
+          "dh_state": "ENABLED_NOT_READY",
+          "graph": 4,
+          "frames": 161,
+          "events": 19217,
+          "health": {
+            "scopeLimit": 512,
+            "eventLimit": 100000,
+            "activeLimit": 128,
+            "pendingLimit": 4096,
+            "queryPoolLimit": null,
+            "conflicts": 0,
+            "queueEvictions": 0,
+            "droppedEvents": 0,
+            "droppedBytes": null,
+            "unresolvedTail": 45,
+            "imbalancedScopes": 1,
+            "timeouts": null,
+            "resets": null,
+            "disjoints": null,
+            "timerOverheadNs": null,
+            "outcome": {
+              "status": "UNKNOWN",
+              "reason": "closed; consult per-event validity"
+            }
+          },
+          "physical_scopes": [
+            "terrain-setup/shadow",
+            "terrain/shadow/opaque+cutout",
+            "terrain/shadow/translucent",
+            "terrain-setup/world",
+            "dh-total/world/main",
+            "dh-render-list/world",
+            "dh/world/opaque",
+            "terrain/world/opaque+cutout",
+            "dh-total/world/deferred",
+            "dh/world/translucent",
+            "terrain/world/translucent"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "dev/experiments/cost-map-live-20261108/run-04-graph",
+      "operation_state": "complete",
+      "configuration_restored": true,
+      "save_restored": true,
+      "cohorts": [
+        {
+          "path": "dev/experiments/cost-map-live-20261108/run-04-graph/live-cost-map/cohort-1/capture.json",
+          "sha256": "578c384b48204bc403d45d5b5fd746c51dd0be205155ca413306f23df06f6e3f",
+          "dh_state": "ENABLED_NOT_READY",
+          "graph": 1,
+          "frames": 183,
+          "events": 22286,
+          "health": {
+            "scopeLimit": 512,
+            "eventLimit": 100000,
+            "activeLimit": 128,
+            "pendingLimit": 4096,
+            "queryPoolLimit": null,
+            "conflicts": 0,
+            "queueEvictions": 0,
+            "droppedEvents": 0,
+            "droppedBytes": null,
+            "unresolvedTail": 43,
+            "imbalancedScopes": 0,
+            "timeouts": null,
+            "resets": null,
+            "disjoints": null,
+            "timerOverheadNs": null,
+            "outcome": {
+              "status": "UNKNOWN",
+              "reason": "closed; consult per-event validity"
+            }
+          },
+          "physical_scopes": [
+            "terrain-setup/shadow",
+            "terrain/shadow/opaque+cutout",
+            "terrain/shadow/translucent",
+            "terrain-setup/world",
+            "dh-total/world/main",
+            "dh-render-list/world",
+            "dh/world/opaque",
+            "terrain/world/opaque+cutout",
+            "dh-total/world/deferred",
+            "dh/world/translucent",
+            "terrain/world/translucent"
+          ]
+        },
+        {
+          "path": "dev/experiments/cost-map-live-20261108/run-04-graph/live-cost-map/cohort-2/capture.json",
+          "sha256": "ec841e0b41b0953ce0eea5094ad381cdad83bbe3b620e75fcf3b9786dafcd8f3",
+          "dh_state": "ENABLED_NOT_READY",
+          "graph": 2,
+          "frames": 147,
+          "events": 17453,
+          "health": {
+            "scopeLimit": 512,
+            "eventLimit": 100000,
+            "activeLimit": 128,
+            "pendingLimit": 4096,
+            "queryPoolLimit": null,
+            "conflicts": 0,
+            "queueEvictions": 0,
+            "droppedEvents": 0,
+            "droppedBytes": null,
+            "unresolvedTail": 45,
+            "imbalancedScopes": 1,
+            "timeouts": null,
+            "resets": null,
+            "disjoints": null,
+            "timerOverheadNs": null,
+            "outcome": {
+              "status": "UNKNOWN",
+              "reason": "closed; consult per-event validity"
+            }
+          },
+          "physical_scopes": [
+            "terrain-setup/shadow",
+            "terrain/shadow/opaque+cutout",
+            "terrain/shadow/translucent",
+            "terrain-setup/world",
+            "dh-total/world/main",
+            "dh-render-list/world",
+            "dh/world/opaque",
+            "terrain/world/opaque+cutout",
+            "dh-total/world/deferred",
+            "dh/world/translucent",
+            "terrain/world/translucent"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "dev/experiments/cost-map-live-20261108/run-05-transitions",
+      "operation_state": "complete",
+      "configuration_restored": true,
+      "save_restored": true,
+      "cohorts": [
+        {
+          "path": "dev/experiments/cost-map-live-20261108/run-05-transitions/live-cost-map/cohort-1/capture.json",
+          "sha256": "0eb26ecc6ded52243a10575b6e8ad4557f508de1db4b5c34e55f38467d22fcc3",
+          "dh_state": "ENABLED_NOT_READY",
+          "graph": 1,
+          "frames": 31,
+          "events": 3210,
+          "health": {
+            "scopeLimit": 512,
+            "eventLimit": 100000,
+            "activeLimit": 128,
+            "pendingLimit": 4096,
+            "queryPoolLimit": null,
+            "conflicts": 0,
+            "queueEvictions": 0,
+            "droppedEvents": 0,
+            "droppedBytes": null,
+            "unresolvedTail": 34,
+            "imbalancedScopes": 0,
+            "timeouts": null,
+            "resets": null,
+            "disjoints": null,
+            "timerOverheadNs": null,
+            "outcome": {
+              "status": "UNKNOWN",
+              "reason": "closed; consult per-event validity"
+            }
+          },
+          "physical_scopes": [
+            "terrain-setup/shadow",
+            "terrain/shadow/opaque+cutout",
+            "terrain/shadow/translucent",
+            "terrain-setup/world",
+            "dh-total/world/main",
+            "dh-render-list/world",
+            "dh/world/opaque",
+            "terrain/world/opaque+cutout",
+            "dh-total/world/deferred",
+            "dh/world/translucent",
+            "terrain/world/translucent"
+          ]
+        },
+        {
+          "path": "dev/experiments/cost-map-live-20261108/run-05-transitions/live-cost-map/cohort-2/capture.json",
+          "sha256": "dfc68f17fcc6bac61e62e5f10382380e6329c6d624ddafd4f7831e61e5cab171",
+          "dh_state": "ENABLED_NOT_READY",
+          "graph": 1,
+          "frames": 1,
+          "events": 173,
+          "health": {
+            "scopeLimit": 512,
+            "eventLimit": 100000,
+            "activeLimit": 128,
+            "pendingLimit": 4096,
+            "queryPoolLimit": null,
+            "conflicts": 0,
+            "queueEvictions": 0,
+            "droppedEvents": 0,
+            "droppedBytes": null,
+            "unresolvedTail": 28,
+            "imbalancedScopes": 0,
+            "timeouts": null,
+            "resets": null,
+            "disjoints": null,
+            "timerOverheadNs": null,
+            "outcome": {
+              "status": "UNKNOWN",
+              "reason": "closed; consult per-event validity"
+            }
+          },
+          "physical_scopes": [
+            "terrain-setup/shadow",
+            "terrain/shadow/opaque+cutout",
+            "terrain/shadow/translucent",
+            "terrain-setup/world",
+            "dh-total/world/main",
+            "dh-render-list/world",
+            "dh/world/opaque",
+            "terrain/world/opaque+cutout",
+            "dh-total/world/deferred",
+            "dh/world/translucent",
+            "terrain/world/translucent"
+          ]
+        },
+        {
+          "path": "dev/experiments/cost-map-live-20261108/run-05-transitions/live-cost-map/cohort-3/capture.json",
+          "sha256": "a803535a6236e5a66bef8107ed63c8e9da37108cd0ad02718c18691c7314cd01",
+          "dh_state": "ENABLED_NOT_READY",
+          "graph": 1,
+          "frames": 109,
+          "events": 13729,
+          "health": {
+            "scopeLimit": 512,
+            "eventLimit": 100000,
+            "activeLimit": 128,
+            "pendingLimit": 4096,
+            "queryPoolLimit": null,
+            "conflicts": 0,
+            "queueEvictions": 0,
+            "droppedEvents": 0,
+            "droppedBytes": null,
+            "unresolvedTail": 34,
+            "imbalancedScopes": 0,
+            "timeouts": null,
+            "resets": null,
+            "disjoints": null,
+            "timerOverheadNs": null,
+            "outcome": {
+              "status": "UNKNOWN",
+              "reason": "closed; consult per-event validity"
+            }
+          },
+          "physical_scopes": [
+            "terrain-setup/shadow",
+            "terrain/shadow/opaque+cutout",
+            "terrain/shadow/translucent",
+            "terrain-setup/world",
+            "dh-total/world/main",
+            "dh-render-list/world",
+            "dh/world/opaque",
+            "terrain/world/opaque+cutout",
+            "dh-total/world/deferred",
+            "dh/world/translucent",
+            "terrain/world/translucent"
+          ]
+        },
+        {
+          "path": "dev/experiments/cost-map-live-20261108/run-05-transitions/live-cost-map/cohort-4/capture.json",
+          "sha256": "f0c21493362496258fc0f6a5ac06cb89f6effa8400094e0fa184aeaab180e8a5",
+          "dh_state": "ENABLED_NOT_READY",
+          "graph": 2,
+          "frames": 135,
+          "events": 15941,
+          "health": {
+            "scopeLimit": 512,
+            "eventLimit": 100000,
+            "activeLimit": 128,
+            "pendingLimit": 4096,
+            "queryPoolLimit": null,
+            "conflicts": 0,
+            "queueEvictions": 0,
+            "droppedEvents": 0,
+            "droppedBytes": null,
+            "unresolvedTail": 43,
+            "imbalancedScopes": 0,
+            "timeouts": null,
+            "resets": null,
+            "disjoints": null,
+            "timerOverheadNs": null,
+            "outcome": {
+              "status": "UNKNOWN",
+              "reason": "closed; consult per-event validity"
+            }
+          },
+          "physical_scopes": [
+            "terrain-setup/shadow",
+            "terrain/shadow/opaque+cutout",
+            "terrain/shadow/translucent",
+            "terrain-setup/world",
+            "dh-total/world/main",
+            "dh-render-list/world",
+            "dh/world/opaque",
+            "terrain/world/opaque+cutout",
+            "dh-total/world/deferred",
+            "dh/world/translucent",
+            "terrain/world/translucent"
+          ]
+        },
+        {
+          "path": "dev/experiments/cost-map-live-20261108/run-05-transitions/live-cost-map/cohort-5/capture.json",
+          "sha256": "0c10391bd2ef0cfc86897fb6eab527aad61b36704e5f74254722acfc7219e376",
+          "dh_state": "INSTALLED_RENDERING_DISABLED",
+          "graph": 3,
+          "frames": 11,
+          "events": 742,
+          "health": {
+            "scopeLimit": 512,
+            "eventLimit": 100000,
+            "activeLimit": 128,
+            "pendingLimit": 4096,
+            "queryPoolLimit": null,
+            "conflicts": 0,
+            "queueEvictions": 0,
+            "droppedEvents": 0,
+            "droppedBytes": null,
+            "unresolvedTail": 25,
+            "imbalancedScopes": 0,
+            "timeouts": null,
+            "resets": null,
+            "disjoints": null,
+            "timerOverheadNs": null,
+            "outcome": {
+              "status": "UNKNOWN",
+              "reason": "closed; consult per-event validity"
+            }
+          },
+          "physical_scopes": [
+            "terrain-setup/shadow",
+            "terrain/shadow/opaque+cutout",
+            "terrain/shadow/translucent",
+            "terrain-setup/world",
+            "terrain/world/opaque+cutout",
+            "terrain/world/translucent",
+            "dh-total/world/main",
+            "dh-render-list/world",
+            "dh/world/opaque",
+            "dh-total/world/deferred",
+            "dh/world/translucent"
+          ]
+        },
+        {
+          "path": "dev/experiments/cost-map-live-20261108/run-05-transitions/live-cost-map/cohort-6/capture.json",
+          "sha256": "a70ba90a7391aa68738cbaa862c9cf64927a2d788aadf20354072330a4020f6b",
+          "dh_state": "ENABLED_NOT_READY",
+          "graph": 4,
+          "frames": 33,
+          "events": 3129,
+          "health": {
+            "scopeLimit": 512,
+            "eventLimit": 100000,
+            "activeLimit": 128,
+            "pendingLimit": 4096,
+            "queryPoolLimit": null,
+            "conflicts": 0,
+            "queueEvictions": 0,
+            "droppedEvents": 0,
+            "droppedBytes": null,
+            "unresolvedTail": 34,
+            "imbalancedScopes": 1,
+            "timeouts": null,
+            "resets": null,
+            "disjoints": null,
+            "timerOverheadNs": null,
+            "outcome": {
+              "status": "UNKNOWN",
+              "reason": "closed; consult per-event validity"
+            }
+          },
+          "physical_scopes": [
+            "terrain-setup/shadow",
+            "terrain/shadow/opaque+cutout",
+            "terrain/shadow/translucent",
+            "terrain-setup/world",
+            "dh-total/world/main",
+            "dh-render-list/world",
+            "dh/world/opaque",
+            "terrain/world/opaque+cutout",
+            "dh-total/world/deferred",
+            "dh/world/translucent",
+            "terrain/world/translucent"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "dev/experiments/cost-map-live-20261108/run-06-final",
+      "operation_state": "complete",
+      "execution": "passed",
+      "configuration_restored": true,
+      "save_restored": true,
+      "cohorts": [
+        {
+          "path": "dev/experiments/cost-map-live-20261108/run-06-final/live-cost-map/cohort-1/capture.json",
+          "sha256": "c96765b8af4a8c4ae4da34a40a8d83cf42d7a941b338c15a210988ce21eb76ef",
+          "dh_state": "ENABLED_NOT_READY",
+          "graph": 1,
+          "frames": 104,
+          "events": 12044,
+          "health": {
+            "scopeLimit": 512,
+            "eventLimit": 100000,
+            "activeLimit": 128,
+            "pendingLimit": 4096,
+            "queryPoolLimit": null,
+            "conflicts": 0,
+            "queueEvictions": 0,
+            "droppedEvents": 0,
+            "droppedBytes": null,
+            "unresolvedTail": 43,
+            "imbalancedScopes": 0,
+            "timeouts": null,
+            "resets": null,
+            "disjoints": null,
+            "timerOverheadNs": null,
+            "outcome": {
+              "status": "UNKNOWN",
+              "reason": "closed; consult per-event validity"
+            }
+          },
+          "physical_scopes": [
+            "terrain-setup/shadow",
+            "terrain/shadow/opaque+cutout",
+            "terrain/shadow/translucent",
+            "terrain-setup/world",
+            "dh-total/world/main",
+            "dh-render-list/world",
+            "dh/world/opaque",
+            "terrain/world/opaque+cutout",
+            "dh-total/world/deferred",
+            "dh/world/translucent",
+            "terrain/world/translucent"
+          ]
+        },
+        {
+          "path": "dev/experiments/cost-map-live-20261108/run-06-final/live-cost-map/cohort-2/capture.json",
+          "sha256": "51515b22418e88c0808e9c06edf3b75b69f29aff33fa8201ce4162f604979fde",
+          "dh_state": "ENABLED_NOT_READY",
+          "graph": 2,
+          "frames": 89,
+          "events": 9962,
+          "health": {
+            "scopeLimit": 512,
+            "eventLimit": 100000,
+            "activeLimit": 128,
+            "pendingLimit": 4096,
+            "queryPoolLimit": null,
+            "conflicts": 0,
+            "queueEvictions": 0,
+            "droppedEvents": 0,
+            "droppedBytes": null,
+            "unresolvedTail": 45,
+            "imbalancedScopes": 0,
+            "timeouts": null,
+            "resets": null,
+            "disjoints": null,
+            "timerOverheadNs": null,
+            "outcome": {
+              "status": "UNKNOWN",
+              "reason": "closed; consult per-event validity"
+            }
+          },
+          "physical_scopes": [
+            "terrain-setup/shadow",
+            "terrain/shadow/opaque+cutout",
+            "terrain/shadow/translucent",
+            "terrain-setup/world",
+            "dh-total/world/main",
+            "dh-render-list/world",
+            "dh/world/opaque",
+            "terrain/world/opaque+cutout",
+            "dh-total/world/deferred",
+            "dh/world/translucent",
+            "terrain/world/translucent"
+          ]
+        },
+        {
+          "path": "dev/experiments/cost-map-live-20261108/run-06-final/live-cost-map/cohort-3/capture.json",
+          "sha256": "f078623f2ed4bd40c42dc6e690de0fc19a1bd41ffa12a8973fa923b177171164",
+          "dh_state": "INSTALLED_RENDERING_DISABLED",
+          "graph": 3,
+          "frames": 64,
+          "events": 6273,
+          "health": {
+            "scopeLimit": 512,
+            "eventLimit": 100000,
+            "activeLimit": 128,
+            "pendingLimit": 4096,
+            "queryPoolLimit": null,
+            "conflicts": 0,
+            "queueEvictions": 0,
+            "droppedEvents": 0,
+            "droppedBytes": null,
+            "unresolvedTail": 39,
+            "imbalancedScopes": 0,
+            "timeouts": null,
+            "resets": null,
+            "disjoints": null,
+            "timerOverheadNs": null,
+            "outcome": {
+              "status": "UNKNOWN",
+              "reason": "closed; consult per-event validity"
+            }
+          },
+          "physical_scopes": [
+            "terrain-setup/shadow",
+            "terrain/shadow/opaque+cutout",
+            "terrain/shadow/translucent",
+            "terrain-setup/world",
+            "terrain/world/opaque+cutout",
+            "terrain/world/translucent",
+            "dh-total/world/main",
+            "dh-render-list/world",
+            "dh/world/opaque",
+            "dh-total/world/deferred",
+            "dh/world/translucent"
+          ]
+        },
+        {
+          "path": "dev/experiments/cost-map-live-20261108/run-06-final/live-cost-map/cohort-4/capture.json",
+          "sha256": "ee8e2f59f1c657bfd0f989846339f38beb36ece7b8b257d573e22bbd84b4d9cb",
+          "dh_state": "ENABLED_NOT_READY",
+          "graph": 4,
+          "frames": 42,
+          "events": 4088,
+          "health": {
+            "scopeLimit": 512,
+            "eventLimit": 100000,
+            "activeLimit": 128,
+            "pendingLimit": 4096,
+            "queryPoolLimit": null,
+            "conflicts": 0,
+            "queueEvictions": 0,
+            "droppedEvents": 0,
+            "droppedBytes": null,
+            "unresolvedTail": 37,
+            "imbalancedScopes": 1,
+            "timeouts": null,
+            "resets": null,
+            "disjoints": null,
+            "timerOverheadNs": null,
+            "outcome": {
+              "status": "UNKNOWN",
+              "reason": "closed; consult per-event validity"
+            }
+          },
+          "physical_scopes": [
+            "terrain-setup/shadow",
+            "terrain/shadow/opaque+cutout",
+            "terrain/shadow/translucent",
+            "terrain-setup/world",
+            "dh-total/world/main",
+            "dh-render-list/world",
+            "dh/world/opaque",
+            "terrain/world/opaque+cutout",
+            "dh-total/world/deferred",
+            "dh/world/translucent",
+            "terrain/world/translucent"
+          ]
+        }
+      ]
+    }
+  ],
+  "disk": {
+    "initial_free_bytes": 33917800448,
+    "observed_free_after_cleanup_bytes": 36331495424,
+    "free_at_record_bytes": 34953678848,
+    "deleted_measured_bytes_excluding_daemon_logs": 2341635814,
+    "deleted_paths": [
+      "~/.gradle/caches/build-cache-1",
+      "build/reports/configuration-cache",
+      "~/.cache/mesa_shader_cache_db",
+      "~/.cache/libdnf5",
+      "~/.gradle/caches/neoformruntime/intermediate_results",
+      "~/.gradle/jdks/OpenJDK21U-jdk_aarch64_linux_hotspot_21-any-vendor-21.0.13_9.tar.gz",
+      "~/.gradle/daemon/9.2.1/daemon-*.out.log"
+    ],
+    "note": "Btrfs statfs changed asynchronously; rebuilt intermediates and new artifacts consume part of the recovered space."
+  },
+  "tests": {
+    "cost_map_python": 9,
+    "stage1_checks": 82,
+    "capture_owner_checks": 44,
+    "lifecycle": 30,
+    "dev_client": 55,
+    "workflow": 14,
+    "production_jar_entries": 2736,
+    "production_dev_entries": 0,
+    "benchmark_regressions": "running"
+  }
+}

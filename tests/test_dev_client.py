@@ -1,5 +1,6 @@
 """Launcher checks use temporary profiles and fake processes; never launch Minecraft."""
 import argparse
+import itertools
 import importlib.util
 import json
 from pathlib import Path
@@ -779,7 +780,7 @@ class DevClientTest(unittest.TestCase):
                           live, RuntimeError('probe unavailable at deadline'), live, live, gone, gone]), \
              patch.object(dev, 'associated', return_value=True), \
              patch.object(dev.os, 'getsid', return_value=80), \
-             patch.object(dev.time, 'monotonic', side_effect=[0, 8, 8, 8, 10, 10, 10]), \
+             patch.object(dev.time, 'monotonic', side_effect=itertools.chain([0, 8, 8, 8], itertools.repeat(10))), \
              patch.object(dev.time, 'sleep') as sleep, patch.object(dev.os, 'kill') as kill:
             popen.return_value.pid = 80
             popen.return_value.poll.side_effect = [None, 0]

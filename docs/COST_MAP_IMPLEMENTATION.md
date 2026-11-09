@@ -1,3 +1,113 @@
+# Live cost-map completion follow-up — 2026-11-08
+
+The live launcher and bounded Asahi checks now exist and have run successfully.
+This supersedes the earlier checkpoint's “no client launched” limitation. It
+**does not claim complete stage 2–4 design acceptance**: worker/upload timing,
+all-four-pack enabled semantic graph joins, timestamp/elapsed driver qualification,
+process replication/rank uncertainty and full legacy migration remain incomplete.
+No section 10 campaign, stage 5 qualification, stage 6 review, RTX/Nsight,
+training or optimization work was started.
+
+## New implementation
+
+- `profile --live` owns a prepared managed slot through the existing exact-process
+  supervisor, configuration backups/CAS restoration and whole-save backup/reset.
+  World copies use `run_storage.copytree`. It uses the existing GPU-backed display
+  selector and native 2560×1600 fullscreen, limits the requested capture to 1–30 s,
+  checks actual CPU/GPU samples and graph replacement, and exports each immutable
+  cohort. The current scene is the prepared authored save, explicitly identified.
+- Development-only native guard refuses every optimization request (including
+  TERRAIN_RADIUS); production artifacts do not contain this guard or other dev
+  classes. Main mod is present because the timer hooks require its measurement
+  APIs; its runtime was disabled in these tests. No shader optimization was enabled.
+- Frame boundaries observe pipeline object replacement, dimension/disconnect,
+  vanilla distance, effective DH rendering/mode/radius/quality/generation and mesh
+  readiness. A change drains/disposes queries and finalizes the old cohort before
+  issuing new observations. Pipeline replacement alone advances graph generation;
+  readiness/settings can end a cohort without replacing that graph. Parsed and
+  linked graph/target evidence is exported from the actual pipeline. Hook scopes
+  register as observed; unobserved programs are not fabricated as timed scopes.
+- Canonical physical DH joins retain main/deferred, world/shadow and opacity in
+  CPU/GPU invocation records. Reports expose physical joins separately from semantic
+  features. [Pinned-hook review and limitations](COST_MAP_DH_HOOKS.md).
+- Effective settings, thread CPU/heap endpoints and DH submission/index counters
+  remain observations, not task timing/residency. A declared
+  `--dh-transition-check` toggles rendering off/on, using API override ownership
+  and restoration (including clearing an originally absent API value). Normal
+  capture does not alter generation, DH radius/mode or vanilla distance.
+- Optional DH JAR staging is pinned, predeclared in the operation backup map and
+  restored/removed at shutdown. Whole-profile verification passed after each
+  successful run; generated DH state remains in retained world-after evidence.
+
+## Live evidence
+
+[Compact results and capture checksums](../dev/experiments/cost-map-live-20261108/RESULTS.json).
+Raw captures, graph inventories, exports, receipts and console logs remain under
+that directory and outside Git. These were actual Minecraft/Apple GPU runs:
+
+- First attempt (`run-01`) crashed on absent main-mod RuntimeMeasurement classes.
+  Log/crash evidence retained; process stopped, configuration restored and saved
+  world checked byte-identical to the pre-entry backup. This is not a successful run.
+- `run-02`: original MakeUp, absent DH; CPU/GPU hooks resolved, readiness changed
+  cohorts, canonical JSON/CSV/HTML exported. Absent-DH rows remain N/A/null.
+- `run-03-dh`: installed/enabled DH, existing DEFAULT/256-chunk settings and
+  generation=true; main/deferred/opaque/translucent/render-list hooks fired;
+  submission counters advanced. Deliberate Iris reload ended the old graph cohort.
+- `run-04-graph`: two actual graph inventories, each with 522 parsed program rows,
+  seven linked-program rows and seven target rows. Graph 1 yielded 18,506 measured
+  CPU events and 1,217 GPU terminal samples; graph 2 yielded 14,344 and 991.
+- `run-05-transitions`: six cohorts across four graph generations, including
+  INSTALLED_RENDERING_DISABLED between enabled cohorts. Rendering API override,
+  config, optional JAR and whole save restored. Enabled cohorts deliberately remain
+  ENABLED_NOT_READY; submissions alone do not prove horizon residency. Partial
+  final frames/unresolved query tails stay visible in health and event records.
+
+Example maintained command (no A/B score):
+
+```sh
+python3 scripts/run_benchmark.py profile --live --dh --dh-transition-check \
+  --profile run-workloads/world-pool/neoforge-1211-asahi-pbr/client \
+  --pack MakeUpNativeOriginal.zip --seconds 8 \
+  --output dev/experiments/cost-map-live-20261108/FRESH_RUN
+```
+
+`run-06-final` reran the current client path with a four-second window plus the
+declared DH transition check: four cohorts, four graph generations, enabled →
+disabled → enabled, hardware samples, exports and full restoration passed. It also
+records DH API world-loaded readiness separately from unverified residency.
+
+## Machine and verification
+
+Origin was synchronized before edits (9afbaa0). `loginctl` showed an active tty
+session, no Plasma desktop; the already-running private KWin/Xwayland service
+provided DISPLAY=:0, WAYLAND_DISPLAY=wayland-shaderlod,
+XDG_RUNTIME_DIR=/run/user/1000, empty XAUTHORITY and its private D-Bus address.
+`headless_display.wait_ready` checked service invocation ownership, GLX
+Accelerated=yes / Apple M1 / Mesa 25.1.0 and xrandr 2560×1600. Minecraft independently
+reported that GPU, native framebuffer, fullscreen and shaders without fallback.
+No Xvfb or software renderer was used.
+
+Deleted measured regenerable cache data totals 2,341,635,814 bytes plus old Gradle
+daemon logs: Gradle build cache, configuration-cache reports, Mesa shader cache,
+DNF user metadata cache, NeoForm intermediates and cached downloaded JDK archive.
+The installed JDK, dependencies and experiment records were preserved. Initial
+free space was 33,917,800,448 bytes; post-cleanup observed free space was
+36,331,495,424 bytes. Rebuilding NeoForm and retaining live evidence consumed some
+of that gain; final space is recorded in RESULTS.json. Btrfs reports update
+asynchronously, so deleted logical bytes and net free-space change differ.
+
+Focused verification: nine cost-map Python tests (including all 82 contract and
+44 ownership checks, physical context/boundary checks, dynamic live inventory,
+launcher admission refusals and offline round trips); 30 lifecycle, 55 dev-client
+and 14 workflow tests. The dev-client deadline fixture initially exhausted its
+finite fake-clock list because publication reads also read that clock; it now
+keeps time stationary after reaching the deadline. An initial lifecycle/dev-client
+invocation omitted PYTHONPATH=scripts and was rerun with it. Production jar:
+2,736 entries, zero dev/CostMap/TimingMixin entries. Broader benchmark regression
+results are recorded below when complete.
+
+---
+
 # Cost-map implementation checkpoint — 2026-11-08
 
 Authority: Philip's “go build the whole thing and test it well e2e” authorizes

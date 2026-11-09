@@ -14,6 +14,7 @@ public abstract class MinecraftFrameTimingMixin {
     @Inject(method = "runTick", at = @At("HEAD"))
     private void shaderlod$beginTick(boolean renderLevel, CallbackInfo ci) {
         boolean world = Minecraft.getInstance().level != null;
+        com.pp.shaderlod.dev.LiveCostMap.boundary();
         GpuTimers.beginTick(world);
         CpuTimers.beginFrame(GpuTimers.frameId(), world);
         CpuTimers.begin("run-tick");

@@ -5,6 +5,7 @@
   "plugin": "com.pp.shaderlod.dev.mixin.DevEvidenceMixinPlugin",
   "compatibilityLevel": "JAVA_21",
   "client": [
+    "CostMapNativeMixin",
     "SamplerAllocationFailureMixin",
     "SamplerUnitBudgetMixin",
     "BackgroundWindowMixin",

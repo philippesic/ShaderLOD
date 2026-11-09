@@ -145,6 +145,7 @@ neoForge {
                 systemProperty 'shaderlod.dev.readinessEvents',project.property('readinessEvents').toString()
                 jvmArgument "-Xlog:gc*,safepoint:file=${project.property('readinessEvents')}/gc-safepoint.log:utctime,uptime,pid,tid,level,tags"
             }
+            for (name in ['manualProfiling','costMap']) { if(project.hasProperty(name))systemProperty 'shaderlod.dev.'+name,project.property(name).toString() }
             if(project.hasProperty('savedAuthoredScene'))systemProperty 'shaderlod.dev.savedAuthoredScene',project.property('savedAuthoredScene').toString()
             if(project.hasProperty('rendererWorkCounters'))systemProperty 'shaderlod.dev.rendererWorkCounters',project.property('rendererWorkCounters').toString()
             if(project.findProperty('mixinExport') == 'true')systemProperty 'mixin.debug.export','true'

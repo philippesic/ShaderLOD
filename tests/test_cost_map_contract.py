@@ -24,7 +24,7 @@ class CostMapContractTest(unittest.TestCase):
         with tempfile.TemporaryDirectory(prefix='shaderlod-costmap-') as directory:
             subprocess.run([java_tool('javac'), '--release', '21', '-d', directory,
                             *map(str, sources)], check=True, timeout=60)
-            for main in ('costmap.CostMapContractTest', 'costmap.CaptureOwnerTest', 'GpuSamplingPolicyTest', 'TimingStatisticsTest'):
+            for main in ('costmap.CostMapContractTest', 'costmap.CaptureOwnerTest', 'costmap.ScopeContextTest', 'GpuSamplingPolicyTest', 'TimingStatisticsTest'):
                 with self.subTest(main=main):
                     subprocess.run([java_tool('java'), '-Djava.awt.headless=true', '-cp', directory,
                                     'com.pp.shaderlod.dev.timing.' + main], check=True, timeout=30)

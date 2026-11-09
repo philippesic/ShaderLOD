@@ -130,7 +130,16 @@ def summarize(data):
     cpu_trace=cpu_trace[:4096];gpu_trace=gpu_trace[:4096]
     gpu_clocks={}
     for event in gpu_trace:gpu_clocks.setdefault(event['tid'],[]).append(event)
-    return {'schema_version':1,'catalog_revision':REVISION,'manifest':data['manifest'],'costs':rows,
+    physical_joins=[]
+    for scope_id,scope in scopes.items():
+        name=scope['name']
+        if not name.startswith(('dh/','dh-total/','dh-render-list/','terrain/','terrain-setup/')):continue
+        observed=[e['invocation'] for e in events.values() if e['invocation']['scopeId']==scope_id]
+        contexts=sorted({(i['dhStage'],i['worldShadow'],i['opacity']) for i in observed})
+        physical_joins.append({'name':name,'hook_invocations':len(observed),'contexts':[{'dh_stage':x,'world_shadow':y,'opacity':z} for x,y,z in contexts],
+                               'meaning':'render-list CPU wrapper' if name.startswith('dh-render-list/') else 'main/deferred inclusive wrapper' if name.startswith('dh-total/') else 'terrain wrapper; not a draw or visibility count',
+                               'semantic':'physical hook only; shader features remain separately evidence gated'})
+    return {'schema_version':1,'catalog_revision':REVISION,'manifest':data['manifest'],'costs':rows,'physical_joins':physical_joins,
             'coverage':coverage(data['manifest'])+data.get('coverage',[]),'health':data.get('health',{}),
             'hierarchy':[e['invocation'] for e in list(events.values())[:4096]],'omitted_detail':omitted_detail,
             'cpu_trace':cpu_trace,'gpu_trace':gpu_trace if len(gpu_clocks)<=1 else [],'gpu_clock_traces':gpu_clocks,
@@ -154,7 +163,7 @@ def export(data, output):
     (output/'report.json').write_text(json.dumps(result,indent=2))
     for dimension in ('cpu','gpu'):
         write_csv(output/(dimension+'.csv'),[{'event_id':e['invocation']['eventId'], 'invocation':e['invocation'], **e[dimension]} for e in data.get('events',[]) if e.get(dimension)])
-    for name,rows in [('costs',result['costs']),('coverage',result['coverage']),('frames',data.get('frames',[])),('scopes',data['scopes'])]:write_csv(output/(name+'.csv'),rows)
+    for name,rows in [('costs',result['costs']),('coverage',result['coverage']),('frames',data.get('frames',[])),('scopes',data['scopes']),('physical-joins',result['physical_joins'])]:write_csv(output/(name+'.csv'),rows)
     for lane in ('cpu','gpu'):
         (output/(lane+'-trace.json')).write_text(json.dumps({'traceEvents':result[lane+'_trace'],'clock': 'CPU monotonic' if lane=='cpu' else 'GPU ONLY: uncorrelated; elapsed records excluded'}))
     for index,(clock,events) in enumerate(result['gpu_clock_traces'].items()):
@@ -164,7 +173,7 @@ def export(data, output):
     page='''<!doctype html><meta charset="utf-8"><title>ShaderLOD cost map</title>
 <style>body{font:16px system-ui;margin:2em}td,th{padding:.5em;text-align:left;border-bottom:1px solid #ccc}pre{white-space:pre-wrap}.bar{background:#518aaf;color:white;min-width:2px;padding:4px;margin:2px}summary{cursor:pointer}</style>
 <h1>Diagnostic cost map</h1><p>Display: milliseconds. Inclusive parents and mixed tags are nonadditive. Overhead unqualified.</p>
-<label>View <select id="view"><option>costs</option><option>coverage</option><option>DH</option><option>hierarchy</option><option>investigation_queue</option><option>CPU wall flame</option><option>frame pacing</option></select></label>
+<label>View <select id="view"><option>costs</option><option>coverage</option><option>DH</option><option>physical_joins</option><option>hierarchy</option><option>investigation_queue</option><option>CPU wall flame</option><option>frame pacing</option></select></label>
 <input id="search" placeholder="Filter named scopes"><div id="content"></div><script>
 const data=DATA;const root=document.querySelector('#content');
 function pre(value){let p=document.createElement('pre');p.textContent=JSON.stringify(value,null,2);return p}
@@ -195,6 +204,7 @@ def plan(args):
 def command(argv):
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('mode',choices=['profile-plan','profile','profile-report'])
+    p.add_argument('--dh-transition-check',action='store_true');p.add_argument('--live',action='store_true');p.add_argument('--profile',type=Path);p.add_argument('--pack');p.add_argument('--dh',action='store_true');p.add_argument('--world',default='ShaderLOD-Benchmark-overworld-3-flat')
     p.add_argument('--input',type=Path);p.add_argument('--output',type=Path)
     p.add_argument('--fps',type=float,default=60);p.add_argument('--seconds',type=float,default=20)
     p.add_argument('--windows',type=int,default=3);p.add_argument('--processes',type=int,default=2)
@@ -203,6 +213,10 @@ def command(argv):
     if any(getattr(a,k)<=0 for k in ('fps','seconds','windows','processes','cadence','scope_sets','minimum')):p.error('positive sampling inputs required')
     if a.mode=='profile-plan':
         result=plan(a);print(json.dumps(result,indent=2));return 0 if result['feasible'] else 1
+    if a.live:
+        if a.mode!='profile' or not a.profile or not a.output or a.input:p.error('live profile requires --profile and --output without --input')
+        from cost_map_live import run
+        return run(a)
     if not a.input or not a.output:p.error('--input and --output required')
     finalization=a.input.parent/'finalized.json'
     if finalization.exists():

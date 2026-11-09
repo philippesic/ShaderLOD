@@ -44,15 +44,26 @@ public final class CostMapSession {
         var c=current;long now=System.nanoTime();
         if(c.frame!=null)c.frames.add(new Frame(c.frame,c.frameStart,now,null,null,false,false,false,!world,Set.of(),new Outcome(world?Status.UNKNOWN:Status.INVALID,"boundary observed; root coverage separate"),"next frame start"));
         if(c.frames.size()>=100000)throw new IllegalStateException("canonical frame cap exceeded");
-        c.frame=new FrameId(c.capture.captureId(),c.capture.cohortId(),1,1,id,1);c.frameStart=now;
+        c.frame=new FrameId(c.capture.captureId(),c.capture.cohortId(),1,1,id,c.manifest.has("graph_generation")?c.manifest.get("graph_generation").getAsLong():1);c.frameStart=now;
         c.registry.beginFrame(c.frame);c.cpu.clear();c.collect();
         if(c.events.size()+c.coverage.size()>600000)throw new IllegalStateException("canonical event cap exceeded; finalize partial capture");
     }
     private void collect(){var b=registry.drain();events.addAll(b.events());coverage.addAll(b.coverage());}
+    private boolean known(String name) {
+        if(names.containsKey(name))return true;
+        if(!manifest.has("dynamic_inventory")||!manifest.get("dynamic_inventory").getAsBoolean()||names.size()>=512){unknownHook(name);return false;}
+        var scope=registry.register(new ScopeKey(manifest.get("graph_generation").getAsLong(),"observed-hook",name,Operation.WRAPPER,name),name,Set.of(),"physical hook; semantic coverage unverified",new Outcome(Status.UNKNOWN,"observed hook, no inferred resource identity"));
+        names.put(name,scope.id());return true;
+    }
+    private ScopeContext context(String name) {
+        String enclosing="unknown";
+        for(var inv:cpu) {var scope=registry.scopes().get(inv.scopeId()-1);if(scope.name().startsWith("dh-total/")){enclosing=scope.name().substring(scope.name().lastIndexOf('/')+1);break;}}
+        return ScopeContext.of(name,enclosing,capture.dh().state()==DhState.ABSENT);
+    }
     public static Long beginCpu(String name,long ns,Long threadNs){
         var c=current;if(c==null || c.frame==null)return null;
-        if(!c.names.containsKey(name)){c.unknownHook(name);return null;}
-        var i=c.registry.begin(c.names.get(name),Thread.currentThread().threadId(),"render","unknown","unknown","unknown",ns,threadNs,c.cpuClock);c.cpu.push(i);return i.eventId();
+        if(!c.known(name))return null;
+        var context=c.context(name);var i=c.registry.begin(c.names.get(name),Thread.currentThread().threadId(),"render",context.dhStage(),context.worldShadow(),context.opacity(),ns,threadNs,c.cpuClock);c.cpu.push(i);return i.eventId();
     }
     public static void endCpu(Long id,long ns,Long threadNs){
         var c=current;if(c==null || id==null)return;
@@ -60,8 +71,8 @@ public final class CostMapSession {
     }
     public static Long issueGpu(String name,boolean timestamps,int bits){
         var c=current;if(c==null || c.frame==null)return null;
-        if(!c.names.containsKey(name)){c.unknownHook(name);return null;}
-        var i=c.registry.begin(c.names.get(name),Thread.currentThread().threadId(),"render","unknown","unknown","unknown",System.nanoTime(),null,c.cpuClock);
+        if(!c.known(name))return null;
+        var context=c.context(name);var i=c.registry.begin(c.names.get(name),Thread.currentThread().threadId(),"render",context.dhStage(),context.worldShadow(),context.opacity(),System.nanoTime(),null,c.cpuClock);
         c.registry.issueGpu(i,new Clock("OpenGL GPU (uncorrelated)",bits,1,1),timestamps?Backend.TIMESTAMP:Backend.ELAPSED);
         c.registry.endMissing(i.eventId(),new Outcome(Status.UNKNOWN,"GPU submission record; CPU separately observed"));return i.eventId();
     }

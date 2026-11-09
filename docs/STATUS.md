@@ -62,8 +62,14 @@ for the test command and stage-2 seams. The subsequent [implementation checkpoin
 lifecycle changes, optional canonical live-hook records, source seeds and an offline
 export pipeline. Stages 2–4 are **partially implemented, not accepted complete**;
 that note lists remaining authorized work. Stage-1 checks and synthetic pipeline
-e2e pass; no live client was launched (no display variables; free space at the
-32 GiB reserve before runtime growth). Machine qualification remains unperformed.
+e2e pass. The follow-up now adds the owned live launcher, automatic graph/cohort
+boundaries and physical DH joins. Bounded original-MakeUp runs on Apple M1 at
+2560×1600 passed absent-DH and enabled-DH CPU/GPU hook/export checks, Iris reload,
+and explicit DH rendering off/on transitions, with config/whole-save restoration.
+DH residency remains unverified (enabled-not-ready). All-four-pack enabled semantic
+joins, worker/upload timings and other remaining acceptance items are listed in
+the implementation note; stages 2–4 are not represented as fully accepted.
+Machine qualification remains unperformed.
 
 ## Completed audit context (2026-11-07)
 

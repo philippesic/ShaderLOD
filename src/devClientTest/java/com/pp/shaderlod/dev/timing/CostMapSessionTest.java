@@ -23,5 +23,12 @@ public final class CostMapSessionTest {
         CostMapSession.frame(2,true);CostMapSession.resolveGpu(gpu,null,null,100L);
         CostMapSession.finish(Path.of(args[0]),"fixture complete");
         if(CostMapSession.active())throw new AssertionError("owner survived stop");
+        manifest.addProperty("dynamic_inventory",true);manifest.addProperty("graph_generation",5);
+        request.add("scopes",new JsonArray());CostMapSession.start(request);CostMapSession.frame(3,true);
+        Long dynamic=CostMapSession.beginCpu("new-live-hook",2000L,null);CostMapSession.endCpu(dynamic,2100L,null);
+        Path extra=Path.of(args[0]).resolve("dynamic");CostMapSession.finish(extra,"dynamic inventory fixture");
+        var saved=JsonParser.parseString(Files.readString(extra.resolve("capture.json"))).getAsJsonObject();
+        if(saved.getAsJsonArray("scopes").get(0).getAsJsonObject().get("graph_generation").getAsInt()!=5)throw new AssertionError("graph ownership");
+        if(saved.getAsJsonArray("events").size()!=1)throw new AssertionError("dynamic hook vanished");
     }
 }

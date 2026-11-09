@@ -128,7 +128,7 @@ on an ancestor protects a subtree. Unknown or still-needed evidence stays intact
 
 ## Cost-map diagnostic checkpoint
 
-These commands never launch a client or enter scored A/B timing:
+Offline commands never launch a client; live diagnostics stay outside scored A/B:
 
 ```sh
 python3 scripts/run_benchmark.py profile-plan --fps 60 --seconds 20 --windows 3 --processes 2 --cadence 4 --scope-sets 7
@@ -136,8 +136,16 @@ python3 scripts/run_benchmark.py profile --input /absolute/path/capture.json --o
 python3 scripts/run_benchmark.py profile-report --input /absolute/path/capture.json --output /absolute/path/new-report
 ```
 
-`profile` currently imports an existing schema-1 canonical cohort; it is not yet
-an owned live launcher. `profile-report` regenerates offline exports. Output must
+`profile --input` imports an existing schema-1 canonical cohort.
+`profile --live --profile MANAGED_CLIENT --pack ORIGINAL.zip --seconds 8 --output FRESH`
+launches an owned native 2560×1600 Asahi client in the prepared authored save,
+captures CPU/GPU records, exercises an Iris reload, exports each cohort and restores
+configuration and the whole save. Capture duration is bounded to 1–30 seconds;
+startup/world loading are separate bounded phases. `--dh` enables pinned owned JAR
+staging; `--dh-transition-check` explicitly tests rendering off/on with API override
+restoration. Generation/radius/mode/distance remain the existing effective inputs.
+The report is diagnostic, not an A/B performance or readiness qualification.
+`profile-report` regenerates offline exports. Output must
 be a new directory; existing finalized output is never overwritten. Legacy
 unversioned `report.json` is read and labeled duration-only without inventing
 endpoints. `profile-plan` estimates regularly active observations per scope set
