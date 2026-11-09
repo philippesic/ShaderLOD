@@ -101,7 +101,7 @@ class LiveSinkHeadless(unittest.TestCase):
   if not jars:self.skipTest('cached Gson required for canonical live-sink fixture')
   with tempfile.TemporaryDirectory(prefix='cost-map-session-') as tmp:
    sources=list((ROOT/'src/devClient/java/com/pp/shaderlod/dev/timing/costmap').glob('*.java'))
-   sources += [ROOT/'src/devClient/java/com/pp/shaderlod/dev/timing/CostMapSession.java',ROOT/'src/devClientTest/java/com/pp/shaderlod/dev/timing/CostMapSessionTest.java']
+   sources += [ROOT/'src/devClient/java/com/pp/shaderlod/dev/timing/DhTaskTimings.java',ROOT/'src/devClient/java/com/pp/shaderlod/dev/timing/CostMapSession.java',ROOT/'src/devClientTest/java/com/pp/shaderlod/dev/timing/CostMapSessionTest.java']
    subprocess.run([java_tool('javac'),'--release','21','-cp',str(jars[-1]),'-d',tmp,*map(str,sources)],check=True)
    capture=Path(tmp)/'capture'
    subprocess.run([java_tool('java'),'-cp',tmp+':'+str(jars[-1]),'com.pp.shaderlod.dev.timing.CostMapSessionTest',str(capture)],check=True)

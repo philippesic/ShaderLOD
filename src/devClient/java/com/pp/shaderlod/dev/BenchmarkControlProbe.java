@@ -67,7 +67,9 @@ public final class BenchmarkControlProbe {
         // Bounded close material coverage; no blocks or resource data are edited.
         new SavedPose(.5,65,-6.5,0,65,6000),new SavedPose(-50.5,65,71,0,10,6000),
         // Existing stone gallery face has native Replete normal/height data.
-        new SavedPose(-60.5,65,71,0,10,6000));
+        new SavedPose(-60.5,65,71,0,10,6000),
+        // Cost-map horizon and authored water approaches; no terrain/distance edits.
+        new SavedPose(.5,96,-20.5,0,0,6000),new SavedPose(.5,80,82.5,0,4,6000));
     private final Map<Object,Object> dhPrevious=new LinkedHashMap<>(),dhLast=new LinkedHashMap<>();
     private final Map<String,Object> dhConfigs=new HashMap<>();
     private record WorldState(Object server,double x,double y,double z,float yaw,float pitch,long day,int rain,int thunder,boolean raining,boolean thundering,boolean frozen,int distance,boolean hideGui,net.minecraft.world.level.GameType gameType) {}

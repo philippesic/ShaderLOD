@@ -1,3 +1,117 @@
+# Profiler DH coverage follow-up — 2026-11-08
+
+The remaining worker/upload and residency collectors are now implemented and
+live-tested, and all four pinned source catalogs have automatic semantic binding.
+This supersedes the corresponding unknown/no-hook statements in the historical
+checkpoints below. **Full four-pack live acceptance is blocked on this Asahi
+machine:** both original Complementary DH-enabled packs fail composite1 linking
+with `Too many fragment shader texture samplers`. No settings or shader changes
+were used to work around that failure. This is a machine blocker after real owned
+launches, not acceptance of an untested limitation.
+
+## Implemented in this follow-up
+
+- `DhWorkerTimingMixin` wraps pinned DH `PriorityTaskPicker$TrackedRunnable.run`
+  with finally cleanup. Constructor-time owner tokens survive queue delay and
+  cannot migrate to a later capture. All five named generation, conversion,
+  propagation, render-loading and file pools use this runnable. CPU wall and
+  available thread-CPU intervals remain window tasks, never render-frame costs.
+  Pre-entry and unfinished tasks remain explicit through queue endpoints and
+  unfinished counts. Collection is lock-free, bounded at 16,384 retained samples,
+  with overflow/failure health. It excludes executor rate-limit sleeps after run;
+  sleeps within a task remain in wall time and separate from thread CPU.
+- `DhUploadTimingMixin` wraps `GLBuffer.uploadBuffer` with finally cleanup,
+  thread identity, requested bytes, CPU wall/thread time and upload method.
+  This includes CPU API/staging cost, not internal asynchronous driver DMA time.
+  No renderer timers run on workers. Raw task CSV, task distributions and CPU trace
+  entries accompany the existing physical CPU/GPU passes. Parent/child/task
+  intervals are nonadditive.
+- A once-per-second bounded world render-list census checks `buffersUploaded`,
+  non-null VBOs, section bounds, camera and vanilla distance. `ENABLED_READY`
+  requires loaded world plus fresh uploaded containers wholly beyond vanilla's
+  distance square. Residency is now evidence-based; visibility and complete
+  horizon coverage are separate claims. The first census failure in run-01
+  exposed DH's indexed non-Iterable collection and was fixed before successful
+  horizon checks.
+- Exact original archive hashes, selected graph sources and actual effective
+  options activate four-pack mixed feature descriptions, dedicated DH terrain/water
+  joins and source-proven DH texture consumers. Shared fog/lighting/AO remain mixed
+  with vanilla. Unknown source/options/dimension/graph stay unmapped. Static
+  four-pack fixtures and [source review](COST_MAP_DH_CATALOG.md) cover activation,
+  unknown versions, stale graph refusal and missing source evidence.
+- Saved horizon/water poses, separate screenshots and declared steady/streaming
+  workload requests use the existing owned launcher. The explicit steady request
+  temporarily disables distant generation with getApiValue/CAS/clearValue
+  restoration. It does not manufacture a steady verdict: residual loading/tasks
+  and queue endpoints remain visible. This exercised a generation-disabled window
+  and ordinary generation-enabled windows, not a traversal/capture campaign.
+- The pinned Iris `DHCompatInternal.copyTranslucents` boundary now records the
+  DH terrain-depth → opaque-depth handoff with CPU/GPU wrapper scopes, source and
+  destination texture IDs, extent, frame and enclosing CPU event. It covers both
+  initial allocation/copy and fast-copy branches, with finally cleanup. Synthetic
+  event/texture/extent ownership and compilation passed. The final live attempt
+  was refused before mutation by the 32 GiB reserve plus restoration headroom;
+  this newly added handoff hook remains **not live-validated**.
+- Live admission now reserves saved-world restoration space plus runtime headroom.
+  Source inventory generation no longer imports the JSON it is regenerating.
+
+## Verification and bounded live outcomes
+
+[Compact evidence](../dev/experiments/cost-map-coverage-20261108/RESULTS.json)
+contains capture hashes, task concerns, readiness observations, restoration state
+and log checksums. Original captures, images, logs and refreshed exports remain
+local in that experiment. No records were deleted. Btrfs compression and byte-verified COW sharing of
+identical generated report files were attempted/applied. Identical files in the
+two cached JDK installations also share COW extents; both installations and their
+bytes remain intact. Only regenerable download/metadata/shader caches were removed.
+
+- MakeUp run-04, native 2560×1600 horizon: not-ready → ready, up to 143 uploaded
+  far containers in that run, executed semantic passes, generation/loading/
+  propagation tasks, upload timings, Iris reload and whole restoration passed.
+- BSL run-07, native water approach: not-ready → ready, semantic binding and
+  worker/upload intervals passed; far residency and whole restoration recorded.
+- MakeUp run-08: owned generation=false request and restoration passed. Loading
+  persisted in the capture; this is explicitly **not a conditioned steady dataset**.
+- Reimagined run-05 and Unbound run-06: original enabled-DH composite1 sampler
+  link failures before capture. Runtime validation of those catalogs is blocked.
+- Run-02 hit the storage reserve; run-03 exposed a relative screenshot path bug.
+  Both were recovered and their whole-save/configuration restoration verified.
+  Run-05 restored original inputs before reserve blocked the redundant slot reset;
+  its failed reset was not replayed. Later complete map comparison verified both
+  original slot and canonical inputs; the recovery receipt preserves that distinction.
+
+CPU/synthetic tests: 13 cost-map tests, including 82 contract and 44 capture-owner
+checks, physical joins/sampling/statistics, four-pack binding, task failure/worker
+clocks/late ownership/bounds and residency section geometry; 30 lifecycle, 55
+client, 14 workflow and 63 benchmark regressions (607.981 s). Compile and production
+jar passed: 2,736 entries, zero dev/CostMap/TimingMixin classes. All finalized live
+captures round-tripped through the current report without changing their results.
+These test totals do not represent additional GPU benchmark sessions.
+
+## Explicit remaining limits
+
+- Four-pack live semantic acceptance remains blocked by the two sampler failures.
+  Their source mappings are implemented and fixture-tested, not runtime-qualified.
+- Conversion shares the validated runnable hook, but no completed conversion task
+  occurred in these prepared-save windows. It remains unknown in those reports,
+  with zero queue endpoints reported as context, never a fabricated duration.
+- No DH shadow invocation was observed. All four original archives lack a dedicated
+  world0 dh_shadow; this does not prove a fallback shadow path impossible.
+- The new resource-identified DH depth handoff hook compiled and passed the
+  CPU sink fixture, but its final live check was blocked by storage admission.
+  Existing live captures predate that hook; do not treat their generic copy/blit
+  intervals as validation of the new boundary. Other mixed copies/mips retain
+  their physical intervals without inventing incremental DH cost. Driver-internal
+  asynchronous DMA execution has no Java boundary and remains unknown.
+- These are bounded functionality checks, not driver-overhead qualification,
+  replicated rank uncertainty, a steady/streaming capture study or stage 6 review.
+  The broader historical stage 2–4 acceptance checklist is not declared complete.
+
+No parked optimization was enabled. No RTX/Nsight, training, section 10 program,
+stage 5 campaign or stage 6 work was performed. Terrain-cap policy stayed inactive.
+
+---
+
 # Live cost-map completion follow-up — 2026-11-08
 
 The live launcher and bounded Asahi checks now exist and have run successfully.

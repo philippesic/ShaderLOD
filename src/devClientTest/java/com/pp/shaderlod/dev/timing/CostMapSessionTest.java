@@ -18,11 +18,14 @@ public final class CostMapSessionTest {
         request.add("scopes",JsonParser.parseString("[{\"name\":\"run-tick\",\"stage\":\"frame\",\"program\":\"frame\",\"operation\":\"CPU_WORK\"}]"));
         CostMapSession.start(request);CostMapSession.frame(1,true);
         Long cpu=CostMapSession.beginCpu("run-tick",1000L,null);
+        CostMapSession.transfer(7,8,2560,1600);
         Long gpu=CostMapSession.issueGpu("run-tick",false,64);
         CostMapSession.endCpu(cpu,1300L,null);
         CostMapSession.frame(2,true);CostMapSession.resolveGpu(gpu,null,null,100L);
         CostMapSession.finish(Path.of(args[0]),"fixture complete");
         if(CostMapSession.active())throw new AssertionError("owner survived stop");
+        var transfer=JsonParser.parseString(Files.readString(Path.of(args[0]).resolve("capture.json"))).getAsJsonObject().getAsJsonObject("manifest").getAsJsonArray("dh_transfers").get(0).getAsJsonObject();
+        if(transfer.get("cpu_event").getAsLong()!=cpu||transfer.get("source_depth_texture").getAsInt()!=7||transfer.get("width").getAsInt()!=2560)throw new AssertionError("transfer identity lost");
         manifest.addProperty("dynamic_inventory",true);manifest.addProperty("graph_generation",5);
         request.add("scopes",new JsonArray());CostMapSession.start(request);CostMapSession.frame(3,true);
         Long dynamic=CostMapSession.beginCpu("new-live-hook",2000L,null);CostMapSession.endCpu(dynamic,2100L,null);

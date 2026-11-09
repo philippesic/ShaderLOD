@@ -388,3 +388,13 @@ remain explicit. All217 native operations are terminal/restored/released, both
 managed profiles match canonical sources and no Minecraft clients remain. The
 final owned scheduled task is removed. ShaderLOD-only cleanup retains verified
 backups and the32GiB reserve. [Final report](../dev/experiments/rtx5080-four-target-audit-20261106/REPORT.md).
+
+
+## 2026-11-08 — Profiler DH coverage follow-up
+
+Task-owned worker/upload CPU intervals, far uploaded-buffer residency, four-pack
+semantic source/graph/option binding and saved horizon/water workload inputs.
+MakeUp/BSL bounded live checks passed; both Complementary original enabled-DH
+composite1 links failed the Asahi sampler limit. No optimization or capture
+campaign. [Implementation and remaining limits](COST_MAP_IMPLEMENTATION.md),
+[compact evidence](../dev/experiments/cost-map-coverage-20261108/RESULTS.json).

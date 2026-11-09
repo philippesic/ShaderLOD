@@ -24,7 +24,11 @@ final class NativeGraphDump {
         for(var id:ProgramId.values())set.get(id).ifPresent(p->programs.put(p.getName(),p));
         for(var group:List.of(ProgramArrayId.Begin,ProgramArrayId.ShadowComposite,ProgramArrayId.Prepare,ProgramArrayId.Deferred,ProgramArrayId.Composite))
             for(var p:set.getComposite(group))if(p!=null)programs.put(p.getName(),p);
-        var manifest=new JsonObject();manifest.add("context",context);manifest.addProperty("dimension",dimension.toString());
+        var manifest=new JsonObject();manifest.add("context",context);
+        var options=pack.getShaderPackOptions();var actual=new TreeMap<String,String>();
+        options.getOptionSet().getBooleanOptions().keySet().forEach(k->actual.put(k,Boolean.toString(options.getOptionValues().getBooleanValueOrDefault(k))));
+        options.getOptionSet().getStringOptions().keySet().forEach(k->actual.put(k,options.getOptionValues().getStringValueOrDefault(k)));
+        manifest.add("effective_options",JSON.toJsonTree(actual));manifest.addProperty("dimension",dimension.toString());
         manifest.addProperty("scope","Parsed selected ProgramSource and directives; program availability is not proof of executed draws or active compute/image consumers");
         var rows=new JsonArray();long bytes=0;Files.createDirectory(directory);
         for(var entry:programs.entrySet()) {

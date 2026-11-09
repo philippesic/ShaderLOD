@@ -3,7 +3,7 @@ from pathlib import Path
 import hashlib
 import json
 import zipfile
-from cost_map import SEEDS
+from cost_map_features import SEEDS
 ROOT=Path(__file__).resolve().parents[1]
 PACKS={'reimagined-r5.9.3':'ComplementaryReimagined_r5.9.3.zip','unbound-r5.9.3':'ComplementaryUnbound_r5.9.3.zip','bsl-10.1.8':'BSL_v10.1.8.zip','makeup-9.5g':'MakeUp-UltraFast-9.5g.zip'}
 

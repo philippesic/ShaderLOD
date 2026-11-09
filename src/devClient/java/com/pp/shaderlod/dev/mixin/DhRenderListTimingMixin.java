@@ -14,7 +14,7 @@ public abstract class DhRenderListTimingMixin {
     @Inject(method = "buildRenderList", at = @At("HEAD"), remap = false)
     private void shaderlod$begin(CallbackInfo ci) { CpuTimers.beginLayer(scope()); }
     @Inject(method = "buildRenderList", at = @At("RETURN"), remap = false)
-    private void shaderlod$end(CallbackInfo ci) { CpuTimers.endLayer(scope()); }
+    private void shaderlod$end(CallbackInfo ci) { CpuTimers.endLayer(scope()); if(Boolean.getBoolean("shaderlod.dev.costMap"))com.pp.shaderlod.dev.timing.DhResidency.observe(this); }
     @org.spongepowered.asm.mixin.Unique
     private static String scope() { return "dh-render-list/" + (ShadowRenderer.ACTIVE ? "shadow" : "world"); }
 }

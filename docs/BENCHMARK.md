@@ -143,7 +143,8 @@ captures CPU/GPU records, exercises an Iris reload, exports each cohort and rest
 configuration and the whole save. Capture duration is bounded to 1–30 seconds;
 startup/world loading are separate bounded phases. `--dh` enables pinned owned JAR
 staging; `--dh-transition-check` explicitly tests rendering off/on with API override
-restoration. Generation/radius/mode/distance remain the existing effective inputs.
+restoration. Generation/radius/mode/distance remain the existing effective inputs unless the
+explicit steady workload request described below owns generation=false.
 The report is diagnostic, not an A/B performance or readiness qualification.
 `profile-report` regenerates offline exports. Output must
 be a new directory; existing finalized output is never overwritten. Legacy
@@ -157,3 +158,21 @@ GPU data has no timeline positions; uncorrelated GPU timestamps never share a CP
 trace. Cost labels and inclusive hierarchy are nonadditive. See
 [COST_MAP_IMPLEMENTATION](COST_MAP_IMPLEMENTATION.md) for exact implemented scope,
 test evidence and remaining stage 2–4 work. No four-pack capture study is implied.
+
+
+Cost-map live coverage additions (2026-11-08): `--scene horizon` and `--scene water`
+select saved poses 12/13 in the same authored world and retain a separate native
+screenshot before timers start. `--workload steady` explicitly owns a temporary
+DH generation=false API override and restores the prior API value (including
+absence); it does not guarantee queues have drained. `--workload streaming`
+labels the request without clearing caches, moving the camera or enabling generation.
+The default `observed` preserves the generation policy. Reports distinguish the
+request from actual task/queue evidence; loading during a steady request stays
+visible. Generation-disabled rendering cannot establish generation cost.
+
+`task-costs.csv` reports CPU wall/thread task distributions; `dh-tasks.csv` retains
+individual intervals, thread identities, failures and requested upload bytes.
+Tasks are window-owned and nonadditive with render-frame scopes. Readiness uses
+fresh world-list uploaded VBO containers wholly beyond the vanilla distance square,
+not submissions alone. It establishes residency, not visible pixels or complete
+horizon coverage. Four-pack mixed labels and limits: [DH catalog](COST_MAP_DH_CATALOG.md).

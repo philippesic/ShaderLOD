@@ -36,7 +36,7 @@ public final class CostMapSession {
             if(names.put(name,scope.id())!=null)throw new IllegalArgumentException("duplicate scope name in graph inventory");
         }
     }
-    public static void start(JsonObject request){if(current!=null)throw new IllegalStateException("canonical owner active");current=new CostMapSession(request);}
+    public static void start(JsonObject request){if(current!=null)throw new IllegalStateException("canonical owner active");current=new CostMapSession(request);DhTaskTimings.start();}
     public static void abort(Path directory,String reason)throws Exception { finish(directory,reason); }
     public static boolean active(){return current!=null;}
     public static void frame(long id,boolean world){
@@ -80,11 +80,20 @@ public final class CostMapSession {
         var c=current;if(c==null || id==null)return;
         c.registry.resolveGpu(id,c.frame,begin,end,elapsed,new Outcome(Status.MEASURED,"available OpenGL query"));
     }
+    public static void transfer(int source,int destination,int width,int height){
+        var c=current;if(c==null||c.frame==null)return;
+        var rows=c.manifest.has("dh_transfers")?c.manifest.getAsJsonArray("dh_transfers"):new JsonArray();
+        if(rows.size()>=4096){c.manifest.addProperty("dh_transfer_overflow",true);return;}
+        var row=new JsonObject();row.addProperty("at_ns",System.nanoTime());row.add("frame",JSON.toJsonTree(c.frame));
+        row.addProperty("cpu_event",c.cpu.isEmpty()?null:c.cpu.peek().eventId());row.addProperty("source_depth_texture",source);row.addProperty("destination_opaque_depth_texture",destination);row.addProperty("width",width);row.addProperty("height",height);
+        row.addProperty("meaning","Iris DH terrain depth to pre-translucency depth; wrapper includes allocation/fast-copy branch; not bandwidth");rows.add(row);c.manifest.add("dh_transfers",rows);
+    }
     public static void evidence(JsonObject before,JsonObject after,JsonElement guard){if(current!=null){current.manifest.add("before",before);current.manifest.add("after",after);current.manifest.add("guard",guard);}}
     public static void finish(Path directory,String reason)throws Exception {
         var c=current;if(c==null)return;current=null;
         try{c.registry.close(reason);}catch(RuntimeException failure){c.manifest.addProperty("finalization_error",failure.toString());}
         c.collect();
+        c.manifest.add("dh_tasks",JSON.toJsonTree(DhTaskTimings.stop()));
         if(c.frame!=null)c.frames.add(new Frame(c.frame,c.frameStart,null,null,null,false,false,true,false,Set.of(),new Outcome(Status.UNKNOWN,"partial final frame"),reason));
         Map<FrameId,CpuEvent> roots=new HashMap<>();
         Integer rootId=c.names.get("run-tick");

@@ -66,10 +66,21 @@ e2e pass. The follow-up now adds the owned live launcher, automatic graph/cohort
 boundaries and physical DH joins. Bounded original-MakeUp runs on Apple M1 at
 2560×1600 passed absent-DH and enabled-DH CPU/GPU hook/export checks, Iris reload,
 and explicit DH rendering off/on transitions, with config/whole-save restoration.
-DH residency remains unverified (enabled-not-ready). All-four-pack enabled semantic
-joins, worker/upload timings and other remaining acceptance items are listed in
-the implementation note; stages 2–4 are not represented as fully accepted.
-Machine qualification remains unperformed.
+The subsequent coverage follow-up adds task-owned DH generation/loading/
+propagation/conversion hooks, CPU upload timings/bytes, real uploaded far-buffer
+residency, saved horizon/water poses, workload requests and four-pack source/graph/
+option semantic binding. MakeUp and BSL passed bounded live residency and new
+collector checks; both Complementary originals failed enabled-DH composite1 linking
+on Apple M1 (`Too many fragment shader texture samplers`). Their live mapping
+cells are blocked after real attempts. Original settings/packs were preserved.
+A generation-disabled request was exercised and restored; residual loading stayed
+visible rather than being called a steady dataset. Conversion and DH shadows were
+not exercised. A resource-identified DH depth handoff hook is implemented and CPU-tested;
+its last live attempt was blocked by storage admission.
+[Implementation and precise limits](COST_MAP_IMPLEMENTATION.md),
+[coverage evidence](../dev/experiments/cost-map-coverage-20261108/RESULTS.json).
+All-four-pack live acceptance and full stages 2–4 acceptance remain incomplete;
+machine qualification remains unperformed. No optimization or later campaign ran.
 
 ## Completed audit context (2026-11-07)
 

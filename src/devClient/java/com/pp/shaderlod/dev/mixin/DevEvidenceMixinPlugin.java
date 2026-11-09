@@ -12,6 +12,7 @@ public final class DevEvidenceMixinPlugin implements IMixinConfigPlugin {
     @Override public void onLoad(String mixinPackage) { com.pp.shaderlod.dev.ShaderAnimationClock.fixed(); }
     @Override public String getRefMapperConfig() { return null; }
     @Override public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
+        if(mixinClassName.endsWith(".DhTransferTimingMixin") || mixinClassName.endsWith(".DhWorkerTimingMixin") || mixinClassName.endsWith(".DhUploadTimingMixin"))return Boolean.getBoolean("shaderlod.dev.costMap");
         if(mixinClassName.endsWith(".CostMapNativeMixin"))return Boolean.getBoolean("shaderlod.dev.costMap");
         if(mixinClassName.endsWith(".CostMapOperationsMixin") || mixinClassName.endsWith(".CostMapPresentationMixin"))return Boolean.getBoolean("shaderlod.dev.costMap");
         if(mixinClassName.endsWith(".SildurLeanDrawMixin"))return Boolean.getBoolean("shaderlod.dev.sildurLeanAlpha")

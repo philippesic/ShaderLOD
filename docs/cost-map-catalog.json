@@ -24,6 +24,14 @@
           "sha256": "eb54c4158af328c6515d0294141b9e26d7d76742fab868f3aafb74e5cc71b1cb",
           "bytes": 117
         },
+        "shaders/world0/composite3.fsh": {
+          "sha256": "e282bc2758bc6fd9ef1cf7cd8bacd6e9015515f28fff01de39e07a76dcc35fec",
+          "bytes": 119
+        },
+        "shaders/world0/composite3.vsh": {
+          "sha256": "cb17aefc55105cfe94ac579c69136a87d06503b9eb2f529240e22ce6107741a6",
+          "bytes": 117
+        },
         "shaders/world0/composite4.fsh": {
           "sha256": "a03c530eac8057bfe9c1ece1c5399d861499a4ea147a095f857b669d6ee48cf7",
           "bytes": 112
@@ -110,6 +118,23 @@
         ],
         "composite7": [
           "conditional-FXAA"
+        ],
+        "dh_terrain": [
+          "DH-terrain",
+          "materials",
+          "lighting",
+          "fog"
+        ],
+        "dh_water": [
+          "DH-translucency",
+          "water",
+          "lighting",
+          "fog"
+        ],
+        "composite3": [
+          "fog",
+          "DH-depth-consumer",
+          "mixed-post"
         ]
       },
       "dh_program_members": [
@@ -147,6 +172,14 @@
           "sha256": "eb54c4158af328c6515d0294141b9e26d7d76742fab868f3aafb74e5cc71b1cb",
           "bytes": 117
         },
+        "shaders/world0/composite3.fsh": {
+          "sha256": "e282bc2758bc6fd9ef1cf7cd8bacd6e9015515f28fff01de39e07a76dcc35fec",
+          "bytes": 119
+        },
+        "shaders/world0/composite3.vsh": {
+          "sha256": "cb17aefc55105cfe94ac579c69136a87d06503b9eb2f529240e22ce6107741a6",
+          "bytes": 117
+        },
         "shaders/world0/composite4.fsh": {
           "sha256": "a03c530eac8057bfe9c1ece1c5399d861499a4ea147a095f857b669d6ee48cf7",
           "bytes": 112
@@ -233,6 +266,23 @@
         ],
         "composite7": [
           "conditional-FXAA"
+        ],
+        "dh_terrain": [
+          "DH-terrain",
+          "materials",
+          "lighting",
+          "fog"
+        ],
+        "dh_water": [
+          "DH-translucency",
+          "water",
+          "lighting",
+          "fog"
+        ],
+        "composite3": [
+          "fog",
+          "DH-depth-consumer",
+          "mixed-post"
         ]
       },
       "dh_program_members": [
@@ -352,6 +402,18 @@
         ],
         "composite7": [
           "conditional-TAA"
+        ],
+        "dh_terrain": [
+          "DH-terrain",
+          "materials",
+          "lighting",
+          "fog"
+        ],
+        "dh_water": [
+          "DH-translucency",
+          "water",
+          "lighting",
+          "fog"
         ]
       },
       "dh_program_members": [
@@ -450,6 +512,18 @@
         "final": [
           "tone-mapping",
           "optional-final-effects"
+        ],
+        "dh_terrain": [
+          "DH-terrain",
+          "materials",
+          "lighting",
+          "fog"
+        ],
+        "dh_water": [
+          "DH-translucency",
+          "water",
+          "lighting",
+          "fog"
         ]
       },
       "dh_program_members": [

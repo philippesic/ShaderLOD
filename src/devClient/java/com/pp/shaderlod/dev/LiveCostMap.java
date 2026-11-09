@@ -36,15 +36,45 @@ public final class LiveCostMap {
         if(!ok||!Objects.equals(priorOverride,api.getMethod("getApiValue").invoke(renderingOverride)))throw new IllegalStateException("DH override restoration failed");
         renderingOverride=priorOverride=lastOverride=null;
     }
+    private static Object generationOverride,priorGeneration,lastGeneration;
+    private static void generation(boolean enabled)throws Exception {
+        if(root==null)throw new IllegalStateException("Active native profile required");
+        var api=configApi();
+        if(generationOverride==null){
+            Object configs=Class.forName("com.seibel.distanthorizons.api.DhApi$Delayed").getField("configs").get(null);
+            Object group=Class.forName("com.seibel.distanthorizons.api.interfaces.config.IDhApiConfig").getMethod("worldGenerator").invoke(configs);
+            generationOverride=Class.forName("com.seibel.distanthorizons.api.interfaces.config.both.IDhApiWorldGenerationConfig").getMethod("enableDistantWorldGeneration").invoke(group);
+            priorGeneration=lastGeneration=api.getMethod("getApiValue").invoke(generationOverride);
+        }
+        if(!Objects.equals(lastGeneration,api.getMethod("getApiValue").invoke(generationOverride)))throw new IllegalStateException("Concurrent generation override edit");
+        boolean ok=(Boolean)api.getMethod("setValue",Object.class).invoke(generationOverride,enabled);
+        lastGeneration=api.getMethod("getApiValue").invoke(generationOverride);
+        if(!ok||!Objects.equals(enabled,api.getMethod("getValue").invoke(generationOverride)))throw new IllegalStateException("Generation override refused");
+    }
+    private static void restoreGeneration()throws Exception {
+        if(generationOverride==null)return;var api=configApi();
+        if(!Objects.equals(lastGeneration,api.getMethod("getApiValue").invoke(generationOverride)))throw new IllegalStateException("Concurrent generation override edit at restore");
+        boolean ok=(Boolean)(priorGeneration==null?api.getMethod("clearValue").invoke(generationOverride):api.getMethod("setValue",Object.class).invoke(generationOverride,priorGeneration));
+        if(!ok||!Objects.equals(priorGeneration,api.getMethod("getApiValue").invoke(generationOverride)))throw new IllegalStateException("Generation restoration failed");
+        generationOverride=priorGeneration=lastGeneration=null;
+    }
     private static com.pp.shaderlod.dev.timing.costmap.CohortBoundary boundaries;
     private static String context;
     private static int cohort,graph;
     private static Path graphEvidence;
     private static JsonObject observation(){
-        var out=new JsonObject();out.addProperty("at_ns",System.nanoTime());out.add("dh_submissions",DhRenderEvidence.liveCounters());
+        var out=new JsonObject();out.addProperty("at_ns",System.nanoTime());out.add("dh_submissions",DhRenderEvidence.liveCounters());out.add("dh_residency",DhResidency.snapshot());
         var thread=java.lang.management.ManagementFactory.getThreadMXBean();var rows=new JsonArray();
         for(long id:thread.getAllThreadIds()){var info=thread.getThreadInfo(id);if(info==null)continue;var row=new JsonObject();row.addProperty("id",id);row.addProperty("name",info.getThreadName());row.addProperty("cpu_ns",thread.isThreadCpuTimeSupported()?thread.getThreadCpuTime(id):-1);rows.add(row);}
-        out.add("threads",rows);out.addProperty("heap_used",java.lang.management.ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed());return out;
+        out.add("threads",rows);
+        var queues=new JsonObject();
+        for(String getter:List.of("getRenderLoadingExecutor","getChunkToLodBuilderExecutor","getUpdatePropagatorExecutor","getFileHandlerExecutor","getWorldGenExecutor")){
+            var row=new JsonObject();try{
+                var cls=Class.forName("com.seibel.distanthorizons.core.util.threading.ThreadPoolUtil");Object pool=cls.getMethod(getter).invoke(null);
+                for(String method:List.of("getQueueSize","getRunningTaskCount","getCompletedTaskCount"))row.addProperty(method,(Number)pool.getClass().getMethod(method).invoke(pool));
+            }catch(Exception unavailable){row.addProperty("unknown",unavailable.toString());}queues.add(getter,row);
+        }
+        out.add("dh_queues",queues);out.addProperty("heap_used",java.lang.management.ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed());return out;
     }
     public static JsonObject command(JsonObject request,Path directory)throws Exception {
         String op=request.get("op").getAsString();
@@ -54,7 +84,8 @@ public final class LiveCostMap {
             Files.createDirectories(root);cohort=0;graph=0;graphEvidence=null;context=null;boundaries=new com.pp.shaderlod.dev.timing.costmap.CohortBoundary();
             try{com.pp.shaderlod.dev.BenchmarkMeasurementGuard.armDiagnostic();}catch(RuntimeException failure){root=null;throw failure;}
             CpuTimers.setRecording(true);GpuTimers.setRecording(true);
-        } else if(op.equals("dh_rendering")){rendering(request.get("enabled").getAsBoolean());}
+        } else if(op.equals("dh_generation")){generation(request.get("enabled").getAsBoolean());}
+        else if(op.equals("dh_rendering")){rendering(request.get("enabled").getAsBoolean());}
         else if(op.equals("stop")) { stop("owned stop"); }
         else throw new IllegalArgumentException("cost-map op");
         var out=new JsonObject();out.addProperty("root",directory.resolve("live-cost-map").toString());return out;
@@ -79,7 +110,7 @@ public final class LiveCostMap {
                 settings.put("api_world_loaded",new Fact(Boolean.toString(loaded),"DH world proxy; not residency"));
                 boolean enabled=!settings.get("renderingMode").value().equals("DISABLED")&&settings.get("renderingEnabled").value().equals("true");
                 // Mesh-ready alone does not establish DH residency. Retain not-ready until that evidence exists.
-                dh=enabled?DhState.ENABLED_NOT_READY:DhState.INSTALLED_RENDERING_DISABLED;
+                dh=enabled?(loaded&&DhResidency.ready()?DhState.ENABLED_READY:DhState.ENABLED_NOT_READY):DhState.INSTALLED_RENDERING_DISABLED;
             }
             Object next=Iris.getPipelineManager().getPipelineNullable();
             String nextContext=(c.level==null?"disconnected":c.level.dimension().location().toString())+"/"+c.options.renderDistance().get()+"/"+dh+"/"+settings+"/fallback="+Iris.isFallback()+"/meshes="+(c.level!=null&&c.levelRenderer.hasRenderedAllSections());
@@ -107,9 +138,9 @@ public final class LiveCostMap {
                 facts.put(CaptureField.GRAPH_REVISION,new Fact(Integer.toString(graph),"pipeline object lifetime; linked evidence"));
                 var dhFacts=new EnumMap<DhField,Fact>(DhField.class);
                 for(var key:DhField.values())dhFacts.put(key,new Fact(installed?"unknown":"not_applicable",installed?"not observed":"DH absent"));
-                var capture=new Capture(1,"live-"+ProcessHandle.current().pid()+"-"+cohort,"cohort-"+cohort,"live","process-"+ProcessHandle.current().pid(),facts,new DhIdentity(dh,"effective API; residency unverified",System.nanoTime(),dhFacts,settings),1,4);
+                var capture=new Capture(1,"live-"+ProcessHandle.current().pid()+"-"+cohort,"cohort-"+cohort,"live","process-"+ProcessHandle.current().pid(),facts,new DhIdentity(dh,"effective API; uploaded far world render-list containers required for ready",System.nanoTime(),dhFacts,settings),1,4);
                 var request=new JsonObject();request.add("capture",JSON.toJsonTree(capture));
-                var manifest=new JsonObject();manifest.addProperty("boundary",context);manifest.addProperty("graph_generation",graph);manifest.addProperty("graph_evidence",graphEvidence.toString());manifest.addProperty("selected_pack",Iris.getCurrentPackName());manifest.addProperty("dynamic_inventory",true);manifest.addProperty("workload",installed?"generation="+settings.get("generation").value()+"; loading/residency and separate streaming cost unmeasured":"DH absent");manifest.add("before_observation",observation());request.add("manifest",manifest);request.add("scopes",new JsonArray());
+                var manifest=new JsonObject();manifest.addProperty("boundary",context);manifest.addProperty("graph_generation",graph);manifest.addProperty("graph_evidence",graphEvidence.toString());manifest.addProperty("selected_pack",Iris.getCurrentPackName());manifest.addProperty("dynamic_inventory",true);manifest.addProperty("workload",installed?"generation="+settings.get("generation").value()+"; task intervals and residency census recorded; steady vs streaming must be inspected":"DH absent");manifest.add("before_observation",observation());request.add("manifest",manifest);request.add("scopes",new JsonArray());
                 CostMapSession.start(request);CpuTimers.setRecording(true);GpuTimers.setRecording(true);
             }
         }catch(Exception failure){try{stop("live adapter failure: "+failure);}catch(Exception cleanup){failure.addSuppressed(cleanup);}throw new IllegalStateException(failure);}
@@ -121,6 +152,6 @@ public final class LiveCostMap {
     private static void stop(String reason)throws Exception {
         GpuTimers.suspendQueries(reason);CpuTimers.disarm();
         try{if(root!=null)finish(reason);}
-        finally{try{restoreRendering();}finally{root=null;com.pp.shaderlod.dev.BenchmarkMeasurementGuard.disarm();}}
+        finally{try{try{restoreRendering();}finally{restoreGeneration();}}finally{root=null;com.pp.shaderlod.dev.BenchmarkMeasurementGuard.disarm();}}
     }
 }

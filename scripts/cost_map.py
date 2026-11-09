@@ -12,11 +12,28 @@ REVISION = 'cost-map-v1'
 SOURCE_CATALOG=json.loads((Path(__file__).resolve().parents[1]/'docs/cost-map-catalog.json').read_text())
 DH_ROWS = ('terrain', 'main', 'deferred', 'shadow', 'list', 'generation', 'conversion',
            'propagation', 'loading', 'upload', 'transfers', 'shared-consumers', 'residency')
-SEEDS = {
- 'reimagined-r5.9.3': {'deferred1':['AO','atmosphere','materials'], 'composite':['clouds','reflections','materials'], 'composite1':['volumetric-light','shadow-consumer','water-fog','refraction','reflection-blur'], 'composite4':['bloom-tiles'], 'composite5':['bloom-combine'], 'composite6':['TAA'], 'composite7':['conditional-FXAA']},
- 'unbound-r5.9.3': {'deferred1':['AO','atmosphere','materials'], 'composite':['clouds','reflections','materials'], 'composite1':['volumetric-light','shadow-consumer','water-fog','refraction','reflection-blur'], 'composite4':['bloom-tiles'], 'composite5':['bloom-combine'], 'composite6':['TAA'], 'composite7':['conditional-FXAA']},
- 'bsl-10.1.8': {'deferred':['AO-producer'], 'deferred1':['AO-consumer','atmosphere','clouds'], 'composite':['light-shafts','water-fog'], 'composite4':['bloom-tiles'], 'composite5':['bloom','post'], 'composite6':['FXAA'], 'composite7':['conditional-TAA']},
- 'makeup-9.5g': {'deferred':['AO','volumetric-clouds'], 'composite':['volumetric-light','bloom-source'], 'composite1':['bloom','blur'], 'composite2':['TAA','motion-blur'], 'final':['tone-mapping','optional-final-effects']}}
+from cost_map_features import SEEDS
+
+def task_kind(sample):
+    if sample['kind'].startswith('upload/'):
+        return 'upload'
+    name=sample['thread']
+    for needle,kind in [('World Gen','generation'),('LOD Builder','conversion'),('Update Propagator','propagation'),('Render Loader','loading'),('File Handler','loading')]:
+        if needle.lower() in name.lower():return kind
+    return 'unclassified-worker'
+
+
+def task_summary(manifest):
+    tasks=manifest.get('dh_tasks',{}).get('samples',[])
+    rows=[]
+    for kind in sorted({task_kind(s) for s in tasks}):
+        samples=[s for s in tasks if task_kind(s)==kind]
+        for metric in ('wall','thread'):
+            values=[s['endNs']-s['startNs'] if metric=='wall' else s.get('cpuNs') for s in samples if not s['failed']]
+            rows.append(dict(concern='DH/'+kind,metric=metric,**distribution([v for v in values if v is not None]),
+                failed=sum(s['failed'] for s in samples),bytes=sum(s['bytes'] for s in samples),
+                denominator='completed window-owned tasks; overlapping CPU intervals, never per-frame GPU cost'))
+    return rows
 
 
 def catalog(scope, manifest):
@@ -37,17 +54,41 @@ def catalog(scope, manifest):
             'dh_consumer': bool(matched and evidence.get('dh_consumer'))}
 
 
-def coverage(manifest):
+def coverage(manifest, physical_joins=()):
     state = manifest.get('dh_state', 'UNKNOWN')
     status = {'ABSENT':'NOT_APPLICABLE', 'INSTALLED_RENDERING_DISABLED':'DISABLED_BY_VERIFIED_CONFIGURATION',
               'FAILED':'INVALID','UNSUPPORTED':'UNSUPPORTED'}.get(state, 'UNKNOWN')
     rows=[]
     for name in DH_ROWS:
+        prefixes={'terrain':('dh/world/',),'main':('dh-total/world/main',),'deferred':('dh-total/world/deferred',),'shadow':('dh/shadow/','dh-total/shadow/'),'list':('dh-render-list/',),'transfers':('operation/dh-depth-handoff',)}
+        physical=[r for r in physical_joins if r['hook_invocations'] and r['name'].startswith(prefixes.get(name,('never-match',)))]
+        if physical and state!='ABSENT':
+            rows.append({'concern':'DH/'+name,'status':'OBSERVED','duration_ns':None,'physical':'joined invocation scopes','semantic':'see per-scope mixed feature costs','scopes':[r['name'] for r in physical],'reason':'physical hooks observed; query availability and CPU timing remain per-event'})
+            continue
+        if name=='shared-consumers' and state!='ABSENT':
+            consumers=[p for p,e in manifest.get('verified_graph_programs',{}).items() if e.get('dh_consumer') and not p.startswith('dh_')]
+            if consumers:
+                rows.append({'concern':'DH/'+name,'status':'OBSERVED','duration_ns':None,'physical':'selected graph source','semantic':'DH consumers mixed with vanilla','programs':consumers,'reason':'selected preprocessed texture reads; cost only where matching invocation exists'})
+                continue
+        residency=manifest.get('after',{}).get('dh_residency',{})
+        if name=='residency' and state!='ABSENT' and residency.get('status')=='observed':
+            rows.append({'concern':'DH/residency','status':'OBSERVED','duration_ns':None,'physical':'uploaded world render-list containers','semantic':'residency; not pixels','evidence':residency})
+            continue
         worker = name in ('generation','conversion','propagation','loading')
+        observed=[s for s in manifest.get('dh_tasks',{}).get('samples',[]) if task_kind(s)==name and not s['failed']]
+        if observed and state!='ABSENT':
+            rows.append({'concern':'DH/'+name,'status':'MEASURED','duration_ns':None,'physical':'CPU task intervals',
+                         'semantic':'nonadditive worker/upload CPU; see task_costs','reason':'completed owner-bound intervals; duration has no render-frame denominator'})
+            continue
         rows.append({'concern': 'DH/'+name, 'status': 'UNKNOWN' if worker and state=='INSTALLED_RENDERING_DISABLED' else status,
-                     'duration_ns':None, 'physical':'uncovered', 'semantic':'unverified',
+                     'duration_ns':None, 'physical':'hook installed; not exercised in window' if name in ('generation','conversion','propagation','loading','upload','shadow','transfers','terrain','main','deferred','list') else 'uncovered', 'semantic':'unverified',
                      'workload':manifest.get('workload','unobserved'),
-                     'reason': 'DH absent' if state=='ABSENT' else 'requires observed stage/world-shadow/opacity join; wrappers and consumers are nonadditive'})
+                     'reason': 'DH absent' if state=='ABSENT' else
+                         'task hook installed; no completed owner-bound interval observed; pre-entry/unfinished work and queues remain explicit' if worker else
+                         'CPU upload hook installed; no completed upload observed; driver-internal asynchronous transfer execution has no Java task boundary' if name=='upload' else
+                         'Iris DH copyTranslucents handoff hook installed; no invocation observed in this window' if name=='transfers' else
+                         'no dedicated dh_shadow source in any pinned archive; no shadow invocation observed; do not infer unsupported fallback rendering' if name=='shadow' else
+                         'hook/selected graph not observed in this window; unknown duration, never zero'})
     for name,count in manifest.get('unregistered_hook_entries',{}).items():
         rows.append({'concern':name,'status':'UNKNOWN','duration_ns':None,'physical':'uncovered','semantic':'unmapped',
                      'hook_entries':count,'reason':'observed hook absent from predeclared inventory; entries are not draw counts'})
@@ -127,20 +168,25 @@ def summarize(data):
         frame_intervals.append(end-start)
         identity=f.get('id',{});window_intervals.setdefault((identity.get('epoch'),identity.get('windowId')),[]).append(end-start)
     omitted_detail={'cpu':max(0,len(cpu_trace)-4096),'gpu':max(0,len(gpu_trace)-4096),'hierarchy':max(0,len(events)-4096)}
+    for sample in data['manifest'].get('dh_tasks',{}).get('samples',[]):
+        cpu_trace.append({'ph':'X','name':'DH/'+task_kind(sample),'pid':1,'tid':sample['threadId'],
+                          'ts':sample['startNs']/1000,'dur':(sample['endNs']-sample['startNs'])/1000,
+                          'args':{'kind':sample['kind'],'bytes':sample['bytes'],'failed':sample['failed'],'denominator':'window task; no render frame'}})
+    omitted_detail['cpu']=max(0,len(cpu_trace)-4096)
     cpu_trace=cpu_trace[:4096];gpu_trace=gpu_trace[:4096]
     gpu_clocks={}
     for event in gpu_trace:gpu_clocks.setdefault(event['tid'],[]).append(event)
     physical_joins=[]
     for scope_id,scope in scopes.items():
         name=scope['name']
-        if not name.startswith(('dh/','dh-total/','dh-render-list/','terrain/','terrain-setup/')):continue
+        if not name.startswith(('dh/','dh-total/','dh-render-list/','terrain/','terrain-setup/','operation/dh-depth-handoff')):continue
         observed=[e['invocation'] for e in events.values() if e['invocation']['scopeId']==scope_id]
         contexts=sorted({(i['dhStage'],i['worldShadow'],i['opacity']) for i in observed})
         physical_joins.append({'name':name,'hook_invocations':len(observed),'contexts':[{'dh_stage':x,'world_shadow':y,'opacity':z} for x,y,z in contexts],
-                               'meaning':'render-list CPU wrapper' if name.startswith('dh-render-list/') else 'main/deferred inclusive wrapper' if name.startswith('dh-total/') else 'terrain wrapper; not a draw or visibility count',
+                               'meaning':'DH depth handoff; resource IDs and extent in manifest dh_transfers' if name=='operation/dh-depth-handoff' else 'render-list CPU wrapper' if name.startswith('dh-render-list/') else 'main/deferred inclusive wrapper' if name.startswith('dh-total/') else 'terrain wrapper; not a draw or visibility count',
                                'semantic':'physical hook only; shader features remain separately evidence gated'})
     return {'schema_version':1,'catalog_revision':REVISION,'manifest':data['manifest'],'costs':rows,'physical_joins':physical_joins,
-            'coverage':coverage(data['manifest'])+data.get('coverage',[]),'health':data.get('health',{}),
+            'task_costs':task_summary(data['manifest']),'coverage':coverage(data['manifest'],physical_joins)+data.get('coverage',[]),'health':data.get('health',{}),
             'hierarchy':[e['invocation'] for e in list(events.values())[:4096]],'omitted_detail':omitted_detail,
             'cpu_trace':cpu_trace,'gpu_trace':gpu_trace if len(gpu_clocks)<=1 else [],'gpu_clock_traces':gpu_clocks,
             'frame_pacing':distribution(frame_intervals),'window_points':[{'epoch_window':list(k),**distribution(v)} for k,v in window_intervals.items()],
@@ -163,7 +209,7 @@ def export(data, output):
     (output/'report.json').write_text(json.dumps(result,indent=2))
     for dimension in ('cpu','gpu'):
         write_csv(output/(dimension+'.csv'),[{'event_id':e['invocation']['eventId'], 'invocation':e['invocation'], **e[dimension]} for e in data.get('events',[]) if e.get(dimension)])
-    for name,rows in [('costs',result['costs']),('coverage',result['coverage']),('frames',data.get('frames',[])),('scopes',data['scopes']),('physical-joins',result['physical_joins'])]:write_csv(output/(name+'.csv'),rows)
+    for name,rows in [('costs',result['costs']),('coverage',result['coverage']),('frames',data.get('frames',[])),('scopes',data['scopes']),('physical-joins',result['physical_joins']),('task-costs',result['task_costs']),('dh-tasks',data['manifest'].get('dh_tasks',{}).get('samples',[]))]:write_csv(output/(name+'.csv'),rows)
     for lane in ('cpu','gpu'):
         (output/(lane+'-trace.json')).write_text(json.dumps({'traceEvents':result[lane+'_trace'],'clock': 'CPU monotonic' if lane=='cpu' else 'GPU ONLY: uncorrelated; elapsed records excluded'}))
     for index,(clock,events) in enumerate(result['gpu_clock_traces'].items()):
@@ -173,7 +219,7 @@ def export(data, output):
     page='''<!doctype html><meta charset="utf-8"><title>ShaderLOD cost map</title>
 <style>body{font:16px system-ui;margin:2em}td,th{padding:.5em;text-align:left;border-bottom:1px solid #ccc}pre{white-space:pre-wrap}.bar{background:#518aaf;color:white;min-width:2px;padding:4px;margin:2px}summary{cursor:pointer}</style>
 <h1>Diagnostic cost map</h1><p>Display: milliseconds. Inclusive parents and mixed tags are nonadditive. Overhead unqualified.</p>
-<label>View <select id="view"><option>costs</option><option>coverage</option><option>DH</option><option>physical_joins</option><option>hierarchy</option><option>investigation_queue</option><option>CPU wall flame</option><option>frame pacing</option></select></label>
+<label>View <select id="view"><option>costs</option><option>coverage</option><option>DH</option><option>physical_joins</option><option>task_costs</option><option>hierarchy</option><option>investigation_queue</option><option>CPU wall flame</option><option>frame pacing</option></select></label>
 <input id="search" placeholder="Filter named scopes"><div id="content"></div><script>
 const data=DATA;const root=document.querySelector('#content');
 function pre(value){let p=document.createElement('pre');p.textContent=JSON.stringify(value,null,2);return p}
@@ -204,7 +250,7 @@ def plan(args):
 def command(argv):
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('mode',choices=['profile-plan','profile','profile-report'])
-    p.add_argument('--dh-transition-check',action='store_true');p.add_argument('--live',action='store_true');p.add_argument('--profile',type=Path);p.add_argument('--pack');p.add_argument('--dh',action='store_true');p.add_argument('--world',default='ShaderLOD-Benchmark-overworld-3-flat')
+    p.add_argument('--workload',choices=('observed','steady','streaming'),default='observed');p.add_argument('--scene',choices=('authored','horizon','water'),default='authored');p.add_argument('--dh-transition-check',action='store_true');p.add_argument('--live',action='store_true');p.add_argument('--profile',type=Path);p.add_argument('--pack');p.add_argument('--dh',action='store_true');p.add_argument('--world',default='ShaderLOD-Benchmark-overworld-3-flat')
     p.add_argument('--input',type=Path);p.add_argument('--output',type=Path)
     p.add_argument('--fps',type=float,default=60);p.add_argument('--seconds',type=float,default=20)
     p.add_argument('--windows',type=int,default=3);p.add_argument('--processes',type=int,default=2)

@@ -17,7 +17,7 @@ def run(a):
     profile=a.profile.resolve();output=a.output.resolve()
     if not 1<=a.seconds<=30:raise ValueError('Live smoke window must be 1..30 seconds')
     if a.dh_transition_check and not a.dh:raise ValueError('DH transition check requires --dh')
-    storage.admit(profile,64*1024**2)
+    storage.admit(profile,storage.tree_bytes(profile/'saves')+128*1024**2)
     if dev.clients(dev.process_table()):raise ValueError('Another client owns the machine')
     runtime=json.loads((ROOT/'dependencies/runtime.lock.json').read_text())['artifacts']['distanthorizons']
     dh_target=profile/'mods'/runtime['filename']
@@ -86,7 +86,20 @@ def run(a):
             time.sleep(1)
         if (state.get('width'),state.get('height'))!=(2560,1600) or not state.get('fullscreen'):raise ValueError('Native 2560x1600 fullscreen required')
         if any(x in state.get('gpu_renderer','').lower() for x in ('llvmpipe','softpipe','software')):raise ValueError('Software renderer refused')
-        send('cost_map',op='start');time.sleep(a.seconds/2)
+        scene=getattr(a,'scene','authored')
+        if scene!='authored':
+            send('pose_saved_authored',index={'horizon':12,'water':13}[scene]);time.sleep(2)
+            image=send('capture_current').get('capture_requested')
+            if image:
+                source=Path(image);source=source if source.is_absolute() else profile/source;deadline=time.monotonic()+10
+                while not source.exists() and time.monotonic()<deadline:time.sleep(.1)
+                if not source.exists():raise ValueError('Scene screenshot did not complete')
+                source.rename(output/'scene.png')
+        send('cost_map',op='start')
+        workload=getattr(a,'workload','observed')
+        if workload=='steady' and a.dh:
+            send('cost_map',op='dh_generation',enabled=False);time.sleep(3)
+        time.sleep(a.seconds/2)
         send('reload');time.sleep(a.seconds/2)
         if a.dh_transition_check:
             send('cost_map',op='dh_rendering',enabled=False);time.sleep(2)
@@ -101,7 +114,12 @@ def run(a):
         if not cpu or not gpu:raise ValueError('Live CPU and GPU hooks must both resolve samples')
         if len({d['manifest']['graph_generation'] for d in records})<2:raise ValueError('Reload did not create a new graph generation')
         if a.dh_transition_check and 'INSTALLED_RENDERING_DISABLED' not in {d['manifest']['dh_state'] for d in records}:raise ValueError('DH setting transition was not captured')
-        for capture in captures:export(json.loads(capture.read_text()),capture.parent/'export')
+        from cost_map_live_catalog import bind, workload_evidence
+        for capture in captures:
+            data=json.loads(capture.read_text());data['manifest']['scene_request']=scene;data['manifest']['workload_request']=workload;bind(data,plan['pack'])
+            data['manifest']['workload_evidence']=workload_evidence(data['manifest'])
+            life.atomic_json(capture,data)
+            export(data,capture.parent/'export')
         completed=True
         life.atomic_json(output/'live-result.json',{'launched':True,'captures':[str(p) for p in captures],'state':state,'scope':'bounded functional smoke; not performance qualification'})
     finally:
