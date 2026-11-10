@@ -129,7 +129,7 @@ def main() -> int:
         result = {
             p.stem: json.loads(p.read_text()) for p in REPORTS.glob("step-*.json")
         }
-        result["Java tests"] = {"rules": 7, "tests": junit}
+        result["Java tests"] = {"rules": 8, "tests": junit}
         result["Java compile / Error Prone"] = {
             "rules": 2,
             "tests": len(list((ROOT / "src").rglob("*.java"))),

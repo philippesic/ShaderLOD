@@ -23,6 +23,7 @@ class BoundaryTest {
         var target = edge.getTargetClass().getPackageName();
         if (owner.startsWith("foundation.contracts")
             && !target.startsWith("java.")
+            && !target.startsWith("javax.")
             && !target.startsWith("foundation.contracts")) {
           errors.add("T-ARCH");
         }
@@ -41,10 +42,20 @@ class BoundaryTest {
         if ((target.equals("java.nio.file.Files")
                 && method.matches(
                     "write.*|newBufferedWriter|newOutputStream|copy|move|delete.*|createFile"))
-            || target.matches("java.io.(FileOutputStream|FileWriter|RandomAccessFile)")) {
+            || target.matches(
+                "java.io.(FileOutputStream|FileWriter|RandomAccessFile|PrintWriter|PrintStream|BufferedWriter|OutputStreamWriter|DataOutputStream|ObjectOutputStream)")) {
           if (!owner.equals("foundation.publisher")) {
             errors.add("D3");
           }
+        }
+        if (target.equals("java.io.File") && method.matches("create.*|delete.*|mkdir.*|set.*")) {
+          if (!owner.equals("foundation.publisher")) {
+            errors.add("D3");
+          }
+        }
+        if ((target.equals("java.lang.Runtime") && method.equals("exec"))
+            || (target.equals("java.lang.ProcessBuilder") && method.equals("start"))) {
+          errors.add("D6d");
         }
         if ((target.equals("java.lang.System")
                 && method.matches("getenv|getPropert.*|setPropert.*"))
@@ -64,7 +75,8 @@ class BoundaryTest {
         if (call.getTarget()
                 .getOwner()
                 .getName()
-                .matches("java.io.(FileOutputStream|FileWriter|RandomAccessFile)")
+                .matches(
+                    "java.io.(FileOutputStream|FileWriter|RandomAccessFile|PrintWriter|PrintStream|BufferedWriter|OutputStreamWriter|DataOutputStream|ObjectOutputStream)")
             && !owner.equals("foundation.publisher")) {
           errors.add("D3");
         }
@@ -143,11 +155,31 @@ class BoundaryTest {
   }
 
   @Test
-  void architecture() throws IOException {
+  void d3PrintWriter() throws IOException {
+    String body =
+        "void save() throws java.io.IOException { try (var writer = new java.io.PrintWriter(\"summary.json\")) { writer.print(1); } }";
+    assertTrue(specimen("foundation.providers.a", body).contains("D3"));
+    assertEquals(List.of(), specimen("foundation.publisher", body));
+  }
+
+  @Test
+  void d6dLauncher() throws IOException {
     assertTrue(
         specimen(
-                "foundation.contracts", "javax.xml.parsers.DocumentBuilder read() { return null; }")
+                "foundation.report",
+                "void launch() throws java.io.IOException { new ProcessBuilder(\"minecraft\").start(); }")
+            .contains("D6d"));
+    assertEquals(List.of(), specimen("foundation.report", "int helper() { return 1; }"));
+  }
+
+  @Test
+  void architecture() throws IOException {
+    assertTrue(
+        specimen("foundation.contracts", "foundation.providers.b.Other read() { return null; }")
             .contains("T-ARCH"));
-    assertEquals(List.of(), specimen("foundation.contracts", "int value() { return 1; }"));
+    assertEquals(
+        List.of(),
+        specimen(
+            "foundation.contracts", "javax.xml.parsers.DocumentBuilder read() { return null; }"));
   }
 }

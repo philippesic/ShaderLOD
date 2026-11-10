@@ -130,7 +130,11 @@ def python_rules(path: str, text: str, entries: list[dict[str, object]]) -> list
 
     for node in ast.walk(tree):
         if isinstance(node, ast.ExceptHandler) and (
-            node.type is None or name(node.type) in ("Exception", "BaseException")
+            node.type is None
+            or any(
+                name(part) in ("Exception", "BaseException")
+                for part in ast.walk(node.type)
+            )
         ):
             token = ast.get_source_segment(text, node) or ""
             permitted = any(
@@ -171,19 +175,32 @@ def python_rules(path: str, text: str, entries: list[dict[str, object]]) -> list
                 "unlink",
                 "touch",
             ):
-                writing = target.rsplit(".", 1)[-1] not in (
-                    "open",
-                    "dumps",
-                    "replace",
-                ) or (
-                    target.endswith("open")
-                    and any(
-                        isinstance(a, ast.Constant)
-                        and isinstance(a.value, str)
-                        and any(c in a.value for c in ("w", "a", "x", "+"))
-                        for a in [*node.args, *(k.value for k in node.keywords)]
+                method = target.rsplit(".", 1)[-1]
+                writing = method not in ("open", "dumps", "replace")
+                if method == "open":
+                    index = (
+                        1
+                        if target in ("open", "builtins.open", "io.open", "codecs.open")
+                        else 0
                     )
-                )
+                    mode = next(
+                        (
+                            keyword.value
+                            for keyword in node.keywords
+                            if keyword.arg == "mode"
+                        ),
+                        node.args[index] if len(node.args) > index else None,
+                    )
+                    writing = mode is not None and not (
+                        isinstance(mode, ast.Constant)
+                        and mode.value in ("r", "rb", "rt")
+                    )
+                if (
+                    method == "replace"
+                    and isinstance(node.func, ast.Attribute)
+                    and isinstance(node.func.value, ast.Call)
+                ):
+                    writing = name(node.func.value.func) in ("pathlib.Path", "Path")
                 if writing and path not in (
                     "checks/bootstrap.py",
                     "checks/driver.py",
@@ -193,7 +210,9 @@ def python_rules(path: str, text: str, entries: list[dict[str, object]]) -> list
                 ):
                     errors.append("D3: result write outside publisher")
             if (
-                target.startswith("subprocess.")
+                target in ("os.system", "os.popen", "os.posix_spawn", "os.posix_spawnp")
+                or target.startswith(("os.exec", "os.spawn"))
+                or target.startswith("subprocess.")
                 or target.endswith("ArgumentParser")
                 or target.endswith("parse_args")
                 or target.endswith("parse_known_args")
@@ -212,6 +231,12 @@ def python_rules(path: str, text: str, entries: list[dict[str, object]]) -> list
                 and "/measurement/" not in path
             ):
                 errors.append("D6c: GPU call outside measurement adapter")
+        if (
+            isinstance(node, (ast.Attribute, ast.Name))
+            and name(node) == "os.environ"
+            and path != "checks/bootstrap.py"
+        ):
+            errors.append("D6b: settings read outside config owner")
         if (
             isinstance(node, ast.Subscript)
             and name(node.value) == "os.environ"
@@ -300,12 +325,20 @@ def validate(
             re.I,
         ) or (
             path.endswith((".py", ".java", ".sh"))
-            and re.search(r"(flock|Semaphore|FileLock|lockf)\s*\(", text)
+            and re.search(
+                r"(flock|Semaphore|FileLock|lockf|Lock|ReentrantLock|tryLock)\s*\(",
+                text,
+            )
             and re.search(r"gpu", text, re.I)
         ):
             errors.append("S6: GPU allocation lock")
         if path.endswith(".py"):
             errors.extend(python_rules(path, text, entries))
+        if path.endswith(".sh") and re.search(
+            r"(?:^|[\s;&|])(?:exec\s+)?(?:java|minecraft|gradlew|\./gradlew)(?:\s|$)",
+            text,
+        ):
+            errors.append("D6d: undeclared shell launcher")
         if path.endswith((".java", ".gradle")):
             if any(
                 t.startswith("@SuppressWarnings") for t in lexical(text, "java")

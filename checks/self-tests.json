@@ -118,6 +118,44 @@
       "control": {
         "java": "d3Writer"
       }
+    },
+    {
+      "name": "java-print-writer",
+      "engine": "bytecode",
+      "bad": {
+        "java": "d3PrintWriter"
+      },
+      "control": {
+        "java": "d3PrintWriter"
+      }
+    },
+    {
+      "name": "builtin-open-mode",
+      "engine": "policy",
+      "bad": {
+        "files": {
+          "provider.py": "open(\"summary.json\", \"w\").write(\"data\")\n"
+        }
+      },
+      "control": {
+        "files": {
+          "report.py": "def read() -> str:\n    with open(\"capture.json\", \"r\") as stream:\n        return stream.read()\n"
+        }
+      }
+    },
+    {
+      "name": "path-replace",
+      "engine": "policy",
+      "bad": {
+        "files": {
+          "report.py": "from pathlib import Path\nPath(\"derived.json\").replace(\"capture.json\")\n"
+        }
+      },
+      "control": {
+        "files": {
+          "report.py": "def label(value: str) -> str:\n    return value.replace(\"old\", \"new\")\n"
+        }
+      }
     }
   ],
   "D4": [
@@ -253,6 +291,20 @@
           "checks/entrypoints.json": "[\"src/main/java/Readiness.java\"]"
         }
       }
+    },
+    {
+      "name": "tuple-broad-catch",
+      "engine": "policy",
+      "bad": {
+        "files": {
+          "readiness.py": "try:\n    value = 1\nexcept (ValueError, Exception):\n    pass\n"
+        }
+      },
+      "control": {
+        "files": {
+          "readiness.py": "value = 1\n"
+        }
+      }
     }
   ],
   "D6b": [
@@ -278,6 +330,20 @@
       },
       "control": {
         "java": "d6bSettings"
+      }
+    },
+    {
+      "name": "environment-mapping",
+      "engine": "policy",
+      "bad": {
+        "files": {
+          "timer.py": "import os\nsnapshot = dict(os.environ)\n"
+        }
+      },
+      "control": {
+        "files": {
+          "checks/bootstrap.py": "import os\nsnapshot = dict(os.environ)\n"
+        }
       }
     }
   ],
@@ -320,6 +386,44 @@
         "files": {
           "helper.py": "def helper() -> str:\n    return \"ready\"\n"
         }
+      }
+    },
+    {
+      "name": "os-launch",
+      "engine": "policy",
+      "bad": {
+        "files": {
+          "report.py": "import os\nos.system(\"minecraft\")\n"
+        }
+      },
+      "control": {
+        "files": {
+          "report.py": "def helper() -> int:\n    return 1\n"
+        }
+      }
+    },
+    {
+      "name": "shell-launch",
+      "engine": "policy",
+      "bad": {
+        "files": {
+          "report.sh": "java -jar client.jar\n"
+        }
+      },
+      "control": {
+        "files": {
+          "helper.sh": "printf data\n"
+        }
+      }
+    },
+    {
+      "name": "java-launch",
+      "engine": "bytecode",
+      "bad": {
+        "java": "d6dLauncher"
+      },
+      "control": {
+        "java": "d6dLauncher"
       }
     }
   ],
@@ -982,6 +1086,20 @@
       "bad": {
         "files": {
           "gpu.lock": "lock"
+        }
+      },
+      "control": {
+        "files": {
+          "busy.py": "def refuse(client_running: bool) -> bool:\n    return client_running\n"
+        }
+      }
+    },
+    {
+      "name": "allocation-api",
+      "engine": "policy",
+      "bad": {
+        "files": {
+          "scheduler.py": "import threading\ngpu = threading.Lock()\n"
         }
       },
       "control": {
