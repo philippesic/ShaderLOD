@@ -1,4 +1,4 @@
-# ShaderLOD foundation
+# ShaderLOD-next foundation
 
 NeoForge 21.1.253 / Minecraft 1.21.1 foundation. No mod classes, launches, benchmarks or optimizations are present. The four future targets are MakeUp 9.5g, BSL 10.1.8, Complementary Reimagined r5.9.3 and Unbound r5.9.3. Distant Horizons 3.3.3 is optional at the later runtime stage.
 
@@ -8,6 +8,6 @@ Install Python 3.13 and Git, then run `./check`. It verifies the wrapper and ins
 
 `./verify --cpu` runs the synthetic contract round trip. `./verify --runtime` exits 2 until stage 4. Neither compilation nor CPU verification demonstrates live behavior. There is no benchmark entry in this stage; one runner is reserved for stage 4.
 
-[System map](docs/SYSTEM_MAP.md), [checks](docs/checks.md), [evidence levels](docs/evidence-levels.md), [decisions](docs/decisions/acceptance.md), [findings](FINDINGS.md).
+[System map](docs/SYSTEM_MAP.md), [checks](docs/checks.md), [evidence levels](docs/evidence-levels.md), [decisions](docs/decisions/acceptance.md), [findings](FINDINGS.md), [remaining port stages](docs/remaining-stages.md), [issue and failure analysis](docs/issue-analysis.md).
 
 Hosted CI, x86 execution and remote review enforcement are untested. This repo has no remote. CODEOWNERS routes protected changes for Philip's review; no branch protection is installed locally.
