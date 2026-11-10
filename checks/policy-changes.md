@@ -22,3 +22,5 @@ The approved A–D implementation replaces the following mechanisms. This record
 The private evaluator for the fresh-agent exercise must independently verify the requested behavior and unchanged safeguards. This document is not an evaluation score or a claim of live runtime correctness.
 
 Pinned native Mixin entry-point directives are structural, exact-site exceptions tied to required bytecode selectors; they do not expire by calendar date. Unused-method/parameter checks remain active elsewhere. Runtime native writers buffer their actual serialization and announce bytes/deletions to the journal before mutation.
+
+Provider bytecode is restricted to domain/engine contracts, standard Java and its own provider module; integration/storage shortcuts and cross-module coupling have negative/control specimens. The fresh-agent repair also closes numeric overflow through direct and decoded measurement admission. Scope reporting is derived from actual task rows, preserving full/partial labels after Gradle callbacks. Runtime child publication uses the existing storage owner; no worker write exception was added.

@@ -4,19 +4,23 @@ from pathlib import Path
 import sys
 
 from shaderlod_host.contracts import decode_request, verify_source
-from shaderlod_host.runtime import execute, verify_result
+from shaderlod_host.runtime import execute, verify_result, recover_execution
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(
         description="Bounded CPU development execution; no benchmark methodology"
     )
-    parser.add_argument("mode", choices=["plan", "run", "verify", "report", "doctor"])
+    parser.add_argument(
+        "mode", choices=["plan", "run", "verify", "report", "doctor", "recover"]
+    )
     parser.add_argument("--request", type=Path)
     parser.add_argument("--source-root", type=Path)
     parser.add_argument("--output-root", type=Path)
     parser.add_argument("--ownership-root", type=Path)
     parser.add_argument("--result", type=Path)
+    parser.add_argument("--control", type=Path)
+    parser.add_argument("--reserve-bytes", type=int, default=67108864)
     args = parser.parse_args()
     if args.mode == "doctor":
         print(
@@ -27,7 +31,8 @@ def main() -> int:
                     if sys.platform == "linux"
                     else "unavailable",
                     "platform": sys.platform,
-                    "live_renderer": "unavailable",
+                    "live_runner": "linux-only; explicit invocation and runtime receipt required",
+                    "current_renderer_qualification": "not inspected by doctor",
                     "benchmark_methodology": "unavailable",
                     "python": sys.version.split()[0],
                 }
@@ -38,6 +43,16 @@ def main() -> int:
         parser.error("--request required")
     try:
         request = decode_request(json.loads(args.request.read_bytes()))
+        if args.mode == "recover":
+            if args.output_root is None or args.ownership_root is None:
+                parser.error("--output-root and --ownership-root required")
+            print(
+                json.dumps(
+                    recover_execution(request, args.output_root, args.ownership_root),
+                    sort_keys=True,
+                )
+            )
+            return 0
         if args.mode in {"verify", "report"}:
             if args.result is None:
                 parser.error("--result required")
@@ -69,7 +84,12 @@ def main() -> int:
         if args.output_root is None or args.ownership_root is None:
             parser.error("--output-root and --ownership-root required")
         result = execute(
-            request, args.source_root, args.output_root, args.ownership_root
+            request,
+            args.source_root,
+            args.output_root,
+            args.ownership_root,
+            args.control,
+            args.reserve_bytes,
         )
         print(json.dumps(result, sort_keys=True))
         return 0 if result["state"] == "complete" else 1

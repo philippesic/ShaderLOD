@@ -38,6 +38,9 @@ final class ProfileExport {
                   var target = net.minecraft.client.Minecraft.getInstance().getMainRenderTarget();
                   record.put("surface", java.util.List.of(target.width, target.height));
                   record.put("dh", DhObservation.current());
+                  record.put(
+                      "sampler_index_policy",
+                      com.pp.shaderlod.integration.SamplerIndexPolicy.observed());
                   record.put("cpu", DevelopmentProfiler.snapshot());
                   record.put("gpu", DevelopmentProfiler.gpuSnapshot());
                   try {

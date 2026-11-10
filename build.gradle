@@ -178,7 +178,7 @@ gradle.buildFinished { result ->
 	}
 	def report = file('build/reports/foundation/gradle-tasks.json')
 	report.parentFile.mkdirs()
-	report.text = groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson([scope: gradle.taskGraph.hasTask(':check') ? 'full' : 'partial', result: result.failure ? 'FAIL' : 'PASS', tasks: rows])) + '\n'
+	report.text = groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson([scope: rows.any { it.path == ':check' } ? 'full' : 'partial', result: result.failure ? 'FAIL' : 'PASS', tasks: rows])) + '\n'
 }
 
 apply from: 'linux-arm64.gradle'
@@ -209,7 +209,7 @@ tasks.register('writeFunctionalLaunch') {
 		}
 		command += run.args + run.argumentProviders.collectMany { it.asArguments().toList() }
 
-		output.text = groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson([argv: command, cwd: file('run-client').absolutePath, environment: run.environment.findAll { key, value -> key == 'MOD_CLASSES' }])) + '\n'
+		output.text = groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson([shipping_jar: tasks.named('jar').get().archiveFile.get().asFile.absolutePath, argv: command, cwd: file('run-client').absolutePath, environment: run.environment.findAll { key, value -> key == 'MOD_CLASSES' }])) + '\n'
 	}
 }
 
@@ -282,3 +282,8 @@ def packResources = tasks.register('generatePackSpecification') {
 	}
 }
 sourceSets.main.resources.srcDir(packResources)
+
+dependencies {
+	compileOnly 'io.github.llamalad7:mixinextras-neoforge:0.5.3'
+	implementation 'org.lwjgl:lwjgl-opengl:3.3.3'
+}

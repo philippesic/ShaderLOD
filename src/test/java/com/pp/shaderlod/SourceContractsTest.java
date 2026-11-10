@@ -286,6 +286,7 @@ class SourceContractsTest {
     private NativeState state =
         new NativeState(Optional.empty(), false, Map.of("queued", "native"), Map.of());
     private boolean failLink;
+    private boolean submitted;
     private String digest = ZERO;
     private long generation;
 
@@ -317,7 +318,7 @@ class SourceContractsTest {
           generation,
           !failLink,
           state.effectiveOptions(),
-          Set.of("observed"));
+          submitted ? Set.of("observed", "submitted-frame:" + digest) : Set.of("observed"));
     }
 
     @Override
@@ -340,6 +341,11 @@ class SourceContractsTest {
     assertEquals(SelectionTransaction.State.PREPARED, transaction.state());
     assertThrows(IllegalStateException.class, transaction::activation);
     assertEquals(1, transaction.apply().generation());
+    assertEquals(SelectionTransaction.State.LINKED, transaction.state());
+    assertThrows(IOException.class, transaction::confirmRendered);
+    assertThrows(IllegalStateException.class, transaction::activation);
+    backend.submitted = true;
+    transaction.confirmRendered();
     assertEquals(SelectionTransaction.State.ACTIVE, transaction.state());
     transaction.off();
     assertEquals(original, backend.snapshot());

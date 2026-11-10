@@ -22,3 +22,9 @@ def display_environment(path: Path) -> dict[str, str]:
     if not environment.get("DISPLAY"):
         raise ValueError("hardware display unavailable")
     return environment
+
+
+def worker_environment(overrides: dict[str, str] | None = None) -> dict[str, str]:
+    environment = dict(os.environ) if overrides is None else dict(overrides)
+    environment["PYTHONPATH"] = str(Path(__file__).resolve().parents[1])
+    return environment

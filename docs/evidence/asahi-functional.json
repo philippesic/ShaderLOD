@@ -1,0 +1,83 @@
+{
+  "absent_dh": {
+    "TAA": "true",
+    "actual_ui_cases": {
+      "cancel_preserved_active": true,
+      "cancel_staged_unchanged": true,
+      "failed_apply_restored": true,
+      "off_restored": true,
+      "options_preserved": true
+    },
+    "archive_identity_and_submitted_frame": "PASS",
+    "cpu_frame_samples": 162,
+    "dimensions": [
+      2560,
+      1600
+    ],
+    "generations": {
+      "identity_probe": 4,
+      "native_activation": 1,
+      "recovery_activation": 7,
+      "selection": 2
+    },
+    "gpu_frame_samples": 64,
+    "gpu_health": {
+      "invalid": 0,
+      "lost": 97,
+      "pending": 1,
+      "scope": "diagnostic client-frame GPU timestamps; per-pass work and performance qualification unavailable"
+    },
+    "images": "final-profile/run-client-absent-dh/",
+    "inputs_unchanged": true,
+    "outcome": "PASS",
+    "receipt": "attempts/asahi-canonical-entry-absent-dh.json",
+    "rendered_sections": {
+      "identity_rendered_sections": 2,
+      "native_rendered_sections": 130
+    },
+    "schema": "shaderlod-functional-v3",
+    "visual_inspection": "Original and identity captures contain terrain, sky and HUD. Initial v2 immediate post-reload capture lacked terrain; v3 added bounded settling and nonempty rendered-section evidence. No pixel equivalence claim."
+  },
+  "cohort_lineage": "F8/F9 and v1/v2 attempts remain immutable. Necessary binding-index compatibility correction supersedes absent-DH unit allocation failure; actual fragment resource count is unchanged.",
+  "dh_enabled": {
+    "functional_reason": "java.io.IOException: Original native shader graph has no submitted frame",
+    "inputs_unchanged": true,
+    "limits": "Native target fails before port activation. Read-only presence/settings is not rendered DH coverage.",
+    "native_error": "composite1: Too many fragment shader texture samplers",
+    "observation": {
+      "present": true,
+      "readiness": "enabled=true; distance=256; mode=DEFAULT; rendered coverage unknown",
+      "version": "3.3.3"
+    },
+    "outcome": "FAIL",
+    "receipt": "attempts/asahi-shipping-dh.json"
+  },
+  "evidence_root": "/home/philip/.local/share/shaderlod-next/evidence/86e431bf04abd609abcc6e84d03da4a9ad63d45b8704a8f1c787b358423ee2db",
+  "hardware_scope": "Asahi only. No RTX 5080 workload launched.",
+  "host": "Apple M1 / Asahi / Mesa25.1 / OpenGL4.6",
+  "journal_remaining": {
+    "run-client": false,
+    "run-client-absent-dh": false
+  },
+  "limits": [
+    "Live functional evidence only; no benchmark design, quality equivalence, performance or optimization claim",
+    "Development probe and diagnostic frame instrumentation remain enabled and excluded from shipping JAR",
+    "Exact declared JVM/mod/host inputs captured; no exhaustive attestation of all system-loaded native libraries",
+    "No Windows runtime or cross-host transfer qualification",
+    "Required DH gate remains held; absent-DH success cannot substitute"
+  ],
+  "manifest_sha256": "86e431bf04abd609abcc6e84d03da4a9ad63d45b8704a8f1c787b358423ee2db",
+  "native_reference": "F9 retained independent native control without ShaderLOD reproduces DH fragment limit. No native-control performance comparison.",
+  "required_gate": "HELD: native Reimagined+DH exceeds fragment sampler resources on the user-specified Asahi MacBook Air",
+  "sampler_index_policy": {
+    "combinedIndices": 96,
+    "fragmentResources": 16,
+    "trackedIndices": 128
+  },
+  "schema": "shaderlod-asahi-functional-v1",
+  "shipping_jar": {
+    "filename": "shaderlod-0.1.0.jar",
+    "sha256": "588af091afef63d71cd9e0e109edc80be7b1ee5c0c46540f1e020522e82bdf3a"
+  },
+  "source_sha256": "fed6c879e732cf7fc7bc6570ebb1def43235aa7e96f62859fbdbdbfa0b484b38"
+}

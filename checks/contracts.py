@@ -25,9 +25,14 @@ class Measured:
         if (
             type(self.value) not in (int, float)
             or type(self.count) is not int
-            or not math.isfinite(self.value)
             or self.count < 1
         ):
+            raise ValueError("D5: invalid measurement")
+        try:
+            finite = math.isfinite(self.value)
+        except OverflowError:
+            finite = False
+        if not finite:
             raise ValueError("D5: invalid measurement")
 
 

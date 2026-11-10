@@ -16,6 +16,7 @@ from shaderlod_host.contracts import (
     mapping,
     verify_source,
 )
+from shaderlod_host.config import worker_environment
 from shaderlod_host.storage import BusyRefusal, publish, recover_journal, replace
 from shaderlod_host.worker import birth
 
@@ -140,13 +141,17 @@ def execute(
             process = subprocess.Popen(
                 [
                     sys.executable,
-                    str(Path(__file__).with_name("worker.py")),
+                    "-m",
+                    "shaderlod_host.worker",
                     str(start + request.timeout_ms / 1000),
                     str(os.getpid()),
                     birth(os.getpid()),
                     json.dumps(command),
+                    str(operation_root / f"process-{request.attempt}.json"),
+                    request.identity,
                 ],
                 cwd=snapshot,
+                env=worker_environment(),
                 stdin=subprocess.DEVNULL,
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL,
@@ -311,3 +316,81 @@ def verify_result(value: object, request: Request) -> dict[str, object]:
     if mapping(result["observations"], "observations") != {"process_exit": code}:
         raise ValueError("observed process disagreement")
     return result
+
+
+def recover_execution(
+    request: Request, output_root: Path, ownership_root: Path
+) -> dict[str, object]:
+    if sys.platform != "linux":
+        raise ValueError("recovery unavailable outside qualified Linux process model")
+    request = decode_request(request.wire())
+    operation_root = output_root / request.operation
+    if (
+        output_root.is_symlink()
+        or operation_root.is_symlink()
+        or ownership_root.is_symlink()
+    ):
+        raise ValueError("recovery roots cannot be symlinks")
+    with BusyRefusal(ownership_root, socket.gethostname() + ":cpu-runner"):
+        journal_path = operation_root / "journal.json"
+        if journal_path.is_symlink():
+            raise ValueError("recovery journal cannot be symlink")
+        journal = recover_journal(journal_path, request.owner)
+        if (
+            journal["request"] != budget_identity(request)
+            or journal["attempt"] != request.attempt
+        ):
+            raise ValueError("recovery request identity disagreement")
+        if journal["state"] not in {"recovery-required", "interrupted"}:
+            raise ValueError("no interrupted attempt to reconcile")
+        path = operation_root / f"process-{request.attempt}.json"
+        if path.is_symlink():
+            raise ValueError("child identity cannot be symlink")
+        child = mapping(json.loads(path.read_bytes()), "child identity")
+        boot = Path("/proc/sys/kernel/random/boot_id").read_text().strip()
+        if (
+            set(child) != {"schema", "request", "host", "boot", "pid", "birth"}
+            or child["schema"] != "shaderlod-child-v1"
+            or child["request"] != request.identity
+            or child["host"] != socket.gethostname()
+            or child["boot"] != boot
+        ):
+            raise ValueError("unverifiable child identity; preserve recovery state")
+        leader = integer(child["pid"], "child pid")
+        if not isinstance(child["birth"], str) or not child["birth"].isdecimal():
+            raise ValueError("invalid child birth identity")
+        process = mapping(journal["process"], "watchdog identity")
+        if (
+            set(process) != {"host", "boot", "pid", "birth"}
+            or process["host"] != socket.gethostname()
+            or process["boot"] != boot
+        ):
+            raise ValueError("unverifiable watchdog identity")
+        watchdog = integer(process["pid"], "watchdog pid")
+        for entry in Path("/proc").iterdir():
+            if not entry.name.isdecimal():
+                continue
+            try:
+                value = (entry / "stat").read_text()
+            except FileNotFoundError:
+                continue
+            fields = value[value.rfind(")") + 2 :].split()
+            if fields[0] == "Z":
+                continue
+            if (
+                (int(entry.name) == watchdog and fields[19] == process["birth"])
+                or int(fields[2]) == leader
+                or int(fields[3]) == leader
+            ):
+                raise ValueError(
+                    "owned process lifetime not quiescent; recovery refused"
+                )
+        journal["state"] = "interrupted"
+        replace(journal_path, journal)
+        return {
+            "schema": "shaderlod-recovery-v1",
+            "request": request.identity,
+            "state": "interrupted",
+            "reserved_ms": journal["reserved_ms"],
+            "action": "verified quiescence; no processes killed; original attempt preserved",
+        }

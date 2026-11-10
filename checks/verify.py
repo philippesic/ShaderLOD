@@ -33,7 +33,10 @@ def cpu() -> dict[str, object]:
 
 def main() -> int:
     if sys.argv[1:] == ["--runtime"]:
-        print("D1: runtime verification unavailable until stage 4", file=sys.stderr)
+        print(
+            "D1: runtime needs explicit --profile, --display, --receipt, --ownership-root and --timeout within an allocated hardware window",
+            file=sys.stderr,
+        )
         return runtime_status(2)
     if sys.argv[1:] == ["--cpu"]:
         print(json.dumps(cpu(), sort_keys=True))

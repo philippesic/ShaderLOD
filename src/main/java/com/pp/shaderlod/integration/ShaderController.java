@@ -19,6 +19,7 @@ public final class ShaderController {
   private final IrisSelection backend = new IrisSelection();
   private SelectionTransaction transaction;
   private String dimension;
+  private String sourceName;
   private boolean recoveryAttempted;
   private String recoveryFailure;
 
@@ -33,6 +34,15 @@ public final class ShaderController {
       }
     }
     invalidateIfChanged();
+    if (transaction != null
+        && transaction.state() == SelectionTransaction.State.LINKED
+        && backend.hasSubmittedFrame()) {
+      try {
+        transaction.confirmRendered();
+      } catch (IOException | IllegalArgumentException | IllegalStateException failure) {
+        transaction.invalidate();
+      }
+    }
   }
 
   public List<String> providers() {
@@ -50,6 +60,7 @@ public final class ShaderController {
     }
     off();
     backend.recover();
+    this.sourceName = sourceName;
     var source = IrisSelection.archive(sourceName);
     var archive = PackArchive.read(source, PackArchive.Limits.defaults());
     if (!archive.identity().archiveSha256().equals(primary.sha256())) {
@@ -104,8 +115,10 @@ public final class ShaderController {
   }
 
   public void invalidateIfChanged() {
-    if (transaction != null && transaction.state() == SelectionTransaction.State.ACTIVE) {
-      var active = transaction.activation();
+    if (transaction != null
+        && (transaction.state() == SelectionTransaction.State.ACTIVE
+            || transaction.state() == SelectionTransaction.State.LINKED)) {
+      var active = transaction.linkedObservation();
       if (!active.packName().equals(net.irisshaders.iris.Iris.getCurrentPackName())
           || active.generation()
               != net.irisshaders.iris.Iris.getPipelineManager()
@@ -116,6 +129,19 @@ public final class ShaderController {
         transaction.invalidate();
       }
     }
+  }
+
+  public String sourceName() {
+    return sourceName == null
+        ? net.irisshaders.iris.Iris.getIrisConfig().getShaderPackName().orElse(primary.filename())
+        : sourceName;
+  }
+
+  public Activation activation() {
+    if (transaction == null) {
+      throw new IllegalStateException("No selection");
+    }
+    return transaction.activation();
   }
 
   public String status() {

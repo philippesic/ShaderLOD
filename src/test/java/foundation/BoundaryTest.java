@@ -46,6 +46,13 @@ class BoundaryTest {
                 && !target.startsWith("com.pp.shaderlod.engine"))) {
           errors.add("T-ARCH");
         }
+        if (owner.startsWith("com.pp.shaderlod.providers.")
+            && !target.startsWith("java.")
+            && !target.startsWith("com.pp.shaderlod.domain")
+            && !target.startsWith("com.pp.shaderlod.engine")
+            && !target.startsWith("com.pp.shaderlod.providers.")) {
+          errors.add("T-ARCH");
+        }
         if (owner.contains(".providers.")
             && target.contains(".providers.")
             && !providerModule(owner).equals(providerModule(target))) {
@@ -254,6 +261,28 @@ class BoundaryTest {
                 "com.pp.shaderlod.integration",
                 "com.pp.shaderlod.dev.Development value() { return null; }")
             .contains("T-ARCH"));
+  }
+
+  @Test
+  void providersUseContractsInsteadOfNativeOwners() throws IOException {
+    assertTrue(
+        specimen(
+                "com.pp.shaderlod.providers.one",
+                "com.pp.shaderlod.integration.Other value() { return null; }",
+                "com.pp.shaderlod.integration")
+            .contains("T-ARCH"));
+    assertTrue(
+        specimen(
+                "com.pp.shaderlod.providers.one",
+                "com.pp.shaderlod.storage.Other value() { return null; }",
+                "com.pp.shaderlod.storage")
+            .contains("T-ARCH"));
+    assertEquals(
+        List.of(),
+        specimen(
+            "com.pp.shaderlod.providers.one",
+            "com.pp.shaderlod.domain.Other value() { return null; }",
+            "com.pp.shaderlod.domain"));
   }
 
   @Test

@@ -6,8 +6,13 @@ import sys
 
 import pytest
 
-from shaderlod_host.contracts import Request, decode_request, digest
-from shaderlod_host.runtime import execute, validate_control, verify_result
+from shaderlod_host.contracts import Request, decode_request, digest, integer
+from shaderlod_host.runtime import (
+    execute,
+    validate_control,
+    verify_result,
+    recover_execution,
+)
 from shaderlod_host.storage import BusyRefusal, publish, reclaim, recover_journal
 
 
@@ -260,6 +265,24 @@ def test_runner_death_stops_owned_group_without_foreign_kill(tmp_path: Path) -> 
                 tmp_path / "results",
                 tmp_path / "owners",
             )
+        receipt = recover_execution(req, tmp_path / "results", tmp_path / "owners")
+        assert receipt["state"] == "interrupted"
+        assert receipt["reserved_ms"] == 2000
+        assert (
+            recover_execution(req, tmp_path / "results", tmp_path / "owners") == receipt
+        )
+        child_path = tmp_path / "results/op/process-1.json"
+        original_child = json.loads(child_path.read_bytes())
+        child_path.write_text(json.dumps(original_child | {"boot": "foreign"}))
+        with pytest.raises(ValueError, match="unverifiable"):
+            recover_execution(req, tmp_path / "results", tmp_path / "owners")
+        child_path.write_text(json.dumps(original_child))
+        resumed = execute(
+            replace(req, attempt=2), tmp_path, tmp_path / "results", tmp_path / "owners"
+        )
+        assert resumed["state"] == "failed"
+        assert integer(resumed["reserved_ms"], "reserved_ms", 0) >= 4000
+        assert foreign.poll() is None
     finally:
         if runner.poll() is None:
             runner.kill()

@@ -1,1 +1,15 @@
-{"required":true,"minVersion":"0.8","package":"com.pp.shaderlod.integration.mixin","compatibilityLevel":"JAVA_21","client":["IrisConfigMixin","IrisOptionsMixin"],"injectors":{"defaultRequire":1}}
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.integration.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "IrisConfigMixin",
+    "IrisOptionsMixin",
+    "SamplerUnitBudgetMixin",
+    "IrisFrameCompletionMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -3,8 +3,11 @@ import os
 from pathlib import Path
 import signal
 import subprocess
+import socket
 import sys
 import time
+
+from shaderlod_host.storage import publish
 
 
 def birth(pid: int) -> str:
@@ -36,6 +39,17 @@ def main() -> int:
     )
     exitcode = 124
     try:
+        if len(sys.argv) == 7:
+            destination = Path(sys.argv[5])
+            record = {
+                "schema": "shaderlod-child-v1",
+                "request": sys.argv[6],
+                "host": socket.gethostname(),
+                "boot": Path("/proc/sys/kernel/random/boot_id").read_text().strip(),
+                "pid": child.pid,
+                "birth": birth(child.pid),
+            }
+            publish(destination, record)
         while True:
             status = os.waitid(
                 os.P_PID, child.pid, os.WEXITED | os.WNOHANG | os.WNOWAIT

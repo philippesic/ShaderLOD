@@ -1,3 +1,5 @@
+> Historical audit input. Current scope, authority and implementation status are owned by [the porting plan](PORTING_PLAN.md); superseded policy recommendations here are inactive.
+
 # Issue and failure analysis
 
 This records what went wrong in the old ShaderLOD repo and its threads, with evidence, root cause where known, and the rule, check, or plan item that now addresses it. Unaddressed items are marked as such. It is an analysis document, not a status diary and not permission to start a later port stage.

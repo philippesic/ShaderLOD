@@ -2,7 +2,6 @@ package com.pp.shaderlod.integration;
 
 import java.io.IOException;
 import java.util.Arrays;
-import net.irisshaders.iris.Iris;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
@@ -29,8 +28,7 @@ public final class SettingsScreen extends Screen {
     int top = height / 2 - 50;
     pack = new EditBox(font, left, top, 300, 20, Component.literal("Shader archive"));
     pack.setMaxLength(240);
-    pack.setValue(
-        Iris.getIrisConfig().getShaderPackName().orElse("ComplementaryReimagined_r5.9.3.zip"));
+    pack.setValue(controller.sourceName());
     addRenderableWidget(pack);
     optimizations =
         new EditBox(font, left, top + 35, 300, 20, Component.literal("Optimization IDs"));
@@ -55,6 +53,10 @@ public final class SettingsScreen extends Screen {
             .build());
   }
 
+  public String feedbackText() {
+    return feedback;
+  }
+
   private void apply() {
     try {
       var ids =
@@ -75,7 +77,7 @@ public final class SettingsScreen extends Screen {
         }
       }
       var active = controller.apply(pack.getValue(), ids, overrides);
-      feedback = "Linked " + active.packName() + "; generation " + active.generation();
+      feedback = "Linked " + active.packName() + "; waiting for submitted frame";
       if (minecraft != null) {
         minecraft.setScreen(parent);
       }
@@ -114,12 +116,12 @@ public final class SettingsScreen extends Screen {
         0xffffff);
     graphics.drawString(
         font, "Available: " + controller.providers(), width / 2 - 150, height / 2 + 65, 0xffffff);
-    graphics.drawString(font, feedback, width / 2 - 150, height / 2 + 65, 0xffffff);
+    graphics.drawString(font, feedback, width / 2 - 150, height / 2 + 80, 0xffffff);
     graphics.drawString(
         font,
         "DH: " + DhObservation.current().readiness(),
         width / 2 - 150,
-        height / 2 + 85,
+        height / 2 + 95,
         0xffffff);
   }
 }

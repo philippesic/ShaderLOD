@@ -1,0 +1,12 @@
+{
+  "active_agents": "Both evaluated agents completed; no running clone work",
+  "authority": "Task-owned clones explicitly marked disposable after preserving patch, fixtures, assessments and check receipts",
+  "removed_roots": [
+    "/tmp/shaderlod-next-agent-trial-qaja_7kg",
+    "/tmp/shaderlod-module-proof-6elwsf4q"
+  ],
+  "retained_evidence_root": "/home/philip/.local/share/shaderlod-next/evidence/631c4a4cb126543ce621a03719f7b566cc4ee412cd7f6f07f0a8459e3c08bd1d",
+  "runtime_profiles_and_raw_live_evidence": "preserved",
+  "schema": "task-cleanup-v1",
+  "shared_caches": "preserved"
+}

@@ -11,6 +11,7 @@ public final class SelectionTransaction {
   public enum State {
     PREPARED,
     APPLYING,
+    LINKED,
     ACTIVE,
     RESTORING,
     RESTORED,
@@ -109,7 +110,7 @@ public final class SelectionTransaction {
         throw new IOException("Requested selection did not produce matching live activation");
       }
       activation = observed;
-      state = State.ACTIVE;
+      state = State.LINKED;
       return observed;
     } catch (IOException | IllegalArgumentException | IllegalStateException failure) {
       try {
@@ -120,6 +121,32 @@ public final class SelectionTransaction {
       }
       throw failure;
     }
+  }
+
+  public Activation linkedObservation() {
+    if ((state != State.LINKED && state != State.ACTIVE) || activation == null) {
+      throw new IllegalStateException("No linked selection");
+    }
+    return activation;
+  }
+
+  public Activation confirmRendered() throws IOException {
+    if (state != State.LINKED || activation == null) {
+      throw new IllegalStateException("No linked selection awaiting a frame");
+    }
+    var observed = backend.observe();
+    if (!observed.linked()
+        || observed.generation() != activation.generation()
+        || !observed.packName().equals(activation.packName())
+        || !observed.archiveSha256().equals(expectedSha256)
+        || !observed.witnesses().containsAll(requiredWitnesses)
+        || !observed.effectiveOptions().entrySet().containsAll(requested.options().entrySet())
+        || !observed.witnesses().contains("submitted-frame:" + expectedSha256)) {
+      throw new IOException("No matching submitted frame observed for linked selection");
+    }
+    activation = observed;
+    state = State.ACTIVE;
+    return observed;
   }
 
   public void cancel() throws IOException {
@@ -136,7 +163,7 @@ public final class SelectionTransaction {
 
   public void invalidate() {
     activation = null;
-    if (state == State.ACTIVE) {
+    if (state == State.ACTIVE || state == State.LINKED) {
       state = State.FAILED;
     }
   }

@@ -23,6 +23,7 @@ def verify_functional(
         "restored_state",
     }
     allowed = required | {
+        "sampler_index_policy",
         "gpu_profiler",
         "native_activation",
         "selection",
@@ -32,11 +33,21 @@ def verify_functional(
         "limits",
         "reason",
         "restoration",
+        "recovery_activation",
+        "identity_output_sha256",
+        "cancel_staged_unchanged",
+        "cancel_preserved_active",
+        "off_restored",
+        "options_preserved",
+        "failed_apply_restored",
+        "failed_apply_reason",
+        "native_rendered_sections",
+        "identity_rendered_sections",
     }
     if (
         not required <= record.keys()
         or not record.keys() <= allowed
-        or record["schema"] != "shaderlod-functional-v1"
+        or record["schema"] != "shaderlod-functional-v3"
     ):
         raise ValueError("unknown functional result schema or fields")
     if record["outcome"] not in ("PASS", "FAIL"):
@@ -60,11 +71,18 @@ def verify_functional(
         or integer(record["native_height"], "height") != 1600
     ):
         raise ValueError("Asahi native dimensions not preserved")
+    integer(record.get("native_rendered_sections"), "native rendered sections", 1)
+    integer(record.get("identity_rendered_sections"), "identity rendered sections", 1)
     dh = mapping(record["dh"], "DH observation")
     if type(dh.get("present")) is not bool or dh["present"] != dh_present:
         raise ValueError("DH mode disagreement")
     activations = []
-    for key in ("native_activation", "selection", "identity_probe"):
+    for key in (
+        "native_activation",
+        "selection",
+        "identity_probe",
+        "recovery_activation",
+    ):
         active = mapping(record.get(key), key)
         if (
             set(active)
@@ -87,7 +105,12 @@ def verify_functional(
         archive = profile / "shaderpacks" / name
         if archive.is_symlink() or digest(archive.read_bytes()) != sha:
             raise ValueError("loaded artifact identity disagreement")
-        if active["witnesses"] != ["linked-archive:" + sha]:
+        if (
+            not isinstance(active["witnesses"], list)
+            or len(active["witnesses"]) != 2
+            or set(active["witnesses"])
+            != {"linked-archive:" + sha, "submitted-frame:" + sha}
+        ):
             raise ValueError("activation witness disagreement")
         mapping(active["effectiveOptions"], "effective options")
         activations.append((active, generation))
@@ -97,8 +120,33 @@ def verify_functional(
             or active["archiveSha256"] != expected_sha256
         ):
             raise ValueError("native/source selection disagreement")
-    if not activations[0][1] < activations[1][1] < activations[2][1]:
+    if (
+        not activations[0][1]
+        < activations[1][1]
+        < activations[2][1]
+        < activations[3][1]
+    ):
         raise ValueError("stale graph generation")
+    for active, _ in activations:
+        if active["effectiveOptions"] != activations[0][0]["effectiveOptions"]:
+            raise ValueError("effective native options changed")
+    if (
+        activations[3][0]["packName"] != expected_source
+        or activations[3][0]["archiveSha256"] != expected_sha256
+    ):
+        raise ValueError("recovery graph disagreement")
+    for key in (
+        "cancel_staged_unchanged",
+        "cancel_preserved_active",
+        "off_restored",
+        "options_preserved",
+        "failed_apply_restored",
+    ):
+        if record.get(key) is not True:
+            raise ValueError("missing actual UI restoration observation: " + key)
+    fault_reason = record.get("failed_apply_reason")
+    if not isinstance(fault_reason, str) or "Iris rejected" not in fault_reason:
+        raise ValueError("missing reload-fault witness")
     restored = mapping(record["restored_state"], "restored native state")
     if (
         set(restored) != {"pack", "enabled", "queued", "effective"}
@@ -117,4 +165,9 @@ def verify_functional(
         record.get("rendered_output_sha256")
     ):
         raise ValueError("rendered output identity disagreement")
+    identity_output = profile / "shaderlod-functional-identity.png"
+    if identity_output.is_symlink() or digest(identity_output.read_bytes()) != identity(
+        record.get("identity_output_sha256")
+    ):
+        raise ValueError("identity rendered output disagreement")
     return record

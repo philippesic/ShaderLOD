@@ -87,6 +87,39 @@ def runtime_artifacts(root: Path, cache: Path) -> None:
             acquire(cached.as_uri(), target, expected)
 
 
+def runtime(
+    root: Path, python: Path, environment: dict[str, str], options: list[str]
+) -> int:
+    required = {"--profile", "--display", "--receipt", "--ownership-root", "--timeout"}
+    if not required <= set(options) or {"--launch", "--shipping-jar"} & set(options):
+        raise ValueError(
+            "RUNTIME: supply --profile, --display, --receipt, --ownership-root and --timeout; launch and shipping identity are build-owned"
+        )
+    subprocess.run(
+        [
+            "./gradlew",
+            "--no-daemon",
+            "writeFunctionalLaunch",
+            "packageAudit",
+            "-PfunctionalProbe",
+        ],
+        env=environment,
+        check=True,
+    )
+    launch_path = root / "build/moddev/functional-launch.json"
+    launch = json.loads(launch_path.read_bytes())
+    command = [
+        str(python),
+        "-m",
+        "shaderlod_host.runtime_live",
+        "--launch",
+        str(launch_path),
+    ]
+    if "--native-control" not in options:
+        command.extend(["--shipping-jar", launch["shipping_jar"]])
+    return subprocess.call(command + options, env=environment)
+
+
 def main() -> int:
     root = Path(__file__).resolve().parents[1]
     os.chdir(root)
@@ -183,6 +216,8 @@ def main() -> int:
         task = "fastCheck" if options == ["--fast"] else "check"
         extra = ["--rerun-tasks"] if options == ["--fresh"] else []
         return subprocess.call(["./gradlew", "--no-daemon", task, *extra], env=env)
+    if sys.argv[2:3] == ["--runtime"] and len(sys.argv) > 3:
+        return runtime(root, envdir / "bin/python", env, sys.argv[3:])
     return subprocess.call(
         [str(envdir / "bin/python"), "-m", "checks.verify", *sys.argv[2:]], env=env
     )

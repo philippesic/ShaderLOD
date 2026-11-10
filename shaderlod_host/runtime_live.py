@@ -9,13 +9,15 @@ import subprocess
 import sys
 import time
 
-from shaderlod_host.config import display_environment
+from shaderlod_host.config import display_environment, worker_environment
 from shaderlod_host.functional_contract import verify_functional
 from shaderlod_host.storage import BusyRefusal, publish
 from shaderlod_host.worker import birth
 
 
-def executable_inputs(launch: dict[str, object], root: Path) -> dict[str, str]:
+def executable_inputs(
+    launch: dict[str, object], root: Path, profile: Path | None = None
+) -> dict[str, str]:
     paths: set[Path] = set()
     pending = list(launch["argv"]) if isinstance(launch["argv"], list) else []
     visited: set[str] = set()
@@ -34,6 +36,9 @@ def executable_inputs(launch: dict[str, object], root: Path) -> dict[str, str]:
     legacy = root / "build/moddev/developmentLegacyClasspath.txt"
     paths.add(legacy)
     paths.update(Path(line) for line in legacy.read_text().splitlines() if line)
+    paths.update((root / "shaderlod_host").glob("*.py"))
+    if profile is not None:
+        paths.update((profile / "mods").glob("*.jar"))
     for directory in [
         root / "build/classes/java",
         root / "build/resources",
@@ -55,6 +60,7 @@ def main() -> int:
     parser.add_argument("--profile", type=Path)
     parser.add_argument("--without-dh", action="store_true")
     parser.add_argument("--native-control", action="store_true")
+    parser.add_argument("--shipping-jar", type=Path)
     parser.add_argument("--display", type=Path, required=True)
     parser.add_argument("--receipt", type=Path, required=True)
     parser.add_argument("--ownership-root", type=Path, required=True)
@@ -66,6 +72,34 @@ def main() -> int:
     argv = launch["argv"]
     if not isinstance(argv, list) or not all(isinstance(a, str) for a in argv):
         raise ValueError("invalid argument vector")
+    if args.shipping_jar is not None:
+        if args.native_control or args.shipping_jar.is_symlink():
+            raise ValueError(
+                "shipping probe requires a regular JAR and development probe"
+            )
+        root = Path(__file__).resolve().parents[1]
+        rewritten = []
+        for item in argv:
+            if item.startswith("-Dfml.modFolders="):
+                entries = [
+                    entry
+                    for entry in item.split("=", 1)[1].split(":")
+                    if not entry.startswith("shaderlod%%")
+                ]
+                rewritten.append("-Dfml.modFolders=" + ":".join(entries))
+            else:
+                rewritten.append(item)
+        argv = rewritten
+        if "-cp" in argv:
+            position = argv.index("-cp") + 1
+            excluded = {
+                str(root / "build/classes/java/main"),
+                str(root / "build/resources/main"),
+            }
+            argv[position] = ":".join(
+                item for item in argv[position].split(":") if item not in excluded
+            )
+        launch["argv"] = argv
     if args.native_control:
         argv = [item for item in argv if not item.startswith("-Dfml.modFolders=")]
         if "-cp" in argv:
@@ -94,6 +128,21 @@ def main() -> int:
             if not (args.without_dh and key == "distanthorizons")
         }
         expected = {item["filename"] for item in artifacts.values()}
+        shipping = None
+        if args.shipping_jar is not None:
+            payload = args.shipping_jar.read_bytes()
+            name = args.shipping_jar.name
+            expected.add(name)
+            target = mods / name
+            if target.exists():
+                if target.is_symlink() or target.read_bytes() != payload:
+                    raise ValueError(
+                        "shipping profile JAR drift; preserve old artifact before replacement"
+                    )
+            else:
+                target.write_bytes(payload)
+            shipping = {"filename": name, "sha256": hashlib.sha256(payload).hexdigest()}
+
         if any(p.name not in expected for p in mods.iterdir()):
             raise ValueError(
                 "unmanaged profile mod; preserve and resolve before launch"
@@ -108,20 +157,21 @@ def main() -> int:
                     raise ValueError("profile mod drift")
             else:
                 target.write_bytes(payload)
-        before = executable_inputs(launch, root)
+        before = executable_inputs(launch, root, profile)
         started = time.monotonic()
         with args.receipt.with_suffix(".log").open("xb") as log:
             worker = subprocess.Popen(
                 [
                     sys.executable,
-                    str(Path(__file__).with_name("worker.py")),
+                    "-m",
+                    "shaderlod_host.worker",
                     str(time.monotonic() + args.timeout),
                     str(os.getpid()),
                     birth(os.getpid()),
                     json.dumps(argv),
                 ],
                 cwd=profile,
-                env=environment,
+                env=worker_environment(environment),
                 stdin=subprocess.DEVNULL,
                 stdout=log,
                 stderr=subprocess.STDOUT,
@@ -160,9 +210,10 @@ def main() -> int:
                 "functional": observed,
                 "dh_mode": "absent" if args.without_dh else "enabled",
                 "native_control": args.native_control,
+                "shipping_jar": shipping,
                 "profile": str(profile),
                 "executable_inputs": before,
-                "inputs_unchanged": before == executable_inputs(launch, root),
+                "inputs_unchanged": before == executable_inputs(launch, root, profile),
                 "outcome": "PASS"
                 if status == 0
                 and observed is not None

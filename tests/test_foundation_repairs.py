@@ -23,6 +23,24 @@ def test_boolean_measurements_refused() -> None:
     assert decode_sample({"kind": "measured", "value": 0, "count": 1}) == Measured(0, 1)
 
 
+@pytest.mark.parametrize(
+    "value", [10**400, -(10**400), float("inf"), float("-inf"), float("nan")]
+)
+def test_unrepresentable_measurements_refused(value: int | float) -> None:
+    with pytest.raises(ValueError, match="D5:"):
+        Measured(value, 1)
+    with pytest.raises(ValueError, match="D5:"):
+        decode_sample({"kind": "measured", "value": value, "count": 1})
+
+
+@pytest.mark.parametrize("value", [0, -0.0, 1.5, -1.5, 2**1023, -(2**1023)])
+def test_finite_signed_measurements_preserved(value: int | float) -> None:
+    direct = Measured(value, 2)
+    assert direct.value == value
+    assert direct.count == 2
+    assert decode_sample({"kind": "measured", "value": value, "count": 2}) == direct
+
+
 def test_failed_publication_leaves_no_partial_result(tmp_path: Path) -> None:
     path = tmp_path / "evidence.json"
     with pytest.raises(TypeError):
@@ -195,3 +213,49 @@ def test_runtime_acquisition_reuses_verified_cache(tmp_path: Path) -> None:
     )
     with pytest.raises(ValueError, match="path escape"):
         runtime_artifacts(root, cache)
+
+
+def test_runtime_entry_pins_setup_and_shipping_identity(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from checks.bootstrap import runtime
+
+    launch = tmp_path / "build/moddev/functional-launch.json"
+    launch.parent.mkdir(parents=True)
+    launch.write_text('{"shipping_jar": "/owned/checked.jar"}')
+    calls: list[list[str]] = []
+
+    def prepare(command: list[str], **kwargs: object) -> None:
+        calls.append(command)
+
+    def run(command: list[str], **kwargs: object) -> int:
+        calls.append(command)
+        return 7
+
+    monkeypatch.setattr("checks.bootstrap.subprocess.run", prepare)
+    monkeypatch.setattr("checks.bootstrap.subprocess.call", run)
+    options = [
+        "--profile",
+        "profile",
+        "--display",
+        "display.json",
+        "--receipt",
+        "receipt.json",
+        "--ownership-root",
+        "owners",
+        "--timeout",
+        "60",
+    ]
+    assert runtime(tmp_path, Path("/owned/python"), {}, options) == 7
+    assert "packageAudit" in calls[0] and "-PfunctionalProbe" in calls[0]
+    assert calls[1][:3] == ["/owned/python", "-m", "shaderlod_host.runtime_live"]
+    assert calls[1][calls[1].index("--shipping-jar") + 1] == "/owned/checked.jar"
+    with pytest.raises(ValueError, match="supply"):
+        runtime(tmp_path, Path("/owned/python"), {}, [])
+    with pytest.raises(ValueError, match="build-owned"):
+        runtime(
+            tmp_path,
+            Path("/owned/python"),
+            {},
+            options + ["--shipping-jar", "/foreign.jar"],
+        )

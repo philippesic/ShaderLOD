@@ -182,7 +182,17 @@ public final class IrisSelection implements SelectionTransaction.Backend {
         Iris.getPipelineManager().getVersionCounterForSodiumShaderReload(),
         linked,
         effectiveOptions(),
-        linked ? Set.of("linked-archive:" + identity.archiveSha256()) : Set.of());
+        linked
+            ? (hasSubmittedFrame()
+                ? Set.of(
+                    "linked-archive:" + identity.archiveSha256(),
+                    "submitted-frame:" + identity.archiveSha256())
+                : Set.of("linked-archive:" + identity.archiveSha256()))
+            : Set.of());
+  }
+
+  public boolean hasSubmittedFrame() {
+    return FrameWitness.observedFor(Iris.getPipelineManager().getPipelineNullable());
   }
 
   @Override

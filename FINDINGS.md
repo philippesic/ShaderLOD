@@ -1,6 +1,6 @@
 # Findings
 
-F1–F7 retain historical evidence. F8 records the new native-stack failure. No retained optimizations. Philip's keep rule is "proven generally positive"; its definition is settled at the benchmark stage.
+F1–F7 retain historical evidence. F8/F9 retain early native-stack failures; F10 records the corrected compatibility cohort and its held DH gate. No retained optimizations. Philip's keep rule is "proven generally positive"; its definition is settled at the benchmark stage.
 
 | ID | Finding | Scope | Evidence level | Limit | Frozen evidence |
 |---|---|---|---|---|---|
@@ -13,3 +13,4 @@ F1–F7 retain historical evidence. F8 records the new native-stack failure. No 
 | F7 | DH depth handoff remains CPU-tested, live pending; conversion and shadow unexercised | Historical implementation note | source-inspected | Historical CPU result not rerun; storage blocker retained | [COST_MAP_IMPLEMENTATION.md](/home/philip/ShaderLOD/docs/COST_MAP_IMPLEMENTATION.md) sha256:43dd226e726f133fdb5f49122109be3958dde6cbab70b0b44b0550fa485406ca |
 | F8 | Pinned Reimagined original fails native Asahi linking with DH; absent-DH also runs out of texture units | New port, Apple M1, 2560×1600, native settings | live-functional | Failed native baseline; settings restore succeeds; no optimization activation/performance qualification | [native failure](docs/evidence/asahi-native-failure.json) sha256:c6a2151e91d871346e9d6e586ba2721e731144530d0705f5b597c5fa53144c7e |
 | F9 | Native reference without ShaderLOD reproduces the same composite1 sampler-limit failure | Pinned Iris/Sodium/DH/Reimagined, Asahi native 2560×1600 | live-functional | Negative control excludes this port as a necessary cause; no performance qualification | [native control](docs/evidence/asahi-native-control.json) sha256:9641bdb8edb43606e5d1a90c388003a5a631f3d341864faa014c4c9493b0f66b |
+| F10 | Shipping JAR passes no-DH native selection, actual frame/UI/provider/error recovery; DH original still exceeds fragment samplers | Corrected native index cohort, Asahi M1, original r5.9.3 at 2560×1600/TAA | live-functional | No-DH result cannot satisfy required DH gate; no image equivalence/performance claim | [functional evidence](docs/evidence/asahi-functional.json) sha256:7fc5c94d693e2859b7f7c77a1ffeba18080645896ac26214a6f306613a078f21 |
