@@ -116,7 +116,7 @@ def main() -> int:
             if step == "exceptionsAudit"
             else len(policy.files(ROOT))
         )
-        rules = {"repoPolicy": 17, "commentBan": 1, "exceptionsAudit": 1}[step]
+        rules = {"repoPolicy": 16, "commentBan": 1, "exceptionsAudit": 1}[step]
     elif step == "selfTest":
         tools = tooltests.main(ROOT)
         rows = selftest.execute(ROOT, tools)

@@ -8,6 +8,7 @@ import sys
 import tarfile
 import urllib.request
 import venv
+import zipfile
 
 
 def digest(path: Path) -> str:
@@ -64,6 +65,20 @@ def main() -> int:
             check=True,
         )
         stamp.write_text(digest(pylock))
+    p2 = Path.home() / ".gradle/caches/p2-data"
+    for artifact in json.loads((root / "dependencies/greclipse.lock.json").read_text())[
+        "artifacts"
+    ]:
+        target = p2 / artifact["path"]
+        if not target.exists():
+            target.parent.mkdir(parents=True, exist_ok=True)
+            if "url" in artifact:
+                urllib.request.urlretrieve(artifact["url"], target)
+            else:
+                with zipfile.ZipFile(p2 / artifact["parent"]) as bundle:
+                    target.write_bytes(bundle.read(artifact["member"]))
+        if digest(target) != artifact["sha256"]:
+            raise RuntimeError("TOOLS: Groovy formatter artifact checksum mismatch")
     env = dict(
         os.environ, JAVA_HOME=str(java), FOUNDATION_PYTHON=str(envdir / "bin/python")
     )

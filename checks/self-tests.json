@@ -736,6 +736,16 @@
           "build.gradle": "test { useJUnitPlatform() }\n"
         }
       }
+    },
+    {
+      "name": "disabled-task-graph",
+      "engine": "tool",
+      "bad": {
+        "tool": "S1"
+      },
+      "control": {
+        "tool": "S1"
+      }
     }
   ],
   "S2": [

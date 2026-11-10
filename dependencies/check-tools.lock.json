@@ -14,7 +14,9 @@
     "python": "3.13",
     "ruff": "0.17.4",
     "mypy": "2.4.1",
-    "pytest": "9.2.0"
+    "pytest": "9.2.0",
+    "foojay": "1.0.0",
+    "greclipse": "4.39"
   },
   "wrapper": {
     "sha256": "423cb469ccc0ecc31f0e4e1c309976198ccb734cdcbb7029d4bda0f18f57e8d9",

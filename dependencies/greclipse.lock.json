@@ -1,0 +1,226 @@
+{
+  "version": "4.39",
+  "artifacts": [
+    {
+      "path": "bundle-pool/https-download.eclipse.org-eclipse-updates-4.39-R-4.39-202602260420-/com.ibm.icu_78.2.0.jar",
+      "url": "https://download.eclipse.org/eclipse/updates/4.39/R-4.39-202602260420/plugins/com.ibm.icu_78.2.0.jar",
+      "sha256": "70627c3ff4b9077f6c3dc2156fb480821f9c1a041b645373f2a0391aae3552a1"
+    },
+    {
+      "path": "bundle-pool/https-download.eclipse.org-eclipse-updates-4.39-R-4.39-202602260420-/org.apache.felix.scr_2.2.14.jar",
+      "url": "https://download.eclipse.org/eclipse/updates/4.39/R-4.39-202602260420/plugins/org.apache.felix.scr_2.2.14.jar",
+      "sha256": "0bc6d63a5e6c3110e5da637b296d5ade217ffe3f7aae33690f0b96d90c5d83e8"
+    },
+    {
+      "path": "bundle-pool/https-download.eclipse.org-eclipse-updates-4.39-R-4.39-202602260420-/org.eclipse.core.commands_3.12.500.v20251103-0733.jar",
+      "url": "https://download.eclipse.org/eclipse/updates/4.39/R-4.39-202602260420/plugins/org.eclipse.core.commands_3.12.500.v20251103-0733.jar",
+      "sha256": "44713362e55ed28e6db5d2c31bf67524fef087645a44dc3239dac60ece017cb9"
+    },
+    {
+      "path": "bundle-pool/https-download.eclipse.org-eclipse-updates-4.39-R-4.39-202602260420-/org.eclipse.core.contenttype_3.9.800.v20251105-1620.jar",
+      "url": "https://download.eclipse.org/eclipse/updates/4.39/R-4.39-202602260420/plugins/org.eclipse.core.contenttype_3.9.800.v20251105-1620.jar",
+      "sha256": "e0c2db96600d519ce36a75f9b7c971afd2870d2d059eee4bf2436d9b33aa0b8d"
+    },
+    {
+      "path": "bundle-pool/https-download.eclipse.org-eclipse-updates-4.39-R-4.39-202602260420-/org.eclipse.core.expressions_3.9.500.v20250608-0434.jar",
+      "url": "https://download.eclipse.org/eclipse/updates/4.39/R-4.39-202602260420/plugins/org.eclipse.core.expressions_3.9.500.v20250608-0434.jar",
+      "sha256": "8444b5de90c9b4ab528c8ea5c341c7e872d0dbe8241ab79085551086d96e7c9e"
+    },
+    {
+      "path": "bundle-pool/https-download.eclipse.org-eclipse-updates-4.39-R-4.39-202602260420-/org.eclipse.core.filesystem_1.11.400.v20251107-0507.jar",
+      "url": "https://download.eclipse.org/eclipse/updates/4.39/R-4.39-202602260420/plugins/org.eclipse.core.filesystem_1.11.400.v20251107-0507.jar",
+      "sha256": "6f70b95d14b90ec57b94c5e3dba7e1d189679cf9a4bc4526e9c91beed7d6a0ef"
+    },
+    {
+      "path": "bundle-pool/https-download.eclipse.org-eclipse-updates-4.39-R-4.39-202602260420-/org.eclipse.core.jobs_3.15.700.v20250725-1147.jar",
+      "url": "https://download.eclipse.org/eclipse/updates/4.39/R-4.39-202602260420/plugins/org.eclipse.core.jobs_3.15.700.v20250725-1147.jar",
+      "sha256": "37015179a7b9b90d16cb92f4b1be6083a1a6dad25428fa8f6b89626f0cc2da79"
+    },
+    {
+      "path": "bundle-pool/https-download.eclipse.org-eclipse-updates-4.39-R-4.39-202602260420-/org.eclipse.core.resources_3.23.200.v20251217-0810.jar",
+      "url": "https://download.eclipse.org/eclipse/updates/4.39/R-4.39-202602260420/plugins/org.eclipse.core.resources_3.23.200.v20251217-0810.jar",
+      "sha256": "7793e07ad47801f62aaa704f0a46d60f8c0ae8075e00f02e720d69862bfe37bc"
+    },
+    {
+      "path": "bundle-pool/https-download.eclipse.org-eclipse-updates-4.39-R-4.39-202602260420-/org.eclipse.core.runtime_3.34.200.v20251220-0953.jar",
+      "url": "https://download.eclipse.org/eclipse/updates/4.39/R-4.39-202602260420/plugins/org.eclipse.core.runtime_3.34.200.v20251220-0953.jar",
+      "sha256": "b4f36a0acb08f03d0b3db54b21fc5638c820c447446a410ba496a5070fa34363"
+    },
+    {
+      "path": "bundle-pool/https-download.eclipse.org-eclipse-updates-4.39-R-4.39-202602260420-/org.eclipse.core.variables_3.6.700.v20250913-1442.jar",
+      "url": "https://download.eclipse.org/eclipse/updates/4.39/R-4.39-202602260420/plugins/org.eclipse.core.variables_3.6.700.v20250913-1442.jar",
+      "sha256": "dd33a48fb6e349c4dbd25124db0acb486bb705ba9735cf42b28355e309c1eb8c"
+    },
+    {
+      "path": "bundle-pool/https-download.eclipse.org-eclipse-updates-4.39-R-4.39-202602260420-/org.eclipse.debug.core_3.23.200.v20251107-0507.jar",
+      "url": "https://download.eclipse.org/eclipse/updates/4.39/R-4.39-202602260420/plugins/org.eclipse.debug.core_3.23.200.v20251107-0507.jar",
+      "sha256": "b565e8dea240564d94ad8d5cb64aa9e1e796192739d5aee9fa0af816b7fa03b1"
+    },
+    {
+      "path": "bundle-pool/https-download.eclipse.org-eclipse-updates-4.39-R-4.39-202602260420-/org.eclipse.equinox.app_1.7.600.v20251211-1038.jar",
+      "url": "https://download.eclipse.org/eclipse/updates/4.39/R-4.39-202602260420/plugins/org.eclipse.equinox.app_1.7.600.v20251211-1038.jar",
+      "sha256": "fd353398835107608f554779a6e91891725efb94e0f57559d0ab3cea4b6156c7"
+    },
+    {
+      "path": "bundle-pool/https-download.eclipse.org-eclipse-updates-4.39-R-4.39-202602260420-/org.eclipse.equinox.common_3.20.300.v20251111-0312.jar",
+      "url": "https://download.eclipse.org/eclipse/updates/4.39/R-4.39-202602260420/plugins/org.eclipse.equinox.common_3.20.300.v20251111-0312.jar",
+      "sha256": "855d239af29ddb1d2248d378697c095be62efb9a5b3c1bb26d31f7b97a8e16ae"
+    },
+    {
+      "path": "bundle-pool/https-download.eclipse.org-eclipse-updates-4.39-R-4.39-202602260420-/org.eclipse.equinox.event_1.7.300.v20250518-0609.jar",
+      "url": "https://download.eclipse.org/eclipse/updates/4.39/R-4.39-202602260420/plugins/org.eclipse.equinox.event_1.7.300.v20250518-0609.jar",
+      "sha256": "a95ed37b7f1c340b4bef599bdc011a3c51b0489a4e1fc11abd62856e49c22fd9"
+    },
+    {
+      "path": "bundle-pool/https-download.eclipse.org-eclipse-updates-4.39-R-4.39-202602260420-/org.eclipse.equinox.preferences_3.12.100.v20251111-0704.jar",
+      "url": "https://download.eclipse.org/eclipse/updates/4.39/R-4.39-202602260420/plugins/org.eclipse.equinox.preferences_3.12.100.v20251111-0704.jar",
+      "sha256": "fd04e81a28ab32b6bb073286eb293c44b760176fcf1e35ef15614d62df820f86"
+    },
+    {
+      "path": "bundle-pool/https-download.eclipse.org-eclipse-updates-4.39-R-4.39-202602260420-/org.eclipse.equinox.registry_3.12.600.v20250906-0651.jar",
+      "url": "https://download.eclipse.org/eclipse/updates/4.39/R-4.39-202602260420/plugins/org.eclipse.equinox.registry_3.12.600.v20250906-0651.jar",
+      "sha256": "4f8cd72681446b598390a8c24ee9b9996f6e4c5fabed022b50bd26f6f5a0bf6c"
+    },
+    {
+      "path": "bundle-pool/https-download.eclipse.org-eclipse-updates-4.39-R-4.39-202602260420-/org.eclipse.jdt.launching.macosx_3.6.400.v20260211-1052.jar",
+      "url": "https://download.eclipse.org/eclipse/updates/4.39/R-4.39-202602260420/plugins/org.eclipse.jdt.launching.macosx_3.6.400.v20260211-1052.jar",
+      "sha256": "a0a012ee18e76f7ca3f0b2d56c44d96776e3e4e6fb6d1d10a885fe591d6730c1"
+    },
+    {
+      "path": "bundle-pool/https-download.eclipse.org-eclipse-updates-4.39-R-4.39-202602260420-/org.eclipse.jdt.launching_3.24.100.v20260218-1303.jar",
+      "url": "https://download.eclipse.org/eclipse/updates/4.39/R-4.39-202602260420/plugins/org.eclipse.jdt.launching_3.24.100.v20260218-1303.jar",
+      "sha256": "bba2ef7540a7ad71c9a8f7c4b337e46a2f7f19dcadfd10b09c35204b8beb2fd2"
+    },
+    {
+      "path": "bundle-pool/https-download.eclipse.org-eclipse-updates-4.39-R-4.39-202602260420-/org.eclipse.jface.text_3.30.0.v20260203-0841.jar",
+      "url": "https://download.eclipse.org/eclipse/updates/4.39/R-4.39-202602260420/plugins/org.eclipse.jface.text_3.30.0.v20260203-0841.jar",
+      "sha256": "8b489eabcdf9064b33f1b37cf5424945cc71de569a0397150b9b2eee90354a53"
+    },
+    {
+      "path": "bundle-pool/https-download.eclipse.org-eclipse-updates-4.39-R-4.39-202602260420-/org.eclipse.jface_3.39.0.v20260122-1511.jar",
+      "url": "https://download.eclipse.org/eclipse/updates/4.39/R-4.39-202602260420/plugins/org.eclipse.jface_3.39.0.v20260122-1511.jar",
+      "sha256": "23dd594da8e64cbffc30c6807ec55c9b53c3b36754d9a676e5ecc336ffaf8a1f"
+    },
+    {
+      "path": "bundle-pool/https-download.eclipse.org-eclipse-updates-4.39-R-4.39-202602260420-/org.eclipse.osgi_3.24.100.v20251215-1416.jar",
+      "url": "https://download.eclipse.org/eclipse/updates/4.39/R-4.39-202602260420/plugins/org.eclipse.osgi_3.24.100.v20251215-1416.jar",
+      "sha256": "d20f892030596fbc2c25da00acdbd2750f77cefd68136c33a3e279b8949867a8"
+    },
+    {
+      "path": "bundle-pool/https-download.eclipse.org-eclipse-updates-4.39-R-4.39-202602260420-/org.eclipse.text_3.14.600.v20260112-1806.jar",
+      "url": "https://download.eclipse.org/eclipse/updates/4.39/R-4.39-202602260420/plugins/org.eclipse.text_3.14.600.v20260112-1806.jar",
+      "sha256": "d675b8a603e62f43cba9c1f24becac1182b3287c033c42fb8106268da7d32d71"
+    },
+    {
+      "path": "bundle-pool/https-download.eclipse.org-eclipse-updates-4.39-R-4.39-202602260420-/org.osgi.service.cm_1.6.1.202109301733.jar",
+      "url": "https://download.eclipse.org/eclipse/updates/4.39/R-4.39-202602260420/plugins/org.osgi.service.cm_1.6.1.202109301733.jar",
+      "sha256": "529da7b6806af4d788acc0aef0079c9c920f6cb1d2679c8f392ca552fb2e1d35"
+    },
+    {
+      "path": "bundle-pool/https-download.eclipse.org-eclipse-updates-4.39-R-4.39-202602260420-/org.osgi.service.component_1.5.1.202212101352.jar",
+      "url": "https://download.eclipse.org/eclipse/updates/4.39/R-4.39-202602260420/plugins/org.osgi.service.component_1.5.1.202212101352.jar",
+      "sha256": "0653852deab5c6f6e9c84e3aa8f72e72b9ce7dfaf7a6431f3d80f6f9d7a433ad"
+    },
+    {
+      "path": "bundle-pool/https-download.eclipse.org-eclipse-updates-4.39-R-4.39-202602260420-/org.osgi.service.event_1.4.1.202109301733.jar",
+      "url": "https://download.eclipse.org/eclipse/updates/4.39/R-4.39-202602260420/plugins/org.osgi.service.event_1.4.1.202109301733.jar",
+      "sha256": "9f11c68980dbd931850f3f27fc7c35e1d710ecc728fe872bd6d786cd7e4b7b5e"
+    },
+    {
+      "path": "bundle-pool/https-download.eclipse.org-eclipse-updates-4.39-R-4.39-202602260420-/org.osgi.service.metatype_1.4.1.202109301733.jar",
+      "url": "https://download.eclipse.org/eclipse/updates/4.39/R-4.39-202602260420/plugins/org.osgi.service.metatype_1.4.1.202109301733.jar",
+      "sha256": "83d9cc2b62500d2e438be91c157659c2d693a262cfd14eb9b916286ca627ed00"
+    },
+    {
+      "path": "bundle-pool/https-download.eclipse.org-eclipse-updates-4.39-R-4.39-202602260420-/org.osgi.service.prefs_1.1.2.202109301733.jar",
+      "url": "https://download.eclipse.org/eclipse/updates/4.39/R-4.39-202602260420/plugins/org.osgi.service.prefs_1.1.2.202109301733.jar",
+      "sha256": "43c7c870710e363405d422da653cce0d798a4537f76e4930f79bceadd3a55345"
+    },
+    {
+      "path": "bundle-pool/https-download.eclipse.org-eclipse-updates-4.39-R-4.39-202602260420-/org.osgi.util.function_1.2.0.202109301733.jar",
+      "url": "https://download.eclipse.org/eclipse/updates/4.39/R-4.39-202602260420/plugins/org.osgi.util.function_1.2.0.202109301733.jar",
+      "sha256": "208819c7c71690c15a6bb8b187474e7f9d0147946b680182a62b9f222ae014ec"
+    },
+    {
+      "path": "bundle-pool/https-download.eclipse.org-eclipse-updates-4.39-R-4.39-202602260420-/org.osgi.util.promise_1.3.0.202212101352.jar",
+      "url": "https://download.eclipse.org/eclipse/updates/4.39/R-4.39-202602260420/plugins/org.osgi.util.promise_1.3.0.202212101352.jar",
+      "sha256": "7053c57e7d7d88fec6b90979a3af125e1d2bb847268a328a2f1ed65ad0a4c185"
+    },
+    {
+      "path": "bundle-pool/https-groovy.jfrog.io-artifactory-plugin--ldtmrg6m1JSts76B3o3M0Q---groovy-eclipse-integration-6.1.0-e4.39-/org.codehaus.groovy.eclipse.codebrowsing_6.1.0.v202603311431-e2603.jar",
+      "url": "https://groovy.jfrog.io/artifactory/plugins-release/org/codehaus/groovy/groovy-eclipse-integration/6.1.0/e4.39/plugins/org.codehaus.groovy.eclipse.codebrowsing_6.1.0.v202603311431-e2603.jar",
+      "sha256": "9d3b88594d5dcd1b4aac206a2eddce58f0644f6a9c5e73e53b3ebf8dc2023ad2"
+    },
+    {
+      "path": "bundle-pool/https-groovy.jfrog.io-artifactory-plugin--ldtmrg6m1JSts76B3o3M0Q---groovy-eclipse-integration-6.1.0-e4.39-/org.codehaus.groovy.eclipse.compilerResolver_6.1.0.v202603311431-e2603.jar",
+      "url": "https://groovy.jfrog.io/artifactory/plugins-release/org/codehaus/groovy/groovy-eclipse-integration/6.1.0/e4.39/plugins/org.codehaus.groovy.eclipse.compilerResolver_6.1.0.v202603311431-e2603.jar",
+      "sha256": "42a519ff3a8549da90eb9b63c8c60673e4880aaba5b2b68bb5a32205f9818f5a"
+    },
+    {
+      "path": "bundle-pool/https-groovy.jfrog.io-artifactory-plugin--ldtmrg6m1JSts76B3o3M0Q---groovy-eclipse-integration-6.1.0-e4.39-/org.codehaus.groovy.eclipse.core_6.1.0.v202603311431-e2603.jar",
+      "url": "https://groovy.jfrog.io/artifactory/plugins-release/org/codehaus/groovy/groovy-eclipse-integration/6.1.0/e4.39/plugins/org.codehaus.groovy.eclipse.core_6.1.0.v202603311431-e2603.jar",
+      "sha256": "9d44ac668967941dbe35864720f4737e4b3f58acbca4b7bcc790ce59d510bd97"
+    },
+    {
+      "path": "bundle-pool/https-groovy.jfrog.io-artifactory-plugin--ldtmrg6m1JSts76B3o3M0Q---groovy-eclipse-integration-6.1.0-e4.39-/org.codehaus.groovy.eclipse.refactoring_6.1.0.v202603311431-e2603.jar",
+      "url": "https://groovy.jfrog.io/artifactory/plugins-release/org/codehaus/groovy/groovy-eclipse-integration/6.1.0/e4.39/plugins/org.codehaus.groovy.eclipse.refactoring_6.1.0.v202603311431-e2603.jar",
+      "sha256": "b0099db296eecb5071224af9cae024e084cdd9ee2b48d2bd1cdbde0bab4e1e47"
+    },
+    {
+      "path": "bundle-pool/https-groovy.jfrog.io-artifactory-plugin--ldtmrg6m1JSts76B3o3M0Q---groovy-eclipse-integration-6.1.0-e4.39-/org.codehaus.groovy_5.0.5.v202603311431-e2603.jar",
+      "url": "https://groovy.jfrog.io/artifactory/plugins-release/org/codehaus/groovy/groovy-eclipse-integration/6.1.0/e4.39/plugins/org.codehaus.groovy_5.0.5.v202603311431-e2603.jar",
+      "sha256": "31fd00db325778e978c96d0145afe2d5e785a06104007ef08b9cd595e217e235"
+    },
+    {
+      "path": "bundle-pool/https-groovy.jfrog.io-artifactory-plugin--ldtmrg6m1JSts76B3o3M0Q---groovy-eclipse-integration-6.1.0-e4.39-/org.eclipse.jdt.core.compiler.batch_3.45.0.v202603311431-e2603.jar",
+      "url": "https://groovy.jfrog.io/artifactory/plugins-release/org/codehaus/groovy/groovy-eclipse-integration/6.1.0/e4.39/plugins/org.eclipse.jdt.core.compiler.batch_3.45.0.v202603311431-e2603.jar",
+      "sha256": "4d4d91cfd04b2ddd285e3f99eb5971104eea43461b2d86769ca9505ab3144fac"
+    },
+    {
+      "path": "bundle-pool/https-groovy.jfrog.io-artifactory-plugin--ldtmrg6m1JSts76B3o3M0Q---groovy-eclipse-integration-6.1.0-e4.39-/org.eclipse.jdt.core_3.45.0.v202603311431-e2603.jar",
+      "url": "https://groovy.jfrog.io/artifactory/plugins-release/org/codehaus/groovy/groovy-eclipse-integration/6.1.0/e4.39/plugins/org.eclipse.jdt.core_3.45.0.v202603311431-e2603.jar",
+      "sha256": "820ec05e6d6bccf4a64debae30fa3bb9277f1ec53d1e7b3fd61d2a243e54ca23"
+    },
+    {
+      "path": "bundle-pool/https-groovy.jfrog.io-artifactory-plugin--ldtmrg6m1JSts76B3o3M0Q---groovy-eclipse-integration-6.1.0-e4.39-/org.eclipse.jdt.groovy.core_6.1.0.v202603311431-e2603.jar",
+      "url": "https://groovy.jfrog.io/artifactory/plugins-release/org/codehaus/groovy/groovy-eclipse-integration/6.1.0/e4.39/plugins/org.eclipse.jdt.groovy.core_6.1.0.v202603311431-e2603.jar",
+      "sha256": "e3931f282e12abac2d977826a54576cc38e7da9989a5654f92e26becb0bbddd0"
+    },
+    {
+      "path": "nested-jars/org.codehaus.groovy_5.0.5.v202603311431-e2603.jar__eclipse-trace.jar__9jwim-bCQW2ug1N3A7R-bQ--.jar",
+      "parent": "bundle-pool/https-groovy.jfrog.io-artifactory-plugin--ldtmrg6m1JSts76B3o3M0Q---groovy-eclipse-integration-6.1.0-e4.39-/org.codehaus.groovy_5.0.5.v202603311431-e2603.jar",
+      "member": "eclipse-trace.jar",
+      "sha256": "d4d962df2eba01faff9c3a6dce359f37aed1bdcc941cbbc544fb74e58d17faf5"
+    },
+    {
+      "path": "nested-jars/org.codehaus.groovy_5.0.5.v202603311431-e2603.jar__groovy-5.0.5.jar__umgZxm6iIq-JLyHgBOjFWg--.jar",
+      "parent": "bundle-pool/https-groovy.jfrog.io-artifactory-plugin--ldtmrg6m1JSts76B3o3M0Q---groovy-eclipse-integration-6.1.0-e4.39-/org.codehaus.groovy_5.0.5.v202603311431-e2603.jar",
+      "member": "lib/groovy-5.0.5.jar",
+      "sha256": "e6f72d7157aad57d2cac5432dade4f81986e3f733c042180131d91b3f28bed80"
+    },
+    {
+      "path": "nested-jars/org.codehaus.groovy_5.0.5.v202603311431-e2603.jar__groovy-eclipse.jar__ijcGPfx52dxCfHfH-hUKvg--.jar",
+      "parent": "bundle-pool/https-groovy.jfrog.io-artifactory-plugin--ldtmrg6m1JSts76B3o3M0Q---groovy-eclipse-integration-6.1.0-e4.39-/org.codehaus.groovy_5.0.5.v202603311431-e2603.jar",
+      "member": "groovy-eclipse.jar",
+      "sha256": "5ef5ad97d3b7550dab544eea5d0572ee0b4808ab71a6c0b368385c7dc769a21b"
+    },
+    {
+      "path": "nested-jars/org.codehaus.groovy_5.0.5.v202603311431-e2603.jar__groovy-parser2.jar__eV7mFjZ8paqoj0hcbKMr3Q--.jar",
+      "parent": "bundle-pool/https-groovy.jfrog.io-artifactory-plugin--ldtmrg6m1JSts76B3o3M0Q---groovy-eclipse-integration-6.1.0-e4.39-/org.codehaus.groovy_5.0.5.v202603311431-e2603.jar",
+      "member": "groovy-parser2.jar",
+      "sha256": "034ee13904e70f7dc705519af9be085e814d513f1e23f128e4e2e0554983c098"
+    },
+    {
+      "path": "nested-jars/org.codehaus.groovy_5.0.5.v202603311431-e2603.jar__groovy-test-5.0.5.jar__UXnMjUBQPGhTB4A8zh4xqw--.jar",
+      "parent": "bundle-pool/https-groovy.jfrog.io-artifactory-plugin--ldtmrg6m1JSts76B3o3M0Q---groovy-eclipse-integration-6.1.0-e4.39-/org.codehaus.groovy_5.0.5.v202603311431-e2603.jar",
+      "member": "lib/groovy-test-5.0.5.jar",
+      "sha256": "514221e55761e705e1f2a4755fbd348afde07ae9d33f17f42a73dd895dd05f44"
+    },
+    {
+      "path": "nested-jars/org.codehaus.groovy_5.0.5.v202603311431-e2603.jar__ivy-2.5.3.jar__tNCfGaqQOQMI5Q3bxJ+SJw--.jar",
+      "parent": "bundle-pool/https-groovy.jfrog.io-artifactory-plugin--ldtmrg6m1JSts76B3o3M0Q---groovy-eclipse-integration-6.1.0-e4.39-/org.codehaus.groovy_5.0.5.v202603311431-e2603.jar",
+      "member": "lib/ivy-2.5.3.jar",
+      "sha256": "9502aa5aabf0b1484924a13ef4b5d24f121f7f91aab6768f11cc9d0906c0803b"
+    }
+  ]
+}

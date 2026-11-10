@@ -103,3 +103,32 @@ def previous = tasks.named('spotlessCheck')
 	previous = task
 }
 tasks.named('check') { dependsOn previous, tasks.named('buildHealth'), tasks.named('spotlessCheck') }
+
+gradle.taskGraph.whenReady { graph ->
+	if (graph.hasTask(tasks.named('check').get())) {
+		[
+			'spotlessJavaCheck',
+			'spotlessGroovyGradleCheck',
+			'compileBenchmarkCoreJava',
+			'compileTestJava',
+			'checkstyleBenchmarkCore',
+			'checkstyleTest',
+			'buildHealth',
+			'discoverProviders',
+			'pythonLint',
+			'pythonTypes',
+			'test',
+			'pythonTests',
+			'repoPolicy',
+			'commentBan',
+			'exceptionsAudit',
+			'selfTest',
+			'checkReport'
+		].each { name ->
+			def required = tasks.named(name).get()
+			if (!required.enabled || !graph.hasTask(required)) {
+				throw new GradleException('S1: required validator disabled or absent: ' + name)
+			}
+		}
+	}
+}

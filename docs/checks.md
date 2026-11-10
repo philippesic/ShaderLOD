@@ -1,6 +1,6 @@
 # Checks
 
-`./check` verifies the pinned tools and invokes `./gradlew --no-daemon check`. Gradle owns every lane. Formatting is read-only against authored files; formatter controls are generated in disposable directories. Java compiler tasks enable Error Prone explicitly, including tests. No source exclusions, ignored failures or blanket suppressions are configured. Default Error Prone checks and javac warnings remain enabled; UnusedVariable is promoted to error. Checkstyle enables UnusedImports; Ruff enables F401; mypy runs strict.
+`./check` verifies the pinned tools and invokes `./gradlew --no-daemon check`. Gradle owns every lane and asserts that every required validator is present and enabled in the check graph. Formatting is read-only against authored files; formatter controls are generated in disposable directories. Java compiler tasks enable Error Prone explicitly, including tests. No source exclusions, ignored failures or blanket suppressions are configured. Test-only relaxations are disabled. Default Error Prone checks and javac warnings remain enabled; UnusedVariable is promoted to error. Checkstyle enables UnusedImports; Ruff enables F401; mypy runs strict.
 
 | ID | Validator and invariant |
 |---|---|
@@ -33,7 +33,7 @@
 
 The root manifest classifies contract roots and is used for bounded source reachability. ArchUnit checks compiled main, benchmarkCore and devClient outputs. This is a scoped guardrail rather than a whole-program proof of reflection behavior. New reflection/mixin roots must be declared. Descriptors are discovered by filename and explicit ID without a shared catalog edit.
 
-Code scanners distinguish literals from comments. Markdown documentation and structured JSON specimen data are prose/data, not executable comments. Unknown authored source extensions fail until supported. Required wrapper attribution and each executable shebang are exact exceptions. There is no general vendor exemption.
+Code scanners distinguish literals from comments. Markdown documentation and structured JSON specimen data are prose/data, not executable comments. Unknown authored source extensions fail until supported. Groovy-Eclipse P2 bundles and nested JARs are hash-verified before loading. Required wrapper attribution and each executable shebang are exact exceptions. There is no general vendor exemption.
 
 The check emits per-step rule and test/file counts and the complete self-test table under `build/reports/foundation/`. Historical FINDINGS evidence is frozen by checksum; local handoff verifies those external bytes separately. CI validates the references' shape and does not pretend to fetch host-private evidence.
 

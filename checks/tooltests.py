@@ -197,8 +197,39 @@ class ToolsTest {
     return results
 
 
+def graph_pair(root: Path) -> dict[str, object]:
+    from checks.policy import files
+
+    with tempfile.TemporaryDirectory(prefix="shaderlod-graph-specimen-") as temp:
+        work = Path(temp)
+        for name, data in files(root).items():
+            target = work / name
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(data)
+        init = work / "disable.gradle"
+        init.write_text(
+            "gradle.projectsEvaluated { rootProject.tasks.named('repoPolicy').get().enabled = false }\n"
+        )
+        prefix = [
+            str(root / "gradlew"),
+            "--no-daemon",
+            "-p",
+            str(work),
+            "--dry-run",
+            "check",
+        ]
+        demand(run(prefix, work), True, "", "S1")
+        result = run([*prefix, "--init-script", str(init)], work)
+        demand(
+            result, False, "S1: required validator disabled or absent: repoPolicy", "S1"
+        )
+        (root / "build/reports/foundation/S1-graph.txt").write_text(result.stdout)
+    return {"bad": "S1", "control": "PASS", "bad_count": 1, "control_count": 1}
+
+
 def main(root: Path) -> dict[str, dict[str, object]]:
     results = python_pairs(root)
+    results["S1"] = graph_pair(root)
     results.update(java_pairs(root))
     (root / "build/reports/foundation/tool-self-tests.json").write_text(
         json.dumps(results, indent=2) + "\n"
