@@ -1,0 +1,1128 @@
+{
+  "D1": [
+    {
+      "name": "synthetic-live",
+      "engine": "contract",
+      "bad": {
+        "action": "receipt",
+        "level": "live-functional"
+      },
+      "control": {
+        "action": "receipt",
+        "level": "cpu-synthetic"
+      }
+    },
+    {
+      "name": "runtime-refusal",
+      "engine": "contract",
+      "bad": {
+        "action": "runtime",
+        "exit": 0
+      },
+      "control": {
+        "action": "runtime",
+        "exit": 2
+      }
+    }
+  ],
+  "D2": [
+    {
+      "name": "duplicate-id",
+      "engine": "policy",
+      "bad": {
+        "files": {
+          "src/main/java/a/OnePackSpec.java": "class OnePackSpec { static String ID = \"one\"; }",
+          "src/main/java/b/TwoPackSpec.java": "class TwoPackSpec { static String ID = \"one\"; }"
+        }
+      },
+      "control": {
+        "files": {
+          "src/main/java/a/OnePackSpec.java": "class OnePackSpec { static String ID = \"one\"; }",
+          "src/main/java/b/TwoPackSpec.java": "class TwoPackSpec { static String ID = \"two\"; }"
+        }
+      }
+    },
+    {
+      "name": "pack-branch",
+      "engine": "policy",
+      "bad": {
+        "files": {
+          "src/main/java/a/OnePackSpec.java": "class OnePackSpec { static String ID = \"one\"; }",
+          "src/main/java/engine/Select.java": "class Select { boolean match(String pack) { return pack.equals(\"one\"); } }"
+        }
+      },
+      "control": {
+        "files": {
+          "src/main/java/a/OnePackSpec.java": "class OnePackSpec { static String ID = \"one\"; }"
+        }
+      }
+    },
+    {
+      "name": "provider-import",
+      "engine": "bytecode",
+      "bad": {
+        "java": "d2Providers"
+      },
+      "control": {
+        "java": "d2Providers"
+      }
+    }
+  ],
+  "D3": [
+    {
+      "name": "provider-write",
+      "engine": "policy",
+      "bad": {
+        "files": {
+          "python/provider.py": "from pathlib import Path\nPath(\"summary.json\").write_text(\"data\")\n"
+        }
+      },
+      "control": {
+        "files": {
+          "python/provider.py": "def record() -> dict[str, int]:\n    return {\"value\": 1}\n"
+        }
+      }
+    },
+    {
+      "name": "reporter-write",
+      "engine": "policy",
+      "bad": {
+        "files": {
+          "python/reporter.py": "from pathlib import Path\nPath(\"capture.json\").write_text(\"data\")\n"
+        }
+      },
+      "control": {
+        "files": {
+          "python/reporter.py": "from pathlib import Path\ndef read(p: Path) -> str:\n    return p.read_text()\n"
+        }
+      }
+    },
+    {
+      "name": "exclusive-publisher",
+      "engine": "contract",
+      "bad": {
+        "action": "publish",
+        "duplicate": true
+      },
+      "control": {
+        "action": "publish",
+        "duplicate": false
+      }
+    },
+    {
+      "name": "java-writer",
+      "engine": "bytecode",
+      "bad": {
+        "java": "d3Writer"
+      },
+      "control": {
+        "java": "d3Writer"
+      }
+    }
+  ],
+  "D4": [
+    {
+      "name": "orphan",
+      "engine": "policy",
+      "bad": {
+        "files": {
+          "src/main/java/Orphan.java": "class Orphan {}"
+        }
+      },
+      "control": {
+        "files": {
+          "src/main/java/MixinCallback.java": "class MixinCallback {}",
+          "checks/entrypoints.json": "[\"src/main/java/MixinCallback.java\"]"
+        }
+      }
+    },
+    {
+      "name": "unused-import",
+      "engine": "tool",
+      "bad": {
+        "tool": "T-CS"
+      },
+      "control": {
+        "tool": "T-CS"
+      }
+    },
+    {
+      "name": "unused-dependency",
+      "engine": "tool",
+      "bad": {
+        "tool": "T-DEP"
+      },
+      "control": {
+        "tool": "T-DEP"
+      }
+    }
+  ],
+  "D5": [
+    {
+      "name": "missing-is-not-zero",
+      "engine": "contract",
+      "bad": {
+        "action": "sample",
+        "data": {
+          "kind": "missing",
+          "value": 0,
+          "count": 0
+        }
+      },
+      "control": {
+        "action": "sample",
+        "data": {
+          "kind": "measured",
+          "value": 0,
+          "count": 1
+        }
+      }
+    },
+    {
+      "name": "unknown-health",
+      "engine": "contract",
+      "bad": {
+        "action": "health",
+        "health": "UNKNOWN"
+      },
+      "control": {
+        "action": "health",
+        "health": "PASS"
+      }
+    },
+    {
+      "name": "unscheduled",
+      "engine": "contract",
+      "bad": {
+        "action": "sample",
+        "data": {
+          "kind": "missing",
+          "reason": ""
+        }
+      },
+      "control": {
+        "action": "sample",
+        "data": {
+          "kind": "missing",
+          "reason": "unscheduled"
+        }
+      }
+    }
+  ],
+  "D6a": [
+    {
+      "name": "broad-catch",
+      "engine": "policy",
+      "bad": {
+        "files": {
+          "readiness.py": "try:\n    value = 1\nexcept Exception:\n    pass\n"
+        }
+      },
+      "control": {
+        "files": {
+          "adapter.py": "def probe() -> str:\n    try:\n        return \"ready\"\n    except Exception:\n        return \"unavailable\"\n"
+        },
+        "entries": [
+          {
+            "rule": "D6a",
+            "path": "adapter.py",
+            "kind": "adapter",
+            "token": "except Exception:\n        return \"unavailable\"",
+            "sha256": "78526ce40474b36a9cad10a6eead7eea267910aabcc77c090046281c6442498b",
+            "reason": "Exact test adapter or required notice",
+            "review": true,
+            "owner": "Philip",
+            "decision": "docs/decisions/comment-ban.md",
+            "expires": "2027-11-09"
+          }
+        ]
+      }
+    },
+    {
+      "name": "java-broad-catch",
+      "engine": "policy",
+      "bad": {
+        "files": {
+          "src/main/java/Readiness.java": "class Readiness { void x() { try {} catch(Exception e) {} } }",
+          "checks/entrypoints.json": "[\"src/main/java/Readiness.java\"]"
+        }
+      },
+      "control": {
+        "files": {
+          "src/main/java/Readiness.java": "class Readiness { void x() {} }",
+          "checks/entrypoints.json": "[\"src/main/java/Readiness.java\"]"
+        }
+      }
+    }
+  ],
+  "D6b": [
+    {
+      "name": "python-settings",
+      "engine": "policy",
+      "bad": {
+        "files": {
+          "timer.py": "import os\nx = os.getenv(\"HOME\")\n"
+        }
+      },
+      "control": {
+        "files": {
+          "checks/bootstrap.py": "import os\nx = os.getenv(\"HOME\")\n"
+        }
+      }
+    },
+    {
+      "name": "java-settings",
+      "engine": "bytecode",
+      "bad": {
+        "java": "d6bSettings"
+      },
+      "control": {
+        "java": "d6bSettings"
+      }
+    }
+  ],
+  "D6c": [
+    {
+      "name": "java-gpu",
+      "engine": "bytecode",
+      "bad": {
+        "java": "d6cGpu"
+      },
+      "control": {
+        "java": "d6cGpu"
+      }
+    }
+  ],
+  "D6d": [
+    {
+      "name": "report-launcher",
+      "engine": "policy",
+      "bad": {
+        "files": {
+          "report.py": "import subprocess\nsubprocess.run([\"minecraft\"])\n"
+        }
+      },
+      "control": {
+        "files": {
+          "helper.py": "def helper(value: int) -> int:\n    return value\n"
+        }
+      }
+    },
+    {
+      "name": "parse-options",
+      "engine": "policy",
+      "bad": {
+        "files": {
+          "report.py": "from argparse import ArgumentParser\nparser = ArgumentParser()\n"
+        }
+      },
+      "control": {
+        "files": {
+          "helper.py": "def helper() -> str:\n    return \"ready\"\n"
+        }
+      }
+    }
+  ],
+  "D7": [
+    {
+      "name": "wildcard",
+      "engine": "policy",
+      "bad": {
+        "entries": [
+          {
+            "rule": "D8",
+            "path": "*.java",
+            "kind": "directive",
+            "token": "@SuppressWarnings(\"unchecked\")",
+            "sha256": "4b9c1beb1e34646ff86013313d304312103e4edd99f962c4b26ead47d3890013",
+            "reason": "Exact test adapter or required notice",
+            "review": true,
+            "owner": "Philip",
+            "decision": "docs/decisions/comment-ban.md",
+            "expires": "2027-11-09"
+          }
+        ]
+      },
+      "control": {
+        "entries": [
+          {
+            "rule": "D8",
+            "path": "Probe.java",
+            "kind": "directive",
+            "token": "@SuppressWarnings(\"unchecked\")",
+            "sha256": "4b9c1beb1e34646ff86013313d304312103e4edd99f962c4b26ead47d3890013",
+            "reason": "Exact test adapter or required notice",
+            "review": true,
+            "owner": "Philip",
+            "decision": "docs/decisions/comment-ban.md",
+            "expires": "2027-11-09"
+          }
+        ]
+      }
+    },
+    {
+      "name": "missing-reason",
+      "engine": "policy",
+      "bad": {
+        "entries": [
+          {
+            "rule": "D8",
+            "path": "Probe.java",
+            "kind": "directive",
+            "token": "@SuppressWarnings(\"unchecked\")",
+            "sha256": "4b9c1beb1e34646ff86013313d304312103e4edd99f962c4b26ead47d3890013",
+            "reason": "",
+            "review": true,
+            "owner": "Philip",
+            "decision": "docs/decisions/comment-ban.md",
+            "expires": "2027-11-09"
+          }
+        ]
+      },
+      "control": {
+        "entries": [
+          {
+            "rule": "D8",
+            "path": "Probe.java",
+            "kind": "directive",
+            "token": "@SuppressWarnings(\"unchecked\")",
+            "sha256": "4b9c1beb1e34646ff86013313d304312103e4edd99f962c4b26ead47d3890013",
+            "reason": "Exact test adapter or required notice",
+            "review": true,
+            "owner": "Philip",
+            "decision": "docs/decisions/comment-ban.md",
+            "expires": "2027-11-09"
+          }
+        ]
+      }
+    },
+    {
+      "name": "expired",
+      "engine": "policy",
+      "bad": {
+        "entries": [
+          {
+            "rule": "D8",
+            "path": "Probe.java",
+            "kind": "directive",
+            "token": "@SuppressWarnings(\"unchecked\")",
+            "sha256": "4b9c1beb1e34646ff86013313d304312103e4edd99f962c4b26ead47d3890013",
+            "reason": "Exact test adapter or required notice",
+            "review": true,
+            "owner": "Philip",
+            "decision": "docs/decisions/comment-ban.md",
+            "expires": "2000-01-01"
+          }
+        ]
+      },
+      "control": {
+        "entries": [
+          {
+            "rule": "D8",
+            "path": "Probe.java",
+            "kind": "directive",
+            "token": "@SuppressWarnings(\"unchecked\")",
+            "sha256": "4b9c1beb1e34646ff86013313d304312103e4edd99f962c4b26ead47d3890013",
+            "reason": "Exact test adapter or required notice",
+            "review": true,
+            "owner": "Philip",
+            "decision": "docs/decisions/comment-ban.md",
+            "expires": "2027-11-09"
+          }
+        ]
+      }
+    },
+    {
+      "name": "unlisted-suppression",
+      "engine": "policy",
+      "bad": {
+        "files": {
+          "Probe.java": "@SuppressWarnings(\"unchecked\") class Probe {}"
+        }
+      },
+      "control": {
+        "files": {
+          "Probe.java": "@SuppressWarnings(\"unchecked\") class Probe {}"
+        },
+        "entries": [
+          {
+            "rule": "D8",
+            "path": "Probe.java",
+            "kind": "directive",
+            "token": "@SuppressWarnings(\"unchecked\")",
+            "sha256": "4b9c1beb1e34646ff86013313d304312103e4edd99f962c4b26ead47d3890013",
+            "reason": "Exact test adapter or required notice",
+            "review": true,
+            "owner": "Philip",
+            "decision": "docs/decisions/comment-ban.md",
+            "expires": "2027-11-09"
+          }
+        ]
+      }
+    }
+  ],
+  "D8": [
+    {
+      "name": "line",
+      "engine": "comments",
+      "bad": {
+        "files": {
+          "Probe.java": "class Probe {} // prose"
+        }
+      },
+      "control": {
+        "files": {
+          "Probe.java": "class Probe { String url = \"https://example.com\"; }"
+        }
+      }
+    },
+    {
+      "name": "block",
+      "engine": "comments",
+      "bad": {
+        "files": {
+          "Probe.java": "/* prose */ class Probe {}"
+        }
+      },
+      "control": {
+        "files": {
+          "Probe.java": "class Probe {}"
+        }
+      }
+    },
+    {
+      "name": "javadoc",
+      "engine": "comments",
+      "bad": {
+        "files": {
+          "Probe.java": "/** prose */ class Probe {}"
+        }
+      },
+      "control": {
+        "files": {
+          "Probe.java": "class Probe {}"
+        }
+      }
+    },
+    {
+      "name": "gradle",
+      "engine": "comments",
+      "bad": {
+        "files": {
+          "build.gradle": "// prose\n"
+        }
+      },
+      "control": {
+        "files": {
+          "build.gradle": "def pattern = /https?:.*/\n"
+        }
+      }
+    },
+    {
+      "name": "shader",
+      "engine": "comments",
+      "bad": {
+        "files": {
+          "shader.glsl": "// prose\n"
+        }
+      },
+      "control": {
+        "files": {
+          "shader.glsl": "#version 330\n#define VALID 1\n"
+        }
+      }
+    },
+    {
+      "name": "docstring",
+      "engine": "comments",
+      "bad": {
+        "files": {
+          "probe.py": "\"\"\"prose\"\"\"\nx = 1\n"
+        }
+      },
+      "control": {
+        "files": {
+          "probe.py": "text = \"ordinary string\"\n"
+        }
+      }
+    },
+    {
+      "name": "suppression",
+      "engine": "comments",
+      "bad": {
+        "files": {
+          "Probe.java": "@SuppressWarnings(\"unchecked\") class Probe {}"
+        }
+      },
+      "control": {
+        "files": {
+          "Probe.java": "@SuppressWarnings(\"unchecked\") class Probe {}"
+        },
+        "entries": [
+          {
+            "rule": "D8",
+            "path": "Probe.java",
+            "kind": "directive",
+            "token": "@SuppressWarnings(\"unchecked\")",
+            "sha256": "4b9c1beb1e34646ff86013313d304312103e4edd99f962c4b26ead47d3890013",
+            "reason": "Exact test adapter or required notice",
+            "review": true,
+            "owner": "Philip",
+            "decision": "docs/decisions/comment-ban.md",
+            "expires": "2027-11-09"
+          }
+        ]
+      }
+    },
+    {
+      "name": "unicode",
+      "engine": "comments",
+      "bad": {
+        "files": {
+          "Probe.java": "\\u002f\\u002f prose\nclass Probe {}"
+        }
+      },
+      "control": {
+        "files": {
+          "Probe.java": "class Probe {}"
+        }
+      }
+    },
+    {
+      "name": "prose-exception",
+      "engine": "comments",
+      "bad": {
+        "files": {
+          "Probe.java": "// prose\nclass Probe {}"
+        },
+        "entries": [
+          {
+            "rule": "D8",
+            "path": "Probe.java",
+            "kind": "directive",
+            "token": "// prose",
+            "sha256": "cbf2b75bd7349b88b3de75fb94b08ffdb9610c9223ea13e7454e40f8038a00a5",
+            "reason": "Exact test adapter or required notice",
+            "review": true,
+            "owner": "Philip",
+            "decision": "docs/decisions/comment-ban.md",
+            "expires": "2027-11-09"
+          }
+        ]
+      },
+      "control": {
+        "files": {
+          "check": "#!/bin/sh\ntrue\n"
+        },
+        "entries": [
+          {
+            "rule": "D8",
+            "path": "check",
+            "kind": "shebang",
+            "token": "#!/bin/sh",
+            "sha256": "3af71adb278ad4af33c144b78fa1ae708da03b773d98324ae991a7daedb53ca2",
+            "reason": "Exact test adapter or required notice",
+            "review": true,
+            "owner": "Philip",
+            "decision": "docs/decisions/comment-ban.md",
+            "expires": "2027-11-09"
+          }
+        ]
+      }
+    },
+    {
+      "name": "license-exact",
+      "engine": "comments",
+      "bad": {
+        "files": {
+          "gradlew": "#\n# Copyright \u00a9 2015-2021 the original authors.\n#\n# Licensed under the Apache License, Version 2.0 (the \"License\");\n# you may not use this file except in compliance with the License.\n# You may obtain a copy of the License at\n#\n#      https://www.apache.org/licenses/LICENSE-2.0\n#\n# Unless required by applicable law or agreed to in writing, software\n# distributed under the License is distributed on an \"AS IS\" BASIS,\n# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n# See the License for the specific language governing permissions and\n# limitations under the License.\n#\n# SPDX-License-Identifier: Apache-2.0\n#\n# extra prose\n"
+        },
+        "entries": [
+          {
+            "rule": "D8",
+            "path": "gradlew",
+            "kind": "license",
+            "token": "#\n# Copyright \u00a9 2015-2021 the original authors.\n#\n# Licensed under the Apache License, Version 2.0 (the \"License\");\n# you may not use this file except in compliance with the License.\n# You may obtain a copy of the License at\n#\n#      https://www.apache.org/licenses/LICENSE-2.0\n#\n# Unless required by applicable law or agreed to in writing, software\n# distributed under the License is distributed on an \"AS IS\" BASIS,\n# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n# See the License for the specific language governing permissions and\n# limitations under the License.\n#\n# SPDX-License-Identifier: Apache-2.0\n#",
+            "sha256": "e15fc5bbdbf28dc1e99f1851a336d1cbd33abec6e2af6070f2f388ef2d04922d",
+            "reason": "Exact test adapter or required notice",
+            "review": true,
+            "owner": "Philip",
+            "decision": "docs/decisions/comment-ban.md",
+            "expires": "2027-11-09"
+          }
+        ]
+      },
+      "control": {
+        "files": {
+          "gradlew": "#\n# Copyright \u00a9 2015-2021 the original authors.\n#\n# Licensed under the Apache License, Version 2.0 (the \"License\");\n# you may not use this file except in compliance with the License.\n# You may obtain a copy of the License at\n#\n#      https://www.apache.org/licenses/LICENSE-2.0\n#\n# Unless required by applicable law or agreed to in writing, software\n# distributed under the License is distributed on an \"AS IS\" BASIS,\n# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n# See the License for the specific language governing permissions and\n# limitations under the License.\n#\n# SPDX-License-Identifier: Apache-2.0\n#\n"
+        },
+        "entries": [
+          {
+            "rule": "D8",
+            "path": "gradlew",
+            "kind": "license",
+            "token": "#\n# Copyright \u00a9 2015-2021 the original authors.\n#\n# Licensed under the Apache License, Version 2.0 (the \"License\");\n# you may not use this file except in compliance with the License.\n# You may obtain a copy of the License at\n#\n#      https://www.apache.org/licenses/LICENSE-2.0\n#\n# Unless required by applicable law or agreed to in writing, software\n# distributed under the License is distributed on an \"AS IS\" BASIS,\n# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n# See the License for the specific language governing permissions and\n# limitations under the License.\n#\n# SPDX-License-Identifier: Apache-2.0\n#",
+            "sha256": "e15fc5bbdbf28dc1e99f1851a336d1cbd33abec6e2af6070f2f388ef2d04922d",
+            "reason": "Exact test adapter or required notice",
+            "review": true,
+            "owner": "Philip",
+            "decision": "docs/decisions/comment-ban.md",
+            "expires": "2027-11-09"
+          }
+        ]
+      }
+    }
+  ],
+  "D9": [
+    {
+      "name": "missing-map-entry",
+      "engine": "policy",
+      "bad": {
+        "files": {
+          "docs/SYSTEM_MAP.md": "| `entry.py:run` | CLI | receipt | contracts | `test.py` |\n",
+          "test.py": "value = 1\n"
+        }
+      },
+      "control": {
+        "files": {
+          "docs/SYSTEM_MAP.md": "| `entry.py:run` | CLI | receipt | contracts | `test.py` |\n",
+          "test.py": "value = 1\n",
+          "entry.py": "def run() -> int:\n    return 1\n"
+        }
+      }
+    }
+  ],
+  "D10": [
+    {
+      "name": "resolved-with-prose",
+      "engine": "policy",
+      "bad": {
+        "files": {
+          "docs/decisions/fix.md": "Correction: resolved\nRemember to be careful\n"
+        }
+      },
+      "control": {
+        "files": {
+          "docs/decisions/fix.md": "Correction: resolved\nRule: D10\nTest: D10\n"
+        }
+      }
+    }
+  ],
+  "S1": [
+    {
+      "name": "ci-command",
+      "engine": "policy",
+      "bad": {
+        "files": {
+          ".github/workflows/check.yml": "- run: ./gradlew build\n"
+        }
+      },
+      "control": {
+        "files": {
+          ".github/workflows/check.yml": "- run: ./check\n"
+        }
+      }
+    },
+    {
+      "name": "disabled-validator",
+      "engine": "policy",
+      "bad": {
+        "files": {
+          "build.gradle": "test { enabled = false }\n"
+        }
+      },
+      "control": {
+        "files": {
+          "build.gradle": "test { useJUnitPlatform() }\n"
+        }
+      }
+    }
+  ],
+  "S2": [
+    {
+      "name": "missing-pair",
+      "engine": "manifest",
+      "bad": {
+        "files": {
+          "checks/self-tests.json": "{}"
+        }
+      },
+      "control": {
+        "action": "manifest"
+      }
+    },
+    {
+      "name": "zero-tests",
+      "engine": "contract",
+      "bad": {
+        "action": "counts",
+        "count": 0
+      },
+      "control": {
+        "action": "counts",
+        "count": 1
+      }
+    },
+    {
+      "name": "missing-test-registration",
+      "engine": "policy",
+      "bad": {
+        "files": {
+          "checks/tests.json": "{\"java\": [], \"python\": [\"test\"]}"
+        }
+      },
+      "control": {
+        "files": {
+          "checks/tests.json": "{\"java\": [\"checkedBytecode\", \"d3Writer\", \"d6bSettings\", \"d6cGpu\", \"d2Providers\", \"architecture\", \"measuredZero\", \"missingReason\", \"closedEnums\"], \"python\": [\"test_synthetic_round_trip\", \"test_live_refused\", \"test_measurement_contract\", \"test_health_and_evidence\", \"test_publisher_once\", \"test_discovery_no_shared_edit\"]}"
+        }
+      }
+    }
+  ],
+  "S3": [
+    {
+      "name": "size",
+      "engine": "policy",
+      "bad": {
+        "files": {
+          "AGENTS.md": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        }
+      },
+      "control": {
+        "files": {
+          "AGENTS.md": "# Rules\n"
+        }
+      }
+    },
+    {
+      "name": "nested",
+      "engine": "policy",
+      "bad": {
+        "files": {
+          "docs/AGENTS.md": "# Rules\n"
+        }
+      },
+      "control": {
+        "files": {
+          "AGENTS.md": "# Rules\n"
+        }
+      }
+    },
+    {
+      "name": "claude-extra",
+      "engine": "policy",
+      "bad": {
+        "files": {
+          "CLAUDE.md": "@AGENTS.md\nextra\n"
+        }
+      },
+      "control": {
+        "files": {
+          "CLAUDE.md": "@AGENTS.md\n"
+        }
+      }
+    }
+  ],
+  "S4": [
+    {
+      "name": "capture",
+      "engine": "policy",
+      "bad": {
+        "files": {
+          "capture.json": "{\"frames\": []}"
+        }
+      },
+      "control": {
+        "files": {
+          "tests/fixture.json": "{\"schema\": \"hand-authored-v1\", \"purpose\": \"small expected value\", \"expected\": 1}"
+        }
+      }
+    },
+    {
+      "name": "run",
+      "engine": "policy",
+      "bad": {
+        "files": {
+          "run/thing.json": "{}"
+        }
+      },
+      "control": {
+        "files": {
+          "tests/fixture.json": "{\"schema\": \"hand-authored-v1\", \"purpose\": \"small expected value\", \"expected\": 1}"
+        }
+      }
+    },
+    {
+      "name": "log",
+      "engine": "policy",
+      "bad": {
+        "files": {
+          "out.log": "raw output"
+        }
+      },
+      "control": {
+        "files": {
+          "tests/fixture.json": "{\"schema\": \"hand-authored-v1\", \"purpose\": \"small expected value\", \"expected\": 1}"
+        }
+      }
+    },
+    {
+      "name": "plan",
+      "engine": "policy",
+      "bad": {
+        "files": {
+          "PORTING_PLAN.md": "# Implementation plan\n"
+        }
+      },
+      "control": {
+        "files": {
+          "tests/fixture.json": "{\"schema\": \"hand-authored-v1\", \"purpose\": \"small expected value\", \"expected\": 1}"
+        }
+      }
+    },
+    {
+      "name": "renamed",
+      "engine": "policy",
+      "bad": {
+        "files": {
+          "innocent.json": "{\"operationId\": \"raw\"}"
+        }
+      },
+      "control": {
+        "files": {
+          "tests/fixture.json": "{\"schema\": \"hand-authored-v1\", \"purpose\": \"small expected value\", \"expected\": 1}"
+        }
+      }
+    },
+    {
+      "name": "csv-schema",
+      "engine": "policy",
+      "bad": {
+        "files": {
+          "tests/expected.csv": "key,expected\nzero,0\n"
+        }
+      },
+      "control": {
+        "files": {
+          "tests/expected.csv": "key,expected\nzero,0\n",
+          "checks/fixtures.json": "{\"tests/expected.csv\": {\"schema\": \"hand-authored-v1\", \"purpose\": \"small expected values\", \"sha256\": \"6825307ed13883450b76c065f69f62a932c12543547fed1d12deaea91c3688af\"}}"
+        }
+      }
+    }
+  ],
+  "S5": [
+    {
+      "name": "status-successor",
+      "engine": "policy",
+      "bad": {
+        "files": {
+          "docs/STATUS.md": "# Status\n"
+        }
+      },
+      "control": {
+        "files": {
+          "README.md": "# Foundation\n"
+        }
+      }
+    },
+    {
+      "name": "missing-evidence",
+      "engine": "manifest",
+      "bad": {
+        "files": {
+          "FINDINGS.md": "| F1 | claim | none |\n"
+        }
+      },
+      "control": {
+        "action": "findings"
+      }
+    }
+  ],
+  "S6": [
+    {
+      "name": "lease",
+      "engine": "policy",
+      "bad": {
+        "files": {
+          "gpu.lease": "lease"
+        }
+      },
+      "control": {
+        "files": {
+          "busy.py": "def refuse(client_running: bool) -> bool:\n    return client_running\n"
+        }
+      }
+    },
+    {
+      "name": "semaphore",
+      "engine": "policy",
+      "bad": {
+        "files": {
+          "gpu_semaphore.py": "value = 1\n"
+        }
+      },
+      "control": {
+        "files": {
+          "busy.py": "def refuse(client_running: bool) -> bool:\n    return client_running\n"
+        }
+      }
+    },
+    {
+      "name": "lock",
+      "engine": "policy",
+      "bad": {
+        "files": {
+          "gpu.lock": "lock"
+        }
+      },
+      "control": {
+        "files": {
+          "busy.py": "def refuse(client_running: bool) -> bool:\n    return client_running\n"
+        }
+      }
+    }
+  ],
+  "T-JFMT": [
+    {
+      "name": "T-JFMT",
+      "engine": "tool",
+      "bad": {
+        "tool": "T-JFMT"
+      },
+      "control": {
+        "tool": "T-JFMT"
+      }
+    }
+  ],
+  "T-GFMT": [
+    {
+      "name": "T-GFMT",
+      "engine": "tool",
+      "bad": {
+        "tool": "T-GFMT"
+      },
+      "control": {
+        "tool": "T-GFMT"
+      }
+    }
+  ],
+  "T-JTYPE": [
+    {
+      "name": "T-JTYPE",
+      "engine": "tool",
+      "bad": {
+        "tool": "T-JTYPE"
+      },
+      "control": {
+        "tool": "T-JTYPE"
+      }
+    }
+  ],
+  "T-EP": [
+    {
+      "name": "T-EP",
+      "engine": "tool",
+      "bad": {
+        "tool": "T-EP"
+      },
+      "control": {
+        "tool": "T-EP"
+      }
+    }
+  ],
+  "T-CS": [
+    {
+      "name": "T-CS",
+      "engine": "tool",
+      "bad": {
+        "tool": "T-CS"
+      },
+      "control": {
+        "tool": "T-CS"
+      }
+    }
+  ],
+  "T-JUNIT": [
+    {
+      "name": "T-JUNIT",
+      "engine": "tool",
+      "bad": {
+        "tool": "T-JUNIT"
+      },
+      "control": {
+        "tool": "T-JUNIT"
+      }
+    }
+  ],
+  "T-DEP": [
+    {
+      "name": "T-DEP",
+      "engine": "tool",
+      "bad": {
+        "tool": "T-DEP"
+      },
+      "control": {
+        "tool": "T-DEP"
+      }
+    }
+  ],
+  "T-PFMT": [
+    {
+      "name": "T-PFMT",
+      "engine": "tool",
+      "bad": {
+        "tool": "T-PFMT"
+      },
+      "control": {
+        "tool": "T-PFMT"
+      }
+    }
+  ],
+  "T-RUFF": [
+    {
+      "name": "T-RUFF",
+      "engine": "tool",
+      "bad": {
+        "tool": "T-RUFF"
+      },
+      "control": {
+        "tool": "T-RUFF"
+      }
+    }
+  ],
+  "T-MYPY": [
+    {
+      "name": "T-MYPY",
+      "engine": "tool",
+      "bad": {
+        "tool": "T-MYPY"
+      },
+      "control": {
+        "tool": "T-MYPY"
+      }
+    }
+  ],
+  "T-PYTEST": [
+    {
+      "name": "T-PYTEST",
+      "engine": "tool",
+      "bad": {
+        "tool": "T-PYTEST"
+      },
+      "control": {
+        "tool": "T-PYTEST"
+      }
+    }
+  ],
+  "T-ARCH": [
+    {
+      "name": "bytecode-boundary",
+      "engine": "bytecode",
+      "bad": {
+        "java": "architecture"
+      },
+      "control": {
+        "java": "architecture"
+      }
+    }
+  ]
+}

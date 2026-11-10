@@ -1,0 +1,62 @@
+[
+  {
+    "rule": "D8",
+    "path": "gradlew",
+    "kind": "shebang",
+    "token": "#!/bin/sh",
+    "sha256": "3af71adb278ad4af33c144b78fa1ae708da03b773d98324ae991a7daedb53ca2",
+    "reason": "Executable POSIX entry",
+    "review": true,
+    "owner": "Philip",
+    "decision": "docs/decisions/comment-ban.md",
+    "expires": "2027-11-09"
+  },
+  {
+    "rule": "D8",
+    "path": "check",
+    "kind": "shebang",
+    "token": "#!/bin/sh",
+    "sha256": "3af71adb278ad4af33c144b78fa1ae708da03b773d98324ae991a7daedb53ca2",
+    "reason": "Executable POSIX entry",
+    "review": true,
+    "owner": "Philip",
+    "decision": "docs/decisions/comment-ban.md",
+    "expires": "2027-11-09"
+  },
+  {
+    "rule": "D8",
+    "path": "verify",
+    "kind": "shebang",
+    "token": "#!/bin/sh",
+    "sha256": "3af71adb278ad4af33c144b78fa1ae708da03b773d98324ae991a7daedb53ca2",
+    "reason": "Executable POSIX entry",
+    "review": true,
+    "owner": "Philip",
+    "decision": "docs/decisions/comment-ban.md",
+    "expires": "2027-11-09"
+  },
+  {
+    "rule": "D8",
+    "path": ".githooks/pre-commit",
+    "kind": "shebang",
+    "token": "#!/bin/sh",
+    "sha256": "3af71adb278ad4af33c144b78fa1ae708da03b773d98324ae991a7daedb53ca2",
+    "reason": "Executable POSIX entry",
+    "review": true,
+    "owner": "Philip",
+    "decision": "docs/decisions/comment-ban.md",
+    "expires": "2027-11-09"
+  },
+  {
+    "rule": "D8",
+    "path": "gradlew",
+    "kind": "license",
+    "token": "#\n# Copyright \u00a9 2015-2021 the original authors.\n#\n# Licensed under the Apache License, Version 2.0 (the \"License\");\n# you may not use this file except in compliance with the License.\n# You may obtain a copy of the License at\n#\n#      https://www.apache.org/licenses/LICENSE-2.0\n#\n# Unless required by applicable law or agreed to in writing, software\n# distributed under the License is distributed on an \"AS IS\" BASIS,\n# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n# See the License for the specific language governing permissions and\n# limitations under the License.\n#\n# SPDX-License-Identifier: Apache-2.0\n#",
+    "sha256": "e15fc5bbdbf28dc1e99f1851a336d1cbd33abec6e2af6070f2f388ef2d04922d",
+    "reason": "Apache-2.0 required wrapper attribution",
+    "review": true,
+    "owner": "Philip",
+    "decision": "docs/decisions/comment-ban.md",
+    "expires": "permanent"
+  }
+]

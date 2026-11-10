@@ -1,0 +1,22 @@
+{
+  "java": [
+    "checkedBytecode",
+    "d3Writer",
+    "d6bSettings",
+    "d6cGpu",
+    "d2Providers",
+    "architecture",
+    "measuredZero",
+    "missingReason",
+    "closedEnums"
+  ],
+  "python": [
+    "test_synthetic_round_trip",
+    "test_live_refused",
+    "test_measurement_contract",
+    "test_health_and_evidence",
+    "test_publisher_once",
+    "test_discovery_no_shared_edit",
+    "test_runtime_refusal"
+  ]
+}

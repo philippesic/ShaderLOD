@@ -1,0 +1,11 @@
+/checks/ @philippesic
+/build.gradle @philippesic
+/settings.gradle @philippesic
+/gradle* @philippesic
+/dependencies/ @philippesic
+/.github/ @philippesic
+/.githooks/ @philippesic
+/check @philippesic
+/verify @philippesic
+/pyproject.toml @philippesic
+/src/test/ @philippesic

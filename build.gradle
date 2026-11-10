@@ -1,0 +1,105 @@
+buildscript { configurations.classpath { resolutionStrategy.activateDependencyLocking() } }
+plugins {
+	id 'java-library'
+	id 'net.neoforged.moddev' version '2.0.141'
+	id 'com.diffplug.spotless' version '8.11.0'
+	id 'net.ltgt.errorprone' version '5.2.0'
+	id 'com.autonomousapps.dependency-analysis' version '3.20.2'
+	id 'checkstyle'
+}
+repositories { mavenCentral() }
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+		vendor = JvmVendorSpec.ADOPTIUM
+	}
+}
+neoForge { version = '21.1.253' }
+sourceSets { benchmarkCore; devClient }
+dependencies {
+	errorprone 'com.google.errorprone:error_prone_core:2.52.0'
+	testImplementation sourceSets.benchmarkCore.output
+	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.14.1'
+	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.14.1'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.14.1'
+	testImplementation 'com.tngtech.archunit:archunit:1.5.1'
+}
+dependencyLocking { lockAllConfigurations(); lockMode = LockMode.STRICT }
+spotless {
+	java {
+		target 'src/**/*.java'
+		googleJavaFormat('2.0.0')
+	}
+	groovyGradle {
+		target '*.gradle'
+		greclipse('4.39')
+	}
+}
+checkstyle {
+	toolVersion = '14.4.0'
+	configFile = file('checks/checkstyle.xml')
+	maxWarnings = 0
+}
+tasks.withType(JavaCompile).configureEach {
+	doFirst {
+		if (!javaCompiler.get().metadata.javaRuntimeVersion.startsWith('21.0.13+9')) {
+			throw new GradleException('TOOLS: Temurin 21.0.13+9 required')
+		}
+	}
+	options.encoding = 'UTF-8'
+	options.compilerArgs += ['-Xlint:all', '-Werror']
+	options.errorprone {
+		enabled = true
+		compilingTestOnlyCode = false
+		error('UnusedVariable')
+	}
+}
+test {
+	useJUnitPlatform()
+	systemProperty 'foundation.root', projectDir.absolutePath
+	dependsOn tasks.named('benchmarkCoreClasses')
+	failOnNoDiscoveredTests = true
+}
+dependencyAnalysis { issues { all { onAny { severity('fail') } } } }
+def python = providers.environmentVariable('FOUNDATION_PYTHON').orElse('python3')
+tasks.register('discoverProviders', Exec) {
+	commandLine python.get(), '-m', 'checks.driver', 'discoverProviders'
+}
+tasks.withType(JavaCompile).configureEach { dependsOn tasks.named('discoverProviders') }
+def previous = tasks.named('spotlessCheck')
+[
+	'compileBenchmarkCoreJava',
+	'compileTestJava',
+	'checkstyleBenchmarkCore',
+	'checkstyleTest',
+	'buildHealth'
+].each { name ->
+	def next = tasks.named(name)
+	def prerequisite = previous
+	next.configure { mustRunAfter prerequisite }
+	previous = next
+}
+[
+	'pythonLint',
+	'pythonTypes',
+	'test',
+	'pythonTests',
+	'repoPolicy',
+	'commentBan',
+	'exceptionsAudit',
+	'selfTest',
+	'checkReport'
+].each { name ->
+	def prerequisite = previous
+	def task
+	if (name == 'test') {
+		task = tasks.named('test')
+	} else {
+		task = tasks.register(name, Exec) {
+			commandLine python.get(), '-m', 'checks.driver', name
+		}
+	}
+	task.configure { dependsOn prerequisite }
+	previous = task
+}
+tasks.named('check') { dependsOn previous, tasks.named('buildHealth'), tasks.named('spotlessCheck') }
