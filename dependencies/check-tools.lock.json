@@ -1,0 +1,38 @@
+{
+  "versions": {
+    "gradle": "9.2.1",
+    "moddev": "2.0.141",
+    "neoforge": "21.1.253",
+    "spotless": "8.11.0",
+    "google-java-format": "2.0.0",
+    "checkstyle": "14.4.0",
+    "errorprone": "2.52.0",
+    "errorprone-plugin": "5.2.0",
+    "archunit": "1.5.1",
+    "dependency-analysis": "3.20.2",
+    "junit": "5.14.1",
+    "python": "3.13",
+    "ruff": "0.17.4",
+    "mypy": "2.4.1",
+    "pytest": "9.2.0"
+  },
+  "wrapper": {
+    "sha256": "423cb469ccc0ecc31f0e4e1c309976198ccb734cdcbb7029d4bda0f18f57e8d9",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/v9.2.1/gradle/wrapper/gradle-wrapper.jar"
+  },
+  "distribution": {
+    "sha256": "72f44c9f8ebcb1af43838f45ee5c4aa9c5444898b3468ab3f4af7b6076c5bc3f"
+  },
+  "jdk": {
+    "version": "21.0.13+9",
+    "vendor": "Eclipse Adoptium",
+    "linux-aarch64": {
+      "sha256": "e3522e707fc7dbe2a72c30746b1e7068301a0213ecd213d4491f35a14eb55578",
+      "url": "https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.13%2B9/OpenJDK21U-jdk_aarch64_linux_hotspot_21.0.13_9.tar.gz"
+    },
+    "linux-x86_64": {
+      "sha256": "d7f5d5cf865a2902b70ff549b97586a7d3f234e016f041ab447ea740c7d66d1c",
+      "url": "https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.13%2B9/OpenJDK21U-jdk_x64_linux_hotspot_21.0.13_9.tar.gz"
+    }
+  }
+}
