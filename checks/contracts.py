@@ -22,7 +22,12 @@ class Measured:
     count: int
 
     def __post_init__(self) -> None:
-        if not math.isfinite(self.value) or self.count < 1:
+        if (
+            type(self.value) not in (int, float)
+            or type(self.count) is not int
+            or not math.isfinite(self.value)
+            or self.count < 1
+        ):
             raise ValueError("D5: invalid measurement")
 
 
@@ -38,7 +43,12 @@ class Missing:
 def decode_sample(data: dict[str, object]) -> Measured | Missing:
     if data.get("kind") == "measured" and set(data) == {"kind", "value", "count"}:
         value, count = data["value"], data["count"]
-        if isinstance(value, (int, float)) and isinstance(count, int):
+        if (
+            isinstance(value, (int, float))
+            and not isinstance(value, bool)
+            and isinstance(count, int)
+            and not isinstance(count, bool)
+        ):
             return Measured(value, count)
     if data.get("kind") == "missing" and set(data) == {"kind", "reason"}:
         reason = data["reason"]
@@ -50,8 +60,15 @@ def decode_sample(data: dict[str, object]) -> Measured | Missing:
 def receipt(evidence: str, producer: str) -> dict[str, str]:
     level = Evidence(evidence)
     if level in (Evidence.FUNCTIONAL, Evidence.PERFORMANCE):
-        raise ValueError("D1: live receipts unavailable until stage 4")
-    if producer == "synthetic" and level != Evidence.SYNTHETIC:
+        raise ValueError(
+            "D1: live receipts unavailable without runtime-owned verification"
+        )
+    allowed = {
+        "synthetic": Evidence.SYNTHETIC,
+        "source-inspector": Evidence.SOURCE,
+        "cpu-integration": Evidence.INTEGRATION,
+    }
+    if producer not in allowed or allowed[producer] != level:
         raise ValueError("D1: synthetic evidence relabeled")
     return {
         "schema": "foundation-receipt-v1",
@@ -62,7 +79,9 @@ def receipt(evidence: str, producer: str) -> dict[str, str]:
 
 def runtime_status(status: int) -> int:
     if status != 2:
-        raise ValueError("D1: runtime stub must refuse until stage 4")
+        raise ValueError(
+            "D1: runtime stub must refuse without runtime-owned verification"
+        )
     return status
 
 

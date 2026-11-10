@@ -1,0 +1,12 @@
+{
+  "schema": "shaderlod-native-control-v1",
+  "scope": "Asahi native Reimagined+DH without ShaderLOD or development instrumentation",
+  "shaderlod_mods_present": false,
+  "native_error": "composite1: Too many fragment shader texture samplers",
+  "fragment_texture_units": 16,
+  "combined_texture_units": 96,
+  "evidence_root": "/home/philip/.local/share/shaderlod-next/evidence/a9cd4efdc237c89c860edea709033c9b619e3a22618b96ae4633977dcff67046",
+  "manifest_sha256": "a9cd4efdc237c89c860edea709033c9b619e3a22618b96ae4633977dcff67046",
+  "log_sha256": "4a243c5ced1e2dfb00145b803d0a63cf38b7d7337bd5a6fde104f573f5b84dbd",
+  "limits": "Bounded negative control; no performance or successful native rendering qualification"
+}

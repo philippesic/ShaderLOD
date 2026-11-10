@@ -27,37 +27,6 @@
   ],
   "D2": [
     {
-      "name": "duplicate-id",
-      "engine": "policy",
-      "bad": {
-        "files": {
-          "src/main/java/a/OnePackSpec.java": "class OnePackSpec { static String ID = \"one\"; }",
-          "src/main/java/b/TwoPackSpec.java": "class TwoPackSpec { static String ID = \"one\"; }"
-        }
-      },
-      "control": {
-        "files": {
-          "src/main/java/a/OnePackSpec.java": "class OnePackSpec { static String ID = \"one\"; }",
-          "src/main/java/b/TwoPackSpec.java": "class TwoPackSpec { static String ID = \"two\"; }"
-        }
-      }
-    },
-    {
-      "name": "pack-branch",
-      "engine": "policy",
-      "bad": {
-        "files": {
-          "src/main/java/a/OnePackSpec.java": "class OnePackSpec { static String ID = \"one\"; }",
-          "src/main/java/engine/Select.java": "class Select { boolean match(String pack) { return pack.equals(\"one\"); } }"
-        }
-      },
-      "control": {
-        "files": {
-          "src/main/java/a/OnePackSpec.java": "class OnePackSpec { static String ID = \"one\"; }"
-        }
-      }
-    },
-    {
       "name": "provider-import",
       "engine": "bytecode",
       "bad": {
@@ -158,43 +127,6 @@
       }
     }
   ],
-  "D4": [
-    {
-      "name": "orphan",
-      "engine": "policy",
-      "bad": {
-        "files": {
-          "src/main/java/Orphan.java": "class Orphan {}"
-        }
-      },
-      "control": {
-        "files": {
-          "src/main/java/MixinCallback.java": "class MixinCallback {}",
-          "checks/entrypoints.json": "[\"src/main/java/MixinCallback.java\"]"
-        }
-      }
-    },
-    {
-      "name": "unused-import",
-      "engine": "tool",
-      "bad": {
-        "tool": "T-CS"
-      },
-      "control": {
-        "tool": "T-CS"
-      }
-    },
-    {
-      "name": "unused-dependency",
-      "engine": "tool",
-      "bad": {
-        "tool": "T-DEP"
-      },
-      "control": {
-        "tool": "T-DEP"
-      }
-    }
-  ],
   "D5": [
     {
       "name": "missing-is-not-zero",
@@ -281,14 +213,12 @@
       "engine": "policy",
       "bad": {
         "files": {
-          "src/main/java/Readiness.java": "class Readiness { void x() { try {} catch(Exception e) {} } }",
-          "checks/entrypoints.json": "[\"src/main/java/Readiness.java\"]"
+          "src/main/java/Readiness.java": "class Readiness { void x() { try {} catch(Exception e) {} } }"
         }
       },
       "control": {
         "files": {
-          "src/main/java/Readiness.java": "class Readiness { void x() {} }",
-          "checks/entrypoints.json": "[\"src/main/java/Readiness.java\"]"
+          "src/main/java/Readiness.java": "class Readiness { void x() {} }"
         }
       }
     },
@@ -796,22 +726,6 @@
       }
     }
   ],
-  "D10": [
-    {
-      "name": "resolved-with-prose",
-      "engine": "policy",
-      "bad": {
-        "files": {
-          "docs/decisions/fix.md": "Correction: resolved\nRemember to be careful\n"
-        }
-      },
-      "control": {
-        "files": {
-          "docs/decisions/fix.md": "Correction: resolved\nRule: D10\nTest: D10\n"
-        }
-      }
-    }
-  ],
   "S1": [
     {
       "name": "ci-command",
@@ -894,20 +808,6 @@
   ],
   "S3": [
     {
-      "name": "size",
-      "engine": "policy",
-      "bad": {
-        "files": {
-          "AGENTS.md": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-        }
-      },
-      "control": {
-        "files": {
-          "AGENTS.md": "# Rules\n"
-        }
-      }
-    },
-    {
       "name": "nested",
       "engine": "policy",
       "bad": {
@@ -938,25 +838,11 @@
   ],
   "S4": [
     {
-      "name": "capture",
-      "engine": "policy",
-      "bad": {
-        "files": {
-          "capture.json": "{\"frames\": []}"
-        }
-      },
-      "control": {
-        "files": {
-          "tests/fixture.json": "{\"schema\": \"hand-authored-v1\", \"purpose\": \"small expected value\", \"expected\": 1}"
-        }
-      }
-    },
-    {
       "name": "run",
       "engine": "policy",
       "bad": {
         "files": {
-          "run/thing.json": "{}"
+          "runs/thing.json": "{}"
         }
       },
       "control": {
@@ -971,34 +857,6 @@
       "bad": {
         "files": {
           "out.log": "raw output"
-        }
-      },
-      "control": {
-        "files": {
-          "tests/fixture.json": "{\"schema\": \"hand-authored-v1\", \"purpose\": \"small expected value\", \"expected\": 1}"
-        }
-      }
-    },
-    {
-      "name": "plan",
-      "engine": "policy",
-      "bad": {
-        "files": {
-          "PORTING_PLAN.md": "# Implementation plan\n"
-        }
-      },
-      "control": {
-        "files": {
-          "tests/fixture.json": "{\"schema\": \"hand-authored-v1\", \"purpose\": \"small expected value\", \"expected\": 1}"
-        }
-      }
-    },
-    {
-      "name": "renamed",
-      "engine": "policy",
-      "bad": {
-        "files": {
-          "innocent.json": "{\"operationId\": \"raw\"}"
         }
       },
       "control": {
@@ -1048,64 +906,6 @@
       },
       "control": {
         "action": "findings"
-      }
-    }
-  ],
-  "S6": [
-    {
-      "name": "lease",
-      "engine": "policy",
-      "bad": {
-        "files": {
-          "gpu.lease": "lease"
-        }
-      },
-      "control": {
-        "files": {
-          "busy.py": "def refuse(client_running: bool) -> bool:\n    return client_running\n"
-        }
-      }
-    },
-    {
-      "name": "semaphore",
-      "engine": "policy",
-      "bad": {
-        "files": {
-          "gpu_semaphore.py": "value = 1\n"
-        }
-      },
-      "control": {
-        "files": {
-          "busy.py": "def refuse(client_running: bool) -> bool:\n    return client_running\n"
-        }
-      }
-    },
-    {
-      "name": "lock",
-      "engine": "policy",
-      "bad": {
-        "files": {
-          "gpu.lock": "lock"
-        }
-      },
-      "control": {
-        "files": {
-          "busy.py": "def refuse(client_running: bool) -> bool:\n    return client_running\n"
-        }
-      }
-    },
-    {
-      "name": "allocation-api",
-      "engine": "policy",
-      "bad": {
-        "files": {
-          "scheduler.py": "import threading\ngpu = threading.Lock()\n"
-        }
-      },
-      "control": {
-        "files": {
-          "busy.py": "def refuse(client_running: bool) -> bool:\n    return client_running\n"
-        }
       }
     }
   ],

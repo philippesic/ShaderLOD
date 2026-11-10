@@ -87,6 +87,14 @@ def lexical(text: str, language: str) -> list[str]:
 
 
 def scan(path: str, text: str, entries: list[dict[str, object]]) -> list[str]:
+    if "/META-INF/services/" in path:
+        lines = text.splitlines()
+        if not lines or any(
+            re.fullmatch(r"[A-Za-z_$][\w$]*(?:\.[A-Za-z_$][\w$]*)+", line) is None
+            for line in lines
+        ):
+            return [f"D8: invalid service provider declaration {path}"]
+        return []
     suffix = Path(path).suffix
     language = {
         ".java": "java",
@@ -124,6 +132,19 @@ def scan(path: str, text: str, entries: list[dict[str, object]]) -> list[str]:
         ):
             return []
         return [f"D8: unknown authored language {path}"]
+    directive_comments: list[str] = []
+    if path.endswith("shaders.properties"):
+        for line in text.splitlines():
+            if re.match(
+                r"^\s*#(?:if|ifdef|ifndef|else|elif|endif|define|undef|include|version|extension)\b",
+                line,
+            ):
+                directive_comments.extend(lexical(line, "shader"))
+        text = re.sub(
+            r"(?m)^\s*#(?:if|ifdef|ifndef|else|elif|endif|define|undef|include|version|extension)\b[^\n]*",
+            "",
+            text,
+        )
     allowed = [e for e in entries if e["path"] == path and e["rule"] == "D8"]
     remaining = text
     for e in allowed:
@@ -154,5 +175,8 @@ def scan(path: str, text: str, entries: list[dict[str, object]]) -> list[str]:
         if remaining.count(token) != 1:
             return [f"D8: exception site absent or repeated {path}"]
         remaining = remaining.replace(token, "", 1)
-    errors = [f"D8: comment in {path}: {c[:60]}" for c in lexical(remaining, language)]
+    errors = [
+        f"D8: comment in {path}: {c[:60]}"
+        for c in [*lexical(remaining, language), *directive_comments]
+    ]
     return errors

@@ -1,0 +1,22 @@
+if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('linux') && System.getProperty('os.arch') in ['aarch64', 'arm64']) {
+	dependencies.components.withModule('net.neoforged:minecraft-dependencies') { details ->
+		details.withVariant('clientLinuxNatives') { variant ->
+			variant.withDependencies { dependencies -> dependencies.removeAll { it.group == 'org.lwjgl' } }
+		}
+	}
+	def natives = file('dependencies/runtime/linux-arm64/natives')
+	def pins = new groovy.json.JsonSlurper().parse(file('dependencies/linux-arm64-runtime.lock.json'))
+	neoForge.runs.configureEach {
+		jvmArgument "-Dorg.lwjgl.librarypath=${natives.absolutePath}"
+	}
+	tasks.matching { it.name in ['runClient', 'runDevelopment'] }.configureEach {
+		doFirst {
+			pins.libraries.each { name, expected ->
+				def library = new File(natives, name)
+				if (!library.isFile() || java.security.MessageDigest.getInstance('SHA-256').digest(library.bytes).encodeHex().toString() != expected) {
+					throw new GradleException('Missing or changed ARM64 native: ' + name)
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,20 @@
+{
+  "schema": "shaderlod-native-failure-v1",
+  "host": "Asahi MacBook Air / Apple M1 / Mesa25.1",
+  "primary": "Reimagined r5.9.3 / Iris1.8.12 / Sodium0.6.13 / DH3.3.3",
+  "dimensions": [
+    2560,
+    1600
+  ],
+  "native_linked": false,
+  "native_error": "composite1: Too many fragment shader texture samplers",
+  "outcome": "FAIL",
+  "settings_restored": "verified by SelectionTransaction native-state equality; journal removed",
+  "recovery_journal_retained": false,
+  "input_closure_unchanged": true,
+  "absent_dh": "Also fails natively: No more available texture units while activating sampler shadowcolor1; no missing optional class error",
+  "evidence_root": "/home/philip/.local/share/shaderlod-next/evidence/ae53462d633b245b60e4f5ed2977ee8aa63c9e70081e9bba3dbd9b7f7b705c6e",
+  "manifest_sha256": "ae53462d633b245b60e4f5ed2977ee8aa63c9e70081e9bba3dbd9b7f7b705c6e",
+  "receipt_sha256": "d318408feebc119f7a87d7da4affb2e55b4c0f0f9b624cd13ca5b0f627a57751",
+  "limits": "Failure-only live evidence. Fallback image existence and CPU timings establish no native correctness, optimization activation or performance."
+}

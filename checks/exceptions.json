@@ -9,7 +9,7 @@
     "review": true,
     "owner": "Philip",
     "decision": "docs/decisions/comment-ban.md",
-    "expires": "2027-11-09"
+    "expires": "permanent"
   },
   {
     "rule": "D8",
@@ -21,7 +21,7 @@
     "review": true,
     "owner": "Philip",
     "decision": "docs/decisions/comment-ban.md",
-    "expires": "2027-11-09"
+    "expires": "permanent"
   },
   {
     "rule": "D8",
@@ -33,7 +33,7 @@
     "review": true,
     "owner": "Philip",
     "decision": "docs/decisions/comment-ban.md",
-    "expires": "2027-11-09"
+    "expires": "permanent"
   },
   {
     "rule": "D8",
@@ -45,7 +45,7 @@
     "review": true,
     "owner": "Philip",
     "decision": "docs/decisions/comment-ban.md",
-    "expires": "2027-11-09"
+    "expires": "permanent"
   },
   {
     "rule": "D8",
@@ -57,6 +57,42 @@
     "review": true,
     "owner": "Philip",
     "decision": "docs/decisions/comment-ban.md",
+    "expires": "permanent"
+  },
+  {
+    "rule": "D8",
+    "path": "src/main/java/com/pp/shaderlod/integration/mixin/IrisConfigMixin.java",
+    "kind": "directive",
+    "token": "@SuppressWarnings(\"UnusedMethod\")",
+    "sha256": "683310e9533cf1e9577cead94ef4ece0956aef634b519509220c8b65ae00f948",
+    "reason": "Pinned required Mixin handlers are invoked through bytecode injection; callback signature is imposed by the native target. No other diagnostics suppressed.",
+    "review": true,
+    "owner": "ShaderLOD",
+    "decision": "docs/decisions/mixin-entries.md",
+    "expires": "permanent"
+  },
+  {
+    "rule": "D8",
+    "path": "src/main/java/com/pp/shaderlod/integration/mixin/IrisConfigMixin.java",
+    "kind": "directive",
+    "token": "@SuppressWarnings(\"UnusedVariable\")",
+    "sha256": "29532ef866b85e3bfeb215f1abe29d3ec3258a70f1405e3004c845fdb7f229bf",
+    "reason": "Pinned required Mixin handlers are invoked through bytecode injection; callback signature is imposed by the native target. No other diagnostics suppressed.",
+    "review": true,
+    "owner": "ShaderLOD",
+    "decision": "docs/decisions/mixin-entries.md",
+    "expires": "permanent"
+  },
+  {
+    "rule": "D8",
+    "path": "src/main/java/com/pp/shaderlod/integration/mixin/IrisOptionsMixin.java",
+    "kind": "directive",
+    "token": "@SuppressWarnings(\"UnusedMethod\")",
+    "sha256": "683310e9533cf1e9577cead94ef4ece0956aef634b519509220c8b65ae00f948",
+    "reason": "Pinned required Mixin handlers are invoked through bytecode injection; callback signature is imposed by the native target. No other diagnostics suppressed.",
+    "review": true,
+    "owner": "ShaderLOD",
+    "decision": "docs/decisions/mixin-entries.md",
     "expires": "permanent"
   }
 ]

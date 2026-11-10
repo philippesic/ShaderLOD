@@ -90,6 +90,34 @@ def java_pairs(root: Path) -> dict[str, dict[str, object]]:
             else:
                 shutil.copyfile(source, target)
         build = (root / "build.gradle").read_text().split("def python =")[0]
+        build = (
+            "\n".join(
+                line
+                for line in build.splitlines()
+                if "compileOnly files(" not in line
+                and "testRuntimeOnly files(" not in line
+                and "additionalRuntimeClasspath files(" not in line
+            )
+            + "\n"
+        )
+        build = (
+            "\n".join(
+                line
+                for line in build.splitlines()
+                if not any(
+                    pin in line
+                    for pin in (
+                        "net.neoforged.fancymodloader:loader",
+                        "com.google.guava:guava",
+                        "net.neoforged:mergetool",
+                        "net.neoforged:bus",
+                        "org.apache.maven:maven-artifact",
+                        "net.fabricmc:sponge-mixin",
+                    )
+                )
+            )
+            + "\n"
+        )
         build = build.replace(
             "systemProperty 'foundation.root', projectDir.absolutePath",
             "systemProperty 'foundation.root', projectDir.absolutePath",

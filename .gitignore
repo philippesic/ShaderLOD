@@ -6,3 +6,10 @@ __pycache__/
 .mypy_cache/
 .ruff_cache/
 *.pyc
+
+/dependencies/runtime/
+/run-client/
+
+/run-client-absent-dh/
+
+/run-client-native-control/

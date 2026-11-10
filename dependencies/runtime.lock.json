@@ -1,0 +1,62 @@
+{
+  "minecraft": "1.21.1",
+  "neoforge": "21.1.253",
+  "java": 21,
+  "artifacts": {
+    "iris": {
+      "filename": "iris-neoforge-1.8.12+mc1.21.1.jar",
+      "url": "https://cdn.modrinth.com/data/YL57xq9U/versions/t3ruzodq/iris-neoforge-1.8.12%2Bmc1.21.1.jar",
+      "hashes": {
+        "sha1": "a3e6355915c7d3b2bc392724795113e51d289378",
+        "sha512": "57b8026a3c3c433cf6123d63dc6ce7e11f6d480a72926370db1fc7f2b06059bc16a753ecd7e7af659c19e90b592103196b0e89585ce4f0744a4ca433f59bcf1a",
+        "sha256": "3e3f94d2d5cdcb8145c4385d521974aa2d8669b2cc212351f70cf06488182e83"
+      },
+      "version_id": "t3ruzodq",
+      "version": "1.8.12+1.21.1-neoforge",
+      "project_id": "YL57xq9U",
+      "loaders": [
+        "neoforge"
+      ],
+      "game_versions": [
+        "1.21.1"
+      ]
+    },
+    "sodium": {
+      "filename": "sodium-neoforge-0.6.13+mc1.21.1.jar",
+      "url": "https://cdn.modrinth.com/data/AANobbMI/versions/Pb3OXVqC/sodium-neoforge-0.6.13%2Bmc1.21.1.jar",
+      "hashes": {
+        "sha512": "ce58f34d05d96c0a109a5cea23c741f6bdb2e6be31fc087c5989274cefca5f10ba0c08c62083cf554a51f2c7667bf46e4164383f675c844e77633aef2659996b",
+        "sha1": "38af70fa4dc4b2aaac636e92fdba3bedd5a025e1",
+        "sha256": "7acd7af2ef75ec883a6872c17494ead65e38025151eb08a1d60e36d34377f403"
+      },
+      "version_id": "Pb3OXVqC",
+      "version": "mc1.21.1-0.6.13-neoforge",
+      "project_id": "AANobbMI",
+      "loaders": [
+        "neoforge"
+      ],
+      "game_versions": [
+        "1.21.1"
+      ]
+    },
+    "distanthorizons": {
+      "filename": "DistantHorizons-3.3.3-1.21.1-fabric-neoforge.jar",
+      "url": "https://cdn.modrinth.com/data/uCdwusMi/versions/9w34y8ai/DistantHorizons-3.3.3-1.21.1-fabric-neoforge.jar",
+      "hashes": {
+        "sha1": "4357b4d19fab818780c94f0e43dad1cc931634b2",
+        "sha512": "d14b32d3fd143a06514d6ad388eee11e9d657c84e1a937aaf8d033b1137fb43ef8b05cff1011a994cc42f3106823c51234f8bc18d72bb05bc317a20ea83c50ed",
+        "sha256": "864e70def5b0d54d619b940b66bb2784e91d3f3fc253064fdc1b3fc5786cbfab"
+      },
+      "version_id": "9w34y8ai",
+      "version": "3.3.3-1.21.1",
+      "project_id": "uCdwusMi",
+      "loaders": [
+        "fabric",
+        "neoforge"
+      ],
+      "game_versions": [
+        "1.21.1"
+      ]
+    }
+  }
+}

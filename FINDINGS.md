@@ -1,6 +1,6 @@
 # Findings
 
-Historical evidence only. No new live runs or retained optimizations. Philip's keep rule is "proven generally positive"; its definition is settled at the benchmark stage.
+F1–F7 retain historical evidence. F8 records the new native-stack failure. No retained optimizations. Philip's keep rule is "proven generally positive"; its definition is settled at the benchmark stage.
 
 | ID | Finding | Scope | Evidence level | Limit | Frozen evidence |
 |---|---|---|---|---|---|
@@ -11,3 +11,5 @@ Historical evidence only. No new live runs or retained optimizations. Philip's k
 | F5 | Reimagined and Unbound originals failed DH-enabled linking: Too many fragment shader texture samplers | Old Asahi runs 05 and 06 | live-functional | Failure on this runtime; no claim about other hardware | [RESULTS.json](/home/philip/ShaderLOD/dev/experiments/cost-map-coverage-20261108/RESULTS.json) sha256:e57c1e89d8907c2bf0d956b8deefafc5936da91dc2034c8946a6f171d2ac48d2 |
 | F6 | run-08 restored generation=false request but residual loading defeated the conditioned steady premise | Old Asahi run-08 | live-functional | Negative premise check only | [RESULTS.json](/home/philip/ShaderLOD/dev/experiments/cost-map-coverage-20261108/RESULTS.json) sha256:e57c1e89d8907c2bf0d956b8deefafc5936da91dc2034c8946a6f171d2ac48d2 |
 | F7 | DH depth handoff remains CPU-tested, live pending; conversion and shadow unexercised | Historical implementation note | source-inspected | Historical CPU result not rerun; storage blocker retained | [COST_MAP_IMPLEMENTATION.md](/home/philip/ShaderLOD/docs/COST_MAP_IMPLEMENTATION.md) sha256:43dd226e726f133fdb5f49122109be3958dde6cbab70b0b44b0550fa485406ca |
+| F8 | Pinned Reimagined original fails native Asahi linking with DH; absent-DH also runs out of texture units | New port, Apple M1, 2560×1600, native settings | live-functional | Failed native baseline; settings restore succeeds; no optimization activation/performance qualification | [native failure](docs/evidence/asahi-native-failure.json) sha256:c6a2151e91d871346e9d6e586ba2721e731144530d0705f5b597c5fa53144c7e |
+| F9 | Native reference without ShaderLOD reproduces the same composite1 sampler-limit failure | Pinned Iris/Sodium/DH/Reimagined, Asahi native 2560×1600 | live-functional | Negative control excludes this port as a necessary cause; no performance qualification | [native control](docs/evidence/asahi-native-control.json) sha256:9641bdb8edb43606e5d1a90c388003a5a631f3d341864faa014c4c9493b0f66b |

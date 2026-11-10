@@ -1,3 +1,5 @@
+> Superseded by [the approved porting plan](PORTING_PLAN.md). Retained as historical input, including the pre-existing user edits. Its stage permissions and target scope are inactive.
+
 # Remaining port stages
 
 This is the consolidated plan for the work that remains after stage 0, the non-source foundation already in this repository at the former path `/home/philip/shaderlod-next`. The remaining stages are source port, benchmark, GPU qualification, and skills. Nothing advances a stage without Philip's explicit go. This document is planning only; it does not authorize a source port, client launch, benchmark, or hardware run.

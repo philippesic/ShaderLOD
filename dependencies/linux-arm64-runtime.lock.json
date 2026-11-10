@@ -1,0 +1,64 @@
+{
+  "schema": 1,
+  "classifier": "natives-linux-arm64",
+  "artifacts": [
+    {
+      "module": "lwjgl",
+      "version": "3.3.3",
+      "url": "https://repo.maven.apache.org/maven2/org/lwjgl/lwjgl/3.3.3/lwjgl-3.3.3-natives-linux-arm64.jar",
+      "sha256": "397a79a5d8907286d4018d026cbc37358c53bbb6aabc3a1534f19ff23b7f8558"
+    },
+    {
+      "module": "lwjgl-freetype",
+      "version": "3.3.3",
+      "url": "https://repo.maven.apache.org/maven2/org/lwjgl/lwjgl-freetype/3.3.3/lwjgl-freetype-3.3.3-natives-linux-arm64.jar",
+      "sha256": "326ff6fa7d2165d57b53219d2c62e60036ebd260f94bdc2f58be4ad43f3b29af"
+    },
+    {
+      "module": "lwjgl-glfw",
+      "version": "3.3.3",
+      "url": "https://repo.maven.apache.org/maven2/org/lwjgl/lwjgl-glfw/3.3.3/lwjgl-glfw-3.3.3-natives-linux-arm64.jar",
+      "sha256": "cc6139c83f799d0e1484ea4c201c8ce6d57c8c7a244a5217116a806b1eb4179b"
+    },
+    {
+      "module": "lwjgl-jemalloc",
+      "version": "3.3.3",
+      "url": "https://repo.maven.apache.org/maven2/org/lwjgl/lwjgl-jemalloc/3.3.3/lwjgl-jemalloc-3.3.3-natives-linux-arm64.jar",
+      "sha256": "e383d5241c0d47f4012a753e0bfffe45afc30d006219b9bd8903756a103789b5"
+    },
+    {
+      "module": "lwjgl-openal",
+      "version": "3.3.3",
+      "url": "https://repo.maven.apache.org/maven2/org/lwjgl/lwjgl-openal/3.3.3/lwjgl-openal-3.3.3-natives-linux-arm64.jar",
+      "sha256": "abf392487b3587da89b655250008df4a360a2fd5e1ee00abd61f7f52915205a1"
+    },
+    {
+      "module": "lwjgl-opengl",
+      "version": "3.3.3",
+      "url": "https://repo.maven.apache.org/maven2/org/lwjgl/lwjgl-opengl/3.3.3/lwjgl-opengl-3.3.3-natives-linux-arm64.jar",
+      "sha256": "0b2b75327d47451634123348d55503ae03e51551b0c8879ae90c8e4b4e1a4f9c"
+    },
+    {
+      "module": "lwjgl-stb",
+      "version": "3.3.3",
+      "url": "https://repo.maven.apache.org/maven2/org/lwjgl/lwjgl-stb/3.3.3/lwjgl-stb-3.3.3-natives-linux-arm64.jar",
+      "sha256": "17f0cf1b8e522eea6b4b97c19070b39e54f5f87ed84fb89585747e40f905e1db"
+    },
+    {
+      "module": "lwjgl-tinyfd",
+      "version": "3.3.3",
+      "url": "https://repo.maven.apache.org/maven2/org/lwjgl/lwjgl-tinyfd/3.3.3/lwjgl-tinyfd-3.3.3-natives-linux-arm64.jar",
+      "sha256": "80d34e76d15c04951744148832908391da8b14f68a030b64b0b40702a37391d7"
+    }
+  ],
+  "libraries": {
+    "libfreetype.so": "c438816dca8b3ccb566caebbd733fa838acd2483dfaab36ea5b6f7d7672bd8ea",
+    "libglfw.so": "0fe0470ed78593b44727a90420d57301c0f8244adceb3d6d2c0be42770db3f91",
+    "libjemalloc.so": "6411c96b7c8ee942c175e137676ade2fd6160d248178f44074daece2a62b96fd",
+    "liblwjgl.so": "7d0fcec9315b78326efaf7e223ad7585f9394fbda87abdf2af62f7f413a9cf80",
+    "liblwjgl_opengl.so": "a6a882dc2ee933406780cc93a662648b627825e85b7133c2b13cb3a149280f60",
+    "liblwjgl_stb.so": "3f0fabed002f93bdd3f93cad7be12f5b35d62641c09526bb8f099f480e7dbc0f",
+    "liblwjgl_tinyfd.so": "5893a79f4d774c81353e83ede0bf4053540d279391583013ed782a3aa2ecad05",
+    "libopenal.so": "661b7faf4f1c733fdef3af5442e2438165f4ce4681a8f857bb45d81682310917"
+  }
+}

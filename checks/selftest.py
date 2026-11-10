@@ -120,6 +120,10 @@ def execute(root: Path, tools: dict[str, dict[str, object]]) -> list[dict[str, o
             rows.append(
                 {
                     "rule": rule,
+                    "engine": engine,
+                    "execution": "reference"
+                    if engine in ("tool", "bytecode")
+                    else "executed",
                     "name": case["name"],
                     "specimen": "FAIL " + rule,
                     "control": "PASS",

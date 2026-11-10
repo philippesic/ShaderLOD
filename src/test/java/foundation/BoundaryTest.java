@@ -1,5 +1,6 @@
 package foundation;
 
+import static com.tngtech.archunit.library.dependencies.SlicesRuleDefinition.slices;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -21,18 +22,33 @@ class BoundaryTest {
       var owner = type.getPackageName();
       for (var edge : type.getDirectDependenciesFromSelf()) {
         var target = edge.getTargetClass().getPackageName();
-        if (owner.startsWith("foundation.contracts")
+        if ((owner.startsWith("foundation.contracts")
+                || owner.startsWith("com.pp.shaderlod.domain"))
             && !target.startsWith("java.")
             && !target.startsWith("javax.")
-            && !target.startsWith("foundation.contracts")) {
+            && !target.startsWith("foundation.contracts")
+            && !target.startsWith("com.pp.shaderlod.domain")) {
           errors.add("T-ARCH");
         }
-        if (owner.startsWith("foundation.main") && target.startsWith("foundation.dev")) {
+        if ((owner.startsWith("foundation.main") && target.startsWith("foundation.dev"))
+            || (owner.startsWith("com.pp.shaderlod.")
+                && !owner.startsWith("com.pp.shaderlod.dev")
+                && target.startsWith("com.pp.shaderlod.dev"))) {
+          errors.add("T-ARCH");
+        }
+        if ((owner.startsWith("com.pp.shaderlod.domain")
+                && (target.equals("java.io")
+                    || target.startsWith("java.nio.file")
+                    || target.startsWith("java.net")))
+            || (owner.startsWith("com.pp.shaderlod.engine")
+                && !target.startsWith("java.")
+                && !target.startsWith("com.pp.shaderlod.domain")
+                && !target.startsWith("com.pp.shaderlod.engine"))) {
           errors.add("T-ARCH");
         }
         if (owner.contains(".providers.")
             && target.contains(".providers.")
-            && !owner.equals(target)) {
+            && !providerModule(owner).equals(providerModule(target))) {
           errors.add("D2");
         }
       }
@@ -44,12 +60,14 @@ class BoundaryTest {
                     "write.*|newBufferedWriter|newOutputStream|copy|move|delete.*|createFile"))
             || target.matches(
                 "java.io.(FileOutputStream|FileWriter|RandomAccessFile|PrintWriter|PrintStream|BufferedWriter|OutputStreamWriter|DataOutputStream|ObjectOutputStream)")) {
-          if (!owner.equals("foundation.publisher")) {
+          if (!owner.equals("foundation.publisher")
+              && !owner.startsWith("com.pp.shaderlod.storage")) {
             errors.add("D3");
           }
         }
         if (target.equals("java.io.File") && method.matches("create.*|delete.*|mkdir.*|set.*")) {
-          if (!owner.equals("foundation.publisher")) {
+          if (!owner.equals("foundation.publisher")
+              && !owner.startsWith("com.pp.shaderlod.storage")) {
             errors.add("D3");
           }
         }
@@ -61,13 +79,14 @@ class BoundaryTest {
                 && method.matches("getenv|getPropert.*|setPropert.*"))
             || (target.matches("java.lang.(Boolean|Integer|Long)")
                 && method.matches("getBoolean|getInteger|getLong"))) {
-          if (!owner.equals("foundation.config")) {
+          if (!owner.equals("foundation.config") && !owner.equals("com.pp.shaderlod.dev.config")) {
             errors.add("D6b");
           }
         }
         if (method.matches(
                 "gl(Finish|FenceSync|BeginQuery.*|EndQuery.*|GetQuery.*|QueryCounter|ClientWaitSync|WaitSync)")
-            && !owner.equals("foundation.measurement")) {
+            && !owner.equals("foundation.measurement")
+            && !owner.startsWith("com.pp.shaderlod.dev.measurement")) {
           errors.add("D6c");
         }
       }
@@ -77,7 +96,8 @@ class BoundaryTest {
                 .getName()
                 .matches(
                     "java.io.(FileOutputStream|FileWriter|RandomAccessFile|PrintWriter|PrintStream|BufferedWriter|OutputStreamWriter|DataOutputStream|ObjectOutputStream)")
-            && !owner.equals("foundation.publisher")) {
+            && !owner.equals("foundation.publisher")
+            && !owner.startsWith("com.pp.shaderlod.storage")) {
           errors.add("D3");
         }
       }
@@ -85,16 +105,37 @@ class BoundaryTest {
     return errors;
   }
 
+  private static String providerModule(String packageName) {
+    int start = packageName.indexOf(".providers.") + ".providers.".length();
+    int end = packageName.indexOf('.', start);
+    return end < 0 ? packageName : packageName.substring(0, end);
+  }
+
   private List<String> specimen(String pack, String body) throws IOException {
+    return specimen(pack, body, "foundation.providers.b");
+  }
+
+  private List<String> specimen(String pack, String body, String dependencyPackage)
+      throws IOException {
     Path dir = Files.createTempDirectory("shaderlod-bytecode-");
     try {
       Path source = dir.resolve("Probe.java");
       Files.writeString(source, "package " + pack + "; public class Probe { " + body + " }");
       Path other = dir.resolve("Other.java");
-      Files.writeString(other, "package foundation.providers.b; public class Other {}");
+      Files.writeString(other, "package " + dependencyPackage + "; public class Other {}");
+      Path development = dir.resolve("Development.java");
+      Files.writeString(development, "package com.pp.shaderlod.dev; public class Development {}");
       int exit =
           ToolProvider.getSystemJavaCompiler()
-              .run(null, null, null, "-d", dir.toString(), source.toString(), other.toString());
+              .run(
+                  null,
+                  null,
+                  null,
+                  "-d",
+                  dir.toString(),
+                  source.toString(),
+                  other.toString(),
+                  development.toString());
       assertEquals(0, exit, "S2: specimen failed compilation");
       return violations(new ClassFileImporter().importPath(dir));
     } finally {
@@ -117,6 +158,22 @@ class BoundaryTest {
                     .filter(Files::exists)
                     .toList());
     assertFalse(classes.isEmpty(), "S2: zero contract classes");
+    for (String role : List.of("domain", "engine", "storage", "integration")) {
+      assertTrue(
+          classes.stream()
+              .anyMatch(type -> type.getPackageName().startsWith("com.pp.shaderlod." + role)),
+          "S2: empty production architecture role " + role);
+    }
+    for (var type : classes) {
+      assertTrue(
+          type.getPackageName().startsWith("foundation.contracts")
+              || List.of("domain", "engine", "storage", "integration", "providers", "dev").stream()
+                  .anyMatch(role ->
+                      type.getPackageName().equals("com.pp.shaderlod." + role)
+                          || type.getPackageName().startsWith("com.pp.shaderlod." + role + ".")),
+          "S2: unclassified compiled class " + type.getName());
+    }
+    slices().matching("com.pp.shaderlod.(*)..").should().beFreeOfCycles().check(classes);
     assertEquals(List.of(), violations(classes));
   }
 
@@ -144,6 +201,12 @@ class BoundaryTest {
 
   @Test
   void d2Providers() throws IOException {
+    assertEquals(
+        List.of(),
+        specimen(
+            "foundation.providers.a",
+            "foundation.providers.a.detail.Other value() { return null; }",
+            "foundation.providers.a.detail"));
     assertTrue(
         specimen("foundation.providers.a", "foundation.providers.b.Other value() { return null; }")
             .contains("D2"));
@@ -170,6 +233,27 @@ class BoundaryTest {
                 "void launch() throws java.io.IOException { new ProcessBuilder(\"minecraft\").start(); }")
             .contains("D6d"));
     assertEquals(List.of(), specimen("foundation.report", "int helper() { return 1; }"));
+  }
+
+  @Test
+  void productionDomainAndEngineBoundaries() throws IOException {
+    assertTrue(
+        specimen("com.pp.shaderlod.domain", "java.nio.file.Path value() { return null; }")
+            .contains("T-ARCH"));
+    assertEquals(
+        List.of(),
+        specimen(
+            "com.pp.shaderlod.domain",
+            "java.time.Instant value() { return java.time.Instant.EPOCH; }"));
+    assertTrue(
+        specimen("com.pp.shaderlod.engine", "foundation.providers.b.Other value() { return null; }")
+            .contains("T-ARCH"));
+    assertEquals(List.of(), specimen("com.pp.shaderlod.engine", "int value() { return 1; }"));
+    assertTrue(
+        specimen(
+                "com.pp.shaderlod.integration",
+                "com.pp.shaderlod.dev.Development value() { return null; }")
+            .contains("T-ARCH"));
   }
 
   @Test

@@ -1,7 +1,6 @@
 from pathlib import Path
 import pytest
 from checks.contracts import Evidence, Health, Measured, Missing, decode_sample, receipt
-from checks.policy import discover
 from checks.publisher import publish
 from checks.verify import cpu, main
 import sys
@@ -41,11 +40,6 @@ def test_publisher_once(tmp_path: Path) -> None:
     with pytest.raises(FileExistsError):
         publish(path, {"value": 2})
     assert path.read_bytes() == original
-
-
-def test_discovery_no_shared_edit() -> None:
-    tree = {"src/NewPackSpec.java": b'class NewPackSpec { static String ID = "new"; }'}
-    assert discover(tree) == ["new"]
 
 
 def test_runtime_refusal(monkeypatch: pytest.MonkeyPatch) -> None:

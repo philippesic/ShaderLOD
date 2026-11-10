@@ -14,10 +14,54 @@ java {
 		vendor = JvmVendorSpec.ADOPTIUM
 	}
 }
-neoForge { version = '21.1.253' }
+neoForge {
+	version = '21.1.253'
+	runs {
+		client {
+			client()
+			gameDirectory = project.file('run-client')
+		}
+	}
+	mods { shaderlod { sourceSet sourceSets.main } }
+}
 sourceSets { benchmarkCore; devClient }
+sourceSets.devClient.compileClasspath += sourceSets.main.output + sourceSets.main.compileClasspath + sourceSets.benchmarkCore.output
+sourceSets.devClient.runtimeClasspath += sourceSets.main.output + sourceSets.main.runtimeClasspath + sourceSets.benchmarkCore.output
+neoForge.addModdingDependenciesTo(sourceSets.devClient)
+neoForge.mods { shaderlod_dev { sourceSet sourceSets.devClient } }
+neoForge.runs.named('client') { loadedMods = [neoForge.mods.shaderlod] }
+neoForge.runs {
+	development {
+		client()
+		sourceSet = sourceSets.devClient
+		loadedMods = [
+			neoForge.mods.shaderlod,
+			neoForge.mods.shaderlod_dev
+		]
+		gameDirectory = project.file('run-client')
+	}
+}
+tasks.register('devJar', Jar) {
+	from sourceSets.devClient.output
+	archiveClassifier = 'dev'
+}
+tasks.named('jar') { from sourceSets.benchmarkCore.output }
 dependencies {
+	api 'net.neoforged.fancymodloader:loader:4.0.45'
+	devClientImplementation 'net.neoforged.fancymodloader:loader:4.0.45'
+	devClientImplementation 'net.neoforged:bus:8.0.5'
+	devClientImplementation 'net.neoforged:mergetool:2.0.3'
+	implementation 'net.neoforged:bus:8.0.5'
+	implementation 'com.google.guava:guava:32.1.2-jre'
+	implementation 'net.neoforged:mergetool:2.0.3'
+	implementation 'org.apache.maven:maven-artifact:3.8.5'
 	errorprone 'com.google.errorprone:error_prone_core:2.52.0'
+	implementation sourceSets.benchmarkCore.output
+	compileOnly 'net.fabricmc:sponge-mixin:0.15.2+mixin.0.8.7'
+	compileOnly files('dependencies/runtime/iris-neoforge-1.8.12+mc1.21.1.jar', 'dependencies/runtime/sodium-neoforge-0.6.13+mc1.21.1.jar', 'dependencies/runtime/DistantHorizons-3.3.3-1.21.1-fabric-neoforge.jar')
+	testRuntimeOnly files('dependencies/runtime/iris-neoforge-1.8.12+mc1.21.1.jar', 'dependencies/runtime/sodium-neoforge-0.6.13+mc1.21.1.jar', 'dependencies/runtime/DistantHorizons-3.3.3-1.21.1-fabric-neoforge.jar')
+	testImplementation sourceSets.devClient.output
+	testImplementation sourceSets.main.output
 	testImplementation sourceSets.benchmarkCore.output
 	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.14.1'
 	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.14.1'
@@ -27,7 +71,7 @@ dependencies {
 dependencyLocking { lockAllConfigurations(); lockMode = LockMode.STRICT }
 spotless {
 	java {
-		target 'src/**/*.java'
+		target 'src/**/*.java', 'optimizations/**/*.java'
 		googleJavaFormat('2.0.0')
 	}
 	groovyGradle {
@@ -55,6 +99,8 @@ tasks.withType(JavaCompile).configureEach {
 	}
 }
 test {
+	workingDir = layout.buildDirectory.dir('test-client').get().asFile
+	doFirst { workingDir.mkdirs() }
 	useJUnitPlatform()
 	systemProperty 'foundation.root', projectDir.absolutePath
 	dependsOn tasks.named('benchmarkCoreClasses')
@@ -62,69 +108,63 @@ test {
 }
 dependencyAnalysis { issues { all { onAny { severity('fail') } } } }
 def python = providers.environmentVariable('FOUNDATION_PYTHON').orElse('python3')
-tasks.register('discoverProviders', Exec) {
-	commandLine python.get(), '-m', 'checks.driver', 'discoverProviders'
+def pythonTasks = [
+	'pythonLint',
+	'pythonTypes',
+	'pythonTests',
+	'repoPolicy',
+	'commentBan',
+	'exceptionsAudit',
+	'toolSelfTest',
+	'selfTest',
+	'checkReport'
+]
+pythonTasks.each { name ->
+	tasks.register(name, Exec) {
+		commandLine python.get(), '-m', 'checks.driver', name
+		if (name == 'toolSelfTest') {
+			inputs.files('dependencies/python.lock', 'dependencies/check-tools.lock.json', 'buildscript-gradle.lockfile', 'gradle.lockfile', 'checks/tooltests.py', 'checks/checkstyle.xml', 'build.gradle', 'settings.gradle', 'gradle.properties')
+			outputs.file('build/reports/foundation/tool-self-tests.json')
+		}
+	}
 }
-tasks.withType(JavaCompile).configureEach { dependsOn tasks.named('discoverProviders') }
-def previous = tasks.named('spotlessCheck')
-[
+tasks.named('selfTest') { dependsOn tasks.named('test'), tasks.named('toolSelfTest') }
+def commonChecks = [
+	'spotlessCheck',
+	'compileJava',
 	'compileBenchmarkCoreJava',
+	'compileDevClientJava',
 	'compileTestJava',
+	'checkstyleMain',
 	'checkstyleBenchmarkCore',
+	'checkstyleDevClient',
 	'checkstyleTest',
-	'buildHealth'
-].each { name ->
-	def next = tasks.named(name)
-	def prerequisite = previous
-	next.configure { mustRunAfter prerequisite }
-	previous = next
-}
-[
+	'buildHealth',
 	'pythonLint',
 	'pythonTypes',
 	'test',
 	'pythonTests',
 	'repoPolicy',
 	'commentBan',
-	'exceptionsAudit',
-	'selfTest',
-	'checkReport'
-].each { name ->
-	def prerequisite = previous
-	def task
-	if (name == 'test') {
-		task = tasks.named('test')
-	} else {
-		task = tasks.register(name, Exec) {
-			commandLine python.get(), '-m', 'checks.driver', name
-		}
-	}
-	task.configure { dependsOn prerequisite }
-	previous = task
+	'exceptionsAudit'
+]
+tasks.register('fastCheck') {
+	dependsOn commonChecks.collect { tasks.named(it) }
+	doLast { println 'PARTIAL: fast checks passed; tool self-tests and full qualification not run' }
 }
-tasks.named('check') { dependsOn previous, tasks.named('buildHealth'), tasks.named('spotlessCheck') }
-
+tasks.named('checkReport') { dependsOn commonChecks.collect { tasks.named(it) }, tasks.named('selfTest') }
+tasks.named('check') { dependsOn tasks.named('checkReport') }
 gradle.taskGraph.whenReady { graph ->
-	if (graph.hasTask(tasks.named('check').get())) {
-		[
-			'spotlessJavaCheck',
-			'spotlessGroovyGradleCheck',
-			'compileBenchmarkCoreJava',
-			'compileTestJava',
-			'checkstyleBenchmarkCore',
-			'checkstyleTest',
-			'buildHealth',
-			'discoverProviders',
-			'pythonLint',
-			'pythonTypes',
-			'test',
-			'pythonTests',
-			'repoPolicy',
-			'commentBan',
-			'exceptionsAudit',
+	def full = graph.hasTask(tasks.named('check').get())
+	def fast = graph.hasTask(tasks.named('fastCheck').get())
+	if (full || fast) {
+		def requiredNames = commonChecks + (full ? [
+			'packageAudit',
+			'toolSelfTest',
 			'selfTest',
 			'checkReport'
-		].each { name ->
+		] : [])
+		requiredNames.each { name ->
 			def required = tasks.named(name).get()
 			if (!required.enabled || !graph.hasTask(required)) {
 				throw new GradleException('S1: required validator disabled or absent: ' + name)
@@ -132,3 +172,113 @@ gradle.taskGraph.whenReady { graph ->
 		}
 	}
 }
+gradle.buildFinished { result ->
+	def rows = gradle.taskGraph.allTasks.collect { task ->
+		[path: task.path, state: task.state.failure ? 'failed' : task.state.noSource ? 'no-source' : task.state.upToDate ? 'reused' : task.state.skipped ? 'not-run' : task.state.executed ? 'executed' : 'not-run']
+	}
+	def report = file('build/reports/foundation/gradle-tasks.json')
+	report.parentFile.mkdirs()
+	report.text = groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson([scope: gradle.taskGraph.hasTask(':check') ? 'full' : 'partial', result: result.failure ? 'FAIL' : 'PASS', tasks: rows])) + '\n'
+}
+
+apply from: 'linux-arm64.gradle'
+neoForge.runs.named('development') {
+	if (project.hasProperty('functionalProbe')) {
+		jvmArgument '-Dshaderlod.functionalProbe=true'
+		programArgument '--quickPlaySingleplayer'
+		programArgument 'ShaderLOD-Smoke'
+	}
+}
+dependencies { devClientImplementation 'com.google.code.gson:gson:2.10.1' }
+tasks.register('writeFunctionalLaunch') {
+	dependsOn tasks.named('prepareDevelopmentRun'), tasks.named('devClientClasses')
+	doLast {
+		def run = tasks.named('runDevelopment').get()
+		def output = file('build/moddev/functional-launch.json')
+		def command = [
+			run.javaLauncher.get().executablePath.asFile.absolutePath
+		] + run.allJvmArgs + run.jvmArgumentProviders.collectMany { it.asArguments().toList() }
+		if (!run.classpathProvider.empty) {
+			command += [
+				'-cp',
+				run.classpathProvider.asPath
+			]
+		}
+		if (run.mainClass.present) {
+			command += [run.mainClass.get()]
+		}
+		command += run.args + run.argumentProviders.collectMany { it.asArguments().toList() }
+
+		output.text = groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson([argv: command, cwd: file('run-client').absolutePath, environment: run.environment.findAll { key, value -> key == 'MOD_CLASSES' }])) + '\n'
+	}
+}
+
+version = '0.1.0'
+group = 'com.pp.shaderlod'
+base { archivesName = 'shaderlod' }
+def optimizationDescriptors = fileTree('optimizations') { include '*/provider.json' }
+optimizationDescriptors.files.each { descriptor ->
+	sourceSets.main.java.srcDir(new File(descriptor.parentFile, 'java'))
+	sourceSets.test.java.srcDir(new File(descriptor.parentFile, 'test'))
+}
+def providerResources = tasks.register('generateOptimizationServices') {
+	inputs.files(optimizationDescriptors)
+	outputs.dir(layout.buildDirectory.dir('generated/providerResources'))
+	doLast {
+		def names = optimizationDescriptors.files.collect { descriptor ->
+			def data = new groovy.json.JsonSlurper().parse(descriptor)
+			if (data.keySet() != (['class'] as Set) || !(data['class'] ==~ /com\.pp\.shaderlod\.providers\.[A-Za-z_$][\w$]*(\.[A-Za-z_$][\w$]*)+/)) {
+				throw new GradleException('Invalid optimization descriptor: ' + descriptor)
+			}
+			data['class']
+		}.sort()
+		if (names.unique(false).size() != names.size()) {
+			throw new GradleException('Duplicate optimization provider class')
+		}
+		def output = layout.buildDirectory.file('generated/providerResources/META-INF/services/com.pp.shaderlod.engine.OptimizationProvider').get().asFile
+		output.parentFile.mkdirs()
+		output.text = names.join('\n') + (names.empty ? '' : '\n')
+	}
+}
+sourceSets.main.resources.srcDir(providerResources)
+tasks.register('packageAudit') {
+	dependsOn tasks.named('jar'), tasks.named('devJar')
+	doLast {
+		def shipping = tasks.named('jar').get().archiveFile.get().asFile
+		new java.util.zip.ZipFile(shipping).withCloseable { archive ->
+			def names = archive.entries().collect { it.name }
+			if (names.any { it.startsWith('com/pp/shaderlod/dev/') } || !names.contains('shaderlod.mixins.json') || !names.contains('META-INF/neoforge.mods.toml')) {
+				throw new GradleException('Shipping artifact includes dev code or lacks integration resources')
+			}
+			def service = archive.getEntry('META-INF/services/com.pp.shaderlod.engine.OptimizationProvider')
+			def actual = service == null ? [] : archive.getInputStream(service).getText('UTF-8').readLines().findAll { !it.empty }
+			def declared = optimizationDescriptors.files.collect { new groovy.json.JsonSlurper().parse(it)['class'] }.sort()
+			if (actual.sort() != declared || actual.any { !names.contains(it.replace('.', '/') + '.class') }) {
+				throw new GradleException('Packaged provider registration disagrees with modules')
+			}
+		}
+		println 'Package audit PASS: shipping boundaries and consumed provider registration'
+	}
+}
+tasks.named('check') { dependsOn tasks.named('packageAudit') }
+
+tasks.named('checkReport') { dependsOn tasks.named('packageAudit') }
+
+dependencies { devClientImplementation 'org.lwjgl:lwjgl-opengl:3.3.3' }
+
+dependencies { devClientImplementation 'com.mojang:brigadier:1.3.10' }
+
+def packResources = tasks.register('generatePackSpecification') {
+	inputs.file('dependencies/primary-pack.json')
+	outputs.dir(layout.buildDirectory.dir('generated/packResources'))
+	doLast {
+		def data = new groovy.json.JsonSlurper().parse(file('dependencies/primary-pack.json'))
+		if (data.schema != 1 || !(data.sha256 ==~ /[a-f0-9]{64}/) || !(data.filename ==~ /[A-Za-z0-9_.+-]+/)) {
+			throw new GradleException('Invalid pinned pack data')
+		}
+		def output = layout.buildDirectory.file('generated/packResources/META-INF/shaderlod/primary.properties').get().asFile
+		output.parentFile.mkdirs()
+		output.text = 'schema=1\nid=' + data.id + '\nfilename=' + data.filename + '\nsha256=' + data.sha256 + '\n'
+	}
+}
+sourceSets.main.resources.srcDir(packResources)
