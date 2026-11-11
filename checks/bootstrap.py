@@ -90,10 +90,10 @@ def runtime_artifacts(root: Path, cache: Path) -> None:
 def runtime(
     root: Path, python: Path, environment: dict[str, str], options: list[str]
 ) -> int:
-    required = {"--profile", "--display", "--receipt", "--ownership-root", "--timeout"}
+    required = {"--profile", "--display", "--ownership-root", "--timeout"}
     if not required <= set(options) or {"--launch", "--shipping-jar"} & set(options):
         raise ValueError(
-            "RUNTIME: supply --profile, --display, --receipt, --ownership-root and --timeout; launch and shipping identity are build-owned"
+            "RUNTIME: supply --profile, --display, --ownership-root and --timeout; launch and shipping identity are build-owned"
         )
     subprocess.run(
         [
@@ -118,6 +118,26 @@ def runtime(
     if "--native-control" not in options:
         command.extend(["--shipping-jar", launch["shipping_jar"]])
     return subprocess.call(command + options, env=environment)
+
+
+def summary(root: Path, status: int) -> str:
+    report = root / "build/reports/foundation/gradle-tasks.json"
+    if not report.is_file():
+        return "CHECK: FAIL before task execution; read the error above"
+    record = json.loads(report.read_text())
+    rows = record["tasks"]
+    counts = {
+        state: sum(1 for row in rows if row["state"] == state)
+        for state in ("executed", "reused", "failed")
+    }
+    tally = ", ".join(f"{counts[state]} {state}" for state in counts)
+    if status == 0:
+        return f"CHECK: {record['scope']} PASS ({tally})"
+    failed = [row["path"] for row in rows if row["state"] == "failed"]
+    return (
+        f"CHECK: {record['scope']} FAIL in {', '.join(failed) or 'Gradle'} ({tally}); "
+        "fixes for each rule ID are in docs/checks.md"
+    )
 
 
 def main() -> int:
@@ -213,11 +233,15 @@ def main() -> int:
             raise ValueError(
                 "CHECK: expected no option (fast), --full or --fresh; see docs/checks.md"
             )
-        report = root / "build/reports/foundation/check.json"
-        report.unlink(missing_ok=True)
+        for name in ("check.json", "gradle-tasks.json"):
+            (root / "build/reports/foundation" / name).unlink(missing_ok=True)
         task = "fastCheck" if options == [] else "check"
         extra = ["--rerun-tasks"] if options == ["--fresh"] else []
-        return subprocess.call(["./gradlew", "--no-daemon", task, *extra], env=env)
+        status = subprocess.call(
+            ["./gradlew", "--no-daemon", "--quiet", task, *extra], env=env
+        )
+        print(summary(root, status))
+        return status
     if sys.argv[2:3] == ["--runtime"] and len(sys.argv) > 3:
         return runtime(root, envdir / "bin/python", env, sys.argv[3:])
     return subprocess.call(

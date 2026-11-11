@@ -24,6 +24,11 @@ def display_environment(path: Path) -> dict[str, str]:
     return environment
 
 
+def evidence_root() -> Path:
+    data = os.environ.get("XDG_DATA_HOME") or str(Path.home() / ".local/share")
+    return Path(data) / "shaderlod-next/evidence"
+
+
 def worker_environment(overrides: dict[str, str] | None = None) -> dict[str, str]:
     environment = dict(os.environ) if overrides is None else dict(overrides)
     environment["PYTHONPATH"] = str(Path(__file__).resolve().parents[1])

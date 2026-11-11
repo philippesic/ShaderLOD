@@ -5,11 +5,16 @@ import os
 from pathlib import Path
 import socket
 import shlex
+import shutil
 import subprocess
 import sys
 import time
 
-from shaderlod_host.config import display_environment, worker_environment
+from shaderlod_host.config import (
+    display_environment,
+    evidence_root,
+    worker_environment,
+)
 from shaderlod_host.functional_contract import verify_functional
 from shaderlod_host.storage import BusyRefusal, publish
 from shaderlod_host.worker import birth
@@ -52,6 +57,40 @@ def executable_inputs(
     }
 
 
+PROBE_OUTPUTS = (
+    "shaderlod-functional.json",
+    "shaderlod-functional.png",
+    "shaderlod-functional-identity.png",
+)
+
+
+def preserve_outputs(profile: Path, destination: Path) -> dict[str, str]:
+    preserved: dict[str, str] = {}
+    for name in PROBE_OUTPUTS:
+        source = profile / name
+        if source.is_file():
+            destination.mkdir(parents=True, exist_ok=True)
+            preserved[name] = hashlib.sha256(source.read_bytes()).hexdigest()
+            shutil.move(source, destination / name)
+    return preserved
+
+
+def attempt_receipt(requested: Path | None, repository: Path, mode: str) -> Path:
+    if requested is None:
+        stamp = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())
+        requested = evidence_root() / "attempts" / f"{stamp}-{mode}.json"
+    resolved = requested.resolve()
+    if resolved.is_relative_to(repository.resolve()):
+        raise ValueError(
+            "receipts belong outside the repository; omit --receipt to use "
+            + str(evidence_root() / "attempts")
+        )
+    if resolved.exists() or resolved.with_suffix("").exists():
+        raise ValueError("receipt already exists; choose a new --receipt or omit it")
+    resolved.parent.mkdir(parents=True, exist_ok=True)
+    return resolved
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(
         description="Bounded Asahi functional execution, no performance study"
@@ -62,7 +101,7 @@ def main() -> int:
     parser.add_argument("--native-control", action="store_true")
     parser.add_argument("--shipping-jar", type=Path)
     parser.add_argument("--display", type=Path, required=True)
-    parser.add_argument("--receipt", type=Path, required=True)
+    parser.add_argument("--receipt", type=Path)
     parser.add_argument("--ownership-root", type=Path, required=True)
     parser.add_argument("--timeout", type=int, default=180)
     args = parser.parse_args()
@@ -112,9 +151,23 @@ def main() -> int:
                 and not item.startswith(str(root / "build/resources"))
             )
         launch["argv"] = argv
+    mode = (
+        "native-control"
+        if args.native_control
+        else "without-dh"
+        if args.without_dh
+        else "dh"
+    )
+    receipt = attempt_receipt(args.receipt, Path(__file__).resolve().parents[1], mode)
     profile = (args.profile or Path(launch["cwd"])).resolve(strict=True)
     if (profile / "shaderlod-functional.json").exists():
-        raise ValueError("preserve prior functional evidence before a new attempt")
+        raise ValueError(
+            "earlier probe outputs remain in "
+            + str(profile)
+            + "; move shaderlod-functional* under "
+            + str(evidence_root())
+            + " before a new attempt"
+        )
     environment = display_environment(args.display)
     environment.update(launch["environment"])
     with BusyRefusal(args.ownership_root, socket.gethostname() + ":gpu:0"):
@@ -159,7 +212,7 @@ def main() -> int:
                 target.write_bytes(payload)
         before = executable_inputs(launch, root, profile)
         started = time.monotonic()
-        with args.receipt.with_suffix(".log").open("xb") as log:
+        with receipt.with_suffix(".log").open("xb") as log:
             worker = subprocess.Popen(
                 [
                     sys.executable,
@@ -199,6 +252,7 @@ def main() -> int:
                     )
                 except (OSError, ValueError) as error:
                     contract_error = str(error)
+            outputs = preserve_outputs(profile, receipt.with_suffix(""))
             result = {
                 "schema": "shaderlod-live-attempt-v1",
                 "platform": sys.platform,
@@ -212,6 +266,10 @@ def main() -> int:
                 "native_control": args.native_control,
                 "shipping_jar": shipping,
                 "profile": str(profile),
+                "outputs": {
+                    "directory": str(receipt.with_suffix("")),
+                    "sha256": outputs,
+                },
                 "executable_inputs": before,
                 "inputs_unchanged": before == executable_inputs(launch, root, profile),
                 "outcome": "PASS"
@@ -227,7 +285,8 @@ def main() -> int:
             if result["inputs_unchanged"] is not True:
                 result["outcome"] = "FAIL"
                 result["identity_failure"] = "Executable input drift"
-            publish(args.receipt, result)
+            publish(receipt, result)
+            print("RECEIPT: " + str(receipt))
             print(
                 json.dumps(
                     {

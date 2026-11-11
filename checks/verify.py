@@ -34,7 +34,7 @@ def cpu() -> dict[str, object]:
 def main() -> int:
     if sys.argv[1:] == ["--runtime"]:
         print(
-            "D1: runtime needs explicit --profile, --display, --receipt, --ownership-root and --timeout within an allocated hardware window",
+            "D1: runtime needs explicit --profile, --display, --ownership-root and --timeout within an allocated hardware window",
             file=sys.stderr,
         )
         return runtime_status(2)

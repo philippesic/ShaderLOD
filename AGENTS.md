@@ -33,7 +33,7 @@ ShaderLOD is a NeoForge 1.21.1 client mod that selects Iris shader packs nativel
 
 ## Working autonomously
 
-Proceed without asking on: source and test changes within an open task, check repairs that keep the rule, bounded live attempts on the allocated Asahi machine, recovery of owned processes and settings, reclaiming files under owned roots that are explicitly disposable or reproducible, and commits.
+Work autonomously toward the goal Philip gives, within any limits he states. Do not stop for approval of steps that serve that goal: source and test changes, refactors, check repairs that keep the rule, bounded live attempts on the allocated Asahi machine, recovery of owned processes and settings, reclaiming files under owned roots that are explicitly disposable or reproducible, and commits. When a step fails, diagnose and repair it within the goal rather than handing back.
 
 Ask Philip before: changing what counts as correct or a pass, changing native quality, expanding the target or product claims, deleting valuable or unclassified data, using any other machine (the RTX 5080 is not allocated), extending a time or resource budget, or publishing anything.
 

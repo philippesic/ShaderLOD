@@ -10,10 +10,14 @@ ROOT = Path(__file__).resolve().parents[1]
 REPORTS = ROOT / "build/reports/foundation"
 
 
-def command(rule: str, args: list[str]) -> int:
+RULE_PREFIXES = tuple(rule + ":" for rule in policy.RULES)
+
+
+def command(rule: str, args: list[str], fix: str = "") -> int:
     result = subprocess.run([sys.executable, "-m", *args], cwd=ROOT)
     if result.returncode:
-        raise RuntimeError(f"{rule}: tool failed ({result.returncode})")
+        detail = fix or "read the tool output above"
+        raise RuntimeError(f"{rule}: {args[0]} failed; {detail}")
     return 1
 
 
@@ -49,18 +53,37 @@ def python_roots() -> list[str]:
 
 
 def main() -> int:
+    try:
+        return run_step(sys.argv[1])
+    except (ValueError, RuntimeError, AssertionError) as error:
+        message = str(error)
+        if not message.startswith(RULE_PREFIXES):
+            raise
+        print(message, file=sys.stderr)
+        print("Fixes for each rule ID: docs/checks.md", file=sys.stderr)
+        return 1
+
+
+def run_step(step: str) -> int:
     REPORTS.mkdir(parents=True, exist_ok=True)
-    step = sys.argv[1]
     count, rules = 0, 0
     if step == "pythonLint":
-        command("T-PFMT", ["ruff", "format", "--check", *python_roots()])
-        command("T-RUFF", ["ruff", "check", *python_roots()])
+        command(
+            "T-PFMT",
+            ["ruff", "format", "--check", "--quiet", *python_roots()],
+            "fix with: "
+            + " ".join([sys.executable, "-m", "ruff", "format", *python_roots()]),
+        )
+        command("T-RUFF", ["ruff", "check", "--quiet", *python_roots()])
         count, rules = 2, 2
     elif step == "pythonTypes":
-        count = command("T-MYPY", ["mypy", *python_roots()])
+        count = command("T-MYPY", ["mypy", "--no-error-summary", *python_roots()])
         rules = 1
     elif step == "pythonTests":
-        command("T-PYTEST", ["pytest", f"--junitxml={REPORTS / 'pytest.xml'}"])
+        command(
+            "T-PYTEST",
+            ["pytest", "-q", "--no-header", f"--junitxml={REPORTS / 'pytest.xml'}"],
+        )
         count = test_counts([REPORTS / "pytest.xml"], "python")
         rules = 1
     elif step in ("repoPolicy", "commentBan", "exceptionsAudit"):
@@ -138,13 +161,11 @@ def main() -> int:
             "note": "tool and bytecode rows reference their actual executions, not additional tests"
         }
         (REPORTS / "check.json").write_text(json.dumps(result, indent=2) + "\n")
-        print(json.dumps(result, indent=2))
         return 0
     else:
         raise ValueError("S2: unknown check step")
     result = {"step": step, "items": count, "result": "PASS"}
     (REPORTS / ("step-" + step + ".json")).write_text(json.dumps(result) + "\n")
-    print(json.dumps(result))
     return 0
 
 

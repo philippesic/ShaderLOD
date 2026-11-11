@@ -16,7 +16,8 @@ Compilation is not a level. A live level needs a runtime receipt. Missing data s
 
 ## Where evidence lives
 
-- Raw outputs (logs, captures, PNGs, receipts) stay outside Git under `~/.local/share/shaderlod-next/evidence/<sha256>/`. `build/reports` is a working copy and may be deleted.
+- Raw outputs (logs, captures, PNGs, receipts) stay outside Git under `~/.local/share/shaderlod-next/evidence/`. `./verify --runtime` writes each attempt's receipt and log to `attempts/` there by default and refuses receipt paths inside the repository. Older bundles sit in directories named by their manifest digest.
+- `build/`, `run-client*/` profiles and other ignored repository directories are disposable working copies. Anything a finding depends on must be under the evidence root, not there.
 - `evidence/*.json` holds compact, dated records that back a finding. They are never edited after the finding cites them; a correction is a new record.
 - `FINDINGS.md` cites each record by path and `sha256:` digest.
 
