@@ -2,11 +2,11 @@
 
 | Command | What it runs | When |
 | --- | --- | --- |
-| `./check` | Compile, Error Prone, Checkstyle, Spotless, dependency analysis, ArchUnit boundaries, Ruff, mypy, Java and Python tests, repository policy, comment ban, exception audit. Prints `PARTIAL`. | While editing |
-| `./check --full` | Everything above plus rule specimens, tool self-tests and the shipping-JAR package audit | Before every commit (the pre-commit hook runs it) and at handoff |
+| `./check` | Fast lane: compile, Error Prone, Checkstyle, Spotless, dependency analysis, ArchUnit boundaries, Ruff, mypy, Java and Python tests, repository policy, comment ban, exception audit. Labels itself `PARTIAL`. | While editing |
+| `./check --full` | Everything portable: the fast lane plus rule specimens, tool self-tests and the shipping-JAR package audit. The pre-commit hook and CI run this. No CI is configured yet, because the repository has no remote. | Before every commit and at handoff |
 | `./check --fresh` | `--full` with Gradle task reuse disabled | After changing check tooling, or when reuse is suspect |
 
-A warm `./check` after a one-file edit takes about 5 to 8 seconds. A warm `--full` with no changes takes about 9 seconds; `--fresh` takes about 100 seconds, mostly tool self-tests. `./check` sets `core.hooksPath` to `.githooks` on first run if it is unset.
+A warm `./check` after a one-file edit takes about 5 to 8 seconds. A warm `--full` with no changes takes about 9 seconds; `--fresh` takes about 100 seconds, mostly tool self-tests. Enable the hook once per clone with `git config core.hooksPath .githooks`; no check command changes Git configuration.
 
 `build/reports/foundation/gradle-tasks.json` lists every task as executed, reused, not-run or failed, and labels the run `full` or `partial`. A partial pass is not a full pass, and reused results are not fresh executions. Nothing here grants live-functional or performance evidence.
 

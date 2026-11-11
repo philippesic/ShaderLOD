@@ -120,23 +120,6 @@ def runtime(
     return subprocess.call(command + options, env=environment)
 
 
-def enable_hook(root: Path) -> None:
-    if not (root / ".git").exists():
-        return
-    current = subprocess.run(
-        ["git", "-C", str(root), "config", "--local", "--get", "core.hooksPath"],
-        capture_output=True,
-        text=True,
-    )
-    if current.returncode == 0:
-        return
-    subprocess.run(
-        ["git", "-C", str(root), "config", "--local", "core.hooksPath", ".githooks"],
-        check=True,
-    )
-    print("CHECK: enabled pre-commit hook (core.hooksPath=.githooks)")
-
-
 def main() -> int:
     root = Path(__file__).resolve().parents[1]
     os.chdir(root)
@@ -230,7 +213,6 @@ def main() -> int:
             raise ValueError(
                 "CHECK: expected no option (fast), --full or --fresh; see docs/checks.md"
             )
-        enable_hook(root)
         report = root / "build/reports/foundation/check.json"
         report.unlink(missing_ok=True)
         task = "fastCheck" if options == [] else "check"

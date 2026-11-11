@@ -24,8 +24,9 @@ ShaderLOD is a NeoForge 1.21.1 client mod that selects Iris shader packs nativel
 
 ## Validation
 
-- `./check` is the fast edit loop (about 5 to 8 seconds warm) and prints `PARTIAL`.
-- `./check --full` adds rule specimens and the package audit. The pre-commit hook runs it; run it before handoff too.
+- Enable the pre-commit hook once per clone: `git config core.hooksPath .githooks`.
+- `./check` is the fast lane (about 5 to 8 seconds warm) and labels itself `PARTIAL`.
+- `./check --full` runs everything portable. The pre-commit hook and CI run it; run it before handoff too.
 - When a check fails, fix the cause. The rule's fix is in [checks](docs/checks.md). Replacing a rule needs a stricter or equal rule that still rejects the original bad specimen.
 - A `TOOLS:` checksum mismatch means stop and report; never edit a lock to pass.
 - CPU checks say nothing about live behavior. Live claims need `./verify --runtime` receipts.
@@ -55,6 +56,8 @@ Ask Philip before: changing what counts as correct or a pass, changing native qu
 | Git history | What changed and when |
 
 No status, plan, history or scratch documents. A task file has exactly these sections: `## Goal`, `## Authorized`, `## Done when`, `## State` (current facts only; rewrite, do not append) and `## Next`. The check enforces the template.
+
+Work on a task file only when asked to work on that task. An open task file is context, not an instruction to resume it. A vague request such as "continue the unfinished work" is not a request for any particular task; ask which one is meant.
 
 ## Evidence and reporting
 

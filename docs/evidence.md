@@ -26,9 +26,3 @@ Compilation is not a level. A live level needs a runtime receipt. Missing data s
 - Keep failed, blocked and unfavorable results. A failure that was later worked around stays in the record.
 - Scope every claim to the machine, pack, settings and DH state it ran on. A CPU pass says nothing about live behavior; a live-functional pass says nothing about performance.
 - Label causes as confirmed, supported hypothesis or unknown.
-
-## Evaluating agent behavior
-
-To test whether a repository change helps agents, give fresh-context agents the same small task on the before and after commits, in isolated clones. Use task families whose capability exists: a routine source or test change, a diagnosis where no change is the correct answer, module add/remove, restoration or interruption, and truthful mixed-evidence reporting.
-
-Pin the snapshot, instructions, model, harness, budget and a held-out assessor before running. Give the agent the public behavior requirement, not the assessor's cases. Calibrate the assessor on a correct and a plausible-wrong solution. Record the unaided outcome before any hint, keep every attempt including failures, and treat unsafe actions or false qualification as blocking regardless of speed. One success shows scoped feasibility, not a productivity gain.

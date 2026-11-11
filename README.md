@@ -6,12 +6,12 @@ The first target is Complementary Reimagined r5.9.3 with Distant Horizons 3.3.3.
 
 ## Setup
 
-Install Python 3.13 and Git, then run `./check`. The first run downloads and verifies the pinned JDK, Gradle and Python tools into user-local caches, and enables the pre-commit hook.
+Install Python 3.13 and Git, enable the pre-commit hook with `git config core.hooksPath .githooks`, then run `./check`. The first run downloads and verifies the pinned JDK, Gradle and Python tools into user-local caches.
 
 | Command | Purpose |
 | --- | --- |
-| `./check` | Fast edit feedback; prints `PARTIAL` |
-| `./check --full` | Full CPU gate; run by the pre-commit hook |
+| `./check` | Fast lane; labels itself `PARTIAL` |
+| `./check --full` | Everything portable; run by the pre-commit hook and CI |
 | `./check --fresh` | Full gate without task reuse |
 | `./verify --cpu` | Synthetic contract and publication round trip |
 | `./verify --runtime …` | Live functional probe on an allocated machine; see [live verification](docs/runtime.md) |
