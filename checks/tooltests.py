@@ -132,6 +132,7 @@ def java_pairs(root: Path) -> dict[str, dict[str, object]]:
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import com.google.gson.Gson;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 import org.junit.jupiter.api.Test;
 
@@ -139,6 +140,7 @@ class ToolsTest {
   @Test
   void readable() {
     assertEquals(1, new ClassFileImporter().importClasses(ToolsTest.class).size());
+    assertEquals("1", new Gson().toJson(1));
   }
 }
 """
@@ -185,7 +187,7 @@ class ToolsTest {
             "T-EP": (
                 "compileTestJava",
                 good.replace(
-                    "    assertEquals", "    int unreadValue = 1;\n    assertEquals"
+                    "    assertEquals", "    int unreadValue = 1;\n    assertEquals", 1
                 ),
                 "[UnusedVariable]",
             ),

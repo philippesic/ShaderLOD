@@ -101,6 +101,92 @@ def attempt_receipt(requested: Path | None, repository: Path, mode: str) -> Path
     return resolved
 
 
+def benchmark_session(
+    launch_path: Path,
+    profile: Path,
+    display: Path,
+    session: Path,
+    ownership: Path,
+    timeout: int,
+) -> int:
+    if sys.platform != "linux" or not 1 <= timeout <= 600:
+        raise ValueError("Linux session with 1–600 second deadline required")
+    root = Path(__file__).resolve().parents[1]
+    if session.exists() or session.resolve().is_relative_to(root):
+        raise ValueError("fresh external session directory required")
+    if not profile.is_dir() or not (profile / "saves/ShaderLOD-Smoke").is_dir():
+        raise ValueError("prepared profile and ShaderLOD-Smoke world required")
+    launch = json.loads(launch_path.read_bytes())
+    if not isinstance(launch.get("argv"), list) or not all(
+        isinstance(a, str) for a in launch["argv"]
+    ):
+        raise ValueError("invalid launch argv")
+    argv = list(launch["argv"])
+    if "-cp" not in argv:
+        raise ValueError("explicit classpath launch required")
+    position = argv.index("-cp")
+    argv[position:position] = [
+        "-Dshaderlod.functionalProbe=false",
+        "-Dshaderlod.benchmarkDirectory=" + str(session.resolve()),
+    ]
+    profile = profile.resolve(strict=True)
+    before = executable_inputs(launch, root, profile)
+    environment = display_environment(display)
+    environment.update(launch["environment"])
+    with BusyRefusal(ownership, socket.gethostname() + ":gpu:0"):
+        session.mkdir(parents=True)
+        with (session / "client.log").open("xb") as log:
+            worker = subprocess.Popen(
+                [
+                    sys.executable,
+                    "-m",
+                    "shaderlod_host.worker",
+                    str(time.monotonic() + timeout),
+                    str(os.getpid()),
+                    birth(os.getpid()),
+                    json.dumps(argv),
+                ],
+                cwd=profile,
+                env=worker_environment(environment),
+                stdout=log,
+                stderr=subprocess.STDOUT,
+                stdin=subprocess.DEVNULL,
+            )
+            publish(
+                session / "session.json",
+                {
+                    "schema": "shaderlod-session-v1",
+                    "host": socket.gethostname(),
+                    "boot": Path("/proc/sys/kernel/random/boot_id").read_text().strip(),
+                    "owner_pid": os.getpid(),
+                    "owner_birth": birth(os.getpid()),
+                    "profile": str(profile.resolve()),
+                    "launch": str(launch_path.resolve()),
+                    "executable_inputs": before,
+                    "timeout_seconds": timeout,
+                    "capabilities": ["status", "fixed-scene-frame-capture"],
+                    "qualification": "unqualified development session",
+                },
+            )
+            try:
+                status = worker.wait(timeout=timeout + 5)
+            finally:
+                if worker.poll() is None:
+                    worker.terminate()
+                    worker.wait(timeout=3)
+            publish(
+                session / "closed.json",
+                {
+                    "schema": "shaderlod-session-close-v1",
+                    "returncode": status,
+                    "inputs_unchanged": before
+                    == executable_inputs(launch, root, profile),
+                    "restoration": "no selection or world reset performed; prepared writable profile retained",
+                },
+            )
+            return status
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(
         description="Bounded Asahi functional execution, no performance study"

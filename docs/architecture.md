@@ -12,7 +12,7 @@
 | `src/benchmarkCore` | Dependency-free measurement and evidence contracts |
 | `src/test/java` | JUnit tests, including compiled ArchUnit boundaries |
 | `optimizations/<id>/` | Optimization modules, none yet ([optimizations](optimizations.md)) |
-| `shaderlod_host` | Python host runner: CLI, bounded execution, storage, live functional runner |
+| `shaderlod_host` | Python host runner: CLI, bounded execution, storage, live functional runner and preliminary frame analysis |
 | `checks` | Bootstrap, check driver, policy rules, rule specimens ([checks](checks.md)) |
 | `tests` | Python tests |
 | `dependencies` | Digest locks ([dependencies](dependencies.md)) |
@@ -33,6 +33,8 @@ Package boundaries and forbidden dependencies are enforced by ArchUnit against c
 | `shaderlod_host/runtime.py:recover_execution` | `python3 -m shaderlod_host recover` | Quiescence check, preserved attempt budget | Child and watchdog identity | `tests/test_host.py` |
 | `shaderlod_host/storage.py:publish` | Result finalization | Exclusive atomic completed result | Owned filesystem | `tests/test_host.py` |
 | `shaderlod_host/runtime_live.py:main` | `./verify --runtime` | Live client attempt and functional receipt | Built JARs, pinned runtime | `tests/test_functional_contract.py` |
+| `shaderlod_host/benchmark.py:analyze_frames` | Offline import or live fixed-scene capture | Complete-stream validity and descriptive frame analysis | Strict frame records | `tests/test_benchmark.py` |
+| `shaderlod_host/runtime_live.py:benchmark_session` | `python3 -m shaderlod_host session-open` | Foreground Linux client, watchdog, external command/results | Prepared profile and allocated display | `tests/test_benchmark.py` |
 
 ## Apply and recovery flow
 

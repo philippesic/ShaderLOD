@@ -10,10 +10,15 @@ import net.neoforged.neoforge.common.NeoForge;
 public final class DevelopmentProfiler {
   private static final BoundedProfiler BUFFER = new BoundedProfiler(4096);
   private static com.pp.shaderlod.dev.measurement.GpuCollector gpu;
+  private final BenchmarkControl benchmark;
   private long start;
   private long frame;
 
   public DevelopmentProfiler() {
+    benchmark = DevelopmentSettings.benchmarkDirectory().map(BenchmarkControl::new).orElse(null);
+    if (benchmark != null) {
+      NeoForge.EVENT_BUS.addListener(benchmark::tick);
+    }
     NeoForge.EVENT_BUS.addListener(ProfileExport::register);
     NeoForge.EVENT_BUS.addListener(this::begin);
     NeoForge.EVENT_BUS.addListener(this::end);
@@ -23,6 +28,12 @@ public final class DevelopmentProfiler {
   }
 
   private void begin(RenderFrameEvent.Pre event) {
+    if (benchmark != null) {
+      benchmark.frame(
+          System.nanoTime(),
+          net.irisshaders.iris.Iris.getPipelineManager().getVersionCounterForSodiumShaderReload());
+      return;
+    }
     if (gpu == null && org.lwjgl.opengl.GL.getCapabilities().OpenGL33) {
       gpu =
           new com.pp.shaderlod.dev.measurement.GpuCollector(
@@ -37,6 +48,9 @@ public final class DevelopmentProfiler {
   }
 
   private void end(RenderFrameEvent.Post event) {
+    if (benchmark != null) {
+      return;
+    }
     long elapsed = System.nanoTime() - start;
     long generation =
         net.irisshaders.iris.Iris.getPipelineManager().getVersionCounterForSodiumShaderReload();

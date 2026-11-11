@@ -17,7 +17,10 @@ def sync_directory(path: Path) -> None:
 
 
 def publish(path: Path, record: dict[str, object]) -> None:
-    payload = canonical(record)
+    publish_bytes(path, canonical(record))
+
+
+def publish_bytes(path: Path, payload: bytes) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     descriptor, name = tempfile.mkstemp(prefix=".publish-", dir=path.parent)
     staging = Path(name)

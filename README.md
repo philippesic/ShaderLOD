@@ -35,3 +35,5 @@ None yet. Agent rules and the documentation map are in [AGENTS.md](AGENTS.md).
 - [FINDINGS](FINDINGS.md): established conclusions and supporting results.
 - [Tasks](tasks/README.md): unfinished-work convention.
 - [Agent rules](AGENTS.md) and [close-results](skills/close-results/SKILL.md): working expectations and investigation closeout.
+
+Frame-capture development commands and current limitations: [profiling](docs/profiling.md).

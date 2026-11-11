@@ -30,6 +30,10 @@ Runtime executable inputs are hashed before and after each attempt; drift invali
 
 `python3 -m shaderlod_host recover` marks an interrupted attempt only after its recorded host, boot and process group are provably quiescent. It never kills a possibly foreign process, never refunds a spent attempt and never rewrites a published result. Missing ownership metadata, another host or boot, or a live group make it refuse.
 
+## Frame capture
+
+The preliminary fixed-scene capture path reuses an owned Linux client and publishes complete bounded frame windows with offline reports. See [profiling](profiling.md) for commands and current limits. Contribution/release comparison, route control and native Windows supervision remain outstanding.
+
 ## Development profiler
 
 The development mod exports bounded CPU render-callback durations and asynchronous GPU timestamps, each tagged with generation and frame, with pending, lost and invalid counts. `/shaderlod-profile` writes a diagnostic export. Collection never waits on a pending query. Per-pass cost maps, calibrated overhead and comparison methods do not exist yet; see [tasks/benchmark-design.md](../tasks/benchmark-design.md).
