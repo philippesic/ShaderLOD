@@ -10,6 +10,14 @@ The earlier archive contains useful lessons that the later candidate screen does
 | Preserve native settings through a real round trip | A historical macOS Reimagined/Replete check restored 398 loaded Iris options | Reuse the restoration test idea; it is not current-platform PBR qualification |
 | Correct setup defects before judging speed | Corrected Bliss viewport sanity remained flat/inconclusive | A repaired harness does not imply an optimization benefit |
 
+## Correction: historical sampler observations (2026-11-10)
+
+The initial readable import omitted an important qualification. The archived GL 4.1 audit found that indexed `SAMPLER_BINDING` queries did not establish sampler bindings on that API. Earlier returned zeros therefore do not prove an unbound sampler or effective filtering. This affects BSL replay, Complementary copy/raster, MakeUp clouds, Sildur/BSL receivers, and shared-probe Bliss/SSR observations. Texture/source joins, recorded pixel equality, and closed negative or quality decisions retain their narrower scope; the correction does not establish a new failure cause or reopen those trials.
+
+The proposed repair selected the texture unit, used the non-indexed getter, and restored the prior active unit. It was staged only: compilation and fake-binding tests passed, but integration and actual driver execution remained unverified. It cannot repair old receipts retroactively. Future evidence must establish that the observation method is valid on the actual API before treating a returned zero as proof.
+
+[Original sampler audit and staged repair](../sources/sampler-gl41-fix-r1.md) sha256:a3798da626d0f6f56216ce9c8fd984140c39ddeed0d94c301063a8d1a2dbb805
+
 ## Conditions and limitations
 
 Evidence level: source-inspected historical import. These records include static derivations and separate live checks on older pinned setups, including macOS/M3 Max at 1920×1200. They must not be pooled with Asahi or RTX campaigns. Historical reports identify missing runtime checks and quality limits. Some old raw paths may already be absent locally; the archived prose does not reconstruct missing captures.

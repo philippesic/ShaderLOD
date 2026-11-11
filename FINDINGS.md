@@ -53,7 +53,7 @@ Current answers within their stated scope. Read the linked result before applyin
 | F37 | Additional work observation did not explain away the RTX regressions. | [Result](results/rtx5080-regression-diagnosis/result.md) |
 | F38 | DH profiling gained live observations but left important boundaries unqualified. | [Result](results/dh-profiling-coverage/result.md) |
 | F39 | Historical benchmark definitions and profiler design are reusable references, with unimplemented and unvalidated parts identified. | [Result](results/profiling-and-benchmark-design-lessons/result.md) |
-| F40 | Earlier viewport, sampling-phase and runtime-readback mistakes provide concrete test-design lessons. | [Result](results/early-rendering-contract-lessons/result.md) |
+| F40 | Earlier viewport, sampling-phase and runtime-readback mistakes provide concrete test-design lessons; old GL 4.1 sampler-zero/filter claims remain unproven | [Result](results/early-rendering-contract-lessons/result.md) |
 | F41 | Locally available history is independently preserved; remote-only and already missing artifacts remain explicit limitations. | [Result](results/historical-evidence-preservation/result.md) |
 
 ## Legacy MacBook Pro controls

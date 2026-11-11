@@ -28,7 +28,7 @@ def fixture(root: Path) -> tuple[dict[str, object], str]:
         "schema": "shaderlod-functional-v3",
         "scope": "functional-only",
         "source": "native.zip",
-        "dh": {"present": True},
+        "dh": {"present": True, "enabled": True},
         "profiler": {},
         "native_width": 2560,
         "native_height": 1600,
@@ -114,3 +114,105 @@ def test_empty_world_render_does_not_qualify(tmp_path: Path, key: str) -> None:
     record[key] = 0
     with pytest.raises(ValueError, match="rendered sections"):
         verify_functional(record, tmp_path, "native.zip", sha, True)
+
+
+@pytest.mark.parametrize("enabled", [False, None, "true", 1])
+def test_dh_presence_does_not_prove_enabled(tmp_path: Path, enabled: object) -> None:
+    record, sha = fixture(tmp_path)
+    record["dh"] = {"present": True, "enabled": enabled}
+    with pytest.raises(ValueError, match="DH enabled"):
+        verify_functional(record, tmp_path, "native.zip", sha, True)
+
+
+def test_missing_dh_enabled_state_refuses_but_absent_mode_passes(
+    tmp_path: Path,
+) -> None:
+    record, sha = fixture(tmp_path)
+    record["dh"] = {"present": True}
+    with pytest.raises(ValueError, match="DH enabled"):
+        verify_functional(record, tmp_path, "native.zip", sha, True)
+    record["dh"] = {"present": False}
+    assert verify_functional(record, tmp_path, "native.zip", sha, False) == record
+
+
+@pytest.mark.parametrize("witnesses", [[{}, {}], [[], []], [1, True]])
+def test_malformed_witnesses_are_contract_failures(
+    tmp_path: Path, witnesses: list[object]
+) -> None:
+    record, sha = fixture(tmp_path)
+    active = record["native_activation"]
+    assert isinstance(active, dict)
+    active["witnesses"] = witnesses
+    with pytest.raises(ValueError, match="witness"):
+        verify_functional(record, tmp_path, "native.zip", sha, True)
+
+
+def test_malformed_witness_publishes_failure_and_preserves_outputs(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    import json
+    import subprocess
+    import sys
+    from shaderlod_host import runtime_live
+
+    root = tmp_path / "repo"
+    (root / "shaderlod_host").mkdir(parents=True)
+    (root / "dependencies").mkdir()
+    (root / "dependencies/runtime.lock.json").write_text('{"artifacts": {}}')
+    profile = tmp_path / "profile"
+    profile.mkdir()
+    record, sha = fixture(profile)
+    active = record["native_activation"]
+    assert isinstance(active, dict)
+    active["witnesses"] = [{}, {}]
+    payload = json.dumps(record).encode()
+    (root / "dependencies/primary-pack.json").write_text(
+        json.dumps({"filename": "native.zip", "sha256": sha})
+    )
+    java = tmp_path / "java"
+    java.write_bytes(b"test executable")
+    launch = tmp_path / "launch.json"
+    launch.write_text(
+        json.dumps({"argv": [str(java)], "cwd": str(profile), "environment": {}})
+    )
+    receipt = tmp_path / "evidence/attempt.json"
+
+    class CompletedWorker:
+        def __init__(self, *args: object, **kwargs: object) -> None:
+            (profile / "shaderlod-functional.json").write_bytes(payload)
+
+        def wait(self, timeout: float) -> int:
+            return 0
+
+        def poll(self) -> int:
+            return 0
+
+    monkeypatch.setattr(
+        runtime_live, "__file__", str(root / "shaderlod_host/runtime_live.py")
+    )
+    monkeypatch.setattr(runtime_live, "display_environment", lambda path: {})
+    monkeypatch.setattr(runtime_live, "executable_inputs", lambda *args: {})
+    monkeypatch.setattr(subprocess, "Popen", CompletedWorker)
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "runtime_live",
+            "--launch",
+            str(launch),
+            "--display",
+            str(tmp_path / "display"),
+            "--receipt",
+            str(receipt),
+            "--ownership-root",
+            str(tmp_path / "ownership"),
+        ],
+    )
+    assert runtime_live.main() == 1
+    result = json.loads(receipt.read_bytes())
+    assert result["outcome"] == "FAIL"
+    assert "witness" in result["contract_failure"]
+    archived = receipt.with_suffix("") / "shaderlod-functional.json"
+    assert archived.read_bytes() == payload
+    assert result["outputs"]["sha256"][archived.name] == digest(payload)
+    assert not (profile / archived.name).exists()

@@ -241,6 +241,10 @@ def test_runner_death_stops_owned_group_without_foreign_kill(tmp_path: Path) -> 
         owned = json.loads(marker.read_bytes())
         runner.kill()
         runner.wait(timeout=1)
+        journal = recover_journal(tmp_path / "results/op/journal.json", req.owner)
+        watchdog = journal["process"]
+        assert isinstance(watchdog, dict)
+        owned.append(watchdog["pid"])
         deadline = time.monotonic() + 2
         while time.monotonic() < deadline:
             alive = []

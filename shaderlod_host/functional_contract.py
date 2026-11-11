@@ -76,6 +76,8 @@ def verify_functional(
     dh = mapping(record["dh"], "DH observation")
     if type(dh.get("present")) is not bool or dh["present"] != dh_present:
         raise ValueError("DH mode disagreement")
+    if dh_present and dh.get("enabled") is not True:
+        raise ValueError("DH enabled state is disabled or unknown")
     activations = []
     for key in (
         "native_activation",
@@ -108,6 +110,7 @@ def verify_functional(
         if (
             not isinstance(active["witnesses"], list)
             or len(active["witnesses"]) != 2
+            or not all(isinstance(item, str) for item in active["witnesses"])
             or set(active["witnesses"])
             != {"linked-archive:" + sha, "submitted-frame:" + sha}
         ):

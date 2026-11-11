@@ -37,3 +37,5 @@ The development mod exports bounded CPU render-callback durations and asynchrono
 ## Not available
 
 Native Windows execution, cross-host artifact transfer and exhaustive loaded-library attestation are not implemented. Requests for them refuse.
+
+DH-enabled functional acceptance requires the structured `dh.enabled` observation to be true; mod presence or a readiness string alone is insufficient. Older records without this field cannot newly qualify that mode. This proves configured enablement only, not rendered DH coverage.

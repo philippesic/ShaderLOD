@@ -5,6 +5,11 @@ import com.seibel.distanthorizons.api.DhApi;
 final class DhApiObservation {
   private DhApiObservation() {}
 
+  static Boolean enabled() {
+    var config = DhApi.Delayed.configs;
+    return config == null ? null : config.graphics().renderingEnabled().getValue();
+  }
+
   static String read() {
     var config = DhApi.Delayed.configs;
     if (config == null) {
