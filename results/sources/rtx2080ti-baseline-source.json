@@ -1,0 +1,73 @@
+{
+  "state": "complete",
+  "task": "Two valid native Windows RTX 2080 Ti variability blocks",
+  "valid_blocks": [
+    "null-p0-02",
+    "null-p0-03"
+  ],
+  "functional_check": "functional-06",
+  "operations": [
+    {
+      "report": "functional-01",
+      "state": "failed-restored",
+      "restored": true,
+      "reset_verified": true
+    },
+    {
+      "report": "functional-04",
+      "state": "failed-restored",
+      "restored": true,
+      "reset_verified": true
+    },
+    {
+      "report": "functional-05",
+      "state": "failed-restored",
+      "restored": true,
+      "reset_verified": true
+    },
+    {
+      "report": "functional-06",
+      "state": "complete",
+      "restored": true,
+      "reset_verified": true
+    },
+    {
+      "report": "null-p0-01",
+      "state": "failed-restored",
+      "restored": true,
+      "reset_verified": true
+    },
+    {
+      "report": "null-p0-02",
+      "state": "complete",
+      "restored": true,
+      "reset_verified": true
+    },
+    {
+      "report": "null-p0-03",
+      "state": "complete",
+      "restored": true,
+      "reset_verified": true
+    }
+  ],
+  "temporary_task_removed": true,
+  "owned_clients_remaining": 0,
+  "evidence_transport_sha256": "e033301b3754ea523b1ad8f083140e81c7443dfeda0ccb7fd53d01b77c6231eb",
+  "retained_remote_root": "C:\\ShaderLODBench",
+  "scope": "No optimization qualification; two baseline blocks only. Shared services/user profiles preserved.",
+  "validation": {
+    "platform_tests_native_windows": 6,
+    "platform_tests_local": "6, 2 Windows-only skipped",
+    "dev_client_tests": 54,
+    "lifecycle_tests": 25,
+    "qualification_tests": 9,
+    "iteration_tests": 37,
+    "prior_harness_regression_tests": 61,
+    "native_Java_build": "passed; successful real functional and null blocks"
+  },
+  "post_measurement_changes": "Linux publication fast path and recovery verification of already-restored slots; timing paths unchanged.",
+  "storage": [
+    "storage-inventory-local.json",
+    "storage-inventory-windows.json"
+  ]
+}

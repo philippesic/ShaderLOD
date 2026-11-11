@@ -1,0 +1,127 @@
+{
+  "at": "2026-11-03T15:37:14.032458+00:00",
+  "decision": "CALIBRATION_BLOCKED_NO_AO_QUALIFICATION",
+  "task": "Make one frozen Bliss AO route trustworthy before considering more optimization work",
+  "scope": "Pinned Bliss2.1.2/native463, Overworld mixedpose0/sky7, Iris/Asahi/M1Air8GB,2560x1600/nativeAA, noDH/Voxy/PBR qualification",
+  "measured": {
+    "clock_controls": "Two completed balanced25ms injected-delay blocks; raw render/start interval/count consistency passes. Timing core unchanged since these tests. No optimization conclusion.",
+    "v1_null": {
+      "valid_blocks": 12,
+      "scenes": {
+        "0": {
+          "decision": "MEASUREMENT_NOT_CALIBRATED",
+          "effect": {
+            "mean": -0.7471000246189159,
+            "lower": -2.3047569967194192,
+            "upper": 0.8105569474815872,
+            "n_process_blocks": 6,
+            "method": "Two-sided95% Studentt df5; approximate with fresh-process blocks, not frames."
+          },
+          "checks": {
+            "mean_inside_one_percent": true,
+            "interval_inside_two_percent": false,
+            "all_blocks_within_three_percent": false,
+            "same_treatment_spread_within_five_percent": false
+          }
+        },
+        "7": {
+          "decision": "MEASUREMENT_NOT_CALIBRATED",
+          "effect": {
+            "mean": 0.5745246246520307,
+            "lower": -0.6714840419417786,
+            "upper": 1.82053329124584,
+            "n_process_blocks": 6,
+            "method": "Two-sided95% Studentt df5; approximate with fresh-process blocks, not frames."
+          },
+          "checks": {
+            "mean_inside_one_percent": true,
+            "interval_inside_two_percent": true,
+            "all_blocks_within_three_percent": true,
+            "same_treatment_spread_within_five_percent": false
+          }
+        }
+      }
+    },
+    "lower_heap_diagnostic": "One excluded valid four-arm1536MiB diagnostic, actual max verified; no timed GCcollections; hostpagingstillpresent, notcausalproof",
+    "v2_null": {
+      "decision": "INCOMPLETE",
+      "valid_blocks": 4,
+      "invalid_attempts": 1,
+      "failure": "Owned JVM confirmedkernelglobalOOM during fourth-arm untimedsecondreload; threepartialtimedwindows not effectdata"
+    },
+    "atomic_reload_diagnostic": "One excluded valid four-arm block, actual linkedsource/physicalgraph/initial+settledcensus/strictcapture/observerOff/1536MiB/restoration pass;4atomicselections and0separateselection/Apply commands. Completion does not prove OOM fixed.",
+    "v3_null": {
+      "decision": "INCOMPLETE",
+      "valid_blocks": 4,
+      "invalid_attempts": 1,
+      "not_launched": 7,
+      "disqualifying_observed_gate": {
+        "run": "v3-null-p7-02",
+        "same_treatment_B_spread_percent": 6.871183060008186,
+        "prespecified_limit_percent": 5
+      },
+      "failure": "Owned JVM confirmedkernelglobalOOM during initialuntimedconfigure of fifthattempt,zero timedwindows. Full12blockcohort notcompleted; do not reportfullcohortCI."
+    },
+    "candidate_timed_blocks": 0
+  },
+  "implemented_harness_repairs": [
+    "Maintained same-route byte-identical ZIPaliasnull and balancedABBA/BAAB processblocks, fixedconditioning/windows and source/graphactualproof",
+    "Detailed observers/counters disabled inqualifying timing; raw sample/count/epoch/start-render-end timestamp/wall reconciliation hardened",
+    "Effectiveheap/API andsource/runtimeidentity matching; externalhostPSI/swap/clientfault telemetry with noframefiltering",
+    "Explicit owned-client1536MiB budget only; public/global/quality settingsunchanged",
+    "Atomic verifiedselection+sourceobserver+single successfulreload; untimed precedingGLdrain, observer disarmbefore rollback; privatequalification skipsredundantordinaryApply while retainingOff/empty/exactpackpipeline invariance"
+  ],
+  "validation": {
+    "maintained_offline_java_build": "PASS",
+    "focused_qualification_tests": 9,
+    "capture_tests": 3,
+    "iteration_tests": 36,
+    "private_off_tests": 2,
+    "process_harness_tests": 60,
+    "standalone_java_transaction_checks": "PASS success/armrejection/reloadfailure/rollbackfailure; callbackordering, not actualIrisfaultinjection",
+    "runtime_limits": "Rejection guards principally code inspection. Twenty-four complete processes include two excluded diagnostics and two clock controls; they do not establish public lifecycle, DH/PBR or other-hardware qualification.",
+    "complete_valid_owned_processes": 24
+  },
+  "stopping_rationale": [
+    "The complete original known-null cohort failed both scenes under preregistered gates.",
+    "The evidence-backed ownedheap and duplicate-reload repairs were implemented/tested prospectively, preserving all earlier failures; gates were never relaxed and data never pooled across versions.",
+    "The repaired cohort is incomplete and already contains a valid spread violation that cannot be discarded. Recurrent OSOOM beforetiming aftertheboundedrepair prevents completing this qualification safely incurrenthostconditions.",
+    "No further benchmark launches, global/shared process cleanup, quality reductions, speculative parameter search or shader edits. Read-only ownDRMmemory census could not attribute visible pinned allocations and had7permission failures; cause/ownership remains unresolved.",
+    "A future attempt needs changed/adequatehostcapacity or coordinated resolution ofknownmemoryowners, then a new complete balancednullcohort on frozenruntime BEFORE AO. NoAO result canbe inferred from this task."
+  ],
+  "restoration": {
+    "operations": 26,
+    "all_terminal_restored_released": true,
+    "owned_clients_remaining": 0,
+    "conflict_bytes_and_world_backups_retained": true,
+    "pending_failed_commands_not_acknowledged": true
+  },
+  "preserved": {
+    "previous16goalstatuses": "Untouched; docsSTATUSbytesverified againsttaskstart",
+    "frozen_shader_producer_and_validator": "Unchanged hashesverified",
+    "native_quality_AA_and_original_packs": "Preserved, exactnative463 source/graphproofforvalidcaptures",
+    "default_enablement": "Nochange; private/defaultoff",
+    "commits_pushes": "None requested or performed"
+  },
+  "evidence": [
+    "null-cohort-v1.json",
+    "null-cohort-v2-incomplete.json",
+    "null-cohort-v3-incomplete.json",
+    "kernel-oom-repair-review.json",
+    "atomic-reload-readiness-review.json",
+    "v2-null-p0-03-termination-interpretation.json",
+    "v3-null-p0-03-termination-interpretation.json",
+    "final-operational-verification.json",
+    "storage-inventory.json",
+    "post-oom-readonly-drm-memory.json"
+  ],
+  "review": {
+    "verdict": "CLOSE for stopping this assigned run; benchmarktrust/AOqualification BLOCKED/NOTACHIEVED",
+    "model": "gpt-6-astra",
+    "effort": "medium",
+    "evidence": "final-independent-stopping-review.json",
+    "link": "<t3-thread://v2/de4b951c-7cc7-4d2d-bbb0-1f3e6d7f79f7/thread:delegated-task:command%3Amcp%3A84c5650b-fd3d-4191-bee0-2299064e48dd%3Adelegate-task%3Accef40b9-b302-4f44-bf5a-2fc1d714ba0d>",
+    "finding": "No evidence-backed material next step within frozen-quality, current-host, nonshared-change scope. Early stop after demonstrated blocker, not12hourscompleted."
+  },
+  "presentation": "qualification-results.html"
+}

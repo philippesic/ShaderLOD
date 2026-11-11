@@ -1,0 +1,53 @@
+{
+  "goal": "N02",
+  "mechanism": "Eliminate unused attachments and target pairs",
+  "asahi": {
+    "goal": "N02",
+    "mechanism": "Eliminate unused attachments and target pairs",
+    "targets": {
+      "makeup": {
+        "status": "CONSOLIDATED_WITH_G01"
+      },
+      "bsl": {
+        "status": "NO_PROVEN_DEAD_LIFETIME"
+      },
+      "reimagined": {
+        "status": "NO_PROVEN_DEAD_LIFETIME"
+      },
+      "unbound": {
+        "status": "NO_PROVEN_DEAD_LIFETIME"
+      }
+    }
+  },
+  "rtx5080": [
+    {
+      "shader": "makeup",
+      "goal": "N02",
+      "status": "CONSOLIDATED_WITH_G01",
+      "scope_note": "Same MakeUp G01 implementation; no independent or additive optimization credit.",
+      "implementation": "dead_frame_copy"
+    },
+    {
+      "shader": "bsl",
+      "goal": "N02",
+      "status": "HELD_NATIVE_LIFETIME_PROOF",
+      "scope_note": "Current native attachments/history/custom texture ownership lack a complete multi-frame read/write/clear/bank-lifetime certificate for safe storage removal. Sampler names or one-frame inactivity cannot prove dead resources. No independent timing or saved-allocation claim; retain native storage until a shared safe mechanism is demonstrated.",
+      "implementation": ""
+    },
+    {
+      "shader": "reimagined",
+      "goal": "N02",
+      "status": "HELD_NATIVE_LIFETIME_PROOF",
+      "scope_note": "Current native attachments/history/custom texture ownership lack a complete multi-frame read/write/clear/bank-lifetime certificate for safe storage removal. Sampler names or one-frame inactivity cannot prove dead resources. No independent timing or saved-allocation claim; retain native storage until a shared safe mechanism is demonstrated.",
+      "implementation": ""
+    },
+    {
+      "shader": "unbound",
+      "goal": "N02",
+      "status": "HELD_NATIVE_LIFETIME_PROOF",
+      "scope_note": "Current native attachments/history/custom texture ownership lack a complete multi-frame read/write/clear/bank-lifetime certificate for safe storage removal. Sampler names or one-frame inactivity cannot prove dead resources. No independent timing or saved-allocation claim; retain native storage until a shared safe mechanism is demonstrated.",
+      "implementation": ""
+    }
+  ],
+  "final_disposition": "discard; no candidate qualified across all four packs and both completed machines"
+}

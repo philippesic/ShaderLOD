@@ -1,0 +1,215 @@
+{
+  "goal": "G09",
+  "mechanism": "POM height-query reuse / empty-prefix skipping",
+  "asahi": {
+    "goal": "G09",
+    "mechanism": "POM height-query reuse / empty-prefix skipping",
+    "targets": {
+      "bsl": {
+        "status": "MEASURED_SLOWER",
+        "effects_pct": {
+          "n": 1,
+          "mean": -5.891803527085965,
+          "sd": null,
+          "variance": null
+        },
+        "plotted_phase": "discovery",
+        "plotted_case": "primary",
+        "plotted_runs": 1,
+        "scope_note": "Primary public prefix route has timed native setup admission; finite synthetic sampler/ray checks do not count rendered skip hits. Alternate exact-cache source exists but the driver exposes no live cache-control uniform; do not classify it as proven executed reuse."
+      },
+      "makeup": {
+        "status": "NO_NATIVE_POM"
+      },
+      "reimagined": {
+        "status": "MEASURED_SLOWER",
+        "effects_pct": {
+          "n": 1,
+          "mean": -38.20846250996783,
+          "sd": null,
+          "variance": null
+        },
+        "plotted_phase": "discovery",
+        "plotted_case": "pbr-rp3-exact-cache",
+        "plotted_runs": 1,
+        "scope_note": "RP_MODE1 fallback and RP_MODE3/Replete native POM opportunity are separate cases; exact cache does not imply compiler/physical query savings."
+      },
+      "unbound": {
+        "status": "MEASURED_SLOWER",
+        "effects_pct": {
+          "n": 1,
+          "mean": -48.41844184180599,
+          "sd": null,
+          "variance": null
+        },
+        "plotted_phase": "discovery",
+        "plotted_case": "pbr-rp3-exact-cache",
+        "plotted_runs": 1,
+        "scope_note": "RP_MODE1 fallback and RP_MODE3/Replete native POM opportunity are separate cases; exact cache does not imply compiler/physical query savings."
+      }
+    }
+  },
+  "rtx5080": [
+    {
+      "shader": "bsl",
+      "goal": "G09",
+      "status": "MEASURED",
+      "arms": {
+        "native": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 5.537358839304968,
+            "sd": 0.04272104180154725,
+            "variance": 0.001825087412609548
+          },
+          "mean_within_window_sd_ms": 0.18169487229159592,
+          "mean_within_window_variance_ms2": 0.03477334172939622,
+          "mean_p95_ms": 5.75045
+        },
+        "candidate": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 5.998719217840195,
+            "sd": 0.04559370963767619,
+            "variance": 0.0020787863585247273
+          },
+          "mean_within_window_sd_ms": 0.1575059251766399,
+          "mean_within_window_variance_ms2": 0.025283028433440477,
+          "mean_p95_ms": 6.17055
+        },
+        "return": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 5.54084511149733,
+            "sd": 0.04755173309275714,
+            "variance": 0.002261167320124815
+          },
+          "mean_within_window_sd_ms": 0.1327744412386112,
+          "mean_within_window_variance_ms2": 0.01804222590352475,
+          "mean_p95_ms": 5.71195
+        }
+      },
+      "effects_pct": {
+        "n": 2,
+        "mean": -8.297927013608147,
+        "sd": 0.05936092729511234,
+        "variance": 0.0035237196893356127
+      },
+      "plotted_case": "primary",
+      "plotted_phase": "screening",
+      "plotted_runs": 2,
+      "plotted_gl_context": "4.6",
+      "implementation": "pom_empty_height_prefix"
+    },
+    {
+      "shader": "makeup",
+      "goal": "G09",
+      "status": "NO_NATIVE_POM_WORK",
+      "scope_note": "This MakeUp profile has no native material POM traversal or height-map consumer. A parallax-cache request therefore cannot remove native POM work here. The other families use separately measured native-PBR cases.",
+      "implementation": ""
+    },
+    {
+      "shader": "reimagined",
+      "goal": "G09",
+      "status": "MEASURED",
+      "arms": {
+        "native": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 4.996121225668396,
+            "sd": 0.0006138116729220461,
+            "variance": 3.767647698153609e-07
+          },
+          "mean_within_window_sd_ms": 0.13964544414068958,
+          "mean_within_window_variance_ms2": 0.020625460688138825,
+          "mean_p95_ms": 5.1274999999999995
+        },
+        "candidate": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 5.821037043335222,
+            "sd": 0.0013600205075417291,
+            "variance": 1.8496557809340626e-06
+          },
+          "mean_within_window_sd_ms": 0.1206917058373433,
+          "mean_within_window_variance_ms2": 0.014732156419303408,
+          "mean_p95_ms": 5.968825
+        },
+        "return": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 4.996416573022621,
+            "sd": 0.0018705710597576866,
+            "variance": 3.4990360896029945e-06
+          },
+          "mean_within_window_sd_ms": 0.11353236284401139,
+          "mean_within_window_variance_ms2": 0.01316777817664649,
+          "mean_p95_ms": 5.13205
+        }
+      },
+      "effects_pct": {
+        "n": 2,
+        "mean": -16.507681460884044,
+        "sd": 0.0017458598495292714,
+        "variance": 3.0480266141983705e-06
+      },
+      "plotted_case": "native-rp3-pbr",
+      "plotted_phase": "screening",
+      "plotted_runs": 2,
+      "plotted_gl_context": "3.2",
+      "implementation": "pom_height_cache"
+    },
+    {
+      "shader": "unbound",
+      "goal": "G09",
+      "status": "MEASURED",
+      "arms": {
+        "native": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 4.985050786572,
+            "sd": 0.0005924760323383498,
+            "variance": 3.510278488953932e-07
+          },
+          "mean_within_window_sd_ms": 0.13720865948796562,
+          "mean_within_window_variance_ms2": 0.019731235891174488,
+          "mean_p95_ms": 5.1315
+        },
+        "candidate": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 5.562050865520099,
+            "sd": 0.00047673704224664745,
+            "variance": 2.2727820745008174e-07
+          },
+          "mean_within_window_sd_ms": 0.132761026207713,
+          "mean_within_window_variance_ms2": 0.01773084010184532,
+          "mean_p95_ms": 5.731475
+        },
+        "return": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 4.9873969611845546,
+            "sd": 0.0019041681843165992,
+            "variance": 3.625856474163574e-06
+          },
+          "mean_within_window_sd_ms": 0.09901713889559918,
+          "mean_within_window_variance_ms2": 0.009805125497046083,
+          "mean_p95_ms": 5.10605
+        }
+      },
+      "effects_pct": {
+        "n": 2,
+        "mean": -11.548362853139922,
+        "sd": 0.03748768536069651,
+        "variance": 0.0014053265537025792
+      },
+      "plotted_case": "native-rp3-pbr",
+      "plotted_phase": "screening",
+      "plotted_runs": 2,
+      "plotted_gl_context": "3.2",
+      "implementation": "pom_height_cache"
+    }
+  ],
+  "final_disposition": "discard; no candidate qualified across all four packs and both completed machines"
+}

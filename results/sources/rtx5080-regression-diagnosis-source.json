@@ -1,0 +1,3217 @@
+{
+  "scope": "Untimed finite observed native events and Iris colour/custom texture inventory only; two completed frames per packet, excluding partial next frame. Physical object names are excluded from storage comparison. This does not enumerate every custom mod allocation, infer GPU duration, or prove lifetime/image equivalence. Earlier implementation attempts remain separately identified by report/context.",
+  "rows": [
+    {
+      "run": "reimagined-g03-gl46-regression-abba-v7",
+      "shader": "reimagined",
+      "goal": "G03",
+      "label": "candidate_0",
+      "case": "gl46-regression-diagnostic",
+      "effect_pct": -6.989027706699114,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "reimagined-g03-gl46-regression-abba-v7",
+      "shader": "reimagined",
+      "goal": "G03",
+      "label": "candidate_1",
+      "case": "gl46-regression-diagnostic",
+      "effect_pct": -6.989027706699114,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "unbound-g03-gl46-regression-abba-v7",
+      "shader": "unbound",
+      "goal": "G03",
+      "label": "candidate_0",
+      "case": "gl46-regression-diagnostic",
+      "effect_pct": -10.80605298995133,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "unbound-g03-gl46-regression-abba-v7",
+      "shader": "unbound",
+      "goal": "G03",
+      "label": "candidate_1",
+      "case": "gl46-regression-diagnostic",
+      "effect_pct": -10.80605298995133,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "makeup-g05-primary-test-abba-runtime-v4",
+      "shader": "makeup",
+      "goal": "G05",
+      "label": "candidate_0",
+      "case": "primary",
+      "effect_pct": -3.8021873341485577,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "completed_quad": 12,
+        "terrain_setup": 6,
+        "mip_return": 4,
+        "swap_copy_return": 12,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "completed_quad": 12,
+        "terrain_setup": 6,
+        "mip_return": 4,
+        "swap_copy_return": 12,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "makeup-g05-primary-test-abba-runtime-v4",
+      "shader": "makeup",
+      "goal": "G05",
+      "label": "candidate_1",
+      "case": "primary",
+      "effect_pct": -3.8021873341485577,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "completed_quad": 12,
+        "terrain_setup": 6,
+        "mip_return": 4,
+        "swap_copy_return": 12,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "completed_quad": 12,
+        "terrain_setup": 6,
+        "mip_return": 4,
+        "swap_copy_return": 12,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "makeup-g05-primary-test-baab-runtime-v4",
+      "shader": "makeup",
+      "goal": "G05",
+      "label": "candidate_0",
+      "case": "primary",
+      "effect_pct": -3.768604062263213,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "completed_quad": 12,
+        "terrain_setup": 6,
+        "mip_return": 4,
+        "swap_copy_return": 12,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "completed_quad": 12,
+        "terrain_setup": 6,
+        "mip_return": 4,
+        "swap_copy_return": 12,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "makeup-g05-primary-test-baab-runtime-v4",
+      "shader": "makeup",
+      "goal": "G05",
+      "label": "candidate_1",
+      "case": "primary",
+      "effect_pct": -3.768604062263213,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "completed_quad": 12,
+        "terrain_setup": 6,
+        "mip_return": 4,
+        "swap_copy_return": 12,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "completed_quad": 12,
+        "terrain_setup": 6,
+        "mip_return": 4,
+        "swap_copy_return": 12,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "makeup-g07-primary-test-abba-runtime-v4",
+      "shader": "makeup",
+      "goal": "G07",
+      "label": "candidate_0",
+      "case": "primary",
+      "effect_pct": -3.1872999081912523,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "completed_quad": 12,
+        "terrain_setup": 6,
+        "mip_return": 4,
+        "swap_copy_return": 12,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "completed_quad": 12,
+        "terrain_setup": 6,
+        "mip_return": 4,
+        "swap_copy_return": 12,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "makeup-g07-primary-test-abba-runtime-v4",
+      "shader": "makeup",
+      "goal": "G07",
+      "label": "candidate_1",
+      "case": "primary",
+      "effect_pct": -3.1872999081912523,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "completed_quad": 12,
+        "terrain_setup": 6,
+        "mip_return": 4,
+        "swap_copy_return": 12,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "completed_quad": 12,
+        "terrain_setup": 6,
+        "mip_return": 4,
+        "swap_copy_return": 12,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "makeup-g07-primary-test-baab-runtime-v4",
+      "shader": "makeup",
+      "goal": "G07",
+      "label": "candidate_0",
+      "case": "primary",
+      "effect_pct": -3.3142508941049273,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "completed_quad": 12,
+        "terrain_setup": 6,
+        "mip_return": 4,
+        "swap_copy_return": 12,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "completed_quad": 12,
+        "terrain_setup": 6,
+        "mip_return": 4,
+        "swap_copy_return": 12,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "makeup-g07-primary-test-baab-runtime-v4",
+      "shader": "makeup",
+      "goal": "G07",
+      "label": "candidate_1",
+      "case": "primary",
+      "effect_pct": -3.3142508941049273,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "completed_quad": 12,
+        "terrain_setup": 6,
+        "mip_return": 4,
+        "swap_copy_return": 12,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "completed_quad": 12,
+        "terrain_setup": 6,
+        "mip_return": 4,
+        "swap_copy_return": 12,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "bsl-g06-primary-test-abba-r1-repair-v2",
+      "shader": "bsl",
+      "goal": "G06",
+      "label": "candidate_0",
+      "case": "primary",
+      "effect_pct": -13.979087981409146,
+      "added_colour_targets": [
+        "10"
+      ],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "completed_quad": 18,
+        "mip_return": 6,
+        "swap_copy_return": 2,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "completed_quad": 20,
+        "mip_return": 6,
+        "swap_copy_return": 2,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {
+        "10": {
+          "main": {
+            "exists": true,
+            "width": 3840,
+            "height": 2160,
+            "format": 33328
+          },
+          "alt": {
+            "exists": true,
+            "width": 3840,
+            "height": 2160,
+            "format": 33328
+          }
+        }
+      }
+    },
+    {
+      "run": "bsl-g06-primary-test-abba-r1-repair-v2",
+      "shader": "bsl",
+      "goal": "G06",
+      "label": "candidate_1",
+      "case": "primary",
+      "effect_pct": -13.979087981409146,
+      "added_colour_targets": [
+        "10"
+      ],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "completed_quad": 18,
+        "mip_return": 6,
+        "swap_copy_return": 2,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "completed_quad": 20,
+        "mip_return": 6,
+        "swap_copy_return": 2,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {
+        "10": {
+          "main": {
+            "exists": true,
+            "width": 3840,
+            "height": 2160,
+            "format": 33328
+          },
+          "alt": {
+            "exists": true,
+            "width": 3840,
+            "height": 2160,
+            "format": 33328
+          }
+        }
+      }
+    },
+    {
+      "run": "unbound-n04-primary-test-abba-r1",
+      "shader": "unbound",
+      "goal": "N04",
+      "label": "candidate_0",
+      "case": "primary",
+      "effect_pct": -5.1708336372352335,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "unbound-n04-primary-test-abba-r1",
+      "shader": "unbound",
+      "goal": "N04",
+      "label": "candidate_1",
+      "case": "primary",
+      "effect_pct": -5.1708336372352335,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "reimagined-g09-native-rp1-fallback-test-abba-r1",
+      "shader": "reimagined",
+      "goal": "G09",
+      "label": "candidate_0",
+      "case": "native-rp1-fallback",
+      "effect_pct": -4.937900584693862,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "reimagined-g09-native-rp1-fallback-test-abba-r1",
+      "shader": "reimagined",
+      "goal": "G09",
+      "label": "candidate_1",
+      "case": "native-rp1-fallback",
+      "effect_pct": -4.937900584693862,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "unbound-g09-native-rp1-fallback-test-abba-r1",
+      "shader": "unbound",
+      "goal": "G09",
+      "label": "candidate_0",
+      "case": "native-rp1-fallback",
+      "effect_pct": -5.077284358663743,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "unbound-g09-native-rp1-fallback-test-abba-r1",
+      "shader": "unbound",
+      "goal": "G09",
+      "label": "candidate_1",
+      "case": "native-rp1-fallback",
+      "effect_pct": -5.077284358663743,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "reimagined-g02-primary-test-baab-r2",
+      "shader": "reimagined",
+      "goal": "G02",
+      "label": "candidate_0",
+      "case": "primary",
+      "effect_pct": -5.509044589505868,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "completed_quad": 18,
+        "mip_return": 6,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "reimagined-g02-primary-test-baab-r2",
+      "shader": "reimagined",
+      "goal": "G02",
+      "label": "candidate_1",
+      "case": "primary",
+      "effect_pct": -5.509044589505868,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "completed_quad": 18,
+        "mip_return": 6,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "unbound-g02-primary-test-baab-r2",
+      "shader": "unbound",
+      "goal": "G02",
+      "label": "candidate_0",
+      "case": "primary",
+      "effect_pct": -9.84865458232676,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "completed_quad": 18,
+        "mip_return": 6,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "unbound-g02-primary-test-baab-r2",
+      "shader": "unbound",
+      "goal": "G02",
+      "label": "candidate_1",
+      "case": "primary",
+      "effect_pct": -9.84865458232676,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "completed_quad": 18,
+        "mip_return": 6,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "reimagined-g03-primary-test-baab-r2",
+      "shader": "reimagined",
+      "goal": "G03",
+      "label": "candidate_0",
+      "case": "primary",
+      "effect_pct": -7.371748810086631,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "reimagined-g03-primary-test-baab-r2",
+      "shader": "reimagined",
+      "goal": "G03",
+      "label": "candidate_1",
+      "case": "primary",
+      "effect_pct": -7.371748810086631,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "unbound-g03-primary-test-baab-r2",
+      "shader": "unbound",
+      "goal": "G03",
+      "label": "candidate_0",
+      "case": "primary",
+      "effect_pct": -11.027351505244173,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "unbound-g03-primary-test-baab-r2",
+      "shader": "unbound",
+      "goal": "G03",
+      "label": "candidate_1",
+      "case": "primary",
+      "effect_pct": -11.027351505244173,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "bsl-g05-primary-test-baab-r2",
+      "shader": "bsl",
+      "goal": "G05",
+      "label": "candidate_0",
+      "case": "primary",
+      "effect_pct": -18.27514822759445,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "completed_quad": 18,
+        "mip_return": 6,
+        "swap_copy_return": 2,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "completed_quad": 18,
+        "mip_return": 6,
+        "swap_copy_return": 2,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "bsl-g05-primary-test-baab-r2",
+      "shader": "bsl",
+      "goal": "G05",
+      "label": "candidate_1",
+      "case": "primary",
+      "effect_pct": -18.27514822759445,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "completed_quad": 18,
+        "mip_return": 6,
+        "swap_copy_return": 2,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "completed_quad": 18,
+        "mip_return": 6,
+        "swap_copy_return": 2,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "reimagined-g05-primary-test-baab-r2",
+      "shader": "reimagined",
+      "goal": "G05",
+      "label": "candidate_0",
+      "case": "primary",
+      "effect_pct": -8.912874558936027,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "reimagined-g05-primary-test-baab-r2",
+      "shader": "reimagined",
+      "goal": "G05",
+      "label": "candidate_1",
+      "case": "primary",
+      "effect_pct": -8.912874558936027,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "unbound-g05-primary-test-baab-r2",
+      "shader": "unbound",
+      "goal": "G05",
+      "label": "candidate_0",
+      "case": "primary",
+      "effect_pct": -13.136085993441528,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "unbound-g05-primary-test-baab-r2",
+      "shader": "unbound",
+      "goal": "G05",
+      "label": "candidate_1",
+      "case": "primary",
+      "effect_pct": -13.136085993441528,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "bsl-g06-primary-test-baab-r2",
+      "shader": "bsl",
+      "goal": "G06",
+      "label": "candidate_0",
+      "case": "primary",
+      "effect_pct": -13.818138976619135,
+      "added_colour_targets": [
+        "10"
+      ],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "completed_quad": 18,
+        "mip_return": 6,
+        "swap_copy_return": 2,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "completed_quad": 20,
+        "mip_return": 6,
+        "swap_copy_return": 2,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {
+        "10": {
+          "main": {
+            "exists": true,
+            "width": 3840,
+            "height": 2160,
+            "format": 33328
+          },
+          "alt": {
+            "exists": true,
+            "width": 3840,
+            "height": 2160,
+            "format": 33328
+          }
+        }
+      }
+    },
+    {
+      "run": "bsl-g06-primary-test-baab-r2",
+      "shader": "bsl",
+      "goal": "G06",
+      "label": "candidate_1",
+      "case": "primary",
+      "effect_pct": -13.818138976619135,
+      "added_colour_targets": [
+        "10"
+      ],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "completed_quad": 18,
+        "mip_return": 6,
+        "swap_copy_return": 2,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "completed_quad": 20,
+        "mip_return": 6,
+        "swap_copy_return": 2,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {
+        "10": {
+          "main": {
+            "exists": true,
+            "width": 3840,
+            "height": 2160,
+            "format": 33328
+          },
+          "alt": {
+            "exists": true,
+            "width": 3840,
+            "height": 2160,
+            "format": 33328
+          }
+        }
+      }
+    },
+    {
+      "run": "reimagined-g06-primary-test-baab-r2",
+      "shader": "reimagined",
+      "goal": "G06",
+      "label": "candidate_0",
+      "case": "primary",
+      "effect_pct": -10.873008737776047,
+      "added_colour_targets": [
+        "10"
+      ],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "completed_quad": 20,
+        "mip_return": 8,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {
+        "10": {
+          "main": {
+            "exists": true,
+            "width": 3840,
+            "height": 2160,
+            "format": 34836
+          },
+          "alt": {
+            "exists": true,
+            "width": 3840,
+            "height": 2160,
+            "format": 34836
+          }
+        }
+      }
+    },
+    {
+      "run": "reimagined-g06-primary-test-baab-r2",
+      "shader": "reimagined",
+      "goal": "G06",
+      "label": "candidate_1",
+      "case": "primary",
+      "effect_pct": -10.873008737776047,
+      "added_colour_targets": [
+        "10"
+      ],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "completed_quad": 20,
+        "mip_return": 8,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {
+        "10": {
+          "main": {
+            "exists": true,
+            "width": 3840,
+            "height": 2160,
+            "format": 34836
+          },
+          "alt": {
+            "exists": true,
+            "width": 3840,
+            "height": 2160,
+            "format": 34836
+          }
+        }
+      }
+    },
+    {
+      "run": "unbound-g06-primary-test-baab-r2",
+      "shader": "unbound",
+      "goal": "G06",
+      "label": "candidate_0",
+      "case": "primary",
+      "effect_pct": -17.701541529299767,
+      "added_colour_targets": [
+        "10"
+      ],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "completed_quad": 20,
+        "mip_return": 8,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {
+        "10": {
+          "main": {
+            "exists": true,
+            "width": 3840,
+            "height": 2160,
+            "format": 34836
+          },
+          "alt": {
+            "exists": true,
+            "width": 3840,
+            "height": 2160,
+            "format": 34836
+          }
+        }
+      }
+    },
+    {
+      "run": "unbound-g06-primary-test-baab-r2",
+      "shader": "unbound",
+      "goal": "G06",
+      "label": "candidate_1",
+      "case": "primary",
+      "effect_pct": -17.701541529299767,
+      "added_colour_targets": [
+        "10"
+      ],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "completed_quad": 20,
+        "mip_return": 8,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {
+        "10": {
+          "main": {
+            "exists": true,
+            "width": 3840,
+            "height": 2160,
+            "format": 34836
+          },
+          "alt": {
+            "exists": true,
+            "width": 3840,
+            "height": 2160,
+            "format": 34836
+          }
+        }
+      }
+    },
+    {
+      "run": "makeup-g07-primary-test-baab-r2",
+      "shader": "makeup",
+      "goal": "G07",
+      "label": "candidate_0",
+      "case": "primary",
+      "effect_pct": -3.2668925882690933,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "completed_quad": 12,
+        "terrain_setup": 6,
+        "mip_return": 4,
+        "swap_copy_return": 12,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "completed_quad": 12,
+        "terrain_setup": 6,
+        "mip_return": 4,
+        "swap_copy_return": 12,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "makeup-g07-primary-test-baab-r2",
+      "shader": "makeup",
+      "goal": "G07",
+      "label": "candidate_1",
+      "case": "primary",
+      "effect_pct": -3.2668925882690933,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "completed_quad": 12,
+        "terrain_setup": 6,
+        "mip_return": 4,
+        "swap_copy_return": 12,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "completed_quad": 12,
+        "terrain_setup": 6,
+        "mip_return": 4,
+        "swap_copy_return": 12,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "bsl-g07-primary-test-baab-r2",
+      "shader": "bsl",
+      "goal": "G07",
+      "label": "candidate_0",
+      "case": "primary",
+      "effect_pct": -17.51013554866526,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "completed_quad": 18,
+        "mip_return": 6,
+        "swap_copy_return": 2,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "completed_quad": 18,
+        "mip_return": 6,
+        "swap_copy_return": 2,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "bsl-g07-primary-test-baab-r2",
+      "shader": "bsl",
+      "goal": "G07",
+      "label": "candidate_1",
+      "case": "primary",
+      "effect_pct": -17.51013554866526,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "completed_quad": 18,
+        "mip_return": 6,
+        "swap_copy_return": 2,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "completed_quad": 18,
+        "mip_return": 6,
+        "swap_copy_return": 2,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "reimagined-g07-primary-test-baab-r2",
+      "shader": "reimagined",
+      "goal": "G07",
+      "label": "candidate_0",
+      "case": "primary",
+      "effect_pct": -7.352428811655341,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "reimagined-g07-primary-test-baab-r2",
+      "shader": "reimagined",
+      "goal": "G07",
+      "label": "candidate_1",
+      "case": "primary",
+      "effect_pct": -7.352428811655341,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "unbound-g07-primary-test-baab-r2",
+      "shader": "unbound",
+      "goal": "G07",
+      "label": "candidate_0",
+      "case": "primary",
+      "effect_pct": -11.085194900953509,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "unbound-g07-primary-test-baab-r2",
+      "shader": "unbound",
+      "goal": "G07",
+      "label": "candidate_1",
+      "case": "primary",
+      "effect_pct": -11.085194900953509,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "unbound-g08-primary-test-baab-r2",
+      "shader": "unbound",
+      "goal": "G08",
+      "label": "candidate_0",
+      "case": "primary",
+      "effect_pct": -5.275106317738123,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "unbound-g08-primary-test-baab-r2",
+      "shader": "unbound",
+      "goal": "G08",
+      "label": "candidate_1",
+      "case": "primary",
+      "effect_pct": -5.275106317738123,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "reimagined-g09-native-rp3-pbr-test-baab-r2",
+      "shader": "reimagined",
+      "goal": "G09",
+      "label": "candidate_0",
+      "case": "native-rp3-pbr",
+      "effect_pct": -16.506446951545442,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "reimagined-g09-native-rp3-pbr-test-baab-r2",
+      "shader": "reimagined",
+      "goal": "G09",
+      "label": "candidate_1",
+      "case": "native-rp3-pbr",
+      "effect_pct": -16.506446951545442,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "unbound-g09-native-rp3-pbr-test-baab-r2",
+      "shader": "unbound",
+      "goal": "G09",
+      "label": "candidate_0",
+      "case": "native-rp3-pbr",
+      "effect_pct": -11.521855056610386,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "unbound-g09-native-rp3-pbr-test-baab-r2",
+      "shader": "unbound",
+      "goal": "G09",
+      "label": "candidate_1",
+      "case": "native-rp3-pbr",
+      "effect_pct": -11.521855056610386,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "bsl-n04-primary-test-baab-r2",
+      "shader": "bsl",
+      "goal": "N04",
+      "label": "candidate_0",
+      "case": "primary",
+      "effect_pct": -2.5315877748827242,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "completed_quad": 18,
+        "mip_return": 6,
+        "swap_copy_return": 2,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "completed_quad": 18,
+        "mip_return": 6,
+        "swap_copy_return": 2,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "bsl-n04-primary-test-baab-r2",
+      "shader": "bsl",
+      "goal": "N04",
+      "label": "candidate_1",
+      "case": "primary",
+      "effect_pct": -2.5315877748827242,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "completed_quad": 18,
+        "mip_return": 6,
+        "swap_copy_return": 2,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "completed_quad": 18,
+        "mip_return": 6,
+        "swap_copy_return": 2,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "unbound-n04-primary-test-baab-r2",
+      "shader": "unbound",
+      "goal": "N04",
+      "label": "candidate_0",
+      "case": "primary",
+      "effect_pct": -5.145363702973726,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "unbound-n04-primary-test-baab-r2",
+      "shader": "unbound",
+      "goal": "N04",
+      "label": "candidate_1",
+      "case": "primary",
+      "effect_pct": -5.145363702973726,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "reimagined-g09-native-rp1-fallback-test-baab-r2",
+      "shader": "reimagined",
+      "goal": "G09",
+      "label": "candidate_0",
+      "case": "native-rp1-fallback",
+      "effect_pct": -4.934014381731213,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "reimagined-g09-native-rp1-fallback-test-baab-r2",
+      "shader": "reimagined",
+      "goal": "G09",
+      "label": "candidate_1",
+      "case": "native-rp1-fallback",
+      "effect_pct": -4.934014381731213,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "unbound-g09-native-rp1-fallback-test-baab-r2",
+      "shader": "unbound",
+      "goal": "G09",
+      "label": "candidate_0",
+      "case": "native-rp1-fallback",
+      "effect_pct": -5.096985750781523,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "unbound-g09-native-rp1-fallback-test-baab-r2",
+      "shader": "unbound",
+      "goal": "G09",
+      "label": "candidate_1",
+      "case": "native-rp1-fallback",
+      "effect_pct": -5.096985750781523,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "reimagined-g02-primary-test-abba-r1",
+      "shader": "reimagined",
+      "goal": "G02",
+      "label": "candidate_0",
+      "case": "primary",
+      "effect_pct": -5.827654913227476,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "completed_quad": 18,
+        "mip_return": 6,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "reimagined-g02-primary-test-abba-r1",
+      "shader": "reimagined",
+      "goal": "G02",
+      "label": "candidate_1",
+      "case": "primary",
+      "effect_pct": -5.827654913227476,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "completed_quad": 18,
+        "mip_return": 6,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "unbound-g02-primary-test-abba-r1",
+      "shader": "unbound",
+      "goal": "G02",
+      "label": "candidate_0",
+      "case": "primary",
+      "effect_pct": -10.169569408489153,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "completed_quad": 18,
+        "mip_return": 6,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "unbound-g02-primary-test-abba-r1",
+      "shader": "unbound",
+      "goal": "G02",
+      "label": "candidate_1",
+      "case": "primary",
+      "effect_pct": -10.169569408489153,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "completed_quad": 18,
+        "mip_return": 6,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "reimagined-g03-primary-test-abba-r1",
+      "shader": "reimagined",
+      "goal": "G03",
+      "label": "candidate_0",
+      "case": "primary",
+      "effect_pct": -7.26212045048237,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "reimagined-g03-primary-test-abba-r1",
+      "shader": "reimagined",
+      "goal": "G03",
+      "label": "candidate_1",
+      "case": "primary",
+      "effect_pct": -7.26212045048237,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "unbound-g03-primary-test-abba-r1",
+      "shader": "unbound",
+      "goal": "G03",
+      "label": "candidate_0",
+      "case": "primary",
+      "effect_pct": -11.123788058083013,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "unbound-g03-primary-test-abba-r1",
+      "shader": "unbound",
+      "goal": "G03",
+      "label": "candidate_1",
+      "case": "primary",
+      "effect_pct": -11.123788058083013,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "bsl-g05-primary-test-abba-r1",
+      "shader": "bsl",
+      "goal": "G05",
+      "label": "candidate_0",
+      "case": "primary",
+      "effect_pct": -18.19244555810189,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "completed_quad": 18,
+        "mip_return": 6,
+        "swap_copy_return": 2,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "completed_quad": 18,
+        "mip_return": 6,
+        "swap_copy_return": 2,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "bsl-g05-primary-test-abba-r1",
+      "shader": "bsl",
+      "goal": "G05",
+      "label": "candidate_1",
+      "case": "primary",
+      "effect_pct": -18.19244555810189,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "completed_quad": 18,
+        "mip_return": 6,
+        "swap_copy_return": 2,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "completed_quad": 18,
+        "mip_return": 6,
+        "swap_copy_return": 2,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "reimagined-g05-primary-test-abba-r1",
+      "shader": "reimagined",
+      "goal": "G05",
+      "label": "candidate_0",
+      "case": "primary",
+      "effect_pct": -8.494331449055755,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "reimagined-g05-primary-test-abba-r1",
+      "shader": "reimagined",
+      "goal": "G05",
+      "label": "candidate_1",
+      "case": "primary",
+      "effect_pct": -8.494331449055755,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "unbound-g05-primary-test-abba-r1",
+      "shader": "unbound",
+      "goal": "G05",
+      "label": "candidate_0",
+      "case": "primary",
+      "effect_pct": -12.909671802394012,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "unbound-g05-primary-test-abba-r1",
+      "shader": "unbound",
+      "goal": "G05",
+      "label": "candidate_1",
+      "case": "primary",
+      "effect_pct": -12.909671802394012,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "reimagined-g06-primary-test-abba-r1",
+      "shader": "reimagined",
+      "goal": "G06",
+      "label": "candidate_0",
+      "case": "primary",
+      "effect_pct": -10.85944963774856,
+      "added_colour_targets": [
+        "10"
+      ],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "completed_quad": 20,
+        "mip_return": 8,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {
+        "10": {
+          "main": {
+            "exists": true,
+            "width": 3840,
+            "height": 2160,
+            "format": 34836
+          },
+          "alt": {
+            "exists": true,
+            "width": 3840,
+            "height": 2160,
+            "format": 34836
+          }
+        }
+      }
+    },
+    {
+      "run": "reimagined-g06-primary-test-abba-r1",
+      "shader": "reimagined",
+      "goal": "G06",
+      "label": "candidate_1",
+      "case": "primary",
+      "effect_pct": -10.85944963774856,
+      "added_colour_targets": [
+        "10"
+      ],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "completed_quad": 20,
+        "mip_return": 8,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {
+        "10": {
+          "main": {
+            "exists": true,
+            "width": 3840,
+            "height": 2160,
+            "format": 34836
+          },
+          "alt": {
+            "exists": true,
+            "width": 3840,
+            "height": 2160,
+            "format": 34836
+          }
+        }
+      }
+    },
+    {
+      "run": "unbound-g06-primary-test-abba-r1",
+      "shader": "unbound",
+      "goal": "G06",
+      "label": "candidate_0",
+      "case": "primary",
+      "effect_pct": -17.455959972381542,
+      "added_colour_targets": [
+        "10"
+      ],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "completed_quad": 20,
+        "mip_return": 8,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {
+        "10": {
+          "main": {
+            "exists": true,
+            "width": 3840,
+            "height": 2160,
+            "format": 34836
+          },
+          "alt": {
+            "exists": true,
+            "width": 3840,
+            "height": 2160,
+            "format": 34836
+          }
+        }
+      }
+    },
+    {
+      "run": "unbound-g06-primary-test-abba-r1",
+      "shader": "unbound",
+      "goal": "G06",
+      "label": "candidate_1",
+      "case": "primary",
+      "effect_pct": -17.455959972381542,
+      "added_colour_targets": [
+        "10"
+      ],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "completed_quad": 20,
+        "mip_return": 8,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {
+        "10": {
+          "main": {
+            "exists": true,
+            "width": 3840,
+            "height": 2160,
+            "format": 34836
+          },
+          "alt": {
+            "exists": true,
+            "width": 3840,
+            "height": 2160,
+            "format": 34836
+          }
+        }
+      }
+    },
+    {
+      "run": "makeup-g07-primary-test-abba-r1",
+      "shader": "makeup",
+      "goal": "G07",
+      "label": "candidate_0",
+      "case": "primary",
+      "effect_pct": -3.2166951194550135,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "completed_quad": 12,
+        "terrain_setup": 6,
+        "mip_return": 4,
+        "swap_copy_return": 12,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "completed_quad": 12,
+        "terrain_setup": 6,
+        "mip_return": 4,
+        "swap_copy_return": 12,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "makeup-g07-primary-test-abba-r1",
+      "shader": "makeup",
+      "goal": "G07",
+      "label": "candidate_1",
+      "case": "primary",
+      "effect_pct": -3.2166951194550135,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "completed_quad": 12,
+        "terrain_setup": 6,
+        "mip_return": 4,
+        "swap_copy_return": 12,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "completed_quad": 12,
+        "terrain_setup": 6,
+        "mip_return": 4,
+        "swap_copy_return": 12,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "bsl-g07-primary-test-abba-r1",
+      "shader": "bsl",
+      "goal": "G07",
+      "label": "candidate_0",
+      "case": "primary",
+      "effect_pct": -16.725018299830946,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "completed_quad": 18,
+        "mip_return": 6,
+        "swap_copy_return": 2,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "completed_quad": 18,
+        "mip_return": 6,
+        "swap_copy_return": 2,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "bsl-g07-primary-test-abba-r1",
+      "shader": "bsl",
+      "goal": "G07",
+      "label": "candidate_1",
+      "case": "primary",
+      "effect_pct": -16.725018299830946,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "completed_quad": 18,
+        "mip_return": 6,
+        "swap_copy_return": 2,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "completed_quad": 18,
+        "mip_return": 6,
+        "swap_copy_return": 2,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "reimagined-g07-primary-test-abba-r1",
+      "shader": "reimagined",
+      "goal": "G07",
+      "label": "candidate_0",
+      "case": "primary",
+      "effect_pct": -7.610525462173764,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "reimagined-g07-primary-test-abba-r1",
+      "shader": "reimagined",
+      "goal": "G07",
+      "label": "candidate_1",
+      "case": "primary",
+      "effect_pct": -7.610525462173764,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "unbound-g07-primary-test-abba-r1",
+      "shader": "unbound",
+      "goal": "G07",
+      "label": "candidate_0",
+      "case": "primary",
+      "effect_pct": -11.039010203192625,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "unbound-g07-primary-test-abba-r1",
+      "shader": "unbound",
+      "goal": "G07",
+      "label": "candidate_1",
+      "case": "primary",
+      "effect_pct": -11.039010203192625,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "unbound-g08-primary-test-abba-r1",
+      "shader": "unbound",
+      "goal": "G08",
+      "label": "candidate_0",
+      "case": "primary",
+      "effect_pct": -5.249081336585702,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "unbound-g08-primary-test-abba-r1",
+      "shader": "unbound",
+      "goal": "G08",
+      "label": "candidate_1",
+      "case": "primary",
+      "effect_pct": -5.249081336585702,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "reimagined-g09-native-rp3-pbr-test-abba-r1",
+      "shader": "reimagined",
+      "goal": "G09",
+      "label": "candidate_0",
+      "case": "native-rp3-pbr",
+      "effect_pct": -16.50891597022265,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "reimagined-g09-native-rp3-pbr-test-abba-r1",
+      "shader": "reimagined",
+      "goal": "G09",
+      "label": "candidate_1",
+      "case": "native-rp3-pbr",
+      "effect_pct": -16.50891597022265,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "unbound-g09-native-rp3-pbr-test-abba-r1",
+      "shader": "unbound",
+      "goal": "G09",
+      "label": "candidate_0",
+      "case": "native-rp3-pbr",
+      "effect_pct": -11.574870649669458,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    },
+    {
+      "run": "unbound-g09-native-rp3-pbr-test-abba-r1",
+      "shader": "unbound",
+      "goal": "G09",
+      "label": "candidate_1",
+      "case": "native-rp3-pbr",
+      "effect_pct": -11.574870649669458,
+      "added_colour_targets": [],
+      "removed_colour_targets": [],
+      "changed_colour_storage": [],
+      "native_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "candidate_event_counts": {
+        "frame_start": 2,
+        "terrain_setup": 6,
+        "mip_return": 8,
+        "completed_quad": 18,
+        "swap_copy_return": 8,
+        "final_return": 2
+      },
+      "completed_frames": [
+        2,
+        2
+      ],
+      "added_storage": {}
+    }
+  ]
+}

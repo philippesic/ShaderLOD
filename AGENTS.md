@@ -5,7 +5,7 @@ ShaderLOD is a NeoForge 1.21.1 client mod that selects Iris shader packs nativel
 ## Where things are
 
 - [README](README.md): setup and commands.
-- [Development readiness](tasks/repo-overhaul.md): benchmark design, agent ops and machine choice blockers.
+- Active development decisions: [benchmark design](tasks/benchmark-design.md), [agent ops](tasks/agent-ops.md), and [machine choice](tasks/machine-choice.md).
 - [Architecture](docs/architecture.md): layout, entry points, Apply/recovery flow.
 - [Development](docs/development.md): how to change, validate and close work.
 - [Iris integration](docs/iris-integration.md): selection states, native writer journal, mixins, sampler indices, DH.
@@ -39,7 +39,7 @@ Work autonomously toward the goal Philip gives, within any limits he states. Do 
 
 Ask Philip before: changing what counts as correct or a pass, changing native quality, expanding the target or product claims, deleting valuable or unclassified data, using any other machine (the RTX 5080 is not allocated), extending a time or resource budget, or publishing anything.
 
-- `/home/philip/ShaderLOD` and `/home/philip/shaderlod` are read-only references, including their ignored files.
+- Historical knowledge is indexed in FINDINGS; supporting records use the artifact location documented in docs/results.md.
 - This repository has no remote. Do not add one or push.
 - Identify owned processes by host, boot and process-birth identity, never PID alone. Do not stop processes you do not own.
 - No scheduler, GPU lease service, automatic evidence expiry or autonomous deletion.

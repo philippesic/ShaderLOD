@@ -18,8 +18,8 @@ This is one scene and one historical setup, not a general verdict on Asahi or vi
 
 ## Evidence and source
 
-- [Original interpretation](/home/philip/ShaderLOD/dev/experiments/headless-development-20261103/final-interpretation.json), sha256:5fa3c3c89f48e9878bbcbc69ed74cccc266e6736e10c77e2d9f5a210f73191d3
-- [Original per-process measurements](/home/philip/ShaderLOD/dev/experiments/headless-development-20261103/baseline-cohort.json), sha256:d616011763cbc29d4afdb40e53eb13331a49956a9eef32eb4da9ee5f029da125
+- [Original interpretation](/home/philip/.local/share/shaderlod-next/evidence/history/original-repository/dev/experiments/headless-development-20261103/final-interpretation.json), sha256:5fa3c3c89f48e9878bbcbc69ed74cccc266e6736e10c77e2d9f5a210f73191d3
+- [Original per-process measurements](/home/philip/.local/share/shaderlod-next/evidence/history/original-repository/dev/experiments/headless-development-20261103/baseline-cohort.json), sha256:d616011763cbc29d4afdb40e53eb13331a49956a9eef32eb4da9ee5f029da125
 - Each row in [result.json](result.json) identifies its original run directory and the verified digest of its executed build-binding.json source/dependency manifest, alongside plan.json, measured windows and restoration records. Executed-source provenance is retained there; this import has not established that every historical source and dependency can be reconstructed. No original artifacts were deleted.
 - Regenerate the figure from retained compact data: `python3 results/asahi-null-calibration/figure.py > results/asahi-null-calibration/figure.html` from the repository root. The generator uses only the Python standard library.
 

@@ -1,0 +1,256 @@
+{
+  "goal": "G03",
+  "mechanism": "Reject transparent cutout fragments earlier",
+  "asahi": {
+    "goal": "G03",
+    "mechanism": "Reject transparent cutout fragments earlier",
+    "targets": {
+      "makeup": {
+        "status": "MEASURED_SLOWER",
+        "effects_pct": {
+          "n": 1,
+          "mean": -2.4141352131190734,
+          "sd": null,
+          "variance": null
+        },
+        "plotted_phase": "discovery",
+        "plotted_case": "primary",
+        "plotted_runs": 1
+      },
+      "bsl": {
+        "status": "UNSUPPORTED_CURRENT_STACK"
+      },
+      "reimagined": {
+        "status": "MEASURED_SLOWER",
+        "effects_pct": {
+          "n": 1,
+          "mean": -3.0821902246786594,
+          "sd": null,
+          "variance": null
+        },
+        "plotted_phase": "discovery",
+        "plotted_case": "primary",
+        "plotted_runs": 1
+      },
+      "unbound": {
+        "status": "MEASURED_SLOWER",
+        "effects_pct": {
+          "n": 1,
+          "mean": -6.557018378869604,
+          "sd": null,
+          "variance": null
+        },
+        "plotted_phase": "discovery",
+        "plotted_case": "primary",
+        "plotted_runs": 1
+      }
+    }
+  },
+  "rtx5080": [
+    {
+      "shader": "makeup",
+      "goal": "G03",
+      "status": "MEASURED",
+      "arms": {
+        "native": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 2.1627358152119216,
+            "sd": 0.0030824137624963755,
+            "variance": 9.501274603227062e-06
+          },
+          "mean_within_window_sd_ms": 0.08005842795587456,
+          "mean_within_window_variance_ms2": 0.0064372545840092705,
+          "mean_p95_ms": 2.26145
+        },
+        "candidate": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 2.161964586099465,
+            "sd": 0.0008151771111018554,
+            "variance": 6.645137224643668e-07
+          },
+          "mean_within_window_sd_ms": 0.08479223729551019,
+          "mean_within_window_variance_ms2": 0.007193714537362105,
+          "mean_p95_ms": 2.272675
+        },
+        "return": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 2.1622799019435206,
+            "sd": 0.00048480719836858964,
+            "variance": 2.3503801959000104e-07
+          },
+          "mean_within_window_sd_ms": 0.07452012049127094,
+          "mean_within_window_variance_ms2": 0.005553424159989892,
+          "mean_p95_ms": 2.25695
+        }
+      },
+      "effects_pct": {
+        "n": 2,
+        "mean": 0.025103875791930907,
+        "sd": 0.04476217786359831,
+        "variance": 0.0020036525670924107
+      },
+      "plotted_case": "primary",
+      "plotted_phase": "screening",
+      "plotted_runs": 2,
+      "plotted_gl_context": "3.2",
+      "implementation": "early_alpha"
+    },
+    {
+      "shader": "bsl",
+      "goal": "G03",
+      "status": "MEASURED",
+      "arms": {
+        "native": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 2.992020628044952,
+            "sd": 0.007953245087433544,
+            "variance": 6.325410742078581e-05
+          },
+          "mean_within_window_sd_ms": 0.10534889257354715,
+          "mean_within_window_variance_ms2": 0.011098725356150932,
+          "mean_p95_ms": 3.13495
+        },
+        "candidate": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 3.002898562504393,
+            "sd": 0.0003471934198893174,
+            "variance": 1.2054327081443988e-07
+          },
+          "mean_within_window_sd_ms": 0.11392758306360913,
+          "mean_within_window_variance_ms2": 0.01397177395075375,
+          "mean_p95_ms": 3.136975
+        },
+        "return": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 3.009618638427484,
+            "sd": 0.0036612250291309977,
+            "variance": 1.3404568713935273e-05
+          },
+          "mean_within_window_sd_ms": 0.10385353492605369,
+          "mean_within_window_variance_ms2": 0.010785798893273076,
+          "mean_p95_ms": 3.13765
+        }
+      },
+      "effects_pct": {
+        "n": 2,
+        "mean": -0.06947729294509296,
+        "sd": 0.20522603623609448,
+        "variance": 0.042117725949178765
+      },
+      "plotted_case": "source-basic-native-optimized",
+      "plotted_phase": "screening",
+      "plotted_runs": 2,
+      "plotted_gl_context": "3.2",
+      "implementation": "early_alpha"
+    },
+    {
+      "shader": "reimagined",
+      "goal": "G03",
+      "status": "MEASURED",
+      "arms": {
+        "native": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 3.412790232411951,
+            "sd": 0.009176371284600141,
+            "variance": 8.420578995283405e-05
+          },
+          "mean_within_window_sd_ms": 0.11465294265600684,
+          "mean_within_window_variance_ms2": 0.013242674613215152,
+          "mean_p95_ms": 3.55395
+        },
+        "candidate": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 3.660814615787892,
+            "sd": 0.009197311296893228,
+            "variance": 8.45905350919598e-05
+          },
+          "mean_within_window_sd_ms": 0.1132853711603023,
+          "mean_within_window_variance_ms2": 0.012878660544058902,
+          "mean_p95_ms": 3.795475
+        },
+        "return": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 3.40964140276954,
+            "sd": 0.003036002119781476,
+            "variance": 9.217308871317615e-06
+          },
+          "mean_within_window_sd_ms": 0.09173204774120458,
+          "mean_within_window_variance_ms2": 0.008518057671563925,
+          "mean_p95_ms": 3.5374
+        }
+      },
+      "effects_pct": {
+        "n": 2,
+        "mean": -7.3169346302845,
+        "sd": 0.07751895648653023,
+        "variance": 0.006009188614760568
+      },
+      "plotted_case": "primary",
+      "plotted_phase": "screening",
+      "plotted_runs": 2,
+      "plotted_gl_context": "3.2",
+      "implementation": "early_alpha"
+    },
+    {
+      "shader": "unbound",
+      "goal": "G03",
+      "status": "MEASURED",
+      "arms": {
+        "native": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 3.5216505073110933,
+            "sd": 0.0004885857149609125,
+            "variance": 2.3871600086386604e-07
+          },
+          "mean_within_window_sd_ms": 0.1017157172518887,
+          "mean_within_window_variance_ms2": 0.010417992033234909,
+          "mean_p95_ms": 3.66665
+        },
+        "candidate": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 3.9129981127556683,
+            "sd": 0.0017365601827365681,
+            "variance": 3.0156412682660625e-06
+          },
+          "mean_within_window_sd_ms": 0.10724185164157916,
+          "mean_within_window_variance_ms2": 0.011626242664830136,
+          "mean_p95_ms": 4.049325
+        },
+        "return": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 3.524000169583943,
+            "sd": 0.00168720670399562,
+            "variance": 2.8466664620077638e-06
+          },
+          "mean_within_window_sd_ms": 0.09355143462944623,
+          "mean_within_window_variance_ms2": 0.008772362660102982,
+          "mean_p95_ms": 3.6403999999999996
+        }
+      },
+      "effects_pct": {
+        "n": 2,
+        "mean": -11.075569781663592,
+        "sd": 0.06819094046659872,
+        "variance": 0.004650004361719212
+      },
+      "plotted_case": "primary",
+      "plotted_phase": "screening",
+      "plotted_runs": 2,
+      "plotted_gl_context": "3.2",
+      "implementation": "early_alpha"
+    }
+  ],
+  "final_disposition": "discard; no candidate qualified across all four packs and both completed machines"
+}

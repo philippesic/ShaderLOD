@@ -1,0 +1,156 @@
+{
+  "objective": "Continue underlying G01-G10 and C01 optimization goals until independently closed or genuinely blocked; C02 excluded",
+  "authority": "User request 2026-11-01 supersedes previous benchmark pause",
+  "count_note": "Twelve listed items total; excluding C02 leaves eleven identified goals",
+  "state": "COMPLETE_WITH_BLOCKER",
+  "running": null,
+  "items": {
+    "G01": {
+      "state": "CLOSED",
+      "prior_evidence": "docs/STATUS.md",
+      "new_evidence": [
+        "g01-current-graph-r1/summary.json",
+        "g01-resource-equivalence-trace.json"
+      ],
+      "review": "g01-independent-review.json",
+      "disposition": "Current pinned MakeUp native100/M1 local optimization search; promising/default off"
+    },
+    "G02": {
+      "state": "BLOCKED",
+      "prior_evidence": "docs/STATUS.md",
+      "new_evidence": [
+        "g02-native-mips-r1/summary.json",
+        "g02-native-mips-r2/summary.json",
+        "g02-integration-contrast-r3/summary.json",
+        "g02-bsl-current-lifetime-proof.json",
+        "g02-bsl-pbr-lifetime-and-qualification.json",
+        "g02-solas-lifetime-proof.json",
+        "g02-solas-lean-qualification.json",
+        "g02-solas-lean-r1/summary.json",
+        "g02-reimagined-current-blocker.json",
+        "g02-unbound-current-blocker.json",
+        "g02-astralex-native-lifetime-proof.json",
+        "g02-astralex-r3/summary.json",
+        "g02-activation-regression-tests-r2.log",
+        "g02-astralex-full-qualification.json",
+        "g02-astralex-r5/summary.json",
+        "g02-astralex-source-pin-refresh.json",
+        "g02-photon-source-pin-refresh.json",
+        "g02-astra-lean-tests.log",
+        "g02-astralex-lean-qualification.json",
+        "g02-photon-public-lifetime-and-qualification.json",
+        "g02-photon-native-applicability.json",
+        "g02-photon-native-pass-qualification.json",
+        "g02-closure-rationale.json"
+      ],
+      "finding": "BSL native/PBR, Solas and Astra singleton native-graph refinements, and Photon public mip-only plus native-derived private pass deletion tested with source/physical evidence. Photon private5.214% lower mean,0.0173% native drift,42 identical surviving stages and two omitted draws. Full restoration/reset/release; no public/default promotion or broad quality/compatibility claim.",
+      "review": "g02-independent-review.json",
+      "native_unbound": "g02-unbound-current-blocker.json",
+      "disposition": "Viable pinned routes completed; whole goal blocked by Reimagined/Unbound original native sampler allocation failures on current runtime, also reproduced without ShaderLOD. No quality/AA downgrade or universal hardware cause claim.",
+      "blockers": [
+        "g02-reimagined-current-blocker.json",
+        "g02-unbound-current-blocker.json"
+      ]
+    },
+    "G03": {
+      "state": "CLOSED",
+      "prior_evidence": "docs/STATUS.md",
+      "new_evidence": "g03-linked-foliage-r1/summary.json",
+      "finding": "Valid restored linked CUTOUT submission run; candidate within9.11% native drift, no individual gain established.",
+      "review": "g03-independent-review.json",
+      "disposition": "Finite current pinned MakeUp native100/M1 search; default off"
+    },
+    "G04": {
+      "state": "CLOSED",
+      "prior_evidence": "docs/STATUS.md",
+      "review": "g04-independent-review.json",
+      "disposition": "Finite current pinned MakeUp native100/M1 search; default off"
+    },
+    "G05": {
+      "state": "CLOSED",
+      "prior_evidence": "docs/STATUS.md",
+      "new_evidence": "g05-fixed16-r2/summary.json",
+      "new_work": "Maintained fixed16 private test, source/work and finite still/motion trace checks completed; slower result and independent closure retained.",
+      "finding": "Complete/restored; fixed16 hierarchy slower than both controls and adds net native-source query expressions, despite correct still/motion trace observations. Independent reviewer CLOSE.",
+      "review": "g05-independent-review.json",
+      "disposition": "Current pinned localreflectionsearch rejected/defaultOff; distinctfixed16testcomplete"
+    },
+    "G06": {
+      "state": "CLOSED",
+      "review": "g06-independent-review.json",
+      "disposition": "Current MakeUp native100/M1 AO optimization search; promising/default off"
+    },
+    "G07": {
+      "state": "CLOSED",
+      "review": "g07-independent-review.json",
+      "disposition": "Finite current local native-quality sample reduction search; do not enable"
+    },
+    "G08": {
+      "state": "CLOSED",
+      "prior_evidence": "docs/STATUS.md",
+      "new_work": "Three maintained native100 cloud variants and source/GPU/work checks completed; Photon diagnostic zero-hit observation retained without hit-correctness claim.",
+      "new_evidence": [
+        "g08-photon-reuse-observation.json",
+        "g08-native-bound-r2/summary.json",
+        "g08-native-bound-split-r1/summary.json",
+        "g08-native-alu-r1/summary.json"
+      ],
+      "finding": "Loop ~10.01% slower, split ~0.054% lower mean without material gain, ALU-only ~1.61% slower. Actual ownership/filter/bytes and positive untimed work with0native-opacity/RGB mismatch in16frames each. Fresh independent reviewer CLOSE. Photon zero-hit equality remains vacuous and new full run invalid/recovered.",
+      "review": "g08-independent-review.json",
+      "disposition": "Finite current pinned local native-quality search; no material gain established, keep private/defaultOff"
+    },
+    "G09": {
+      "state": "CLOSED",
+      "prior_evidence": "docs/STATUS.md",
+      "new_evidence": [
+        "g09-link-pin-repair.json",
+        "g09-native-storage-r3/summary.json",
+        "g09-private-prefix-image-r1/summary.json",
+        "g09-functional-r2/summary.json",
+        "g09-nearest-prefix-law.json"
+      ],
+      "finding": "Private functional prefix Active1 and finite GPU sampler/ray checks completed; slower than both controls. Rendered skip count unmeasured; no broad quality/default qualification.",
+      "review": "g09-independent-review.json",
+      "new_work": "Actual native sampler support, real-atlas synthetic ray comparison, guarded private functional publication and source operator regression tested; valid restored functional result retained.",
+      "disposition": "Current pinned local G09 initial-height/prefix implementations rejected/defaultOff; no general POM exhaustion claim"
+    },
+    "G10": {
+      "state": "CLOSED",
+      "disposition": "Do not enable; local opportunity too small, no evidenced material next avenue",
+      "review": "g10-independent-review.json"
+    },
+    "C01": {
+      "state": "CLOSED",
+      "prior_evidence": "docs/STATUS.md",
+      "new_work": "Explicit128-frame cost+GPU observation aftercandidate timing, Iris frame membership, CPU clocks/drop checks, finally disarm; native timed arms exclude recorder.",
+      "new_evidence": [
+        "c01-cost-gallery-r1/summary.json",
+        "c01-natural-cost-r1/summary.json",
+        "c01-natural-cost-r2/summary.json",
+        "c01-natural-gpu-nowait-r1/summary.json",
+        "c01-natural-gpu-wait-r1/summary.json"
+      ],
+      "finding": "CPU cost plus GPU NO_WAIT/WAIT tested on natural cave with 51.742% submitted-index opportunity. Separate actual primitive witnesses suppressed 56064/108352 primitives in all three modes; native-sample visibility checks found no false-hidden queries. No qualified gain; independent reviewer CLOSE.",
+      "review": "c01-independent-review.json",
+      "disposition": "Finitecurrentpinnedlocalsearch; noqualifiedgain, keepOff"
+    }
+  },
+  "review_role": ".codex/agents/shaderlod_reviewer.toml",
+  "jdk_startup_failure": "Initial launcher without --jdk failed before client launch; retried with prepared JDK21",
+  "tests": {
+    "g02_and_ownership_regressions": "96 tests passed in g02-native-harness-tests.log",
+    "c01_native_mips_ownership_units": "38 tests passed in c01-cost-harness-tests.log",
+    "g09_function_and_c01_java": "4 passed corrected in g09-function-and-c01-tests-r2.log; prior failure was regression fixture missing native PARALLAX_DEPTH definition, preserved separately",
+    "build": "g09-pin-c01-cost-build.log successful; frozen current source/classes receipt",
+    "private_candidates": "41 units passed private-candidate-units-r1.log; fixed16 staged diagnostic matches accepted checksum",
+    "java": "7 passed native-mip-observer-java-tests.log; exact private observation and source/storage/C01 checks",
+    "expanded_harness": "95tests passed expanded-maintained-harness-tests.log (541.888s); syntheticprocess errorprints are expected fixtures",
+    "pbr_mip_ray": "2Java selected tests passed pbr-mip-ray-java-test.log; actualdriverfunction operatorpreservation and privatePBRobserver tuple checks"
+  },
+  "finished": "2026-11-02T08:04:51.710088+00:00",
+  "outcome": "All eleven in-scope goals terminal: ten independently CLOSED, G02 BLOCKED on remaining Complementary native startup after viable routes completed and fresh independent CLOSE stopping review. C02 excluded.",
+  "review": "g02-independent-review.json",
+  "resource_audit": "terminal-resource-audit.json",
+  "slot_verification": "final-slot-verification.json",
+  "storage_inventory": "storage-inventory.json"
+}

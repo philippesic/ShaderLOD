@@ -1,0 +1,388 @@
+{
+  "scope": "Bounded Asahi profiler coverage checks, no optimization/qualification/capture campaign",
+  "runs": [
+    {
+      "path": "dev/experiments/cost-map-coverage-20261108/run-01",
+      "state": "complete",
+      "configuration_restored": true,
+      "save_restored": true,
+      "slot_reset_verified": true,
+      "cohorts": [
+        {
+          "path": "dev/experiments/cost-map-coverage-20261108/run-01/live-cost-map/cohort-1/capture.json",
+          "sha256": "5619adcb9e53bb6cbcd4e68e248125ccb102b6cf8a9cba4366de566e5b40126f",
+          "dh_state": "ENABLED_NOT_READY",
+          "semantic_programs": 0,
+          "task_samples": 642,
+          "task_concerns": [
+            "DH/upload"
+          ],
+          "residency": {
+            "at_ns": 436894550600064,
+            "status": "unknown",
+            "reason": "java.lang.ClassCastException: class com.seibel.distanthorizons.core.util.objects.SortedArraySet cannot be cast to class java.lang.Iterable (com.seibel.distanthorizons.core.util.objects.SortedArraySet is in module distanthorizons@3.3.3 of loader 'TRANSFORMER' @546621c4; java.lang.Iterable is in module java.base of loader 'bootstrap')"
+          },
+          "workload": "no completed streaming tasks observed; endpoint evidence only"
+        },
+        {
+          "path": "dev/experiments/cost-map-coverage-20261108/run-01/live-cost-map/cohort-2/capture.json",
+          "sha256": "91cb4ad7bcbd41ecfd189a276980e2f6047494a5413e24df7affc710e8dce4d2",
+          "dh_state": "ENABLED_NOT_READY",
+          "semantic_programs": 0,
+          "task_samples": 535,
+          "task_concerns": [
+            "DH/generation",
+            "DH/loading",
+            "DH/propagation",
+            "DH/upload"
+          ],
+          "residency": {
+            "at_ns": 436898587698679,
+            "status": "unknown",
+            "reason": "java.lang.ClassCastException: class com.seibel.distanthorizons.core.util.objects.SortedArraySet cannot be cast to class java.lang.Iterable (com.seibel.distanthorizons.core.util.objects.SortedArraySet is in module distanthorizons@3.3.3 of loader 'TRANSFORMER' @546621c4; java.lang.Iterable is in module java.base of loader 'bootstrap')"
+          },
+          "workload": "streaming/generation observed"
+        }
+      ]
+    },
+    {
+      "path": "dev/experiments/cost-map-coverage-20261108/run-02",
+      "state": "failed",
+      "configuration_restored": true,
+      "save_restored": true,
+      "slot_reset_verified": true,
+      "cohorts": []
+    },
+    {
+      "path": "dev/experiments/cost-map-coverage-20261108/run-03",
+      "state": "failed",
+      "configuration_restored": true,
+      "save_restored": true,
+      "slot_reset_verified": true,
+      "cohorts": []
+    },
+    {
+      "path": "dev/experiments/cost-map-coverage-20261108/run-04",
+      "state": "complete",
+      "configuration_restored": true,
+      "save_restored": true,
+      "slot_reset_verified": true,
+      "cohorts": [
+        {
+          "path": "dev/experiments/cost-map-coverage-20261108/run-04/live-cost-map/cohort-1/capture.json",
+          "sha256": "f15f974613733c66894d698ae64677121688d38b1b6f50796493e684b11d24e3",
+          "dh_state": "ENABLED_NOT_READY",
+          "semantic_programs": 7,
+          "task_samples": 3,
+          "task_concerns": [
+            "DH/upload"
+          ],
+          "residency": {
+            "at_ns": 437145421046961,
+            "status": "observed",
+            "listed": 69,
+            "uploaded_containers": 69,
+            "beyond_vanilla_uploaded": 65,
+            "meaning": "uploaded non-null VBO containers in world render list, wholly beyond vanilla square; residency not pixel visibility or complete horizon coverage"
+          },
+          "workload": "background queues active; steady unproven"
+        },
+        {
+          "path": "dev/experiments/cost-map-coverage-20261108/run-04/live-cost-map/cohort-2/capture.json",
+          "sha256": "5be12a3b99ab8334edff95aebc13fa1add709bbef9c1fa7645aec05f4b77fefc",
+          "dh_state": "ENABLED_READY",
+          "semantic_programs": 7,
+          "task_samples": 811,
+          "task_concerns": [
+            "DH/generation",
+            "DH/loading",
+            "DH/propagation",
+            "DH/unclassified-worker",
+            "DH/upload"
+          ],
+          "residency": {
+            "at_ns": 437153340096936,
+            "status": "observed",
+            "listed": 154,
+            "uploaded_containers": 154,
+            "beyond_vanilla_uploaded": 143,
+            "meaning": "uploaded non-null VBO containers in world render list, wholly beyond vanilla square; residency not pixel visibility or complete horizon coverage"
+          },
+          "workload": "streaming/generation observed"
+        },
+        {
+          "path": "dev/experiments/cost-map-coverage-20261108/run-04/live-cost-map/cohort-3/capture.json",
+          "sha256": "6839a764129cae84d99c98856b8218c5817163735f8d40bd1a8520868cecb305",
+          "dh_state": "ENABLED_READY",
+          "semantic_programs": 7,
+          "task_samples": 1165,
+          "task_concerns": [
+            "DH/generation",
+            "DH/loading",
+            "DH/propagation",
+            "DH/upload"
+          ],
+          "residency": {
+            "at_ns": 437158472893301,
+            "status": "observed",
+            "listed": 154,
+            "uploaded_containers": 154,
+            "beyond_vanilla_uploaded": 143,
+            "meaning": "uploaded non-null VBO containers in world render list, wholly beyond vanilla square; residency not pixel visibility or complete horizon coverage"
+          },
+          "workload": "streaming/generation observed"
+        }
+      ]
+    },
+    {
+      "path": "dev/experiments/cost-map-coverage-20261108/run-05-reimagined",
+      "state": "restored",
+      "configuration_restored": true,
+      "save_restored": true,
+      "slot_reset_verified": false,
+      "cohorts": []
+    },
+    {
+      "path": "dev/experiments/cost-map-coverage-20261108/run-06-unbound",
+      "state": "failed",
+      "configuration_restored": true,
+      "save_restored": true,
+      "slot_reset_verified": true,
+      "cohorts": []
+    },
+    {
+      "path": "dev/experiments/cost-map-coverage-20261108/run-07-bsl",
+      "state": "complete",
+      "configuration_restored": true,
+      "save_restored": true,
+      "slot_reset_verified": true,
+      "cohorts": [
+        {
+          "path": "dev/experiments/cost-map-coverage-20261108/run-07-bsl/live-cost-map/cohort-1/capture.json",
+          "sha256": "cb2d5377b0ea6dc2db08a5ac3dd0be06f3246aa59f678d23f981fb2c5449c5c3",
+          "dh_state": "ENABLED_NOT_READY",
+          "semantic_programs": 9,
+          "task_samples": 4,
+          "task_concerns": [
+            "DH/upload"
+          ],
+          "residency": {
+            "at_ns": 437350340286831,
+            "camera": "(0.5, 81.61999988555908, 82.5)",
+            "vanilla_chunks": 8,
+            "dimension": "minecraft:overworld",
+            "status": "observed",
+            "listed": 46,
+            "uploaded_containers": 46,
+            "beyond_vanilla_uploaded": 44,
+            "meaning": "uploaded non-null VBO containers in world render list, wholly beyond vanilla square; residency not pixel visibility or complete horizon coverage"
+          },
+          "workload": "background queues active; steady unproven"
+        },
+        {
+          "path": "dev/experiments/cost-map-coverage-20261108/run-07-bsl/live-cost-map/cohort-2/capture.json",
+          "sha256": "37639209f0225aefc5ff6d263169eb9fee4e51e86f5e43d99d5583057495e9ad",
+          "dh_state": "ENABLED_READY",
+          "semantic_programs": 9,
+          "task_samples": 248,
+          "task_concerns": [
+            "DH/upload"
+          ],
+          "residency": {
+            "at_ns": 437355545088737,
+            "camera": "(0.5, 81.61999988555908, 82.5)",
+            "vanilla_chunks": 8,
+            "dimension": "minecraft:overworld",
+            "status": "observed",
+            "listed": 111,
+            "uploaded_containers": 111,
+            "beyond_vanilla_uploaded": 104,
+            "meaning": "uploaded non-null VBO containers in world render list, wholly beyond vanilla square; residency not pixel visibility or complete horizon coverage"
+          },
+          "workload": "background queues active; steady unproven"
+        },
+        {
+          "path": "dev/experiments/cost-map-coverage-20261108/run-07-bsl/live-cost-map/cohort-3/capture.json",
+          "sha256": "3a02b73d7ace775b9236d84ff45bf9f4f15e6777d8ae4339a33f0d2324f6a6e3",
+          "dh_state": "ENABLED_READY",
+          "semantic_programs": 9,
+          "task_samples": 175,
+          "task_concerns": [
+            "DH/generation",
+            "DH/loading",
+            "DH/upload"
+          ],
+          "residency": {
+            "at_ns": 437358613920233,
+            "camera": "(0.5, 81.61999988555908, 82.5)",
+            "vanilla_chunks": 8,
+            "dimension": "minecraft:overworld",
+            "status": "observed",
+            "listed": 150,
+            "uploaded_containers": 150,
+            "beyond_vanilla_uploaded": 136,
+            "meaning": "uploaded non-null VBO containers in world render list, wholly beyond vanilla square; residency not pixel visibility or complete horizon coverage"
+          },
+          "workload": "streaming/generation observed"
+        }
+      ]
+    },
+    {
+      "path": "dev/experiments/cost-map-coverage-20261108/run-08-steady",
+      "state": "complete",
+      "configuration_restored": true,
+      "save_restored": true,
+      "slot_reset_verified": true,
+      "cohorts": [
+        {
+          "path": "dev/experiments/cost-map-coverage-20261108/run-08-steady/live-cost-map/cohort-1/capture.json",
+          "sha256": "e42655c8be63d8062a2df533b33fdd9a2b4702342f438689162de6b062a70a22",
+          "dh_state": "ENABLED_NOT_READY",
+          "semantic_programs": 7,
+          "task_samples": 5,
+          "task_concerns": [
+            "DH/upload"
+          ],
+          "residency": {
+            "at_ns": 437447513901334,
+            "camera": "(0.5, 97.61999988555908, -20.5)",
+            "vanilla_chunks": 8,
+            "dimension": "minecraft:overworld",
+            "status": "observed",
+            "listed": 41,
+            "uploaded_containers": 41,
+            "beyond_vanilla_uploaded": 37,
+            "meaning": "uploaded non-null VBO containers in world render list, wholly beyond vanilla square; residency not pixel visibility or complete horizon coverage"
+          },
+          "workload": "background queues active; steady unproven"
+        },
+        {
+          "path": "dev/experiments/cost-map-coverage-20261108/run-08-steady/live-cost-map/cohort-2/capture.json",
+          "sha256": "ab47e745dd779259623882d135b042563cbf1279695d0bfe0d0a7318a595cb2e",
+          "dh_state": "ENABLED_READY",
+          "semantic_programs": 7,
+          "task_samples": 18,
+          "task_concerns": [
+            "DH/upload"
+          ],
+          "residency": {
+            "at_ns": 437447513901334,
+            "camera": "(0.5, 97.61999988555908, -20.5)",
+            "vanilla_chunks": 8,
+            "dimension": "minecraft:overworld",
+            "status": "observed",
+            "listed": 41,
+            "uploaded_containers": 41,
+            "beyond_vanilla_uploaded": 37,
+            "meaning": "uploaded non-null VBO containers in world render list, wholly beyond vanilla square; residency not pixel visibility or complete horizon coverage"
+          },
+          "workload": "background queues active; steady unproven"
+        },
+        {
+          "path": "dev/experiments/cost-map-coverage-20261108/run-08-steady/live-cost-map/cohort-3/capture.json",
+          "sha256": "a70b862267d12c46e90556222185c5ad485d8918e308141bc6213cc9d28094f3",
+          "dh_state": "ENABLED_READY",
+          "semantic_programs": 7,
+          "task_samples": 564,
+          "task_concerns": [
+            "DH/unclassified-worker",
+            "DH/upload"
+          ],
+          "residency": {
+            "at_ns": 437456247822870,
+            "camera": "(0.5, 97.61999988555908, -20.5)",
+            "vanilla_chunks": 8,
+            "dimension": "minecraft:overworld",
+            "status": "observed",
+            "listed": 154,
+            "uploaded_containers": 154,
+            "beyond_vanilla_uploaded": 143,
+            "meaning": "uploaded non-null VBO containers in world render list, wholly beyond vanilla square; residency not pixel visibility or complete horizon coverage"
+          },
+          "workload": "background queues active; steady unproven"
+        },
+        {
+          "path": "dev/experiments/cost-map-coverage-20261108/run-08-steady/live-cost-map/cohort-4/capture.json",
+          "sha256": "8f0de86f3a1fdb1b3ce379bd5d1d1825b9fce1a9ecc4c77464578ff273c6cda0",
+          "dh_state": "ENABLED_READY",
+          "semantic_programs": 7,
+          "task_samples": 1,
+          "task_concerns": [
+            "DH/unclassified-worker"
+          ],
+          "residency": {
+            "at_ns": 437460269817045,
+            "camera": "(0.5, 97.61999988555908, -20.5)",
+            "vanilla_chunks": 8,
+            "dimension": "minecraft:overworld",
+            "status": "observed",
+            "listed": 154,
+            "uploaded_containers": 154,
+            "beyond_vanilla_uploaded": 143,
+            "meaning": "uploaded non-null VBO containers in world render list, wholly beyond vanilla square; residency not pixel visibility or complete horizon coverage"
+          },
+          "workload": "background queues active; steady unproven"
+        }
+      ]
+    }
+  ],
+  "tests": {
+    "cost_map": 13,
+    "lifecycle": 30,
+    "dev_client": 55,
+    "workflow": 14,
+    "production_entries": 2736,
+    "production_dev_entries": 0,
+    "benchmark_regressions": {
+      "passed": 63,
+      "seconds": 607.981
+    }
+  },
+  "remaining": [
+    "Complementary Reimagined and Unbound enabled-DH live cells blocked by composite1 sampler link failure on Apple M1",
+    "No observed DH shadows; dedicated shadow programs absent; fallback not proven",
+    "No completed conversion task in prepared-save live windows; common executor hook installed and owner/failure tested",
+    "Steady request disables generation but residual loading is explicitly streaming; not a conditioned steady dataset",
+    "New resource-identified Iris DH depth handoff hook compiled and fixture-tested; final live attempt refused by storage admission; not live-validated",
+    "Mixed shader function costs and internal asynchronous driver DMA durations remain unknown"
+  ],
+  "verification": {
+    "dev/experiments/cost-map-coverage-20261108/verification/shaderlod-coverage-tests-final.log": "bd18932bdd51629ef0340b166aa520808133e7945153b6e2c4203d2984295bcd",
+    "dev/experiments/cost-map-coverage-20261108/verification/shaderlod-coverage-steady.log": "ad1cfa261b1b9f6bdb8f01c2a3f2fb3adc00ab65ca7db637d05d876b53a1e599",
+    "dev/experiments/cost-map-coverage-20261108/verification/shaderlod-coverage-final-build.log": "f6d163fff223cfd0b387e322428338c35a784d3745601217c38bbc36e4b4e6f4",
+    "dev/experiments/cost-map-coverage-20261108/verification/shaderlod-coverage-tests5.log": "57867d0a6bae98423e071800c3adb49af6a9783f7833c097dc0df90046df2062",
+    "dev/experiments/cost-map-coverage-20261108/verification/shaderlod-coverage-bsl.log": "ad1cfa261b1b9f6bdb8f01c2a3f2fb3adc00ab65ca7db637d05d876b53a1e599",
+    "dev/experiments/cost-map-coverage-20261108/verification/shaderlod-coverage-unbound.log": "e952065af4f89fddca58bd2d10fa42c6b820b6626c28aef7d0c9dae05bebf8ad",
+    "dev/experiments/cost-map-coverage-20261108/verification/shaderlod-coverage-reimagined.log": "4fdf5c09169c87440d38f049d39b4c826a4dfdd0a220afd0a412dc1dbf959741",
+    "dev/experiments/cost-map-coverage-20261108/verification/shaderlod-coverage-tests4.log": "0d9d3ce1bf4b6d5bf5a5b4a8b429667f04de090fe7b5020eebc51d75722f6a2e",
+    "dev/experiments/cost-map-coverage-20261108/verification/shaderlod-coverage-live4.log": "ad1cfa261b1b9f6bdb8f01c2a3f2fb3adc00ab65ca7db637d05d876b53a1e599",
+    "dev/experiments/cost-map-coverage-20261108/verification/shaderlod-coverage-benchmark.log": "b250608ae512f7973be1b03512601386af4c753e3bf998b7abbb8971475d65b8",
+    "dev/experiments/cost-map-coverage-20261108/verification/shaderlod-coverage-workflow.log": "73dfe41ebaf7861bc7867a86886435e1eab647912ed0d5168f36adb746bc5f76",
+    "dev/experiments/cost-map-coverage-20261108/verification/shaderlod-coverage-devclient.log": "f7d50624c231632aede576002b9fd97a64a2d7c4e9c93194643f4d4fb0b6aaf7",
+    "dev/experiments/cost-map-coverage-20261108/verification/shaderlod-coverage-lifecycle.log": "7fe86cde8a4bcbda8a70543f31d5f4fa63ca5cbe337aa6603d67ef9e372b9861",
+    "dev/experiments/cost-map-coverage-20261108/verification/shaderlod-coverage-tests3.log": "b92d4f3da0b232ec27c013295493b2270b62ae6c7ca0cc0e5e43f3d99b3f2cc3",
+    "dev/experiments/cost-map-coverage-20261108/verification/shaderlod-coverage-live3.log": "9f473980fa418aba3615578962c9c07a15dc99e3505281017d87725950d1258c",
+    "dev/experiments/cost-map-coverage-20261108/verification/shaderlod-coverage-tests2.log": "70cb56736b7580ac87d2a03be22898948d10738c9db55fc1a7f48e8f43960132",
+    "dev/experiments/cost-map-coverage-20261108/verification/shaderlod-coverage-tests.log": "596afa97a6096b0b603564dc0c5fc87d70708058d5f727cb4068ead7def28e42",
+    "dev/experiments/cost-map-coverage-20261108/verification/shaderlod-coverage-live2.log": "4f9cafc9a04d68646f97b466852dad546c3d970d74006e52445274dd84f9c4f9",
+    "dev/experiments/cost-map-coverage-20261108/verification/shaderlod-coverage-live.log": "ad1cfa261b1b9f6bdb8f01c2a3f2fb3adc00ab65ca7db637d05d876b53a1e599",
+    "dev/experiments/cost-map-coverage-20261108/verification/shaderlod-coverage-build2.log": "d219f522710435bad6b6ced2c92d056ce4f39879217852091cbefca059db1c10",
+    "dev/experiments/cost-map-coverage-20261108/verification/shaderlod-coverage-build.log": "794f6fc0634e57e91a91dee5b8cd80f670cb9d3a34bf23b81e63dcd07ca47aab",
+    "dev/experiments/cost-map-coverage-20261108/verification/shaderlod-coverage-final-tests.log": "270f229bcc5dc7047c046f39351c7332a161d16d3daaf1aabef65e384c89dd89",
+    "dev/experiments/cost-map-coverage-20261108/verification/shaderlod-coverage-transfer-live.log": "eac76485deb580a34bb07bde3b750f554512647cc13e825c6e221796c665a25a",
+    "dev/experiments/cost-map-coverage-20261108/verification/shaderlod-coverage-transfer-tests.log": "75478bbf2177259876077280718dead45ea9d001b60d81c5bed91679eacad054",
+    "dev/experiments/cost-map-coverage-20261108/verification/shaderlod-coverage-transfer-build.log": "60017fe1f5ae94357f54b8b7311985b587d54c28f1eeccd2aee53f2d450ba6c4",
+    "dev/experiments/cost-map-coverage-20261108/verification/shaderlod-iris-api.txt": "1398b4d51cd4a7b3701944a1a2f6f73a616f847c7b515c5311f368d800d393ec",
+    "dev/experiments/cost-map-coverage-20261108/verification/shaderlod-dh-api.txt": "78613a5fb6cec698df7744410fa195ab0583b41467f8b1fbdd21e5f25e3ef031"
+  },
+  "final_handoff_live_attempt": {
+    "launched": false,
+    "reason": "maintained 32 GiB reserve plus saved-world restoration/runtime headroom; refused before operation/config/save mutation",
+    "log": "dev/experiments/cost-map-coverage-20261108/verification/shaderlod-coverage-transfer-live.log"
+  },
+  "disk": {
+    "free_bytes": 34478153728,
+    "minimum_free_bytes": 34359738368,
+    "preservation": "No experiment records deleted. Only regenerable caches removed; byte-identical report and cached JDK files now share COW extents. Both JDK installations retained."
+  }
+}

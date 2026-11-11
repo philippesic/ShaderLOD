@@ -1,0 +1,367 @@
+{
+  "scope": "Four new finite optimization searches independently closed; private/default-off, native options/AA/original archives preserved. Previous goal statuses unchanged. Latest selected VALID runs are descriptive, not an optimum or statistical comparison. Different packs/scenes are not directly comparable.",
+  "goals": {
+    "N01": "CLOSED (scoped research): fresh independent underlying stopping review r2 CLOSE after bounded actual CPU body profiling. Seven runnable families work-requalified, cache DH-key repair and pure compactor-loop refinement tested. No reliable meaningful speed gain/default enablement; Complementary native startup scoped blocker, live DH/PBR unqualified.",
+    "N02": "CLOSED (scoped research): independent underlying Astra/medium CLOSE after two valid fullPBRNether repeats. Bliss unusedRT12output/pair removal actual; Photon unusedNethercloudpasses/RT11mip/RT9-12pairs actual, survivingPBRsource/physicalwork retained. Roofview limitsmaterial/POM/fullqualityclaims, not structural deletionproof. No public/default/DH/otherhardware qualification; ComplementaryandPhotonOverworldPBRentryblockers scoped.",
+    "N03": "CLOSED (scoped research): independent underlying Astra/medium stopping review CLOSE. Private original-derived BlissRT13 and PhotonNetherRT9-12 copyelision source/physical safety qualified, economics repeated honestly. Other histories/partialwrites/ordergaps retained; no reliable performance/public/default/DH/PBR claim.",
+    "N04": "CLOSED (scoped research): independent underlying Astra/medium CLOSE. ExactBlissskyAO repeatedpositive+onepositive settledmixed; SildurunusedunderwaterAO repeatedmeanpositive/tailsmixed. Publicalpharoutes evaluated, Solasleangainnotcleanlyreplicated; SildurminimaloriginalfallbacksourceproofpassesbutactualnativeDrawsamplercomparisonREFblocksrawLOD0underunchangedquality(0grants). Zero/concreteGPU-domain-backedleanrefinementinconclusive. Private/defaultoff; counts/wholeimage/motion/DH/PBR/otherhardware unqualified; no materialsource-backednextstepidentified."
+  },
+  "latest_valid_comparisons": [
+    {
+      "goal": "N01",
+      "label": "CPU \u00b7 MakeUp",
+      "run": "n01-natural-body-cost-r2",
+      "scope": "Natural terrain; controlled CPU4 where labeled, otherwise read-only placement/cost diagnostics. Frequency uncontrolled. No general CPU speed gain.",
+      "native_ms": 36.266554956912024,
+      "candidate_ms": 36.31303965770609,
+      "return_ms": 36.49680018705036,
+      "reductions_percent": [
+        -0.12817512126336703,
+        0.5034976447317986
+      ],
+      "native_drift_percent": 0.6328603998064586,
+      "p95_ms": [
+        48.110952,
+        50.61531,
+        51.580768
+      ],
+      "p95_relation": "mixed",
+      "evidence": "/home/philip/ShaderLOD/dev/experiments/new-optimization-goals-20261102/n01-natural-body-cost-r2/summary.json"
+    },
+    {
+      "goal": "N01",
+      "label": "CPU \u00b7 Bliss (CPU4)",
+      "run": "n01-bliss-natural-affinity-r2",
+      "scope": "Natural terrain; controlled CPU4 where labeled, otherwise read-only placement/cost diagnostics. Frequency uncontrolled. No general CPU speed gain.",
+      "native_ms": 69.42428865172414,
+      "candidate_ms": 71.70296571631206,
+      "return_ms": 74.7028187896679,
+      "reductions_percent": [
+        -3.2822476237663745,
+        4.015716035832834
+      ],
+      "native_drift_percent": 7.3248263031855085,
+      "p95_ms": [
+        85.712856,
+        100.551897,
+        102.139826
+      ],
+      "p95_relation": "mixed",
+      "evidence": "/home/philip/ShaderLOD/dev/experiments/new-optimization-goals-20261102/n01-bliss-natural-affinity-r2/summary.json"
+    },
+    {
+      "goal": "N01",
+      "label": "CPU \u00b7 BSL",
+      "run": "n01-bsl-natural-triple-placement-r1",
+      "scope": "Natural terrain; controlled CPU4 where labeled, otherwise read-only placement/cost diagnostics. Frequency uncontrolled. No general CPU speed gain.",
+      "native_ms": 63.84850578233438,
+      "candidate_ms": 66.36027920915033,
+      "return_ms": 67.92010383277592,
+      "reductions_percent": [
+        -3.933958040269307,
+        2.2965580669104773
+      ],
+      "native_drift_percent": 6.179921094006355,
+      "p95_ms": [
+        85.54182,
+        87.727646,
+        99.000311
+      ],
+      "p95_relation": "mixed",
+      "evidence": "/home/philip/ShaderLOD/dev/experiments/new-optimization-goals-20261102/n01-bsl-natural-triple-placement-r1/summary.json"
+    },
+    {
+      "goal": "N01",
+      "label": "CPU \u00b7 Photon (CPU4)",
+      "run": "n01-photon-natural-affinity-r1",
+      "scope": "Natural terrain; controlled CPU4 where labeled, otherwise read-only placement/cost diagnostics. Frequency uncontrolled. No general CPU speed gain.",
+      "native_ms": 65.46468658306189,
+      "candidate_ms": 65.34170619354838,
+      "return_ms": 66.04868290909091,
+      "reductions_percent": [
+        0.18785760068900167,
+        1.0703873028257316
+      ],
+      "native_drift_percent": 0.8881170458701835,
+      "p95_ms": [
+        92.330146,
+        88.478544,
+        90.03496
+      ],
+      "p95_relation": "below both",
+      "evidence": "/home/philip/ShaderLOD/dev/experiments/new-optimization-goals-20261102/n01-photon-natural-affinity-r1/summary.json"
+    },
+    {
+      "goal": "N01",
+      "label": "CPU \u00b7 Sildur (CPU4)",
+      "run": "n01-sildur-natural-affinity-r1",
+      "scope": "Natural terrain; controlled CPU4 where labeled, otherwise read-only placement/cost diagnostics. Frequency uncontrolled. No general CPU speed gain.",
+      "native_ms": 57.31741759375,
+      "candidate_ms": 58.65769141449275,
+      "return_ms": 58.02654005172414,
+      "reductions_percent": [
+        -2.3383360189781084,
+        -1.087694289899091
+      ],
+      "native_drift_percent": 1.2295788569241344,
+      "p95_ms": [
+        78.55172,
+        79.012386,
+        79.790124
+      ],
+      "p95_relation": "mixed",
+      "evidence": "/home/philip/ShaderLOD/dev/experiments/new-optimization-goals-20261102/n01-sildur-natural-affinity-r1/summary.json"
+    },
+    {
+      "goal": "N01",
+      "label": "CPU \u00b7 Solas (CPU4)",
+      "run": "n01-solas-natural-affinity-r1",
+      "scope": "Natural terrain; controlled CPU4 where labeled, otherwise read-only placement/cost diagnostics. Frequency uncontrolled. No general CPU speed gain.",
+      "native_ms": 134.00580954,
+      "candidate_ms": 136.8286390612245,
+      "return_ms": 133.98613143708607,
+      "reductions_percent": [
+        -2.1064978682001785,
+        -2.1214939140720963
+      ],
+      "native_drift_percent": -0.014685593038494631,
+      "p95_ms": [
+        176.823183,
+        186.399903,
+        177.009098
+      ],
+      "p95_relation": "above both",
+      "evidence": "/home/philip/ShaderLOD/dev/experiments/new-optimization-goals-20261102/n01-solas-natural-affinity-r1/summary.json"
+    },
+    {
+      "goal": "N01",
+      "label": "CPU \u00b7 Astra",
+      "run": "n01-astra-natural-placement-r1",
+      "scope": "Natural terrain; controlled CPU4 where labeled, otherwise read-only placement/cost diagnostics. Frequency uncontrolled. No general CPU speed gain.",
+      "native_ms": 128.78481512820514,
+      "candidate_ms": 136.12956416891893,
+      "return_ms": 139.15146076551724,
+      "reductions_percent": [
+        -5.703117276211566,
+        2.1716599883133663
+      ],
+      "native_drift_percent": 7.7381426630144405,
+      "p95_ms": [
+        151.194832,
+        189.664552,
+        178.264144
+      ],
+      "p95_relation": "above both",
+      "evidence": "/home/philip/ShaderLOD/dev/experiments/new-optimization-goals-20261102/n01-astra-natural-placement-r1/summary.json"
+    },
+    {
+      "goal": "N02",
+      "label": "Unused RT12 \u00b7 Bliss",
+      "run": "n02-bliss-unused-rt12-r1",
+      "scope": "Pinned native profile and scene; private research scope. See interpretation for exact limits.",
+      "native_ms": 64.39615008280255,
+      "candidate_ms": 67.08071600331125,
+      "return_ms": 69.04655197972973,
+      "reductions_percent": [
+        -4.168829840070883,
+        2.847116793023341
+      ],
+      "native_drift_percent": 6.969885688837392,
+      "p95_ms": [
+        82.747155,
+        87.877685,
+        89.460263
+      ],
+      "p95_relation": "mixed",
+      "evidence": "/home/philip/ShaderLOD/dev/experiments/new-optimization-goals-20261102/n02-bliss-unused-rt12-r1/summary.json"
+    },
+    {
+      "goal": "N02",
+      "label": "Unused work \u00b7 Photon PBR",
+      "run": "n02-photon-pbr-nether-r2",
+      "scope": "Full native PBR/POM and AA before qualification; Nether roof-view graph/startup scope, not material/POM branch coverage.",
+      "native_ms": 25.631391310214372,
+      "candidate_ms": 24.877441104495748,
+      "return_ms": 25.89789025095057,
+      "reductions_percent": [
+        2.941511042430877,
+        3.940279059671154
+      ],
+      "native_drift_percent": 1.0343592328950522,
+      "p95_ms": [
+        35.056342,
+        31.19433,
+        34.213138
+      ],
+      "p95_relation": "below both",
+      "evidence": "/home/philip/ShaderLOD/dev/experiments/new-optimization-goals-20261102/n02-photon-pbr-nether-r2/summary.json"
+    },
+    {
+      "goal": "N03",
+      "label": "Fog copy \u00b7 Bliss",
+      "run": "n03-bliss-fog-copy-r2",
+      "scope": "Pinned native profile and scene; private research scope. See interpretation for exact limits.",
+      "native_ms": 69.76752118620689,
+      "candidate_ms": 68.38960746464646,
+      "return_ms": 68.82890434121622,
+      "reductions_percent": [
+        1.9750074219819738,
+        0.6382447618110574
+      ],
+      "native_drift_percent": -1.354460393071189,
+      "p95_ms": [
+        90.367539,
+        91.263724,
+        93.819033
+      ],
+      "p95_relation": "mixed",
+      "evidence": "/home/philip/ShaderLOD/dev/experiments/new-optimization-goals-20261102/n03-bliss-fog-copy-r2/summary.json"
+    },
+    {
+      "goal": "N03",
+      "label": "Cloud copies \u00b7 Photon",
+      "run": "n03-photon-cloud-copy-r4",
+      "scope": "Nether native366 only; unsafe for Overworld cloud history.",
+      "native_ms": 21.976785516233765,
+      "candidate_ms": 22.74334502227171,
+      "return_ms": 24.011865492343933,
+      "reductions_percent": [
+        -3.4880419862664,
+        5.282890121455508
+      ],
+      "native_drift_percent": 8.850357344600475,
+      "p95_ms": [
+        29.494753,
+        31.61111,
+        30.658084
+      ],
+      "p95_relation": "above both",
+      "evidence": "/home/philip/ShaderLOD/dev/experiments/new-optimization-goals-20261102/n03-photon-cloud-copy-r4/summary.json"
+    },
+    {
+      "goal": "N04",
+      "label": "Sky AO \u00b7 Bliss",
+      "run": "n04-bliss-sky-r5",
+      "scope": "Pinned native profile and scene; private research scope. See interpretation for exact limits.",
+      "native_ms": 57.18319425706215,
+      "candidate_ms": 52.47310197416021,
+      "return_ms": 56.34139697229917,
+      "reductions_percent": [
+        8.236847108834326,
+        6.865813071764712
+      ],
+      "native_drift_percent": -1.4830219173610346,
+      "p95_ms": [
+        70.366721,
+        68.501112,
+        73.187128
+      ],
+      "p95_relation": "below both",
+      "evidence": "/home/philip/ShaderLOD/dev/experiments/new-optimization-goals-20261102/n04-bliss-sky-r5/summary.json"
+    },
+    {
+      "goal": "N04",
+      "label": "Mixed AO \u00b7 Bliss",
+      "run": "n04-bliss-mixed-census-r4",
+      "scope": "One positive settled mixed-view run; prior mixed result inconclusive. Aggregate depth census is not executed branches.",
+      "native_ms": 67.20224053642384,
+      "candidate_ms": 62.43863614373089,
+      "return_ms": 68.58349126086956,
+      "reductions_percent": [
+        7.088460674329846,
+        8.959670912298153
+      ],
+      "native_drift_percent": 2.034456354380016,
+      "p95_ms": [
+        91.698206,
+        82.399721,
+        89.778137
+      ],
+      "p95_relation": "below both",
+      "evidence": "/home/philip/ShaderLOD/dev/experiments/new-optimization-goals-20261102/n04-bliss-mixed-census-r4/summary.json"
+    },
+    {
+      "goal": "N04",
+      "label": "Underwater AO \u00b7 Sildur",
+      "run": "n04-sildur-underwater-ao-r2",
+      "scope": "Native115 TAA, actual isEyeInWater1. Repeated positive mean; mixed tails, no physical query count.",
+      "native_ms": 54.087124525469164,
+      "candidate_ms": 50.59550549502488,
+      "return_ms": 57.55695550140845,
+      "reductions_percent": [
+        6.4555456794529915,
+        12.094889220145115
+      ],
+      "native_drift_percent": 6.215879919658881,
+      "p95_ms": [
+        71.845565,
+        75.743204,
+        81.27258
+      ],
+      "p95_relation": "mixed",
+      "evidence": "/home/philip/ShaderLOD/dev/experiments/new-optimization-goals-20261102/n04-sildur-underwater-ao-r2/summary.json"
+    },
+    {
+      "goal": "N04",
+      "label": "Lean alpha \u00b7 Solas",
+      "run": "n04-solas-lean-alpha-r3",
+      "scope": "Pinned native profile and scene; private research scope. See interpretation for exact limits.",
+      "native_ms": 102.91199025888324,
+      "candidate_ms": 110.25862702173914,
+      "return_ms": 115.28559353672317,
+      "reductions_percent": [
+        -7.138756858530152,
+        4.36044640164231
+      ],
+      "native_drift_percent": 11.341650134339467,
+      "p95_ms": [
+        134.491145,
+        162.255698,
+        193.76424
+      ],
+      "p95_relation": "mixed",
+      "evidence": "/home/philip/ShaderLOD/dev/experiments/new-optimization-goals-20261102/n04-solas-lean-alpha-r3/summary.json"
+    },
+    {
+      "goal": "N04",
+      "label": "Lean zero \u00b7 Bliss",
+      "run": "n04-bliss-zero-lean-r1",
+      "scope": "Pinned native profile and scene; private research scope. See interpretation for exact limits.",
+      "native_ms": 72.24864163082438,
+      "candidate_ms": 73.22770517266187,
+      "return_ms": 76.41951586940299,
+      "reductions_percent": [
+        -1.3551307259730954,
+        4.176695783045465
+      ],
+      "native_drift_percent": 5.610985309442913,
+      "p95_ms": [
+        89.61841,
+        96.288581,
+        141.66788
+      ],
+      "p95_relation": "mixed",
+      "evidence": "/home/philip/ShaderLOD/dev/experiments/new-optimization-goals-20261102/n04-bliss-zero-lean-r1/summary.json"
+    }
+  ],
+  "blocked_attempt": {
+    "run": "n04-sildur-lean-alpha-r3",
+    "result": "No candidate scoring: original owned shadow sampler comparison mode violates raw-depth LOD0 premise at actual native delegate. Zero grants, restored/reset/released.",
+    "evidence": "/home/philip/ShaderLOD/dev/experiments/new-optimization-goals-20261102/n04-sildur-lean-alpha-r3-interpretation.json"
+  },
+  "reviews": {
+    "N01": "/home/philip/ShaderLOD/dev/experiments/new-optimization-goals-20261102/n01-underlying-stopping-review-r2.json",
+    "N02": "/home/philip/ShaderLOD/dev/experiments/new-optimization-goals-20261102/n02-underlying-stopping-review-r1.json",
+    "N03": "/home/philip/ShaderLOD/dev/experiments/new-optimization-goals-20261102/n03-underlying-stopping-review-r1.json",
+    "N04": "/home/philip/ShaderLOD/dev/experiments/new-optimization-goals-20261102/n04-underlying-stopping-review-r1.json"
+  },
+  "limits": [
+    "No public/default promotion or physical texture-query/executed-branch savings counts.",
+    "Full pixel/motion and broad DH/PBR/hardware compatibility unqualified.",
+    "Photon PBR evidence covers Nether graph/startup with Replete, not material/POM branch coverage.",
+    "Complementary native startup and Photon Overworld PBR entry remain scoped blockers.",
+    "Private Astra alpha fallback untested; reviewer found no concrete material bottleneck making it mandatory."
+  ],
+  "resource_audit": "/home/philip/ShaderLOD/dev/experiments/new-optimization-goals-20261102/terminal-resource-audit.json",
+  "storage_inventory": "/home/philip/ShaderLOD/dev/experiments/new-optimization-goals-20261102/storage-inventory.json"
+}

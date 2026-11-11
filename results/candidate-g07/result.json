@@ -1,0 +1,267 @@
+{
+  "goal": "G07",
+  "mechanism": "Reduce repeated filter/depth queries",
+  "asahi": {
+    "goal": "G07",
+    "mechanism": "Reduce repeated filter/depth queries",
+    "targets": {
+      "makeup": {
+        "status": "MEASURED_SLOWER",
+        "effects_pct": {
+          "n": 1,
+          "mean": -7.403814563698681,
+          "sd": null,
+          "variance": null
+        },
+        "plotted_phase": "discovery",
+        "plotted_case": "primary",
+        "plotted_runs": 1
+      },
+      "bsl": {
+        "status": "MEASURED_SLOWER",
+        "effects_pct": {
+          "n": 1,
+          "mean": -11.164656411277168,
+          "sd": null,
+          "variance": null
+        },
+        "plotted_phase": "discovery",
+        "plotted_case": "primary",
+        "plotted_runs": 1
+      },
+      "reimagined": {
+        "status": "MEASURED_SLOWER",
+        "effects_pct": {
+          "n": 1,
+          "mean": -5.737343146443291,
+          "sd": null,
+          "variance": null
+        },
+        "plotted_phase": "discovery",
+        "plotted_case": "shared-depth-storage",
+        "plotted_runs": 1,
+        "scope_note": "Initial timing observed sampling permission0; fresh shared typed-D24 case requires permission progress in the exact timing window. Keep initial fallback and new working implementation separate."
+      },
+      "unbound": {
+        "status": "MEASURED_SLOWER",
+        "effects_pct": {
+          "n": 1,
+          "mean": -7.942663042586513,
+          "sd": null,
+          "variance": null
+        },
+        "plotted_phase": "discovery",
+        "plotted_case": "shared-depth-storage",
+        "plotted_runs": 1,
+        "scope_note": "Initial timing observed sampling permission0; fresh shared typed-D24 case requires permission progress in the exact timing window. Keep initial fallback and new working implementation separate."
+      }
+    }
+  },
+  "rtx5080": [
+    {
+      "shader": "makeup",
+      "goal": "G07",
+      "status": "MEASURED",
+      "arms": {
+        "native": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 2.162545635300372,
+            "sd": 0.00039659630736396396,
+            "variance": 1.5728863101473177e-07
+          },
+          "mean_within_window_sd_ms": 0.0846982266015472,
+          "mean_within_window_variance_ms2": 0.007179056922962754,
+          "mean_p95_ms": 2.26655
+        },
+        "candidate": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 2.2328915655243535,
+            "sd": 0.0012561836765935933,
+            "variance": 1.5779974293401975e-06
+          },
+          "mean_within_window_sd_ms": 0.08927249911237038,
+          "mean_within_window_variance_ms2": 0.008056314474756958,
+          "mean_p95_ms": 2.3361
+        },
+        "return": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 2.162636146008733,
+            "sd": 0.001723712378193706,
+            "variance": 2.9711843627382018e-06
+          },
+          "mean_within_window_sd_ms": 0.08451225757094546,
+          "mean_within_window_variance_ms2": 0.007142647850857007,
+          "mean_p95_ms": 2.2663
+        }
+      },
+      "effects_pct": {
+        "n": 2,
+        "mean": -3.25077540114809,
+        "sd": 0.08976790301787749,
+        "variance": 0.00805827641222706
+      },
+      "plotted_case": "primary",
+      "plotted_phase": "screening",
+      "plotted_runs": 2,
+      "plotted_gl_context": "3.2",
+      "implementation": "ao_depth_reuse"
+    },
+    {
+      "shader": "bsl",
+      "goal": "G07",
+      "status": "MEASURED",
+      "arms": {
+        "native": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 3.0081483854603412,
+            "sd": 0.004687453585237213,
+            "variance": 2.19722211137532e-05
+          },
+          "mean_within_window_sd_ms": 0.09593240364018363,
+          "mean_within_window_variance_ms2": 0.00920438058648439,
+          "mean_p95_ms": 3.1288
+        },
+        "candidate": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 3.519165527934008,
+            "sd": 0.01848458808055174,
+            "variance": 0.0003416799965076753
+          },
+          "mean_within_window_sd_ms": 0.10224907741504674,
+          "mean_within_window_variance_ms2": 0.01054698443183648,
+          "mean_p95_ms": 3.64585
+        },
+        "return": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 3.0014726244432053,
+            "sd": 0.007766462091117198,
+            "variance": 6.031793341276052e-05
+          },
+          "mean_within_window_sd_ms": 0.10261392896699859,
+          "mean_within_window_variance_ms2": 0.010529618912499917,
+          "mean_p95_ms": 3.1212999999999997
+        }
+      },
+      "effects_pct": {
+        "n": 2,
+        "mean": -17.117576924248105,
+        "sd": 0.5551617306772698,
+        "variance": 0.3082045472085815
+      },
+      "plotted_case": "primary",
+      "plotted_phase": "screening",
+      "plotted_runs": 2,
+      "plotted_gl_context": "3.2",
+      "implementation": "ao_depth_reuse"
+    },
+    {
+      "shader": "reimagined",
+      "goal": "G07",
+      "status": "MEASURED",
+      "arms": {
+        "native": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 3.410064405012763,
+            "sd": 0.004236827699751844,
+            "variance": 1.7950708957384497e-05
+          },
+          "mean_within_window_sd_ms": 0.10238839762936153,
+          "mean_within_window_variance_ms2": 0.010488265574771786,
+          "mean_p95_ms": 3.55305
+        },
+        "candidate": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 3.666370020128719,
+            "sd": 0.004069955665237085,
+            "variance": 1.6564539116995444e-05
+          },
+          "mean_within_window_sd_ms": 0.11061577443282201,
+          "mean_within_window_variance_ms2": 0.012361368943900797,
+          "mean_p95_ms": 3.80255
+        },
+        "return": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 3.4122680522354534,
+            "sd": 0.00022592779162543012,
+            "variance": 5.1043367028743776e-08
+          },
+          "mean_within_window_sd_ms": 0.11277069259212923,
+          "mean_within_window_variance_ms2": 0.01274855391475312,
+          "mean_p95_ms": 3.5488
+        }
+      },
+      "effects_pct": {
+        "n": 2,
+        "mean": -7.4814771369145525,
+        "sd": 0.18250189178311152,
+        "variance": 0.03330694050441455
+      },
+      "plotted_case": "primary",
+      "plotted_phase": "screening",
+      "plotted_runs": 2,
+      "plotted_gl_context": "3.2",
+      "implementation": "ao_depth_reuse"
+    },
+    {
+      "shader": "unbound",
+      "goal": "G07",
+      "status": "MEASURED",
+      "arms": {
+        "native": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 3.5206346214075546,
+            "sd": 0.002400349018865671,
+            "variance": 5.76167541236939e-06
+          },
+          "mean_within_window_sd_ms": 0.11243046986430565,
+          "mean_within_window_variance_ms2": 0.012645814554031517,
+          "mean_p95_ms": 3.6593999999999998
+        },
+        "candidate": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 3.909907001869615,
+            "sd": 7.693184781553007e-05,
+            "variance": 5.918509208311879e-09
+          },
+          "mean_within_window_sd_ms": 0.12834253830062092,
+          "mean_within_window_variance_ms2": 0.017614506745966388,
+          "mean_p95_ms": 4.04205
+        },
+        "return": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 3.520303862101449,
+            "sd": 0.0004685183999649714,
+            "variance": 2.1950949110573691e-07
+          },
+          "mean_within_window_sd_ms": 0.08886414584278023,
+          "mean_within_window_variance_ms2": 0.007907512262239373,
+          "mean_p95_ms": 3.641
+        }
+      },
+      "effects_pct": {
+        "n": 2,
+        "mean": -11.062102552073068,
+        "sd": 0.03265751297377221,
+        "variance": 0.0010665131536321002
+      },
+      "plotted_case": "primary",
+      "plotted_phase": "screening",
+      "plotted_runs": 2,
+      "plotted_gl_context": "3.2",
+      "implementation": "ao_depth_reuse"
+    }
+  ],
+  "final_disposition": "discard; no candidate qualified across all four packs and both completed machines"
+}

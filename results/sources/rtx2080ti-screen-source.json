@@ -1,0 +1,62 @@
+{
+  "state": "complete",
+  "machine": "DESKTOP-T4JKGJB RTX 2080 Ti",
+  "remote_root": "C:/ShaderLODBench/ShaderLOD/dev/experiments/rtx2080ti-individuals-20261104",
+  "task": null,
+  "matrix": "matrix.json",
+  "scope": "16 individual goal variants; C02 explicitly authorized as 2x2 bloom quality tradeoff. No backend port or qualification gate relaxation.",
+  "retry_required": [],
+  "known_results": {
+    "G01": "Shader compile admission refused",
+    "G02": {
+      "speedup_percent": 3.4767998582507564,
+      "valid": true
+    },
+    "G03": "Qualified early-alpha draw admission unavailable",
+    "G04": "Selected fastpath source did not match arm",
+    "G05": "Fixed16 diagnostic archive pin mismatch; existing backend is Asahi-only",
+    "G06": {
+      "speedup_percent": 0.1949886026229919,
+      "valid": true
+    },
+    "G07": {
+      "speedup_percent": -15.780333983177586,
+      "valid": true
+    },
+    "G08": "Native output equivalence/phase coverage refused",
+    "G09": "Private prefix setup admission unavailable",
+    "G10": {
+      "speedup_percent": 0.14019649248599997,
+      "valid": true
+    },
+    "C01": "Query admission unavailable",
+    "C02": "OpenGL4.5 required; current Minecraft context exposes3.2 (NV extensions present)",
+    "N01": "Apply selected a generated pack instead of required original",
+    "N02": {
+      "speedup_percent": -1.3680184589956235,
+      "valid": true
+    },
+    "N03": {
+      "speedup_percent": 1.2435151609919481,
+      "valid": true
+    },
+    "N04": {
+      "speedup_percent": 3.439024098023702,
+      "valid": true
+    }
+  },
+  "live": null,
+  "ssh_master": null,
+  "secret_files_removed": true,
+  "cleanup_pending": [],
+  "limits": "One maintained chronological bracket per candidate, no broad quality or default qualification.",
+  "c02": "Attempted quality-tradeoff test: NV extensions present, required OpenGL45 absent in Minecraft 3.2 context; no timed result.",
+  "terminal_audit": "18 terminal restored/released operations; zero Minecraft clients; canonical slots matched; both scheduled tasks removed.",
+  "storage_inventory": [
+    "storage-local.json",
+    "storage-remote.json"
+  ],
+  "results": "results.json",
+  "completion_scope": "All16 representative variants attempted. Seven valid single-bracket speedups; nine unmeasured. No backend ports or guard relaxations, no repeat/quality/default qualification.",
+  "cleanup": "Both scheduled tasks removed, all18 operations terminal/restored/released and canonical slots verified; transports removed, results and reusable clients retained. SSH master closed at final handoff."
+}

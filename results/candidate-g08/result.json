@@ -1,0 +1,212 @@
+{
+  "goal": "G08",
+  "mechanism": "Cloud occupancy / lighting reuse",
+  "asahi": {
+    "goal": "G08",
+    "mechanism": "Cloud occupancy / lighting reuse",
+    "targets": {
+      "makeup": {
+        "status": "NO_GAIN_ESTABLISHED",
+        "effects_pct": {
+          "n": 1,
+          "mean": 1.608632550053025,
+          "sd": null,
+          "variance": null
+        },
+        "plotted_phase": "discovery",
+        "plotted_case": "primary",
+        "plotted_runs": 1
+      },
+      "bsl": {
+        "status": "NO_MAINTAINED_GENERAL_ROUTE"
+      },
+      "reimagined": {
+        "status": "MEASURED_SLOWER",
+        "effects_pct": {
+          "n": 1,
+          "mean": -4.032986114756619,
+          "sd": null,
+          "variance": null
+        },
+        "plotted_phase": "discovery",
+        "plotted_case": "primary",
+        "plotted_runs": 1
+      },
+      "unbound": {
+        "status": "NO_GAIN_ESTABLISHED",
+        "effects_pct": {
+          "n": 1,
+          "mean": -4.043341048181176,
+          "sd": null,
+          "variance": null
+        },
+        "plotted_phase": "discovery",
+        "plotted_case": "primary",
+        "plotted_runs": 1
+      }
+    }
+  },
+  "rtx5080": [
+    {
+      "shader": "makeup",
+      "goal": "G08",
+      "status": "MEASURED",
+      "arms": {
+        "native": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 1.9026464059787123,
+            "sd": 0.00043736674697574104,
+            "variance": 1.912896713601419e-07
+          },
+          "mean_within_window_sd_ms": 0.08778478889034697,
+          "mean_within_window_variance_ms2": 0.0077282105805872425,
+          "mean_p95_ms": 1.99695
+        },
+        "candidate": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 1.9099492970725667,
+            "sd": 0.0005973947757641785,
+            "variance": 3.568805181103331e-07
+          },
+          "mean_within_window_sd_ms": 0.08149808252748707,
+          "mean_within_window_variance_ms2": 0.006650572288136246,
+          "mean_p95_ms": 2.0031499999999998
+        },
+        "return": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 1.902305558902666,
+            "sd": 0.0016714676309814351,
+            "variance": 2.793804041418691e-06
+          },
+          "mean_within_window_sd_ms": 0.07917214936521785,
+          "mean_within_window_variance_ms2": 0.006277302319658213,
+          "mean_p95_ms": 1.99615
+        }
+      },
+      "effects_pct": {
+        "n": 2,
+        "mean": -0.39284456645189814,
+        "sd": 0.08704205470457387,
+        "variance": 0.0075763192871940305
+      },
+      "plotted_case": "primary",
+      "plotted_phase": "screening",
+      "plotted_runs": 2,
+      "plotted_gl_context": "3.2",
+      "implementation": "g08-native-bound"
+    },
+    {
+      "shader": "bsl",
+      "goal": "G08",
+      "status": "HELD_NO_QUALIFIED_GENERAL_ROUTE",
+      "scope_note": "The present BSL volume_light_reuse route has no operative qualified native consumer. The historical Balanced clear-weather cloud-bound prototype has different source/profile/API conditions and cannot substitute for this native tuple.",
+      "implementation": ""
+    },
+    {
+      "shader": "reimagined",
+      "goal": "G08",
+      "status": "MEASURED",
+      "arms": {
+        "native": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 2.667823900072302,
+            "sd": 0.009100332023795723,
+            "variance": 8.281604294332197e-05
+          },
+          "mean_within_window_sd_ms": 0.0852439979101045,
+          "mean_within_window_variance_ms2": 0.007346168182546582,
+          "mean_p95_ms": 2.78655
+        },
+        "candidate": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 2.7088712629472314,
+            "sd": 0.018221846614465253,
+            "variance": 0.0003320356940410988
+          },
+          "mean_within_window_sd_ms": 0.08685097143911871,
+          "mean_within_window_variance_ms2": 0.007582648090594421,
+          "mean_p95_ms": 2.8268500000000003
+        },
+        "return": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 2.6898783436857774,
+            "sd": 0.012546183864936236,
+            "variance": 0.00015740672957278637
+          },
+          "mean_within_window_sd_ms": 0.07467911706805543,
+          "mean_within_window_variance_ms2": 0.005709272550019737,
+          "mean_p95_ms": 2.79995
+        }
+      },
+      "effects_pct": {
+        "n": 2,
+        "mean": -1.1200861297674245,
+        "sd": 0.2716596976830576,
+        "variance": 0.07379899134525023
+      },
+      "plotted_case": "primary",
+      "plotted_phase": "screening",
+      "plotted_runs": 2,
+      "plotted_gl_context": "3.2",
+      "implementation": "volume_light_reuse"
+    },
+    {
+      "shader": "unbound",
+      "goal": "G08",
+      "status": "MEASURED",
+      "arms": {
+        "native": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 2.596183834227904,
+            "sd": 0.0029147015365611137,
+            "variance": 8.495485047231717e-06
+          },
+          "mean_within_window_sd_ms": 0.10342658669665374,
+          "mean_within_window_variance_ms2": 0.010697791894741347,
+          "mean_p95_ms": 2.726
+        },
+        "candidate": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 2.732644214211762,
+            "sd": 0.0026185983761136634,
+            "variance": 6.857057455385115e-06
+          },
+          "mean_within_window_sd_ms": 0.08860955267903256,
+          "mean_within_window_variance_ms2": 0.007950341346590013,
+          "mean_p95_ms": 2.845975
+        },
+        "return": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 2.5958923020505154,
+            "sd": 0.0011529812036415513,
+            "variance": 1.3293656559507201e-06
+          },
+          "mean_within_window_sd_ms": 0.09406994678183694,
+          "mean_within_window_variance_ms2": 0.008856285775323283,
+          "mean_p95_ms": 2.71045
+        }
+      },
+      "effects_pct": {
+        "n": 2,
+        "mean": -5.262093827161912,
+        "sd": 0.018402440653129074,
+        "variance": 0.0003386498219919376
+      },
+      "plotted_case": "primary",
+      "plotted_phase": "screening",
+      "plotted_runs": 2,
+      "plotted_gl_context": "3.2",
+      "implementation": "volume_light_reuse"
+    }
+  ],
+  "final_disposition": "discard; no candidate qualified across all four packs and both completed machines"
+}

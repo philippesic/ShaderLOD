@@ -1,0 +1,78 @@
+{
+  "schema": "historical-preservation-v1",
+  "snapshot": "/home/philip/.local/share/shaderlod-next/evidence/history/original-repository",
+  "original_head": "3ee99efcefdbc9d41e711f649ce0d361eefe949d",
+  "verification": "Every regular file SHA256 compared between source and snapshot; every symlink target compared. Original checkout unchanged.",
+  "entries_verified": 186104,
+  "regular_files": 185689,
+  "logical_bytes": 74345409211,
+  "errors": [],
+  "manifest": "/home/philip/.local/share/shaderlod-next/evidence/history/snapshot-manifest.json",
+  "manifest_sha256": "f3d017983cea38bc6299977fb8d2e0af746a602948b9717db8ba022b3e4d0c7f",
+  "earlier_archives": [
+    {
+      "name": "docs-and-agent-setup.tar.gz",
+      "sha256": "8a85a94e7de6a9dd78185f782e5b28d52ba4b0d3e373c11a9e17fe7d3a034d34",
+      "bytes": 7853634
+    },
+    {
+      "name": "retired-checkpoint-code.tar.gz",
+      "sha256": "0b6e982c37b276742892425bd60e6d1d899bcc2737bdeeade71222f09f653446",
+      "bytes": 35523
+    },
+    {
+      "name": "retention-inventory.txt",
+      "sha256": "4c6bdab9bba1903e32c7e82ebac68072a24d03c16c1a2459b8dc72d04c6eecf4",
+      "bytes": 1671
+    }
+  ],
+  "external_tool_symlinks": [
+    {
+      "path": "dependencies/test-python/usr/include/numpy",
+      "target": "/usr/lib64/python3.13/site-packages/numpy/_core/include/numpy"
+    },
+    {
+      "path": "dependencies/runtime/asahi-desktop-java-21.0.6.0.7-6.fc42-r1/usr/lib/jvm/java-21-openjdk/lib/tzdb.dat",
+      "target": "/usr/share/javazi-1.8/tzdb.dat"
+    },
+    {
+      "path": "dependencies/runtime/asahi-desktop-java-21.0.6.0.7-6.fc42-r1/etc/java/java-21-openjdk/java-21-openjdk/lib/security/cacerts",
+      "target": "/etc/pki/ca-trust/extracted/java/cacerts"
+    },
+    {
+      "path": "dev/experiments/asahi-four-target-audit-20261104/chart-env/bin/python3",
+      "target": "/usr/bin/python3.13"
+    },
+    {
+      "path": "dev/experiments/asahi-four-target-audit-20261104/chart-env/bin/python",
+      "target": "/usr/bin/python3.13"
+    },
+    {
+      "path": "dev/experiments/asahi-four-target-audit-20261104/chart-env/bin/python3.13",
+      "target": "/usr/bin/python3.13"
+    }
+  ],
+  "experiment_family_coverage": {
+    "workflow-validation-878e98fb8be9": "Preserved setup/retry evidence; operational history covered by workflow-repair, no additional optimization claim.",
+    "cost-map-live-20261108": "Early live captures preserved; later coverage and explicit limits summarized in dh-profiling-coverage.",
+    "cost-map-pipeline-20261108": "CPU-only export/report roundtrips preserved; design limits summarized in profiling-and-benchmark-design-lessons.",
+    "shortlist-resume-20261101": "Curated in candidate, calibration, compatibility or tooling results; all detailed files preserved in snapshot.",
+    "combination-search-20261101": "Curated in candidate, calibration, compatibility or tooling results; all detailed files preserved in snapshot.",
+    "shortlist-closure-20261101": "Curated in candidate, calibration, compatibility or tooling results; all detailed files preserved in snapshot.",
+    "new-optimization-goals-20261102": "Curated in candidate, calibration, compatibility or tooling results; all detailed files preserved in snapshot.",
+    "benchmark-trust-bliss-20261103": "Curated in candidate, calibration, compatibility or tooling results; all detailed files preserved in snapshot.",
+    "benchmark-workflow-repair-20261103": "Curated in candidate, calibration, compatibility or tooling results; all detailed files preserved in snapshot.",
+    "benchmark-reliability-investigation-20261103": "Curated in candidate, calibration, compatibility or tooling results; all detailed files preserved in snapshot.",
+    "headless-development-20261103": "Curated in candidate, calibration, compatibility or tooling results; all detailed files preserved in snapshot.",
+    "rtx2080ti-baseline-20261103": "Curated in candidate, calibration, compatibility or tooling results; all detailed files preserved in snapshot.",
+    "rtx2080ti-individuals-20261104": "Curated in candidate, calibration, compatibility or tooling results; all detailed files preserved in snapshot.",
+    "asahi-four-target-audit-20261104": "Curated in candidate, calibration, compatibility or tooling results; all detailed files preserved in snapshot.",
+    "rtx5080-four-target-audit-20261106": "Curated in candidate, calibration, compatibility or tooling results; all detailed files preserved in snapshot.",
+    "cost-map-coverage-20261108": "Curated in candidate, calibration, compatibility or tooling results; all detailed files preserved in snapshot."
+  },
+  "limitations": [
+    "Same-disk copy-on-write preservation is not an off-host backup.",
+    "Historical remote-only Windows quality captures and already missing source/profile inputs are not recovered.",
+    "Preserved run identities do not imply current qualification or bit-for-bit reproducibility of every past environment."
+  ]
+}

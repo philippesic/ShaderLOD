@@ -1,0 +1,185 @@
+{
+  "goal": "C02",
+  "mechanism": "Hardware coarse shading",
+  "asahi": {
+    "goal": "C02",
+    "mechanism": "Hardware coarse shading",
+    "targets": {
+      "makeup": {
+        "status": "HARDWARE_UNSUPPORTED"
+      },
+      "bsl": {
+        "status": "HARDWARE_UNSUPPORTED"
+      },
+      "reimagined": {
+        "status": "HARDWARE_UNSUPPORTED"
+      },
+      "unbound": {
+        "status": "HARDWARE_UNSUPPORTED"
+      }
+    }
+  },
+  "rtx5080": [
+    {
+      "shader": "makeup",
+      "goal": "C02",
+      "status": "NO_ISOLATED_BLOOM_VRS_ROUTE",
+      "scope_note": "MakeUp native composite writes multiple outputs (including full scene color); composite1 combines scene and bloom. The measured single-output bloom VRS contract would coarsen additional scene work here. A new isolated producer/quality contract is required; this is not an absent NVIDIA VRS capability.",
+      "implementation": ""
+    },
+    {
+      "shader": "bsl",
+      "goal": "C02",
+      "status": "MEASURED",
+      "arms": {
+        "native": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 2.8641018652698538,
+            "sd": 0.0020729900244605957,
+            "variance": 4.297287641513142e-06
+          },
+          "mean_within_window_sd_ms": 0.09299863744591359,
+          "mean_within_window_variance_ms2": 0.008687733786499138,
+          "mean_p95_ms": 2.98955
+        },
+        "candidate": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 2.8012523155830595,
+            "sd": 0.00017638962128980183,
+            "variance": 3.111329849875971e-08
+          },
+          "mean_within_window_sd_ms": 0.08845096686366954,
+          "mean_within_window_variance_ms2": 0.007887054858350992,
+          "mean_p95_ms": 2.9212249999999997
+        },
+        "return": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 2.8669973139768716,
+            "sd": 0.004125569907479452,
+            "variance": 1.7020327061500014e-05
+          },
+          "mean_within_window_sd_ms": 0.09098915319839884,
+          "mean_within_window_variance_ms2": 0.008308824524639156,
+          "mean_p95_ms": 2.9797000000000002
+        }
+      },
+      "effects_pct": {
+        "n": 2,
+        "mean": 2.243742019096482,
+        "sd": 0.11188533438694258,
+        "variance": 0.012518328050877957
+      },
+      "plotted_case": "native-gl46-vrs-2x2",
+      "plotted_phase": "screening",
+      "plotted_runs": 2,
+      "plotted_gl_context": "4.6",
+      "implementation": "c02-bloom-vrs"
+    },
+    {
+      "shader": "reimagined",
+      "goal": "C02",
+      "status": "MEASURED",
+      "arms": {
+        "native": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 3.2394356639478934,
+            "sd": 0.00018287152934969172,
+            "variance": 3.3441996246695164e-08
+          },
+          "mean_within_window_sd_ms": 0.09364764462178088,
+          "mean_within_window_variance_ms2": 0.00887953068997686,
+          "mean_p95_ms": 3.3695500000000003
+        },
+        "candidate": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 3.1745520424406757,
+            "sd": 0.0029947500442331853,
+            "variance": 8.968527827434664e-06
+          },
+          "mean_within_window_sd_ms": 0.09157588558319091,
+          "mean_within_window_variance_ms2": 0.00846845629972291,
+          "mean_p95_ms": 3.3004
+        },
+        "return": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 3.239595925631234,
+            "sd": 0.0031140190727789617,
+            "variance": 9.697114785631143e-06
+          },
+          "mean_within_window_sd_ms": 0.09249770872433313,
+          "mean_within_window_variance_ms2": 0.008569299524193691,
+          "mean_p95_ms": 3.3588500000000003
+        }
+      },
+      "effects_pct": {
+        "n": 2,
+        "mean": 2.005364659901851,
+        "sd": 0.048111090352090886,
+        "variance": 0.0023146770148670523
+      },
+      "plotted_case": "native-gl46-vrs-2x2",
+      "plotted_phase": "screening",
+      "plotted_runs": 2,
+      "plotted_gl_context": "4.6",
+      "implementation": "c02-bloom-vrs"
+    },
+    {
+      "shader": "unbound",
+      "goal": "C02",
+      "status": "MEASURED",
+      "arms": {
+        "native": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 3.3733939476536356,
+            "sd": 0.0005532473706577141,
+            "variance": 3.060826531396741e-07
+          },
+          "mean_within_window_sd_ms": 0.10647380855272401,
+          "mean_within_window_variance_ms2": 0.011410309268703928,
+          "mean_p95_ms": 3.5145999999999997
+        },
+        "candidate": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 3.3140032403822435,
+            "sd": 0.003919630495495086,
+            "variance": 1.5363503221215052e-05
+          },
+          "mean_within_window_sd_ms": 0.1089085584847343,
+          "mean_within_window_variance_ms2": 0.012026496378193457,
+          "mean_p95_ms": 3.446425
+        },
+        "return": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 3.3740097120566004,
+            "sd": 0.0032452234085752524,
+            "variance": 1.053147497156478e-05
+          },
+          "mean_within_window_sd_ms": 0.09943829180124156,
+          "mean_within_window_variance_ms2": 0.009969595156117698,
+          "mean_p95_ms": 3.504
+        }
+      },
+      "effects_pct": {
+        "n": 2,
+        "mean": 1.7695430903849871,
+        "sd": 0.07699140130101288,
+        "variance": 0.0059276758742936074
+      },
+      "plotted_case": "native-gl46-vrs-2x2",
+      "plotted_phase": "screening",
+      "plotted_runs": 2,
+      "plotted_gl_context": "4.6",
+      "implementation": "c02-bloom-vrs"
+    }
+  ],
+  "final_disposition": "discard; no candidate qualified across all four packs and both completed machines"
+}

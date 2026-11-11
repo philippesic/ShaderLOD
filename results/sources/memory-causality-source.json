@@ -1,0 +1,250 @@
+{
+  "at": "2026-11-03T23:09:03.020300+00:00",
+  "scope": "Read-only investigation; no launches, configuration changes, or process termination",
+  "null_v1_rows": [
+    {
+      "scene": "0",
+      "run": "dev/experiments/benchmark-trust-bliss-20261103/null-p0-01",
+      "mean_ms": 71.42274402851653,
+      "effect_percent": -0.5601994838968447,
+      "same_treatment_spread_percent": {
+        "A": 0.4451111458583784,
+        "B": 0.2273650894095294
+      },
+      "battery_C": [
+        41.2,
+        41.7,
+        42.1,
+        42.5
+      ]
+    },
+    {
+      "scene": "0",
+      "run": "dev/experiments/benchmark-trust-bliss-20261103/null-p0-02",
+      "mean_ms": 75.13689904836949,
+      "effect_percent": -0.11973403268795027,
+      "same_treatment_spread_percent": {
+        "A": 1.8712012839910026,
+        "B": 2.2410977611134464
+      },
+      "battery_C": [
+        43.8,
+        43.9,
+        44.1,
+        44.2
+      ]
+    },
+    {
+      "scene": "0",
+      "run": "dev/experiments/benchmark-trust-bliss-20261103/null-p0-03",
+      "mean_ms": 77.45655362281582,
+      "effect_percent": -1.062439159895903,
+      "same_treatment_spread_percent": {
+        "A": 1.0659648514337952,
+        "B": 0.3076811585647727
+      },
+      "battery_C": [
+        44.7,
+        44.8,
+        44.9,
+        44.9
+      ]
+    },
+    {
+      "scene": "0",
+      "run": "dev/experiments/benchmark-trust-bliss-20261103/null-p0-04",
+      "mean_ms": 79.02853298308119,
+      "effect_percent": 0.17421092549429854,
+      "same_treatment_spread_percent": {
+        "A": 5.603784817538328,
+        "B": 6.177715264065284
+      },
+      "battery_C": [
+        45.3,
+        45.4,
+        45.5,
+        45.5
+      ]
+    },
+    {
+      "scene": "0",
+      "run": "dev/experiments/benchmark-trust-bliss-20261103/null-p0-05",
+      "mean_ms": 85.37580185264918,
+      "effect_percent": -3.5344930888714745,
+      "same_treatment_spread_percent": {
+        "A": 5.9950795743134755,
+        "B": 1.4147984658842037
+      },
+      "battery_C": [
+        45.4,
+        45.4,
+        45.4,
+        45.4
+      ]
+    },
+    {
+      "scene": "0",
+      "run": "dev/experiments/benchmark-trust-bliss-20261103/null-p0-06",
+      "mean_ms": 82.08324198684316,
+      "effect_percent": 0.6200546921443786,
+      "same_treatment_spread_percent": {
+        "A": 0.4910496000232252,
+        "B": 1.122684671016876
+      },
+      "battery_C": [
+        45.4,
+        45.4,
+        45.4,
+        45.5
+      ]
+    },
+    {
+      "scene": "7",
+      "run": "dev/experiments/benchmark-trust-bliss-20261103/null-p7-01",
+      "mean_ms": 61.512184231476844,
+      "effect_percent": 0.5577677900844213,
+      "same_treatment_spread_percent": {
+        "A": 0.3966723828181404,
+        "B": 2.134926700272342
+      },
+      "battery_C": [
+        42.9,
+        43.1,
+        43.3,
+        43.4
+      ]
+    },
+    {
+      "scene": "7",
+      "run": "dev/experiments/benchmark-trust-bliss-20261103/null-p7-02",
+      "mean_ms": 63.351203165063545,
+      "effect_percent": 0.2142122370771134,
+      "same_treatment_spread_percent": {
+        "A": 0.8801850666745561,
+        "B": 2.2242071379621624
+      },
+      "battery_C": [
+        44.3,
+        44.4,
+        44.5,
+        44.6
+      ]
+    },
+    {
+      "scene": "7",
+      "run": "dev/experiments/benchmark-trust-bliss-20261103/null-p7-03",
+      "mean_ms": 64.44745722553473,
+      "effect_percent": 0.7618336777044403,
+      "same_treatment_spread_percent": {
+        "A": 0.3801090547416501,
+        "B": 0.9643634783343402
+      },
+      "battery_C": [
+        45.0,
+        45.1,
+        45.2,
+        45.3
+      ]
+    },
+    {
+      "scene": "7",
+      "run": "dev/experiments/benchmark-trust-bliss-20261103/null-p7-04",
+      "mean_ms": 66.46756393678073,
+      "effect_percent": 0.8348454071182725,
+      "same_treatment_spread_percent": {
+        "A": 0.6340051325997594,
+        "B": 3.346575430145964
+      },
+      "battery_C": [
+        45.3,
+        45.4,
+        45.4,
+        45.4
+      ]
+    },
+    {
+      "scene": "7",
+      "run": "dev/experiments/benchmark-trust-bliss-20261103/null-p7-05",
+      "mean_ms": 67.86854756410483,
+      "effect_percent": -1.3064418693134812,
+      "same_treatment_spread_percent": {
+        "A": 3.248918317244887,
+        "B": 5.588647882219618
+      },
+      "battery_C": [
+        45.4,
+        45.4,
+        45.4,
+        45.4
+      ]
+    },
+    {
+      "scene": "7",
+      "run": "dev/experiments/benchmark-trust-bliss-20261103/null-p7-06",
+      "mean_ms": 69.12826832327806,
+      "effect_percent": 2.384930505241418,
+      "same_treatment_spread_percent": {
+        "A": 6.318972184284618,
+        "B": 9.666462338794942
+      },
+      "battery_C": [
+        45.4,
+        45.4,
+        45.4,
+        45.5
+      ]
+    }
+  ],
+  "sources": {
+    "null-cohort-v1.json": "dev/experiments/benchmark-trust-bliss-20261103/null-cohort-v1.json",
+    "memory-diagnostic-01-interpretation.json": "dev/experiments/benchmark-trust-bliss-20261103/memory-diagnostic-01-interpretation.json",
+    "late-null-frame-stall-diagnostic.json": "dev/experiments/benchmark-trust-bliss-20261103/late-null-frame-stall-diagnostic.json",
+    "v3-null-p0-03-kernel-journal.txt": "dev/experiments/benchmark-trust-bliss-20261103/v3-null-p0-03-kernel-journal.txt",
+    "post-oom-readonly-drm-memory.json": "dev/experiments/benchmark-trust-bliss-20261103/post-oom-readonly-drm-memory.json"
+  },
+  "live_memory": "MemTotal:        7688016 kB\nMemFree:          543312 kB\nMemAvailable:    1933872 kB\nBuffers:             432 kB\nCached:          5347280 kB\nSwapCached:       430064 kB\nActive:          1645712 kB\nInactive:        1740992 kB\nActive(anon):     955040 kB\nInactive(anon):    93824 kB\nActive(file):     690672 kB\nInactive(file):  1647168 kB\nUnevictable:     3002528 kB\nMlocked:             432 kB\nSwapTotal:       8388592 kB\nSwapFree:        5054368 kB\nZswap:             37696 kB\nZswapped:          12288 kB\nDirty:              4640 kB\nWriteback:             0 kB\nAnonPages:       1006496 kB\nMapped:           375584 kB\nShmem:           3010416 kB\nKReclaimable:      88912 kB\nSlab:             394160 kB\nSReclaimable:      88912 kB\nSUnreclaim:       305248 kB\nKernelStack:       26944 kB\nPageTables:        54304 kB\nSecPageTables:       672 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:    12232592 kB\nCommitted_AS:   12156080 kB\nVmallocTotal:   136898928640 kB\nVmallocUsed:       54816 kB\nVmallocChunk:          0 kB\nPercpu:             5632 kB\nHardwareCorrupted:     0 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:         0 kB\nFilePmdMapped:         0 kB\nCmaTotal:          65536 kB\nCmaFree:           33728 kB\nHugePages_Total:       0\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:      32768 kB\nHugetlb:               0 kB\n",
+  "live_pressure": {
+    "cpu": "some avg10=0.00 avg60=0.00 avg300=0.00 total=1147495720\nfull avg10=0.00 avg60=0.00 avg300=0.00 total=0\n",
+    "memory": "some avg10=0.00 avg60=0.00 avg300=0.00 total=1912710322\nfull avg10=0.00 avg60=0.00 avg300=0.00 total=1876984255\n",
+    "io": "some avg10=0.00 avg60=0.00 avg300=0.00 total=1155860167\nfull avg10=0.00 avg60=0.00 avg300=0.00 total=1024432228\n"
+  },
+  "thermal_sensors": {
+    "/sys/class/hwmon/hwmon0/temp1_input": {
+      "device": "nvme",
+      "label": "Composite",
+      "milliC": "29850"
+    },
+    "/sys/class/hwmon/hwmon3/temp3_input": {
+      "device": "macsmc_hwmon",
+      "label": "Charge Regulator Temp",
+      "milliC": "31281"
+    },
+    "/sys/class/hwmon/hwmon3/temp4_input": {
+      "device": "macsmc_hwmon",
+      "label": "WiFi/BT Module Temp",
+      "milliC": "32923"
+    },
+    "/sys/class/hwmon/hwmon3/temp1_input": {
+      "device": "macsmc_hwmon",
+      "label": "NAND Flash Temperature",
+      "milliC": "31189"
+    },
+    "/sys/class/hwmon/hwmon3/temp2_input": {
+      "device": "macsmc_hwmon",
+      "label": "Battery Hotspot",
+      "milliC": "27799"
+    },
+    "/sys/class/hwmon/hwmon1/temp1_input": {
+      "device": "macsmc_battery",
+      "label": "temp",
+      "milliC": "27800"
+    }
+  },
+  "findings": [
+    "Recorded temperature is battery, not CPU/GPU. No CPU/GPU-labeled hwmon temperature found in live census.",
+    "Timed lower-heap diagnostic has active paging and client major faults without recorded timed GC collections.",
+    "Latest OOM has 5193696 KiB unevictable, 5193936 KiB shmem, out of 7688016 KiB managed RAM. Ownership unresolved.",
+    "Same-shader process means worsen over session; temperature/time/memory confounded. No causal attribution to agents or heat.",
+    "Current idle snapshot does not reconstruct prior benchmark resource competition."
+  ]
+}

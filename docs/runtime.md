@@ -4,7 +4,7 @@
 
 ## Target
 
-The existing live setup is the Asahi MacBook Air (Apple M1, Mesa, 2560×1600) with pinned Complementary Reimagined r5.9.3, its original options, native resolution and native AA, with Distant Horizons enabled. Running without DH (`--without-dh`) is a separate diagnostic and does not substitute for the DH-enabled target. Machine choice is a readiness blocker tracked in [tasks/machine-choice.md](../tasks/machine-choice.md).
+The existing live setup is the Asahi MacBook Air (Apple M1, Mesa, 2560×1600) with pinned Complementary Reimagined r5.9.3, its original options, native resolution and native AA, with Distant Horizons enabled. Running without DH (`--without-dh`) is a separate diagnostic and does not substitute for the DH-enabled target. Machine choice is an open development decision tracked in [tasks/machine-choice.md](../tasks/machine-choice.md).
 
 ## Running it
 

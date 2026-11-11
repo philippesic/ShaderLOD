@@ -1,0 +1,107 @@
+{
+  "goal": "G04",
+  "mechanism": "Skip noncontributing translucent lighting / cloud work",
+  "asahi": {
+    "goal": "G04",
+    "mechanism": "Skip noncontributing translucent lighting / cloud work",
+    "targets": {
+      "makeup": {
+        "status": "NO_GAIN_ESTABLISHED",
+        "effects_pct": {
+          "n": 4,
+          "mean": 0.860470842294105,
+          "sd": 2.3937792861383196,
+          "variance": 5.730179270744883
+        },
+        "plotted_phase": "confirmation",
+        "plotted_case": "primary",
+        "plotted_runs": 4,
+        "scope_note": "Close translucent honey fixture at0,64,-5, savedpose9, whole-save restored. Confirmations use the same fixture; water pose2 is separate. Source-controlled fast path is present; skipped fragment/query count unmeasured. Other v1 packs have no maintained shared transform."
+      },
+      "bsl": {
+        "status": "NO_MAINTAINED_GENERAL_ROUTE"
+      },
+      "reimagined": {
+        "status": "NO_MAINTAINED_GENERAL_ROUTE"
+      },
+      "unbound": {
+        "status": "NO_MAINTAINED_GENERAL_ROUTE"
+      }
+    }
+  },
+  "rtx5080": [
+    {
+      "shader": "makeup",
+      "goal": "G04",
+      "status": "MEASURED",
+      "arms": {
+        "native": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 2.714212178057452,
+            "sd": 0.003298935133193485,
+            "variance": 1.0882973013018319e-05
+          },
+          "mean_within_window_sd_ms": 0.09192458240683528,
+          "mean_within_window_variance_ms2": 0.008453402199016684,
+          "mean_p95_ms": 2.83975
+        },
+        "candidate": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 2.7056714999195854,
+            "sd": 0.0002302753633581963,
+            "variance": 5.3026742969749326e-08
+          },
+          "mean_within_window_sd_ms": 0.09133647421357832,
+          "mean_within_window_variance_ms2": 0.00846840509714214,
+          "mean_p95_ms": 2.82705
+        },
+        "return": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 2.7110476657339997,
+            "sd": 0.00026748135864760583,
+            "variance": 7.154627722396914e-08
+          },
+          "mean_within_window_sd_ms": 0.09280539130701004,
+          "mean_within_window_variance_ms2": 0.008614964108395972,
+          "mean_p95_ms": 2.8301
+        }
+      },
+      "effects_pct": {
+        "n": 2,
+        "mean": 0.25650145647757316,
+        "sd": 0.06422233917819424,
+        "variance": 0.0041245088495190235
+      },
+      "plotted_case": "primary",
+      "plotted_phase": "screening",
+      "plotted_runs": 2,
+      "plotted_gl_context": "3.2",
+      "implementation": "translucent_fastpath"
+    },
+    {
+      "shader": "bsl",
+      "goal": "G04",
+      "status": "HELD_NO_QUALIFIED_GENERAL_ROUTE",
+      "scope_note": "The qualified MakeUp ordinary translucent contribution/normal guard is not a general proof for this native shader. Its material/lighting/translucency graph has no certified equivalent zero-work predicate in the current implementation. Defer a new pack-specific algorithm; this is not measured zero or a missing NVIDIA capability.",
+      "implementation": ""
+    },
+    {
+      "shader": "reimagined",
+      "goal": "G04",
+      "status": "HELD_NO_QUALIFIED_GENERAL_ROUTE",
+      "scope_note": "The qualified MakeUp ordinary translucent contribution/normal guard is not a general proof for this native shader. Its material/lighting/translucency graph has no certified equivalent zero-work predicate in the current implementation. Defer a new pack-specific algorithm; this is not measured zero or a missing NVIDIA capability.",
+      "implementation": ""
+    },
+    {
+      "shader": "unbound",
+      "goal": "G04",
+      "status": "HELD_NO_QUALIFIED_GENERAL_ROUTE",
+      "scope_note": "The qualified MakeUp ordinary translucent contribution/normal guard is not a general proof for this native shader. Its material/lighting/translucency graph has no certified equivalent zero-work predicate in the current implementation. Defer a new pack-specific algorithm; this is not measured zero or a missing NVIDIA capability.",
+      "implementation": ""
+    }
+  ],
+  "final_disposition": "discard; no candidate qualified across all four packs and both completed machines"
+}

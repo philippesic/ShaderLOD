@@ -12,6 +12,6 @@ Discard. The sixteen candidates remain excluded from active implementation under
 
 ## Evidence and source
 
-[STATUS.md](/home/philip/ShaderLOD/docs/STATUS.md) sha256:3a3a436bfdea4b7f42c438bc577d781b72ac67b3ae1f61cc4b851f764dbef81d
+[STATUS.md](/home/philip/.local/share/shaderlod-next/evidence/history/original-repository/docs/STATUS.md) sha256:3a3a436bfdea4b7f42c438bc577d781b72ac67b3ae1f61cc4b851f764dbef81d
 
-Executed-source identity: follow the original investigation records linked above. This summary does not establish a recoverable source snapshot; verify it before reproducing or deleting dependencies.
+Executed-source identity: the complete historical source checkout and run freezes are preserved in the artifact snapshot. Use the original build bindings to identify the executed revision; a current checkout alone does not prove a historical run used it. See [artifact access](../../docs/results.md#historical-artifact-access).

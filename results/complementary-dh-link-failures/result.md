@@ -12,6 +12,6 @@ Unresolved. Keep the knowledge; this does not authorize reviving an implementati
 
 ## Evidence and source
 
-[RESULTS.json](/home/philip/ShaderLOD/dev/experiments/cost-map-coverage-20261108/RESULTS.json) sha256:e57c1e89d8907c2bf0d956b8deefafc5936da91dc2034c8946a6f171d2ac48d2
+[RESULTS.json](/home/philip/.local/share/shaderlod-next/evidence/history/original-repository/dev/experiments/cost-map-coverage-20261108/RESULTS.json) sha256:e57c1e89d8907c2bf0d956b8deefafc5936da91dc2034c8946a6f171d2ac48d2
 
-Executed-source identity: follow the original investigation records linked above. This summary does not establish a recoverable source snapshot; verify it before reproducing or deleting dependencies.
+Executed-source identity: the complete historical source checkout and run freezes are preserved in the artifact snapshot. Use the original build bindings to identify the executed revision; a current checkout alone does not prove a historical run used it. See [artifact access](../../docs/results.md#historical-artifact-access).

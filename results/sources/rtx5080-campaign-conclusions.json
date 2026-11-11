@@ -1,0 +1,83 @@
+{
+  "scope": "Completed current64-cell RTX5080 screening audit, not a claim that all64 combinations run or that implementations are hardware-optimal.40 cells have two-process primary timing;22 have explicit source-held/no-certified-route reasons;two share G01. Existing general-route scope does not become four separate new pack-specific implementations.",
+  "decision": "No broadly useful shared v1/default candidate qualified. Retain MakeUp copy omission and BSL mip omission as scoped experimental gains; C02 is a small NVIDIA-only bloom quality tradeoff. Other routes are regressive, inconclusive, or offer small scene-limited reductions without an established broadly useful gain.",
+  "retained_observations": [
+    {
+      "shader": "makeup",
+      "goal": "G01",
+      "frame_time_reduction_pct": {
+        "n": 2,
+        "mean": 3.2439859394439177,
+        "sd": 0.04122971900083723,
+        "variance": 0.0016998897288879988
+      },
+      "case": "primary",
+      "actual_gl": "3.2"
+    },
+    {
+      "shader": "bsl",
+      "goal": "G02",
+      "frame_time_reduction_pct": {
+        "n": 2,
+        "mean": 3.9526139568694063,
+        "sd": 0.11903587980345784,
+        "variance": 0.014169540680583263
+      },
+      "case": "primary",
+      "actual_gl": "3.2"
+    },
+    {
+      "shader": "bsl",
+      "goal": "C02",
+      "frame_time_reduction_pct": {
+        "n": 2,
+        "mean": 2.243742019096482,
+        "sd": 0.11188533438694258,
+        "variance": 0.012518328050877957
+      },
+      "case": "native-gl46-vrs-2x2",
+      "actual_gl": "4.6"
+    },
+    {
+      "shader": "reimagined",
+      "goal": "C02",
+      "frame_time_reduction_pct": {
+        "n": 2,
+        "mean": 2.005364659901851,
+        "sd": 0.048111090352090886,
+        "variance": 0.0023146770148670523
+      },
+      "case": "native-gl46-vrs-2x2",
+      "actual_gl": "4.6"
+    },
+    {
+      "shader": "unbound",
+      "goal": "C02",
+      "frame_time_reduction_pct": {
+        "n": 2,
+        "mean": 1.7695430903849871,
+        "sd": 0.07699140130101288,
+        "variance": 0.0059276758742936074
+      },
+      "case": "native-gl46-vrs-2x2",
+      "actual_gl": "4.6"
+    }
+  ],
+  "minor_observation": {
+    "shader": "makeup",
+    "goal": "N04",
+    "effect": {
+      "n": 2,
+      "mean": 1.1201750056577207,
+      "sd": 0.272030308245914,
+      "variance": 0.07400048860436699
+    },
+    "limit": "Sky-focused MakeUp N04 only; small n2 result and no measured fragment skip frequency; not a general benefit or default recommendation."
+  },
+  "variance": "N-1 sample frame variance within each window; window-mean variation and equal-weight independent-process variance stay separate. SD bars are not confidence intervals.40 primary cells have n2; separate modern-context diagnosis has n1 and unavailable between-process variance.",
+  "regression": "Real4.6 G03 diagnostics remain slower by6.989%/10.806% on Reimagined/Unbound.572 valid windows have no exploratory2% quarter/pair trend flag. G06 full-size allocation/half viewport is intentional. Observed-work/JFR checks do not isolate every CPU/GPU bottleneck or prove algorithms cannot improve.",
+  "quality_scope": "All2178 successful PNGs decoded/hashed and all121 paired slots per case compared in final RGB8. Selected frames0/60/120 reviewed visually; supplemental unscaled crops retained. Shader clocks/history and small rendered pose differences remain uncontrolled. RGB differences are descriptive against native-return variation, not deterministic equivalence. The logical20s path holds for rendering/writer capacity and may take longer in real time; these captures never supply performance bars. Brief shimmer/ghosting, HDR, all scenes/transitions, DH and broad PBR compatibility remain unqualified.",
+  "operations": 217,
+  "all_terminal_restored_released": true,
+  "untested": "Production/default enablement; hardware-optimal variants; universal HDR/temporal/transition/DH/PBR compatibility; AMD and renewed2080Ti testing; held geometry/lifetime/new general-route implementations."
+}

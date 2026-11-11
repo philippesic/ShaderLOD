@@ -1,0 +1,265 @@
+{
+  "goal": "N04",
+  "mechanism": "Guard overwritten AO or exact zero work",
+  "asahi": {
+    "goal": "N04",
+    "mechanism": "Guard overwritten AO or exact zero work",
+    "targets": {
+      "makeup": {
+        "status": "NO_GAIN_ESTABLISHED",
+        "effects_pct": {
+          "n": 1,
+          "mean": 0.5341341018459879,
+          "sd": null,
+          "variance": null
+        },
+        "plotted_phase": "discovery",
+        "plotted_case": "primary",
+        "plotted_runs": 1
+      },
+      "bsl": {
+        "status": "NO_GAIN_ESTABLISHED",
+        "effects_pct": {
+          "n": 1,
+          "mean": -5.516240568451429,
+          "sd": null,
+          "variance": null
+        },
+        "plotted_phase": "discovery",
+        "plotted_case": "primary",
+        "plotted_runs": 1
+      },
+      "reimagined": {
+        "status": "NO_GAIN_ESTABLISHED",
+        "effects_pct": {
+          "n": 1,
+          "mean": -5.6077785913101055,
+          "sd": null,
+          "variance": null
+        },
+        "plotted_phase": "discovery",
+        "plotted_case": "primary",
+        "plotted_runs": 1
+      },
+      "unbound": {
+        "status": "NO_GAIN_ESTABLISHED",
+        "effects_pct": {
+          "n": 1,
+          "mean": -5.05096188692013,
+          "sd": null,
+          "variance": null
+        },
+        "plotted_phase": "discovery",
+        "plotted_case": "primary",
+        "plotted_runs": 1
+      }
+    }
+  },
+  "rtx5080": [
+    {
+      "shader": "makeup",
+      "goal": "N04",
+      "status": "MEASURED",
+      "arms": {
+        "native": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 1.8971350887163432,
+            "sd": 0.010645606527494323,
+            "variance": 0.00011332893833822975
+          },
+          "mean_within_window_sd_ms": 0.08464434214013217,
+          "mean_within_window_variance_ms2": 0.007164664752259487,
+          "mean_p95_ms": 1.9964
+        },
+        "candidate": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 1.8790228505388327,
+            "sd": 0.00020697098786548836,
+            "variance": 4.283698981801613e-08
+          },
+          "mean_within_window_sd_ms": 0.07569624770703062,
+          "mean_within_window_variance_ms2": 0.005853937935805518,
+          "mean_p95_ms": 1.965975
+        },
+        "return": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 1.9034980066944747,
+            "sd": 0.000608238490506818,
+            "variance": 3.699540613340125e-07
+          },
+          "mean_within_window_sd_ms": 0.07157906503227929,
+          "mean_within_window_variance_ms2": 0.005130685877123691,
+          "mean_p95_ms": 1.9823499999999998
+        }
+      },
+      "effects_pct": {
+        "n": 2,
+        "mean": 1.1201750056577207,
+        "sd": 0.272030308245914,
+        "variance": 0.07400048860436699
+      },
+      "plotted_case": "primary",
+      "plotted_phase": "screening",
+      "plotted_runs": 2,
+      "plotted_gl_context": "3.2",
+      "implementation": "ao_sky_elision"
+    },
+    {
+      "shader": "bsl",
+      "goal": "N04",
+      "status": "MEASURED",
+      "arms": {
+        "native": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 2.714161085093965,
+            "sd": 0.025146801447379828,
+            "variance": 0.0006323616230339441
+          },
+          "mean_within_window_sd_ms": 0.08488957736284079,
+          "mean_within_window_variance_ms2": 0.007241360384622779,
+          "mean_p95_ms": 2.8304
+        },
+        "candidate": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 2.7546976092445705,
+            "sd": 0.003897257099829183,
+            "variance": 1.5188612902168975e-05
+          },
+          "mean_within_window_sd_ms": 0.09944723123131385,
+          "mean_within_window_variance_ms2": 0.009968794449404602,
+          "mean_p95_ms": 2.8763500000000004
+        },
+        "return": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 2.686019170436812,
+            "sd": 0.005175335862027679,
+            "variance": 2.678410128478978e-05
+          },
+          "mean_within_window_sd_ms": 0.08962537860099315,
+          "mean_within_window_variance_ms2": 0.008048279618485296,
+          "mean_p95_ms": 2.798
+        }
+      },
+      "effects_pct": {
+        "n": 2,
+        "mean": -2.0244453727743363,
+        "sd": 0.717207663116152,
+        "variance": 0.5143868320325319
+      },
+      "plotted_case": "primary",
+      "plotted_phase": "screening",
+      "plotted_runs": 2,
+      "plotted_gl_context": "3.2",
+      "implementation": "ao_sky_elision"
+    },
+    {
+      "shader": "reimagined",
+      "goal": "N04",
+      "status": "MEASURED",
+      "arms": {
+        "native": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 2.671592475467347,
+            "sd": 0.01342095355525852,
+            "variance": 0.00018012199433240636
+          },
+          "mean_within_window_sd_ms": 0.07856634559875075,
+          "mean_within_window_variance_ms2": 0.006178621167655263,
+          "mean_p95_ms": 2.788
+        },
+        "candidate": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 2.698608269805586,
+            "sd": 0.004162914488307397,
+            "variance": 1.732985703695964e-05
+          },
+          "mean_within_window_sd_ms": 0.08980253089331855,
+          "mean_within_window_variance_ms2": 0.008124865355436595,
+          "mean_p95_ms": 2.8145000000000002
+        },
+        "return": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 2.6599270908918196,
+            "sd": 0.0007482820169047254,
+            "variance": 5.599259768230038e-07
+          },
+          "mean_within_window_sd_ms": 0.07672726464098205,
+          "mean_within_window_variance_ms2": 0.005900550094814987,
+          "mean_p95_ms": 2.76605
+        }
+      },
+      "effects_pct": {
+        "n": 2,
+        "mean": -1.2327088763460847,
+        "sd": 0.39678589562671457,
+        "variance": 0.15743904696829403
+      },
+      "plotted_case": "primary",
+      "plotted_phase": "screening",
+      "plotted_runs": 2,
+      "plotted_gl_context": "3.2",
+      "implementation": "zero_emission_arithmetic"
+    },
+    {
+      "shader": "unbound",
+      "goal": "N04",
+      "status": "MEASURED",
+      "arms": {
+        "native": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 2.5953385171101244,
+            "sd": 0.0016887237311803231,
+            "variance": 2.851787840251592e-06
+          },
+          "mean_within_window_sd_ms": 0.08844513892346606,
+          "mean_within_window_variance_ms2": 0.007830266263117575,
+          "mean_p95_ms": 2.7158499999999997
+        },
+        "candidate": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 2.729192351444315,
+            "sd": 0.0004330829265827154,
+            "variance": 1.8756082129744968e-07
+          },
+          "mean_within_window_sd_ms": 0.09175412179402412,
+          "mean_within_window_variance_ms2": 0.008512324385457811,
+          "mean_p95_ms": 2.8520000000000003
+        },
+        "return": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 2.5953075461023127,
+            "sd": 0.0017540231186988842,
+            "variance": 3.07659710093016e-06
+          },
+          "mean_within_window_sd_ms": 0.08229110566588022,
+          "mean_within_window_variance_ms2": 0.006791350843210544,
+          "mean_p95_ms": 2.7041
+        }
+      },
+      "effects_pct": {
+        "n": 2,
+        "mean": -5.158098670104479,
+        "sd": 0.0180099632326875,
+        "variance": 0.00032435877564275566
+      },
+      "plotted_case": "primary",
+      "plotted_phase": "screening",
+      "plotted_runs": 2,
+      "plotted_gl_context": "3.2",
+      "implementation": "zero_emission_arithmetic"
+    }
+  ],
+  "final_disposition": "discard; no candidate qualified across all four packs and both completed machines"
+}

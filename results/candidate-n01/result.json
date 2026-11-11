@@ -1,0 +1,265 @@
+{
+  "goal": "N01",
+  "mechanism": "CPU command compaction / admission and scalar caching",
+  "asahi": {
+    "goal": "N01",
+    "mechanism": "CPU command compaction / admission and scalar caching",
+    "targets": {
+      "makeup": {
+        "status": "MEASURED_SLOWER",
+        "effects_pct": {
+          "n": 1,
+          "mean": -4.198275700319056,
+          "sd": null,
+          "variance": null
+        },
+        "plotted_phase": "discovery",
+        "plotted_case": "primary",
+        "plotted_runs": 1
+      },
+      "bsl": {
+        "status": "NO_GAIN_ESTABLISHED",
+        "effects_pct": {
+          "n": 1,
+          "mean": 0.698890603117378,
+          "sd": null,
+          "variance": null
+        },
+        "plotted_phase": "discovery",
+        "plotted_case": "primary",
+        "plotted_runs": 1
+      },
+      "reimagined": {
+        "status": "NO_GAIN_ESTABLISHED",
+        "effects_pct": {
+          "n": 1,
+          "mean": 0.09048166587496348,
+          "sd": null,
+          "variance": null
+        },
+        "plotted_phase": "discovery",
+        "plotted_case": "primary",
+        "plotted_runs": 1
+      },
+      "unbound": {
+        "status": "NO_GAIN_ESTABLISHED",
+        "effects_pct": {
+          "n": 4,
+          "mean": -0.06053235966574136,
+          "sd": 1.5381990746607466,
+          "variance": 2.3660563932871774
+        },
+        "plotted_phase": "confirmation",
+        "plotted_case": "primary",
+        "plotted_runs": 4
+      }
+    }
+  },
+  "rtx5080": [
+    {
+      "shader": "makeup",
+      "goal": "N01",
+      "status": "MEASURED",
+      "arms": {
+        "native": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 2.940994460873643,
+            "sd": 0.0039871866988159125,
+            "variance": 1.589765777121453e-05
+          },
+          "mean_within_window_sd_ms": 0.09914842228346865,
+          "mean_within_window_variance_ms2": 0.00983727654074169,
+          "mean_p95_ms": 3.0787
+        },
+        "candidate": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 2.9414319344318587,
+            "sd": 0.00016637690857417237,
+            "variance": 2.7681275706698507e-08
+          },
+          "mean_within_window_sd_ms": 0.10361846318519986,
+          "mean_within_window_variance_ms2": 0.010776762817456872,
+          "mean_p95_ms": 3.083875
+        },
+        "return": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 2.937099219509732,
+            "sd": 0.00019234727147882826,
+            "variance": 3.699747284535006e-08
+          },
+          "mean_within_window_sd_ms": 0.09999639439468269,
+          "mean_within_window_variance_ms2": 0.010044874829247619,
+          "mean_p95_ms": 3.06345
+        }
+      },
+      "effects_pct": {
+        "n": 2,
+        "mean": -0.08117464778430541,
+        "sd": 0.0702723351587541,
+        "variance": 0.0049382010886642675
+      },
+      "plotted_case": "primary",
+      "plotted_phase": "screening",
+      "plotted_runs": 2,
+      "plotted_gl_context": "4.6",
+      "implementation": "native CPU bundle"
+    },
+    {
+      "shader": "bsl",
+      "goal": "N01",
+      "status": "MEASURED",
+      "arms": {
+        "native": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 4.0363506225239725,
+            "sd": 0.0068057812059593705,
+            "variance": 4.631865782338979e-05
+          },
+          "mean_within_window_sd_ms": 0.11417234328269632,
+          "mean_within_window_variance_ms2": 0.01305473920009088,
+          "mean_p95_ms": 4.1943
+        },
+        "candidate": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 4.037422274975276,
+            "sd": 0.001613364527068597,
+            "variance": 2.602945097203278e-06
+          },
+          "mean_within_window_sd_ms": 0.12646546333606584,
+          "mean_within_window_variance_ms2": 0.016070879245286898,
+          "mean_p95_ms": 4.208125000000001
+        },
+        "return": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 4.034510872345928,
+            "sd": 0.001572210879440542,
+            "variance": 2.4718470494312025e-06
+          },
+          "mean_within_window_sd_ms": 0.11985677722533589,
+          "mean_within_window_variance_ms2": 0.014371842167116934,
+          "mean_p95_ms": 4.2156
+        }
+      },
+      "effects_pct": {
+        "n": 2,
+        "mean": -0.049385049815673134,
+        "sd": 0.10485725702699229,
+        "variance": 0.010995044351224725
+      },
+      "plotted_case": "primary",
+      "plotted_phase": "screening",
+      "plotted_runs": 2,
+      "plotted_gl_context": "4.6",
+      "implementation": "native CPU bundle"
+    },
+    {
+      "shader": "reimagined",
+      "goal": "N01",
+      "status": "MEASURED",
+      "arms": {
+        "native": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 5.293681618125791,
+            "sd": 0.005054982055769736,
+            "variance": 2.5552843584154017e-05
+          },
+          "mean_within_window_sd_ms": 0.17576554229389169,
+          "mean_within_window_variance_ms2": 0.032741667710692465,
+          "mean_p95_ms": 5.5021
+        },
+        "candidate": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 5.317048248692681,
+            "sd": 0.011589794588004467,
+            "variance": 0.00013432333859213764
+          },
+          "mean_within_window_sd_ms": 0.13795947903692385,
+          "mean_within_window_variance_ms2": 0.019160802064910203,
+          "mean_p95_ms": 5.4945
+        },
+        "return": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 5.309646453290873,
+            "sd": 0.026209963330344217,
+            "variance": 0.0006869621777779885
+          },
+          "mean_within_window_sd_ms": 0.1427796557355079,
+          "mean_within_window_variance_ms2": 0.020510396938547025,
+          "mean_p95_ms": 5.4923
+        }
+      },
+      "effects_pct": {
+        "n": 2,
+        "mean": -0.2902907445444495,
+        "sd": 0.07710895482795967,
+        "variance": 0.005945790914660324
+      },
+      "plotted_case": "primary",
+      "plotted_phase": "screening",
+      "plotted_runs": 2,
+      "plotted_gl_context": "4.6",
+      "implementation": "native CPU bundle"
+    },
+    {
+      "shader": "unbound",
+      "goal": "N01",
+      "status": "MEASURED",
+      "arms": {
+        "native": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 5.23376126866493,
+            "sd": 0.01283654520150781,
+            "variance": 0.0001647768927103532
+          },
+          "mean_within_window_sd_ms": 0.16414340312319103,
+          "mean_within_window_variance_ms2": 0.027108711235384553,
+          "mean_p95_ms": 5.4159500000000005
+        },
+        "candidate": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 5.206186022989424,
+            "sd": 0.0006283452499729748,
+            "variance": 3.948177531636002e-07
+          },
+          "mean_within_window_sd_ms": 0.1572984798112649,
+          "mean_within_window_variance_ms2": 0.02526985566004763,
+          "mean_p95_ms": 5.39255
+        },
+        "return": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 5.211155851945266,
+            "sd": 0.006102754300607178,
+            "variance": 3.724361005357941e-05
+          },
+          "mean_within_window_sd_ms": 0.11395117102038971,
+          "mean_within_window_variance_ms2": 0.012988113565312528,
+          "mean_p95_ms": 5.3614999999999995
+        }
+      },
+      "effects_pct": {
+        "n": 2,
+        "mean": 0.31156308187792103,
+        "sd": 0.07630028369169399,
+        "variance": 0.005821733291432983
+      },
+      "plotted_case": "primary",
+      "plotted_phase": "screening",
+      "plotted_runs": 2,
+      "plotted_gl_context": "4.6",
+      "implementation": "native CPU bundle"
+    }
+  ],
+  "final_disposition": "discard; no candidate qualified across all four packs and both completed machines"
+}

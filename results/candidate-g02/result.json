@@ -1,0 +1,215 @@
+{
+  "goal": "G02",
+  "mechanism": "Omit unused mip generations / passes",
+  "asahi": {
+    "goal": "G02",
+    "mechanism": "Omit unused mip generations / passes",
+    "targets": {
+      "bsl": {
+        "status": "NO_GAIN_ESTABLISHED",
+        "effects_pct": {
+          "n": 1,
+          "mean": 2.611198263528727,
+          "sd": null,
+          "variance": null
+        },
+        "plotted_phase": "discovery",
+        "plotted_case": "wall-pose11",
+        "plotted_runs": 1,
+        "scope_note": "Prospectively select the balanced static-wall case to reduce sky-animation/control drift; original gallery and native-only BSL cases remain separate, including inconclusive/negative results."
+      },
+      "reimagined": {
+        "status": "MEASURED_SLOWER",
+        "effects_pct": {
+          "n": 1,
+          "mean": -5.331899541989118,
+          "sd": null,
+          "variance": null
+        },
+        "plotted_phase": "discovery",
+        "plotted_case": "wall-pose11",
+        "plotted_runs": 1,
+        "scope_note": "Prospectively select the balanced static-wall case to reduce sky-animation/control drift; original gallery and native-only BSL cases remain separate, including inconclusive/negative results."
+      },
+      "unbound": {
+        "status": "MEASURED_SLOWER",
+        "effects_pct": {
+          "n": 1,
+          "mean": -5.670307487441936,
+          "sd": null,
+          "variance": null
+        },
+        "plotted_phase": "discovery",
+        "plotted_case": "wall-pose11",
+        "plotted_runs": 1,
+        "scope_note": "Prospectively select the balanced static-wall case to reduce sky-animation/control drift; original gallery and native-only BSL cases remain separate, including inconclusive/negative results."
+      },
+      "makeup": {
+        "status": "NO_DEAD_MIP_CHAIN_CURRENT"
+      }
+    }
+  },
+  "rtx5080": [
+    {
+      "shader": "bsl",
+      "goal": "G02",
+      "status": "MEASURED",
+      "arms": {
+        "native": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 2.881334410769272,
+            "sd": 0.01608155915148505,
+            "variance": 0.00025861654474271256
+          },
+          "mean_within_window_sd_ms": 0.10260426775783918,
+          "mean_within_window_variance_ms2": 0.010528342383013353,
+          "mean_p95_ms": 3.0116500000000004
+        },
+        "candidate": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 2.763928652627489,
+            "sd": 0.010269357027422567,
+            "variance": 0.00010545969375667328
+          },
+          "mean_within_window_sd_ms": 0.09228902295044497,
+          "mean_within_window_variance_ms2": 0.008552357540292915,
+          "mean_p95_ms": 2.884725
+        },
+        "return": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 2.8740270890177833,
+            "sd": 0.012435259869166576,
+            "variance": 0.00015463568801370474
+          },
+          "mean_within_window_sd_ms": 0.109646956937159,
+          "mean_within_window_variance_ms2": 0.012026939839735325,
+          "mean_p95_ms": 2.9901
+        }
+      },
+      "effects_pct": {
+        "n": 2,
+        "mean": 3.9526139568694063,
+        "sd": 0.11903587980345784,
+        "variance": 0.014169540680583263
+      },
+      "plotted_case": "primary",
+      "plotted_phase": "screening",
+      "plotted_runs": 2,
+      "plotted_gl_context": "3.2",
+      "implementation": "dead_mip_chain"
+    },
+    {
+      "shader": "reimagined",
+      "goal": "G02",
+      "status": "MEASURED",
+      "arms": {
+        "native": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 3.257591025730086,
+            "sd": 0.0033107442947775323,
+            "variance": 1.0961027785401977e-05
+          },
+          "mean_within_window_sd_ms": 0.09844529400046323,
+          "mean_within_window_variance_ms2": 0.009715589631556675,
+          "mean_p95_ms": 3.3825000000000003
+        },
+        "candidate": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 3.4400969139521917,
+            "sd": 0.008763775551724909,
+            "variance": 7.680376192101122e-05
+          },
+          "mean_within_window_sd_ms": 0.11111214570830816,
+          "mean_within_window_variance_ms2": 0.012674232887326296,
+          "mean_p95_ms": 3.573975
+        },
+        "return": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 3.25352682250415,
+            "sd": 0.006015958023366304,
+            "variance": 3.619175093890541e-05
+          },
+          "mean_within_window_sd_ms": 0.09555953133478162,
+          "mean_within_window_variance_ms2": 0.009145380604949717,
+          "mean_p95_ms": 3.3684000000000003
+        }
+      },
+      "effects_pct": {
+        "n": 2,
+        "mean": -5.668349751366672,
+        "sd": 0.2252915204595897,
+        "variance": 0.05075626919099372
+      },
+      "plotted_case": "primary",
+      "plotted_phase": "screening",
+      "plotted_runs": 2,
+      "plotted_gl_context": "3.2",
+      "implementation": "dead_mip_chain"
+    },
+    {
+      "shader": "unbound",
+      "goal": "G02",
+      "status": "MEASURED",
+      "arms": {
+        "native": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 3.373268025464961,
+            "sd": 0.00017950359334745588,
+            "variance": 3.2221540024648806e-08
+          },
+          "mean_within_window_sd_ms": 0.10488664601102812,
+          "mean_within_window_variance_ms2": 0.011416526260554054,
+          "mean_p95_ms": 3.51295
+        },
+        "candidate": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 3.713354346336622,
+            "sd": 0.01105949589648693,
+            "variance": 0.00012231244948441124
+          },
+          "mean_within_window_sd_ms": 0.10938085660594167,
+          "mean_within_window_variance_ms2": 0.012100068709386718,
+          "mean_p95_ms": 3.84945
+        },
+        "return": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 3.3777197291444363,
+            "sd": 0.006360427507309421,
+            "variance": 4.045503807573834e-05
+          },
+          "mean_within_window_sd_ms": 0.09669763176416532,
+          "mean_within_window_variance_ms2": 0.00935086672203303,
+          "mean_p95_ms": 3.49695
+        }
+      },
+      "effects_pct": {
+        "n": 2,
+        "mean": -10.009111995407956,
+        "sd": 0.22692104976272945,
+        "variance": 0.05149316282541913
+      },
+      "plotted_case": "primary",
+      "plotted_phase": "screening",
+      "plotted_runs": 2,
+      "plotted_gl_context": "3.2",
+      "implementation": "dead_mip_chain"
+    },
+    {
+      "shader": "makeup",
+      "goal": "G02",
+      "status": "NATIVE_MIP_CONSUMERS_REQUIRED",
+      "scope_note": "Both MakeUp native mip families have positive-LOD consumers: colortex1 exposure in the vertex path at log2(min(viewWidth,viewHeight))-1, and colortex0 soft-LOD bloom. At native4K these are not dead chains. No omission is justified while preserving the present settings.",
+      "implementation": ""
+    }
+  ],
+  "final_disposition": "discard; no candidate qualified across all four packs and both completed machines"
+}

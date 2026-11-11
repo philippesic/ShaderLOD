@@ -1,0 +1,684 @@
+{
+  "scope": "Completed Asahi audit of16goals across4targets;64dispositions,36timed cells. Other28are explicit held,unsupported,no-native-opportunity or consolidated cases, never invented zero measurements.",
+  "local_gains": [
+    {
+      "goal": "G01",
+      "target": "makeup",
+      "effect_percent": {
+        "n": 4,
+        "mean": 8.143937082974203,
+        "sd": 1.7775762627850458,
+        "variance": 3.1597773700168506
+      },
+      "quality": "Limited reviewed20s6fps camera sequences; no full temporal or broad compatibility certificate."
+    },
+    {
+      "goal": "G06",
+      "target": "makeup",
+      "effect_percent": {
+        "n": 4,
+        "mean": 4.141890214247758,
+        "sd": 1.6370040034983766,
+        "variance": 2.679782107469713
+      },
+      "quality": "Limited reviewed20s6fps camera sequences; no full temporal or broad compatibility certificate."
+    }
+  ],
+  "no_additive_credit": "G01,N02,N03 MakeUp share one deletion result. G01/G06 were measured individually; their gains cannot be summed.",
+  "decisions": [
+    {
+      "goal": "G01",
+      "mechanism": "Avoid framebuffer copies / identity transfers",
+      "targets": {
+        "makeup": {
+          "status": "LOCAL_TIMING_GAIN_CONFIRMED",
+          "effects_pct": {
+            "n": 4,
+            "mean": 8.143937082974203,
+            "sd": 1.7775762627850458,
+            "variance": 3.1597773700168506
+          },
+          "plotted_phase": "confirmation",
+          "plotted_case": "primary",
+          "plotted_runs": 4
+        },
+        "reimagined": {
+          "status": "HELD_LIFETIME_PROOF"
+        },
+        "unbound": {
+          "status": "HELD_LIFETIME_PROOF"
+        },
+        "bsl": {
+          "status": "NO_PROVEN_DEAD_LIFETIME"
+        }
+      }
+    },
+    {
+      "goal": "G02",
+      "mechanism": "Omit unused mip generations / passes",
+      "targets": {
+        "bsl": {
+          "status": "NO_GAIN_ESTABLISHED",
+          "effects_pct": {
+            "n": 1,
+            "mean": 2.611198263528727,
+            "sd": null,
+            "variance": null
+          },
+          "plotted_phase": "discovery",
+          "plotted_case": "wall-pose11",
+          "plotted_runs": 1,
+          "scope_note": "Prospectively select the balanced static-wall case to reduce sky-animation/control drift; original gallery and native-only BSL cases remain separate, including inconclusive/negative results."
+        },
+        "reimagined": {
+          "status": "MEASURED_SLOWER",
+          "effects_pct": {
+            "n": 1,
+            "mean": -5.331899541989118,
+            "sd": null,
+            "variance": null
+          },
+          "plotted_phase": "discovery",
+          "plotted_case": "wall-pose11",
+          "plotted_runs": 1,
+          "scope_note": "Prospectively select the balanced static-wall case to reduce sky-animation/control drift; original gallery and native-only BSL cases remain separate, including inconclusive/negative results."
+        },
+        "unbound": {
+          "status": "MEASURED_SLOWER",
+          "effects_pct": {
+            "n": 1,
+            "mean": -5.670307487441936,
+            "sd": null,
+            "variance": null
+          },
+          "plotted_phase": "discovery",
+          "plotted_case": "wall-pose11",
+          "plotted_runs": 1,
+          "scope_note": "Prospectively select the balanced static-wall case to reduce sky-animation/control drift; original gallery and native-only BSL cases remain separate, including inconclusive/negative results."
+        },
+        "makeup": {
+          "status": "NO_DEAD_MIP_CHAIN_CURRENT"
+        }
+      }
+    },
+    {
+      "goal": "G03",
+      "mechanism": "Reject transparent cutout fragments earlier",
+      "targets": {
+        "makeup": {
+          "status": "MEASURED_SLOWER",
+          "effects_pct": {
+            "n": 1,
+            "mean": -2.4141352131190734,
+            "sd": null,
+            "variance": null
+          },
+          "plotted_phase": "discovery",
+          "plotted_case": "primary",
+          "plotted_runs": 1
+        },
+        "bsl": {
+          "status": "UNSUPPORTED_CURRENT_STACK"
+        },
+        "reimagined": {
+          "status": "MEASURED_SLOWER",
+          "effects_pct": {
+            "n": 1,
+            "mean": -3.0821902246786594,
+            "sd": null,
+            "variance": null
+          },
+          "plotted_phase": "discovery",
+          "plotted_case": "primary",
+          "plotted_runs": 1
+        },
+        "unbound": {
+          "status": "MEASURED_SLOWER",
+          "effects_pct": {
+            "n": 1,
+            "mean": -6.557018378869604,
+            "sd": null,
+            "variance": null
+          },
+          "plotted_phase": "discovery",
+          "plotted_case": "primary",
+          "plotted_runs": 1
+        }
+      }
+    },
+    {
+      "goal": "G04",
+      "mechanism": "Skip noncontributing translucent lighting / cloud work",
+      "targets": {
+        "makeup": {
+          "status": "NO_GAIN_ESTABLISHED",
+          "effects_pct": {
+            "n": 4,
+            "mean": 0.860470842294105,
+            "sd": 2.3937792861383196,
+            "variance": 5.730179270744883
+          },
+          "plotted_phase": "confirmation",
+          "plotted_case": "primary",
+          "plotted_runs": 4,
+          "scope_note": "Close translucent honey fixture at0,64,-5, savedpose9, whole-save restored. Confirmations use the same fixture; water pose2 is separate. Source-controlled fast path is present; skipped fragment/query count unmeasured. Other v1 packs have no maintained shared transform."
+        },
+        "bsl": {
+          "status": "NO_MAINTAINED_GENERAL_ROUTE"
+        },
+        "reimagined": {
+          "status": "NO_MAINTAINED_GENERAL_ROUTE"
+        },
+        "unbound": {
+          "status": "NO_MAINTAINED_GENERAL_ROUTE"
+        }
+      }
+    },
+    {
+      "goal": "G05",
+      "mechanism": "Reflection traversal / depth-query reuse",
+      "targets": {
+        "makeup": {
+          "status": "MEASURED_SLOWER",
+          "effects_pct": {
+            "n": 1,
+            "mean": -5.203233148230776,
+            "sd": null,
+            "variance": null
+          },
+          "plotted_phase": "discovery",
+          "plotted_case": "shared-depth-ssr",
+          "plotted_runs": 1,
+          "scope_note": "Main case requires actual nearest-sampler permission progress inside timing windows. Initial source/request-only runs stay separate; permission0 at setup does not classify transient draw grants."
+        },
+        "bsl": {
+          "status": "MEASURED_SLOWER",
+          "effects_pct": {
+            "n": 1,
+            "mean": -21.832639184194598,
+            "sd": null,
+            "variance": null
+          },
+          "plotted_phase": "discovery",
+          "plotted_case": "draw-permission-proof",
+          "plotted_runs": 1,
+          "scope_note": "Main case requires actual nearest-sampler permission progress inside timing windows. Initial source/request-only runs stay separate; permission0 at setup does not classify transient draw grants."
+        },
+        "reimagined": {
+          "status": "MEASURED_SLOWER",
+          "effects_pct": {
+            "n": 1,
+            "mean": -11.790593118565566,
+            "sd": null,
+            "variance": null
+          },
+          "plotted_phase": "discovery",
+          "plotted_case": "primary",
+          "plotted_runs": 1,
+          "scope_note": "Shader-side projected-refinement LOD gate uses the requested next-event flag; source guard/branch frequency and avoided steps are not counted. Separate native-water exact-depth permission belongs to unrequested projected-refinement peer. Preserve native AA/resolution and label this implementation separately from MakeUp/BSL nearest-cell events."
+        },
+        "unbound": {
+          "status": "MEASURED_SLOWER",
+          "effects_pct": {
+            "n": 1,
+            "mean": -14.900754936954344,
+            "sd": null,
+            "variance": null
+          },
+          "plotted_phase": "discovery",
+          "plotted_case": "primary",
+          "plotted_runs": 1,
+          "scope_note": "Shader-side projected-refinement LOD gate uses the requested next-event flag; source guard/branch frequency and avoided steps are not counted. Separate native-water exact-depth permission belongs to unrequested projected-refinement peer. Preserve native AA/resolution and label this implementation separately from MakeUp/BSL nearest-cell events."
+        }
+      }
+    },
+    {
+      "goal": "G06",
+      "mechanism": "Reduce / avoid AO work",
+      "targets": {
+        "makeup": {
+          "status": "LOCAL_TIMING_GAIN_CONFIRMED",
+          "effects_pct": {
+            "n": 4,
+            "mean": 4.141890214247758,
+            "sd": 1.6370040034983766,
+            "variance": 2.679782107469713
+          },
+          "plotted_phase": "confirmation",
+          "plotted_case": "primary",
+          "plotted_runs": 4,
+          "scope_note": "Exact native AO attenuation/center-depth reuse route, distinct from the half-resolution AO implementation on other targets. Four gallerypose0 confirmations,2ABBA2BAAB; p95 mixed. Close-wall alternate case does not prove zero skipped work or negligible fallback overhead. Moving-camera and cross-GPU qualification are separate."
+        },
+        "bsl": {
+          "status": "MEASURED_SLOWER",
+          "effects_pct": {
+            "n": 1,
+            "mean": -10.862258445978526,
+            "sd": null,
+            "variance": null
+          },
+          "plotted_phase": "discovery",
+          "plotted_case": "primary",
+          "plotted_runs": 1
+        },
+        "reimagined": {
+          "status": "MEASURED_SLOWER",
+          "effects_pct": {
+            "n": 1,
+            "mean": -7.887102478850397,
+            "sd": null,
+            "variance": null
+          },
+          "plotted_phase": "discovery",
+          "plotted_case": "primary",
+          "plotted_runs": 1
+        },
+        "unbound": {
+          "status": "MEASURED_SLOWER",
+          "effects_pct": {
+            "n": 1,
+            "mean": -8.797582246831677,
+            "sd": null,
+            "variance": null
+          },
+          "plotted_phase": "discovery",
+          "plotted_case": "primary",
+          "plotted_runs": 1
+        }
+      }
+    },
+    {
+      "goal": "G07",
+      "mechanism": "Reduce repeated filter/depth queries",
+      "targets": {
+        "makeup": {
+          "status": "MEASURED_SLOWER",
+          "effects_pct": {
+            "n": 1,
+            "mean": -7.403814563698681,
+            "sd": null,
+            "variance": null
+          },
+          "plotted_phase": "discovery",
+          "plotted_case": "primary",
+          "plotted_runs": 1
+        },
+        "bsl": {
+          "status": "MEASURED_SLOWER",
+          "effects_pct": {
+            "n": 1,
+            "mean": -11.164656411277168,
+            "sd": null,
+            "variance": null
+          },
+          "plotted_phase": "discovery",
+          "plotted_case": "primary",
+          "plotted_runs": 1
+        },
+        "reimagined": {
+          "status": "MEASURED_SLOWER",
+          "effects_pct": {
+            "n": 1,
+            "mean": -5.737343146443291,
+            "sd": null,
+            "variance": null
+          },
+          "plotted_phase": "discovery",
+          "plotted_case": "shared-depth-storage",
+          "plotted_runs": 1,
+          "scope_note": "Initial timing observed sampling permission0; fresh shared typed-D24 case requires permission progress in the exact timing window. Keep initial fallback and new working implementation separate."
+        },
+        "unbound": {
+          "status": "MEASURED_SLOWER",
+          "effects_pct": {
+            "n": 1,
+            "mean": -7.942663042586513,
+            "sd": null,
+            "variance": null
+          },
+          "plotted_phase": "discovery",
+          "plotted_case": "shared-depth-storage",
+          "plotted_runs": 1,
+          "scope_note": "Initial timing observed sampling permission0; fresh shared typed-D24 case requires permission progress in the exact timing window. Keep initial fallback and new working implementation separate."
+        }
+      }
+    },
+    {
+      "goal": "G08",
+      "mechanism": "Cloud occupancy / lighting reuse",
+      "targets": {
+        "makeup": {
+          "status": "NO_GAIN_ESTABLISHED",
+          "effects_pct": {
+            "n": 1,
+            "mean": 1.608632550053025,
+            "sd": null,
+            "variance": null
+          },
+          "plotted_phase": "discovery",
+          "plotted_case": "primary",
+          "plotted_runs": 1
+        },
+        "bsl": {
+          "status": "NO_MAINTAINED_GENERAL_ROUTE"
+        },
+        "reimagined": {
+          "status": "MEASURED_SLOWER",
+          "effects_pct": {
+            "n": 1,
+            "mean": -4.032986114756619,
+            "sd": null,
+            "variance": null
+          },
+          "plotted_phase": "discovery",
+          "plotted_case": "primary",
+          "plotted_runs": 1
+        },
+        "unbound": {
+          "status": "NO_GAIN_ESTABLISHED",
+          "effects_pct": {
+            "n": 1,
+            "mean": -4.043341048181176,
+            "sd": null,
+            "variance": null
+          },
+          "plotted_phase": "discovery",
+          "plotted_case": "primary",
+          "plotted_runs": 1
+        }
+      }
+    },
+    {
+      "goal": "G09",
+      "mechanism": "POM height-query reuse / empty-prefix skipping",
+      "targets": {
+        "bsl": {
+          "status": "MEASURED_SLOWER",
+          "effects_pct": {
+            "n": 1,
+            "mean": -5.891803527085965,
+            "sd": null,
+            "variance": null
+          },
+          "plotted_phase": "discovery",
+          "plotted_case": "primary",
+          "plotted_runs": 1,
+          "scope_note": "Primary public prefix route has timed native setup admission; finite synthetic sampler/ray checks do not count rendered skip hits. Alternate exact-cache source exists but the driver exposes no live cache-control uniform; do not classify it as proven executed reuse."
+        },
+        "makeup": {
+          "status": "NO_NATIVE_POM"
+        },
+        "reimagined": {
+          "status": "MEASURED_SLOWER",
+          "effects_pct": {
+            "n": 1,
+            "mean": -38.20846250996783,
+            "sd": null,
+            "variance": null
+          },
+          "plotted_phase": "discovery",
+          "plotted_case": "pbr-rp3-exact-cache",
+          "plotted_runs": 1,
+          "scope_note": "RP_MODE1 fallback and RP_MODE3/Replete native POM opportunity are separate cases; exact cache does not imply compiler/physical query savings."
+        },
+        "unbound": {
+          "status": "MEASURED_SLOWER",
+          "effects_pct": {
+            "n": 1,
+            "mean": -48.41844184180599,
+            "sd": null,
+            "variance": null
+          },
+          "plotted_phase": "discovery",
+          "plotted_case": "pbr-rp3-exact-cache",
+          "plotted_runs": 1,
+          "scope_note": "RP_MODE1 fallback and RP_MODE3/Replete native POM opportunity are separate cases; exact cache does not imply compiler/physical query savings."
+        }
+      }
+    },
+    {
+      "goal": "G10",
+      "mechanism": "Reuse identical filter taps",
+      "targets": {
+        "makeup": {
+          "status": "NO_GAIN_ESTABLISHED",
+          "effects_pct": {
+            "n": 2,
+            "mean": 0.4447341342773934,
+            "sd": 1.1941974803609525,
+            "variance": 1.4261076221004476
+          },
+          "plotted_phase": "confirmation",
+          "plotted_case": "primary",
+          "plotted_runs": 2,
+          "scope_note": "Two fresh exact-bloom confirmation processes and two matching selector0 native-equivalent controls; discovery4.17% not reproduced. Query-expression opportunity count is not physical texture traffic or GPU time."
+        },
+        "bsl": {
+          "status": "HELD_SMALL_OPPORTUNITY"
+        },
+        "reimagined": {
+          "status": "HELD_SMALL_OPPORTUNITY"
+        },
+        "unbound": {
+          "status": "HELD_SMALL_OPPORTUNITY"
+        }
+      }
+    },
+    {
+      "goal": "C01",
+      "mechanism": "Additional terrain occlusion queries",
+      "targets": {
+        "makeup": {
+          "status": "MEASURED_SLOWER",
+          "effects_pct": {
+            "n": 1,
+            "mean": -3.166964486466332,
+            "sd": null,
+            "variance": null
+          },
+          "plotted_phase": "discovery",
+          "plotted_case": "primary",
+          "plotted_runs": 1
+        },
+        "bsl": {
+          "status": "HELD_SHARED_GEOMETRY_PROOF"
+        },
+        "reimagined": {
+          "status": "HELD_SHARED_GEOMETRY_PROOF"
+        },
+        "unbound": {
+          "status": "HELD_SHARED_GEOMETRY_PROOF"
+        }
+      }
+    },
+    {
+      "goal": "C02",
+      "mechanism": "Hardware coarse shading",
+      "targets": {
+        "makeup": {
+          "status": "HARDWARE_UNSUPPORTED"
+        },
+        "bsl": {
+          "status": "HARDWARE_UNSUPPORTED"
+        },
+        "reimagined": {
+          "status": "HARDWARE_UNSUPPORTED"
+        },
+        "unbound": {
+          "status": "HARDWARE_UNSUPPORTED"
+        }
+      }
+    },
+    {
+      "goal": "N01",
+      "mechanism": "CPU command compaction / admission and scalar caching",
+      "targets": {
+        "makeup": {
+          "status": "MEASURED_SLOWER",
+          "effects_pct": {
+            "n": 1,
+            "mean": -4.198275700319056,
+            "sd": null,
+            "variance": null
+          },
+          "plotted_phase": "discovery",
+          "plotted_case": "primary",
+          "plotted_runs": 1
+        },
+        "bsl": {
+          "status": "NO_GAIN_ESTABLISHED",
+          "effects_pct": {
+            "n": 1,
+            "mean": 0.698890603117378,
+            "sd": null,
+            "variance": null
+          },
+          "plotted_phase": "discovery",
+          "plotted_case": "primary",
+          "plotted_runs": 1
+        },
+        "reimagined": {
+          "status": "NO_GAIN_ESTABLISHED",
+          "effects_pct": {
+            "n": 1,
+            "mean": 0.09048166587496348,
+            "sd": null,
+            "variance": null
+          },
+          "plotted_phase": "discovery",
+          "plotted_case": "primary",
+          "plotted_runs": 1
+        },
+        "unbound": {
+          "status": "NO_GAIN_ESTABLISHED",
+          "effects_pct": {
+            "n": 4,
+            "mean": -0.06053235966574136,
+            "sd": 1.5381990746607466,
+            "variance": 2.3660563932871774
+          },
+          "plotted_phase": "confirmation",
+          "plotted_case": "primary",
+          "plotted_runs": 4
+        }
+      }
+    },
+    {
+      "goal": "N02",
+      "mechanism": "Eliminate unused attachments and target pairs",
+      "targets": {
+        "makeup": {
+          "status": "CONSOLIDATED_WITH_G01"
+        },
+        "bsl": {
+          "status": "NO_PROVEN_DEAD_LIFETIME"
+        },
+        "reimagined": {
+          "status": "NO_PROVEN_DEAD_LIFETIME"
+        },
+        "unbound": {
+          "status": "NO_PROVEN_DEAD_LIFETIME"
+        }
+      }
+    },
+    {
+      "goal": "N03",
+      "mechanism": "Eliminate terminal copies with dead lifetime",
+      "targets": {
+        "makeup": {
+          "status": "CONSOLIDATED_WITH_G01"
+        },
+        "bsl": {
+          "status": "NO_PROVEN_DEAD_LIFETIME"
+        },
+        "reimagined": {
+          "status": "NO_PROVEN_DEAD_LIFETIME"
+        },
+        "unbound": {
+          "status": "NO_PROVEN_DEAD_LIFETIME"
+        }
+      }
+    },
+    {
+      "goal": "N04",
+      "mechanism": "Guard overwritten AO or exact zero work",
+      "targets": {
+        "makeup": {
+          "status": "NO_GAIN_ESTABLISHED",
+          "effects_pct": {
+            "n": 1,
+            "mean": 0.5341341018459879,
+            "sd": null,
+            "variance": null
+          },
+          "plotted_phase": "discovery",
+          "plotted_case": "primary",
+          "plotted_runs": 1
+        },
+        "bsl": {
+          "status": "NO_GAIN_ESTABLISHED",
+          "effects_pct": {
+            "n": 1,
+            "mean": -5.516240568451429,
+            "sd": null,
+            "variance": null
+          },
+          "plotted_phase": "discovery",
+          "plotted_case": "primary",
+          "plotted_runs": 1
+        },
+        "reimagined": {
+          "status": "NO_GAIN_ESTABLISHED",
+          "effects_pct": {
+            "n": 1,
+            "mean": -5.6077785913101055,
+            "sd": null,
+            "variance": null
+          },
+          "plotted_phase": "discovery",
+          "plotted_case": "primary",
+          "plotted_runs": 1
+        },
+        "unbound": {
+          "status": "NO_GAIN_ESTABLISHED",
+          "effects_pct": {
+            "n": 1,
+            "mean": -5.05096188692013,
+            "sd": null,
+            "variance": null
+          },
+          "plotted_phase": "discovery",
+          "plotted_case": "primary",
+          "plotted_runs": 1
+        }
+      }
+    }
+  ],
+  "recommendation": "Keep defaults unchanged. Retain the scoped MakeUp copy/storage and exact-AO observations for fresh second-GPU-family screening. Do not advance pack/vendor-specific production routes or substantial engineering on these measurements. Stop tested losing/no-gain variants; lifetime/geometry/unsupported cases remain held with reasons.",
+  "limits": [
+    "Asahi AppleM1 only; no2080Ti access used.",
+    "Two baseline and four positive-candidate confirmation processes are descriptive, not universal calibration or independent-frame inference.",
+    "No v1 shared benefit across all three shader families demonstrated. Complementary styles are one family with both profiles tested.",
+    "Negligible fallback overhead, net apply/startup economics, all LOD transitions, broad DH/PBR and other dimensions remain unqualified.",
+    "Source flags, permission grants and CPU-list reductions are distinguished from branch hits, GL draws, saved texture transactions and GPU time."
+  ],
+  "repairs": [
+    "Development Iris sampler allocation/cleanup uses combined texture-index namespace capped by MC state tracking; per-stage GL linking limits preserved.",
+    "Ordinary maintained controller/observer properties no longer falsely deny qualified AO bootstrap; renderer-transform and unknown active-property checks remain strict.",
+    "Common strict base-depth24/unsigned-normalized recognition reuses typed actual storage; ownership,precision,sampler,dimensions,mips,LOD/API/epoch guards retained.",
+    "Exact-window cached AO producer/consumer, depth and transient nearest-water grants plus source/graph inventories support actual activation judgments.",
+    "Maintained baseline/variance/native-control and ABBA/BAAB setup repaired, including B-first native option snapshot and metadata/custom texture ownership.",
+    "Bounded lossless recorder uses raw PNGs with per-image writer-thread content flush; fresh captures complete without missed slots. Failed attempts remain invalid."
+  ],
+  "evidence": {
+    "charts": "interactive-charts.html",
+    "all_data": "results.json",
+    "frame_variance": "frame-variance.csv",
+    "process_variance": "between-run-variance.csv",
+    "work": "work-evidence.json",
+    "motion": "motion-review-final.json",
+    "terminal": "terminal-audit.json",
+    "storage": "storage-inventory.json",
+    "consistency": "report-validation.json"
+  }
+}

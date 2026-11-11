@@ -14,4 +14,4 @@ Retain. Keep the knowledge; this does not authorize reviving an implementation o
 
 [asahi-functional.json](../sources/asahi-functional.json) sha256:7fc5c94d693e2859b7f7c77a1ffeba18080645896ac26214a6f306613a078f21
 
-Executed-source identity: follow the original investigation records linked above. This summary does not establish a recoverable source snapshot; verify it before reproducing or deleting dependencies.
+Executed-source identity: the complete historical source checkout and run freezes are preserved in the artifact snapshot. Use the original build bindings to identify the executed revision; a current checkout alone does not prove a historical run used it. See [artifact access](../../docs/results.md#historical-artifact-access).

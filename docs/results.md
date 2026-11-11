@@ -54,3 +54,11 @@ Use one descriptive result folder per coherent question or investigation, not pe
 FINDINGS contains a short scoped conclusion and link for each result. Group by topic when helpful. Negative and inconclusive results are established knowledge about what happened, not proof of universal impossibility. Avoid copying full writeups into the index.
 
 Open task → investigate → write result if warranted → update current docs → prune obsolete code within scope → update FINDINGS → close task. Tasks follow tasks/README.md and are deleted when complete. A routine fix updates code, tests and current docs; create a result only for durable knowledge.
+
+## Historical artifact access
+
+Historical results are self-contained at two levels: readable conclusions and compact supporting records are tracked under results/; the complete locally available historical checkout, experiments, source history, dependencies and frozen inputs are preserved at `/home/philip/.local/share/shaderlod-next/evidence/history/original-repository`. The earlier document/checkpoint archives are retained beside it in `earlier-document-archive/`. These are archival references, not current instructions.
+
+Old absolute `/home/philip/ShaderLOD/` paths embedded in immutable records map to the same relative path beneath that snapshot. Relative links in an archived report resolve from its original path there. The adjacent snapshot-manifest.json records hashes and symlink targets. Never execute old launch instructions without adapting them to current authorization and tools.
+
+Some original RTX quality archives were recorded as native-Windows-only, and an earlier canonical client source was already absent. Copying the locally available history does not recover those missing/remote artifacts or prove every historical experiment reproducible. The retained RTX ARTIFACTS.md and preservation receipts identify them. No other machine was accessed. The snapshot is a separately named copy-on-write copy on the same disk, not an independent disaster-recovery backup. Do not delete historical data on another host based on this import.

@@ -4,7 +4,7 @@ A NeoForge 1.21.1 / Minecraft 1.21.1 client mod for Iris shader packs. Its setti
 
 The existing live setup uses Complementary Reimagined r5.9.3 with Distant Horizons 3.3.3. Without DH it passes live functional verification on an Asahi M1. With DH enabled, the original pack exceeds the GPU's fragment sampler limit; see [FINDINGS](FINDINGS.md) F9 and F10. No optimization exists yet, and nothing is performance-qualified.
 
-Development readiness has three blockers: benchmark design, agent ops, and machine choice. See [development readiness](tasks/repo-overhaul.md).
+Open development decisions are [benchmark design](tasks/benchmark-design.md), [agent ops](tasks/agent-ops.md), and [machine choice](tasks/machine-choice.md).
 
 ## Setup
 

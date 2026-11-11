@@ -1,0 +1,300 @@
+{
+  "objective": "Continue all G01\u2013G10,C01,C02 until defensible dispositions or real blockers; task ACTIVE",
+  "authority": "User 2026-11-01 resumed optimization-review skill; no commits or pushes requested",
+  "machine": "Local Asahi Apple M1; NF1.21.1 Iris1.8.12 Sodium0.6.13, minimal stack, no DH",
+  "profile": "/home/philip/ShaderLOD/run-workloads/world-pool/workflow-validation-878e98fb8be9/client",
+  "jdk": "/home/philip/ShaderLOD/dependencies/runtime/asahi-desktop-java-21.0.6.0.7-6.fc42-r1/usr/lib/jvm/java-21-openjdk",
+  "viewport": [
+    2560,
+    1600
+  ],
+  "next": "No required work remains for the reviewed evaluation/disposition request. Per-item limitations and real blockers remain recorded for any future qualification work.",
+  "queue": {
+    "G01": {
+      "state": "REPEATED_SCOPED_POSITIVE_UNQUALIFIED_REVIEWED",
+      "evidence": "g01-final-interpretation.json",
+      "next_or_limit": "Samepose0conditionedrepeat means24.478/22.712/24.329ms; midpoint6.932%, drift-0.610%, meanandp95belowboth. Completecopywitness6/3/6again. Priorconditionedmeanobservation8.756%; donotpool. Fullrestore/reset/release. Stillnogrossloss; alias/history,motion,setup-net,DH/PBRqualification absent; nopromotion.",
+      "whole12_review": "CLOSE, limited evaluated-route disposition; no enablement qualification"
+    },
+    "G02": {
+      "state": "WEAK_SCOPED_MEAN_RESULT_NOT_QUALIFIED_REVIEWED",
+      "evidence": "g02-bsl-r5/summary.json",
+      "next_or_limit": "Complete two-frame witnesses: mip calls2/0/2; candidate only1.55% below first control with3.89% drift and higher p95 than both controls. Prior r4 invalid; recovery fully verified separately. No broad gain/history parity claim.",
+      "whole12_review": "CLOSE, limited evaluated-route disposition; no enablement qualification"
+    },
+    "G03": {
+      "state": "INCONCLUSIVE_DO_NOT_ENABLE_REVIEWED",
+      "evidence": "g03-final-interpretation.json",
+      "next_or_limit": "Conditionedfoliagepose1 means23.194/23.985/24.147ms; candidatewithinnative4.027%drift. Source-onlyAsahirewriteobserved; permissioncount0expected, linkedconsumption/avoidedfragmentcountunproven. Native/candidatestillsnogrossloss; nomotion/DH/PBRqualification. Fullrestore/reset/release. r2harnessrefusalinvalidandrestored.",
+      "whole12_review": "CLOSE, limited evaluated-route disposition; no enablement qualification"
+    },
+    "G04": {
+      "state": "INCONCLUSIVE_DO_NOT_ENABLE_REVIEWED",
+      "evidence": "g04-final-interpretation.json",
+      "next_or_limit": "Samefixture9repeat means28.025/27.948/27.288ms; candidatewithinnativedrift-2.663%, midpoint-1.054%. Prior4%meanobservationdidnotreproduce; p95worsebothcontrols inbothconditionedruns. Fixturevisibleallarms; fullsave/configreset/release. Stillnogrossloss; executedfragment/motion/DH/PBRnotproven.",
+      "whole12_review": "CLOSE, limited evaluated-route disposition; no enablement qualification"
+    },
+    "G05": {
+      "state": "REJECT_TESTED_PUBLIC_ROUTE_REVIEWED",
+      "evidence": "g05-bsl-next-event-r1/summary.json",
+      "next_or_limit": "Actual owned NEAREST water draw qualified; candidate mean22.89% higher than native midpoint, native drift\u22120.85%; restore/reset/release pass. No blanket reflection-algorithm or private fixed16 conclusion. Native/candidate water stills viewed without gross difference; no motion equivalence claim.",
+      "whole12_review": "CLOSE, limited evaluated-route disposition; no enablement qualification"
+    },
+    "G06": {
+      "state": "REPEATED_SCOPED_POSITIVE_UNQUALIFIED_REVIEWED",
+      "evidence": "g06-final-interpretation.json",
+      "next_or_limit": "Samepose0conditionedrepeat means24.127/23.748/25.127ms; meanandp95belowbothcontrols again. Midpoint3.570%, repeatdrift4.062%, only1.571%belowfirstnative: impreciseeffect. Selectedsource skipfalse/true/false; noexecutedAOskip/linkedconsumption proof. Fullrestore/reset/release. Stillsnogrossloss; setup-net,motion,DH/PBRunqualified; nopromotion.",
+      "whole12_review": "CLOSE, limited evaluated-route disposition; no enablement qualification"
+    },
+    "G07": {
+      "state": "REJECT_ADMITTED_ALTERNATIVE_REVIEWED",
+      "evidence": "g07-bsl-sample-reuse-r3/summary.json",
+      "next_or_limit": "BSL-only normalizedD24 recognition implemented; actualpermission1/721qualifieddraws, returnowners0; candidate11.34% slower with1.17% drift and worse p95. Shared guard unchanged. SourceArchive temporalZIP remains unavailable/unqualified, not repinned. Fresh Astra/medium review CLOSE, no blocking findings.",
+      "whole12_review": "CLOSE, limited evaluated-route disposition; no enablement qualification"
+    },
+    "G08": {
+      "state": "NO_NET_BENEFIT_OBSERVED_ALTERNATIVE_REVIEWED",
+      "evidence": "g08-photon-light-reuse-r3/summary.json",
+      "next_or_limit": "Pinned original Photon cloud-light reuse alternative: candidate mean0.93% above native midpoint with0.43% drift and worse p95; restore/reset/release pass. Actual reuse-hit count/temporal quality unverified. Private MakeUp occupancy route still owner-unqualified; no generic cloud-reuse impossibility claim.",
+      "whole12_review": "CLOSE, limited evaluated-route disposition; no enablement qualification"
+    },
+    "G09": {
+      "state": "REJECT_TESTED_PUBLIC_ROUTE_REVIEWED",
+      "evidence": "g09-bsl-initial-reuse-r2/summary.json",
+      "next_or_limit": "Exact initial RGBA reuse under existing request, rounded-cell cache removed. Native BSL PBR384/Replete stone pose11; same resource/AA/options allarms. Mean70.445/78.414/69.577ms; candidate12.00% above native midpoint, drift\u22121.24%, p95worseboth. Full restore/reset/release, clients0. Stills viewed with same relief/no grossloss. Actual saved hardware fetches, fragment-hit count, motion equivalence unmeasured. Reject tested public route, not all POM optimization.",
+      "next_work": "g09-initial-reuse-next-work.json",
+      "whole12_review": "CLOSE, limited evaluated-route disposition; no enablement qualification"
+    },
+    "G10": {
+      "state": "INCONCLUSIVE_DO_NOT_ENABLE_REVIEWED",
+      "evidence": "g10-final-interpretation.json",
+      "next_or_limit": "Exactzero-dither reuse implemented/evaluated through maintainedprivate route. Actual pre-detachlink/returnedprogram/consumingdraw and same-threadR16Fwriter texture joined. Both active runs cover16phases;516..699reusepixels/frame=0.00315..0.00427%of12native sourcequeryexpressions, notphysicalfetches. Firstrun3.52%midpoint/1.95%vsfirstnative with3.21%drift; byte-identicalnative-control1.61%midpoint/0.03%vsfirstnative with3.17%drift; activerepeat0.18%midpoint lies betweencontrols with\u22121.88%drift. No reproducedqualifiednetwin; noenable. Allrestored/reset/released. Stills no grossloss; motion/DH/PBR unqualified. Approximatepairing leftdisabled, precisionunproven.",
+      "whole12_review": "CLOSE, limited evaluated-route disposition; no enablement qualification"
+    },
+    "C01": {
+      "state": "NO_NET_BENEFIT_TESTED_PRIVATE_ROUTE_REVIEWED",
+      "evidence": "c01-makeup-current-frame-r1/summary.json",
+      "next_or_limit": "Originalnative100/Asahi/pose4,prefix1group32 private current-frameextraocclusion, no publicflags. Actualquery/readprogress/pinnednativeattachedstage observed;13.503%indexsubmissionssuppressed, no newmeshscans acrossboundary interval. Means22.739/23.983/23.573ms, candidate+3.573%midpoint,+1.741%return; native drift3.601%; no observed netbenefit, no precise effectsize/universal rejection. Fullrestore/reset/release. Stills no grossloss, primitive witness andmotion/DH/PBR/CPU-GPUattribution not established.",
+      "whole12_review": "CLOSE, limited evaluated-route disposition; no enablement qualification"
+    },
+    "C02": {
+      "state": "LOCAL_HARDWARE_BLOCKER_REVIEWED",
+      "evidence": "gl-extensions.txt",
+      "next_or_limit": "Required NV shading-rate and mixed-sample extensions absent on local M1. No remote-hardware claim; existing default-Off backend retained.",
+      "whole12_review": "CLOSE, limited evaluated-route disposition; no enablement qualification"
+    }
+  },
+  "changes_this_turn": [
+    "benchmark_iteration.public_identity captures compile_controls alongside pinned recipe hash",
+    "benchmark_iteration.activation checks recipe enabled compile options before candidate timing",
+    "run_benchmark passes captured compile control to activation",
+    "benchmark_iteration.evaluate adds both-native descriptive comparison and control-relative reductions; no statistical/closure claim",
+    "focused tests added for compile rejection, frozen recipe contract, drift overlap",
+    "docs/STATUS and docs/EXPERIMENTS record resumed work and scoped evidence"
+  ],
+  "tests": {
+    "focused": "19 passed current reflection/AO diagnostics and Photon identity/program-marker/native-option negative cases",
+    "benchmark_regressions": "36 passed current changes in benchmark-tests-r5.log",
+    "dev_client": "50 tests:44 pass,6 pre-existing process-association failures; same six reproduce with this turn witness-plan changes removed in memory",
+    "witness_reload_targeted": "2 passed (delayed configuration ownership/restoration and explicit hooks)",
+    "source_shortlist": "28 passed,1 known G07 strict archive pin failure retained",
+    "scene_process": "2 success/uncertain-failure restoration tests included in36 benchmark suite",
+    "live": "G03 andG06 complete/restored; G04 first resource lookup refused before mutation and recovered, corrected fixture complete/restored; G01 conditioned/witness complete/restored; G02 first witness-integration invalid and manually recovered with preserved conflicting bytes; corrected retrycomplete/restored",
+    "G07_actual": "2 full restored comparisons, no admitted reuse; diagnostic sampler snapshot and unchanged CPU guard replay preserved",
+    "G08_actual": "r2 refused before candidate timing/restored; r3 exact marker/native inputs accepted, full sequence/reset/release completed",
+    "G05_actual": "Owned native NEAREST water-draw permission observed, full sequence/reset/release passed; rejected net result for tested route",
+    "new_BSL_storage": "4 JUnit tests pass, no skips; preserved XML and log. Real maintained run confirms actualadmission and return/restoration.",
+    "g09_preprocess": "g09-preprocess-tests-r2.log/.xml:1producer/Irispreprocessor test,9macro scenarios plus native shadow byte equality pass.",
+    "g09_resource": "g09-resource-tests.log (20 pass)",
+    "g09_harness": "g09-benchmark-tests-r2.log (37 pass; process resource refusal evidence fixture-resource-refusal.json)",
+    "g09_dependent_pins": "14recorded,13passed,1skipped (availablePinnedOriginalAndAssembledSourcesRecognize); reviewer independently verified BSL assembly/digest. See g09-dependent-pin-tests.log and g09-dependent-pin-test-xml.",
+    "c01_contract": "c01-iteration-tests.log:22focused passes",
+    "c01_process": "c01-process-tests-r2.log:2C01 real-process simulated-rendering tests pass (progress/restoration and guard refusal skips timing/restores). First r1 had only wrong test capture-count assertion; corrected.",
+    "c01_existing_harness": "c01-harness-tests-r1.log:37regression passes",
+    "c01_launch_plan": "c01-launch-plan-tests.log:1focused explicit-owner/no-DH flag forwarding test pass",
+    "g10_source": "g10-source-tests-r3.log:9pairing/sourcecompiler+3reuse tests pass using cached native test Python/toolchain; earlier missing numpy/tool alias prerequisites retained separately.",
+    "g10_contract": "g10-iteration-tests-r3.log26pass (actualproducerstage/original preservation/pre-existingfile restoration included)",
+    "g10_existing_harness": "g10-harness-tests-r1.log:39existing public/C01process regressions pass",
+    "g10_process": "g10-process-tests-r2.log2newG10 process tests pass with reload-family-default repopulation simulation",
+    "g10_plan": "g10-launch-plan-tests.log:1explicitowner/noDHflag test pass",
+    "g10_build": "g10-final-build.log actualJDK offline fullsource/class/resource binding success",
+    "g10_control_contract": "g10-control-contract-tests.log27focused passes inclnative-control selector/identity",
+    "g10_control_process": "g10-control-process-tests.log3G10realprocess simulated-rendering tests pass inclknown-nullclassification/restoration",
+    "g03_g06_contract": "g03-g06-iteration-tests.log28focused passes, early-alpha untimed admission/counter read and pre-timing/progress refusal",
+    "g03_g06_build": "g03-g06-build.log actualJDK offline source/class/resource binding success",
+    "g03_g06_process": "g03-g06-harness-tests.log initial44:43passed/1failed test expectation (admission afterApply); fixed assertion, affected2tests passed g03-alpha-process-tests-r3.log, includes typed diagnostic preservedonrefusal. No implementationfailure hidden; do not claim full44rerun.",
+    "dev_client_current": "dev-client-tests-r2.log:52 passed current fullsuite, no process-association source changes. Earlier six failures remain retained as time/environment-dependent observations, not claimed fixed."
+  },
+  "resources": {
+    "clients_remaining": 0,
+    "storage_inventory": "storage-inventory-r3.json",
+    "retained_directory_logical_bytes": 424939222
+  },
+  "files": {
+    "scripts/benchmark_iteration.py": "a5b2304d4b1a150eb1d108cc19e921231c22875b1d39eb99fa3f8bfaf2403852",
+    "scripts/run_benchmark.py": "5d9049bba639428a936e05f515d66f484904737dbbffbfc1ccb881407d8f6a6e",
+    "scripts/dev_client.py": "b61bc68b098d24dd65ac35265aea985551913c3edde84af1c779cff254da5559",
+    "tests/test_benchmark_iteration.py": "6d6f41c9825524096cb7c4003d0f70d80193000bcbae0ce7a2525099ecf18d92",
+    "tests/test_run_benchmark.py": "596d10a815e425eccc02a4cb0a362cc320f94734ce2a56e0f3aeba3b1bf7f7a6",
+    "tests/test_dev_client.py": "e5d7b3a5dc5a51c0c764e00d127b4a73adfcf1c2c926049ebf2fb73b8a622848",
+    "src/devClient/java/com/pp/shaderlod/dev/BenchmarkControlProbe.java": "bb08af73cfe0ca5cef66dd154a39cfe057e13b9ee8b284e529ce3c5e6ae1efc9",
+    "src/devClient/java/com/pp/shaderlod/dev/StandardFeatureScene.java": "44f80a346d8d0c2dd36a72c921f60c34eb9cf949aea40b8d19cb2e4b895eb2ab",
+    "docs/BENCHMARK.md": "627a58d852f5e7def19aa6b3bef48de8103ca7b44bef7744309e34d8fc0359a5",
+    "docs/STATUS.md": "e458b29721604250965213cb8b8d8bb5493a310eccf5eb57b486935e6e173320",
+    "docs/EXPERIMENTS.md": "0a4fb46a3c1de76d0fdb6bbd9d6add0a6f2d21180120f71c53f7a169dfdfae57",
+    "src/main/java/com/pp/shaderlod/optimization/bsl/BslAoDepthRuntime.java": "1272851b7eb62767124a9753876b1f357a6b33e173dca98bc5c3291a345f6b44",
+    "src/main/java/com/pp/shaderlod/optimization/bsl/BslAoDepthContract.java": "5e0d07b632e4284dd64f57619179ebf35417e3182b0eef79a675afe42817c7e7",
+    "src/test/java/com/pp/shaderlod/optimization/bsl/BslAoDepthContractTest.java": "7608ed3bc5b2446194585ee5159424dc24daed564775dd295a682e98ba8da35d"
+  },
+  "reviews": [
+    {
+      "scope": "first harness safeguard checkpoint only",
+      "verdict": "CLOSE",
+      "model": "gpt-6-astra",
+      "effort": "medium",
+      "limitation": "Frozen contract was unit-covered but not live-tested at review time; process fixture compile-refusal coverage suggested; now added and passed."
+    },
+    {
+      "scope": "fixture/witness/harness integration",
+      "verdict": "CLOSE",
+      "model": "gpt-6-astra",
+      "effort": "medium",
+      "limitation": "Not optimization or all12 closure. G04 positive is mean-only; p95 exceeds both controls."
+    },
+    {
+      "scope": "G05/G07 diagnostics/G08 Photon batch",
+      "verdict": "CLOSE",
+      "model": "gpt-6-astra",
+      "effort": "medium",
+      "limitation": "Source proposal supports BSL-only actual normalized-D24 recognition with all other guards; implementation and live evaluation were still required. No entire12 closure."
+    },
+    {
+      "scope": "BSL-only queried unsized D24 contract and admitted negative G07 result",
+      "result": "CLOSE intermediate only",
+      "thread": "<t3-thread://v2/de4b951c-7cc7-4d2d-bbb0-1f3e6d7f79f7/thread:delegated-task:command%3Amcp%3A18416195-76d7-438a-b0f7-55316effd270%3Adelegate-task%3A464d5615-04af-412e-9046-9cf8456ddf4d>"
+    },
+    {
+      "scope": "G09 implementation, deterministic pins, native PBR negative result, resource selection safeguard",
+      "result": "CLOSE intermediate;13pass/1skip; selection enforced, byte identity recorded not continuously checked",
+      "thread": "<t3-thread://v2/de4b951c-7cc7-4d2d-bbb0-1f3e6d7f79f7/thread:delegated-task:command%3Amcp%3A18416195-76d7-438a-b0f7-55316effd270%3Adelegate-task%3Aca919619-f258-45ae-b1ca-8eaedb125b05>"
+    },
+    {
+      "scope": "Maintained C01 private route and limited net result",
+      "result": "CLOSE intermediate, no blocking finding; drift/work/quality limits retained",
+      "thread": "<t3-thread://v2/de4b951c-7cc7-4d2d-bbb0-1f3e6d7f79f7/thread:delegated-task:command%3Amcp%3A18416195-76d7-438a-b0f7-55316effd270%3Adelegate-task%3Ad628cabc-ca30-4f25-92fd-8852e98286e8>"
+    },
+    {
+      "scope": "G10 observer/harness/workwriter/control/repeat and inconclusive result",
+      "result": "CLOSE intermediate, no material blocker; complete pixelcode/writer joins and nine rawarmmetrics independently verified",
+      "thread": "<t3-thread://v2/de4b951c-7cc7-4d2d-bbb0-1f3e6d7f79f7/thread:delegated-task:command%3Amcp%3A18416195-76d7-438a-b0f7-55316effd270%3Adelegate-task%3A03179d90-124c-4bbf-b0c9-455bcf483764>"
+    },
+    {
+      "verdict": "CLOSE",
+      "scope": "Requested whole12 evaluation/disposition task; no material blocker. Not net/default-winner qualification, universal rejection or enablement approval.",
+      "model": "gpt-6-astra",
+      "effort": "medium",
+      "thread": "<t3-thread://v2/de4b951c-7cc7-4d2d-bbb0-1f3e6d7f79f7/thread:delegated-task:command%3Amcp%3A18416195-76d7-438a-b0f7-55316effd270%3Adelegate-task%3Ab3eb5e59-e433-4cd9-b175-0d0b369ab98a>",
+      "verified": "47 frozen hashes;48raw mean/p95 vectors;16 completed comparisons native option/resource/camera/viewport matches and restore/reset/release receipts; original pack identities; five final identical build bindings. Read-only review, no suites rerun or clients launched.",
+      "limits": "Chronological drift; incomplete executed-work evidence; no causal setup amortization; no pixel/motion or broad DH/PBR qualification; G01 alias/history equivalence unproven; historical failures and skipped coverage preserved.",
+      "at": "2026-11-01T13:17:45.846611+00:00"
+    }
+  ],
+  "changes_since_first_review": [
+    "tests/test_run_benchmark.py now integrates enabled/refused compile contract into real-process fixture; explicit refusal test passed",
+    "StandardFeatureScene.java and BenchmarkControlProbe hook: bounded one-block G04 scene, exact standard-owned backup/native100/preimage; no general world editor",
+    "run_benchmark automatically prepares G04 at saved pose9 before all arms, records mutation and checks visibility; restoration remains whole-profile standard path",
+    "benchmark_iteration.untimed_work uses existing G01/G02 observers after each timed arm, always disarms; BSL observed compilation requires untimed reload",
+    "Standard schedule conditioning120s,budget900; no outcome gate relaxed; guide updated",
+    "Canonical dev_client.plan has explicit validated bsl_mip_witness_runtime bool, requires main mod+neutral controller; standard G02 selects existing hook property",
+    "BSL untimed reload now declared configuration mutation and held through rendered readiness and settled writes; real r4 conflict preserved, manually recovered, existing recover command verified profile reset",
+    "Real retry G02r5 has all three complete witnesses and automatic restoration. No current owned runtime remains."
+  ],
+  "current_review_scope": "Whole12 finalreview CLOSE; status-only closeout recorded separately, reviewed source/measurement evidence preserved.",
+  "changes_this_batch": [
+    "Private G10 source object->successful link->returned Program->consuming quad receipt, exact pinned API, explicit flag only; no production permission/state mutation",
+    "Maintained private original-derived exact reuse mode3 and native-equivalent known-null mode0 routes, fullnative100 andOff/emptypublicrequests",
+    "Lifecycle staging with backups/restoration forprivate archives/sidecars, including pre-existingfile recovery; diagnosticreloads acknowledged as mutations afterready/settled bytes",
+    "Corrected private reload family-default repopulation after r1 strictrefusal; r1restored/no candidate timing",
+    "Separate post-timing integerwork witness, producertexture joinedtosame-thread readback; complete16producerphase coverage r2",
+    "r2scopedmeanpositive3.52%midpoint,1.95%belowfirstnativewith3.21%drift; sourcequeryopportunity0.00315..0.00427%, notphysicalfetches",
+    "Native-equivalentcontrol actualvertex+fragment sourcebyteidentical, midpointadvantage1.61%but0.03%vsfirstnativewith3.17%drift; known-null labeled",
+    "Exactreuse r3repeat currentlyactive; interpretation/independentreviewpending"
+  ],
+  "storage_inventory": "storage-inventory-r9.json",
+  "owned_clients_remaining": 0,
+  "g09_file_hashes": {
+    "patches/adapters/bsl-shaders.json": "e5900101b68db0740b86e4cff6ccc42d5db09093d30c7a2b7672789f876e6f85",
+    "src/main/resources/assets/shaderlod/adapters/patches/adapters/bsl-shaders.json": "e5900101b68db0740b86e4cff6ccc42d5db09093d30c7a2b7672789f876e6f85",
+    "src/main/java/com/pp/shaderlod/packs/SupportedPackCatalog.java": "22555f7bc1365cdfc43d32b8c289c8535901d0ecfb025918445ff352d6d9f622",
+    "src/main/java/com/pp/shaderlod/bslprefix/BslPrefixRuntime.java": "511703fdd4d670487e64e3323797be11da09ce54418f188c793b71f0c48bea5e",
+    "src/main/java/com/pp/shaderlod/optimization/bsl/BslAoNormalBridge.java": "2ea2b469507bb03ce1a9ec3d2047f695d59be6113ab653c6260c3dc38cba23f0",
+    "src/main/java/com/pp/shaderlod/optimization/bslearlyalpha/BslEarlyAlphaRuntime.java": "b79811c021369df44f512cd8ad03a19f97a7103b4fef045a8a92a95746c2425d",
+    "src/main/java/com/pp/shaderlod/optimization/bslmerged/BslMergedLinkageGate.java": "e72f21ff96e06abff358e9e57ef2325190c6c616f03c888f10df957e762d5929",
+    "src/main/java/com/pp/shaderlod/optimization/bslprime/BslDepthPriming.java": "cdacb28741bf30a75c9e840e50a5255b2f64a724a8f3404498dc6802b5832871",
+    "src/main/resources/assets/shaderlod/adapters/qualification/dead-mip-admission.json": "09feac3e5de17848902205dde8bd16b06720316f7b11987c6d46d8fe7c72580f",
+    "src/main/java/com/pp/shaderlod/optimization/mips/DeadMipAdmission.java": "7b4c2481ff02719465bcf28cbea216500af7fe3f8b7a653c65d952166e65fb89",
+    "src/test/java/com/pp/shaderlod/optimization/bsl/BslPomCachePreprocessTest.java": "ec0178b6f585af4946f3526a77d65f4bbc8d8ddb9ba29c15d402a22128ebecbc",
+    "src/devClient/java/com/pp/shaderlod/dev/BenchmarkControlProbe.java": "4e978b808d55ac1cfe40d3b7659e3ccd9e06183e263feb38d091b1679abb5636",
+    "scripts/run_benchmark.py": "3f6d743170ac9d6cecb22ed5e19867a13e6785ae1ded6693c9d6d04ad435ad7c",
+    "scripts/benchmark_iteration.py": "94dd8fb707b7015e95c56e3b078aca467ed71bf3d348b835a7857e00f101b44e",
+    "tests/test_benchmark_iteration.py": "9399c811f03a9c1bee91ab933c01aeb02cad7f270351171879e9b06132770e7f",
+    "tests/test_run_benchmark.py": "7fd2b9669772fd278b4bc89bfacd89ecfe2428cad38dde610a052267fd12a8e3",
+    "docs/BENCHMARK.md": "b4dc93d741ef4a26fe48938e362af23cf253fc07499f98daffaa512b348942b6",
+    "docs/EXPERIMENTS.md": "ee4916260e288218f328075fbfae36a200e1c13a79a4793919aa6e97ad56d1bc"
+  },
+  "c01_file_hashes": {
+    "scripts/run_benchmark.py": "4431aef367c2e95e0bfe20f25ac753c8793940d0bd52d2e1bfa13a0ef6e58485",
+    "scripts/benchmark_iteration.py": "46d221f626181600d4ee88154529e9d16e0a1d5ae43d129829fa87fc0b361c32",
+    "scripts/dev_client.py": "7b66b61e009ecdbc7e5cec4e635d35f2d85fdb2eb7bd0ea64c554e25c6d8edeb",
+    "tests/test_run_benchmark.py": "435ac3caec588c44c4f8836173b495378b09da57d7f41b11a3985c9147c68a6c",
+    "tests/test_benchmark_iteration.py": "0cbfdee4171bd6976e7f674353f0ec1a00cfd6c23dcd132afe7214adeeef5b0d",
+    "tests/test_dev_client.py": "5633251e6b8c404a8296972090d53f7f9ecbdf30ef5a5c35702bae0f12096e7e",
+    "docs/BENCHMARK.md": "b8f3d696b3cefc597dff1a65262b8daa89f1f143cdcc8c2404b439e1f7808e8b",
+    "docs/EXPERIMENTS.md": "d9912f0b77a057eb65b84b2ffb5e5858777afbed4a1c913d57e8914ca76e769a"
+  },
+  "g10_file_hashes": {
+    "src/devClient/java/com/pp/shaderlod/dev/G10BloomReceipt.java": "d6eecfe030c639e8e7779e90a0d0462f3b6ab8b855341d4746335d826d6813bd",
+    "src/devClient/java/com/pp/shaderlod/dev/mixin/G10BloomLinkMixin.java": "a81c0aef76e8b9ae388a95f1757fb998af1a31f42729089545e282d09c261a26",
+    "src/devClient/java/com/pp/shaderlod/dev/mixin/G10BloomRendererMixin.java": "884bfe5b7642d77f53799096dc39d7b475ce69703c168a87aa60f705a158db87",
+    "src/devClient/java/com/pp/shaderlod/dev/mixin/DevEvidenceMixinPlugin.java": "b9d2743cd2ba5ac383e9c947a2a18ab6aec936e14666746f8d4f5501e15d3b1b",
+    "src/devClient/java/com/pp/shaderlod/dev/BenchmarkControlProbe.java": "3b334903d07f81b9d8ad895ae2818b13ec391ffac85ed210816afee2fb0e8e84",
+    "src/devClient/resources/shaderlod-dev.mixins.json": "edddfbec94fc35a3c934e68afc809cd0e7451d463d2f887395839ce184c4d78f",
+    "build.gradle": "aba13e7f6b4590dbec454f8d1c5db8b5ce75e3b8ed421fd7685de74627c8b949",
+    "scripts/run_benchmark.py": "e92cb5f4eda8622e7273d9dd60cf6d2b4c1059259e9a1ae8738c9b0b76b925a0",
+    "scripts/benchmark_iteration.py": "fed3f9f636a27c4093d8a3497ea9e17d65ebf71a55933b96c266b7ed8afb1872",
+    "scripts/dev_client.py": "0dccf795bb1093210dfe96d79f54bf60d97e10951945f545304c11107ce9ed6b",
+    "tests/test_run_benchmark.py": "eae21563d699e28b3f6a8dc774f5d5b01dc5ced74526310c6c2c8e87685af07b",
+    "tests/test_benchmark_iteration.py": "a0cee446fcc260bcfbef7e87c36657501268ced3295fcaf15f8db698fecc4e4c",
+    "tests/test_dev_client.py": "0f6e7376563470ece0a353751821a1a8e2e1640a93d628ee5c37d654f5fc179c",
+    "docs/EXPERIMENTS.md": "e2f28a1c18e2c5a56538f19a22754d5f0fbfbac9f39b801381447466fe94f868",
+    "docs/BENCHMARK.md": "ce75580b7007ed9f3bf7904ebcaafe7d45f522f6b67a77450824ff6750a8ddf7"
+  },
+  "g03_next_work": "Completed and independently reviewed in whole12 closure; no pending finalbatch work.",
+  "g03_g06_file_hashes": {
+    "src/main/java/com/pp/shaderlod/optimization/makeupearlyalpha/MakeUpPostSampleAlpha.java": "a2b55898004b57f075e8ddd04e505a06176ef65b3e1f222405dc6f968a51708b",
+    "src/main/java/com/pp/shaderlod/optimization/makeupearlyalpha/MakeUpEarlyAlphaRuntime.java": "530ef32a2a1aa5c67af80718d73665358440f118c0896693f5b92243e81ea89a",
+    "src/devClient/java/com/pp/shaderlod/dev/BenchmarkControlProbe.java": "0071562346cc9d76428547c42bec8863baed31a2f24b6175ec8513c723390994",
+    "scripts/benchmark_iteration.py": "b75f2cfe1d44757b1ef95eecbb5dfbe3fd613efbcf04d1505afdf523a7615cd0",
+    "scripts/run_benchmark.py": "28c97204429b0c6cb186cb6b0f9d0da65b580852876ec19eda2790b2e78e700e",
+    "tests/test_benchmark_iteration.py": "29eab1cd383d4f7b0488cfb0e067df9e75647e352576cd4e4e63b3039ea9d974",
+    "tests/test_run_benchmark.py": "3a99a91f7c0a318915a2a71ca4aa6945ee3ccf4e09c30d053505f2de48d7b367",
+    "docs/BENCHMARK.md": "a847020367c3e65b1ec863570b85d676bb575d2a15fe1476a7697d319cc3e2e0"
+  },
+  "g03_g06_scope": {
+    "implementation": "Typed existing permission-route counters and explicit weaker Asahi source setup receipt, invalidated on lifetime changes. Maintained route-specific admission checks, existing permission path progress requirement retained. No shader arithmetic or quality settings changed.",
+    "tests": [
+      "g03-iteration-tests-r2.log:29 passed",
+      "g03-build-r3.log:actual JDK offline build verified",
+      "g03-harness-tests-r3.log:45 passed in270.550s, including source-only success and permission refusal/progress process fixtures"
+    ],
+    "failed_attempt": "g03-r2-refusal.json",
+    "remaining": "G03source-only conditionedtiming; G06conditionedtiming; full12 audit/review"
+  },
+  "whole12_disposition_audit": "whole12-disposition-audit.json",
+  "final_review_file_hashes": "whole12-current-file-hashes.json",
+  "review_status": "CLOSE_WHOLE12_SCOPED_EVALUATION_COMPLETE",
+  "status": "COMPLETE_SCOPED_EVALUATION_AND_DISPOSITION",
+  "final_review": "whole12-final-review.json",
+  "post_review_status_changes": "whole12-closeout-file-changes.json",
+  "results_visualization": "whole12-results.html"
+}

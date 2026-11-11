@@ -1,0 +1,651 @@
+{
+  "status": "QUICK_MEASUREMENT_COMPLETE_OPTIMIZATION_GOALS_OPEN_OR_BLOCKED",
+  "objective": "Measure best tested compatible shortlist combination on original native settings; do not infer combined gains from singleton timings.",
+  "initial_target": "User-confirmed MakeUp native100 on local M1; best tested compatible subset within explicit search, no all12-active or global optimum claim.",
+  "compatibility_findings": {
+    "public_runtime": "Existing G01/G03/G04/G06 MakeUp routes intentionally singleton-gated. Add explicit experimental combination contract with source/admission tests before timing; start G01+G06.",
+    "family_exclusion": "BSL G02/G05/G07/G09 and Photon G08 tested variants cannot execute on a MakeUp original; separate native baselines required.",
+    "private_routes": "C01/G10 independent private original-source contracts; composition not yet established. Negative singleton result is not a proof of negative interaction.",
+    "C02": "Required NV extensions absent on local M1; literal all12-active cannot be measured here."
+  },
+  "next": "Status clarified only. No additional benchmarks or subset search scheduled; underlying goals remain open/blocked.",
+  "results": [
+    {
+      "report": "g01-g06-pose0-r1",
+      "validity": "INVALID_REFUSED_BEFORE_CANDIDATE_TIMING",
+      "reason": "Both compilecontrols1 but G06 GLSL guard requires G01Off. Source-marker safeguard refused. Restored config/full profile reset/release verified; no performance interpretation."
+    },
+    {
+      "report": "g01-g06-pose0-r2",
+      "interpretation": "g01-g06-r2-interpretation.json",
+      "state": "VALID_SCOPED_INITIAL_PAIR_OBSERVATION_NOT_BEST_DETERMINED"
+    },
+    {
+      "report": "g01-pose0-r1",
+      "state": "COMPLETE_RESTORED_FRESH_SINGLETON_REFERENCE",
+      "evaluation": {
+        "execution": "COMPLETE",
+        "completion": "COMPLETE",
+        "validity": "VALID",
+        "improvement": "OBSERVED_LOWER_FRAME_TIME",
+        "review": "REQUIRED",
+        "closure": false,
+        "arms": {
+          "native": {
+            "samples": 949,
+            "excluded_initial_unavailable_interval": true,
+            "mean_total_frame_ms": 21.351326159114855,
+            "p95_total_frame_ms": 26.378471,
+            "completed_render_frames": 950,
+            "wall_seconds": 20.288222194,
+            "completed_frame_ms": 21.35602336210526
+          },
+          "candidate": {
+            "samples": 982,
+            "excluded_initial_unavailable_interval": true,
+            "mean_total_frame_ms": 20.685805392057027,
+            "p95_total_frame_ms": 27.126275,
+            "completed_render_frames": 983,
+            "wall_seconds": 20.354221496,
+            "completed_frame_ms": 20.70622736113937
+          },
+          "return": {
+            "samples": 891,
+            "excluded_initial_unavailable_interval": true,
+            "mean_total_frame_ms": 22.832437960718295,
+            "p95_total_frame_ms": 31.500958,
+            "completed_render_frames": 892,
+            "wall_seconds": 20.39365076,
+            "completed_frame_ms": 22.862837174887893
+          }
+        },
+        "limits": "One chronological development comparison; no statistical, visual, DH/PBR, hardware-universal or closure claim.",
+        "baseline_mean_total_frame_ms": 22.091882059916575,
+        "frame_time_reduction_percent": 6.364675784734194,
+        "speedup_ratio": 1.0679730202044468,
+        "drift_comparison": "BELOW_BOTH_NATIVE_CONTROLS",
+        "reduction_vs_native_controls_percent": [
+          3.1169996753279787,
+          9.401679191483659
+        ],
+        "native_return_drift_percent": 6.704326039702898
+      },
+      "scope": "Same compiledrevision/native100/terrainpose0 as pair; comparison sessions not pooled or cross-subtracted causally."
+    },
+    {
+      "report": "g06-pose0-r1",
+      "state": "COMPLETE_RESTORED_FRESH_SINGLETON_REFERENCE",
+      "evaluation": {
+        "execution": "COMPLETE",
+        "completion": "COMPLETE",
+        "validity": "VALID",
+        "improvement": "OBSERVED_LOWER_FRAME_TIME",
+        "review": "REQUIRED",
+        "closure": false,
+        "arms": {
+          "native": {
+            "samples": 892,
+            "excluded_initial_unavailable_interval": true,
+            "mean_total_frame_ms": 22.725122808295964,
+            "p95_total_frame_ms": 27.927382,
+            "completed_render_frames": 893,
+            "wall_seconds": 20.30503645,
+            "completed_frame_ms": 22.73800274356103
+          },
+          "candidate": {
+            "samples": 934,
+            "excluded_initial_unavailable_interval": true,
+            "mean_total_frame_ms": 21.684922900428266,
+            "p95_total_frame_ms": 26.665444,
+            "completed_render_frames": 935,
+            "wall_seconds": 20.285715846,
+            "completed_frame_ms": 21.695952776470588
+          },
+          "return": {
+            "samples": 847,
+            "excluded_initial_unavailable_interval": true,
+            "mean_total_frame_ms": 23.983775198347107,
+            "p95_total_frame_ms": 35.171306,
+            "completed_render_frames": 848,
+            "wall_seconds": 20.348934907,
+            "completed_frame_ms": 23.996385503537738
+          }
+        },
+        "limits": "One chronological development comparison; no statistical, visual, DH/PBR, hardware-universal or closure claim.",
+        "baseline_mean_total_frame_ms": 23.354449003321534,
+        "frame_time_reduction_percent": 7.148642653294128,
+        "speedup_ratio": 1.0769901793314791,
+        "drift_comparison": "BELOW_BOTH_NATIVE_CONTROLS",
+        "reduction_vs_native_controls_percent": [
+          4.577312592070862,
+          9.58503104247438
+        ],
+        "native_return_drift_percent": 5.389347399598826
+      },
+      "scope": "Same compiledrevision/native100/terrainpose0 as pair; no pooling/cross-session subtraction as causal effect."
+    },
+    {
+      "report": "g01-g06-pose0-r3",
+      "state": "COMPLETE_RESTORED_PAIR_REPEAT",
+      "evaluation": {
+        "execution": "COMPLETE",
+        "completion": "COMPLETE",
+        "validity": "VALID",
+        "improvement": "OBSERVED_LOWER_FRAME_TIME",
+        "review": "REQUIRED",
+        "closure": false,
+        "arms": {
+          "native": {
+            "samples": 839,
+            "excluded_initial_unavailable_interval": true,
+            "mean_total_frame_ms": 24.073604337306318,
+            "p95_total_frame_ms": 31.00959,
+            "completed_render_frames": 840,
+            "wall_seconds": 20.228627937,
+            "completed_frame_ms": 24.081699925000002
+          },
+          "candidate": {
+            "samples": 978,
+            "excluded_initial_unavailable_interval": true,
+            "mean_total_frame_ms": 20.738092752556238,
+            "p95_total_frame_ms": 27.317865,
+            "completed_render_frames": 979,
+            "wall_seconds": 20.324277904,
+            "completed_frame_ms": 20.760243007150155
+          },
+          "return": {
+            "samples": 827,
+            "excluded_initial_unavailable_interval": true,
+            "mean_total_frame_ms": 24.584908126964933,
+            "p95_total_frame_ms": 35.093522,
+            "completed_render_frames": 828,
+            "wall_seconds": 20.385518309,
+            "completed_frame_ms": 24.620191194444445
+          }
+        },
+        "limits": "One chronological development comparison; no statistical, visual, DH/PBR, hardware-universal or closure claim.",
+        "baseline_mean_total_frame_ms": 24.329256232135627,
+        "frame_time_reduction_percent": 14.76067926333051,
+        "speedup_ratio": 1.1731674904933933,
+        "drift_comparison": "BELOW_BOTH_NATIVE_CONTROLS",
+        "reduction_vs_native_controls_percent": [
+          13.855472317375895,
+          15.647060198648763
+        ],
+        "native_return_drift_percent": 2.101600578250531
+      }
+    },
+    {
+      "report": "g01-g06-pose0-r4",
+      "state": "COMPLETE_RESTORED_CURRENT_HOST_CATALOG_BINDING",
+      "evaluation": {
+        "execution": "COMPLETE",
+        "completion": "COMPLETE",
+        "validity": "VALID",
+        "improvement": "OBSERVED_LOWER_FRAME_TIME",
+        "review": "REQUIRED",
+        "closure": false,
+        "arms": {
+          "native": {
+            "samples": 873,
+            "excluded_initial_unavailable_interval": true,
+            "mean_total_frame_ms": 23.107939630011455,
+            "p95_total_frame_ms": 32.24269,
+            "completed_render_frames": 874,
+            "wall_seconds": 20.208169156,
+            "completed_frame_ms": 23.121475006864987
+          },
+          "candidate": {
+            "samples": 987,
+            "excluded_initial_unavailable_interval": true,
+            "mean_total_frame_ms": 20.551883483282673,
+            "p95_total_frame_ms": 26.692442,
+            "completed_render_frames": 988,
+            "wall_seconds": 20.318206421,
+            "completed_frame_ms": 20.564986256072874
+          },
+          "return": {
+            "samples": 873,
+            "excluded_initial_unavailable_interval": true,
+            "mean_total_frame_ms": 23.27388554753723,
+            "p95_total_frame_ms": 30.482821,
+            "completed_render_frames": 874,
+            "wall_seconds": 20.380825577,
+            "completed_frame_ms": 23.319022399313504
+          }
+        },
+        "limits": "One chronological development comparison; no statistical, visual, DH/PBR, hardware-universal or closure claim.",
+        "baseline_mean_total_frame_ms": 23.190912588774342,
+        "frame_time_reduction_percent": 11.37958282318352,
+        "speedup_ratio": 1.1284081387303655,
+        "drift_comparison": "BELOW_BOTH_NATIVE_CONTROLS",
+        "reduction_vs_native_controls_percent": [
+          11.06137625272788,
+          11.695520538222251
+        ],
+        "native_return_drift_percent": 0.7155644129593328
+      }
+    },
+    {
+      "report": "g01-g06-fixture-r1",
+      "validity": "VALID",
+      "mean_ms": {
+        "native": 23.88338012264151,
+        "candidate": 23.432468817762402,
+        "return": 25.322404473158553
+      },
+      "limits": "Same authored honeyfixture/pose9; one comparison; independent review pending."
+    },
+    {
+      "report": "g01-g03-g06-fixture-r1",
+      "validity": "VALID",
+      "mean_ms": {
+        "native": 26.344298255874673,
+        "candidate": 23.174135770904925,
+        "return": 26.124404851804126
+      },
+      "limits": "G03 source setup only; linked consumption/avoided fragments unobserved. One comparison, no causal increment estimate."
+    },
+    {
+      "report": "g01-g04-g06-fixture-r1",
+      "validity": "VALID",
+      "mean_ms": {
+        "native": 27.11368002684564,
+        "candidate": 24.714682875457875,
+        "return": 26.575161823298426
+      },
+      "limits": "G04 source marker plus authored fixture, no fragment-count or motion proof. One comparison."
+    },
+    {
+      "report": "g01-g03-g04-g06-fixture-r1",
+      "validity": "VALID",
+      "mean_ms": {
+        "native": 27.45841840108401,
+        "candidate": 25.09573959382716,
+        "return": 26.55767431853786
+      },
+      "limits": "One authored honeyfixture comparison; source/work/quality limits retained."
+    },
+    {
+      "report": "g01-g03-g06-pose0-r1",
+      "validity": "VALID",
+      "mean_ms": {
+        "native": 24.86361742997543,
+        "candidate": 21.62269365531915,
+        "return": 24.671044216969698
+      },
+      "limits": "G03 source setup only; one terrain comparison, no additive or causal marginal-gain claim."
+    },
+    {
+      "report": "g01-g03-g06-c01-pose0-r1",
+      "validity": "VALID",
+      "mean_ms": {
+        "native": 25.73376981019108,
+        "candidate": 23.081969317045456,
+        "return": 25.595299188205768
+      },
+      "limits": "C01 actual query/read admission and progress; boundary counters include untimed work, no GPU primitive or hidden-error equivalence claim."
+    },
+    {
+      "report": "g01-g03-g06-g10-pose0-r1",
+      "scope": "First instrumented G10 addition qualified actual link/draw and new G03 witness; continuous G10 GL observer in all timing arms. Not used for marginal G10/best-subset ranking.",
+      "interpretation": "g10-first-live-scope.json"
+    },
+    {
+      "report": "g01-g03-g06-g10-control-pose0-r1",
+      "validity": "VALID",
+      "mean_ms": {
+        "native": 22.920295302378253,
+        "candidate": 20.571038652482272,
+        "return": 23.436825296551724
+      },
+      "scope": "G10 off observer-matched public triple; G03 linked submissions; GL observers untimed."
+    },
+    {
+      "report": "g01-g03-g06-g10-pose0-r2",
+      "validity": "VALID",
+      "mean_ms": {
+        "native": 24.758996068711653,
+        "candidate": 22.138829711328974,
+        "return": 25.059336444717445
+      },
+      "scope": "Exact G10 addition; moved-stage compiled/link/native-submission proofs; diagnostic observers untimed. No branch-hit or physical-fetch count."
+    },
+    {
+      "report": "g01-g03-g04-g06-pose0-r1",
+      "validity": "VALID",
+      "mean_ms": {
+        "native": 25.243453175810473,
+        "candidate": 22.096978582333694,
+        "return": 25.76383277243995
+      },
+      "scope": "All four public features on saved terrain; G10 observer-matched kernel-off control; observers untimed."
+    }
+  ],
+  "implementation": "Explicit neutral-main-control benchmark-only G01/G06 composition; normal singleton admission unchanged. Shared exact original native100/source/API/platform guards retained; no source recipe or original ZIP repin. G01 properties and G06 deferred source compile controls checked independently, actual copy witness before/after timing. No claim of AO fragments or motion coverage.",
+  "tests": {
+    "source": "source-tests-r1.log:22JUnit passes, retained XML",
+    "launcher": "dev-client-tests-r1.log:53pass",
+    "focused": "iteration-tests-r3.log:31pass; r1 had one obsolete singleton error-message assertion, corrected and retained",
+    "harness": "harness-tests-r1.log:47pass, includes combined success and partial compile refusal/restoration",
+    "build": "build-r1.log:actual JDK offline source/classes binding verified",
+    "source_r2": {
+      "log": "source-tests-r2.log",
+      "xml": "source-test-xml-r2",
+      "counts": {
+        "tests": 28,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 1
+      },
+      "scope": "Conditional G01/G06 vertex/fragment code equality with singleton, native/refused preservation; spoof define rejection; producer/catalog/default contract tests."
+    },
+    "source_r5": {
+      "counts": {
+        "tests": 29,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 1
+      },
+      "skips": [
+        "com.pp.shaderlod.packs.SupportedPackCatalogTest.availablePinnedOriginalAndAssembledSourcesRecognize()"
+      ],
+      "log": "source-tests-r5.log",
+      "xml": "source-test-xml-r5",
+      "scope": "All58 assembled stages compared; paired properties equal G01; G06pair stages equal G06singleton; native/singleton/refused guard cases; constructor spooffilter/default admission; producer/catalog checks."
+    },
+    "host_contract": {
+      "counts": {
+        "tests": 11,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "log": "host-contract-tests.log",
+      "scope": "Explicit Linux/aarch64 private admission plus original native/profile negatives; no GPU/source change on measured M1."
+    },
+    "catalog_contract": {
+      "counts": {
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 1
+      },
+      "log": "catalog-contract-tests.log",
+      "scope": "Current validated generated digest and prior historical identities retained; two never-live intermediate prototype aliases removed."
+    }
+  },
+  "files": {
+    "build.gradle": "6eb82630a665829994474edd6ebc1b9cd134a6a56b1a6e95aca4e1a0d97b18b2",
+    "scripts/run_benchmark.py": "78a4a02726906d1dfb9690ef562ea4b8ae7f0a67cf3e6c9cd72bc3ca72f2c712",
+    "scripts/benchmark_iteration.py": "bfdecce0e54d9fcf6ab6fa2f97d50a15659f62e9acd6ce9f61595c241fd3f9be",
+    "scripts/dev_client.py": "c9cb70552891982da38e296a445004b1c83a533fa6d37afc7db571b7f50e4e18",
+    "src/main/java/com/pp/shaderlod/optimization/makeupexact/MakeUpCombinationGraph.java": "2966cd9cde74215d1f9579d1be283536d5ff0a1cb9792bfff00454d5c3e615f2",
+    "src/main/java/com/pp/shaderlod/optimization/makeupexact/MakeUpExactGraph.java": "5a03378d927126af9e96440c22fed60816ae6ff4ecc8dd660dbe9317be55a63c",
+    "src/main/java/com/pp/shaderlod/optimization/framecopy/MakeUpLeanGraph.java": "0f892c9cf0db67da860d4f79ee7ba3978e1768ac3fb91cb6abf1bf7df04459a5",
+    "src/main/java/com/pp/shaderlod/optimization/framecopy/MakeUpDeadCopyAdmission.java": "88dd692270614d2049a802de96acc90c81e979ef7604aa668bf9d485f5de5d29"
+  },
+  "running": null,
+  "composition_source_update": "composition-source-update-r2.json",
+  "source_validation_progress": {
+    "r3": "Full assembled test correctly refused stage preservation (G01 options unavailable at outer wrapper decision).",
+    "r4": "All58 stage comparisons reached completion, then wrong54cardinality assertion failed; corrected expected count58.",
+    "r5": "Passed with one recorded historical availability skip; actual local MakeUp original was assembled by the non-skipped composition test.",
+    "composition_contract": "Pair preserves G01 code on56non-deferred stages; deferred vertex/fragment match G06singleton. Conditional early existing option declarations make wrapper decisions bound to actual G01 value. Native and unrelated guards retained; original ZIP/member pins and properties bytes unchanged."
+  },
+  "compatibility_and_search": "compatibility-and-search.json",
+  "post_measurement_tightening": [
+    "Host-boundary gate (measured target remains allowed)",
+    "Removed only never-live intermediate generated-source compatibility aliases; current validated source unchanged"
+  ],
+  "binding_scope": "First four completed comparisons share exactly identical build-binding maps. Currentr4 differs only in MakeUpCombinationGraph.java/SupportedPackCatalog.java and their two compiled classes (host tightening / transient alias removal); GLSL resources and all other bindings identical. Do not claim allfive same compiled revision.",
+  "comparison_audit": "measured-comparison-audit.json",
+  "owned_clients_remaining": 0,
+  "storage_inventory": "quick-result-storage-inventory.json",
+  "pair_interpretation": "pair-measurement-interpretation.json",
+  "review_status": "QUICK_MEASUREMENT_REVIEW_CLOSE_ONLY_NO_OPTIMIZATION_GOAL_CLOSURE",
+  "pair_review": "pair-independent-review.json",
+  "g04_composition": {
+    "status": "MEASURED_IN_COMBINATIONS_UNQUALIFIED_INDIVIDUAL_GOAL_OPEN",
+    "source_stage_checks": 58,
+    "live_comparisons": 3
+  },
+  "public_four_checkpoint": "public-four-implementation-checkpoint.json",
+  "g10_prototype": {
+    "state": "LIVE_COMPOSITION_EVALUATED_INCREMENT_INCONCLUSIVE_GOAL_OPEN",
+    "source_members": "Added exact original bloom.glsl member pin required by maintained producer; original pack identity and existing member pins unchanged.",
+    "initial_sync_failure": "Unpinned new patch member refused before runtime; fixed through exact original member pin. No client launched in that state.",
+    "compiler_limit": "Standalone glslangValidator unavailable for two legacy checks; live compiled/link evidence exists. No all-suite-green claim."
+  },
+  "current_tests": {
+    "java_source": {
+      "recorded": 48,
+      "passed": 48,
+      "log": "final-composition-java-tests-r1.log"
+    },
+    "harness_units": {
+      "recorded": 86,
+      "passed": 86,
+      "log": "g10-g03-harness-unit-tests-r3.log"
+    },
+    "process_suite": {
+      "recorded": 57,
+      "passed": 56,
+      "failed": 1,
+      "reason": "New refusal fixture still expected complete operation instead of failed-restored; predicate corrected.",
+      "log": "final-composition-harness-tests-r1.log"
+    },
+    "affected_negative_rerun": {
+      "recorded": 2,
+      "passed": 2,
+      "log": "final-composition-focused-process-tests-r3.log"
+    },
+    "standalone_G10_compiler": "Two tests cannot run: glslangValidator absent; retained failure log. Live driver compilation/link qualification required."
+  },
+  "g10_observer_fix": {
+    "scope": "All G10 GL draw queries now explicit untimed intervals, finally-disarmed; timing refuses armed G10 observer. G10-off control matches observer mode, actual source role1/2 required.",
+    "units": "87passed; untimed-g10-unit-tests-r1.log",
+    "processes": "Five of six passed initially; armed-observer fixture converted g10 fault selector to bool and did not inject intended fault. Corrected; affected negative rerun recorded separately.",
+    "build": "untimed-g10-build-r1.log",
+    "negative_rerun": "untimed-g10-negative-test-r2.log: one affected process case passed; G10 armed observer refuses candidate timing and restores."
+  },
+  "remaining_measured_search": [],
+  "g10_increment_status": "Untimed-observer on/off comparisons overlap: no demonstrated incremental benefit; no branch-hit/physical-fetch count. Do not add singleton gains.",
+  "scope_correction": "User wanted a quick test of best combo, not continued broad subset optimization. No further benchmark runs planned.",
+  "quick_result": "quick-combo-result.json",
+  "review_inputs": "quick-review-inputs.json",
+  "independent_review": "quick-result-independent-review.json",
+  "current_status_authority": "docs/STATUS.md and dev/experiments/shortlist-closure-20261101/checkpoint.json",
+  "optimization_goals": {
+    "G01": {
+      "goal_status": "CLOSED",
+      "disposition": "Current pinned MakeUp native100/M1 local optimization search; promising/default off",
+      "review": "../shortlist-closure-20261101/g01-independent-review.json",
+      "exhausted": false,
+      "default_qualified": false,
+      "scope": "Finite current pinned local search; see resumed checkpoint for evidence/limitations"
+    },
+    "G02": {
+      "goal_status": "BLOCKED",
+      "disposition": "Viable pinned routes completed; whole goal blocked by Reimagined/Unbound original native sampler allocation failures on current runtime, also reproduced without ShaderLOD. No quality/AA downgrade or universal hardware cause claim.",
+      "review": "../shortlist-closure-20261101/g02-independent-review.json",
+      "exhausted": false,
+      "default_qualified": false,
+      "scope": "Finite current pinned local search; see resumed checkpoint for evidence/limitations"
+    },
+    "G03": {
+      "goal_status": "CLOSED",
+      "disposition": "Finite current pinned MakeUp native100/M1 search; default off",
+      "review": "../shortlist-closure-20261101/g03-independent-review.json",
+      "exhausted": false,
+      "default_qualified": false,
+      "scope": "Finite current pinned local search; see resumed checkpoint for evidence/limitations"
+    },
+    "G04": {
+      "goal_status": "CLOSED",
+      "disposition": "Finite current pinned MakeUp native100/M1 search; default off",
+      "review": "../shortlist-closure-20261101/g04-independent-review.json",
+      "exhausted": false,
+      "default_qualified": false,
+      "scope": "Finite current pinned local search; see resumed checkpoint for evidence/limitations"
+    },
+    "G05": {
+      "goal_status": "CLOSED",
+      "disposition": "Current pinned localreflectionsearch rejected/defaultOff; distinctfixed16testcomplete",
+      "review": "../shortlist-closure-20261101/g05-independent-review.json",
+      "exhausted": false,
+      "default_qualified": false,
+      "scope": "Finite current pinned local search; see resumed checkpoint for evidence/limitations"
+    },
+    "G06": {
+      "goal_status": "CLOSED",
+      "disposition": "Current MakeUp native100/M1 AO optimization search; promising/default off",
+      "review": "../shortlist-closure-20261101/g06-independent-review.json",
+      "exhausted": false,
+      "default_qualified": false,
+      "scope": "Finite current pinned local search; see resumed checkpoint for evidence/limitations"
+    },
+    "G07": {
+      "goal_status": "CLOSED",
+      "disposition": "Finite current local native-quality sample reduction search; do not enable",
+      "review": "../shortlist-closure-20261101/g07-independent-review.json",
+      "exhausted": false,
+      "default_qualified": false,
+      "scope": "Finite current pinned local search; see resumed checkpoint for evidence/limitations"
+    },
+    "G08": {
+      "goal_status": "CLOSED",
+      "disposition": "Finite current pinned local native-quality search; no material gain established, keep private/defaultOff",
+      "review": "../shortlist-closure-20261101/g08-independent-review.json",
+      "exhausted": false,
+      "default_qualified": false,
+      "scope": "Finite current pinned local search; see resumed checkpoint for evidence/limitations"
+    },
+    "G09": {
+      "goal_status": "CLOSED",
+      "disposition": "Current pinned local G09 initial-height/prefix implementations rejected/defaultOff; no general POM exhaustion claim",
+      "review": "../shortlist-closure-20261101/g09-independent-review.json",
+      "exhausted": false,
+      "default_qualified": false,
+      "scope": "Finite current pinned local search; see resumed checkpoint for evidence/limitations"
+    },
+    "G10": {
+      "goal_status": "CLOSED",
+      "disposition": "Do not enable; local opportunity too small, no evidenced material next avenue",
+      "review": "../shortlist-closure-20261101/g10-independent-review.json",
+      "exhausted": false,
+      "default_qualified": false,
+      "scope": "Finite current pinned local search; see resumed checkpoint for evidence/limitations"
+    },
+    "C01": {
+      "goal_status": "CLOSED",
+      "disposition": "Finitecurrentpinnedlocalsearch; noqualifiedgain, keepOff",
+      "review": "../shortlist-closure-20261101/c01-independent-review.json",
+      "exhausted": false,
+      "default_qualified": false,
+      "scope": "Finite current pinned local search; see resumed checkpoint for evidence/limitations"
+    },
+    "C02": {
+      "goal_status": "EXCLUDED",
+      "local_capability": "Required NV extensions absent on current M1; no eligible-hardware result",
+      "default_qualified": false
+    }
+  },
+  "closure_scope": {
+    "completed": [
+      "Quick combined single-scene measurement/report",
+      "Historical assigned implementation/harness/evaluation reviews only"
+    ],
+    "optimization_goals_exhausted": [],
+    "historical_close_is_not_goal_closure": true,
+    "dominant_overhead_causes_not_isolated": true,
+    "scheduling": "STOPPED; no benchmark/search work authorized by this status update."
+  },
+  "optimization_goals_at_quick_result_capture": {
+    "G01": {
+      "goal_status": "OPEN",
+      "tested_route_disposition": "PROMISING_UNQUALIFIED",
+      "unresolved": "Alias/history, motion, setup economics and broader compatibility unresolved.",
+      "exhausted": false,
+      "default_qualified": false
+    },
+    "G02": {
+      "goal_status": "OPEN",
+      "tested_route_disposition": "INCONCLUSIVE",
+      "unresolved": "Removed mip work; weak mean observation, worse p95 and drift; no qualified net win.",
+      "exhausted": false,
+      "default_qualified": false
+    },
+    "G03": {
+      "goal_status": "OPEN",
+      "tested_route_disposition": "COMBINATION_OBSERVATION_INDIVIDUAL_CONTRIBUTION_UNISOLATED",
+      "unresolved": "Linked CUTOUT submissions observed later; avoided fragments and quality equivalence unresolved.",
+      "exhausted": false,
+      "default_qualified": false
+    },
+    "G04": {
+      "goal_status": "OPEN",
+      "tested_route_disposition": "SINGLETON_INCONCLUSIVE_POSITIVE_COMBINATION_OBSERVATION",
+      "unresolved": "Individual gain and executed fast-path/fragment counts unresolved.",
+      "exhausted": false,
+      "default_qualified": false
+    },
+    "G05": {
+      "goal_status": "OPEN",
+      "tested_route_disposition": "REJECT_TESTED_BSL_PUBLIC_ROUTE",
+      "unresolved": "Tested route slower; dominant cost and alternative reflection implementations not exhausted.",
+      "exhausted": false,
+      "default_qualified": false
+    },
+    "G06": {
+      "goal_status": "OPEN",
+      "tested_route_disposition": "PROMISING_UNQUALIFIED",
+      "unresolved": "Executed AO-skip counts, individual combined effect and quality/economics unresolved.",
+      "exhausted": false,
+      "default_qualified": false
+    },
+    "G07": {
+      "goal_status": "OPEN_WITH_ORIGINAL_INPUT_BLOCKER",
+      "tested_route_disposition": "REJECT_TESTED_BSL_ALTERNATIVE",
+      "unresolved": "Original temporal accepted archive unavailable/strict pin; general sample reduction not rejected.",
+      "exhausted": false,
+      "default_qualified": false
+    },
+    "G08": {
+      "goal_status": "OPEN_WITH_MAKEUP_COMPATIBILITY_ADMISSION_BLOCKER",
+      "tested_route_disposition": "NO_OBSERVED_BENEFIT_PHOTON_ALTERNATIVE",
+      "unresolved": "MakeUp prototype cloud mode/steps differ from target and runtime owner unqualified; reuse frequency unresolved.",
+      "exhausted": false,
+      "default_qualified": false
+    },
+    "G09": {
+      "goal_status": "OPEN",
+      "tested_route_disposition": "REJECT_TESTED_BSL_PUBLIC_ROUTE",
+      "unresolved": "Physical fetch savings and dominant cost not established; broader POM optimization open.",
+      "exhausted": false,
+      "default_qualified": false
+    },
+    "G10": {
+      "goal_status": "OPEN",
+      "tested_route_disposition": "INCONCLUSIVE_INCREMENT",
+      "unresolved": "Exact route narrow opportunity, combined on/off overlap; approximate pairing precision unqualified.",
+      "exhausted": false,
+      "default_qualified": false
+    },
+    "C01": {
+      "goal_status": "OPEN",
+      "tested_route_disposition": "NO_NET_BENEFIT_ESTABLISHED_IN_TESTED_ROUTES",
+      "unresolved": "Combined terrain saved no commands/indices; query economics and independent hidden-error validation unresolved.",
+      "exhausted": false,
+      "default_qualified": false
+    },
+    "C02": {
+      "goal_status": "BLOCKED_ON_LOCAL_HARDWARE",
+      "tested_route_disposition": "NOT_MEASURED_ON_ELIGIBLE_HARDWARE",
+      "unresolved": "Required NV extensions absent on M1; no general algorithm rejection.",
+      "exhausted": false,
+      "default_qualified": false
+    }
+  },
+  "resumed_closure_checkpoint": "../shortlist-closure-20261101/checkpoint.json"
+}

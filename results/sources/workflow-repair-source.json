@@ -1,0 +1,191 @@
+{
+  "objective": "Simplify and speed the maintained benchmark workflow; statistical reliability remains a separate task.",
+  "status": "IMPLEMENTED_AND_TESTED_LOCAL_PATHS",
+  "implemented": [
+    "discover with profile/source availability, input paths, candidates and scenes",
+    "plan without build or launch, with timings and remedies",
+    "managed --slot selection and automatic Linux ARM64/full JDK21 discovery",
+    "early missing-canonical, changed-input, active-client and compiled-capability checks",
+    "short functional check with no performance verdict and guarded re-evaluation",
+    "shared nine-candidate module/report/settling registry",
+    "atomic private selection/observation under an explicit paired launch capability",
+    "reuse of an acknowledged unchanged progressing Apply boundary",
+    "historical/current report interpretation, phase/build/profile timing and closure-only review metadata",
+    "short main guide with separate candidate reference"
+  ],
+  "validation": {
+    "focused_python": "89 tests, 88 pass and one macOS-only skip; final-focused-tests.log",
+    "benchmark_regressions": "61 pass; final-benchmark-regressions.log",
+    "additional_process_reruns": "4 pass; updated-process-tests-r2.log",
+    "functional_process": "PASS; functional-process-test.log",
+    "java_capability_dimension_and_transaction_checks": "PASS; java-transaction-tests.log",
+    "offline_build": "PASS; final-build.log; source/classes receipt verified after all source edits",
+    "runtime": [
+      {
+        "report": "private-photon-check-r1",
+        "state": "complete",
+        "released": true,
+        "restored": true,
+        "clients_remaining": 0,
+        "purpose": "functional-check",
+        "error": null,
+        "runtime_seconds": 229.44617683300748,
+        "source_atomic_selections": 3,
+        "direct_pack_selections": 0,
+        "settings_apply_calls": 0,
+        "reused_readiness": {
+          "reused_apply_readiness": 0
+        },
+        "evaluation": "NOT_EVALUATED"
+      },
+      {
+        "report": "private-sildur-check-r1",
+        "state": "complete",
+        "released": true,
+        "restored": true,
+        "clients_remaining": 0,
+        "purpose": "functional-check",
+        "error": null,
+        "runtime_seconds": 230.37733559391927,
+        "source_atomic_selections": 0,
+        "direct_pack_selections": 4,
+        "settings_apply_calls": 3,
+        "reused_readiness": {
+          "reused_apply_readiness": 3
+        },
+        "evaluation": "NOT_EVALUATED"
+      },
+      {
+        "report": "private-sildur-check-r2",
+        "state": "failed-restored",
+        "released": true,
+        "restored": true,
+        "clients_remaining": 0,
+        "purpose": "functional-check",
+        "error": "Control command failed: java.lang.IllegalStateException: Exclusive untimed owned Bliss Overworld, Off/empty requests/options required",
+        "runtime_seconds": 61.16255220398307,
+        "source_atomic_selections": 1,
+        "direct_pack_selections": 0,
+        "settings_apply_calls": 0,
+        "reused_readiness": {
+          "reused_apply_readiness": 0
+        },
+        "evaluation": "NOT_EVALUATED"
+      },
+      {
+        "report": "private-sildur-check-r3",
+        "state": "complete",
+        "released": true,
+        "restored": true,
+        "clients_remaining": 0,
+        "purpose": "functional-check",
+        "error": null,
+        "runtime_seconds": 193.33302771800663,
+        "source_atomic_selections": 3,
+        "direct_pack_selections": 0,
+        "settings_apply_calls": 0,
+        "reused_readiness": {
+          "reused_apply_readiness": 0
+        },
+        "evaluation": "NOT_EVALUATED"
+      },
+      {
+        "report": "public-r1",
+        "state": "failed-restored",
+        "released": true,
+        "restored": true,
+        "clients_remaining": 0,
+        "purpose": "benchmark",
+        "error": "Standard test needs a clean managed checkout; differing original inputs are preserved",
+        "runtime_seconds": 0.5889006740180776,
+        "source_atomic_selections": 0,
+        "direct_pack_selections": 0,
+        "settings_apply_calls": 0,
+        "reused_readiness": {},
+        "evaluation": "UNRESOLVED"
+      },
+      {
+        "report": "public-r2",
+        "state": "complete",
+        "released": true,
+        "restored": true,
+        "clients_remaining": 0,
+        "purpose": "benchmark",
+        "error": null,
+        "runtime_seconds": 351.5878752070712,
+        "source_atomic_selections": 0,
+        "direct_pack_selections": 0,
+        "settings_apply_calls": 3,
+        "reused_readiness": {},
+        "evaluation": "OBSERVED_LOWER_FRAME_TIME"
+      },
+      {
+        "report": "public-r3",
+        "state": "complete",
+        "released": true,
+        "restored": true,
+        "clients_remaining": 0,
+        "purpose": "benchmark",
+        "error": null,
+        "runtime_seconds": 343.22434432595037,
+        "source_atomic_selections": 0,
+        "direct_pack_selections": 0,
+        "settings_apply_calls": 3,
+        "reused_readiness": {
+          "reused_apply_readiness": 3
+        },
+        "evaluation": "OBSERVED_LOWER_FRAME_TIME"
+      }
+    ],
+    "restoration": "All seven operations terminal/restored/released; zero Minecraft clients; operation-audit.json",
+    "historical_reports": "report-audit.json; invalid, incomplete, drift and functional outcomes kept distinct"
+  },
+  "measured_workflow_changes": {
+    "public_apply_readiness_reuses": 3,
+    "public_run_elapsed_seconds": [
+      351.5878752070712,
+      343.22434432595037
+    ],
+    "private_sildur_check_elapsed_seconds": [
+      230.37733559391927,
+      193.33302771800663
+    ],
+    "private_sildur_direct_selection_calls": [
+      4,
+      0
+    ],
+    "private_sildur_apply_calls": [
+      3,
+      0
+    ],
+    "private_sildur_atomic_observed_selections": [
+      0,
+      3
+    ],
+    "qualification": "Single before/after workflow observations, not a statistical speedup estimate or shader performance qualification.",
+    "profile_preparation_seconds": 0.34208764403592795,
+    "profile_restoration_reset_seconds": 1.4777502600336447
+  },
+  "retained_by_design": [
+    "Fresh client isolation; persistent reuse was not justified by the observed phase costs",
+    "Full backup/hash/reset protections were inexpensive on this prepared workload",
+    "Specialized legacy routes keep their distinct validators rather than a new generic workflow language"
+  ],
+  "limits": [
+    "Live validation is NeoForge1.21.1/Iris on this Linux ARM64 Asahi host, native quality/AA, without DH; other hosts and PBR were not newly qualified",
+    "Bliss null calibration and host capacity/OOM blockers remain unresolved; reduced reload requests do not prove reduced residency",
+    "neoforge-1211-asahi-authored retains its data but its recorded canonical source is absent; discovery marks it unavailable and a verified slot was used",
+    "The pre-existing MakeUpAlphaVertexContractTest failure is outside this repair; no full Gradle test-suite pass is claimed",
+    "No universal absence of future pain points or hardware issues is claimed"
+  ],
+  "preserved": [
+    "Native shader packs/options/AA",
+    "Public Apply/Off/Cancel behavior and restoration",
+    "Previous goal statuses and defaults",
+    "All failed attempts and useful recovery evidence"
+  ],
+  "storage_inventory": "storage-inventory.json",
+  "pstack_skill": "Pushed policy/skills/project-repair/SKILL.md to private p-stack main",
+  "implementation_commit": "12cc31679de84fc7801ee8ef760d9ea1cff7482f",
+  "git": "ShaderLOD commit local, working tree clean, not pushed; p-stack skill already pushed."
+}

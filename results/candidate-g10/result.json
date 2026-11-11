@@ -1,0 +1,107 @@
+{
+  "goal": "G10",
+  "mechanism": "Reuse identical filter taps",
+  "asahi": {
+    "goal": "G10",
+    "mechanism": "Reuse identical filter taps",
+    "targets": {
+      "makeup": {
+        "status": "NO_GAIN_ESTABLISHED",
+        "effects_pct": {
+          "n": 2,
+          "mean": 0.4447341342773934,
+          "sd": 1.1941974803609525,
+          "variance": 1.4261076221004476
+        },
+        "plotted_phase": "confirmation",
+        "plotted_case": "primary",
+        "plotted_runs": 2,
+        "scope_note": "Two fresh exact-bloom confirmation processes and two matching selector0 native-equivalent controls; discovery4.17% not reproduced. Query-expression opportunity count is not physical texture traffic or GPU time."
+      },
+      "bsl": {
+        "status": "HELD_SMALL_OPPORTUNITY"
+      },
+      "reimagined": {
+        "status": "HELD_SMALL_OPPORTUNITY"
+      },
+      "unbound": {
+        "status": "HELD_SMALL_OPPORTUNITY"
+      }
+    }
+  },
+  "rtx5080": [
+    {
+      "shader": "makeup",
+      "goal": "G10",
+      "status": "MEASURED",
+      "arms": {
+        "native": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 2.153745267893817,
+            "sd": 0.00044426943794096687,
+            "variance": 1.9737533348838262e-07
+          },
+          "mean_within_window_sd_ms": 0.08873102430672103,
+          "mean_within_window_variance_ms2": 0.007951455555736592,
+          "mean_p95_ms": 2.26025
+        },
+        "candidate": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 2.159707497231679,
+            "sd": 0.005302769543816624,
+            "variance": 2.8119364834829173e-05
+          },
+          "mean_within_window_sd_ms": 0.09110532373068483,
+          "mean_within_window_variance_ms2": 0.008313911967394259,
+          "mean_p95_ms": 2.27455
+        },
+        "return": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 2.156643008653516,
+            "sd": 0.005196335724109966,
+            "variance": 2.7001904957661444e-05
+          },
+          "mean_within_window_sd_ms": 0.07419015011572241,
+          "mean_within_window_variance_ms2": 0.005509047619420072,
+          "mean_p95_ms": 2.2493
+        }
+      },
+      "effects_pct": {
+        "n": 2,
+        "mean": -0.20934255777148664,
+        "sd": 0.11491135880756687,
+        "variance": 0.013204620383001374
+      },
+      "plotted_case": "primary",
+      "plotted_phase": "screening",
+      "plotted_runs": 2,
+      "plotted_gl_context": "3.2",
+      "implementation": "g10-exact-bloom"
+    },
+    {
+      "shader": "bsl",
+      "goal": "G10",
+      "status": "NO_CERTIFIED_IDENTICAL_QUERY_REUSE",
+      "scope_note": "BSL native bloom uses a6x6 grid of distinct offsets. At4K these are nonzero distinct pixel offsets, so the MakeUp identical-coordinate reuse certificate does not port. Approximate bilinear pairing/clamp/derivative changes would be a different implementation needing quality proof; no universal impossibility is claimed.",
+      "implementation": ""
+    },
+    {
+      "shader": "reimagined",
+      "goal": "G10",
+      "status": "NO_CERTIFIED_IDENTICAL_QUERY_REUSE",
+      "scope_note": "Complementary native bloom uses a7x7 grid of distinct offsets. At4K these are nonzero distinct pixel offsets, so the MakeUp identical-coordinate reuse certificate does not port. Approximate bilinear pairing/clamp/derivative changes would be a different implementation needing quality proof; no universal impossibility is claimed.",
+      "implementation": ""
+    },
+    {
+      "shader": "unbound",
+      "goal": "G10",
+      "status": "NO_CERTIFIED_IDENTICAL_QUERY_REUSE",
+      "scope_note": "Complementary native bloom uses a7x7 grid of distinct offsets. At4K these are nonzero distinct pixel offsets, so the MakeUp identical-coordinate reuse certificate does not port. Approximate bilinear pairing/clamp/derivative changes would be a different implementation needing quality proof; no universal impossibility is claimed.",
+      "implementation": ""
+    }
+  ],
+  "final_disposition": "discard; no candidate qualified across all four packs and both completed machines"
+}

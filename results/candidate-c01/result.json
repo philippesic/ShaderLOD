@@ -1,0 +1,106 @@
+{
+  "goal": "C01",
+  "mechanism": "Additional terrain occlusion queries",
+  "asahi": {
+    "goal": "C01",
+    "mechanism": "Additional terrain occlusion queries",
+    "targets": {
+      "makeup": {
+        "status": "MEASURED_SLOWER",
+        "effects_pct": {
+          "n": 1,
+          "mean": -3.166964486466332,
+          "sd": null,
+          "variance": null
+        },
+        "plotted_phase": "discovery",
+        "plotted_case": "primary",
+        "plotted_runs": 1
+      },
+      "bsl": {
+        "status": "HELD_SHARED_GEOMETRY_PROOF"
+      },
+      "reimagined": {
+        "status": "HELD_SHARED_GEOMETRY_PROOF"
+      },
+      "unbound": {
+        "status": "HELD_SHARED_GEOMETRY_PROOF"
+      }
+    }
+  },
+  "rtx5080": [
+    {
+      "shader": "makeup",
+      "goal": "C01",
+      "status": "MEASURED",
+      "arms": {
+        "native": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 2.0297302454453914,
+            "sd": 0.004136121977110149,
+            "variance": 1.7107505009533568e-05
+          },
+          "mean_within_window_sd_ms": 0.09511722423324734,
+          "mean_within_window_variance_ms2": 0.009075370877867863,
+          "mean_p95_ms": 2.13355
+        },
+        "candidate": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 2.0281878613640383,
+            "sd": 0.0033912964899219223,
+            "variance": 1.1500891882556749e-05
+          },
+          "mean_within_window_sd_ms": 0.07372441016714512,
+          "mean_within_window_variance_ms2": 0.005473369481625656,
+          "mean_p95_ms": 2.12075
+        },
+        "return": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 2.0262991341712357,
+            "sd": 0.004214113768333443,
+            "variance": 1.775875485245749e-05
+          },
+          "mean_within_window_sd_ms": 0.07085067149426572,
+          "mean_within_window_variance_ms2": 0.005021842617556804,
+          "mean_p95_ms": 2.1112
+        }
+      },
+      "effects_pct": {
+        "n": 2,
+        "mean": -0.008578772152796878,
+        "sd": 0.03866735091172156,
+        "variance": 0.0014951640265302144
+      },
+      "plotted_case": "gpu-authored",
+      "plotted_phase": "screening",
+      "plotted_runs": 2,
+      "plotted_gl_context": "3.2",
+      "implementation": "c01-bounds"
+    },
+    {
+      "shader": "bsl",
+      "goal": "C01",
+      "status": "HELD_CONSERVATIVE_GEOMETRY_PROOF",
+      "scope_note": "BSL WavingBlocks changes native SOLID vertices. The MakeUp proxy bounds/source certificate cannot certify conservative occlusion of these positions. Query hardware works on this GPU; extending only the target list would be unsafe. No culling benefit is claimed.",
+      "implementation": ""
+    },
+    {
+      "shader": "reimagined",
+      "goal": "C01",
+      "status": "HELD_CONSERVATIVE_GEOMETRY_PROOF",
+      "scope_note": "Complementary DoWave and material depth adjustments change native SOLID vertices. The MakeUp proxy bounds/source certificate cannot certify conservative occlusion of these positions. Query hardware works on this GPU; extending only the target list would be unsafe. No culling benefit is claimed.",
+      "implementation": ""
+    },
+    {
+      "shader": "unbound",
+      "goal": "C01",
+      "status": "HELD_CONSERVATIVE_GEOMETRY_PROOF",
+      "scope_note": "Complementary DoWave and material depth adjustments change native SOLID vertices. The MakeUp proxy bounds/source certificate cannot certify conservative occlusion of these positions. Query hardware works on this GPU; extending only the target list would be unsafe. No culling benefit is claimed.",
+      "implementation": ""
+    }
+  ],
+  "final_disposition": "discard; no candidate qualified across all four packs and both completed machines"
+}

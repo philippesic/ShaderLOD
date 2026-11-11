@@ -1,0 +1,269 @@
+{
+  "goal": "G05",
+  "mechanism": "Reflection traversal / depth-query reuse",
+  "asahi": {
+    "goal": "G05",
+    "mechanism": "Reflection traversal / depth-query reuse",
+    "targets": {
+      "makeup": {
+        "status": "MEASURED_SLOWER",
+        "effects_pct": {
+          "n": 1,
+          "mean": -5.203233148230776,
+          "sd": null,
+          "variance": null
+        },
+        "plotted_phase": "discovery",
+        "plotted_case": "shared-depth-ssr",
+        "plotted_runs": 1,
+        "scope_note": "Main case requires actual nearest-sampler permission progress inside timing windows. Initial source/request-only runs stay separate; permission0 at setup does not classify transient draw grants."
+      },
+      "bsl": {
+        "status": "MEASURED_SLOWER",
+        "effects_pct": {
+          "n": 1,
+          "mean": -21.832639184194598,
+          "sd": null,
+          "variance": null
+        },
+        "plotted_phase": "discovery",
+        "plotted_case": "draw-permission-proof",
+        "plotted_runs": 1,
+        "scope_note": "Main case requires actual nearest-sampler permission progress inside timing windows. Initial source/request-only runs stay separate; permission0 at setup does not classify transient draw grants."
+      },
+      "reimagined": {
+        "status": "MEASURED_SLOWER",
+        "effects_pct": {
+          "n": 1,
+          "mean": -11.790593118565566,
+          "sd": null,
+          "variance": null
+        },
+        "plotted_phase": "discovery",
+        "plotted_case": "primary",
+        "plotted_runs": 1,
+        "scope_note": "Shader-side projected-refinement LOD gate uses the requested next-event flag; source guard/branch frequency and avoided steps are not counted. Separate native-water exact-depth permission belongs to unrequested projected-refinement peer. Preserve native AA/resolution and label this implementation separately from MakeUp/BSL nearest-cell events."
+      },
+      "unbound": {
+        "status": "MEASURED_SLOWER",
+        "effects_pct": {
+          "n": 1,
+          "mean": -14.900754936954344,
+          "sd": null,
+          "variance": null
+        },
+        "plotted_phase": "discovery",
+        "plotted_case": "primary",
+        "plotted_runs": 1,
+        "scope_note": "Shader-side projected-refinement LOD gate uses the requested next-event flag; source guard/branch frequency and avoided steps are not counted. Separate native-water exact-depth permission belongs to unrequested projected-refinement peer. Preserve native AA/resolution and label this implementation separately from MakeUp/BSL nearest-cell events."
+      }
+    }
+  },
+  "rtx5080": [
+    {
+      "shader": "makeup",
+      "goal": "G05",
+      "status": "MEASURED",
+      "arms": {
+        "native": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 2.2339165150016775,
+            "sd": 0.00022434581443823542,
+            "variance": 5.0331044455955165e-08
+          },
+          "mean_within_window_sd_ms": 0.09423990032362813,
+          "mean_within_window_variance_ms2": 0.008940670546438627,
+          "mean_p95_ms": 2.3419499999999998
+        },
+        "candidate": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 2.31856410432815,
+            "sd": 0.00037801601660726006,
+            "variance": 1.4289610881162033e-07
+          },
+          "mean_within_window_sd_ms": 0.08805437189734036,
+          "mean_within_window_variance_ms2": 0.007778662661890903,
+          "mean_p95_ms": 2.4278
+        },
+        "return": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 2.2340803667865696,
+            "sd": 0.0005182035051920274,
+            "variance": 2.6853487279330356e-07
+          },
+          "mean_within_window_sd_ms": 0.09459717858510996,
+          "mean_within_window_variance_ms2": 0.008952828673649653,
+          "mean_p95_ms": 2.3328499999999996
+        }
+      },
+      "effects_pct": {
+        "n": 2,
+        "mean": -3.7853956982058854,
+        "sd": 0.023746959284558698,
+        "variance": 0.0005639180752624886
+      },
+      "plotted_case": "primary",
+      "plotted_phase": "screening",
+      "plotted_runs": 2,
+      "plotted_gl_context": "4.6",
+      "implementation": "reflection_next_event_refinement"
+    },
+    {
+      "shader": "bsl",
+      "goal": "G05",
+      "status": "MEASURED",
+      "arms": {
+        "native": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 3.037122510005867,
+            "sd": 0.0010829972495127512,
+            "variance": 1.1728830424521844e-06
+          },
+          "mean_within_window_sd_ms": 0.09310492342854929,
+          "mean_within_window_variance_ms2": 0.008711923836873265,
+          "mean_p95_ms": 3.17295
+        },
+        "candidate": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 3.592353777672812,
+            "sd": 0.001981729036300094,
+            "variance": 3.927249973314898e-06
+          },
+          "mean_within_window_sd_ms": 0.10288141524557883,
+          "mean_within_window_variance_ms2": 0.010632393314240356,
+          "mean_p95_ms": 3.72595
+        },
+        "return": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 3.0395743424771604,
+            "sd": 0.005274818706706615,
+            "variance": 2.782371238862205e-05
+          },
+          "mean_within_window_sd_ms": 0.07490253480482759,
+          "mean_within_window_variance_ms2": 0.005620906444034132,
+          "mean_p95_ms": 3.1427
+        }
+      },
+      "effects_pct": {
+        "n": 2,
+        "mean": -18.23379689284817,
+        "sd": 0.05847961842041796,
+        "variance": 0.003419865770597688
+      },
+      "plotted_case": "primary",
+      "plotted_phase": "screening",
+      "plotted_runs": 2,
+      "plotted_gl_context": "3.2",
+      "implementation": "reflection_next_event_refinement"
+    },
+    {
+      "shader": "reimagined",
+      "goal": "G05",
+      "status": "MEASURED",
+      "arms": {
+        "native": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 3.5468564984959405,
+            "sd": 0.01706321318582523,
+            "variance": 0.00029115324422492
+          },
+          "mean_within_window_sd_ms": 0.10252147809710388,
+          "mean_within_window_variance_ms2": 0.010517335293035713,
+          "mean_p95_ms": 3.6842
+        },
+        "candidate": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 3.849288725644259,
+            "sd": 0.002616887984528525,
+            "variance": 6.8481027235697656e-06
+          },
+          "mean_within_window_sd_ms": 0.1121952399925919,
+          "mean_within_window_variance_ms2": 0.012739024451456075,
+          "mean_p95_ms": 3.98165
+        },
+        "return": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 3.535336406459563,
+            "sd": 0.0025960710460606004,
+            "variance": 6.739584876194181e-06
+          },
+          "mean_within_window_sd_ms": 0.11402088428932927,
+          "mean_within_window_variance_ms2": 0.01300888808725829,
+          "mean_p95_ms": 3.6622500000000002
+        }
+      },
+      "effects_pct": {
+        "n": 2,
+        "mean": -8.703603003995891,
+        "sd": 0.2959546712152464,
+        "variance": 0.08758916741412458
+      },
+      "plotted_case": "primary",
+      "plotted_phase": "screening",
+      "plotted_runs": 2,
+      "plotted_gl_context": "3.2",
+      "implementation": "reflection_next_event_refinement"
+    },
+    {
+      "shader": "unbound",
+      "goal": "G05",
+      "status": "MEASURED",
+      "arms": {
+        "native": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 3.629440734089171,
+            "sd": 0.011143182206140722,
+            "variance": 0.00012417050967925122
+          },
+          "mean_within_window_sd_ms": 0.14310958946606864,
+          "mean_within_window_variance_ms2": 0.02244474406385494,
+          "mean_p95_ms": 3.77565
+        },
+        "candidate": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 4.095967965311987,
+            "sd": 4.618288975623156e-05,
+            "variance": 2.132859306236238e-09
+          },
+          "mean_within_window_sd_ms": 0.13305956200247696,
+          "mean_within_window_variance_ms2": 0.019037078283372408,
+          "mean_p95_ms": 4.236675
+        },
+        "return": {
+          "window_means_ms": {
+            "n": 2,
+            "mean": 3.6185998075732386,
+            "sd": 0.0009579210685575282,
+            "variance": 9.176127735863965e-07
+          },
+          "mean_within_window_sd_ms": 0.11825291095117456,
+          "mean_within_window_variance_ms2": 0.014427218026976177,
+          "mean_p95_ms": 3.7439
+        }
+      },
+      "effects_pct": {
+        "n": 2,
+        "mean": -13.02287889791777,
+        "sd": 0.16009900984656486,
+        "variance": 0.02563169295385047
+      },
+      "plotted_case": "primary",
+      "plotted_phase": "screening",
+      "plotted_runs": 2,
+      "plotted_gl_context": "3.2",
+      "implementation": "reflection_next_event_refinement"
+    }
+  ],
+  "final_disposition": "discard; no candidate qualified across all four packs and both completed machines"
+}
