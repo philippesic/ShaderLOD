@@ -8,7 +8,7 @@ The stage-1 plan used its own numbers: stage 3 is source, 4a is the harness, 4b 
 
 ## Sources
 
-- `/home/philip/.t3/scratch/2026-11-10-shaderlod-migration-stage-1-read-d4cf15a1/PORTING_PLAN.md` on Asahi (philip-macbookair), 551 lines, prepared 9 November 2026. Cited as the stage-1 plan.
+- `/home/philip/.t3/scratch/2026-11-10-shaderlod-migration-stage-1-read-d4cf15a1/PORTING_PLAN.md` on Asahi (philip-macbookair), 551 lines, prepared 9 November 2026. Cited as the porting plan.
 - ShaderLOD foundation proposal Page: https://cursor.com/canvas/store-2a326036-ee6e-460b-a22f-a5bffbf66171/86dc4e44-31dd-47f0-984f-b55c1ef9266c
 - `/home/philip/.t3/scratch/2026-11-10-shaderlod-migration-stage-2-build-94c75c59/FOUNDATION_REPORT.md`
 - This repository's `README.md`, `FINDINGS.md`, `docs/SYSTEM_MAP.md`, `docs/checks.md`, `docs/evidence-levels.md`, and `docs/decisions/`
@@ -104,7 +104,7 @@ Display and power setup on Asahi is unsettled; closed-lid headless timings did n
 
 ## Skills
 
-Out of scope. The stage-1 plan gives no inventory, entry criterion, exit gate, or estimate. A later request is required.
+Out of scope. The porting plan gives no inventory, entry criterion, exit gate, or estimate. A later request is required.
 
 ## Open questions awaiting Philip
 
