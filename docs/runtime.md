@@ -4,7 +4,7 @@
 
 ## Target
 
-The current target is the Asahi MacBook Air (Apple M1, Mesa, 2560×1600) with pinned Complementary Reimagined r5.9.3, its original options, native resolution and native AA, with Distant Horizons enabled. Running without DH (`--without-dh`) is a separate diagnostic and does not substitute for the DH-enabled target. The open DH-enabled failure is tracked in [tasks/dh-enabled-target.md](../tasks/dh-enabled-target.md).
+The existing live setup is the Asahi MacBook Air (Apple M1, Mesa, 2560×1600) with pinned Complementary Reimagined r5.9.3, its original options, native resolution and native AA, with Distant Horizons enabled. Running without DH (`--without-dh`) is a separate diagnostic and does not substitute for the DH-enabled target. Machine choice is a readiness blocker tracked in [tasks/machine-choice.md](../tasks/machine-choice.md).
 
 ## Running it
 
@@ -32,7 +32,7 @@ Runtime executable inputs are hashed before and after each attempt; drift invali
 
 ## Development profiler
 
-The development mod exports bounded CPU frame intervals and asynchronous GPU timestamps, each tagged with generation and frame, with pending, lost and invalid counts. `/shaderlod-profile` writes a diagnostic export. Collection never waits on a pending query. Per-pass cost maps, calibrated overhead and comparison methods do not exist yet; see [tasks/benchmark-design.md](../tasks/benchmark-design.md).
+The development mod exports bounded CPU render-callback durations and asynchronous GPU timestamps, each tagged with generation and frame, with pending, lost and invalid counts. `/shaderlod-profile` writes a diagnostic export. Collection never waits on a pending query. Per-pass cost maps, calibrated overhead and comparison methods do not exist yet; see [tasks/benchmark-design.md](../tasks/benchmark-design.md).
 
 ## Not available
 

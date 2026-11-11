@@ -2,7 +2,9 @@
 
 A NeoForge 1.21.1 / Minecraft 1.21.1 client mod for Iris shader packs. Its settings screen selects a pack natively and applies optional optimization modules to it. Apply reloads Iris and counts the selection as active only after a frame is submitted through the selected pipeline. Off restores the previous native settings, Cancel discards unapplied edits, and a failed Apply restores automatically.
 
-The first target is Complementary Reimagined r5.9.3 with Distant Horizons 3.3.3. Without DH it passes live functional verification on an Asahi M1. With DH enabled, the original pack exceeds the GPU's fragment sampler limit; see [FINDINGS](FINDINGS.md) F9 and F10. No optimization exists yet, and nothing is performance-qualified.
+The existing live setup uses Complementary Reimagined r5.9.3 with Distant Horizons 3.3.3. Without DH it passes live functional verification on an Asahi M1. With DH enabled, the original pack exceeds the GPU's fragment sampler limit; see [FINDINGS](FINDINGS.md) F9 and F10. No optimization exists yet, and nothing is performance-qualified.
+
+Development readiness has three blockers: benchmark design, agent ops, and machine choice. See [development readiness](tasks/repo-overhaul.md).
 
 ## Setup
 

@@ -1,10 +1,11 @@
 # ShaderLOD-next
 
-ShaderLOD is a NeoForge 1.21.1 client mod that selects Iris shader packs natively and loads optimization modules that transform them. The correctness boundary: original shader archives, effective shader options, native resolution and AA are never changed without the user's selection, and Off, Cancel and a failed Apply always restore the exact previous state. The first target is Complementary Reimagined r5.9.3 with Distant Horizons (DH) on the Asahi MacBook Air.
+ShaderLOD is a NeoForge 1.21.1 client mod that selects Iris shader packs natively and loads optimization modules that transform them. The correctness boundary: original shader archives, effective shader options, native resolution and AA are never changed without the user's selection, and Off, Cancel and a failed Apply always restore the exact previous state. The existing live setup uses Complementary Reimagined r5.9.3 on Asahi. The development machine is pending selection; existing evidence does not grant allocation elsewhere.
 
 ## Where things are
 
 - [README](README.md): setup and commands.
+- [Development readiness](tasks/repo-overhaul.md): benchmark design, agent ops and machine choice blockers.
 - [System map](docs/SYSTEM_MAP.md): layout, entry points, Apply/recovery flow.
 - [Iris integration](docs/iris-integration.md): selection states, native writer journal, mixins, sampler indices, DH.
 - [Optimization modules](docs/optimizations.md): how to add or remove one.
