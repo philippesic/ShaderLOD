@@ -12,7 +12,7 @@ The three blockers are resolved: benchmark design, agent ops, and machine choice
 ## State
 The mod foundation, local checks and pre-commit hook work. Full checks passed with 60 Python tests. A clean temporary clone passed ./check using shared tool and Minecraft caches; cold-cache installation was not tested. All ten existing FINDINGS references matched their recorded digests. No optimization is accepted.
 
-The three blocking workstreams are [benchmark design](benchmark-design.md), [agent ops](agent-ops.md), and [machine choice](machine-choice.md). Evidence presentation and closeout are under discussion within agent ops; the current evidence convention remains in effect until agreement. Remote CI is excluded. No remote is configured, so commits remain local. Backup setup is deferred until readiness is complete.
+The three blocking workstreams are [benchmark design](benchmark-design.md), [agent ops](agent-ops.md), and [machine choice](machine-choice.md). The evidence convention and shared closeout skill are implemented; the historical F2 example is ready for presentation review within agent ops. Remote CI is excluded. No remote is configured, so commits remain local. Backup setup is deferred until readiness is complete.
 
 ## Next
 Discuss the proposed evidence system, then implement the agreed format, selectively import relevant historical investigations, and smoke-test closeout. Finish development-direction repairs without seeking component-by-component approval. Address measurement, profiling, correctness qualification and live experiment design in benchmark design. Do not require a successful new optimization or fresh-agent comparison to declare the repository ready.

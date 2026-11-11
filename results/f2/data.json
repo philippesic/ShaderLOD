@@ -1,0 +1,62 @@
+[
+  {
+    "process": 1,
+    "order": "ABBA",
+    "apparent_gain_percent": 1.7785081186854816,
+    "run": "/home/philip/ShaderLOD/dev/experiments/headless-development-20261103/null-p0-01",
+    "executed_build_binding": {
+      "path": "/home/philip/ShaderLOD/dev/experiments/headless-development-20261103/null-p0-01/build-binding.json",
+      "sha256": "e82856d384c96b7f5991167b50f3ba768e3f0f5319f0844c2b290b4207fcb0d5"
+    }
+  },
+  {
+    "process": 2,
+    "order": "BAAB",
+    "apparent_gain_percent": 3.482116576858459,
+    "run": "/home/philip/ShaderLOD/dev/experiments/headless-development-20261103/null-p0-02",
+    "executed_build_binding": {
+      "path": "/home/philip/ShaderLOD/dev/experiments/headless-development-20261103/null-p0-02/build-binding.json",
+      "sha256": "e82856d384c96b7f5991167b50f3ba768e3f0f5319f0844c2b290b4207fcb0d5"
+    }
+  },
+  {
+    "process": 3,
+    "order": "ABBA",
+    "apparent_gain_percent": -9.695493113672216,
+    "run": "/home/philip/ShaderLOD/dev/experiments/headless-development-20261103/null-p0-03",
+    "executed_build_binding": {
+      "path": "/home/philip/ShaderLOD/dev/experiments/headless-development-20261103/null-p0-03/build-binding.json",
+      "sha256": "e82856d384c96b7f5991167b50f3ba768e3f0f5319f0844c2b290b4207fcb0d5"
+    }
+  },
+  {
+    "process": 4,
+    "order": "BAAB",
+    "apparent_gain_percent": -4.013717382900798,
+    "run": "/home/philip/ShaderLOD/dev/experiments/headless-development-20261103/null-p0-04",
+    "executed_build_binding": {
+      "path": "/home/philip/ShaderLOD/dev/experiments/headless-development-20261103/null-p0-04/build-binding.json",
+      "sha256": "e82856d384c96b7f5991167b50f3ba768e3f0f5319f0844c2b290b4207fcb0d5"
+    }
+  },
+  {
+    "process": 5,
+    "order": "ABBA",
+    "apparent_gain_percent": 5.636166309635722,
+    "run": "/home/philip/ShaderLOD/dev/experiments/headless-development-20261103/null-p0-05",
+    "executed_build_binding": {
+      "path": "/home/philip/ShaderLOD/dev/experiments/headless-development-20261103/null-p0-05/build-binding.json",
+      "sha256": "e82856d384c96b7f5991167b50f3ba768e3f0f5319f0844c2b290b4207fcb0d5"
+    }
+  },
+  {
+    "process": 6,
+    "order": "BAAB",
+    "apparent_gain_percent": 10.243102236619354,
+    "run": "/home/philip/ShaderLOD/dev/experiments/headless-development-20261103/null-p0-06",
+    "executed_build_binding": {
+      "path": "/home/philip/ShaderLOD/dev/experiments/headless-development-20261103/null-p0-06/build-binding.json",
+      "sha256": "e82856d384c96b7f5991167b50f3ba768e3f0f5319f0844c2b290b4207fcb0d5"
+    }
+  }
+]

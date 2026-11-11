@@ -117,6 +117,7 @@ def scan(path: str, text: str, entries: list[dict[str, object]]) -> list[str]:
         ".yml": "config",
         ".yaml": "config",
         ".xml": "xml",
+        ".html": "xml",
         ".lockfile": "config",
     }.get(suffix)
     if path in ("check", "verify", "gradlew", ".githooks/pre-commit"):
@@ -179,4 +180,11 @@ def scan(path: str, text: str, entries: list[dict[str, object]]) -> list[str]:
         f"D8: comment in {path}: {c[:60]}"
         for c in [*lexical(remaining, language), *directive_comments]
     ]
+    if suffix == ".html":
+        for embedded in re.findall(
+            r"<(?:style|script)\b[^>]*>(.*?)</(?:style|script)>", text, re.S | re.I
+        ):
+            errors.extend(
+                f"D8: comment in {path}: {token}" for token in lexical(embedded, "java")
+            )
     return errors

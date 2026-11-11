@@ -391,21 +391,28 @@ def validate(
                 )
         if path == "FINDINGS.md":
             rows = [line for line in text.splitlines() if re.match(r"\| F\d+", line)]
-            if not rows or any(
-                not any(
-                    level in row
-                    for level in (
-                        "source-inspected",
-                        "cpu-synthetic",
-                        "cpu-integration",
-                        "live-functional",
-                        "live-performance-qualified",
+            if not rows:
+                errors.append("S5: findings map is empty")
+            for row in rows:
+                target = re.search(r"\[Result\]\((results/[^)]+/result\.md)\)", row)
+                result = tree.get(target[1], b"").decode() if target else ""
+                if (
+                    not result
+                    or not re.search(r"sha256:[a-f0-9]{64}", result)
+                    or not any(
+                        level in result
+                        for level in (
+                            "source-inspected",
+                            "cpu-synthetic",
+                            "cpu-integration",
+                            "live-functional",
+                            "live-performance-qualified",
+                        )
                     )
-                )
-                or not re.search(r"(sha256:[a-f0-9]{64}|/blob/[a-f0-9]{40}/)", row)
-                for row in rows
-            ):
-                errors.append("S5: finding lacks frozen evidence or scope")
+                ):
+                    errors.append(
+                        "S5: finding lacks linked result, frozen evidence or scope"
+                    )
     if "docs/SYSTEM_MAP.md" in tree:
         section = ""
         for line in tree["docs/SYSTEM_MAP.md"].decode().splitlines():

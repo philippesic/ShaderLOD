@@ -69,7 +69,16 @@ def outcome(spec: dict[str, object], root: Path, engine: str) -> list[str]:
             [],
         )
     elif action == "findings":
-        return validate({"FINDINGS.md": (root / "FINDINGS.md").read_bytes()}, [])
+        return validate(
+            {
+                "FINDINGS.md": (root / "FINDINGS.md").read_bytes(),
+                **{
+                    str(p.relative_to(root)): p.read_bytes()
+                    for p in (root / "results").rglob("result.md")
+                },
+            },
+            [],
+        )
     else:
         raise ValueError("S2: unknown specimen action")
     return []

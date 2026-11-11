@@ -275,3 +275,34 @@ def test_stale_owner_paths_cannot_write_or_launch() -> None:
         )
         assert any(error.startswith("D3:") for error in errors)
         assert any(error.startswith("D6d:") for error in errors)
+
+
+def test_findings_require_resolvable_scoped_results() -> None:
+    index = b"| F1 | Question | Scoped answer | [Result](results/example/result.md) |\n"
+    result = b"# Answer\nsource-inspected sha256:" + b"a" * 64
+    assert not validate({"FINDINGS.md": index, "results/example/result.md": result}, [])
+    assert any(
+        error.startswith("S5:") for error in validate({"FINDINGS.md": index}, [])
+    )
+    assert any(
+        error.startswith("S5:")
+        for error in validate(
+            {"FINDINGS.md": index, "results/example/result.md": b"# Unsupported claim"},
+            [],
+        )
+    )
+
+
+def test_html_figures_still_reject_comments() -> None:
+    assert not validate(
+        {"results/chart.html": b"<style>p{color:red}</style><p>Result</p>"}, []
+    )
+    for text in (
+        b"<!-- hidden -->",
+        b"<style>/* hidden */</style>",
+        b"<script>// hidden\n</script>",
+    ):
+        assert any(
+            error.startswith("D8:")
+            for error in validate({"results/chart.html": text}, [])
+        )

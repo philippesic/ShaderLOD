@@ -12,7 +12,7 @@ ShaderLOD is a NeoForge 1.21.1 client mod that selects Iris shader packs nativel
 - [Live verification](docs/runtime.md): `./verify --runtime`, the probe, process ownership.
 - [Checks](docs/checks.md): check modes, rule IDs and their fixes.
 - [Dependencies](docs/dependencies.md): pins and what to do when one does not match.
-- [Evidence](docs/evidence.md): evidence levels, where raw data lives, how to report.
+- [Evidence](docs/evidence.md): project result specification and closeout rules. Use `investigation-closeout` for meaningful investigation closeout.
 - [Findings](FINDINGS.md) and [tasks](tasks/): read both before starting.
 
 ## Code
@@ -51,7 +51,8 @@ Ask Philip before: changing what counts as correct or a pass, changing native qu
 | --- | --- |
 | `AGENTS.md` | Rules for every task. Philip owns it; propose changes |
 | `docs/*.md` | How each part works now. Update in the same commit as the code; delete outdated text |
-| `FINDINGS.md` | Closed questions with scope and evidence, including failures. Correct rows in place |
+| `FINDINGS.md` | Short map of questions, scoped current conclusions and result links |
+| `results/` | Readable investigation results, compact data and reproducible figures; explicit summary corrections |
 | `evidence/` | Frozen records backing findings. Never edited |
 | `tasks/NAME.md` | One open multi-session task, one owner. Delete it when the task is done |
 | Git history | What changed and when |
