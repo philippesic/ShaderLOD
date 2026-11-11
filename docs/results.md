@@ -1,4 +1,4 @@
-# Evidence and reporting
+# Results and closeout
 
 ## Levels
 
@@ -18,9 +18,9 @@ Compilation is not a level. A live level needs a runtime receipt. Missing data s
 
 - Raw outputs (logs, captures, PNGs, receipts) stay outside Git under `~/.local/share/shaderlod-next/evidence/`. `./verify --runtime` writes each attempt's receipt and log to `attempts/` there by default and refuses receipt paths inside the repository. Older bundles sit in directories named by their manifest digest.
 - `build/`, `run-client*/` profiles and other ignored repository directories are working copies. Before reclaiming them, preserve any unclassified or finding-dependent output. Anything a finding depends on must be under the evidence root, not there.
-- `evidence/*.json` holds compact, dated records that back a finding. They are never edited after the finding cites them; a correction is a new record.
+- `results/sources/*.json` holds compact, dated records that back a finding. They are never edited after the finding cites them; a correction is a new record.
 - `FINDINGS.md` is a short question/conclusion/result map. Scope belongs in the conclusion.
-- `results/<id>/result.md` explains each meaningful investigation. Keep supporting compact numerical data and figure-generation inputs beside it; raw logs stay behind evidence links.
+- `results/<descriptive-name>/result.md` explains each meaningful investigation. Keep supporting compact numerical data and figure-generation inputs beside it; raw logs stay behind evidence links.
 
 ## Reporting
 
@@ -31,7 +31,7 @@ Compilation is not a level. A live level needs a runtime receipt. Missing data s
 
 ## Result presentation and closeout
 
-Use the shared `investigation-closeout` skill; its tracked source is `skills/investigation-closeout/SKILL.md`. This document is the project specification it reads.
+Use the shared `close-results` skill; its tracked source is `skills/close-results/SKILL.md`. This document is the project specification it reads.
 
 A result starts with a finding-led title and a short explanation of what happened and why it matters. Include a useful chart for measurements or a small table for functional outcomes. State tested conditions, limitations, evidence level, and the decision: retain, revise, discard or unresolved. Separate observations from causes and from acceptance decisions. An unresolved result names what evidence would resolve it. Failed investigations receive the same treatment as successful ones. Do not create a result for every routine check.
 
@@ -44,3 +44,13 @@ Raw records remain immutable. A summary correction records the date, changed cla
 Before removing rejected implementation, verify that source and necessary dependencies are recoverable. Preserve reusable code and regression tests only when they still serve the project. Apply authorized cleanup and validate the remaining project with ./check --full before closing its task. Disk-space policy belongs to agent ops; closeout grants no new deletion or publication authority.
 
 Historical imports identify what was inspected, do not relabel old measurements as new runs, and disclose missing source or inputs. Completed result pages may coexist with an unresolved scientific question; keep a task open only when further work is assigned.
+
+## Common document roles and lifecycle
+
+AGENTS.md holds rules every agent needs; README.md introduces and navigates the project. Current architecture belongs in docs/architecture.md and development procedures in docs/development.md. Other docs remain current topic guides. Never accumulate obsolete instructions or commit diaries in docs.
+
+Use one descriptive result folder per coherent question or investigation, not per run, commit or session. Basic result sections are: conclusion-led title and explanation; useful chart or table when warranted; conditions and limitations; decision; evidence and executed-source references. Optional result.json holds structured facts or figure inputs. Optional figures and small tables stay beside result.md. Small archived reports belong in results/sources/; large execution records stay external.
+
+FINDINGS contains a short scoped conclusion and link for each result. Group by topic when helpful. Negative and inconclusive results are established knowledge about what happened, not proof of universal impossibility. Avoid copying full writeups into the index.
+
+Open task → investigate → write result if warranted → update current docs → prune obsolete code within scope → update FINDINGS → close task. Tasks follow tasks/README.md and are deleted when complete. A routine fix updates code, tests and current docs; create a result only for durable knowledge.

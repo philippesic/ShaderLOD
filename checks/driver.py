@@ -113,7 +113,11 @@ def run_step(step: str) -> int:
                 "FINDINGS.md",
                 "checks/self-tests.json",
                 "checks/tests.json",
-                "docs/SYSTEM_MAP.md",
+                "docs/architecture.md",
+                "docs/development.md",
+                "docs/results.md",
+                "tasks/README.md",
+                "skills/close-results/SKILL.md",
                 ".githooks/pre-commit",
             }
             if not required <= set(policy.files(ROOT)):

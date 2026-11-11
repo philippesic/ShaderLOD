@@ -6,14 +6,15 @@ ShaderLOD is a NeoForge 1.21.1 client mod that selects Iris shader packs nativel
 
 - [README](README.md): setup and commands.
 - [Development readiness](tasks/repo-overhaul.md): benchmark design, agent ops and machine choice blockers.
-- [System map](docs/SYSTEM_MAP.md): layout, entry points, Apply/recovery flow.
+- [Architecture](docs/architecture.md): layout, entry points, Apply/recovery flow.
+- [Development](docs/development.md): how to change, validate and close work.
 - [Iris integration](docs/iris-integration.md): selection states, native writer journal, mixins, sampler indices, DH.
 - [Optimization modules](docs/optimizations.md): how to add or remove one.
 - [Live verification](docs/runtime.md): `./verify --runtime`, the probe, process ownership.
 - [Checks](docs/checks.md): check modes, rule IDs and their fixes.
 - [Dependencies](docs/dependencies.md): pins and what to do when one does not match.
-- [Evidence](docs/evidence.md): project result specification and closeout rules. Use `investigation-closeout` for meaningful investigation closeout.
-- [Findings](FINDINGS.md) and [tasks](tasks/): read both before starting.
+- [Results](docs/results.md): project result specification and closeout rules. Use `close-results` for meaningful investigation closeout.
+- Scan [FINDINGS](FINDINGS.md) for relevant established results; follow its links when useful. Read the assigned task and [task convention](tasks/README.md).
 
 ## Code
 
@@ -51,13 +52,16 @@ Ask Philip before: changing what counts as correct or a pass, changing native qu
 | --- | --- |
 | `AGENTS.md` | Rules for every task. Philip owns it; propose changes |
 | `docs/*.md` | How each part works now. Update in the same commit as the code; delete outdated text |
-| `FINDINGS.md` | Short map of questions, scoped current conclusions and result links |
+| `README.md` | Project introduction, setup and navigation |
+| `FINDINGS.md` | Short index of scoped established conclusions and result links |
 | `results/` | Readable investigation results, compact data and reproducible figures; explicit summary corrections |
-| `evidence/` | Frozen records backing findings. Never edited |
+| `results/sources/` | Frozen records backing findings. Never edited |
+| `tasks/README.md` | Task convention |
+| `skills/close-results/SKILL.md` | Shared investigation closeout procedure |
 | `tasks/NAME.md` | One open multi-session task, one owner. Delete it when the task is done |
 | Git history | What changed and when |
 
-No status, plan, history or scratch documents. A task file has exactly these sections: `## Goal`, `## Authorized`, `## Done when`, `## State` (current facts only; rewrite, do not append) and `## Next`. The check enforces the template.
+Keep current guidance in docs, unfinished work in tasks, and durable knowledge in results. Git is the implementation history. Follow [tasks/README.md](tasks/README.md) for the enforced task template and [docs/results.md](docs/results.md) for result presentation.
 
 Work on a task file only when asked to work on that task. An open task file is context, not an instruction to resume it. A vague request such as "continue the unfinished work" is not a request for any particular task; ask which one is meant.
 

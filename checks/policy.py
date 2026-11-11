@@ -378,7 +378,7 @@ def validate(
                 errors.append("S1: disabled check or excluded source")
         if path == ".githooks/pre-commit" and text != "#!/bin/sh\n./check --full\n":
             errors.append("S1: pre-commit hook must run exactly ./check --full")
-        if path.startswith("tasks/"):
+        if path.startswith("tasks/") and path != "tasks/README.md":
             headings = re.findall(r"^## (.+)$", text, re.M)
             if not path.endswith(".md") or "/" in path[len("tasks/") :]:
                 errors.append("S5: tasks/ holds only tasks/NAME.md files, in " + path)
@@ -413,16 +413,16 @@ def validate(
                     errors.append(
                         "S5: finding lacks linked result, frozen evidence or scope"
                     )
-    if "docs/SYSTEM_MAP.md" in tree:
+    if "docs/architecture.md" in tree:
         section = ""
-        for line in tree["docs/SYSTEM_MAP.md"].decode().splitlines():
+        for line in tree["docs/architecture.md"].decode().splitlines():
             if line.startswith("## "):
                 section = line[3:].strip()
             if section == "Entry points" and line.startswith("| `"):
                 columns = [c.strip() for c in line.strip("|").split("|")]
                 if ":" not in columns[0]:
                     errors.append(
-                        "D9: entry point row needs `path:symbol` in docs/SYSTEM_MAP.md"
+                        "D9: entry point row needs `path:symbol` in docs/architecture.md"
                     )
                     continue
                 path, symbol = columns[0].strip("`").split(":", 1)

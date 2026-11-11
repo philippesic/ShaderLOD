@@ -29,7 +29,7 @@ Each failure starts with a rule ID. Fix the cause; do not weaken the rule. A rul
 | D6d | Process launch or argument parsing outside the runtime and CLI owners | Launch through `shaderlod_host.runtime`; add options to `shaderlod_host/__main__.py` |
 | D7 | Incomplete, wildcard, stale or unlisted exceptions | Add an exact entry to `checks/exceptions.json` with token, site, reason and `decision` doc, or remove the suppression |
 | D8 | Comments, Javadoc, docstrings, unknown source languages | Delete the comment and make the code say it through names and types; tool directives need a D7 entry |
-| D9 | `docs/SYSTEM_MAP.md` rows whose entry or test no longer exists | Update the row to the current symbol and test |
+| D9 | `docs/architecture.md` rows whose entry or test no longer exists | Update the row to the current symbol and test |
 | S1 | Disabled validators, excluded sources, a changed pre-commit hook | Restore the task or hook; a check cannot be turned off to pass |
 | S2 | Missing required tests, specimens, suites or configuration | Restore the test, or add the missing bad/control specimen pair |
 | S3 | Nested `AGENTS.md`/`CLAUDE.md`, or `CLAUDE.md` other than `@AGENTS.md` | Keep one root `AGENTS.md`; edit it instead |

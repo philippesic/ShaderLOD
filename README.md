@@ -26,3 +26,12 @@ Install Python 3.13 and Git, enable the pre-commit hook with `git config core.ho
 | --- | --- | --- |
 
 None yet. Agent rules and the documentation map are in [AGENTS.md](AGENTS.md).
+
+## Navigation
+
+- [Architecture](docs/architecture.md): how the project works.
+- [Development](docs/development.md): changing and validating it.
+- [Results](docs/results.md): result format and closeout rules.
+- [FINDINGS](FINDINGS.md): established conclusions and supporting results.
+- [Tasks](tasks/README.md): unfinished-work convention.
+- [Agent rules](AGENTS.md) and [close-results](skills/close-results/SKILL.md): working expectations and investigation closeout.

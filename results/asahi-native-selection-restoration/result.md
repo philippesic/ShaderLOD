@@ -12,6 +12,6 @@ Retain. Keep the knowledge; this does not authorize reviving an implementation o
 
 ## Evidence and source
 
-[asahi-functional.json](../../evidence/asahi-functional.json) sha256:7fc5c94d693e2859b7f7c77a1ffeba18080645896ac26214a6f306613a078f21
+[asahi-functional.json](../sources/asahi-functional.json) sha256:7fc5c94d693e2859b7f7c77a1ffeba18080645896ac26214a6f306613a078f21
 
 Executed-source identity: follow the original investigation records linked above. This summary does not establish a recoverable source snapshot; verify it before reproducing or deleting dependencies.

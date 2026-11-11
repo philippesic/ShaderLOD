@@ -306,3 +306,15 @@ def test_html_figures_still_reject_comments() -> None:
             error.startswith("D8:")
             for error in validate({"results/chart.html": text}, [])
         )
+
+
+def test_task_readme_is_convention_not_an_active_task() -> None:
+    assert not validate(
+        {"tasks/README.md": b"# Tasks\n\n## Lifecycle\nClose completed work.\n"}, []
+    )
+    assert any(
+        error.startswith("S5:")
+        for error in validate(
+            {"tasks/work.md": b"# Work\n\n## Lifecycle\nNot a task.\n"}, []
+        )
+    )
