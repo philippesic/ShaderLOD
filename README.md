@@ -1,30 +1,26 @@
 # ShaderLOD-next
 
-Agent-first NeoForge 21.1.253 / Minecraft 1.21.1 port. The first target is the pinned Complementary Reimagined r5.9.3 archive with Distant Horizons 3.3.3. The source includes native shader selection, transaction recovery, isolated optimization loading, and development-only bounded CPU/GPU frame instrumentation. Functional qualification is scoped by the retained Asahi receipts; DH-enabled linking remains blocked. Performance is unqualified.
+A NeoForge 1.21.1 / Minecraft 1.21.1 client mod for Iris shader packs. Its settings screen selects a pack natively and applies optional optimization modules to it. Apply reloads Iris and counts the selection as active only after a frame is submitted through the selected pipeline. Off restores the previous native settings, Cancel discards unapplied edits, and a failed Apply restores automatically.
 
-Read the [active porting plan](docs/PORTING_PLAN.md) for progress and stopping conditions. Benchmark redesign and high-level agent operations remain deferred. Historical optimizations stay in the old repository.
+The first target is Complementary Reimagined r5.9.3 with Distant Horizons 3.3.3. Without DH it passes live functional verification on an Asahi M1. With DH enabled, the original pack exceeds the GPU's fragment sampler limit; see [FINDINGS](FINDINGS.md) F9 and F10. No optimization exists yet, and nothing is performance-qualified.
 
-Install Python 3.13 and Git, then run `./check`. Setup verifies digest-pinned Temurin 21.0.13+9, Gradle 9.2.1 and hashed Python wheels in user-local caches. Dependency locks and verification metadata are enforced. First acquisition requires network; normal warmed checks reuse caches. Enable the local hook with `git config core.hooksPath .githooks`.
+## Setup
 
-| Command | Scope |
+Install Python 3.13 and Git, then run `./check`. The first run downloads and verifies the pinned JDK, Gradle and Python tools into user-local caches, and enables the pre-commit hook.
+
+| Command | Purpose |
 | --- | --- |
-| `./check --fast` | Partial edit feedback: compile, formatting, types, boundaries and CPU tests |
-| `./check` | Full CPU gate, including policy/tool specimens |
-| `./check --fresh` | Full gate with task reuse disabled |
-| `./verify --cpu` | Synthetic contract/publication round trip |
-| `./verify --runtime` | Requires explicit allocated profile/display/output/ownership/timeout; prepares and runs bounded shipping-JAR functional probe |
-| `python3 -m shaderlod_host doctor` | Current host capabilities; no hardware launch |
-| `python3 -m shaderlod_host --help` | Versioned bounded CPU plan/run/verify/report interface |
+| `./check` | Fast edit feedback; prints `PARTIAL` |
+| `./check --full` | Full CPU gate; run by the pre-commit hook |
+| `./check --fresh` | Full gate without task reuse |
+| `./verify --cpu` | Synthetic contract and publication round trip |
+| `./verify --runtime …` | Live functional probe on an allocated machine; see [live verification](docs/runtime.md) |
+| `python3 -m shaderlod_host doctor` | Host capabilities, without launching anything |
+| `python3 -m shaderlod_host --help` | Host runner: plan, run, verify, report, recover |
 
-The main JAR contains no development mod or historical optimizations. [Optimization modules](docs/optimizations.md) own their source, descriptor and tests; registration is generated and consumed by the packaged loader. Its mod config screen stages an archive and optional provider IDs; Apply performs a reload and requires matching linkage followed by an observed submitted frame before ACTIVE status. Off restores the captured native preimage. Cancel discards unapplied UI edits. Failed restoration retains the recovery journal and refuses replacement. Pending native Iris option queues must be applied/cancelled in Iris first. Original shader options, resolution and AA are preserved. A native rendering witness is distinct from visual correctness and performance qualification.
+## Accepted optimizations
 
-The Linux host executor freezes declared sources, pins its executable, bounds attempts and time, and owns child process groups with a watchdog. Windows execution explicitly refuses pending qualification. Neither CPU fixtures nor an idle GPU observation establishes permission or safe hardware exclusion. Keep live jobs within an allocated host/device window.
-
-| Accepted optimization | Scope | Evidence |
+| Optimization | Scope | Evidence |
 | --- | --- | --- |
 
-No new optimization has performance evidence. [Findings](FINDINGS.md) retain historical positive, negative and inconclusive observations with their original scopes.
-
-[System map](docs/SYSTEM_MAP.md), [check policy changes](checks/policy-changes.md), [source disposition](docs/source-disposition.md), [evidence levels](docs/evidence-levels.md). This repository remains local-only; no remote or hosted review protection is configured.
-
-[Asahi functional procedure and limits](docs/runtime.md) and [lightweight agent exercise](docs/agent-exercises.md) describe what was actually exercised.
+None yet. Agent rules and the documentation map are in [AGENTS.md](AGENTS.md).

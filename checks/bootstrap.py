@@ -120,6 +120,23 @@ def runtime(
     return subprocess.call(command + options, env=environment)
 
 
+def enable_hook(root: Path) -> None:
+    if not (root / ".git").exists():
+        return
+    current = subprocess.run(
+        ["git", "-C", str(root), "config", "--local", "--get", "core.hooksPath"],
+        capture_output=True,
+        text=True,
+    )
+    if current.returncode == 0:
+        return
+    subprocess.run(
+        ["git", "-C", str(root), "config", "--local", "core.hooksPath", ".githooks"],
+        check=True,
+    )
+    print("CHECK: enabled pre-commit hook (core.hooksPath=.githooks)")
+
+
 def main() -> int:
     root = Path(__file__).resolve().parents[1]
     os.chdir(root)
@@ -209,11 +226,14 @@ def main() -> int:
     env["PATH"] = str(java / "bin") + ":" + env["PATH"]
     if sys.argv[1] == "check":
         options = sys.argv[2:]
-        if options not in ([], ["--fast"], ["--full"], ["--fresh"]):
-            raise ValueError("CHECK: expected --fast, --full or --fresh")
+        if options not in ([], ["--full"], ["--fresh"]):
+            raise ValueError(
+                "CHECK: expected no option (fast), --full or --fresh; see docs/checks.md"
+            )
+        enable_hook(root)
         report = root / "build/reports/foundation/check.json"
         report.unlink(missing_ok=True)
-        task = "fastCheck" if options == ["--fast"] else "check"
+        task = "fastCheck" if options == [] else "check"
         extra = ["--rerun-tasks"] if options == ["--fresh"] else []
         return subprocess.call(["./gradlew", "--no-daemon", task, *extra], env=env)
     if sys.argv[2:3] == ["--runtime"] and len(sys.argv) > 3:

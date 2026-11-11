@@ -95,9 +95,6 @@ def main() -> int:
             }
             if not required <= set(policy.files(ROOT)):
                 errors.append("S2: mandatory check configuration missing")
-            print(
-                "Local checks: scoped autonomous maintenance; no hosted protection claimed."
-            )
         if errors:
             raise ValueError("\n".join(errors))
         count = (

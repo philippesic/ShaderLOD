@@ -37,6 +37,7 @@ RULES = {
     "T-DEP",
     "T-ARCH",
 }
+TASK_SECTIONS = ["Goal", "Authorized", "Done when", "State", "Next"]
 
 
 def files(root: Path) -> dict[str, bytes]:
@@ -339,7 +340,11 @@ def validate(
         if re.search(
             r"(^|/)(STATUS|STATUS_AUDIT|STATUS_HISTORY|EXPERIMENTS)(\.|$)", path, re.I
         ):
-            errors.append("S5: competing findings index")
+            errors.append(
+                "S5: status/history document "
+                + path
+                + "; put open work in tasks/NAME.md and closed results in FINDINGS.md"
+            )
         if path.endswith(".py"):
             errors.extend(
                 message + " in " + path for message in python_rules(path, text, entries)
@@ -374,12 +379,19 @@ def validate(
                 text,
             ) and path.endswith(".gradle"):
                 errors.append("S1: disabled check or excluded source")
-        if path == ".github/workflows/check.yml" and re.findall(
-            r"^\s*- run: (.+)$", text, re.M
-        ) != ["./check"]:
-            errors.append("S1: CI command differs")
-        if path == ".githooks/pre-commit" and text != "#!/bin/sh\n./check\n":
-            errors.append("S1: hook command differs")
+        if path == ".githooks/pre-commit" and text != "#!/bin/sh\n./check --full\n":
+            errors.append("S1: pre-commit hook must run exactly ./check --full")
+        if path.startswith("tasks/"):
+            headings = re.findall(r"^## (.+)$", text, re.M)
+            if not path.endswith(".md") or "/" in path[len("tasks/") :]:
+                errors.append("S5: tasks/ holds only tasks/NAME.md files, in " + path)
+            elif not text.startswith("# ") or headings != TASK_SECTIONS:
+                errors.append(
+                    "S5: task file "
+                    + path
+                    + " needs a '# Title' and exactly these sections in order: "
+                    + ", ".join("## " + h for h in TASK_SECTIONS)
+                )
         if path == "FINDINGS.md":
             rows = [line for line in text.splitlines() if re.match(r"\| F\d+", line)]
             if not rows or any(
@@ -398,9 +410,17 @@ def validate(
             ):
                 errors.append("S5: finding lacks frozen evidence or scope")
     if "docs/SYSTEM_MAP.md" in tree:
+        section = ""
         for line in tree["docs/SYSTEM_MAP.md"].decode().splitlines():
-            if line.startswith("| `"):
+            if line.startswith("## "):
+                section = line[3:].strip()
+            if section == "Entry points" and line.startswith("| `"):
                 columns = [c.strip() for c in line.strip("|").split("|")]
+                if ":" not in columns[0]:
+                    errors.append(
+                        "D9: entry point row needs `path:symbol` in docs/SYSTEM_MAP.md"
+                    )
+                    continue
                 path, symbol = columns[0].strip("`").split(":", 1)
                 testpath = columns[-1].strip("`")
                 exists = path in tree and testpath in tree

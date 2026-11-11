@@ -8,7 +8,7 @@
     "reason": "Executable POSIX entry",
     "review": true,
     "owner": "Philip",
-    "decision": "docs/decisions/comment-ban.md",
+    "decision": "docs/checks.md",
     "expires": "permanent"
   },
   {
@@ -20,7 +20,7 @@
     "reason": "Executable POSIX entry",
     "review": true,
     "owner": "Philip",
-    "decision": "docs/decisions/comment-ban.md",
+    "decision": "docs/checks.md",
     "expires": "permanent"
   },
   {
@@ -32,7 +32,7 @@
     "reason": "Executable POSIX entry",
     "review": true,
     "owner": "Philip",
-    "decision": "docs/decisions/comment-ban.md",
+    "decision": "docs/checks.md",
     "expires": "permanent"
   },
   {
@@ -44,7 +44,7 @@
     "reason": "Executable POSIX entry",
     "review": true,
     "owner": "Philip",
-    "decision": "docs/decisions/comment-ban.md",
+    "decision": "docs/checks.md",
     "expires": "permanent"
   },
   {
@@ -56,7 +56,7 @@
     "reason": "Apache-2.0 required wrapper attribution",
     "review": true,
     "owner": "Philip",
-    "decision": "docs/decisions/comment-ban.md",
+    "decision": "docs/checks.md",
     "expires": "permanent"
   },
   {
@@ -68,7 +68,7 @@
     "reason": "Pinned required Mixin handlers are invoked through bytecode injection; callback signature is imposed by the native target. No other diagnostics suppressed.",
     "review": true,
     "owner": "ShaderLOD",
-    "decision": "docs/decisions/mixin-entries.md",
+    "decision": "docs/iris-integration.md",
     "expires": "permanent"
   },
   {
@@ -80,7 +80,7 @@
     "reason": "Pinned required Mixin handlers are invoked through bytecode injection; callback signature is imposed by the native target. No other diagnostics suppressed.",
     "review": true,
     "owner": "ShaderLOD",
-    "decision": "docs/decisions/mixin-entries.md",
+    "decision": "docs/iris-integration.md",
     "expires": "permanent"
   },
   {
@@ -92,7 +92,7 @@
     "reason": "Pinned required Mixin handlers are invoked through bytecode injection; callback signature is imposed by the native target. No other diagnostics suppressed.",
     "review": true,
     "owner": "ShaderLOD",
-    "decision": "docs/decisions/mixin-entries.md",
+    "decision": "docs/iris-integration.md",
     "expires": "permanent"
   },
   {
@@ -104,7 +104,7 @@
     "reason": "Required pinned Mixin expression handler has a bytecode-injected caller, not a Java source caller.",
     "review": true,
     "owner": "ShaderLOD",
-    "decision": "docs/decisions/sampler-indices.md",
+    "decision": "docs/iris-integration.md",
     "expires": "permanent"
   },
   {
@@ -116,7 +116,7 @@
     "reason": "Pinned frame-finalization callback has an injected caller and imposed CallbackInfo parameter.",
     "review": true,
     "owner": "ShaderLOD",
-    "decision": "docs/decisions/mixin-entries.md",
+    "decision": "docs/iris-integration.md",
     "expires": "permanent"
   },
   {
@@ -128,7 +128,7 @@
     "reason": "Pinned frame-finalization callback has an injected caller and imposed CallbackInfo parameter.",
     "review": true,
     "owner": "ShaderLOD",
-    "decision": "docs/decisions/mixin-entries.md",
+    "decision": "docs/iris-integration.md",
     "expires": "permanent"
   }
 ]

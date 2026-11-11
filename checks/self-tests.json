@@ -202,7 +202,7 @@
             "reason": "Exact test adapter or required notice",
             "review": true,
             "owner": "Philip",
-            "decision": "docs/decisions/comment-ban.md",
+            "decision": "docs/checks.md",
             "expires": "2027-11-09"
           }
         ]
@@ -372,7 +372,7 @@
             "reason": "Exact test adapter or required notice",
             "review": true,
             "owner": "Philip",
-            "decision": "docs/decisions/comment-ban.md",
+            "decision": "docs/checks.md",
             "expires": "2027-11-09"
           }
         ]
@@ -388,7 +388,7 @@
             "reason": "Exact test adapter or required notice",
             "review": true,
             "owner": "Philip",
-            "decision": "docs/decisions/comment-ban.md",
+            "decision": "docs/checks.md",
             "expires": "2027-11-09"
           }
         ]
@@ -408,7 +408,7 @@
             "reason": "",
             "review": true,
             "owner": "Philip",
-            "decision": "docs/decisions/comment-ban.md",
+            "decision": "docs/checks.md",
             "expires": "2027-11-09"
           }
         ]
@@ -424,7 +424,7 @@
             "reason": "Exact test adapter or required notice",
             "review": true,
             "owner": "Philip",
-            "decision": "docs/decisions/comment-ban.md",
+            "decision": "docs/checks.md",
             "expires": "2027-11-09"
           }
         ]
@@ -444,7 +444,7 @@
             "reason": "Exact test adapter or required notice",
             "review": true,
             "owner": "Philip",
-            "decision": "docs/decisions/comment-ban.md",
+            "decision": "docs/checks.md",
             "expires": "2000-01-01"
           }
         ]
@@ -460,7 +460,7 @@
             "reason": "Exact test adapter or required notice",
             "review": true,
             "owner": "Philip",
-            "decision": "docs/decisions/comment-ban.md",
+            "decision": "docs/checks.md",
             "expires": "2027-11-09"
           }
         ]
@@ -488,7 +488,7 @@
             "reason": "Exact test adapter or required notice",
             "review": true,
             "owner": "Philip",
-            "decision": "docs/decisions/comment-ban.md",
+            "decision": "docs/checks.md",
             "expires": "2027-11-09"
           }
         ]
@@ -602,7 +602,7 @@
             "reason": "Exact test adapter or required notice",
             "review": true,
             "owner": "Philip",
-            "decision": "docs/decisions/comment-ban.md",
+            "decision": "docs/checks.md",
             "expires": "2027-11-09"
           }
         ]
@@ -639,7 +639,7 @@
             "reason": "Exact test adapter or required notice",
             "review": true,
             "owner": "Philip",
-            "decision": "docs/decisions/comment-ban.md",
+            "decision": "docs/checks.md",
             "expires": "2027-11-09"
           }
         ]
@@ -658,7 +658,7 @@
             "reason": "Exact test adapter or required notice",
             "review": true,
             "owner": "Philip",
-            "decision": "docs/decisions/comment-ban.md",
+            "decision": "docs/checks.md",
             "expires": "2027-11-09"
           }
         ]
@@ -681,7 +681,7 @@
             "reason": "Exact test adapter or required notice",
             "review": true,
             "owner": "Philip",
-            "decision": "docs/decisions/comment-ban.md",
+            "decision": "docs/checks.md",
             "expires": "2027-11-09"
           }
         ]
@@ -700,7 +700,7 @@
             "reason": "Exact test adapter or required notice",
             "review": true,
             "owner": "Philip",
-            "decision": "docs/decisions/comment-ban.md",
+            "decision": "docs/checks.md",
             "expires": "2027-11-09"
           }
         ]
@@ -713,32 +713,76 @@
       "engine": "policy",
       "bad": {
         "files": {
-          "docs/SYSTEM_MAP.md": "| `entry.py:run` | CLI | receipt | contracts | `test.py` |\n",
+          "docs/SYSTEM_MAP.md": "## Entry points\n\n| `entry.py:run` | CLI | receipt | contracts | `test.py` |\n",
           "test.py": "value = 1\n"
         }
       },
       "control": {
         "files": {
-          "docs/SYSTEM_MAP.md": "| `entry.py:run` | CLI | receipt | contracts | `test.py` |\n",
+          "docs/SYSTEM_MAP.md": "## Entry points\n\n| `entry.py:run` | CLI | receipt | contracts | `test.py` |\n",
           "test.py": "value = 1\n",
           "entry.py": "def run() -> int:\n    return 1\n"
+        }
+      }
+    },
+    {
+      "name": "malformed-map-entry",
+      "engine": "policy",
+      "bad": {
+        "files": {
+          "docs/SYSTEM_MAP.md": "## Entry points\n\n| `entry.py` | CLI | receipt | contracts | `test.py` |\n",
+          "test.py": "value = 1\n",
+          "entry.py": "def run() -> int:\n    return 1\n"
+        }
+      },
+      "control": {
+        "files": {
+          "docs/SYSTEM_MAP.md": "## Layout\n\n| `entry.py` | Entry module |\n"
         }
       }
     }
   ],
   "S1": [
     {
-      "name": "ci-command",
+      "name": "hook-command",
       "engine": "policy",
       "bad": {
         "files": {
-          ".github/workflows/check.yml": "- run: ./gradlew build\n"
-        }
+          ".githooks/pre-commit": "#!/bin/sh\n./check\n"
+        },
+        "entries": [
+          {
+            "rule": "D8",
+            "path": ".githooks/pre-commit",
+            "kind": "shebang",
+            "token": "#!/bin/sh",
+            "sha256": "3af71adb278ad4af33c144b78fa1ae708da03b773d98324ae991a7daedb53ca2",
+            "reason": "Executable POSIX entry",
+            "review": true,
+            "owner": "Philip",
+            "decision": "docs/checks.md",
+            "expires": "permanent"
+          }
+        ]
       },
       "control": {
         "files": {
-          ".github/workflows/check.yml": "- run: ./check\n"
-        }
+          ".githooks/pre-commit": "#!/bin/sh\n./check --full\n"
+        },
+        "entries": [
+          {
+            "rule": "D8",
+            "path": ".githooks/pre-commit",
+            "kind": "shebang",
+            "token": "#!/bin/sh",
+            "sha256": "3af71adb278ad4af33c144b78fa1ae708da03b773d98324ae991a7daedb53ca2",
+            "reason": "Executable POSIX entry",
+            "review": true,
+            "owner": "Philip",
+            "decision": "docs/checks.md",
+            "expires": "permanent"
+          }
+        ]
       }
     },
     {
@@ -906,6 +950,34 @@
       },
       "control": {
         "action": "findings"
+      }
+    },
+    {
+      "name": "task-template",
+      "engine": "policy",
+      "bad": {
+        "files": {
+          "tasks/port.md": "# Port\n\n## Progress log\n2026-11-10: did stuff\n"
+        }
+      },
+      "control": {
+        "files": {
+          "tasks/port.md": "# Title\n\n## Goal\ng\n\n## Authorized\na\n\n## Done when\nd\n\n## State\ns\n\n## Next\nn\n"
+        }
+      }
+    },
+    {
+      "name": "task-layout",
+      "engine": "policy",
+      "bad": {
+        "files": {
+          "tasks/notes/scratch.txt": "scratch\n"
+        }
+      },
+      "control": {
+        "files": {
+          "tasks/scratch.md": "# Title\n\n## Goal\ng\n\n## Authorized\na\n\n## Done when\nd\n\n## State\ns\n\n## Next\nn\n"
+        }
       }
     }
   ],

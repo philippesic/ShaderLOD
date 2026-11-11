@@ -1,9 +1,22 @@
-# Adding an optimization module
+# Optimization modules
 
-Start from measured work only after the separately designed profiler/benchmark workflow is available. The present identity probe validates loading and is not a speedup.
+No optimization exists yet. Start one only from measured work, which needs the profiler and benchmark workflow in [tasks/benchmark-design.md](../tasks/benchmark-design.md). The development identity provider proves loading, not a speedup.
 
-An implementation using the current archive transformation capability lives under `optimizations/<id>/`. Its `provider.json` contains exactly one `class` string naming a public `OptimizationProvider` implementation in `com.pp.shaderlod.providers.<module>`. Java sources go under `java/`, and independent tests under `test/`. Keep the provider, its descriptor and its tests in that directory. Gradle discovers the source roots and generates the ServiceLoader resource consumed by the actual registry; adding/removing a module requires no shared engine, config or service-list edit.
+## Layout
 
-The provider names its stable ID, exact supported archive/member identities, conflicts and preimage-anchored replacements. Unknown input or overlapping edits refuse. Returning no replacements demonstrates identity loading only. Pack metadata and license members remain preserved in derived archives; originals are never modified. Configuration carries IDs, not an expanding enum. Runtime activation additionally needs the matching linked archive and live witness.
+A module lives in `optimizations/<id>/`:
 
-Run focused tests while editing, then `./check` for full CPU and packaged-registration verification. Preserve evidence/source reachability before removing a rejected module. New capabilities beyond archive transformations require a deliberate engine/API change and its own acceptance evidence.
+- `provider.json` holds exactly one `class` string naming a public `OptimizationProvider` implementation in `com.pp.shaderlod.providers.<module>`.
+- `java/` holds its sources, `test/` its tests.
+
+Gradle discovers module source roots and generates the ServiceLoader registration the registry consumes. Adding or removing a module needs no edit to the engine, config or a service list. The package audit fails if the packaged registration disagrees with the module directories. Provider bytecode may depend only on `domain` and `engine` contracts, standard Java and its own module; ArchUnit rejects shortcuts into `integration` or `storage` and coupling between modules.
+
+## Contract
+
+A provider declares its stable ID, the exact archive and member identities it supports, its conflicts and its replacements, each anchored to the bytes it replaces. Unknown input and overlapping edits refuse with a reason. Derived archives keep pack metadata and license members; originals are never modified. Configuration stores IDs and parameters. Activation still needs the linked archive and a live frame witness ([Iris integration](iris-integration.md)).
+
+The current capability is archive transformation. A mechanism that needs something else, such as a runtime hook, needs a deliberate engine change with its own tests.
+
+## Removing a rejected module
+
+Record the result in `FINDINGS.md` with the commit that still contains the module, then delete the module directory. Keep regression tests for any shared bug it exposed.

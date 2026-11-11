@@ -150,7 +150,7 @@ def commonChecks = [
 ]
 tasks.register('fastCheck') {
 	dependsOn commonChecks.collect { tasks.named(it) }
-	doLast { println 'PARTIAL: fast checks passed; tool self-tests and full qualification not run' }
+	doLast { println 'PARTIAL: fast checks passed; rule specimens, tool self-tests and package audit not run. Run ./check --full before committing.' }
 }
 tasks.named('checkReport') { dependsOn commonChecks.collect { tasks.named(it) }, tasks.named('selfTest') }
 tasks.named('check') { dependsOn tasks.named('checkReport') }

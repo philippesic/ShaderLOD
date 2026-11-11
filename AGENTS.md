@@ -1,13 +1,63 @@
 # ShaderLOD-next
 
-Implement the approved [porting plan](docs/PORTING_PLAN.md) packages A–D and lightweight fresh-agent exercises. Philip authorized autonomous source, checks, bounded runtime verification and recovery on 10 November 2026. Benchmark methodology, real optimization research and high-level agent skills remain deferred. Routine check/test changes need no renewed approval; preserve the underlying invariant and regression evidence when replacing a rule.
+ShaderLOD is a NeoForge 1.21.1 client mod that selects Iris shader packs natively and loads optimization modules that transform them. The correctness boundary: original shader archives, effective shader options, native resolution and AA are never changed without the user's selection, and Off, Cancel and a failed Apply always restore the exact previous state. The first target is Complementary Reimagined r5.9.3 with Distant Horizons (DH) on the Asahi MacBook Air.
 
-Keep both old repositories read-only, including ignored evidence. This repository remains local-only: no remote or push. Preserve unrelated edits. Commit coherent checkpoints with short subjects and no coauthor trailers.
+## Where things are
 
-Current runtime target is the Asahi MacBook Air, as Philip explicitly directed. Start with Complementary Reimagined + DH; do not switch to the RTX 5080. Preserve original archives, native resolution/AA and effective settings. Require actual activation and exact restoration on Off, Cancel and failed Apply. CPU fixtures do not establish live functionality or performance. Refuse unsupported capabilities explicitly.
+- [README](README.md): setup and commands.
+- [System map](docs/SYSTEM_MAP.md): layout, entry points, Apply/recovery flow.
+- [Iris integration](docs/iris-integration.md): selection states, native writer journal, mixins, sampler indices, DH.
+- [Optimization modules](docs/optimizations.md): how to add or remove one.
+- [Live verification](docs/runtime.md): `./verify --runtime`, the probe, process ownership.
+- [Checks](docs/checks.md): check modes, rule IDs and their fixes.
+- [Dependencies](docs/dependencies.md): pins and what to do when one does not match.
+- [Evidence](docs/evidence.md): evidence levels, where raw data lives, how to report.
+- [Findings](FINDINGS.md) and [tasks](tasks/): read both before starting.
 
-No ordinary comments/docstrings in owned code. Use clear names, types and decomposition. Keep root-only instructions and the CLAUDE pointer. Keep FINDINGS as the conclusions index and the porting plan as current execution direction.
+## Code
 
-Run ./check before handoff; ./check --fast is partial editing feedback. Preserve required tests and negative/control specimens. Report executed, reused and unavailable checks honestly. Escalate only changed product/acceptance semantics, valuable-data deletion, unallocated hardware, extended resource budgets or external publication.
+- No comments, Javadoc or docstrings in code, tests, scripts, build files or configuration. Say it with names, types and small functions. Put rationale in the topic doc or commit message.
+- Keep each package to its role in the system map; ArchUnit enforces it. Make invalid states unrepresentable with types; refuse unsupported input with a reason instead of guessing.
+- One owner per piece of state: settings via `shaderlod_host.config`, results via `shaderlod_host.storage.publish`, launches via `shaderlod_host.runtime`.
+- Tests are small, behavioral and deterministic. Never skip, disable or delete a test to pass.
+- Unsupported combinations stay explicit. Never lower shader settings, samplers, resolution or AA to obtain a pass.
 
-Use task-owned outputs and identify owned processes by birth identity, not PID alone. Reclaim only explicitly disposable/reproducible inactive data under owned roots after dependency checks. Preserve shared caches, active inputs, recovery state and scientific evidence. No scheduler, GPU lease service, automatic evidence expiry or autonomous deletion agent.
+## Validation
+
+- `./check` is the fast edit loop (about 5 to 8 seconds warm) and prints `PARTIAL`.
+- `./check --full` adds rule specimens and the package audit. The pre-commit hook runs it; run it before handoff too.
+- When a check fails, fix the cause. The rule's fix is in [checks](docs/checks.md). Replacing a rule needs a stricter or equal rule that still rejects the original bad specimen.
+- A `TOOLS:` checksum mismatch means stop and report; never edit a lock to pass.
+- CPU checks say nothing about live behavior. Live claims need `./verify --runtime` receipts.
+
+## Working autonomously
+
+Proceed without asking on: source and test changes within an open task, check repairs that keep the rule, bounded live attempts on the allocated Asahi machine, recovery of owned processes and settings, reclaiming files under owned roots that are explicitly disposable or reproducible, and commits.
+
+Ask Philip before: changing what counts as correct or a pass, changing native quality, expanding the target or product claims, deleting valuable or unclassified data, using any other machine (the RTX 5080 is not allocated), extending a time or resource budget, or publishing anything.
+
+- `/home/philip/ShaderLOD` and `/home/philip/shaderlod` are read-only references, including their ignored files.
+- This repository has no remote. Do not add one or push.
+- Identify owned processes by host, boot and process-birth identity, never PID alone. Do not stop processes you do not own.
+- No scheduler, GPU lease service, automatic evidence expiry or autonomous deletion.
+- Parallel work uses separate clones or worktrees; worktrees do not isolate the GPU, display, ports or caches.
+- Preserve unrelated uncommitted edits. Commit coherent checkpoints with short subjects and no co-author trailers.
+
+## Documents
+
+| Home | Holds |
+| --- | --- |
+| `AGENTS.md` | Rules for every task. Philip owns it; propose changes |
+| `docs/*.md` | How each part works now. Update in the same commit as the code; delete outdated text |
+| `FINDINGS.md` | Closed questions with scope and evidence, including failures. Correct rows in place |
+| `evidence/` | Frozen records backing findings. Never edited |
+| `tasks/NAME.md` | One open multi-session task, one owner. Delete it when the task is done |
+| Git history | What changed and when |
+
+No status, plan, history or scratch documents. A task file has exactly these sections: `## Goal`, `## Authorized`, `## Done when`, `## State` (current facts only; rewrite, do not append) and `## Next`. The check enforces the template.
+
+## Evidence and reporting
+
+- Raw outputs stay outside Git under `~/.local/share/shaderlod-next/evidence`. Keep failed and unfavorable results.
+- Done means exercised. Report what was executed, reused from cache and not run, and what remains untested.
+- Write plainly: short sentences, no invented labels, scope every claim.
