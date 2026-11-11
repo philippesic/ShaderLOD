@@ -44,6 +44,14 @@ public final class FrameCapture {
     previous = timestamp;
   }
 
+  public List<Frame> since(int cursor) {
+    return List.copyOf(frames.subList(cursor, frames.size()));
+  }
+
+  public int count() {
+    return frames.size();
+  }
+
   public Result finish() {
     return new Result(frames, overflow, generationChanged);
   }

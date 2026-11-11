@@ -1,33 +1,31 @@
-# Frame capture development
+# Profiling
 
-The first frame-capture path is implemented and exercised on Asahi. It is a development facility: comparison execution, repeatable routes, pass mappings and qualification are still being implemented in [the benchmark task](../tasks/benchmark-design.md). A valid stream means its frame sequence and clocks agree; it does not qualify a performance claim.
-
-## Planning and reporting
+Use [benchmark sessions](benchmarks.md) to reuse a ready client and world. Frame capture is the outcome measure; sampled stage instrumentation is diagnostic and can change the workload. Keep minimally instrumented comparisons authoritative.
 
 ```
 python3 -m shaderlod_host profile --spec benchmarks/profiles/frame.json --plan
-python3 -m shaderlod_host compare --spec benchmarks/comparisons/development.json --plan
-python3 -m shaderlod_host report --frames /external/frames.jsonl --output-root /external/fresh-report
-python3 -m shaderlod_host verify --result /external/fresh-capture/receipt.json
+python3 -m shaderlod_host profile --spec benchmarks/profiles/frame.json --session /external/session --output-root /external/fresh-profile
+python3 -m shaderlod_host profile --spec benchmarks/profiles/stages.json --session /external/session --output-root /external/fresh-stage-profile
+python3 -m shaderlod_host verify --result /external/fresh-profile/receipt.json
+python3 -m shaderlod_host report --frames /external/frames.jsonl --output-root /external/fresh-import
 ```
 
-The preliminary strict specification identifies scope, workload label, arm labels, blocks, measured window, total budget and instrumentation. It forecasts capture time only. The workload label does not establish a controlled scene; live route and arm admission remain outstanding. Execution of comparisons explicitly refuses until that path exists. Existing CPU requests retain their original contracts.
+Open `report.html` locally without a server or network. It offers frame-time/FPS and optional CPU/GPU stage tracks, time selection, panning, point tooltips, route markers, a selected-interval stage table and CSV export. `summary.json`, `observation.json` and exact `frames.jsonl` support agents without HTML scraping. Raw spikes and gaps remain visible. An imported stream has no newly established live provenance. Receipt verification checks file identity and frame reduction, not qualification by itself.
 
-Reports contain frame-time and FPS views with selectable time bounds, raw spikes, validity and structured analysis. FPS uses completed frames over elapsed time; missing frames or changed generations prevent a complete-stream FPS claim. Imported observations are explicitly unqualified. Raw records remain beside the derived report. A fresh output directory is required. Published files refuse overwrite.
+The collector records consecutive application frame entries in a finite 200,000-frame buffer and publishes immutable one-second chunks asynchronously. Generation changes, lost focus/context, overflow or incomplete spool invalidate the outcome. A crash can preserve partial chunks but cannot produce a completed-window verdict. Typical captures are 10–20 seconds; qualified scope permits bounded five-minute sustained windows. An excessive frame rate can exhaust the buffer; choose a fitting declared window, never silently downsample acceptance data.
 
-## Reusing a Linux client
+CPU stage intervals are render-thread wall time between public NeoForge boundaries. They are not thread CPU consumption. GPU timestamp intervals are asynchronous and sampled every tenth render callback when supported; pending/lost/invalid queries, overflow and counter bits are reported. Unavailable GPU measurements are not zero. GPU elapsed includes scheduling and possible idle time; nanosecond units do not imply nanosecond precision. Public scene/shadow boundaries include shared engine and shader work. On tile-based GPUs, timing placement can further limit interpretation. Do not turn these spans into exclusive occupancy, sum overlapping scopes, or claim GPU savings from CPU timestamps.
 
-Use an allocated display, prepared writable profile and current launch manifest. Do not start another client on the same GPU. Native Windows supervision is not implemented yet. Never edit loaded classes, resources, dependency JARs or host source while the session is active: subsequent commands refuse executable drift. Keep the foreground session command running in its owning terminal.
+## Pack-specific meaning and extensions
 
-```
-python3 -m shaderlod_host session-open --launch build/moddev/functional-launch.json --profile run-client-absent-dh --display /run/user/1000/shaderlod-display/environment.json --ownership-root /run/user/1000/shaderlod-ownership --session /external/fresh-session --timeout 240
-python3 -m shaderlod_host session-status --session /external/fresh-session
-python3 -m shaderlod_host profile --spec benchmarks/profiles/frame.json --session /external/fresh-session --output-root /external/fresh-capture
-python3 -m shaderlod_host session-close --session /external/fresh-session
-```
+The base profiler works on an unmapped original pack. Exact archive/dimension/option mappings in `benchmarks/mappings/` add semantic membership to observed intervals. Reimagined's initial mapping distinguishes combined shadow-scene and main-scene work using actual Iris shadow-pass state. It does not invent separate AO, fog or reflection timings. MakeUp exercises the generic unmapped path. Original source, observed boundary and causal attribution remain distinct facts.
 
-The prepared profile needs the existing ShaderLOD-Smoke world. A status result must show readiness before capture. The session uses the existing worker/watchdog and GPU advisory lock; its bounded lifetime remains authoritative. The close acknowledgement precedes game shutdown; inspect closed.json for final process completion. The watchdog forcibly stops its owned client on timeout or parent loss. This initial fixed-scene path performs no candidate selection or world reset; its writable world is retained. It does not promise exact world restoration after forced termination.
+To add a mapping, inspect the exact original archive and relevant programs, declare the supported options/dimension and label only observed boundaries. Exercise supported and unknown variants; an unknown version remains unmapped. A mapping revision gets a new identity and never rewrites old reports. If an effect shares a program/span, label the combination. A more precise effect split requires a new verified instrumentation boundary, not dividing a combined duration by source size.
 
-Commands are sequential and published once. A timed-out command is uncertain: inspect its eventual result or failure record before proceeding. The host refuses a second command while the previous outcome is missing. A controller failure stops further command processing. Receipt and log files are preserved externally.
+To add a collector, keep OpenGL query ownership under `dev/measurement`, preserve explicit missingness and source/generation joins, and qualify its observer effects on both reference and candidate when the mechanism changes collection frequency or scheduling. The module admission point remains the maintained profile/comparison specification. Do not add a separate process launcher or a universal shader parser. Deep JFR/counter investigations are focused extensions, not permanent overhead on the one-minute loop.
 
-Frame collection uses consecutive render-frame entry timestamps and a finite 200,000-frame buffer. Overflow and shader-generation changes invalidate the capture; it never rolls old samples away. The buffer is published after the timed window. Durable partial streams on crashes are outstanding, so an interrupted capture is incomplete. Default diagnostic GPU queries are disabled in this frame-only path. Observer overhead, presentation interpretation and stable workload conditions remain to be qualified.
+## Quality captures
+
+`benchmarks/comparisons/*-quality.json` are separate short motion/image workflows. GPU readback occurs on the render thread; PNG encoding uses a bounded worker queue. The route never waits for encoding capacity. `quality.json` records actual times, poses, cadence, maximum gap, queue failures and dropped images; `quality.html` provides playback. These are untimed quality observations, not performance windows. Insufficient cadence or progression is explicit and prevents using that sequence as adequate motion evidence.
+
+Unchanged-image variability calibrates false alarms; a known visible defect tests only the sensitivity exercised. Inspect onset/recovery and relevant regions. Brief shimmer between captured frames can remain unseen. Human review, viewing conditions and mechanism-specific sequences define perceptual scope; checksums and non-uniform images cannot approve quality.

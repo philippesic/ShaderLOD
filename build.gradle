@@ -204,7 +204,10 @@ neoForge.runs.named('development') {
 		programArgument 'ShaderLOD-Smoke'
 	}
 }
-dependencies { devClientImplementation 'com.google.code.gson:gson:2.10.1' }
+dependencies {
+	devClientImplementation 'com.google.code.gson:gson:2.10.1'
+	devClientImplementation 'org.lwjgl:lwjgl-glfw:3.3.3'
+}
 tasks.register('writeFunctionalLaunch') {
 	dependsOn tasks.named('prepareDevelopmentRun'), tasks.named('devClientClasses')
 	doLast {

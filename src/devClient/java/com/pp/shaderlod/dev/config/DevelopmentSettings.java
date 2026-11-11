@@ -11,4 +11,14 @@ public final class DevelopmentSettings {
   public static boolean functionalProbe() {
     return Boolean.getBoolean("shaderlod.functionalProbe");
   }
+
+  public static java.util.Map<String, String> runtimeIdentity() {
+    var result = new java.util.TreeMap<String, String>();
+    for (String key :
+        java.util.List.of(
+            "java.runtime.version", "java.vendor", "os.name", "os.version", "os.arch")) {
+      result.put(key, System.getProperty(key, "unavailable"));
+    }
+    return java.util.Map.copyOf(result);
+  }
 }

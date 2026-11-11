@@ -1,0 +1,50 @@
+{
+  "schema": "shaderlod-comparison-v1",
+  "scope": "development",
+  "cases": [
+    {
+      "id": "natural-translation",
+      "pack": "ComplementaryReimagined_r5.9.3.zip",
+      "sha256": "fed6c879e732cf7fc7bc6570ebb1def43235aa7e96f62859fbdbdbfa0b484b38",
+      "from": [
+        36.5,
+        131,
+        0.5,
+        -45,
+        20
+      ],
+      "to": [
+        44.5,
+        131,
+        0.5,
+        -25,
+        20
+      ],
+      "dimension": "minecraft:overworld",
+      "surface": [
+        2560,
+        1600
+      ]
+    }
+  ],
+  "arms": [
+    {
+      "id": "original",
+      "modules": [],
+      "delay_ms": 0
+    },
+    {
+      "id": "visible-fault",
+      "modules": [
+        "visual-fault-probe"
+      ],
+      "delay_ms": 0
+    }
+  ],
+  "blocks": 1,
+  "window_ms": 4000,
+  "warmup_ms": 1000,
+  "budget_ms": 90000,
+  "seed": 7,
+  "quality_cadence_ms": 500
+}

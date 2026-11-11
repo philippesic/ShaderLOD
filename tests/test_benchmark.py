@@ -149,7 +149,7 @@ def test_uncertain_command_is_not_replayed(
     import os
     import socket
 
-    from shaderlod_host.benchmark import session_command
+    from shaderlod_host.benchmark import CommandIncomplete, session_command
     from shaderlod_host.worker import birth
 
     metadata = {
@@ -167,7 +167,7 @@ def test_uncertain_command_is_not_replayed(
     monkeypatch.setattr(
         "shaderlod_host.runtime_live.executable_inputs", lambda *args: {}
     )
-    with pytest.raises(ValueError, match="timed out"):
+    with pytest.raises(CommandIncomplete, match="timed out"):
         session_command(tmp_path, "status", 0, 0.01)
     with pytest.raises(ValueError, match="outcome unknown"):
         session_command(tmp_path, "status", 0, 0.01)
@@ -195,3 +195,31 @@ def test_receipt_tamper_and_analysis_independence(tmp_path: Path) -> None:
     (target / "frames.jsonl").write_text("corrupt")
     with pytest.raises(ValueError, match="digest"):
         verify_frame_receipt(receipt)
+
+
+def test_managed_profile_artifact_restores_and_preserves_foreign_edit(
+    tmp_path: Path,
+) -> None:
+    from shaderlod_host.storage import (
+        prepare_profile_artifact,
+        restore_profile_artifact,
+    )
+
+    profile = tmp_path / "profile"
+    (profile / "mods").mkdir(parents=True)
+    target = profile / "mods/shaderlod.jar"
+    target.write_bytes(b"original")
+    shipping = tmp_path / "shaderlod.jar"
+    shipping.write_bytes(b"new-build")
+    session = tmp_path / "session"
+    session.mkdir()
+    record = prepare_profile_artifact(profile, shipping, session)
+    assert target.read_bytes() == b"new-build"
+    target.write_bytes(b"foreign-edit")
+    with pytest.raises(ValueError, match="changed"):
+        restore_profile_artifact(profile, record)
+    assert target.read_bytes() == b"foreign-edit"
+    target.write_bytes(b"new-build")
+    restore_profile_artifact(profile, record)
+    assert target.read_bytes() == b"original"
+    assert (session / "profile-artifact-preimage.jar").read_bytes() == b"original"

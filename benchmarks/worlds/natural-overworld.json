@@ -1,0 +1,7 @@
+{
+  "schema": "shaderlod-world-v1",
+  "id": "natural-overworld-8675309",
+  "tree_sha256": "afcfad283595987bfe753bb71bf8808bb53cb2d7e3afed20198015986a731065",
+  "exposure": "Previously used historical development scene; not an unseen confirmation holdout",
+  "description": "Minecraft 1.21.1 normal Overworld noise terrain, seed 8675309, saved creative camera at 0.5/131/0.5. Adopted as a reusable harness fixture; not a representative release matrix by itself."
+}

@@ -20,6 +20,14 @@ public final class AtomicFiles {
     }
   }
 
+  public static void removeIfUnchanged(Path destination, byte[] expected) throws IOException {
+    if (Files.isSymbolicLink(destination)
+        || !java.util.Arrays.equals(Files.readAllBytes(destination), expected)) {
+      throw new IOException("Journal changed before completion");
+    }
+    Files.delete(destination);
+  }
+
   public static void replace(Path destination, byte[] bytes) throws IOException {
     Path temporary = stage(destination, bytes);
     try {

@@ -10,6 +10,10 @@ from typing import Iterable
 from shaderlod_host.storage import publish, publish_bytes
 
 
+class CommandIncomplete(RuntimeError):
+    pass
+
+
 def object_fields(value: object, fields: set[str], name: str) -> dict[str, object]:
     if not isinstance(value, dict) or set(value) != fields:
         raise ValueError(name + ": unexpected or missing fields")
@@ -70,7 +74,7 @@ class WorkflowPlan:
         blocks = positive(data["blocks"], "blocks")
         window = positive(data["window_ms"], "window_ms")
         budget = positive(data["budget_ms"], "budget_ms")
-        if blocks > 100 or window > 3600000 or budget > 86400000:
+        if blocks > 100 or window > 300000 or budget > 86400000:
             raise ValueError("workflow exceeds supported finite bounds")
         instrument = label(data["instrument"], "instrument")
         if instrument not in {"frames", "diagnostic"}:
@@ -227,40 +231,20 @@ def render_frames(frames: tuple[Frame, ...], analysis: dict[str, object]) -> str
     ]
     data = json.dumps(points, allow_nan=False)
     summary = json.dumps(analysis, allow_nan=False).replace("<", "\\u003c")
-    return """<!doctype html><html lang="en"><meta charset="utf-8"><title>ShaderLOD frame observations</title>
-<style>body{font:16px system-ui;margin:2rem;background:rgb(18,23,32);color:rgb(231,237,245)}canvas{width:100%;height:380px;border:1px solid gray}input{width:35%}pre{white-space:pre-wrap}button,select{font:inherit}</style>
-<h1>ShaderLOD frame observations</h1><p>Application frame production. Imported observations do not establish loaded-source provenance, GPU cost or display smoothness.</p>
-<label>View <select id="metric"><option value="ms">Frame time (ms)</option><option value="fps">FPS in elapsed-time bins</option></select></label>
-<p><label>Start <input id="start" type="range" min="0" max="1000" value="0"></label> <label>End <input id="end" type="range" min="0" max="1000" value="1000"></label></p>
-<canvas id="plot" width="1600" height="380" aria-label="Performance timeline"></canvas><p id="detail"></p><details><summary>Structured analysis and limitations</summary><pre id="summary"></pre></details>
-<script>
-const points=POINTS, summary=SUMMARY, canvas=document.getElementById('plot'), context=canvas.getContext('2d');
-const start=document.getElementById('start'),end=document.getElementById('end'),metric=document.getElementById('metric'),detail=document.getElementById('detail');
-document.getElementById('summary').textContent=JSON.stringify(summary,null,2);
-let visible=[];
-function draw(){
-const low=Math.min(+start.value,+end.value)/1000*points.at(-1)[0],high=Math.max(+start.value,+end.value)/1000*points.at(-1)[0];
-visible=points.filter(p=>p[0]>=low&&p[0]<=high);
-let values=visible.map(p=>[p[0],p[1],p[2]]);
-if(metric.value==='fps'){
-const bins=new Map();for(const p of points){const b=Math.max(0,Math.ceil(p[0])-1);bins.set(b,(bins.get(b)||0)+1);}
-values=[...bins].filter(p=>p[0]>=low&&p[0]<=high).map(p=>[p[0],p[1]/Math.min(1,points.at(-1)[0]-p[0]),0]);
-if(!summary.valid){values=[];}
-}
-context.clearRect(0,0,1600,380);const ymax=values.reduce((m,p)=>Math.max(m,p[1]),1), span=Math.max(.001,high-low);context.fillStyle='white';context.fillText(ymax.toFixed(2)+' '+metric.value,10,18);context.fillText(low.toFixed(2)+' s',10,375);context.fillText(high.toFixed(2)+' s',1480,375);
-context.strokeStyle='rgb(107,210,255)';context.beginPath();let previous=null;for(const p of values){const x=40+(p[0]-low)/span*1520,y=350-p[1]/ymax*320;if(previous===null||(metric.value==='ms'&&p[2]!==previous+1)){context.moveTo(x,y);}else{context.lineTo(x,y);}previous=p[2];}context.stroke();
-detail.textContent=visible.length+' frames; '+low.toFixed(2)+'–'+high.toFixed(2)+' s. Valid: '+summary.valid+'. Raw points retained; no smoothing.';
-}
-for(const input of [start,end,metric]){input.addEventListener('input',draw);}draw();
-</script></html>""".replace("POINTS", data).replace("SUMMARY", summary)
+    template = (Path(__file__).with_name("templates") / "frames.html").read_text()
+    return template.replace("@@POINTS@@", data).replace("@@SUMMARY@@", summary)
 
 
 def session_command(
-    session: Path, action: str, duration_ms: int, timeout: float
+    session: Path,
+    action: str,
+    duration_ms: int,
+    timeout: float,
+    payload: dict[str, object] | None = None,
 ) -> dict[str, object]:
     from shaderlod_host.runtime_live import executable_inputs
     from shaderlod_host.storage import BusyRefusal
-    from shaderlod_host.worker import birth
+    from shaderlod_host.worker import birth, boot
 
     metadata = json.loads((session / "session.json").read_bytes())
     if (
@@ -269,11 +253,25 @@ def session_command(
     ):
         raise ValueError("foreign or unsupported session")
     if (
-        metadata["boot"] != Path("/proc/sys/kernel/random/boot_id").read_text().strip()
+        metadata["boot"] != boot()
         or birth(metadata["owner_pid"]) != metadata["owner_birth"]
         or (session / "closed.json").exists()
     ):
         raise ValueError("session owner is not live")
+    child_path = session / "child.json"
+    if "child_record" in metadata and not child_path.exists():
+        raise ValueError(
+            "client ownership publication pending; retry status without replaying commands"
+        )
+    if child_path.exists():
+        child = json.loads(child_path.read_bytes())
+        if (
+            child.get("host") != metadata["host"]
+            or child.get("boot") != metadata["boot"]
+            or birth(child["pid"]) != child["birth"]
+        ):
+            raise ValueError("recorded client process is not live")
+        metadata["child"] = child
     launch_path = Path(metadata["launch"])
     launch = json.loads(launch_path.read_bytes())
     root = Path(__file__).resolve().parents[1]
@@ -283,40 +281,83 @@ def session_command(
     ):
         raise ValueError("live executable input drift; restart session")
     if (
-        action not in {"status", "capture", "close"}
+        action
+        not in {
+            "status",
+            "capture",
+            "close",
+            "select",
+            "restore",
+            "prepare",
+            "screenshot",
+            "recover",
+            "validate",
+        }
         or type(duration_ms) is not int
-        or not 0 <= duration_ms <= 60000
-        or not 0 < timeout <= 65
+        or not 0 <= duration_ms <= 300000
+        or not 0 < timeout <= 310
     ):
         raise ValueError("invalid bounded session command")
     with BusyRefusal(session / "ownership", "command"):
         commands = sorted(session.glob("command-*.json"))
         sequence = len(commands) + 1
+        terminal_failure = None
+        if (session / "failure.json").exists():
+            terminal_failure = json.loads((session / "failure.json").read_bytes())
+        for failure_path in session.glob("failure-*.json"):
+            candidate = json.loads(failure_path.read_bytes())
+            if (
+                not isinstance(candidate, dict)
+                or type(candidate.get("sequence")) is not int
+            ):
+                raise ValueError("malformed controller failure identity")
+            if (
+                terminal_failure is None
+                or candidate["sequence"] > terminal_failure["sequence"]
+            ):
+                terminal_failure = candidate
+        prior_result = session / ("result-" + str(sequence - 1) + ".json")
+        if isinstance(terminal_failure, dict) and prior_result.exists():
+            prior = json.loads(prior_result.read_bytes())
+            if prior.get("recovered_failure_sequence") == terminal_failure.get(
+                "sequence"
+            ):
+                terminal_failure = None
+        recover_close = (
+            action in {"close", "recover"}
+            and isinstance(terminal_failure, dict)
+            and terminal_failure.get("sequence") == sequence - 1
+        )
         if (
             commands
             and not (session / ("result-" + str(sequence - 1) + ".json")).exists()
+            and not recover_close
         ):
             raise ValueError("prior command outcome unknown; refusing replay")
-        if (session / "failure.json").exists():
+        if terminal_failure is not None and not recover_close:
             raise ValueError("session has a preserved controller failure")
         publish(
             session / ("command-" + str(sequence) + ".json"),
             {
-                "schema": "shaderlod-control-v1",
+                "schema": "shaderlod-control-v2",
                 "sequence": sequence,
                 "action": action,
                 "duration_ms": duration_ms,
+                "payload": {} if payload is None else payload,
             },
         )
         deadline = time.monotonic() + timeout
         result = session / ("result-" + str(sequence) + ".json")
         while not result.exists():
-            if (session / "failure.json").exists() or (
-                session / "closed.json"
-            ).exists():
-                raise ValueError("session failed or closed; inspect preserved evidence")
+            if (
+                (session / ("failure-" + str(sequence) + ".json")).exists()
+                and not recover_close
+            ) or (session / "closed.json").exists():
+                raise CommandIncomplete(
+                    "session failed or closed; inspect preserved evidence"
+                )
             if time.monotonic() >= deadline:
-                raise ValueError(
+                raise CommandIncomplete(
                     "command timed out; reconcile outcome before another command"
                 )
             time.sleep(0.02)
@@ -326,16 +367,82 @@ def session_command(
             or observed.get("schema") != "shaderlod-control-result-v1"
             or observed.get("sequence") != sequence
         ):
-            raise ValueError("command acknowledgement identity mismatch")
-        if (
+            raise CommandIncomplete("command acknowledgement identity mismatch")
+        if action == "close":
+            while not (session / "closed.json").exists():
+                if time.monotonic() >= deadline:
+                    raise CommandIncomplete(
+                        "close acknowledged; process finalization still pending"
+                    )
+                time.sleep(0.02)
+            closed = json.loads((session / "closed.json").read_bytes())
+            if (
+                closed.get("returncode") != 0
+                or closed.get("inputs_unchanged") is not True
+                or closed.get("profile_artifact_restored") is not True
+                or closed.get("shader_recovery_pending") is not False
+                or closed.get("world_recovery_pending") is not False
+            ):
+                raise CommandIncomplete(
+                    "session closed with an execution or artifact-restoration failure"
+                )
+            observed["closed"] = closed
+        elif (
             executable_inputs(launch, root, Path(metadata["profile"]))
             != metadata["executable_inputs"]
         ):
-            raise ValueError(
+            raise CommandIncomplete(
                 "executable input drift during command; raw result retained in session"
             )
+        for name, path in {
+            "loaded_main_class_sha256": root
+            / "build/classes/java/main/com/pp/shaderlod/storage/AtomicFiles.class",
+            "loaded_dev_class_sha256": root
+            / "build/classes/java/devClient/com/pp/shaderlod/dev/BenchmarkControl.class",
+        }.items():
+            if observed.get(name) != hashlib.sha256(path.read_bytes()).hexdigest():
+                raise CommandIncomplete(
+                    "loaded class disagrees with declared build: " + name
+                )
         observed["session_identity"] = metadata
         return observed
+
+
+def stage_summary(value: object) -> list[dict[str, object]]:
+    if not isinstance(value, dict):
+        return []
+    groups: dict[tuple[str, str], dict[str, list[float]]] = {}
+    for stream, field in (("cpu", "wall_ns"), ("gpu", "gpu_elapsed_ns")):
+        rows = value.get(stream)
+        if not isinstance(rows, list):
+            raise ValueError("invalid stage stream")
+        for row in rows:
+            if (
+                not isinstance(row, dict)
+                or not isinstance(row.get("from"), str)
+                or not isinstance(row.get("to"), str)
+            ):
+                raise ValueError("invalid stage boundary")
+            raw = row.get(field)
+            if type(raw) is not int or raw < 0:
+                raise ValueError("invalid stage clock")
+            group = groups.setdefault((row["from"], row["to"]), {"cpu": [], "gpu": []})
+            group[stream].append(raw / 1000000)
+    return [
+        {
+            "from": key[0],
+            "to": key[1],
+            "cpu_samples": len(group["cpu"]),
+            "cpu_mean_ms": sum(group["cpu"]) / len(group["cpu"])
+            if group["cpu"]
+            else None,
+            "gpu_samples": len(group["gpu"]),
+            "gpu_mean_ms": sum(group["gpu"]) / len(group["gpu"])
+            if group["gpu"]
+            else None,
+        }
+        for key, group in groups.items()
+    ]
 
 
 def save_live_capture(
@@ -347,6 +454,52 @@ def save_live_capture(
     frames = tuple(Frame.decode(row) for row in capture["frames"])
     analysis = analyze_frames(frames)
     analysis["benchmark_qualified"] = False
+    analysis["events"] = observed.get("checkpoints", [])
+    if "stage_profile" in observed:
+        analysis["stage_summary"] = stage_summary(observed["stage_profile"])
+        from shaderlod_host.adapters import semantic_mapping
+
+        mapping = semantic_mapping(
+            observed, Path(__file__).resolve().parents[1] / "benchmarks/mappings"
+        )
+        analysis["mapping"] = mapping
+        profile = observed["stage_profile"]
+        if not isinstance(profile, dict):
+            raise ValueError("stage profile required")
+        analysis["stage_health"] = {
+            key: value for key, value in profile.items() if key not in {"cpu", "gpu"}
+        }
+        gpu = {row["span_id"]: row for row in profile["gpu"]}
+        origin = frames[0].timestamp_ns - frames[0].interval_ns
+        samples = []
+        for row in profile["cpu"]:
+            if "started_ns" not in row:
+                continue
+            semantic = "mixed / unmapped"
+            definition = mapping.get("definition")
+            if isinstance(definition, dict):
+                for label_record in definition["labels"]:
+                    if row["from"].startswith(label_record["namespace"]) and row[
+                        "to"
+                    ].startswith(label_record["namespace"]):
+                        semantic = label_record["label"]
+            samples.append(
+                {
+                    "start_s": (row["started_ns"] - origin) / 1e9,
+                    "from": row["from"],
+                    "to": row["to"],
+                    "cpu_ms": row["wall_ns"] / 1e6,
+                    "gpu_ms": gpu[row["span_id"]]["gpu_elapsed_ns"] / 1e6
+                    if row["span_id"] in gpu
+                    else None,
+                    "submission": row["submission"],
+                    "label": semantic,
+                }
+            )
+        analysis["stage_samples"] = samples
+        analysis["diagnostic_limits"] = (
+            "Sampled stage intervals; missing GPU completions and shared shader effects prevent exclusive cost attribution"
+        )
     if (
         observed.get("valid") is not True
         or capture.get("overflow") is not False
@@ -418,6 +571,21 @@ def verify_frame_receipt(path: Path) -> dict[str, object]:
             raise ValueError("capture digest disagreement: " + name)
     recomputed = analyze_frames(read_frames(path.parent / "frames.jsonl"))
     summary = json.loads((path.parent / "summary.json").read_bytes())
+    observed = json.loads((path.parent / "observation.json").read_bytes())
+    capture = observed.get("capture")
+    if not isinstance(capture, dict) or not isinstance(capture.get("frames"), list):
+        raise ValueError("missing original capture")
+    if tuple(Frame.decode(row) for row in capture["frames"]) != read_frames(
+        path.parent / "frames.jsonl"
+    ):
+        raise ValueError("capture/raw frame disagreement")
+    if summary.get("valid") is True and (
+        observed.get("valid") is not True
+        or observed.get("ready") is not True
+        or capture.get("overflow") is not False
+        or capture.get("generationChanged") is not False
+    ):
+        raise ValueError("invalid observation promoted by summary")
     for field in (
         "frames",
         "elapsed_ns",
@@ -439,3 +607,40 @@ def verify_frame_receipt(path: Path) -> dict[str, object]:
         "benchmark_qualified": False,
         "scope": "file integrity and frame reduction only",
     }
+
+
+def wait_ready(session: Path, timeout: float) -> dict[str, object]:
+    prepared = False
+    deadline = time.monotonic() + timeout
+    while not (session / "session.json").exists():
+        if time.monotonic() >= deadline or (session / "closed.json").exists():
+            raise ValueError(
+                "session startup did not publish ownership before deadline"
+            )
+        time.sleep(0.05)
+    metadata = json.loads((session / "session.json").read_bytes())
+    recover_needed = (
+        Path(metadata["profile"]) / "shaderlod-benchmark-world.json"
+    ).exists() and not any(session.glob("world-preimage-*.json"))
+    while True:
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            raise ValueError("readiness deadline exhausted")
+        if "child_record" in metadata and not (session / "child.json").exists():
+            if (session / "closed.json").exists():
+                raise ValueError("session closed before child ownership publication")
+            time.sleep(min(0.05, remaining))
+            continue
+        observed = session_command(session, "status", 0, min(65, remaining))
+        if observed.get("world_loaded") is True and recover_needed:
+            session_command(session, "recover", 0, min(65, remaining))
+            recover_needed = False
+            continue
+        if observed.get("ready") is True:
+            return observed
+        if observed.get("world_loaded") is True and not prepared:
+            session_command(
+                session, "prepare", 0, min(65, max(0.1, deadline - time.monotonic()))
+            )
+            prepared = True
+        time.sleep(min(0.2, max(0, deadline - time.monotonic())))

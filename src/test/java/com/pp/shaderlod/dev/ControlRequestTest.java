@@ -25,7 +25,7 @@ class ControlRequestTest {
             good.replace(":1000", ":1.5"),
             good.replace(":1000", ":null"),
             good.replace("capture", "unknown"),
-            good.replace(":1000", ":60001"),
+            good.replace(":1000", ":300001"),
             good.replace("capture", "status"),
             good.replace("\"sequence\":1", "\"sequence\":\"1\""))) {
       assertThrows(IllegalArgumentException.class, () -> decode(bad));

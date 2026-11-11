@@ -36,6 +36,19 @@ final class FunctionalProbe {
   private NativeState original;
   private int ticks;
   private int waited;
+  private final boolean stopOnComplete;
+
+  FunctionalProbe() {
+    this(true);
+  }
+
+  FunctionalProbe(boolean stopOnComplete) {
+    this.stopOnComplete = stopOnComplete;
+  }
+
+  boolean done() {
+    return phase == Phase.DONE;
+  }
 
   void tick(ClientTickEvent.Post event) {
     var minecraft = Minecraft.getInstance();
@@ -244,6 +257,8 @@ final class FunctionalProbe {
     } catch (IOException failure) {
       net.irisshaders.iris.Iris.logger.error("Functional result publication failed", failure);
     }
-    Minecraft.getInstance().stop();
+    if (stopOnComplete) {
+      Minecraft.getInstance().stop();
+    }
   }
 }

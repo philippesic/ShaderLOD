@@ -29,6 +29,9 @@ None yet. Agent rules and the documentation map are in [AGENTS.md](AGENTS.md).
 
 ## Navigation
 
+- [Benchmarks](docs/benchmarks.md): fast validation, one-minute comparisons, qualification and recovery.
+- [Profiling](docs/profiling.md): interactive timelines, structured data and pack mappings.
+- [Optimization direction](docs/optimization-philosophy.md): one reusable product and perceptual quality.
 - [Architecture](docs/architecture.md): how the project works.
 - [Development](docs/development.md): changing and validating it.
 - [Results](docs/results.md): result format and closeout rules.

@@ -1,0 +1,5 @@
+{
+  "schema": "shaderlod-validation-spec-v1",
+  "surface": [1024, 768],
+  "dh_enabled": false
+}

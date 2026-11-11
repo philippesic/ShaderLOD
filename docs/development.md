@@ -15,3 +15,5 @@ Run `./check` while editing; it is explicitly partial. Run `./check --full` befo
 For a meaningful investigation, follow [close-results](../skills/close-results/SKILL.md) and [results](results.md). A result is warranted for a durable lesson, meaningful comparison or decision that future work should remember; a routine bug fix does not automatically warrant one. Update current docs, remove obsolete implementation within scope after verifying recoverability, update FINDINGS and delete the completed task.
 
 Raw execution records remain outside the source tree. Keep compact figure inputs beside a result only when useful, and small archived supporting reports in `results/sources/`. Do not manufacture a chart or structured record for every result.
+
+For rendering work, use the maintained [benchmark workflows](benchmarks.md) and the project [benchmark skill](../skills/benchmark/SKILL.md). Follow [optimization direction](optimization-philosophy.md): a first-pack win does not grant broad eligibility. Portable checks, live correctness, diagnostic profiling and contribution qualification answer different questions.

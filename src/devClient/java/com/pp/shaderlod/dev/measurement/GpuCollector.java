@@ -114,6 +114,13 @@ public final class GpuCollector {
         "diagnostic client-frame GPU timestamps; per-pass work and performance qualification unavailable");
   }
 
+  public Snapshot drain() {
+    poll();
+    var result = snapshot();
+    samples.clear();
+    return result;
+  }
+
   public void close() {
     if (active != null) {
       discard(active);

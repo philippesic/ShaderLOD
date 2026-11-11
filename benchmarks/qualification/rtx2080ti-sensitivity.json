@@ -1,0 +1,305 @@
+{
+  "schema": "shaderlod-campaign-v1",
+  "sessions": [
+    {
+      "schema": "shaderlod-comparison-v1",
+      "scope": "contribution",
+      "cases": [
+        {
+          "id": "coast-pan",
+          "pack": "ComplementaryReimagined_r5.9.3.zip",
+          "sha256": "fed6c879e732cf7fc7bc6570ebb1def43235aa7e96f62859fbdbdbfa0b484b38",
+          "from": [
+            0.5,
+            131,
+            0.5,
+            -45,
+            30
+          ],
+          "to": [
+            0.5,
+            131,
+            0.5,
+            -25,
+            30
+          ],
+          "dimension": "minecraft:overworld",
+          "surface": [
+            1024,
+            768
+          ]
+        }
+      ],
+      "arms": [
+        {
+          "id": "original",
+          "modules": [],
+          "delay_ms": 0
+        },
+        {
+          "id": "delay-100ms",
+          "modules": [],
+          "delay_ms": 100
+        }
+      ],
+      "blocks": 1,
+      "window_ms": 5000,
+      "warmup_ms": 1000,
+      "budget_ms": 90000,
+      "seed": 0
+    },
+    {
+      "schema": "shaderlod-comparison-v1",
+      "scope": "contribution",
+      "cases": [
+        {
+          "id": "coast-pan",
+          "pack": "ComplementaryReimagined_r5.9.3.zip",
+          "sha256": "fed6c879e732cf7fc7bc6570ebb1def43235aa7e96f62859fbdbdbfa0b484b38",
+          "from": [
+            0.5,
+            131,
+            0.5,
+            -45,
+            30
+          ],
+          "to": [
+            0.5,
+            131,
+            0.5,
+            -25,
+            30
+          ],
+          "dimension": "minecraft:overworld",
+          "surface": [
+            1024,
+            768
+          ]
+        }
+      ],
+      "arms": [
+        {
+          "id": "original",
+          "modules": [],
+          "delay_ms": 0
+        },
+        {
+          "id": "delay-100ms",
+          "modules": [],
+          "delay_ms": 100
+        }
+      ],
+      "blocks": 1,
+      "window_ms": 5000,
+      "warmup_ms": 1000,
+      "budget_ms": 90000,
+      "seed": 2
+    },
+    {
+      "schema": "shaderlod-comparison-v1",
+      "scope": "contribution",
+      "cases": [
+        {
+          "id": "coast-pan",
+          "pack": "ComplementaryReimagined_r5.9.3.zip",
+          "sha256": "fed6c879e732cf7fc7bc6570ebb1def43235aa7e96f62859fbdbdbfa0b484b38",
+          "from": [
+            0.5,
+            131,
+            0.5,
+            -45,
+            30
+          ],
+          "to": [
+            0.5,
+            131,
+            0.5,
+            -25,
+            30
+          ],
+          "dimension": "minecraft:overworld",
+          "surface": [
+            1024,
+            768
+          ]
+        }
+      ],
+      "arms": [
+        {
+          "id": "original",
+          "modules": [],
+          "delay_ms": 0
+        },
+        {
+          "id": "delay-100ms",
+          "modules": [],
+          "delay_ms": 100
+        }
+      ],
+      "blocks": 1,
+      "window_ms": 5000,
+      "warmup_ms": 1000,
+      "budget_ms": 90000,
+      "seed": 7
+    },
+    {
+      "schema": "shaderlod-comparison-v1",
+      "scope": "contribution",
+      "cases": [
+        {
+          "id": "coast-pan",
+          "pack": "ComplementaryReimagined_r5.9.3.zip",
+          "sha256": "fed6c879e732cf7fc7bc6570ebb1def43235aa7e96f62859fbdbdbfa0b484b38",
+          "from": [
+            0.5,
+            131,
+            0.5,
+            -45,
+            30
+          ],
+          "to": [
+            0.5,
+            131,
+            0.5,
+            -25,
+            30
+          ],
+          "dimension": "minecraft:overworld",
+          "surface": [
+            1024,
+            768
+          ]
+        }
+      ],
+      "arms": [
+        {
+          "id": "original",
+          "modules": [],
+          "delay_ms": 0
+        },
+        {
+          "id": "delay-100ms",
+          "modules": [],
+          "delay_ms": 100
+        }
+      ],
+      "blocks": 1,
+      "window_ms": 5000,
+      "warmup_ms": 1000,
+      "budget_ms": 90000,
+      "seed": 4
+    },
+    {
+      "schema": "shaderlod-comparison-v1",
+      "scope": "contribution",
+      "cases": [
+        {
+          "id": "coast-pan",
+          "pack": "ComplementaryReimagined_r5.9.3.zip",
+          "sha256": "fed6c879e732cf7fc7bc6570ebb1def43235aa7e96f62859fbdbdbfa0b484b38",
+          "from": [
+            0.5,
+            131,
+            0.5,
+            -45,
+            30
+          ],
+          "to": [
+            0.5,
+            131,
+            0.5,
+            -25,
+            30
+          ],
+          "dimension": "minecraft:overworld",
+          "surface": [
+            1024,
+            768
+          ]
+        }
+      ],
+      "arms": [
+        {
+          "id": "original",
+          "modules": [],
+          "delay_ms": 0
+        },
+        {
+          "id": "delay-100ms",
+          "modules": [],
+          "delay_ms": 100
+        }
+      ],
+      "blocks": 1,
+      "window_ms": 5000,
+      "warmup_ms": 1000,
+      "budget_ms": 90000,
+      "seed": 11
+    },
+    {
+      "schema": "shaderlod-comparison-v1",
+      "scope": "contribution",
+      "cases": [
+        {
+          "id": "coast-pan",
+          "pack": "ComplementaryReimagined_r5.9.3.zip",
+          "sha256": "fed6c879e732cf7fc7bc6570ebb1def43235aa7e96f62859fbdbdbfa0b484b38",
+          "from": [
+            0.5,
+            131,
+            0.5,
+            -45,
+            30
+          ],
+          "to": [
+            0.5,
+            131,
+            0.5,
+            -25,
+            30
+          ],
+          "dimension": "minecraft:overworld",
+          "surface": [
+            1024,
+            768
+          ]
+        }
+      ],
+      "arms": [
+        {
+          "id": "original",
+          "modules": [],
+          "delay_ms": 0
+        },
+        {
+          "id": "delay-100ms",
+          "modules": [],
+          "delay_ms": 100
+        }
+      ],
+      "blocks": 1,
+      "window_ms": 5000,
+      "warmup_ms": 1000,
+      "budget_ms": 90000,
+      "seed": 8
+    }
+  ],
+  "policy": {
+    "schema": "shaderlod-qualification-policy-v1",
+    "reference": "original",
+    "candidate": "delay-100ms",
+    "confidence": 0.95,
+    "minimum_gain": 0.01,
+    "maximum_harm": 0.05,
+    "cases": [
+      "coast-pan"
+    ],
+    "benefit_cases": [
+      "coast-pan"
+    ],
+    "sessions": 6,
+    "quality_criteria": "Harness slowdown control only; no optimization or product acceptance"
+  },
+  "startup_ms": 120000,
+  "budget_ms": 1440000
+}

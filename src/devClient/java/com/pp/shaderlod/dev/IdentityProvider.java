@@ -7,6 +7,12 @@ import java.util.List;
 import java.util.Map;
 
 public final class IdentityProvider implements OptimizationProvider {
+  private static int invocations;
+
+  public static int invocations() {
+    return invocations;
+  }
+
   @Override
   public String id() {
     return "identity-probe";
@@ -24,6 +30,7 @@ public final class IdentityProvider implements OptimizationProvider {
     if (!supports(identity) || !parameters.isEmpty()) {
       throw new IllegalArgumentException("Unsupported identity probe input");
     }
+    invocations++;
     return List.of();
   }
 }

@@ -4,7 +4,7 @@
 
 ## Target
 
-The existing live setup is the Asahi MacBook Air (Apple M1, Mesa, 2560×1600) with pinned Complementary Reimagined r5.9.3, its original options, native resolution and native AA, with Distant Horizons enabled. Running without DH (`--without-dh`) is a separate diagnostic and does not substitute for the DH-enabled target. Machine choice is an open development decision tracked in [tasks/machine-choice.md](../tasks/machine-choice.md).
+The existing live setup is the Asahi MacBook Air (Apple M1, Mesa, 2560×1600) with pinned Complementary Reimagined r5.9.3, its original options, native resolution and native AA, with Distant Horizons enabled. Running without DH (`--without-dh`) is a separate diagnostic and does not substitute for the DH-enabled target. The benchmark implementation was additionally allocated native Windows RTX 2080 Ti access. Its actual observed native monitor was 1024×768; it is a separate configuration, not a substitute for the Asahi surface.
 
 ## Running it
 
@@ -30,16 +30,10 @@ Runtime executable inputs are hashed before and after each attempt; drift invali
 
 `python3 -m shaderlod_host recover` marks an interrupted attempt only after its recorded host, boot and process group are provably quiescent. It never kills a possibly foreign process, never refunds a spent attempt and never rewrites a published result. Missing ownership metadata, another host or boot, or a live group make it refuse.
 
-## Frame capture
+## Benchmark sessions and profiling
 
-The preliminary fixed-scene capture path reuses an owned Linux client and publishes complete bounded frame windows with offline reports. See [profiling](profiling.md) for commands and current limits. Contribution/release comparison, route control and native Windows supervision remain outstanding.
+The shared Linux/native-Windows session controller, quick in-session validation, short comparisons and frozen multi-session qualification are documented in [benchmarks](benchmarks.md). It uses the same settings-screen functional probe and independent host validator. [Profiling](profiling.md) describes full-frame streams, renderer-stage diagnostics, pack mappings and separate motion captures.
 
-## Development profiler
+Native Windows supervision uses a kill-on-close owned process job; Linux uses an owned process group. Both refuse unknown process identity. `doctor --probe-worker --output-root EXTERNAL` exercises normal exit, deadline and parent-loss cleanup. Raw evidence and executable input snapshots remain external.
 
-The development mod exports bounded CPU render-callback durations and asynchronous GPU timestamps, each tagged with generation and frame, with pending, lost and invalid counts. `/shaderlod-profile` writes a diagnostic export. Collection never waits on a pending query. Per-pass cost maps, calibrated overhead and comparison methods do not exist yet; see [tasks/benchmark-design.md](../tasks/benchmark-design.md).
-
-## Not available
-
-Native Windows execution, cross-host artifact transfer and exhaustive loaded-library attestation are not implemented. Requests for them refuse.
-
-DH-enabled functional acceptance requires the structured `dh.enabled` observation to be true; mod presence or a readiness string alone is insufficient. Older records without this field cannot newly qualify that mode. This proves configured enablement only, not rendered DH coverage.
+DH-enabled functional acceptance requires structured `dh.enabled=true`; mod presence or a readiness string alone is insufficient. This proves configured enablement only, not rendered DH coverage. The Asahi native DH sampler-limit failure remains a blocked cell. No-DH validation does not replace it. Exhaustive loaded-system-library attestation and universal image/performance guarantees are not provided.

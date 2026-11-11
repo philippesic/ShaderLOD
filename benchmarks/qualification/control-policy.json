@@ -1,0 +1,16 @@
+{
+  "schema": "shaderlod-qualification-policy-v1",
+  "reference": "original",
+  "candidate": "delay-100ms",
+  "confidence": 0.95,
+  "minimum_gain": 0.01,
+  "maximum_harm": 0.05,
+  "cases": [
+    "coast-pan"
+  ],
+  "benefit_cases": [
+    "coast-pan"
+  ],
+  "sessions": 6,
+  "quality_criteria": "Harness slowdown control only; no optimization or product acceptance"
+}

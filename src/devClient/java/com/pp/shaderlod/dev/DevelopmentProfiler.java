@@ -18,6 +18,7 @@ public final class DevelopmentProfiler {
     benchmark = DevelopmentSettings.benchmarkDirectory().map(BenchmarkControl::new).orElse(null);
     if (benchmark != null) {
       NeoForge.EVENT_BUS.addListener(benchmark::tick);
+      NeoForge.EVENT_BUS.addListener(benchmark::stage);
     }
     NeoForge.EVENT_BUS.addListener(ProfileExport::register);
     NeoForge.EVENT_BUS.addListener(this::begin);
@@ -49,6 +50,7 @@ public final class DevelopmentProfiler {
 
   private void end(RenderFrameEvent.Post event) {
     if (benchmark != null) {
+      benchmark.endFrame();
       return;
     }
     long elapsed = System.nanoTime() - start;

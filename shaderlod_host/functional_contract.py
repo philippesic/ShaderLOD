@@ -9,6 +9,7 @@ def verify_functional(
     expected_source: str,
     expected_sha256: str,
     dh_present: bool,
+    expected_surface: tuple[int, int] = (2560, 1600),
 ) -> dict[str, object]:
     record = mapping(value, "functional result")
     required = {
@@ -67,10 +68,10 @@ def verify_functional(
     if record["source"] != expected_source:
         raise ValueError("functional source disagreement")
     if (
-        integer(record["native_width"], "width") != 2560
-        or integer(record["native_height"], "height") != 1600
+        integer(record["native_width"], "width") != expected_surface[0]
+        or integer(record["native_height"], "height") != expected_surface[1]
     ):
-        raise ValueError("Asahi native dimensions not preserved")
+        raise ValueError("declared native dimensions not preserved")
     integer(record.get("native_rendered_sections"), "native rendered sections", 1)
     integer(record.get("identity_rendered_sections"), "identity rendered sections", 1)
     dh = mapping(record["dh"], "DH observation")
