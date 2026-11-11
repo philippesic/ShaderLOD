@@ -10,7 +10,12 @@
     "missingReason",
     "closedEnums",
     "d3PrintWriter",
-    "d6dLauncher"
+    "d6dLauncher",
+    "archiveIdentityAndDerivedPatchPreserveOriginal",
+    "journalRecoversPreimageAndAbsenceAfterFreshReader",
+    "restorationJournalSurvivesReloadBoundaryAndRequiresExactFinish",
+    "transactionActivationAndOffRestoreOriginalNativeQueue",
+    "failedLinkAndWrongSourceRestoreWithoutPositiveWitness"
   ],
   "python": [
     "test_synthetic_round_trip",
@@ -18,6 +23,11 @@
     "test_measurement_contract",
     "test_health_and_evidence",
     "test_publisher_once",
-    "test_runtime_refusal"
+    "test_runtime_refusal",
+    "test_registered_iris_mixin_selectors_match_pinned_jar",
+    "test_runner_death_stops_owned_group_without_foreign_kill",
+    "test_recovery_is_idempotent_and_preserves_budget",
+    "test_source_drift_and_attempt_replay_refused",
+    "test_probe_outputs_move_beside_receipt"
   ]
 }

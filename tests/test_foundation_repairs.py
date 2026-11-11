@@ -259,3 +259,19 @@ def test_runtime_entry_pins_setup_and_shipping_identity(
             {},
             options + ["--shipping-jar", "/foreign.jar"],
         )
+
+
+def test_stale_owner_paths_cannot_write_or_launch() -> None:
+    for path in (
+        "python/publisher.py",
+        "shaderlod_host/storage/foreign.py",
+        "shaderlod_host/runtime/foreign.py",
+    ):
+        errors = validate(
+            {
+                path: b'from pathlib import Path\nPath("x").write_text("x")\nimport subprocess\nsubprocess.run(["true"])\n'
+            },
+            [],
+        )
+        assert any(error.startswith("D3:") for error in errors)
+        assert any(error.startswith("D6d:") for error in errors)

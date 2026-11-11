@@ -75,6 +75,16 @@ def preserve_outputs(profile: Path, destination: Path) -> dict[str, str]:
     return preserved
 
 
+def read_functional(path: Path) -> tuple[dict[str, object] | None, str | None]:
+    try:
+        observed = json.loads(path.read_bytes()) if path.exists() else None
+        if observed is not None and not isinstance(observed, dict):
+            raise ValueError("functional output must be an object")
+        return observed, None
+    except (OSError, ValueError) as error:
+        return None, str(error)
+
+
 def attempt_receipt(requested: Path | None, repository: Path, mode: str) -> Path:
     if requested is None:
         stamp = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())
@@ -236,10 +246,7 @@ def main() -> int:
                     worker.terminate()
                     worker.wait(timeout=3)
             functional = profile / "shaderlod-functional.json"
-            observed = (
-                json.loads(functional.read_bytes()) if functional.exists() else None
-            )
-            contract_error = None
+            observed, contract_error = read_functional(functional)
             if observed is not None:
                 pin = json.loads((root / "dependencies/primary-pack.json").read_bytes())
                 try:

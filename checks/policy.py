@@ -215,16 +215,13 @@ def python_rules(path: str, text: str, entries: list[dict[str, object]]) -> list
                     writing = False
                 if (
                     writing
-                    and not path.startswith(
-                        ("tests/", "shaderlod_host/storage/", "shaderlod_host/runtime/")
-                    )
+                    and not path.startswith(("tests/",))
                     and path
                     not in (
                         "checks/bootstrap.py",
                         "checks/driver.py",
                         "checks/tooltests.py",
                         "checks/publisher.py",
-                        "python/publisher.py",
                         "checks/selftest.py",
                         "shaderlod_host/storage.py",
                         "shaderlod_host/runtime.py",
@@ -242,7 +239,7 @@ def python_rules(path: str, text: str, entries: list[dict[str, object]]) -> list
                     or target.endswith("parse_args")
                     or target.endswith("parse_known_args")
                 )
-                and not path.startswith(("tests/", "shaderlod_host/runtime/"))
+                and not path.startswith(("tests/",))
                 and path
                 not in (
                     "checks/bootstrap.py",

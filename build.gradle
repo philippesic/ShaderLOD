@@ -137,7 +137,7 @@ pythonTasks.each { name ->
 	tasks.register(name, Exec) {
 		commandLine python.get(), '-m', 'checks.driver', name
 		if (name == 'toolSelfTest') {
-			inputs.files('dependencies/python.lock', 'dependencies/check-tools.lock.json', 'buildscript-gradle.lockfile', 'gradle.lockfile', 'checks/tooltests.py', 'checks/checkstyle.xml', 'build.gradle', 'settings.gradle', 'gradle.properties')
+			inputs.files('dependencies/runtime.lock.json', 'dependencies/python.lock', 'dependencies/check-tools.lock.json', 'buildscript-gradle.lockfile', 'gradle.lockfile', 'checks/tooltests.py', 'checks/checkstyle.xml', 'build.gradle', 'settings.gradle', 'gradle.properties')
 			outputs.file('build/reports/foundation/tool-self-tests.json')
 		}
 	}

@@ -26,8 +26,12 @@ def acquire(url: str, target: Path, expected: str) -> None:
     staged = Path(name)
     try:
         urllib.request.urlretrieve(url, staged)
-        if digest(staged) != expected:
-            raise RuntimeError("TOOLS: downloaded artifact checksum mismatch")
+        observed = digest(staged)
+        if observed != expected:
+            raise RuntimeError(
+                f"TOOLS: downloaded artifact checksum mismatch: {target}; URL {url}; "
+                f"expected {expected}; observed {observed}; stop and report"
+            )
         staged.replace(target)
     finally:
         staged.unlink(missing_ok=True)

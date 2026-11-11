@@ -3,7 +3,11 @@ from pathlib import Path
 
 import pytest
 
-from shaderlod_host.runtime_live import attempt_receipt, preserve_outputs
+from shaderlod_host.runtime_live import (
+    attempt_receipt,
+    preserve_outputs,
+    read_functional,
+)
 
 
 def test_default_receipt_is_outside_repository(
@@ -45,3 +49,16 @@ def test_probe_outputs_move_beside_receipt(tmp_path: Path) -> None:
     }
     assert sorted(p.name for p in profile.iterdir()) == ["options.txt"]
     assert (destination / "shaderlod-functional.png").read_bytes() == b"image"
+
+
+@pytest.mark.parametrize("payload", [b"{broken", b"[]", b"true", b"123"])
+def test_malformed_probe_remains_available_for_failure_receipt(
+    tmp_path: Path, payload: bytes
+) -> None:
+    source = tmp_path / "shaderlod-functional.json"
+    source.write_bytes(payload)
+    observed, failure = read_functional(source)
+    assert observed is None and failure
+    destination = tmp_path / "preserved"
+    preserve_outputs(tmp_path, destination)
+    assert (destination / source.name).read_bytes() == payload
