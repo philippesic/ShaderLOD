@@ -11,7 +11,7 @@ Install Python 3.13 and Git, enable the pre-commit hook with `git config core.ho
 | Command | Purpose |
 | --- | --- |
 | `./check` | Fast lane; labels itself `PARTIAL` |
-| `./check --full` | Everything portable; run by the pre-commit hook and CI |
+| `./check --full` | Everything portable; run by the pre-commit hook |
 | `./check --fresh` | Full gate without task reuse |
 | `./verify --cpu` | Synthetic contract and publication round trip |
 | `./verify --runtime …` | Live functional probe on an allocated machine; see [live verification](docs/runtime.md) |

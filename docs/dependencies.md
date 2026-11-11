@@ -27,3 +27,9 @@ A `TOOLS:` checksum or version error means the bytes on disk or at the URL diffe
 A `TOOLS: incomplete JDK` error names an interrupted installation directory. That directory is owned by bootstrap and can be removed so the next run reinstalls it.
 
 Changing Iris, Sodium, DH, NeoForge or Minecraft versions also requires re-checking the mixin selectors in [Iris integration](iris-integration.md); a non-matching selector fails startup.
+
+## Runtime updates
+
+Edit runtime versions, filenames, URLs and digests only in `dependencies/runtime.lock.json` for an approved update. `mod_version` is the version declared by the mod, which can differ from the download's release label. Gradle reads the JAR filenames and NeoForge version here and expands Minecraft, NeoForge and mod dependency ranges into the packaged metadata. Each range admits the pinned version up to the next patch.
+
+`./check` reads every registered Iris mixin's target and method selector and checks that method name and descriptor against the pinned JAR without loading Minecraft. This catches removed or changed target methods; it does not prove injection sites or live compatibility. Run `./check --full` and then live verification for an update. Earlier live findings remain scoped to their original versions.

@@ -26,7 +26,7 @@ ShaderLOD is a NeoForge 1.21.1 client mod that selects Iris shader packs nativel
 
 - Enable the pre-commit hook once per clone: `git config core.hooksPath .githooks`.
 - `./check` is the fast lane (about 5 to 8 seconds warm) and labels itself `PARTIAL`.
-- `./check --full` runs everything portable. The pre-commit hook and CI run it; run it before handoff too.
+- `./check --full` runs everything portable. The pre-commit hook runs it; run it before handoff too.
 - When a check fails, fix the cause. The rule's fix is in [checks](docs/checks.md). Replacing a rule needs a stricter or equal rule that still rejects the original bad specimen.
 - A `TOOLS:` checksum mismatch means stop and report; never edit a lock to pass.
 - CPU checks say nothing about live behavior. Live claims need `./verify --runtime` receipts.

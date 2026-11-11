@@ -82,6 +82,7 @@ def java_pairs(root: Path) -> dict[str, dict[str, object]]:
             "settings.gradle",
             "gradle.properties",
             "checks/checkstyle.xml",
+            "dependencies/runtime.lock.json",
         ):
             source, target = root / name, work / name
             target.parent.mkdir(parents=True, exist_ok=True)
@@ -96,6 +97,8 @@ def java_pairs(root: Path) -> dict[str, dict[str, object]]:
                 for line in build.splitlines()
                 if "compileOnly files(" not in line
                 and "testRuntimeOnly files(" not in line
+                and "compileOnly runtimeJars" not in line
+                and "testRuntimeOnly runtimeJars" not in line
                 and "additionalRuntimeClasspath files(" not in line
             )
             + "\n"

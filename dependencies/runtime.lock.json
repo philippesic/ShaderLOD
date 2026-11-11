@@ -5,6 +5,7 @@
   "artifacts": {
     "iris": {
       "filename": "iris-neoforge-1.8.12+mc1.21.1.jar",
+      "mod_version": "1.8.12",
       "url": "https://cdn.modrinth.com/data/YL57xq9U/versions/t3ruzodq/iris-neoforge-1.8.12%2Bmc1.21.1.jar",
       "hashes": {
         "sha1": "a3e6355915c7d3b2bc392724795113e51d289378",
@@ -23,6 +24,7 @@
     },
     "sodium": {
       "filename": "sodium-neoforge-0.6.13+mc1.21.1.jar",
+      "mod_version": "0.6.13",
       "url": "https://cdn.modrinth.com/data/AANobbMI/versions/Pb3OXVqC/sodium-neoforge-0.6.13%2Bmc1.21.1.jar",
       "hashes": {
         "sha512": "ce58f34d05d96c0a109a5cea23c741f6bdb2e6be31fc087c5989274cefca5f10ba0c08c62083cf554a51f2c7667bf46e4164383f675c844e77633aef2659996b",
@@ -41,6 +43,7 @@
     },
     "distanthorizons": {
       "filename": "DistantHorizons-3.3.3-1.21.1-fabric-neoforge.jar",
+      "mod_version": "3.3.3",
       "url": "https://cdn.modrinth.com/data/uCdwusMi/versions/9w34y8ai/DistantHorizons-3.3.3-1.21.1-fabric-neoforge.jar",
       "hashes": {
         "sha1": "4357b4d19fab818780c94f0e43dad1cc931634b2",

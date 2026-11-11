@@ -3,7 +3,7 @@
 | Command | What it runs | When |
 | --- | --- | --- |
 | `./check` | Fast lane: compile, Error Prone, Checkstyle, Spotless, dependency analysis, ArchUnit boundaries, Ruff, mypy, Java and Python tests, repository policy, comment ban, exception audit. Labels itself `PARTIAL`. | While editing |
-| `./check --full` | Everything portable: the fast lane plus rule specimens, tool self-tests and the shipping-JAR package audit. The pre-commit hook and CI run this. No CI is configured yet, because the repository has no remote. | Before every commit and at handoff |
+| `./check --full` | Everything portable: the fast lane plus rule specimens, tool self-tests and the shipping-JAR package audit. The pre-commit hook runs this. Checks stay local; remote CI is not used. | Before every commit and at handoff |
 | `./check --fresh` | `--full` with Gradle task reuse disabled | After changing check tooling, or when reuse is suspect |
 
 A warm `./check` after a one-file edit takes about 5 to 8 seconds. A warm `--full` with no changes takes about 9 seconds; `--fresh` takes about 100 seconds, mostly tool self-tests. Enable the hook once per clone with `git config core.hooksPath .githooks`; no check command changes Git configuration.
