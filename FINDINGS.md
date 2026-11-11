@@ -55,3 +55,11 @@ Current answers within their stated scope. Read the linked result before applyin
 | F39 | Historical benchmark definitions and profiler design are reusable references, with unimplemented and unvalidated parts identified. | [Result](results/profiling-and-benchmark-design-lessons/result.md) |
 | F40 | Earlier viewport, sampling-phase and runtime-readback mistakes provide concrete test-design lessons. | [Result](results/early-rendering-contract-lessons/result.md) |
 | F41 | Locally available history is independently preserved; remote-only and already missing artifacts remain explicit limitations. | [Result](results/historical-evidence-preservation/result.md) |
+
+## Legacy MacBook Pro controls
+
+| ID | Conclusion | Result |
+| --- | --- | --- |
+| F42 | The earlier program defined 61 controls across nine families; implementation coverage is not 549 performance wins. | [Result](results/legacy-mac-61-controls/result.md) |
+| F43 | Combined native-shader CPU profiles supplied scoped positive Mac evidence, with drift and family-specific limits. | [Result](results/legacy-mac-native-cpu-profiles/result.md) |
+| F44 | Fifteen later Mac backlog items closed with mixed/parked outcomes and no new generated-pack winner. | [Result](results/legacy-mac-backlog-outcomes/result.md) |

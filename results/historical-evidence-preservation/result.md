@@ -15,3 +15,7 @@ Retain this evidence store as the backing archive for the new knowledge index. F
 [Preservation receipt and coverage inventory](../sources/historical-preservation.json) sha256:f7aa48ef4394be8598d7b6a32db6a3133bb21ae496249a2f6e38b5926821f8a9
 
 The receipt identifies the original source revision, full per-file manifest, earlier archives, external links and remaining limitations. See [artifact access](../../docs/results.md#historical-artifact-access) for relocation rules. Original reports retain their original paths as provenance; those paths are interpreted beneath the preserved snapshot.
+
+## Correction
+
+2026-11-10: The initial readable import omitted the legacy 61-control MacBook Pro program even though its archive bytes were preserved. The legacy-mac-61-controls catalog and two companion results now expose its 549 family/control records and later local impact findings. Preservation completeness must not be described as complete semantic review of every archived investigation.
