@@ -13,7 +13,7 @@ The earlier one-time metadata force-push exception is complete, not standing aut
 
 ## Done when
 The old checkout and superseded bulk history are retired after confirming no new work,
-and this completed task and its AGENTS navigation are removed.
+and this completed task is removed.
 
 ## State
 Canonical checkout: /home/philip/ShaderLOD, branch main, established GitHub origin.
@@ -45,5 +45,4 @@ new game or native Windows run was needed for these path changes. On Philip's de
 request, confirm no new work or old-checkout processes, then remove
 /home/philip/ShaderLOD-old-delete and the superseded bulk archive under
 /home/philip/.local/share/shaderlod/evidence/history. Keep the compatibility data
-symlink while immutable records use it. Remove this task and its AGENTS link after
-that cleanup.
+symlink while immutable records use it. Remove this task after that cleanup.

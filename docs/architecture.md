@@ -17,7 +17,7 @@
 | `tests` | Python tests |
 | `dependencies` | Digest locks ([dependencies](dependencies.md)) |
 | `results` | Readable conclusions indexed by `FINDINGS.md`; frozen compact supporting records in `results/sources/` |
-| External artifact root | Large raw evidence under `~/.local/share/shaderlod/evidence`; access and identity rules in [results](results.md) |
+| External artifact root | Working raw outputs under `~/.local/share/shaderlod/evidence`; extraction, retention and deletion rules in [results](results.md) |
 | `tasks` | Open multi-session tasks |
 
 Package boundaries and forbidden dependencies are enforced by ArchUnit against compiled output, not by this table.
