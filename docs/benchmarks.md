@@ -60,8 +60,8 @@ Qualification is not merely a longer development route. Use fixed paired blocks 
 A practical starting matrix is up to three pack roles × four cases × three paired blocks × two arms × 30 seconds, or 36 minutes of capture. Reload/readiness, targeted quality, two five-minute sustained arms and a two-case interaction supplement make roughly 1.5–2.5 hours of primary contribution work; release with a distinct original/incumbent/candidate is usually longer. These are planning estimates, not fixed counts or authorization to exceed a budget. The executable campaign lists actual sessions/cases/windows and includes startup, close and lifecycle allowances. Pilot variance and sensitivity determine whether that allocation can answer the chosen margins. Too little precision remains inconclusive.
 
 ```
-python3 -m shaderlod_host qualify --spec /authored/contribution.json --plan
-python3 -m shaderlod_host qualify --spec /authored/contribution.json --launch LAUNCH --profile PROFILE --world WORLD --display DISPLAY --ownership-root OWNERSHIP --output-root .local/artifacts/fresh-campaign
+python3 -m shaderlod_host qualify --spec benchmarks/contributions/NAME.json --plan
+python3 -m shaderlod_host qualify --spec benchmarks/contributions/NAME.json --launch LAUNCH --profile PROFILE --world WORLD --display DISPLAY --ownership-root OWNERSHIP --output-root .local/artifacts/fresh-campaign
 python3 -m shaderlod_host qualify --policy POLICY --runs .local/artifacts/campaign/comparison-1/result.json .local/artifacts/campaign/comparison-2/result.json --review REVIEW --output-root .local/artifacts/fresh-assessment
 python3 -m shaderlod_host history --runs .local/artifacts/first/result.json .local/artifacts/later/result.json --output-root .local/artifacts/fresh-history
 ```
