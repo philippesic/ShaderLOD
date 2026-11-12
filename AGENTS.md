@@ -5,7 +5,8 @@ ShaderLOD is a NeoForge 1.21.1 client mod that selects Iris shader packs nativel
 ## Where things are
 
 - [README](README.md): setup and commands.
-- Active development decisions: [benchmark design](tasks/benchmark-design.md), [agent ops](tasks/agent-ops.md), and [machine choice](tasks/machine-choice.md).
+- Benchmark workflows: [Benchmarks](docs/benchmarks.md) and [benchmark skill](skills/benchmark/SKILL.md).
+- Active development decisions: [agent ops](tasks/agent-ops.md) and [machine choice](tasks/machine-choice.md).
 - [Architecture](docs/architecture.md): layout, entry points, Apply/recovery flow.
 - [Development](docs/development.md): how to change, validate and close work.
 - [Iris integration](docs/iris-integration.md): selection states, native writer journal, mixins, sampler indices, DH.
