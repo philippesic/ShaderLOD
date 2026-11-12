@@ -22,8 +22,9 @@ follow relevant results rather than reading the entire archive.
 These project skills are tracked here; read them at the indicated trigger even if
 a global skill catalog does not list them. Shared `benchmark-design` is for designing
 or repairing measurement methods; ordinary runs use the project benchmark skill.
-[README](README.md) holds setup and the full topic map. Document roles and task
-lifecycle live in [development](docs/development.md) and [tasks](tasks/README.md).
+[README](README.md) introduces the product. Setup, the full topic map and document
+roles live in [development](docs/development.md); task lifecycle is in
+[tasks](tasks/README.md).
 
 ## Correctness and code boundaries
 
@@ -58,7 +59,10 @@ global instructions and project mechanics in their topic docs.
 - No scheduler, GPU lease service or automatic evidence expiry. Cleanup follows
   global ownership rules and the [result specification](docs/results.md); raw evidence
   stays under `~/.local/share/shaderlod-next/evidence`.
-- This repository has no remote. Do not add one or push.
+- The established user-owned origin is `git@github.com:philippesic/ShaderLOD.git`.
+  Commit coherent checkpoints and push under the global publishing convention.
+  Preserve legacy history during the agreed main-branch cutover; never force-push.
 
-Active environment decisions: [agent operations](tasks/agent-ops.md) and
-[machine choice](tasks/machine-choice.md). They are context, not unrelated assignments.
+Active transition: [repository cutover](tasks/repository-cutover.md). The long-term
+[machine choice](tasks/machine-choice.md) remains separate. Tasks are context, not
+unrelated assignments.

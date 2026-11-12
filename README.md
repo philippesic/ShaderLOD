@@ -1,45 +1,33 @@
-# ShaderLOD-next
+# ShaderLOD
 
-A NeoForge 1.21.1 / Minecraft 1.21.1 client mod for Iris shader packs. Its settings screen selects a pack natively and applies optional optimization modules to it. Apply reloads Iris and counts the selection as active only after a frame is submitted through the selected pipeline. Off restores the previous native settings, Cancel discards unapplied edits, and a failed Apply restores automatically.
+An experimental Minecraft client mod for automatic shader-pack optimizations.
+The goal is better performance across shader packs while preserving their appearance
+and your chosen settings.
 
-The existing live setup uses Complementary Reimagined r5.9.3 with Distant Horizons 3.3.3. Without DH it passes live functional verification on an Asahi M1. With DH enabled, the original pack exceeds the GPU's fragment sampler limit; see [FINDINGS](FINDINGS.md) F9 and F10. No optimization exists yet. The [benchmark workflows](docs/benchmarks.md) have [bounded live qualification](results/benchmark-workflows/result.md); this accepts no optimization.
+ShaderLOD currently provides native shader-pack selection and an optimization-module
+framework. No performance optimizations are shipped yet; this is not a release-ready
+performance mod.
 
-Open development decisions are [agent ops](tasks/agent-ops.md) and [machine choice](tasks/machine-choice.md).
+## Requirements
 
-## Setup
+- Minecraft 1.21.1 with NeoForge
+- Iris and Sodium for NeoForge
+- A compatible shader pack
 
-Install Python 3.13 and Git, enable the pre-commit hook with `git config core.hooksPath .githooks`, then run `./check`. The first run downloads and verifies the pinned JDK, Gradle and Python tools into user-local caches.
+See [dependencies](docs/dependencies.md) for the versions used during development.
+Shader-pack and Distant Horizons compatibility is still being tested.
 
-| Command | Purpose |
-| --- | --- |
-| `./check` | Fast lane; labels itself `PARTIAL` |
-| `./check --full` | Everything portable; run by the pre-commit hook |
-| `./check --fresh` | Full gate without task reuse |
-| `./verify --cpu` | Synthetic contract and publication round trip |
-| `./verify --runtime …` | Live functional probe on an allocated machine; see [live verification](docs/runtime.md) |
-| `python3 -m shaderlod_host doctor` | Host capabilities, without launching anything |
-| `python3 -m shaderlod_host --help` | Host runner: plan, run, verify, report, recover |
+## Usage
 
-## Accepted optimizations
+Place a development build of ShaderLOD in your client's `mods` folder alongside
+its dependencies. Open ShaderLOD's configuration screen from the Mods menu to
+select a shader pack and apply available modules. Original shader archives are
+preserved, and Off restores the previous selection.
 
-| Optimization | Scope | Evidence |
-| --- | --- | --- |
+## Development
 
-None yet. Agent rules and the documentation map are in [AGENTS.md](AGENTS.md).
+Build and contribution instructions are in the [development guide](docs/development.md).
 
-## Navigation
+## License
 
-- [Benchmarks](docs/benchmarks.md): fast validation, one-minute comparisons, qualification and recovery.
-- [Optimize skill](skills/optimize/SKILL.md): investigate, implement and evaluate an optimization.
-- [Benchmark skill](skills/benchmark/SKILL.md): the maintained agent measurement procedure.
-- [Profiling](docs/profiling.md): interactive timelines, structured data and pack mappings.
-- [Optimization direction](docs/optimization-philosophy.md): one reusable product and perceptual quality.
-- [Architecture](docs/architecture.md): how the project works.
-- [Development](docs/development.md): changing, maintaining and closing work.
-- [Checks](docs/checks.md): selecting validation and repairing failures.
-- [Iris integration](docs/iris-integration.md): activation, native settings and compatibility.
-- [Dependencies](docs/dependencies.md): pins and the supported update path.
-- [Results](docs/results.md): result format and closeout rules.
-- [FINDINGS](FINDINGS.md): established conclusions and supporting results.
-- [Tasks](tasks/README.md): unfinished-work convention.
-- [Agent rules](AGENTS.md) and [close-results](skills/close-results/SKILL.md): working expectations and investigation closeout.
+[MIT](LICENSE).

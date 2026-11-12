@@ -1,10 +1,42 @@
 # Development
 
-[AGENTS](../AGENTS.md) routes assigned work to the relevant procedure. Follow
-[README setup](../README.md#setup), including enabling the hook once. Read the
+[AGENTS](../AGENTS.md) routes assigned work to the relevant procedure. Follow the setup below, including enabling the hook once. Read the
 assigned task and relevant topic docs; use the [architecture](architecture.md) to
 locate ownership and entry points. For optimization work, use the
 [optimize skill](../skills/optimize/SKILL.md) and relevant prior FINDINGS.
+
+## Setup
+
+Use Python 3.13 and Git. Enable the local hook once per clone:
+
+```
+git config core.hooksPath .githooks
+./check
+```
+
+The first check acquires and verifies the pinned JDK, Gradle and Python tools;
+subsequent runs reuse user-local caches. See [dependencies](dependencies.md) for
+pins and repair/update paths. Run `./check --full` for the complete portable gate.
+To build a development JAR after setup, use the pinned JDK:
+
+```
+JAVA_HOME=~/.local/share/shaderlod-jdks/jdk-21.0.13+9 ./gradlew --no-daemon jar
+```
+
+The shipping JAR is `build/libs/shaderlod-0.1.0.jar`. The development probe JAR is
+separate and is not a distribution artifact. Live profiles, worlds and captures
+are external inputs prepared through [runtime](runtime.md) and [benchmarks](benchmarks.md).
+A source clone does not include those artifacts.
+
+## Topic map
+
+- [Architecture](architecture.md): code ownership, behavior and entry points.
+- [Checks](checks.md): validation selection, coverage and failure repairs.
+- [Iris integration](iris-integration.md): activation, native settings and compatibility.
+- [Dependencies](dependencies.md): pins and the supported update path.
+- [Optimization direction](optimization-philosophy.md) and [modules](optimizations.md): mechanisms and implementation contracts.
+- [Benchmark workflows](benchmarks.md), [definitions](benchmark-definitions.md) and [profiling](profiling.md): measurements and their limits.
+- [Results](results.md), [FINDINGS](../FINDINGS.md) and [tasks](../tasks/README.md): evidence, prior conclusions and unfinished work.
 
 ## Change and validate
 
