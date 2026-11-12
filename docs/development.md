@@ -10,13 +10,16 @@ locate ownership and entry points. For optimization work, use the
 RTX 2080 Ti (WSL) is the primary development machine; Asahi is secondary. Each
 has its own `/home/philip/ShaderLOD` checkout of the established origin. Push source
 changes before switching machines and fast-forward a clean destination checkout.
+The Mac retains only `.git` at `/Users/pippo/github/shaderlod` for historical
+repository identity and threads; it is not a development checkout. RTX 5080 has
+no ShaderLOD checkout.
 Ignored tools, prepared clients/worlds and host setup are local resources, not part
 of Git synchronization. A source checkout alone does not qualify a runtime or GPU. On the 2080 Ti, editing
 and portable checks run in WSL; GPU benchmarks use the maintained native Windows
 supervision and preparation path in [benchmarks](benchmarks.md).
 
-The 2080 Ti T3 project is pinned, while secondary/historical registrations retain
-their threads and point to their own checkouts. Pinning and archiving do not set
+The 2080 Ti T3 project is pinned. Secondary and historical registrations retain
+their threads; the Mac registration points to its Git-only folder. Pinning and archiving do not set
 new-thread routing: the current Mac T3 client inherits the current thread or draft’s
 machine, and grouped repositories may still select an archived representative.
 Explicitly select RTX 2080 Ti in the new draft’s machine selector before submitting.
