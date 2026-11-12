@@ -20,6 +20,11 @@ Known tool constraints:
 - JUnit uses its API and engine artifacts directly, because the dependency analysis rejects the unused aggregator.
 - The Gradle wrapper JAR is the official 9.2.1 artifact, verified against services.gradle.org.
 
+A fresh machine can require parent POM or Gradle module metadata absent from a
+previously warm cache. Keep verification enabled; verify missing metadata against
+the official repository before recording its checksum. Adding verified metadata
+coverage does not authorize changing locked versions or replacing a mismatching pin.
+
 ## When a pin no longer matches
 
 A `TOOLS:` checksum or version error means the bytes on disk or at the URL differ from the lock. Do not edit the hash, version or lock to make it pass. Stop and report the mismatching artifact, the expected and observed digests and the URL. Updating a pin is a task the user approves; it changes the runtime identity, and earlier live findings no longer apply to the new build.

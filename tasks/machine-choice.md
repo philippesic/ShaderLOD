@@ -20,7 +20,10 @@ established origin. T3 registration, icon and source synchronization are verifie
 registrations are archived secondary/history; RTX 2080 Ti is the active pinned
 project. Python 3.13.2 is installed inside the primary checkout. Its cold portable
 check exposed a copied-venv shared-library failure; the maintained bootstrap now
-uses symlinks and the corrected cold path is being checked.
+uses symlinks. The next cold check found four missing verification entries for
+existing dependency metadata. Official Maven Central bytes and available SHA-256
+sidecars matched; only those four checksums were added, with no existing pin or
+locked version changed. The corrected cold check remains to run.
 This selection does not establish a newly prepared or qualified live runtime. Native Windows supervision, prepared
 runtime/profile reuse and cross-host evidence transfers are implemented and exercised.
 Benchmark controls passed on RTX 2080 Ti at its observed native 1024x768 surface and
