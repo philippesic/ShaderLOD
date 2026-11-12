@@ -57,8 +57,9 @@ global instructions and project mechanics in their topic docs.
 - Identify owned processes by host, boot and process birth, never PID alone. Use
   maintained recovery paths and preserve active/shared work.
 - No scheduler, GPU lease service or automatic evidence expiry. Cleanup follows
-  global ownership rules and the [result specification](docs/results.md); raw evidence
-  stays under `~/.local/share/shaderlod-next/evidence`.
+  global ownership rules and the [result specification](docs/results.md). Temporary
+  raw outputs live under `~/.local/share/shaderlod-next/evidence`; closeout extracts
+  compact evidence into results/ and removes superseded bulky outputs within scope.
 - The established user-owned origin is `git@github.com:philippesic/ShaderLOD.git`.
   Commit coherent checkpoints and push under the global publishing convention.
   Preserve legacy history during the agreed main-branch cutover; never force-push.

@@ -47,11 +47,13 @@ A result starts with a finding-led title and a short explanation of what happene
 
 Figures must name quantities and units, show controls and uncertainty when available, and distinguish independent runs from samples within a run. Keep numerical data and executable regeneration instructions. Do not invent error bars or interpret missing observations as zero. Figures explain the result; logs are supporting material.
 
-Link frozen records with SHA-256 identities and the executed source, including any dirty patch or snapshot. Mark unavailable provenance explicitly; it prevents reproducibility claims and deletion of potentially necessary inputs, not publication of an honestly limited historical summary.
+Identify the executed source, including any relevant dirty patch, dependency versions and tested inputs. Keep compact measurements with SHA-256 identities sufficient to check the conclusions and regenerate figures. Preserve failures, exclusions and missingness in that retained data. Mark unavailable provenance explicitly and limit reproducibility claims accordingly.
 
-Raw records remain immutable. A summary correction records the date, changed claim and reason in the result; materially new investigations get new results. Update FINDINGS to the current scoped conclusion without hiding relevant prior results.
+Raw records remain immutable while retained; this does not require permanent retention of every output. Closeout extracts useful measurements, conditions, limitations and conclusions into results/, verifies the retained evidence against the raw attempt, and then deletes superseded bulky outputs within the investigation's authorized scope. Keep only inputs or records still necessary to support the claim and not adequately represented by the compact result. Logs, captures, caches and frozen environments are not retained merely because they were produced. Do not delete active/shared work or select away unfavorable evidence. Record what was discarded and any resulting reproduction limits. Existing historical archives need this extraction and verification before deletion; this policy is not blanket permission to erase them.
 
-Before removing rejected implementation, verify that source and necessary dependencies are recoverable. Preserve reusable code and regression tests only when they still serve the project. Apply authorized cleanup and validate the remaining project with ./check --full before closing its task. Disk-space policy belongs to agent ops; closeout grants no new deletion or publication authority.
+A summary correction records the date, changed claim and reason in the result; materially new investigations get new results. Update FINDINGS to the current scoped conclusion without hiding relevant prior results.
+
+Before removing rejected implementation, verify that source and necessary dependency identities are recoverable. Preserve reusable code and regression tests only when they still serve the project. Apply authorized cleanup and validate the remaining project with ./check --full before closing its task. Closeout includes extracting evidence and removing superseded outputs; it grants no unrelated deletion or publication authority.
 
 Historical imports identify what was inspected, do not relabel old measurements as new runs, and disclose missing source or inputs. Completed result pages may coexist with an unresolved scientific question; keep a task open only when further work is assigned.
 
@@ -59,7 +61,7 @@ Historical imports identify what was inspected, do not relabel old measurements 
 
 AGENTS.md holds rules every agent needs; README.md introduces and navigates the project. Current architecture belongs in docs/architecture.md and development procedures in docs/development.md. Other docs remain current topic guides. Never accumulate obsolete instructions or commit diaries in docs.
 
-Use one descriptive result folder per coherent question or investigation, not per run, commit or session. Basic result sections are: conclusion-led title and explanation; useful chart or table when warranted; conditions and limitations; decision; evidence and executed-source references. Optional result.json holds structured facts or figure inputs. Optional figures and small tables stay beside result.md. Small archived reports belong in results/sources/; large execution records stay external.
+Use one descriptive result folder per coherent question or investigation, not per run, commit or session. Basic result sections are: conclusion-led title and explanation; useful chart or table when warranted; conditions and limitations; decision; evidence and executed-source references. Optional result.json holds structured facts or figure inputs. Optional figures and small tables stay beside result.md. Small supporting reports belong in results/sources/. Large execution records are temporary external working material unless a specific result requires their continued retention.
 
 FINDINGS contains a short scoped conclusion and link for each result. Group by topic when helpful. Negative and inconclusive results are established knowledge about what happened, not proof of universal impossibility. Avoid copying full writeups into the index.
 
@@ -67,7 +69,11 @@ Open task → investigate → write result if warranted → update current docs 
 
 ## Historical artifact access
 
-Historical results are self-contained at two levels: readable conclusions and compact supporting records are tracked under results/; the complete locally available historical checkout, experiments, source history, dependencies and frozen inputs are preserved at `/home/philip/.local/share/shaderlod-next/evidence/history/original-repository`. The earlier document/checkpoint archives are retained beside it in `earlier-document-archive/`. These are archival references, not current instructions.
+The full historical snapshot is a temporary preservation fallback, not the intended permanent evidence format. Some supporting reports and inputs have not yet been extracted into compact results. Current references still depend on it; complete that extraction and verify the retained evidence before pruning the snapshot. Do not describe the historical import as complete while that dependency remains.
+
+The user-approved coauthor-trailer removal changed 31 newer commit IDs without changing their source trees. [Commit identity mapping](../results/sources/commit-id-map.json) resolves earlier citations to equivalent rewritten commits; original execution records retain their recorded identities. The mapping identifies the recovery bundle containing the original commits. The older repository's published branch tips were not rewritten.
+
+Historical imports currently have two storage levels: readable conclusions and compact supporting records are tracked under results/; the complete locally available historical checkout, experiments, source history, dependencies and frozen inputs are preserved at `/home/philip/.local/share/shaderlod-next/evidence/history/original-repository`. The earlier document/checkpoint archives are retained beside it in `earlier-document-archive/`. These are archival references, not current instructions.
 
 Old absolute `/home/philip/ShaderLOD/` paths embedded in immutable records map to the same relative path beneath that snapshot. Relative links in an archived report resolve from its original path there. The adjacent snapshot-manifest.json records hashes and symlink targets. Never execute old launch instructions without adapting them to current authorization and tools.
 
