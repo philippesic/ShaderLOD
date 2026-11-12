@@ -20,9 +20,10 @@ their threads and point to their own checkouts. Pinning and archiving do not set
 new-thread routing: the current Mac T3 client inherits the current thread or draft’s
 machine, and grouped repositories may still select an archived representative.
 Explicitly select RTX 2080 Ti in the new draft’s machine selector before submitting.
-A persistent ShaderLOD-specific machine default is not configured; see the
-[T3 routing task](../tasks/t3-default-machine.md). The shared project favicon is
-tracked at `assets/shaderlod.svg`.
+Philip chose explicit machine selection rather than a T3 client change. Before
+sending a new draft, confirm its machine is RTX 2080 Ti (`DESKTOP-T4JKGJB`) and
+its project is ShaderLOD. No persistent per-project routing default is configured.
+The shared project favicon is tracked at `assets/shaderlod.svg`.
 
 ## Setup
 
