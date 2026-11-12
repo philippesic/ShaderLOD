@@ -12,8 +12,10 @@ and removing the other remote branch once its history is retained. Rename, T3 pr
 switch and old-checkout deletion are later cutover actions; do not perform them now.
 Philip subsequently approved a one-time force-with-lease push to remove four Cursor
 coauthor trailers, preserving recovery bundles and the old-to-new commit mapping.
-This is not standing force-push authority. No blanket historical archive deletion is
-authorized: extract useful evidence and verify compact results before pruning it.
+This is not standing force-push authority. Philip assigned complete historical
+extraction into this repository, with a return only when the old checkout and bulk
+archive are no longer needed. Verify compact results before recommending retirement;
+the actual rename, workspace switch and old-directory deletion remain later actions.
 
 ## Done when
 Remote main contains the exact reviewed new tree and both prior histories, old branch
@@ -37,16 +39,23 @@ dependency caches were reused. This documentation cutover adds no live rendering
 performance claim. The README is user-focused; contributor setup/navigation lives in
 docs/development.md. Completed agent-operations work no longer has an active task.
 
-The retained artifact snapshot at
-/home/philip/.local/share/shaderlod-next/evidence/history/original-repository holds
-original source, Git history and ignored evidence. The current old checkout's 184,669
-regular files and symlinks outside .git all matched this snapshot, with no missing or
-changed entries. Git preservation was checked separately. No symlink from the new
-checkout resolves into the old checkout. Some compact results still depend on reports
-or inputs in the archive: the import did not yet meet Philip's no-archive-dependency
-goal. Extract useful evidence, verify claims and figure regeneration from the retained
-compact data, and then prune superseded bulky material. Do not retain the complete
-snapshot by default. These copies share a disk and are not an independent disaster backup.
+Historical reports and compact measurements now live in results/sources/history,
+indexed by results/historical-evidence-extraction/catalog.md. The extraction retains
+failed/inconclusive records, earlier report versions, quantified ledger excerpts,
+nested RTX controls and recoverable authored source. Existing findings reference this
+data rather than old directories. Source recovery covers 2,963 unique authored sources:
+2,939 main-history Git blobs and 24 additional text records. The 61-control Mac program
+remains distinct from the later sixteen-candidate campaign. Detailed raw reanalysis
+and exact old environment/world replay are deliberately outside the retained claims.
+
+The old checkout's current 184,669 entries outside .git matched the safety snapshot
+before extraction. No symlink from the new checkout resolves into the old checkout.
+With both old locations hidden, the offline verifier passes, all 2,939 Git-backed
+source variants recover with matching SHA-256, and the calibration figure regenerates
+byte-identically. The isolated full gate passes (11 tasks executed/88 reused; 104
+Python tests executed). A final byte audit checked all 184,669 current old-checkout
+entries outside .git with zero differences. Neither old directory has been deleted. Keep the new repository's prepared runtime profiles/evidence and small Git
+recovery bundles outside the old-directory retirement scope.
 
 Cutover receipts, audit, recovery bundles and clean-clone check log are under
 /home/philip/.local/share/shaderlod-next/evidence/repository-cutover-fkco2lv0.
@@ -54,9 +63,13 @@ Rename, T3 workspace change and old-checkout deletion have not been performed.
 Long-term hardware and independent backup setup remain separate decisions.
 
 ## Next
+Publish the verified extraction and confirm its evidence/source recovery from a
+fresh remote clone. Extraction scope, retained-data integrity and intentional omissions
+belong in results/historical-evidence-extraction/result.md.
+
 When Philip requests the final switch, confirm both checkouts have no new active work
 or owned processes, recheck preservation of any changes since this audit, rename the
-new checkout and select it in T3, then retire the old working checkout. Complete
-historical evidence extraction before pruning the archive; retain Git recovery bundles
+new checkout and select it in T3, then retire the old working checkout and superseded
+bulk historical archives; retain Git recovery bundles
 for the approved metadata rewrite. Validate path-sensitive setup after the rename
 and remove this task and its AGENTS navigation when the switch is finished.

@@ -16,7 +16,7 @@ The initial readable import omitted an important qualification. The archived GL 
 
 The proposed repair selected the texture unit, used the non-indexed getter, and restored the prior active unit. It was staged only: compilation and fake-binding tests passed, but integration and actual driver execution remained unverified. It cannot repair old receipts retroactively. Future evidence must establish that the observation method is valid on the actual API before treating a returned zero as proof.
 
-[Original sampler audit and staged repair](../sources/sampler-gl41-fix-r1.md) sha256:a3798da626d0f6f56216ce9c8fd984140c39ddeed0d94c301063a8d1a2dbb805
+[Original sampler audit and staged repair](../sources/history/earlier-cross-pack-methods-05.json) sha256:a3798da626d0f6f56216ce9c8fd984140c39ddeed0d94c301063a8d1a2dbb805
 
 ## Conditions and limitations
 
@@ -32,4 +32,4 @@ Retain the contract and test-design lessons. Discard any assumption that old exp
 
 [Searchable index of the complete earlier archive](../sources/earlier-archive-index.json) sha256:c65724516babf780dab661d736b8c73ae8ffbeb6715bbf71619cdd93fc90b91a
 
-Original reports include source/archive identities and evidence limitations. The complete document and retired-code archives remain in `/home/philip/.local/share/shaderlod-next/evidence/history/earlier-document-archive/`; source history and locally available files remain in the [artifact snapshot](/home/philip/.local/share/shaderlod-next/evidence/history/original-repository). See [artifact access](../../docs/results.md#historical-artifact-access).
+Compact source reports and retained measurements are in the [historical evidence catalog](../historical-evidence-extraction/catalog.md). Original paths inside those records are provenance labels, not file dependencies. See [historical evidence access](../../docs/results.md#historical-artifact-access) for source recovery and intentional limits.

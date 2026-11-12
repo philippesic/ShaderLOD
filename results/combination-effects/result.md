@@ -16,4 +16,4 @@ Unresolved. New combinations require their own correctness and measured comparis
 
 [combination-effects-source.json](../sources/combination-effects-source.json) sha256:cc6b5a9ed088898ed04610eceb99105efbb4b3cb9fb483385743a11c9013480d
 
-Full run records, source history, frozen inputs and supporting scripts are retained in [the historical artifact snapshot](/home/philip/.local/share/shaderlod-next/evidence/history/original-repository). See [artifact access](../../docs/results.md#historical-artifact-access) for path mapping, verification and known remote-only evidence.
+Compact source reports and retained measurements are in the [historical evidence catalog](../historical-evidence-extraction/catalog.md). Original paths inside those records are provenance labels, not file dependencies. See [historical evidence access](../../docs/results.md#historical-artifact-access) for source recovery and intentional limits.

@@ -22,4 +22,4 @@ Retain this catalog and its scoped findings for future development. Do not apply
 
 [legacy-mac-investigation-reports.json](../sources/legacy-mac-investigation-reports.json) sha256:592fe34339b43c78e35971f90fc83d9a7943a7e6346c7865d87b623173a2c292
 
-The records preserve exact source references and hashes, historical refusals and gaps. Their pending-work prose is historical, not current authorization. Full reports and retired code are in the [preserved archive](/home/philip/.local/share/shaderlod-next/evidence/history/earlier-document-archive/docs-and-agent-setup.tar.gz); see [artifact access](../../docs/results.md#historical-artifact-access).
+The records preserve exact source references and hashes, historical refusals and gaps. Their pending-work prose is historical, not current authorization. Compact source reports and retained measurements are in the [historical evidence catalog](../historical-evidence-extraction/catalog.md). Original paths inside those records are provenance labels, not file dependencies. See [historical evidence access](../../docs/results.md#historical-artifact-access) for source recovery and intentional limits.

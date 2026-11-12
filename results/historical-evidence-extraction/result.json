@@ -1,0 +1,236 @@
+{
+  "schema": "shaderlod-historical-extraction-v1",
+  "scope": "Locally available old ShaderLOD checkout, earlier document/retired-source archives, Git report versions, frozen source ZIPs and nested RTX control archive. Does not claim recovery of already-missing Mac/Windows inputs.",
+  "legacy_head": "3ee99efcefdbc9d41e711f649ce0d361eefe949d",
+  "original_manifest_sha256": "f3d017983cea38bc6299977fb8d2e0af746a602948b9717db8ba022b3e4d0c7f",
+  "snapshot_regular_files": 185689,
+  "snapshot_symlinks": 415,
+  "file_dispositions": {
+    "Project documentation/configuration: relevant records retained; obsolete setup superseded": {
+      "entries": 132,
+      "logical_bytes": 74963888
+    },
+    "Git history: published ancestors and separate recovery bundles": {
+      "entries": 1435,
+      "logical_bytes": 24476942
+    },
+    "Project implementation and definitions: retained in main Git history": {
+      "entries": 5210,
+      "logical_bytes": 46302979
+    },
+    "Downloaded/generated/runtime working material: no permanent retention required": {
+      "entries": 12552,
+      "logical_bytes": 1290069381
+    },
+    "Investigation working material: compact reports, measurements and authored-source recovery retained": {
+      "entries": 166775,
+      "logical_bytes": 72909596021
+    }
+  },
+  "earlier_archive_entries": 2109,
+  "earlier_archive_dispositions": {
+    "obsolete operating instructions; superseded by current guidance": 14,
+    "retained supporting report": 1069,
+    "superseded ledger; unique quantitative excerpts extracted": 1026
+  },
+  "retained_record_count": 3957,
+  "supporting_bytes": 76746923,
+  "supporting_file_count": 82,
+  "topics": {
+    "earlier-photon": 181,
+    "rtx2080ti-individuals-20261104": 54,
+    "rtx5080-four-target-audit-20261106": 1005,
+    "asahi-four-target-audit-20261104": 525,
+    "earlier-bsl": 111,
+    "new-optimization-goals-20261102": 253,
+    "benchmark-trust-bliss-20261103": 156,
+    "earlier-makeup": 70,
+    "earlier-compatibility": 182,
+    "earlier-cross-pack-methods": 525,
+    "authored-source": 24,
+    "earlier-rtx-controls": 16,
+    "rtx2080ti-baseline-20261103": 25,
+    "headless-development-20261103": 86,
+    "shortlist-closure-20261101": 184,
+    "combination-search-20261101": 83,
+    "shortlist-resume-20261101": 132,
+    "earlier-sildur": 27,
+    "earlier-solas": 14,
+    "earlier-complementary": 127,
+    "benchmark-workflow-repair-20261103": 29,
+    "cost-map-coverage-20261108": 14,
+    "earlier-bliss": 21,
+    "earlier-astralex": 3,
+    "cost-map-live-20261108": 14,
+    "retired-source": 6,
+    "earlier-measurement-excerpts": 1,
+    "workflow-validation-878e98fb8be9": 8,
+    "benchmark-reliability-investigation-20261103": 2,
+    "cost-map-pipeline-20261108": 1,
+    "tested-options": 78
+  },
+  "historical_ledger_excerpts": 1042,
+  "nested_archive": {
+    "archive": "old-5080-runs.tar.gz",
+    "members_scanned": 10419,
+    "elapsed_seconds": 11.502307671005838,
+    "expected_summaries": 16,
+    "retained": [
+      {
+        "path": "shaderlod-g01-bloom-bracket-20261026-r1/result.json",
+        "record": "5d2f1c37f3ad9599099b2fa157ee6783e9d3b3272afb67d1cc5706206b1c3118",
+        "bytes": 1754
+      },
+      {
+        "path": "shaderlod-g01-native-20261026-r1/result.json",
+        "record": "45a6bdcb66c1d3a6f2ac175a37b69e69ceccdffaec597645e677f188fe2a5a54",
+        "bytes": 18919
+      },
+      {
+        "path": "shaderlod-neutral-absent-20261026-r2/neutral/windows/absent_0/result.json",
+        "record": "36958858dccc87da18e30a3709005c3a92851d7b6276b1168a26532e988f3a83",
+        "bytes": 1249216
+      },
+      {
+        "path": "shaderlod-neutral-absent-20261026-r2/neutral/windows/absent_1/result.json",
+        "record": "40c6d0bde110a8679d8c28255680e40163e3dec6a71cc1c9903991631119fc6c",
+        "bytes": 1259755
+      },
+      {
+        "path": "shaderlod-neutral-absent-20261026-r2/neutral-return/windows/return_0/result.json",
+        "record": "a5a7fb5695a20fa4bc1f7d08b9b18781408c32c83028414bf3364fec32a1b35a",
+        "bytes": 1262186
+      },
+      {
+        "path": "shaderlod-neutral-absent-20261026-r2/neutral-return/windows/return_1/result.json",
+        "record": "f4ba7a12b981768a6d9ec946bf243ab887e13b3315ed58de8fccea5dcf2d88d0",
+        "bytes": 1277214
+      },
+      {
+        "path": "shaderlod-neutral-adapter-20261026-r1/neutral/windows/r0_adapter0/result.json",
+        "record": "28488a4e41dbe797ab5014df547fa4c2167b8daefd6e0bbff19872b1e85149cc",
+        "bytes": 1265449
+      },
+      {
+        "path": "shaderlod-neutral-adapter-20261026-r1/neutral/windows/r0_adapter1/result.json",
+        "record": "02a1bcc895109c4b3738e4a16873013da2c23b3de22518c1d47d7e3036debdba",
+        "bytes": 1121809
+      },
+      {
+        "path": "shaderlod-neutral-adapter-20261026-r1/neutral/windows/r0_native/result.json",
+        "record": "e339f03e848429b0fdd922d48a31e46ebc175d3621de0ece6eb439a5cd90a778",
+        "bytes": 1267654
+      },
+      {
+        "path": "shaderlod-neutral-adapter-20261026-r1/neutral/windows/r0_return1/result.json",
+        "record": "57f8086c6dbcebd62a9b8e660a0ad5ff917b31d00f9d474154b95a048bacb4dc",
+        "bytes": 1132225
+      },
+      {
+        "path": "shaderlod-neutral-adapter-20261026-r1/neutral/windows/r1_adapter0/result.json",
+        "record": "91abcbd46f91218ae8528e6723d9a541ee558ae049236229cc85e9a1fecc5ee5",
+        "bytes": 1262607
+      },
+      {
+        "path": "shaderlod-neutral-adapter-20261026-r1/neutral/windows/r1_adapter1/result.json",
+        "record": "8cfd210cd6326f312308316c2792c502d08c82665cd40fb127cc7406e791a464",
+        "bytes": 1124390
+      },
+      {
+        "path": "shaderlod-neutral-adapter-20261026-r1/neutral/windows/r1_native/result.json",
+        "record": "a6ec0381f8b3832e39fb86dc33bf5a0ff4b96670688eb7f8d7268e776a9e1489",
+        "bytes": 1257499
+      },
+      {
+        "path": "shaderlod-neutral-adapter-20261026-r1/neutral/windows/r1_return1/result.json",
+        "record": "9cd421b33a23029734fe56a348b7fd1d0fe92873ca1567a0c301bd2b3e59ea14",
+        "bytes": 1114910
+      },
+      {
+        "path": "shaderlod-neutral-paired-smoke-20261026-r1/neutral/windows/paired-smoke/result.json",
+        "record": "d46da865438be7ded9a053ad2b392922cebb40827e161d0a40ee2e5040c6982a",
+        "bytes": 266714
+      },
+      {
+        "path": "shaderlod-pc-makeup-current-20261026-r1/evidence/summary.json",
+        "record": "072f701d82291af37f65f8bf2e7b576bc9d1e25701d127dbd5c8ceb9886f6066",
+        "bytes": 10965
+      }
+    ]
+  },
+  "git_report_inspection": {
+    "ledger_excerpts": 1042,
+    "git_report_versions_scanned": 1243,
+    "git_objects_enumerated": 15325
+  },
+  "authored_source": {
+    "schema": "shaderlod-historical-source-recovery-v1",
+    "public_source_blobs_scanned": 4149,
+    "unique_experiment_sources": 2963,
+    "source_copies": 20590,
+    "in_main_history": 2939,
+    "retained_extra_source_records": 24,
+    "limits": "Authored Java/Python/Gradle/patch files only. Third-party pack archives, compiled classes, worlds and system environments are not a frozen render replay."
+  },
+  "source_archives": [
+    {
+      "archive": "dev/experiments/rtx5080-four-target-audit-20261106/frozen/native-before-c01-raster-db5dd15-20261106.zip",
+      "source_members": 1883,
+      "sha256": "81826a684d5c9ca06f75e75b3f252322c2de239b62388a3b1b69e3719013fc5d"
+    },
+    {
+      "archive": "dev/experiments/rtx5080-four-target-audit-20261106/frozen/native-before-c02-ac0481f-20261106.zip",
+      "source_members": 1676,
+      "sha256": "4210f0535c4f7a2f742d69f214035075abfdcb5d0cb0eade9eb178fe4d3c8355"
+    },
+    {
+      "archive": "dev/experiments/rtx5080-four-target-audit-20261106/frozen/native-before-entry-repairs-2a47ba0-20261106.zip",
+      "source_members": 1886,
+      "sha256": "e30722be15497cea9ed0a62dc6a521c5a3108f6ce1a189e8ecb60075251011d4"
+    },
+    {
+      "archive": "dev/experiments/rtx5080-four-target-audit-20261106/frozen/native-before-package-sync-4286bd5-20261106.zip",
+      "source_members": 1886,
+      "sha256": "d94c0d97590a4ab30d05cacfd50cf138f1b73c67494fe70d7fa1a582375a365f"
+    },
+    {
+      "archive": "dev/experiments/rtx5080-four-target-audit-20261106/frozen/native-before-quality-clock-v6-20261107.zip",
+      "source_members": 1888,
+      "sha256": "b5753b958dd3542b92ba2c25d42caf0eb803c2a863099b2fc63e08e524f2c5d2"
+    },
+    {
+      "archive": "dev/experiments/rtx5080-four-target-audit-20261106/frozen/native-before-quality-v5-20261107.zip",
+      "source_members": 1886,
+      "sha256": "d6d70414b3c8d80696da39df2edcaf7e165f78034f5a2e62224abad17797b514"
+    },
+    {
+      "archive": "dev/experiments/rtx5080-four-target-audit-20261106/frozen/native-before-runtime-pin-v4-20261107.zip",
+      "source_members": 1886,
+      "sha256": "f739ee649d310ddc218f3b5401c5cb331d40002d955cccdc0bbf1a33dbf57741"
+    },
+    {
+      "archive": "dev/experiments/rtx5080-four-target-audit-20261106/frozen/native-before-shared-reader-92b154c-20261106.zip",
+      "source_members": 1886,
+      "sha256": "5053bb1c33606678da7e4c58f82f0b058901f0322b79fdbc41ab3101c549a889"
+    },
+    {
+      "archive": "dev/experiments/rtx5080-four-target-audit-20261106/frozen/native-before-windows-io-7bc497a-20261106.zip",
+      "source_members": 1883,
+      "sha256": "58ac0d2f62b48ac89228140eec3eff5a9448c073e53eba3af98e0b4fa0c98a92"
+    },
+    {
+      "archive": "dev/experiments/rtx5080-four-target-audit-20261106/canonical-source.tar",
+      "source_members": 3721,
+      "sha256": "bf114728c2dbf25c2ed57d9dc9a17e4611faa47da5c7c85b4f285eb946e9505e"
+    }
+  ],
+  "unclassified_file_groups": 0,
+  "omitted_by_design": [
+    "Full per-frame CPU traces and detailed runtime state histories not needed by retained claims",
+    "PNG/video sequences and copied worlds; prior visual observations remain source-inspected, not independently re-reviewable image-quality proof",
+    "Downloaded dependencies, installed JDKs, compiled classes and caches",
+    "Superseded operational diaries and machine instructions except unique reported quantitative excerpts",
+    "Full frozen execution environments; no bit-for-bit historical render replay is promised"
+  ],
+  "deletion_performed": false
+}

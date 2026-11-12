@@ -16,4 +16,4 @@ Retain the tested hooks and design lessons as references; reimplement selectivel
 
 [dh-profiling-coverage-source.json](../sources/dh-profiling-coverage-source.json) sha256:e57c1e89d8907c2bf0d956b8deefafc5936da91dc2034c8946a6f171d2ac48d2
 
-Full run records, source history, frozen inputs and supporting scripts are retained in [the historical artifact snapshot](/home/philip/.local/share/shaderlod-next/evidence/history/original-repository). See [artifact access](../../docs/results.md#historical-artifact-access) for path mapping, verification and known remote-only evidence.
+Compact source reports and retained measurements are in the [historical evidence catalog](../historical-evidence-extraction/catalog.md). Original paths inside those records are provenance labels, not file dependencies. See [historical evidence access](../../docs/results.md#historical-artifact-access) for source recovery and intentional limits.

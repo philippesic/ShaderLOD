@@ -4,7 +4,7 @@ Current answers within their stated scope. Read the linked result before applyin
 
 | ID | Conclusion | Result |
 | --- | --- | --- |
-| F1 | None of the sixteen optimizations from the original repository met the keep bar; their implementations remain in the original repository | [Result](results/historical-optimization-retention/result.md) |
+| F1 | None of the sixteen historical candidates met the original keep bar; implementations remain in Git history | [Result](results/historical-optimization-retention/result.md) |
 | F2 | Unchanged-shader null runs varied from −9.70% to +10.24%, so the calibration failed; a ~3% effect cannot be detected with that setup | [Result](results/asahi-null-calibration/result.md) |
 | F3 | Bounded tasks, uploads, residency, hooks and restoration worked in original-pack runs | [Result](results/dh-observation-hooks/result.md) |
 | F4 | GPU timing covered only 39 of 162 frame intervals, with unknown health, 43 unresolved queries and one imbalanced scope; it is not a cost breakdown | [Result](results/incomplete-gpu-cost-capture/result.md) |
@@ -54,7 +54,7 @@ Current answers within their stated scope. Read the linked result before applyin
 | F38 | DH profiling gained live observations but left important boundaries unqualified. | [Result](results/dh-profiling-coverage/result.md) |
 | F39 | Historical benchmark designs and early control comparisons expose measurement limits; optional-stack and in-process controls did not establish consistent gains. | [Result](results/profiling-and-benchmark-design-lessons/result.md) |
 | F40 | Earlier viewport, sampling-phase and runtime-readback mistakes provide concrete test-design lessons; old GL 4.1 sampler-zero/filter claims remain unproven | [Result](results/early-rendering-contract-lessons/result.md) |
-| F41 | Locally available history is preserved separately; readable coverage is mapped, while unreviewed and missing evidence remain explicit. | [Result](results/historical-evidence-preservation/result.md) |
+| F41 | Historical reports, compact measurements and source recovery now live here; the old checkout and bulk snapshot are no longer dependencies. | [Result](results/historical-evidence-extraction/result.md) |
 
 ## Legacy MacBook Pro controls
 
@@ -69,3 +69,10 @@ Current answers within their stated scope. Read the linked result before applyin
 | ID | Conclusion | Result |
 | --- | --- | --- |
 | F45 | Reused-session validation/comparisons, profiling and frozen campaigns passed scoped RTX 2080 Ti/Asahi controls, including sustained captures and recovery. This qualifies the workflow, not an optimization or universal small-effect sensitivity. | [Result](results/benchmark-workflows/result.md) |
+
+## Additional historical lessons and extraction
+
+| ID | Conclusion | Result |
+| --- | --- | --- |
+| F46 | Older BSL approximate-POM and reflected-cloud trials established no useful original-relative gain in their tested wall view. | [Result](results/earlier-bsl-approximation-trials/result.md) |
+| F47 | Earlier loader probes reached native rendering but did not establish stable speed or complete-scene quality; they do not expand current support. | [Result](results/earlier-loader-measurement-limits/result.md) |

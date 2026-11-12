@@ -16,4 +16,4 @@ Retain the workflow lessons; implement only capabilities needed by the new runne
 
 [workflow-repair-source.json](../sources/workflow-repair-source.json) sha256:a457f551abb8f598a2512e145bc9c728b95871015d80f345a4ea10d6240529be
 
-Full run records, source history, frozen inputs and supporting scripts are retained in [the historical artifact snapshot](/home/philip/.local/share/shaderlod-next/evidence/history/original-repository). See [artifact access](../../docs/results.md#historical-artifact-access) for path mapping, verification and known remote-only evidence.
+Compact source reports and retained measurements are in the [historical evidence catalog](../historical-evidence-extraction/catalog.md). Original paths inside those records are provenance labels, not file dependencies. See [historical evidence access](../../docs/results.md#historical-artifact-access) for source recovery and intentional limits.

@@ -16,4 +16,4 @@ Revise the measurement environment and validate it before scoring optimizations.
 
 [bliss-calibration-and-oom-source.json](../sources/bliss-calibration-and-oom-source.json) sha256:f49abfd18486ecc32bd974fa775c43ac5ac92e9a8e17f9b273d35503089b0012
 
-Full run records, source history, frozen inputs and supporting scripts are retained in [the historical artifact snapshot](/home/philip/.local/share/shaderlod-next/evidence/history/original-repository). See [artifact access](../../docs/results.md#historical-artifact-access) for path mapping, verification and known remote-only evidence.
+Compact source reports and retained measurements are in the [historical evidence catalog](../historical-evidence-extraction/catalog.md). Original paths inside those records are provenance labels, not file dependencies. See [historical evidence access](../../docs/results.md#historical-artifact-access) for source recovery and intentional limits.

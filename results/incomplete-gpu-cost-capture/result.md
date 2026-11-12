@@ -12,6 +12,6 @@ Unresolved. Keep the knowledge; this does not authorize reviving an implementati
 
 ## Evidence and source
 
-[capture.json](/home/philip/.local/share/shaderlod-next/evidence/history/original-repository/dev/experiments/cost-map-coverage-20261108/run-04/live-cost-map/cohort-3/capture.json) sha256:6839a764129cae84d99c98856b8218c5817163735f8d40bd1a8520868cecb305
+[capture.json retained record](../sources/history/cost-map-coverage-20261108-02.json) sha256:6839a764129cae84d99c98856b8218c5817163735f8d40bd1a8520868cecb305
 
-Executed-source identity: the complete historical source checkout and run freezes are preserved in the artifact snapshot. Use the original build bindings to identify the executed revision; a current checkout alone does not prove a historical run used it. See [artifact access](../../docs/results.md#historical-artifact-access).
+Executed-source identities remain in the retained reports. Authored frozen-source variants are recoverable through the [source map](../historical-evidence-extraction/source-recovery.json), using main Git history or compact source records. This does not promise a replay of the old driver, world or execution environment.

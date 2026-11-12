@@ -16,4 +16,4 @@ Discard active implementations under the final retention rule; preserve exact pr
 
 [new-candidate-search-source.json](../sources/new-candidate-search-source.json) sha256:baaa0208c7eafb1a8b39a19495923f7f40f2db84733e5437d152dd5802757f1e
 
-Full run records, source history, frozen inputs and supporting scripts are retained in [the historical artifact snapshot](/home/philip/.local/share/shaderlod-next/evidence/history/original-repository). See [artifact access](../../docs/results.md#historical-artifact-access) for path mapping, verification and known remote-only evidence.
+Compact source reports and retained measurements are in the [historical evidence catalog](../historical-evidence-extraction/catalog.md). Original paths inside those records are provenance labels, not file dependencies. See [historical evidence access](../../docs/results.md#historical-artifact-access) for source recovery and intentional limits.

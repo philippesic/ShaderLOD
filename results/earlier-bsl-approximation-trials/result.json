@@ -1,0 +1,47 @@
+{
+  "scope": "Historical cached instantaneous FPS endpoints; not frame-time distributions or independent repeated brackets. M3 Max, OpenGL 4.1 Metal 91.7, MC1.21.1 NeoForge21.1.253, Iris1.8.12, Sodium0.6.13, BSL10.1.8, native1920x1200, PBR wall, noDH.",
+  "metric": "Minecraft.getFps() at comparison ticks600/1800",
+  "trials": [
+    {
+      "name": "approximate POM cache",
+      "original": [
+        95,
+        93
+      ],
+      "full_work": [
+        95,
+        91
+      ],
+      "candidate": [
+        80,
+        83
+      ],
+      "return": [
+        86,
+        87
+      ],
+      "source": "docs/evaluation/bsl-pom-approx-cache-early-cost-r1.md"
+    },
+    {
+      "name": "whole-ray reflected-cloud shortcut",
+      "original": [
+        96,
+        92
+      ],
+      "full_work": [
+        85,
+        79
+      ],
+      "candidate": [
+        84,
+        87
+      ],
+      "return": [
+        88,
+        90
+      ],
+      "source": "docs/evaluation/bsl-reflected-cloud-early-cost-r2.md"
+    }
+  ],
+  "decision": "Neither fixed candidate established useful original-relative gain; no causal slowdown percentage inferred from drifting endpoints."
+}

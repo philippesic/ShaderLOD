@@ -1,0 +1,32 @@
+{
+  "scope": "Historical distinct loader/version experiments, not current support qualification. Apple M3 Max/OpenGL4.1/1920x1200, MakeUp9.5g/nativeAA2.",
+  "fabric_1_21_11": {
+    "stages": [
+      {
+        "name": "off",
+        "renders": 5107,
+        "seconds": 30.056396791
+      },
+      {
+        "name": "on",
+        "renders": 4047,
+        "seconds": 30.003424416
+      },
+      {
+        "name": "return_off",
+        "renders": 2350,
+        "seconds": 30.057400666
+      }
+    ],
+    "source": "docs/evaluation/12111-fabric-makeup-speed-r2-review.md"
+  },
+  "neoforge_26_2": {
+    "descriptor_queries": 32641,
+    "gl_function_entries": 1679,
+    "native_encoder_body_returns": 3273,
+    "settled_seconds": 2.041,
+    "full_scene_quality_qualified": false,
+    "speed_measured": false,
+    "source": "docs/evaluation/262-neoforge-binding-runtime-20261011-r5.md"
+  }
+}

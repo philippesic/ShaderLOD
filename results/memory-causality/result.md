@@ -16,4 +16,4 @@ Retain the diagnostic limits; do not blame thermal throttling, agents or memory 
 
 [memory-causality-source.json](../sources/memory-causality-source.json) sha256:a46d016a7a1726c8662dd297d12daa207bd4d3c0dceab935d236ad8950e4dc34
 
-Full run records, source history, frozen inputs and supporting scripts are retained in [the historical artifact snapshot](/home/philip/.local/share/shaderlod-next/evidence/history/original-repository). See [artifact access](../../docs/results.md#historical-artifact-access) for path mapping, verification and known remote-only evidence.
+Compact source reports and retained measurements are in the [historical evidence catalog](../historical-evidence-extraction/catalog.md). Original paths inside those records are provenance labels, not file dependencies. See [historical evidence access](../../docs/results.md#historical-artifact-access) for source recovery and intentional limits.

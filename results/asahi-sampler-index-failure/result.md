@@ -14,4 +14,4 @@ Unresolved. Keep the knowledge; this does not authorize reviving an implementati
 
 [asahi-native-failure.json](../sources/asahi-native-failure.json) sha256:c6a2151e91d871346e9d6e586ba2721e731144530d0705f5b597c5fa53144c7e
 
-Executed-source identity: the complete historical source checkout and run freezes are preserved in the artifact snapshot. Use the original build bindings to identify the executed revision; a current checkout alone does not prove a historical run used it. See [artifact access](../../docs/results.md#historical-artifact-access).
+Executed-source identities remain in the retained reports. Authored frozen-source variants are recoverable through the [source map](../historical-evidence-extraction/source-recovery.json), using main Git history or compact source records. This does not promise a replay of the old driver, world or execution environment.

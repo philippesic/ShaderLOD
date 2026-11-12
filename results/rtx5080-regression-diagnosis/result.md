@@ -16,4 +16,4 @@ Retain the observations; unresolved bottlenecks require targeted profiling inste
 
 [rtx5080-regression-diagnosis-source.json](../sources/rtx5080-regression-diagnosis-source.json) sha256:1a41f81fcdeb05874bc00412ad377d2ebf03eb3f536553aac620ca2f8d766aa2
 
-Full run records, source history, frozen inputs and supporting scripts are retained in [the historical artifact snapshot](/home/philip/.local/share/shaderlod-next/evidence/history/original-repository). See [artifact access](../../docs/results.md#historical-artifact-access) for path mapping, verification and known remote-only evidence.
+Compact source reports and retained measurements are in the [historical evidence catalog](../historical-evidence-extraction/catalog.md). Original paths inside those records are provenance labels, not file dependencies. See [historical evidence access](../../docs/results.md#historical-artifact-access) for source recovery and intentional limits.

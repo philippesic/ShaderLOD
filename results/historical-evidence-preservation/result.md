@@ -1,38 +1,21 @@
-# Locally available historical evidence is preserved independently of the old checkout
+# Historical knowledge now lives in the repository without the bulk snapshot
 
-Readable candidate and investigation results now point to compact local sources or a separately named artifact snapshot. The snapshot includes the complete original checkout, Git history, ignored experiments, run freezes, dependencies and locally available inputs. The earlier document and retired-code archives are also preserved and indexed.
+The completed [historical extraction](../historical-evidence-extraction/result.md) replaces the earlier keep-everything snapshot strategy. Readable conclusions, supporting reports, numerical observations, failed outcomes and authored-source recovery are tracked here. The old working checkout and its duplicate archive are no longer evidence dependencies.
 
 ## Conditions and limitations
 
-Evidence level: cpu-integration. 185689 regular files were verified by SHA256 and 415 symlinks by target text. No copied symlink resolves into the old checkout. External system-tool links remain explicit in the receipt. This establishes local byte preservation, not universal experimental reproducibility. Remote-only Windows captures and previously missing inputs are not recovered. The snapshot shares storage on the same disk and is not a disaster-recovery backup.
+Evidence level: cpu-integration for extraction/integrity/source recovery; source-inspected for historical claims. Original Mac/Windows gaps remain explicit. Detailed raw capture reanalysis and bit-for-bit replay of old drivers/worlds are deliberately not promised. Preserving a report is not independent confirmation that every reported claim is correct.
 
 ## Decision
 
-Retain this evidence store as the backing archive for the new knowledge index. Future development can use the new repository and its artifact store without browsing the old checkout. Do not infer permission to delete remote data or claim that every historical artifact ever mentioned exists here.
+Retain compact evidence and implementation history. The old working checkout and bulk historical archives can be retired after the workspace switch and a check for new work. Keep the new repository's own profiles/evidence and the small Git recovery bundles separate from that deletion scope.
 
-## Evidence and source
+## Evidence
 
-[Preservation receipt and coverage inventory](../sources/historical-preservation.json) sha256:f7aa48ef4394be8598d7b6a32db6a3133bb21ae496249a2f6e38b5926821f8a9
+[Extraction coverage and disposition](../historical-evidence-extraction/result.json) sha256:86d9102c8acadcaf64c82187e8c4d386cd09cae2b6bcb300e9d6e6e0dace85d0
 
-The receipt identifies the original source revision, full per-file manifest, earlier archives, external links and remaining limitations. See [artifact access](../../docs/results.md#historical-artifact-access) for relocation rules. Original reports retain their original paths as provenance; those paths are interpreted beneath the preserved snapshot.
+The earlier [byte-preservation receipt](../sources/historical-preservation.json) sha256:f7aa48ef4394be8598d7b6a32db6a3133bb21ae496249a2f6e38b5926821f8a9 records the safety copy made before extraction. Its old paths are provenance, not instructions to retain the snapshot permanently.
 
 ## Correction
 
-2026-11-10: The initial readable import omitted the legacy 61-control MacBook Pro program even though its archive bytes were preserved. The legacy-mac-61-controls catalog and two companion results now expose its 549 family/control records and later local impact findings. Preservation completeness must not be described as complete semantic review of every archived investigation.
-
-
-## Knowledge coverage
-
-Byte preservation and readable knowledge coverage are separate claims. The [earlier archive index](../sources/earlier-archive-index.json) contains 2,109 entries: 1,007 history snapshots, 607 evaluation records, 429 top-level documents, 35 research records, and 31 other entries. These counts describe locations, not unique investigations or verified conclusions.
-
-| Material | Readable coverage | Remaining boundary |
-| --- | --- | --- |
-| Later sixteen-candidate campaigns, repeats and combinations | Individual candidate results, combination/repeatability results and platform screens | Historical scope only; no current qualification |
-| Legacy Mac 61-control program | Full control catalog, native CPU profiles and fifteen-item backlog consolidation | Applicability is not performance; underlying reports were not all individually adjudicated |
-| Measurement and rendering-contract lessons | Profiling lessons, early rendering lessons and explicit sampler correction | Selected lessons, not an exhaustive semantic audit |
-| October in-process and optional-stack controls | [Profiling and benchmark-design lessons](../profiling-and-benchmark-design-lessons/result.md), added 2026-11-11 | Missing runtime provenance and limited workloads remain explicit |
-| Older loader/version ports, pack-specific trials and research reports | Searchable archive index and preserved originals | Not systematically mapped to result pages or exclusion decisions; consult relevant reports before reviving a matching direction |
-| Historical task diaries and old launch instructions | Preserved as reference, deliberately not restored as current guidance | They do not authorize work or define the maintained system |
-| Remote-only or previously missing raw inputs | Disclosed in preservation limitations | Not recovered |
-
-The current repository and its retained artifact store suffice to access the locally preserved material without the old checkout. They do not establish that every useful historical lesson has already been extracted. Before selecting a specific optimization family or importing an old mechanism, benchmark preparation should check its matching archive records and adopt any additional durable conclusion. No claim of exhaustive semantic completeness or permission to delete unclassified evidence follows.
+2026-11-12: The initial migration preserved bytes but incompletely extracted knowledge and still required the archive. The later extraction adds the earlier reports, quantified ledger excerpts, nested controls and missing source variants; it verifies retained evidence without either old directory. Earlier claims of archive independence were premature. The October 61-control program remains distinct from the later sixteen-candidate campaign; neither applicability nor a copied report constitutes a measured speed win.

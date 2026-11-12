@@ -16,4 +16,4 @@ Retain the native-platform and recovery lessons; benchmark design must define an
 
 [rtx2080ti-baseline-source.json](../sources/rtx2080ti-baseline-source.json) sha256:8ac0ba3b9eb1394f5f8918537deee16dd22ad2573483f7d307c5e9a395fabc6c
 
-Full run records, source history, frozen inputs and supporting scripts are retained in [the historical artifact snapshot](/home/philip/.local/share/shaderlod-next/evidence/history/original-repository). See [artifact access](../../docs/results.md#historical-artifact-access) for path mapping, verification and known remote-only evidence.
+Compact source reports and retained measurements are in the [historical evidence catalog](../historical-evidence-extraction/catalog.md). Original paths inside those records are provenance labels, not file dependencies. See [historical evidence access](../../docs/results.md#historical-artifact-access) for source recovery and intentional limits.

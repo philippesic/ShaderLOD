@@ -4,7 +4,7 @@ These observations provide useful integration leads for future DH profiling. The
 
 ## Conditions and limitations
 
-Scope: MakeUp run-04 and BSL run-07, original repository. Evidence level: live-functional. Incomplete coverage; no performance result. This is a historical evidence import; no new experiment was executed.
+Scope: MakeUp run-04 and BSL run-07, original repository. Evidence level: source-inspected historical import of originally live observations; not an intact current runtime receipt bundle. Incomplete coverage; no performance result. This is a historical evidence import; no new experiment was executed.
 
 ## Decision
 
@@ -12,6 +12,6 @@ Retain. Keep the knowledge; this does not authorize reviving an implementation o
 
 ## Evidence and source
 
-[RESULTS.json](/home/philip/.local/share/shaderlod-next/evidence/history/original-repository/dev/experiments/cost-map-coverage-20261108/RESULTS.json) sha256:e57c1e89d8907c2bf0d956b8deefafc5936da91dc2034c8946a6f171d2ac48d2
+[RESULTS.json retained record](../sources/history/cost-map-coverage-20261108-03.json) sha256:e57c1e89d8907c2bf0d956b8deefafc5936da91dc2034c8946a6f171d2ac48d2
 
-Executed-source identity: the complete historical source checkout and run freezes are preserved in the artifact snapshot. Use the original build bindings to identify the executed revision; a current checkout alone does not prove a historical run used it. See [artifact access](../../docs/results.md#historical-artifact-access).
+Executed-source identities remain in the retained reports. Authored frozen-source variants are recoverable through the [source map](../historical-evidence-extraction/source-recovery.json), using main Git history or compact source records. This does not promise a replay of the old driver, world or execution environment.

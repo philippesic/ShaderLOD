@@ -16,4 +16,4 @@ Retain the correctness evidence within its limits. Future temporal/HDR/DH/PBR cl
 
 [rtx5080-rendering-review-source.json](../sources/rtx5080-rendering-review-source.json) sha256:475bd677fb5ed7fdab45be0d069e29861f61d6113c9c199cd87a075c0af430c7
 
-Full run records, source history, frozen inputs and supporting scripts are retained in [the historical artifact snapshot](/home/philip/.local/share/shaderlod-next/evidence/history/original-repository). See [artifact access](../../docs/results.md#historical-artifact-access) for path mapping, verification and known remote-only evidence.
+Compact source reports and retained measurements are in the [historical evidence catalog](../historical-evidence-extraction/catalog.md). Original paths inside those records are provenance labels, not file dependencies. See [historical evidence access](../../docs/results.md#historical-artifact-access) for source recovery and intentional limits.

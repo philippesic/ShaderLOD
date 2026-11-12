@@ -14,4 +14,4 @@ Retain. Keep the knowledge; this does not authorize reviving an implementation o
 
 [asahi-functional.json](../sources/asahi-functional.json) sha256:7fc5c94d693e2859b7f7c77a1ffeba18080645896ac26214a6f306613a078f21
 
-Executed-source identity: the complete historical source checkout and run freezes are preserved in the artifact snapshot. Use the original build bindings to identify the executed revision; a current checkout alone does not prove a historical run used it. See [artifact access](../../docs/results.md#historical-artifact-access).
+Executed-source identities remain in the retained reports. Authored frozen-source variants are recoverable through the [source map](../historical-evidence-extraction/source-recovery.json), using main Git history or compact source records. This does not promise a replay of the old driver, world or execution environment.

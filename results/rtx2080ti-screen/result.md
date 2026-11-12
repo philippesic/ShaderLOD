@@ -16,4 +16,4 @@ Retain as scoped compatibility and exploratory evidence; do not infer broad qual
 
 [rtx2080ti-screen-source.json](../sources/rtx2080ti-screen-source.json) sha256:a38c5490ffe9e73fc9eb6172a4b84d9fb2f309baba335d5322669ce891305a22
 
-Full run records, source history, frozen inputs and supporting scripts are retained in [the historical artifact snapshot](/home/philip/.local/share/shaderlod-next/evidence/history/original-repository). See [artifact access](../../docs/results.md#historical-artifact-access) for path mapping, verification and known remote-only evidence.
+Compact source reports and retained measurements are in the [historical evidence catalog](../historical-evidence-extraction/catalog.md). Original paths inside those records are provenance labels, not file dependencies. See [historical evidence access](../../docs/results.md#historical-artifact-access) for source recovery and intentional limits.

@@ -1,6 +1,6 @@
-# None of the sixteen optimizations from the original repository met the keep bar; their implementations remain in the original repository
+# None of the sixteen historical candidates met the original keep bar
 
-The earlier screen does not supply an optimization to enable by default. It does supply scoped results and rejected approaches worth consulting before repeating the work.
+The earlier screen does not supply an optimization to enable by default. It does supply scoped results and rejected approaches worth consulting before repeating the work. Their implementations remain in main's preserved Git history, not an old working-checkout dependency.
 
 ## Conditions and limitations
 
@@ -12,6 +12,6 @@ Discard. The sixteen candidates remain excluded from active implementation under
 
 ## Evidence and source
 
-[STATUS.md](/home/philip/.local/share/shaderlod-next/evidence/history/original-repository/docs/STATUS.md) sha256:3a3a436bfdea4b7f42c438bc577d781b72ac67b3ae1f61cc4b851f764dbef81d
+[STATUS.md retained record](../sources/history/earlier-cross-pack-methods-02.json) sha256:3a3a436bfdea4b7f42c438bc577d781b72ac67b3ae1f61cc4b851f764dbef81d
 
-Executed-source identity: the complete historical source checkout and run freezes are preserved in the artifact snapshot. Use the original build bindings to identify the executed revision; a current checkout alone does not prove a historical run used it. See [artifact access](../../docs/results.md#historical-artifact-access).
+Executed-source identities remain in the retained reports. Authored frozen-source variants are recoverable through the [source map](../historical-evidence-extraction/source-recovery.json), using main Git history or compact source records. This does not promise a replay of the old driver, world or execution environment.

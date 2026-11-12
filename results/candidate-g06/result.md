@@ -25,4 +25,4 @@ Discard from active implementation under the final retention decision. Revisit o
 
 [rtx5080-campaign-measurements.json](../sources/rtx5080-campaign-measurements.json) sha256:97989c9385528de5756a42128dce565e73e531e5d0c5d28b59e4e74c342dfc78
 
-Full run records, source history, frozen inputs and supporting scripts are retained in [the historical artifact snapshot](/home/philip/.local/share/shaderlod-next/evidence/history/original-repository). See [artifact access](../../docs/results.md#historical-artifact-access) for path mapping, verification and known remote-only evidence.
+Compact source reports and retained measurements are in the [historical evidence catalog](../historical-evidence-extraction/catalog.md). Original paths inside those records are provenance labels, not file dependencies. See [historical evidence access](../../docs/results.md#historical-artifact-access) for source recovery and intentional limits.
