@@ -32,22 +32,52 @@ def executable_inputs(
     paths: set[Path] = set()
     pending = list(launch["argv"]) if isinstance(launch["argv"], list) else []
     visited: set[str] = set()
+    classpath_directories: set[Path] = set()
+    arguments = list(pending)
+    for index, argument in enumerate(arguments[:-1]):
+        if argument in {"-cp", "-classpath", "--class-path"}:
+            classpath_directories.update(
+                Path(piece) for piece in str(arguments[index + 1]).split(os.pathsep)
+            )
     while pending:
         token = str(pending.pop())
         if token.startswith("@") and token not in visited:
             visited.add(token)
             path = Path(token[1:])
             paths.add(path)
-            pending.extend(shlex.split(path.read_text(), comments=True))
+            expanded = shlex.split(path.read_text(), comments=True)
+            for index, argument in enumerate(expanded[:-1]):
+                if argument in {"-cp", "-classpath", "--class-path"}:
+                    classpath_directories.update(
+                        Path(piece) for piece in expanded[index + 1].split(os.pathsep)
+                    )
+            pending.extend(expanded)
         else:
+            if token.startswith("-D") and "=" in token:
+                candidate = Path(token.split("=", 1)[1])
+                if candidate.is_absolute() and candidate.is_file():
+                    paths.add(candidate)
             for piece in token.split(os.pathsep):
                 path = Path(piece)
                 if path.is_absolute() and path.is_file():
                     paths.add(path)
+                elif (
+                    path in classpath_directories
+                    and path.is_absolute()
+                    and path.is_dir()
+                ):
+                    paths.update(
+                        member for member in path.rglob("*") if member.is_file()
+                    )
     legacy = root / "build/moddev/developmentLegacyClasspath.txt"
     paths.add(legacy)
     paths.update(Path(line) for line in legacy.read_text().splitlines() if line)
     paths.update((root / "shaderlod_host").glob("*.py"))
+    paths.update(
+        path
+        for path in (root / "shaderlod_host/templates").rglob("*")
+        if path.is_file()
+    )
     if profile is not None:
         paths.update((profile / "mods").glob("*.jar"))
         paths.update(
@@ -119,6 +149,8 @@ def benchmark_session(
     timeout: int,
     world: str = "ShaderLOD-Smoke",
     ancestor: tuple[int, str] | None = None,
+    telemetry_enabled: bool = False,
+    without_shaderlod: bool = False,
 ) -> int:
     if sys.platform not in {"linux", "win32"} or not 1 <= timeout <= 14400:
         raise ValueError("Linux/Windows session with 1–14400 second deadline required")
@@ -147,12 +179,22 @@ def benchmark_session(
     import zipfile
 
     with zipfile.ZipFile(shipping) as archive:
-        for compiled in (root / "build/classes/java/main").rglob("*.class"):
-            member = compiled.relative_to(root / "build/classes/java/main").as_posix()
-            if archive.read(member) != compiled.read_bytes():
-                raise ValueError(
-                    "shipping JAR differs from compiled sources; build jar before opening session"
-                )
+        for relative in (
+            "build/classes/java/main",
+            "build/classes/java/benchmarkCore",
+            "build/resources/main",
+        ):
+            for compiled in (root / relative).rglob("*"):
+                if not compiled.is_file():
+                    continue
+                member = compiled.relative_to(root / relative).as_posix()
+                if (
+                    member not in archive.namelist()
+                    or archive.read(member) != compiled.read_bytes()
+                ):
+                    raise ValueError(
+                        "shipping JAR differs from compiled classes/resources; build jar before opening session"
+                    )
     environment = (
         worker_environment() if os.name == "nt" else display_environment(display)
     )
@@ -160,6 +202,88 @@ def benchmark_session(
     with BusyRefusal(ownership, socket.gethostname() + ":gpu:0"):
         recover_profile_artifact(profile)
         session.mkdir(parents=True)
+        if without_shaderlod:
+            from shaderlod_host.storage import publish_bytes
+
+            resource = (
+                session / "library-resources/META-INF/shaderlod/primary.properties"
+            )
+            publish_bytes(
+                resource,
+                (
+                    root / "build/resources/main/META-INF/shaderlod/primary.properties"
+                ).read_bytes(),
+            )
+            library = session / "library-classes"
+            for relative in (
+                "build/classes/java/main",
+                "build/classes/java/benchmarkCore",
+            ):
+                for compiled in (root / relative).rglob("*.class"):
+                    library_member = compiled.relative_to(root / relative)
+                    if (
+                        library_member.as_posix()
+                        != "com/pp/shaderlod/integration/ShaderLod.class"
+                    ):
+                        publish_bytes(library / library_member, compiled.read_bytes())
+            rewritten = []
+            for token in argv:
+                if token.startswith("-Dfml.modFolders="):
+                    token = (
+                        "-Dfml.modFolders="
+                        + os.pathsep.join(
+                            entry
+                            for entry in token.split("=", 1)[1].split(os.pathsep)
+                            if not entry.startswith("shaderlod%%")
+                        )
+                        + os.pathsep
+                        + "shaderlod_dev%%"
+                        + str(library)
+                        + os.pathsep
+                        + "shaderlod_dev%%"
+                        + str(session / "library-resources")
+                    )
+                rewritten.append(token)
+            argv = rewritten
+            classpath = argv.index("-cp") + 1
+            argv[classpath] = os.pathsep.join(
+                [str(session / "library-resources"), str(library)]
+                + [
+                    entry
+                    for entry in argv[classpath].split(os.pathsep)
+                    if entry
+                    not in {
+                        str(root / "build/resources/main"),
+                        str(root / "build/classes/java/main"),
+                        str(root / "build/classes/java/benchmarkCore"),
+                    }
+                ]
+            )
+            legacy = session / "native-legacy-classpath.txt"
+            publish_bytes(
+                legacy,
+                (
+                    "\n".join(
+                        entry
+                        for entry in (
+                            root / "build/moddev/developmentLegacyClasspath.txt"
+                        )
+                        .read_text()
+                        .splitlines()
+                        if entry
+                        not in {
+                            str(root / "build/resources/main"),
+                            str(root / "build/classes/java/main"),
+                            str(root / "build/classes/java/benchmarkCore"),
+                        }
+                    )
+                    + "\n"
+                ).encode(),
+            )
+            argv[argv.index("-cp") : argv.index("-cp")] = [
+                "-DlegacyClassPath.file=" + str(legacy)
+            ]
+            environment.pop("MOD_CLASSES", None)
         found_world = False
         for index, token in enumerate(argv):
             if token.startswith("@"):
@@ -189,7 +313,7 @@ def benchmark_session(
         launch = dict(launch, argv=argv)
         publish(session / "launch.json", launch)
         launch_path = session / "launch.json"
-        with profile_artifact(profile, shipping, session):
+        with profile_artifact(profile, shipping, session, without_shaderlod):
             from shaderlod_host.storage import snapshot_inputs
 
             snapshot_inputs(root, session / "inputs.tar")
@@ -230,6 +354,16 @@ def benchmark_session(
                         "world": world,
                         "launch": str(launch_path.resolve()),
                         "executable_inputs": before,
+                        "shaderlod_mode": "absent"
+                        if without_shaderlod
+                        else "installed",
+                        "build_sha256": hashlib.sha256(
+                            shipping.read_bytes()
+                        ).hexdigest(),
+                        "instrumentation": {
+                            "telemetry": "1hz" if telemetry_enabled else "disabled",
+                            "frames": "complete-entry-v1",
+                        },
                         "input_snapshot_sha256": hashlib.sha256(
                             (session / "inputs.tar").read_bytes()
                         ).hexdigest(),
@@ -252,19 +386,25 @@ def benchmark_session(
                 try:
                     telemetry_stop = threading.Event()
                     telemetry_errors: list[str] = []
-                    telemetry = threading.Thread(
-                        target=record_telemetry,
-                        args=(session, telemetry_stop, telemetry_errors),
-                        daemon=True,
+                    telemetry = (
+                        threading.Thread(
+                            target=record_telemetry,
+                            args=(session, telemetry_stop, telemetry_errors),
+                            daemon=True,
+                        )
+                        if telemetry_enabled
+                        else None
                     )
-                    telemetry.start()
+                    if telemetry is not None:
+                        telemetry.start()
                     try:
                         status = worker.wait(timeout=timeout + 5)
                     except KeyboardInterrupt:
                         status = 130
                     finally:
                         telemetry_stop.set()
-                        telemetry.join(timeout=3)
+                        if telemetry is not None:
+                            telemetry.join(timeout=3)
                 finally:
                     if worker.poll() is None:
                         worker.terminate()
@@ -278,7 +418,7 @@ def benchmark_session(
                 "inputs_unchanged": unchanged,
                 "profile_artifact_restored": True,
                 "telemetry_errors": telemetry_errors,
-                "telemetry_stopped": not telemetry.is_alive(),
+                "telemetry_stopped": telemetry is None or not telemetry.is_alive(),
                 "restoration": "profile artifact restored; shader/world state is established by acknowledged close and recovery journals",
                 "shader_recovery_pending": (
                     profile / "shaderlod-recovery.json"
@@ -867,6 +1007,7 @@ def campaign_attempts(
             str(int(allowance)),
             "--world",
             world,
+            "--telemetry",
             "--ancestor-pid",
             str(os.getpid()),
             "--ancestor-birth",
@@ -933,7 +1074,7 @@ def campaign_attempts(
         "state": "complete"
         if len(runs) == len(campaign.comparisons) and not failures
         else "incomplete",
-        "runs": [str(path.relative_to(output)) for path in runs],
+        "runs": [path.relative_to(output).as_posix() for path in runs],
         "failures": failures,
         "assessment": assessment,
         "quality": "required separately; no automatic acceptance",
@@ -1018,3 +1159,228 @@ def freeze_windows_runtime(legacy: Path, output: Path, root: Path) -> dict[str, 
     }
     publish(output / "manifest.json", record)
     return record
+
+
+def execute_installation(
+    plan: object,
+    launch: Path,
+    profile: Path,
+    display: Path,
+    ownership: Path,
+    output: Path,
+    world: str,
+) -> dict[str, object]:
+    from shaderlod_host.benchmark import save_live_capture, session_command, wait_ready
+    from shaderlod_host.comparison import (
+        ComparisonPlan,
+        installation_plan,
+        render_comparison,
+        configuration,
+        conditions_match,
+        workload_failure,
+    )
+    from shaderlod_host.storage import publish_bytes
+
+    if (
+        not isinstance(plan, ComparisonPlan)
+        or len(plan.cases) != 1
+        or len(plan.arms) != 2
+        or any(arm.modules or arm.delay_ms for arm in plan.arms)
+        or plan.instrument != "frames"
+        or plan.quality_cadence_ms
+        or output.exists()
+    ):
+        raise ValueError(
+            "installation needs one case, two empty arms, frame-only capture and fresh output"
+        )
+    installation_plan(plan)
+    started = time.monotonic()
+    output.mkdir(parents=True)
+    publish(
+        output / "plan.json",
+        {
+            "definition": plan.wire(),
+            "mode": "native / installed-Off in fresh paired processes",
+        },
+    )
+    case = plan.cases[0]
+    payload = (profile / "shaderpacks" / case.pack).read_bytes()
+    if hashlib.sha256(payload).hexdigest() != case.sha256:
+        raise ValueError("installation original archive identity disagreement")
+    publish_bytes(output / (case.sha256 + ".zip"), payload)
+    deadline = time.monotonic() + plan.budget_ms / 1000
+    observations: list[dict[str, object]] = []
+    failure = None
+    reference_config = None
+    for index, (block, _, arm) in enumerate(plan.schedule()):
+        absent = arm.identity == plan.arms[0].identity
+        session = output / ("session-" + str(index + 1))
+        remaining = deadline - time.monotonic()
+        if remaining < (plan.window_ms + plan.warmup_ms) / 1000 + 20:
+            failure = "installation budget cannot admit another complete process"
+            break
+        allowance = min(180, int(remaining))
+        argv = [
+            sys.executable,
+            "-m",
+            "shaderlod_host",
+            "session-open",
+            "--launch",
+            str(launch.resolve()),
+            "--profile",
+            str(profile.resolve()),
+            "--display",
+            str(display.resolve()),
+            "--ownership-root",
+            str(ownership.resolve()),
+            "--session",
+            str(session.resolve()),
+            "--timeout",
+            str(allowance),
+            "--world",
+            world,
+            "--ancestor-pid",
+            str(os.getpid()),
+            "--ancestor-birth",
+            birth(os.getpid()),
+        ]
+        if absent:
+            argv.append("--without-shaderlod")
+        with (output / ("launcher-" + str(index + 1) + ".log")).open("xb") as log:
+            owner = subprocess.Popen(
+                argv,
+                stdin=subprocess.DEVNULL,
+                stdout=log,
+                stderr=subprocess.STDOUT,
+                env=worker_environment(),
+            )
+            try:
+                ready_deadline = time.monotonic() + min(
+                    120, allowance - (plan.window_ms + plan.warmup_ms) / 1000 - 15
+                )
+                while not (session / "session.json").exists():
+                    if owner.poll() is not None or time.monotonic() >= ready_deadline:
+                        raise ValueError("installation session failed during startup")
+                    time.sleep(0.05)
+                wait_ready(session, max(0.1, ready_deadline - time.monotonic()))
+                session_command(
+                    session,
+                    "prepare",
+                    0,
+                    15,
+                    {
+                        "day_time": case.day_time,
+                        "weather": case.weather,
+                        "pose": list(case.start),
+                    },
+                )
+                conditions_deadline = min(deadline - 15, time.monotonic() + 10)
+                status = session_command(session, "status", 0, 10)
+                while not conditions_match(case, status):
+                    if time.monotonic() >= conditions_deadline:
+                        raise ValueError(
+                            "installation weather/time readiness exhausted"
+                        )
+                    time.sleep(0.05)
+                    status = session_command(session, "status", 0, 10)
+                time.sleep(plan.warmup_ms / 1000)
+                status = session_command(session, "status", 0, 10)
+                mods = status.get("runtime_mods")
+                activation = status.get("activation")
+                if (
+                    not isinstance(mods, dict)
+                    or (mods.get("shaderlod") == "absent") != absent
+                    or not isinstance(activation, dict)
+                    or activation.get("archiveSha256") != case.sha256
+                    or status.get("surface") != list(case.surface)
+                    or not conditions_match(case, status)
+                ):
+                    raise ValueError(
+                        "actual mod presence, native graph, surface or conditions differ from installation plan"
+                    )
+                config = configuration(status)
+                if reference_config is not None and config != reference_config:
+                    raise ValueError("native and installed-Off configurations differ")
+                reference_config = config
+                window_started = time.monotonic() - started
+                observed = session_command(
+                    session,
+                    "capture",
+                    plan.window_ms,
+                    min(310, max(0.1, deadline - time.monotonic() - 15)),
+                    {"from": list(case.start), "to": list(case.end), "delay_ms": 0},
+                )
+                capture = output / ("capture-" + str(index + 1))
+                summary = save_live_capture(observed, capture)
+                if (
+                    summary["valid"] is not True
+                    or workload_failure(case, observed, plan.window_ms) is not None
+                    or configuration(observed) != config
+                ):
+                    raise ValueError("installation capture invalid")
+                observations.append(
+                    {
+                        "block": block,
+                        "mode": "native" if absent else "installed-Off",
+                        "summary": summary,
+                        "selection": status,
+                        "capture": capture.name,
+                        "arm": "native" if absent else "installed-Off",
+                        "case": case.identity,
+                        "attempt": capture.name,
+                        "quality_only": False,
+                        "window_started_seconds": window_started,
+                    }
+                )
+            except (OSError, ValueError, RuntimeError) as error:
+                failure = str(error)
+            finally:
+                if owner.poll() is None:
+                    try:
+                        session_command(
+                            session,
+                            "close",
+                            0,
+                            min(15, max(0.1, deadline - time.monotonic())),
+                        )
+                    except (OSError, ValueError, RuntimeError) as error:
+                        failure = (failure or "") + "; close: " + str(error)
+                        owner.terminate()
+                try:
+                    owner.wait(timeout=5)
+                except subprocess.TimeoutExpired:
+                    owner.kill()
+                    owner.wait(timeout=3)
+                    failure = (
+                        failure or ""
+                    ) + "; supervisor forced down; recovery required"
+            if failure is not None:
+                break
+    result: dict[str, object] = {
+        "schema": "shaderlod-installation-result-v1",
+        "state": "complete"
+        if failure is None and len(observations) == len(plan.schedule())
+        else "incomplete",
+        "observations": observations,
+        "failure": failure,
+        "scope": "Main mod registration/mixins installed-Off versus measurement-only development mod with common helper classes. Declared native operating mode; capped throughput cannot establish rendering headroom. No automatic retention.",
+    }
+    publish_bytes(
+        output / "report.html",
+        render_comparison(
+            result
+            | {
+                "qualification": "bounded installation control",
+                "retention": "no automatic admission",
+            }
+        ).encode(),
+    )
+    publish(output / "result.json", result)
+    publish(
+        output / "receipt.json",
+        {
+            "schema": "shaderlod-installation-receipt-v1",
+            "sha256": hashlib.sha256((output / "result.json").read_bytes()).hexdigest(),
+        },
+    )
+    return result

@@ -40,6 +40,18 @@ class NvidiaSensors:
             "adapter": "NVML device 0; match UUID/name before interpretation",
         }
         for key, symbol in (
+            ("nvml_version", "nvmlSystemGetNVMLVersion"),
+            ("driver_version", "nvmlSystemGetDriverVersion"),
+        ):
+            buffer = ctypes.create_string_buffer(128)
+            function = getattr(self.library, symbol, None)
+            result = -1 if function is None else function(buffer, len(buffer))
+            record[key] = (
+                buffer.value.decode(errors="replace")
+                if result == 0
+                else {"unavailable": result}
+            )
+        for key, symbol in (
             ("name", "nvmlDeviceGetName"),
             ("uuid", "nvmlDeviceGetUUID"),
         ):

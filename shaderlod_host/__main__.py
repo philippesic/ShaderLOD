@@ -31,6 +31,7 @@ def main() -> int:
             "session-open",
             "session-status",
             "session-close",
+            "session-recover",
             "prepare-windows",
             "prepare-profile",
             "prepare-world",
@@ -38,6 +39,7 @@ def main() -> int:
             "qualify",
             "validate",
             "history",
+            "installation",
         ],
     )
     parser.add_argument("--request", type=Path)
@@ -58,6 +60,8 @@ def main() -> int:
     parser.add_argument("--display", type=Path)
     parser.add_argument("--timeout", type=int, default=180)
     parser.add_argument("--wait-ready", action="store_true")
+    parser.add_argument("--telemetry", action="store_true")
+    parser.add_argument("--without-shaderlod", action="store_true")
     parser.add_argument("--source-root", type=Path)
     parser.add_argument("--output-root", type=Path)
     parser.add_argument("--ownership-root", type=Path)
@@ -65,6 +69,68 @@ def main() -> int:
     parser.add_argument("--control", type=Path)
     parser.add_argument("--reserve-bytes", type=int, default=67108864)
     args = parser.parse_args()
+    if (args.ancestor_pid is None) != (args.ancestor_birth is None):
+        parser.error("internal ancestry requires both process ID and birth identity")
+    if args.resume and (args.mode != "qualify" or args.spec is None):
+        parser.error(
+            "--resume requires qualify --spec for an unfinished frozen campaign"
+        )
+    if (
+        args.mode in {"qualify", "history"}
+        and args.result is not None
+        and not args.runs
+    ):
+        from shaderlod_host.campaign import campaign_results
+
+        args.runs = campaign_results(args.result.parent)
+    if args.mode == "report" and args.result is not None and args.request is None:
+        if args.output_root is None:
+            parser.error("report --result requires fresh --output-root")
+        from shaderlod_host.reports import rebuild
+
+        try:
+            print(json.dumps(rebuild(args.result, args.output_root), sort_keys=True))
+            return 0
+        except (OSError, ValueError) as error:
+            print(json.dumps({"status": "refused", "reason": str(error)}))
+            return 2
+    if args.mode == "installation":
+        from shaderlod_host.comparison import ComparisonPlan, installation_plan
+        from shaderlod_host.runtime_live import execute_installation
+
+        if args.spec is None:
+            parser.error("installation requires --spec")
+        installation = ComparisonPlan.decode(json.loads(args.spec.read_bytes()))
+        resolved_installation = installation_plan(installation)
+        if args.plan:
+            print(json.dumps(resolved_installation, sort_keys=True))
+            return 0
+        if (
+            args.launch is None
+            or args.profile is None
+            or args.display is None
+            or args.ownership_root is None
+            or args.output_root is None
+        ):
+            parser.error(
+                "installation requires --launch --profile --display --ownership-root --output-root"
+            )
+        result = execute_installation(
+            installation,
+            args.launch,
+            args.profile,
+            args.display,
+            args.ownership_root,
+            args.output_root,
+            args.world,
+        )
+        print(
+            json.dumps(
+                {key: value for key, value in result.items() if key != "observations"},
+                sort_keys=True,
+            )
+        )
+        return 0 if result["state"] == "complete" else 1
     if args.mode == "history":
         from shaderlod_host.reports import history
 
@@ -80,9 +146,25 @@ def main() -> int:
     if args.mode == "validate":
         from shaderlod_host.validation import validation_spec, validate_session
 
-        if args.spec is None or args.session is None or args.output_root is None:
-            parser.error("validate requires --spec --session --output-root")
+        if args.spec is None:
+            parser.error("validate requires --spec")
         surface, dh_enabled = validation_spec(json.loads(args.spec.read_bytes()))
+        if args.plan:
+            print(
+                json.dumps(
+                    {
+                        "schema": "shaderlod-validation-plan-v1",
+                        "surface": list(surface),
+                        "dh_enabled": dh_enabled,
+                        "maximum_control_wait_seconds": 75,
+                        "scope": "ready-session functional lifecycle, no speed or perceptual verdict",
+                    },
+                    sort_keys=True,
+                )
+            )
+            return 0
+        if args.session is None or args.output_root is None:
+            parser.error("validate requires --session --output-root")
         result = validate_session(args.session, args.output_root, surface, dh_enabled)
         print(
             json.dumps(
@@ -129,7 +211,13 @@ def main() -> int:
                 args.control,
             )
             print(json.dumps(result, sort_keys=True))
-            return 0 if result["state"] == "complete" else 1
+            return (
+                0
+                if result["state"] == "complete"
+                else 3
+                if result["state"] == "paused"
+                else 1
+            )
         if args.policy is None or not args.runs or args.output_root is None:
             parser.error("qualify requires --policy --runs --output-root")
         policy = QualificationPolicy.decode(json.loads(args.policy.read_bytes()))
@@ -203,7 +291,10 @@ def main() -> int:
             )
         pin = json.loads(
             (
-                Path(__file__).resolve().parents[1] / "dependencies/primary-pack.json"
+                args.spec
+                if args.spec is not None
+                else Path(__file__).resolve().parents[1]
+                / "dependencies/primary-pack.json"
             ).read_bytes()
         )
         with BusyRefusal(args.ownership_root, socket.gethostname() + ":gpu:0"):
@@ -257,11 +348,16 @@ def main() -> int:
             )
         )
         return 0
-    if args.mode in {"session-open", "session-status", "session-close"}:
+    if args.mode in {
+        "session-open",
+        "session-status",
+        "session-close",
+        "session-recover",
+    }:
         try:
             if args.session is None:
                 parser.error("--session required")
-            if args.mode in {"session-status", "session-close"}:
+            if args.mode in {"session-status", "session-close", "session-recover"}:
                 if args.mode == "session-status" and args.wait_ready:
                     from shaderlod_host.benchmark import wait_ready
 
@@ -272,9 +368,15 @@ def main() -> int:
                     json.dumps(
                         session_command(
                             args.session,
-                            "close" if args.mode == "session-close" else "status",
+                            {
+                                "session-close": "close",
+                                "session-status": "status",
+                                "session-recover": "recover",
+                            }[args.mode],
                             0,
-                            5,
+                            5
+                            if args.mode == "session-status"
+                            else min(65, args.timeout),
                         ),
                         sort_keys=True,
                     )
@@ -302,6 +404,8 @@ def main() -> int:
                 None
                 if args.ancestor_pid is None
                 else (args.ancestor_pid, args.ancestor_birth),
+                args.telemetry,
+                args.without_shaderlod,
             )
         except CommandIncomplete as error:
             print(json.dumps({"status": "incomplete", "reason": str(error)}))
@@ -352,7 +456,7 @@ def main() -> int:
                         {
                             key: value
                             for key, value in result.items()
-                            if key != "observations"
+                            if key not in {"observations", "baselines"}
                         },
                         sort_keys=True,
                     )
@@ -371,6 +475,8 @@ def main() -> int:
                     raise ValueError(
                         "only single fixed-scene frame captures are currently supported"
                     )
+                if args.output_root.exists():
+                    raise ValueError("fresh profile output required before capture")
                 payload = None
                 if plan.instrument == "diagnostic":
                     status = session_command(args.session, "status", 0, 5)
@@ -394,12 +500,29 @@ def main() -> int:
                 )
                 from shaderlod_host.benchmark import save_live_capture
 
-                summary = save_live_capture(observed, args.output_root)
+                try:
+                    summary = save_live_capture(observed, args.output_root)
+                except (OSError, ValueError) as error:
+                    from shaderlod_host.storage import publish
+
+                    publish(
+                        args.output_root / "failure.json",
+                        {
+                            "schema": "shaderlod-profile-failure-v1",
+                            "state": "incomplete",
+                            "reason": str(error),
+                            "session": str(args.session),
+                            "sequence": observed.get("sequence"),
+                        },
+                    )
+                    raise CommandIncomplete(
+                        "capture rejected; raw acknowledgement and failure receipt preserved"
+                    ) from error
                 print(json.dumps(summary, sort_keys=True))
                 return 0 if summary["valid"] is True else 1
             if not args.plan:
                 raise ValueError(
-                    "live benchmark execution is not yet implemented; use --plan"
+                    "live comparison requires a shaderlod-comparison-v1 specification"
                 )
             print(json.dumps(plan.describe(), sort_keys=True))
             return 0
@@ -413,6 +536,48 @@ def main() -> int:
         from shaderlod_host.benchmark import verify_frame_receipt
 
         try:
+            kind = json.loads(args.result.read_bytes()).get("schema")
+            if kind == "shaderlod-comparison-result-v1":
+                from shaderlod_host.comparison import verify_comparison
+
+                verified = verify_comparison(args.result)
+                print(json.dumps({"integrity": "PASS", "state": verified["state"]}))
+                return 0
+            if kind == "shaderlod-campaign-result-v1":
+                from shaderlod_host.campaign import campaign_results
+                from shaderlod_host.comparison import verify_comparison
+
+                record = json.loads(args.result.read_bytes())
+                paths = campaign_results(args.result.parent)
+                for path in paths:
+                    verify_comparison(path)
+                names = record.get("runs")
+                if (
+                    not isinstance(names, list)
+                    or not all(isinstance(name, str) for name in names)
+                    or [name.replace("\\", "/") for name in names]
+                    != [
+                        path.relative_to(args.result.parent).as_posix()
+                        for path in paths
+                    ]
+                ):
+                    raise ValueError("campaign run coverage disagreement")
+                print(
+                    json.dumps(
+                        {
+                            "integrity": "PASS",
+                            "state": record["state"],
+                            "verified_runs": len(paths),
+                        }
+                    )
+                )
+                return 0
+            if kind == "shaderlod-installation-result-v1":
+                from shaderlod_host.comparison import verify_installation
+
+                verified = verify_installation(args.result)
+                print(json.dumps({"integrity": "PASS", "state": verified["state"]}))
+                return 0
             print(json.dumps(verify_frame_receipt(args.result), sort_keys=True))
             return 0
         except (OSError, ValueError) as error:

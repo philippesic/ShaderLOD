@@ -231,7 +231,7 @@ def replace_bytes(path: Path, payload: bytes) -> None:
 
 
 def prepare_profile_artifact(
-    profile: Path, shipping: Path, session: Path
+    profile: Path, shipping: Path, session: Path, absent: bool = False
 ) -> dict[str, object]:
     marker = profile / "shaderlod-benchmark-profile.json"
     if marker.exists():
@@ -245,14 +245,17 @@ def prepare_profile_artifact(
         "schema": "shaderlod-profile-artifact-v1",
         "target": str(target.resolve()),
         "session": str(session.resolve()),
-        "managed_sha256": digest(payload),
+        "managed_sha256": None if absent else digest(payload),
         "original_sha256": None if existing is None else digest(existing),
         "backup": str((session / "profile-artifact-preimage.jar").resolve()),
     }
     if existing is not None:
         publish_bytes(Path(str(record["backup"])), existing)
     publish(marker, record)
-    replace_bytes(target, payload)
+    if absent:
+        target.unlink(missing_ok=True)
+    else:
+        replace_bytes(target, payload)
     return record
 
 
@@ -261,10 +264,15 @@ def restore_profile_artifact(profile: Path, expected: dict[str, object]) -> None
     if json.loads(marker.read_bytes()) != expected:
         raise ValueError("profile journal changed before restoration")
     target = Path(str(expected["target"]))
-    if target.is_symlink() or digest(target.read_bytes()) != expected["managed_sha256"]:
+    if target.is_symlink() or (
+        target.exists()
+        if expected["managed_sha256"] is None
+        else not target.exists()
+        or digest(target.read_bytes()) != expected["managed_sha256"]
+    ):
         raise ValueError("managed profile artifact changed; preserve before recovery")
     if expected["original_sha256"] is None:
-        target.unlink()
+        target.unlink(missing_ok=True)
     else:
         original = Path(str(expected["backup"])).read_bytes()
         if digest(original) != expected["original_sha256"]:
@@ -275,9 +283,9 @@ def restore_profile_artifact(profile: Path, expected: dict[str, object]) -> None
 
 @contextmanager
 def profile_artifact(
-    profile: Path, shipping: Path, session: Path
+    profile: Path, shipping: Path, session: Path, absent: bool = False
 ) -> Iterator[dict[str, object]]:
-    record = prepare_profile_artifact(profile, shipping, session)
+    record = prepare_profile_artifact(profile, shipping, session, absent)
     try:
         yield record
     finally:
@@ -332,6 +340,15 @@ def prepare_primary_profile(
         raise ValueError(
             "fresh setup evidence and quiescent recovered profile required"
         )
+    if (
+        not isinstance(filename, str)
+        or Path(filename).name != filename
+        or "\\" in filename
+        or not isinstance(expected, str)
+        or len(expected) != 64
+        or any(c not in "0123456789abcdef" for c in expected)
+    ):
+        raise ValueError("regular pack filename and SHA-256 required")
     archive = profile / "shaderpacks" / filename
     if archive.is_symlink() or digest(archive.read_bytes()) != expected:
         raise ValueError("pinned original pack required")

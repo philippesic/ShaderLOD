@@ -2,8 +2,9 @@ import hashlib
 import json
 from pathlib import Path
 
-from shaderlod_host.benchmark import verify_frame_receipt
+from shaderlod_host.benchmark import verify_frame_receipt, build_identity
 from shaderlod_host.storage import publish, publish_bytes
+from shaderlod_host.comparison import configuration
 
 
 def history(runs: list[Path], output: Path) -> dict[str, object]:
@@ -36,14 +37,24 @@ def history(runs: list[Path], output: Path) -> dict[str, object]:
             case = next(c for c in plan["cases"] if c["id"] == row["case"])
             context = {
                 "case": case,
+                "native_configuration": configuration(selection),
+                "collector_sha256": selection.get("loaded_dev_class_sha256"),
                 "renderer": selection.get("renderer"),
                 "runtime": selection.get("runtime"),
+                "runtime_mods": selection.get("runtime_mods"),
+                "world_seed": selection.get("world_seed"),
+                "world_path": selection.get("world_path"),
                 "resource_packs": selection.get("resource_packs"),
                 "options": selection.get("options"),
                 "client_options": selection.get("client_options"),
                 "host": selection.get("session_identity", {}).get("host"),
+                "instrumentation": selection.get("session_identity", {}).get(
+                    "instrumentation"
+                ),
                 "instrument": row.get("instrument", "frames"),
                 "quality_only": row.get("quality_only", False),
+                "quality_cadence_ms": plan.get("quality_cadence_ms", 0),
+                "mapping": row["summary"].get("mapping"),
                 "window_ms": plan["window_ms"],
                 "warmup_ms": plan["warmup_ms"],
             }
@@ -61,7 +72,7 @@ def history(runs: list[Path], output: Path) -> dict[str, object]:
                 "frame_ms_p95": row["summary"].get("frame_ms_p95"),
                 "valid": row.get("workload_valid") is True
                 and row["summary"].get("valid") is True,
-                "build": selection.get("loaded_main_class_sha256"),
+                "build": build_identity(selection.get("session_identity")),
                 "timeline": str(directory / "report.html"),
             }
             groups.setdefault(identity, []).append(record)
@@ -80,3 +91,48 @@ def history(runs: list[Path], output: Path) -> dict[str, object]:
     )
     publish_bytes(output / "report.html", html.encode())
     return result
+
+
+def rebuild(source: Path, output: Path) -> dict[str, object]:
+    from shaderlod_host.benchmark import read_frames, render_frames
+    from shaderlod_host.comparison import verify_comparison, render_comparison
+
+    if output.exists():
+        raise ValueError("fresh report output required")
+    record = json.loads(source.read_bytes())
+    kind = record.get("schema")
+    if kind == "shaderlod-frame-capture-v1":
+        verify_frame_receipt(source)
+        summary = json.loads((source.parent / "summary.json").read_bytes())
+        rendered = render_frames(read_frames(source.parent / "frames.jsonl"), summary)
+        publish(output / "summary.json", summary)
+    elif kind == "shaderlod-comparison-result-v1":
+        record = verify_comparison(source)
+        view = json.loads(json.dumps(record))
+        for row in view["observations"]:
+            row["attempt"] = (source.parent / row["attempt"]).resolve().as_uri()
+        rendered = render_comparison(view)
+        publish_bytes(output / "result.json", source.read_bytes())
+    elif kind == "shaderlod-campaign-result-v1":
+        from shaderlod_host.campaign import campaign_results
+
+        return history(campaign_results(source.parent), output)
+    else:
+        raise ValueError("completed capture/comparison or campaign result required")
+    publish_bytes(output / "report.html", rendered.encode())
+    manifest: dict[str, object] = {
+        "schema": "shaderlod-derived-report-v1",
+        "source": str(source.resolve()),
+        "source_sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
+        "renderer_sha256": {
+            path.name: hashlib.sha256(path.read_bytes()).hexdigest()
+            for path in (
+                Path(__file__),
+                *Path(__file__).with_name("templates").glob("*.html"),
+            )
+        },
+        "report_sha256": hashlib.sha256(rendered.encode()).hexdigest(),
+        "limits": "Offline derivative; no new evidence or qualification. Linked raw assets remain at their preserved source location.",
+    }
+    publish(output / "manifest.json", manifest)
+    return manifest

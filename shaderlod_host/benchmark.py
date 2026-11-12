@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 import hashlib
+import html
 import json
 import math
 import socket
@@ -104,7 +105,7 @@ class WorkflowPlan:
             "capture_ms": len(self.arms) * self.blocks * self.window_ms,
             "budget_ms": self.budget_ms,
             "instrument": self.instrument,
-            "live_capability": "not yet qualified",
+            "live_capability": "profile capture; comparison uses shaderlod-comparison-v1",
             "acceptance": "no retention policy supplied",
         }
 
@@ -115,6 +116,23 @@ class Frame:
     timestamp_ns: int
     interval_ns: int
     generation: int
+
+    def __post_init__(self) -> None:
+        for name, value in (
+            ("sequence", self.sequence),
+            ("timestamp_ns", self.timestamp_ns),
+            ("interval_ns", self.interval_ns),
+            ("generation", self.generation),
+        ):
+            if (
+                type(value) is not int
+                or not (0 if name == "generation" else 1)
+                <= value
+                <= 9223372036854775807
+            ):
+                raise ValueError(
+                    "frame field is outside its signed 64-bit contract: " + name
+                )
 
     @classmethod
     def decode(cls, value: object) -> "Frame":
@@ -232,7 +250,20 @@ def render_frames(frames: tuple[Frame, ...], analysis: dict[str, object]) -> str
     data = json.dumps(points, allow_nan=False)
     summary = json.dumps(analysis, allow_nan=False).replace("<", "\\u003c")
     template = (Path(__file__).with_name("templates") / "frames.html").read_text()
-    return template.replace("@@POINTS@@", data).replace("@@SUMMARY@@", summary)
+    fallback = html.escape(
+        "Frames: "
+        + str(analysis["frames"])
+        + "; FPS: "
+        + str(analysis.get("fps"))
+        + "; valid: "
+        + str(analysis["valid"])
+        + ". Application frame production; qualification is separate."
+    )
+    return (
+        template.replace("@@POINTS@@", data)
+        .replace("@@SUMMARY@@", summary)
+        .replace("@@FALLBACK@@", fallback)
+    )
 
 
 def session_command(
@@ -497,6 +528,20 @@ def save_live_capture(
                 }
             )
         analysis["stage_samples"] = samples
+        events = analysis["events"]
+        if not isinstance(events, list):
+            raise ValueError("event list required")
+        starts: dict[int, float] = {}
+        for sample in samples:
+            starts.setdefault(sample["submission"], sample["start_s"])
+        analysis["events"] = events + [
+            {
+                "elapsed_ns": round(value * 1e9),
+                "kind": "diagnostic-sample",
+                "submission": submission,
+            }
+            for submission, value in starts.items()
+        ]
         analysis["diagnostic_limits"] = (
             "Sampled stage intervals; missing GPU completions and shared shader effects prevent exclusive cost attribution"
         )
@@ -632,6 +677,10 @@ def wait_ready(session: Path, timeout: float) -> dict[str, object]:
             time.sleep(min(0.05, remaining))
             continue
         observed = session_command(session, "status", 0, min(65, remaining))
+        if observed.get("world_loaded") is True and observed.get("fallback") is True:
+            raise ValueError(
+                "native Iris graph fell back; inspect preserved client.log instead of treating fallback as readiness"
+            )
         if observed.get("world_loaded") is True and recover_needed:
             session_command(session, "recover", 0, min(65, remaining))
             recover_needed = False
@@ -644,3 +693,27 @@ def wait_ready(session: Path, timeout: float) -> dict[str, object]:
             )
             prepared = True
         time.sleep(min(0.2, max(0, deadline - time.monotonic())))
+
+
+def build_identity(metadata: object) -> str | None:
+    if not isinstance(metadata, dict):
+        return None
+    declared = metadata.get("build_sha256")
+    if (
+        isinstance(declared, str)
+        and len(declared) == 64
+        and all(c in "0123456789abcdef" for c in declared)
+    ):
+        return declared
+    inputs = metadata.get("executable_inputs")
+    if not isinstance(inputs, dict):
+        return None
+    matches = {
+        value
+        for path, value in inputs.items()
+        if isinstance(path, str)
+        and isinstance(value, str)
+        and "/mods/shaderlod-" in path.replace("\\", "/").lower()
+        and path.endswith(".jar")
+    }
+    return next(iter(matches)) if len(matches) == 1 else None

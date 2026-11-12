@@ -34,6 +34,6 @@ Runtime executable inputs are hashed before and after each attempt; drift invali
 
 The shared Linux/native-Windows session controller, quick in-session validation, short comparisons and frozen multi-session qualification are documented in [benchmarks](benchmarks.md). It uses the same settings-screen functional probe and independent host validator. [Profiling](profiling.md) describes full-frame streams, renderer-stage diagnostics, pack mappings and separate motion captures.
 
-Native Windows supervision uses a kill-on-close owned process job; Linux uses an owned process group. Both refuse unknown process identity. `doctor --probe-worker --output-root EXTERNAL` exercises normal exit, deadline and parent-loss cleanup. Raw evidence and executable input snapshots remain external.
+Native Windows supervision uses a kill-on-close owned process job; Linux uses an owned process group. Both refuse unknown process identity. `doctor --probe-worker --output-root EXTERNAL` exercises normal exit, deadline, direct-parent loss and campaign-ancestor loss cleanup. Raw evidence and executable input snapshots remain external.
 
 DH-enabled functional acceptance requires structured `dh.enabled=true`; mod presence or a readiness string alone is insufficient. This proves configured enablement only, not rendered DH coverage. The Asahi native DH sampler-limit failure remains a blocked cell. No-DH validation does not replace it. Exhaustive loaded-system-library attestation and universal image/performance guarantees are not provided.

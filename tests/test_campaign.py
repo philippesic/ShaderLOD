@@ -14,6 +14,7 @@ def test_campaign_freezes_independent_repetition_and_lifecycle_budget() -> None:
             / "benchmarks/comparisons/asahi-null.json"
         ).read_bytes()
     )
+    plan["scope"] = "contribution"
     record = {
         "schema": "shaderlod-campaign-v1",
         "sessions": [plan, plan | {"seed": 9}],
@@ -31,3 +32,11 @@ def test_campaign_freezes_independent_repetition_and_lifecycle_budget() -> None:
     ):
         with pytest.raises(ValueError):
             Campaign.decode(record | changes)
+
+
+def test_tracked_campaigns_are_executable() -> None:
+    root = Path(__file__).resolve().parents[1] / "benchmarks/qualification"
+    for path in root.glob("*.json"):
+        record = json.loads(path.read_bytes())
+        if record.get("schema") == "shaderlod-campaign-v1":
+            assert Campaign.decode(record).comparisons[0].window_ms > 0

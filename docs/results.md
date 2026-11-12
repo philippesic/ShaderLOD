@@ -12,7 +12,7 @@ Every finding carries one level. A higher level is never implied by a lower one.
 | live-functional | Runtime receipts prove the stated function on the stated machine only |
 | live-performance-qualified | Matching correctness, coverage, health and calibrated comparison evidence |
 
-Compilation is not a level. A live level needs a runtime receipt. Missing data stays missing with a reason; it is never zero. Health is PASS or FAIL. No level admits an optimization by itself. The acceptance bar for keeping an optimization is Philip's wording, "proven generally positive"; its exact meaning is part of [benchmark design](../tasks/benchmark-design.md).
+Compilation is not a level. A live level needs a runtime receipt. Missing data stays missing with a reason; it is never zero. Health is PASS or FAIL. No level admits an optimization by itself. The acceptance bar for keeping an optimization is Philip's wording, "proven generally positive"; each contribution freezes its useful gain, tolerated harm and perceptual criteria through the [benchmark protocol](benchmark-definitions.md).
 
 ## Where evidence lives
 

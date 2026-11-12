@@ -1,0 +1,47 @@
+{
+  "schema": "shaderlod-comparison-v1",
+  "scope": "release",
+  "cases": [
+    {
+      "id": "makeup-native-overhead",
+      "pack": "MakeUp-UltraFast-9.5g.zip",
+      "sha256": "0036da17e0c7158e1c669593e6322d53fce3f5a42fb5124b935e9e21a5719db8",
+      "from": [
+        0.5,
+        131,
+        0.5,
+        -45,
+        30
+      ],
+      "to": [
+        0.5,
+        131,
+        0.5,
+        -25,
+        30
+      ],
+      "dimension": "minecraft:overworld",
+      "surface": [
+        2560,
+        1600
+      ]
+    }
+  ],
+  "arms": [
+    {
+      "id": "native",
+      "modules": [],
+      "delay_ms": 0
+    },
+    {
+      "id": "installed-Off",
+      "modules": [],
+      "delay_ms": 0
+    }
+  ],
+  "blocks": 1,
+  "window_ms": 5000,
+  "warmup_ms": 1000,
+  "budget_ms": 300000,
+  "seed": 7
+}

@@ -1,6 +1,8 @@
 # Optimization modules
 
-No optimization exists yet. Start one only from measured work, which needs the profiler and benchmark workflow in [tasks/benchmark-design.md](../tasks/benchmark-design.md). The development identity provider proves loading, not a speedup.
+Follow [optimization direction](optimization-philosophy.md) and the [benchmark skill](../skills/benchmark/SKILL.md) before choosing a mechanism or claiming support.
+
+No optimization exists yet. Start one only from measured work, which needs the profiler and benchmark workflow in [benchmark workflows](benchmarks.md). The development identity provider proves loading, not a speedup.
 
 ## Layout
 

@@ -223,6 +223,7 @@ def probe_worker(output: Path) -> dict[str, object]:
         ("normal", "pass", birth(os.getpid()), 5, 0),
         ("deadline", "import time; time.sleep(20)", birth(os.getpid()), 0.3, 124),
         ("parent-loss", "import time; time.sleep(20)", "invalid-parent-birth", 5, 124),
+        ("ancestor-loss", "import time; time.sleep(20)", birth(os.getpid()), 5, 124),
     ]:
         record = output / (name + "-child.json")
         started = time.monotonic()
@@ -237,7 +238,12 @@ def probe_worker(output: Path) -> dict[str, object]:
                 json.dumps([sys.executable, "-c", child_code]),
                 str(record),
                 name,
-            ],
+            ]
+            + (
+                [json.dumps({"pid": os.getpid(), "birth": "invalid-ancestor-birth"})]
+                if name == "ancestor-loss"
+                else []
+            ),
             capture_output=True,
             timeout=10,
         )

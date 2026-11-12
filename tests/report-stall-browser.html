@@ -1,0 +1,9 @@
+<script>
+const selector=document.getElementById('metric');
+selector.value='fps';selector.dispatchEvent(new Event('input'));
+const samples=document.getElementById('scope')?values:plotted.map(row=>row.p);
+if(samples.length!==5||samples.filter(row=>row[1]===0).length!==2)throw Error('stall throughput bins hidden');
+selector.value='ms';selector.dispatchEvent(new Event('input'));
+if(!document.getElementById('scope')&&plotted.some(row=>!Number.isFinite(row.p[1])))throw Error('missing intervals invented');
+console.log('SHADERLOD_STALL_CHECKS passed: two empty seconds, finite observed intervals');
+</script>

@@ -35,6 +35,10 @@ class Campaign:
         if policy.sessions != len(plans):
             raise ValueError("policy and planned independent-session count differ")
         for plan in plans:
+            if plan.scope == "development":
+                raise ValueError(
+                    "confirmation campaign requires contribution/release scope"
+                )
             if set(policy.cases) != {case.identity for case in plan.cases} or not {
                 policy.reference,
                 policy.candidate,

@@ -1,0 +1,39 @@
+<script>
+(async () => {
+  function ensure(value, reason) { if (!value) throw new Error(reason); }
+  function change(id, value) { const element=document.getElementById(id);element.value=value;element.dispatchEvent(new Event('input')); }
+  const metric=document.getElementById('metric');
+  ensure(metric && document.querySelector('canvas'), 'report controls missing');
+  change('metric','fps');
+  change('start',200);change('end',800);
+  if(document.getElementById('scope')) {
+    change('metric','cpu');change('metric','gpu');
+    const rows=document.querySelectorAll('#stages tr');
+    ensure(rows.length>1,'stage table is empty');
+    rows[1].click();
+    ensure(document.getElementById('scope').value!=='all','stage selection did not reach graph');
+    document.getElementById('left').click();
+    ensure(+document.getElementById('start').value<200,'panning did not move interval');
+    change('scope','all');
+  }
+  if(document.getElementById('view')) { change('view','session');change('view','route'); }
+  change('metric','ms');change('start',0);change('end',1000);
+  const canvas=document.querySelector('canvas'),box=canvas.getBoundingClientRect();
+  canvas.dispatchEvent(new MouseEvent('mousemove',{clientX:box.left+box.width/2,clientY:box.top+50}));
+  const hover=document.getElementById('hover');
+  ensure(hover&&hover.textContent.length>0,'point tooltip missing');
+  if(document.getElementById('csv')) {
+    let blob=null;
+    const originalUrl=URL.createObjectURL, originalClick=HTMLAnchorElement.prototype.click;
+    URL.createObjectURL=value=>{blob=value;return 'blob:report-test';};
+    HTMLAnchorElement.prototype.click=function(){};
+    document.getElementById('csv').click();
+    ensure(blob!==null,'CSV export missing');
+    ensure((await blob.text()).startsWith('seconds,value,sequence_or_submission\n'),'CSV schema mismatch');
+    URL.createObjectURL=originalUrl;HTMLAnchorElement.prototype.click=originalClick;
+  }
+  document.body.dataset.reportChecks='passed';
+  console.log('SHADERLOD_REPORT_CHECKS passed: tracks, time bounds, stage selection, panning, tooltip, export');
+})();
+
+</script>

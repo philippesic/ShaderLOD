@@ -57,7 +57,11 @@ public record ControlRequest(
     if (action.equals("select")) {
       requireFields(payload, Set.of("pack", "sha256", "modules"));
     } else if (action.equals("prepare") && !payload.isEmpty()) {
-      requireFields(payload, Set.of("day_time", "weather"));
+      requireFields(
+          payload,
+          payload.has("pose")
+              ? Set.of("day_time", "weather", "pose")
+              : Set.of("day_time", "weather"));
       if (!payload.get("day_time").toString().matches("[0-9]+")
           || payload.get("day_time").getAsLong() >= 24000
           || !payload.get("weather").isJsonPrimitive()

@@ -1,0 +1,1 @@
+{"schema":"shaderlod-workflow-v1","scope":"profile","workload":"deadline-interruption-control","arms":["original"],"blocks":1,"window_ms":60000,"budget_ms":70000,"instrument":"frames"}

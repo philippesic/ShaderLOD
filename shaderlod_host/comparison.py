@@ -420,6 +420,10 @@ def execute_comparison(
         from shaderlod_host.assessment import QualificationPolicy
 
         declared = QualificationPolicy.decode(policy)
+        if plan.scope == "development":
+            raise ValueError(
+                "development screening cannot become confirmation by adding a policy"
+            )
         policy_identity = declared.identity
         publish(output / "policy.json", declared.wire())
     started = time.monotonic()
@@ -429,6 +433,8 @@ def execute_comparison(
     failure = None
     attempted: list[dict[str, object]] = []
     restored = False
+    inputs: dict[str, str] = {}
+    baselines: dict[str, dict[str, object]] = {}
 
     def call(
         action: str, duration: int = 0, payload: dict[str, object] | None = None
@@ -446,6 +452,23 @@ def execute_comparison(
 
     try:
         initial = call("status")
+        metadata = initial.get("session_identity")
+        if isinstance(metadata, dict):
+            profile = Path(str(metadata["profile"]))
+            for case in plan.cases:
+                source = profile / "shaderpacks" / case.pack
+                if source.is_symlink():
+                    raise ValueError("original archive cannot be a symlink")
+                payload = source.read_bytes()
+                if (
+                    source.is_symlink()
+                    or hashlib.sha256(payload).hexdigest() != case.sha256
+                ):
+                    raise ValueError("original archive preflight identity disagreement")
+                name = "inputs/" + case.sha256 + ".zip"
+                if name not in inputs:
+                    publish_bytes(output / name, payload)
+                    inputs[name] = case.sha256
         if initial.get("ready") is not True and initial.get("world_loaded") is not True:
             raise ValueError(
                 "session is not ready; wait for ready status before comparison"
@@ -462,8 +485,30 @@ def execute_comparison(
             attempted.append(attempt)
             publish(output / ("attempt-" + str(index + 1) + ".started.json"), attempt)
             call(
-                "prepare", payload={"day_time": case.day_time, "weather": case.weather}
+                "prepare",
+                payload={
+                    "day_time": case.day_time,
+                    "weather": case.weather,
+                    "pose": list(case.start),
+                },
             )
+            if case.identity not in baselines:
+                native = initial
+                initial_activation = initial.get("activation")
+                if (
+                    not isinstance(initial_activation, dict)
+                    or initial_activation.get("archiveSha256") != case.sha256
+                    or initial.get("selected_modules", []) != []
+                ):
+                    native = call(
+                        "select",
+                        payload={
+                            "pack": case.pack,
+                            "sha256": case.sha256,
+                            "modules": [],
+                        },
+                    )
+                baselines[case.identity] = native
             selection_started = time.monotonic()
             selected = call(
                 "select",
@@ -474,6 +519,10 @@ def execute_comparison(
                 },
             )
             selection_seconds = time.monotonic() - selection_started
+            if configuration(selected) != configuration(baselines[case.identity]):
+                raise ValueError(
+                    "candidate changed native options, surface, runtime, resources or DH configuration"
+                )
             activation = selected.get("activation")
             if (
                 not isinstance(activation, dict)
@@ -504,6 +553,15 @@ def execute_comparison(
                 if execution_deadline - time.monotonic() <= plan.warmup_ms / 1000:
                     raise ValueError("insufficient remaining warmup budget")
                 time.sleep(plan.warmup_ms / 1000)
+            conditioned = call("status")
+            pose = vector(conditioned.get("pose"))
+            if any(
+                abs(pose[i] - case.start[i]) > (0.25 if i < 3 else 0.05)
+                for i in range(5)
+            ):
+                raise ValueError(
+                    "prepared player drifted during fixed conditioning; use an appropriate prepared scene"
+                )
             capture_payload: dict[str, object] = {
                 "from": list(case.start),
                 "to": list(case.end),
@@ -513,6 +571,7 @@ def execute_comparison(
                 capture_payload["diagnostic"] = True
             if plan.instrument == "memory-control":
                 capture_payload["durable_chunks"] = False
+            quality = None
             if plan.quality_cadence_ms:
                 capture_payload["quality_cadence_ms"] = plan.quality_cadence_ms
             window_started = time.monotonic() - started
@@ -525,7 +584,7 @@ def execute_comparison(
             if plan.quality_cadence_ms:
                 from shaderlod_host.quality import save_sequence
 
-                save_sequence(
+                quality = save_sequence(
                     observed, session, case_dir, plan.quality_cadence_ms, plan.window_ms
                 )
             if arm.delay_ms:
@@ -539,6 +598,11 @@ def execute_comparison(
                         "known slowdown did not execute its declared delay"
                     )
             route_failure = workload_failure(case, observed, plan.window_ms)
+            if isinstance(quality, dict) and quality.get("sequence_valid") is not True:
+                route_failure = (
+                    route_failure
+                    or "quality cadence, delivery or camera alignment incomplete"
+                )
             captured_activation = observed.get("activation")
             activation_matches = (
                 isinstance(captured_activation, dict)
@@ -563,6 +627,7 @@ def execute_comparison(
                 "quality_only": plan.quality_cadence_ms > 0,
                 "selection_seconds": selection_seconds,
                 "conditions_seconds": conditions_seconds,
+                "conditioning": conditioned,
                 "window_started_seconds": window_started,
                 "window_ended_seconds": time.monotonic() - started,
             }
@@ -578,6 +643,7 @@ def execute_comparison(
                 or observed.get("dimension") != case.dimension
                 or not conditions_match(case, observed)
                 or observed.get("options") != selected.get("options")
+                or configuration(observed) != configuration(selected)
             ):
                 raise ValueError("invalid measured window or configuration drift")
     except (OSError, ValueError, RuntimeError) as error:
@@ -606,6 +672,8 @@ def execute_comparison(
         "restored": restored,
         "failure": failure,
         "policy_sha256": policy_identity,
+        "input_archives": inputs,
+        "baselines": baselines,
         "observations": results,
         "attempts": attempted,
         "reliability": {
@@ -705,6 +773,18 @@ def verify_comparison(path: Path) -> dict[str, object]:
         or receipt.get("sha256") != hashlib.sha256(path.read_bytes()).hexdigest()
     ):
         raise ValueError("comparison receipt/schema disagreement")
+    archives = result.get("input_archives", {})
+    if not isinstance(archives, dict):
+        raise ValueError("input archive map required")
+    for name, expected in archives.items():
+        asset = path.parent / name
+        if (
+            name != "inputs/" + str(expected) + ".zip"
+            or asset.is_symlink()
+            or not asset.resolve().is_relative_to(path.parent.resolve())
+            or hashlib.sha256(asset.read_bytes()).hexdigest() != expected
+        ):
+            raise ValueError("preserved original archive identity disagreement")
     definition = json.loads((path.parent / "plan.json").read_bytes())["definition"]
     plan = ComparisonPlan.decode(definition)
     if (
@@ -727,6 +807,10 @@ def verify_comparison(path: Path) -> dict[str, object]:
             row.get("block"),
         ) != (case.identity, arm.identity, block):
             raise ValueError("observation differs from scheduled arm/case/block")
+        if row.get("instrument", "frames") != plan.instrument or row.get(
+            "quality_only", False
+        ) != bool(plan.quality_cadence_ms):
+            raise ValueError("instrumentation differs from frozen comparison")
         directory = path.parent / str(row.get("attempt"))
         verify_frame_receipt(directory / "receipt.json")
         summary = json.loads((directory / "summary.json").read_bytes())
@@ -748,6 +832,13 @@ def verify_comparison(path: Path) -> dict[str, object]:
             or not conditions_match(case, observed)
         ):
             raise ValueError("comparison environment differs from declared case")
+        baseline = result.get("baselines", {}).get(case.identity)
+        if isinstance(baseline, dict) and configuration(selected) != configuration(
+            baseline
+        ):
+            raise ValueError("candidate differs from native configuration baseline")
+        if configuration(observed) != configuration(selected):
+            raise ValueError("configuration drift during captured window")
         activation = selected.get("activation")
         actual = observed.get("activation")
         if (
@@ -776,4 +867,81 @@ def verify_comparison(path: Path) -> dict[str, object]:
             "selected_modules", []
         ) != list(arm.modules):
             raise ValueError("requested modules were not actually prepared")
+    return result
+
+
+def configuration(observed: dict[str, object]) -> dict[str, object]:
+    dh = observed.get("dh")
+    if (
+        isinstance(dh, dict)
+        and dh.get("present") is True
+        and type(dh.get("enabled")) is not bool
+    ):
+        raise ValueError("DH configured state is unknown")
+    return {
+        "surface": observed.get("surface"),
+        "dimension": observed.get("dimension"),
+        "options": observed.get("options"),
+        "client_options": observed.get("client_options"),
+        "resource_packs": observed.get("resource_packs"),
+        "dh": {key: dh.get(key) for key in ("present", "version", "enabled")}
+        if isinstance(dh, dict)
+        else None,
+        "runtime": observed.get("runtime"),
+        "renderer": observed.get("renderer"),
+    }
+
+
+def installation_plan(plan: ComparisonPlan) -> dict[str, object]:
+    if (
+        len(plan.cases) != 1
+        or tuple(arm.identity for arm in plan.arms) != ("native", "installed-Off")
+        or any(arm.modules or arm.delay_ms for arm in plan.arms)
+        or plan.instrument != "frames"
+        or plan.quality_cadence_ms
+        or plan.window_ms > 60000
+    ):
+        raise ValueError(
+            "installation needs one case, native/installed-Off empty arms and frame-only windows up to 60 seconds"
+        )
+    return plan.describe() | {
+        "fresh_processes": 2 * plan.blocks,
+        "mode": "native / installed-Off",
+        "startup_and_close_allowance_seconds_per_process": 135,
+    }
+
+
+def verify_installation(path: Path) -> dict[str, object]:
+    from shaderlod_host.benchmark import verify_frame_receipt
+
+    result = json.loads(path.read_bytes())
+    receipt = json.loads((path.parent / "receipt.json").read_bytes())
+    if (
+        not isinstance(result, dict)
+        or result.get("schema") != "shaderlod-installation-result-v1"
+        or receipt.get("sha256") != hashlib.sha256(path.read_bytes()).hexdigest()
+    ):
+        raise ValueError("installation result/receipt disagreement")
+    plan = ComparisonPlan.decode(
+        json.loads((path.parent / "plan.json").read_bytes())["definition"]
+    )
+    installation_plan(plan)
+    rows = result.get("observations")
+    if not isinstance(rows, list) or (
+        result.get("state") == "complete" and len(rows) != 2 * plan.blocks
+    ):
+        raise ValueError("installation process coverage incomplete")
+    for row in rows:
+        directory = path.parent / row["capture"]
+        verify_frame_receipt(directory / "receipt.json")
+        observed = json.loads((directory / "observation.json").read_bytes())
+        if (
+            row["summary"] != json.loads((directory / "summary.json").read_bytes())
+            or (observed["runtime_mods"].get("shaderlod") == "absent")
+            != (row["mode"] == "native")
+            or workload_failure(plan.cases[0], observed, plan.window_ms) is not None
+        ):
+            raise ValueError(
+                "installation evidence does not match declared mode/workload"
+            )
     return result

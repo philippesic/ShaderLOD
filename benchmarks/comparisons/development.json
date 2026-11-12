@@ -1,1 +1,0 @@
-{"schema":"shaderlod-workflow-v1","scope":"development","workload":"fixed-ready-scene","arms":["original","candidate"],"blocks":1,"window_ms":10000,"budget_ms":60000,"instrument":"frames"}

@@ -10,6 +10,7 @@ from shaderlod_host.benchmark import (
     object_fields,
     positive,
     verify_frame_receipt,
+    build_identity,
 )
 
 
@@ -176,6 +177,15 @@ def assess(
         from shaderlod_host.comparison import ComparisonPlan
 
         plan = ComparisonPlan.decode(definition)
+        if (
+            plan.scope == "development"
+            or plan.instrument != "frames"
+            or plan.quality_cadence_ms
+        ):
+            problems.append(
+                str(path)
+                + ": exploratory/diagnostic/quality data cannot establish confirmation"
+            )
         if not set(policy.cases) <= {case.identity for case in plan.cases}:
             problems.append(str(path) + ": policy coverage missing from frozen plan")
         for index, row in enumerate(rows):
@@ -211,6 +221,10 @@ def assess(
             ):
                 problems.append(case + ": missing JVM process identity")
                 continue
+            candidate_build = build_identity(metadata)
+            if candidate_build is None:
+                problems.append(case + ": missing exact candidate build identity")
+                continue
             child = metadata["child"]
             key = json.dumps(
                 [
@@ -224,11 +238,19 @@ def assess(
                 [
                     metadata.get("host"),
                     metadata.get("world"),
+                    candidate_build,
+                    metadata.get("instrumentation"),
                     selected.get("surface"),
                     selected.get("dimension"),
                     selected.get("renderer"),
                     selected.get("runtime"),
+                    selected.get("runtime_mods"),
+                    selected.get("world_seed"),
+                    selected.get("world_path"),
                     selected.get("resource_packs"),
+                    selected.get("dh", {}).get("present"),
+                    selected.get("dh", {}).get("enabled"),
+                    selected.get("dh", {}).get("version"),
                     selected.get("options"),
                     selected.get("client_options"),
                     selected.get("loaded_main_class_sha256"),

@@ -251,7 +251,7 @@ def test_runner_death_stops_owned_group_without_foreign_kill(tmp_path: Path) -> 
             for pid in owned:
                 try:
                     value = Path(f"/proc/{pid}/stat").read_text()
-                except FileNotFoundError:
+                except (FileNotFoundError, ProcessLookupError):
                     continue
                 if value[value.rfind(")") + 2 :].split()[0] != "Z":
                     alive.append(pid)
@@ -328,3 +328,26 @@ def test_world_copy_preserves_source_and_refuses_unsafe_reuse(tmp_path: Path) ->
     (source / "escape").symlink_to(tmp_path)
     with pytest.raises(ValueError, match="symlink"):
         copytree(source, tmp_path / "unsafe", 0)
+
+
+def test_input_identity_excludes_assets_but_includes_classpath(tmp_path: Path) -> None:
+    from shaderlod_host.runtime_live import executable_inputs
+    import os
+
+    assets = tmp_path / "assets"
+    classes = tmp_path / "classes"
+    assets.mkdir()
+    classes.mkdir()
+    (assets / "large-world-input").write_text("assets")
+    (classes / "Executed.class").write_bytes(b"code")
+    legacy = tmp_path / "build/moddev/developmentLegacyClasspath.txt"
+    legacy.parent.mkdir(parents=True)
+    legacy.write_text("")
+    args = tmp_path / "arguments.txt"
+    args.write_text("-cp " + str(classes) + os.pathsep + str(assets / "missing.jar"))
+    observed = executable_inputs(
+        {"argv": ["java", "@" + str(args), "--assetsDir", str(assets)]}, tmp_path
+    )
+    assert str(classes / "Executed.class") in observed
+    assert str(assets / "large-world-input") not in observed
+    assert str(args) in observed

@@ -15,6 +15,7 @@ final class BenchmarkControl {
   private final Path directory;
   private final BenchmarkWorld world;
   private java.util.concurrent.CompletableFuture<java.util.Map<String, Object>> worldAction;
+  private java.util.List<Double> pendingPose;
   private boolean closing;
   private boolean idleClosing;
   private long lastActivity = System.nanoTime();
@@ -28,6 +29,9 @@ final class BenchmarkControl {
   private boolean contextLost;
   private boolean durableChunks = true;
   private String captureDimension;
+  private long activeWorldFrames;
+  private boolean observingFrame;
+  private boolean worldRendered;
   private java.util.List<String> selectedModules = java.util.List.of();
   private FrameCapture capture;
   private CaptureSpool spool;
@@ -48,13 +52,16 @@ final class BenchmarkControl {
   private long selectionStarted;
   private CameraRoute route;
   private java.util.List<Double> originalPose;
+  private java.util.List<Double> scenarioOriginalPose;
   private int delayMillis;
   private long delayExecuted;
   private long checkpointTime;
   private long routeTicks;
   private long viewCheckpointTime;
   private long qualityCadence;
-  private long qualityLast;
+  private CaptureCadence qualityClock;
+  private java.util.List<Double> latestCamera = java.util.List.of();
+  private long cameraObserved;
   private QualityCapture quality;
   private final java.util.List<java.util.Map<String, Object>> viewCheckpoints =
       new java.util.ArrayList<>();
@@ -68,11 +75,15 @@ final class BenchmarkControl {
 
   void frame(long timestamp, long generation) {
     if (capture != null) {
+      contextLost |= observingFrame && !worldRendered;
+      observingFrame = true;
+      worldRendered = false;
       var client = Minecraft.getInstance();
       contextLost |=
           client.level == null
               || client.player == null
               || client.screen != null
+              || client.getOverlay() != null
               || !client.isWindowActive()
               || client.getMainRenderTarget().width != captureWidth
               || client.getMainRenderTarget().height != captureHeight
@@ -113,30 +124,49 @@ final class BenchmarkControl {
   void stage(net.neoforged.neoforge.client.event.RenderLevelStageEvent event) {
     boolean shadow = net.irisshaders.iris.api.v0.IrisApi.getInstance().isRenderingShadowPass();
     if (capture != null
+        && !shadow
+        && event
+            .getStage()
+            .equals(net.neoforged.neoforge.client.event.RenderLevelStageEvent.Stage.AFTER_LEVEL)
+        && net.irisshaders.iris.api.v0.IrisApi.getInstance().isShaderPackInUse()
+        && !net.irisshaders.iris.Iris.isFallback()) {
+      activeWorldFrames++;
+      worldRendered = true;
+    }
+    if (capture != null
         && route != null
         && !shadow
         && event
             .getStage()
-            .equals(net.neoforged.neoforge.client.event.RenderLevelStageEvent.Stage.AFTER_SKY)
-        && System.nanoTime() - viewCheckpointTime >= 250000000) {
+            .equals(net.neoforged.neoforge.client.event.RenderLevelStageEvent.Stage.AFTER_SKY)) {
       var camera = event.getCamera();
       var point = camera.getPosition();
-      viewCheckpointTime = System.nanoTime();
-      viewCheckpoints.add(
-          java.util.Map.of(
-              "elapsed_ns",
-              viewCheckpointTime - started,
-              "client_ticks",
-              routeTicks,
-              "player_pose",
-              currentPose(),
-              "camera_pose",
-              java.util.List.of(
-                  point.x, point.y, point.z, (double) camera.getYRot(), (double) camera.getXRot()),
-              "eye_height",
-              Minecraft.getInstance().player.getEyeHeight(),
-              "first_person",
-              Minecraft.getInstance().options.getCameraType().isFirstPerson()));
+      cameraObserved = System.nanoTime();
+      latestCamera =
+          java.util.List.of(
+              point.x, point.y, point.z, (double) camera.getYRot(), (double) camera.getXRot());
+      if (cameraObserved - viewCheckpointTime >= 250000000) {
+        viewCheckpointTime = System.nanoTime();
+        viewCheckpoints.add(
+            java.util.Map.of(
+                "elapsed_ns",
+                viewCheckpointTime - started,
+                "client_ticks",
+                routeTicks,
+                "player_pose",
+                currentPose(),
+                "camera_pose",
+                java.util.List.of(
+                    point.x,
+                    point.y,
+                    point.z,
+                    (double) camera.getYRot(),
+                    (double) camera.getXRot()),
+                "eye_height",
+                Minecraft.getInstance().player.getEyeHeight(),
+                "first_person",
+                Minecraft.getInstance().options.getCameraType().isFirstPerson()));
+      }
     }
     if (stages != null) {
       stages.boundary((shadow ? "shadow/" : "main/") + event.getStage());
@@ -147,26 +177,32 @@ final class BenchmarkControl {
     if (stages != null) {
       stages.end();
     }
-    if (capture != null
-        && qualityCadence > 0
-        && System.nanoTime() - qualityLast >= qualityCadence) {
+    if (capture != null && qualityClock != null && qualityClock.due(System.nanoTime())) {
       long readbackStart = System.nanoTime();
       var image =
           net.minecraft.client.Screenshot.takeScreenshot(
               Minecraft.getInstance().getMainRenderTarget());
-      qualityLast = System.nanoTime();
+      long readbackEnd = System.nanoTime();
       quality.offer(
-          "motion-" + sequence + "-" + qualityLast + ".png",
+          "motion-" + sequence + "-" + readbackStart + ".png",
           image,
           java.util.Map.of(
               "elapsed_ns",
               readbackStart - started,
               "readback_ns",
-              qualityLast - readbackStart,
+              readbackEnd - readbackStart,
               "client_ticks",
               routeTicks,
               "pose",
-              currentPose()));
+              currentPose(),
+              "camera_pose",
+              latestCamera,
+              "camera_observed_ns",
+              cameraObserved,
+              "frame_start_ns",
+              capture.latestTimestamp(),
+              "first_person",
+              Minecraft.getInstance().options.getCameraType().isFirstPerson()));
     }
   }
 
@@ -221,6 +257,11 @@ final class BenchmarkControl {
           return;
         }
         var change = worldAction.join();
+        world.applyClient(change);
+        if (pendingPose != null) {
+          position(pendingPose);
+          pendingPose = null;
+        }
         worldAction = null;
         var record = state();
         record.put("world", change);
@@ -293,8 +334,10 @@ final class BenchmarkControl {
           record.put("expected_client_ticks", duration / 50000000.0);
           record.put("delay_ms", delayMillis);
           record.put("context_lost", contextLost);
+          record.put("active_world_frames", activeWorldFrames);
           record.put("executed_delay_ns", delayExecuted);
           record.put("quality_cadence_ns", qualityCadence);
+          record.put("quality_skipped_slots", qualityClock == null ? 0 : qualityClock.skipped());
           if (quality != null) {
             var qualityResult = quality.finish();
             record.put("quality_frames", qualityResult.get("frames"));
@@ -312,6 +355,8 @@ final class BenchmarkControl {
               "valid",
               !result.overflow()
                   && !contextLost
+                  && worldRendered
+                  && activeWorldFrames >= result.frames().size()
                   && !result.generationChanged()
                   && !result.frames().isEmpty()
                   && Boolean.TRUE.equals(spoolStatus.get("complete")));
@@ -325,6 +370,7 @@ final class BenchmarkControl {
         restore();
         closing = true;
         idleClosing = true;
+        restorePose();
         worldAction = world.set(true);
         return;
       }
@@ -381,21 +427,35 @@ final class BenchmarkControl {
                   !weather.equals("clear"),
                   weather.equals("thunder"));
         }
+        if (request.payload().has("pose")) {
+          var pose = vector(request.payload().getAsJsonArray("pose"));
+          new CameraRoute(pose, pose);
+          if (scenarioOriginalPose == null) {
+            scenarioOriginalPose = currentPose();
+          }
+          if (distance(scenarioOriginalPose, pose) > 4096) {
+            throw new IOException("Scenario exceeds 64 blocks from owned pose preimage");
+          }
+          pendingPose = pose;
+        }
       } else if (action.equals("screenshot")) {
         var record = state();
         record.putAll(image("quality-" + sequence + ".png"));
         publish(record);
       } else if (action.equals("recover")) {
         restore();
+        restorePose();
         closing = false;
         worldAction = world.set(true);
       } else if (action.equals("restore")) {
         restore();
+        restorePose();
         publish(state());
       } else if (action.equals("select")) {
         select(request.payload());
       } else if (action.equals("close")) {
         restore();
+        restorePose();
         closing = true;
         worldAction = world.set(true);
       } else if (action.equals("capture")) {
@@ -415,7 +475,8 @@ final class BenchmarkControl {
             !request.payload().has("durable_chunks")
                 || request.payload().get("durable_chunks").getAsBoolean();
         quality = null;
-        qualityLast = 0;
+        qualityClock = null;
+        latestCamera = java.util.List.of();
         qualityCadence =
             request.payload().has("quality_cadence_ms")
                 ? request.payload().get("quality_cadence_ms").getAsLong() * 1000000
@@ -431,7 +492,8 @@ final class BenchmarkControl {
                   vector(request.payload().getAsJsonArray("from")),
                   vector(request.payload().getAsJsonArray("to")));
           originalPose = currentPose();
-          if (distance(originalPose, route.from()) > 4096) {
+          var anchor = scenarioOriginalPose == null ? originalPose : scenarioOriginalPose;
+          if (distance(anchor, route.from()) > 4096 || distance(anchor, route.to()) > 4096) {
             throw new IOException("Route start exceeds 64 blocks from current position");
           }
           delayMillis = request.payload().get("delay_ms").getAsInt();
@@ -444,6 +506,9 @@ final class BenchmarkControl {
         }
         duration = millis * 1000000;
         contextLost = false;
+        activeWorldFrames = 0;
+        observingFrame = false;
+        worldRendered = false;
         captureWidth = Minecraft.getInstance().getMainRenderTarget().width;
         captureHeight = Minecraft.getInstance().getMainRenderTarget().height;
         captureDimension = String.valueOf(net.irisshaders.iris.Iris.getCurrentDimension());
@@ -464,6 +529,7 @@ final class BenchmarkControl {
         spool = new CaptureSpool(directory, sequence);
         spooled = 0;
         started = System.nanoTime();
+        qualityClock = qualityCadence > 0 ? new CaptureCadence(started, qualityCadence) : null;
         spooledAt = started;
       } else {
         throw new IOException("Unsupported command");
@@ -506,6 +572,7 @@ final class BenchmarkControl {
         client.level != null
             && client.player != null
             && client.screen == null
+            && client.getOverlay() == null
             && client.isWindowActive()
             && client.levelRenderer.countRenderedSections() > 0
             && !net.irisshaders.iris.Iris.isFallback());
@@ -527,6 +594,29 @@ final class BenchmarkControl {
             : java.util.List.of(monitor.width(), monitor.height(), monitor.refreshRate()));
     record.put("renderer", com.pp.shaderlod.dev.measurement.RenderEnvironment.current());
     record.put("runtime", com.pp.shaderlod.dev.config.DevelopmentSettings.runtimeIdentity());
+    var runtimeMods = new java.util.TreeMap<String, String>();
+    for (String id :
+        java.util.List.of("neoforge", "iris", "sodium", "distanthorizons", "shaderlod")) {
+      runtimeMods.put(
+          id,
+          net.neoforged.fml.ModList.get()
+              .getModContainerById(id)
+              .map(mod -> mod.getModInfo().getVersion().toString())
+              .orElse("absent"));
+    }
+    record.put("runtime_mods", runtimeMods);
+    record.put("minecraft", net.minecraft.SharedConstants.getCurrentVersion().getName());
+    var server = client.getSingleplayerServer();
+    if (server != null) {
+      record.put("world_seed", server.overworld().getSeed());
+      record.put(
+          "world_path",
+          server
+              .getWorldPath(net.minecraft.world.level.storage.LevelResource.ROOT)
+              .toAbsolutePath()
+              .normalize()
+              .toString());
+    }
     record.put("resource_packs", client.getResourcePackRepository().getSelectedIds());
     var runtime = Runtime.getRuntime();
     record.put(
@@ -558,7 +648,8 @@ final class BenchmarkControl {
     record.put("loaded_main_class_sha256", classDigest(com.pp.shaderlod.storage.AtomicFiles.class));
     record.put("loaded_dev_class_sha256", classDigest(BenchmarkControl.class));
     record.put("options", com.pp.shaderlod.integration.IrisSelection.effectiveOptions());
-    if (!record.containsKey("activation") && backend.hasSubmittedFrame()) {
+    if (!record.containsKey("activation")
+        && net.irisshaders.iris.api.v0.IrisApi.getInstance().isShaderPackInUse()) {
       try {
         record.put("activation", backend.observe());
       } catch (IOException unavailable) {
@@ -684,6 +775,13 @@ final class BenchmarkControl {
     modules.off();
     moduleSelection = false;
     selectedModules = java.util.List.of();
+  }
+
+  private void restorePose() {
+    if (scenarioOriginalPose != null) {
+      position(scenarioOriginalPose);
+      scenarioOriginalPose = null;
+    }
   }
 
   private void select(JsonObject payload) throws IOException {

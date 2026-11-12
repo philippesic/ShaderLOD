@@ -7,13 +7,13 @@ A `shaderlod-comparison-v1` definition contains:
 | Field | Meaning |
 | --- | --- |
 | `scope` | `development`, `contribution`, or `release`; this label never grants acceptance |
-| `cases` | Distinct IDs, original pack filename and SHA-256, five-coordinate `from`/`to` poses, dimension and native surface |
+| `cases` | Distinct IDs, original pack filename and SHA-256, five-coordinate `from`/`to` poses, dimension and native surface; optional `day_time` (default 6000) and `weather` (`clear`, `rain`, `thunder`) |
 | `arms` | Distinct IDs, exact module lists, and explicit `delay_ms` test control (normally zero) |
 | `blocks` | Complete paired blocks within this process; not independent JVM samples |
-| `window_ms`, `warmup_ms` | Fixed arm-symmetric measurement and conditioning, with bounded readiness separately recorded |
+| `window_ms`, `warmup_ms` | Up to 60 seconds per development window or 300 seconds per contribution/release window. Fixed arm-symmetric measurement and conditioning, with bounded readiness separately recorded |
 | `budget_ms` | Entire comparison, including reserved restoration time; no automatic retry |
 | `seed` | Frozen randomized case/arm order; alternating block order |
-| `instrument` | Optional `frames` (default) or `stages` diagnostic; diagnostics do not enter confirmation |
+| `instrument` | Optional `frames` (default), `stages`, or `memory-control` (no durable spool, observer control); diagnostics do not enter confirmation |
 | `quality_cadence_ms` | Optional 100–1000 ms; zero disables images. Nonzero requires a separate development capture no longer than ten seconds |
 
 Each route is limited to 64 blocks, starts within 64 blocks of the prepared player, and refuses unloaded chunks. Movement follows client simulation ticks at 20 Hz. The measured result must show the expected tick progression and actual player/render-camera checkpoints. Frames are not the route clock. A machine unable to maintain the declared progression produces an invalid workload, not a conveniently slowed benchmark. Build a separately declared lower-demand workload if appropriate.

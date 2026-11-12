@@ -33,7 +33,7 @@ def run_fixture(
             / "benchmarks/comparisons/asahi-null.json"
         ).read_bytes()
     )
-    plan = ComparisonPlan.decode(spec)
+    plan = ComparisonPlan.decode(spec | {"scope": "contribution"})
     root.mkdir()
     (root / "plan.json").write_text(json.dumps({"definition": plan.wire()}))
     rows = []
@@ -48,6 +48,7 @@ def run_fixture(
                 "host": "fixture",
                 "boot": "fixture-boot",
                 "world": "test-world",
+                "build_sha256": "e" * 64,
                 "child": {"pid": jvm, "birth": str(jvm)},
             },
             "surface": [2560, 1600],

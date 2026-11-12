@@ -48,6 +48,10 @@ public final class FrameCapture {
     return List.copyOf(frames.subList(cursor, frames.size()));
   }
 
+  public long latestTimestamp() {
+    return previous;
+  }
+
   public int count() {
     return frames.size();
   }

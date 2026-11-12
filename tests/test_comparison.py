@@ -77,7 +77,7 @@ def test_route_and_measured_generation_drift_cannot_promote(tmp_path: Path) -> N
         payload: dict[str, object] | None,
     ) -> dict[str, object]:
         if action == "status":
-            return {"ready": True}
+            return {"ready": True, "pose": [0.5, 131, 0.5, -45, 30]}
         if action == "select":
             return {
                 "activation": {"linked": True, "witnesses": ["submitted-frame:abc"]},
@@ -121,3 +121,39 @@ def test_route_and_measured_generation_drift_cannot_promote(tmp_path: Path) -> N
     assert result["state"] == "incomplete"
     assert result["observations"]
     assert result["restored"] is True
+
+
+def test_native_configuration_guard_includes_dh_caps_and_resources() -> None:
+    from shaderlod_host.comparison import configuration
+
+    native: dict[str, object] = {
+        "options": {"TAA": "true"},
+        "client_options": {"vsync": True},
+        "resource_packs": ["fixture"],
+        "dh": {
+            "present": True,
+            "version": "fixture",
+            "enabled": True,
+            "readiness": "loading",
+        },
+    }
+    assert configuration(native) == configuration(
+        native
+        | {
+            "dh": {
+                "present": True,
+                "version": "fixture",
+                "enabled": True,
+                "readiness": "settled",
+            }
+        }
+    )
+    invalid_changes: tuple[dict[str, object], ...] = (
+        {"client_options": {"vsync": False}},
+        {"resource_packs": []},
+        {"dh": {"present": True, "version": "fixture", "enabled": False}},
+    )
+    for changes in invalid_changes:
+        assert configuration(native) != configuration(native | changes)
+    with pytest.raises(ValueError, match="unknown"):
+        configuration(native | {"dh": {"present": True, "enabled": None}})

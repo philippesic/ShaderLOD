@@ -39,13 +39,22 @@ def save_sequence(
         publish_bytes(output / name, payload)
         records.append(frame)
     gaps.append(max(0, duration_ms * 1000000 - previous))
+    alignment_complete = all(camera_alignment(frame) for frame in records)
+    delivery = observed.get("quality_status")
+    complete = isinstance(delivery, dict) and delivery.get("complete") is True
+    cadence_met = (
+        max(gaps) <= cadence_ms * 1500000
+        and observed.get("quality_skipped_slots", 0) == 0
+    )
     record: dict[str, object] = {
         "schema": "shaderlod-quality-sequence-v1",
         "cadence_ms": cadence_ms,
         "duration_ms": duration_ms,
         "frames": records,
         "max_gap_ms": max(gaps) / 1000000,
-        "cadence_met": max(gaps) <= cadence_ms * 1500000,
+        "cadence_met": cadence_met,
+        "alignment_complete": alignment_complete,
+        "sequence_valid": cadence_met and complete and alignment_complete,
         "delivery": observed.get(
             "quality_status", {"complete": False, "reason": "delivery status missing"}
         ),
@@ -59,3 +68,17 @@ def save_sequence(
     )
     publish_bytes(output / "quality.html", html.encode())
     return record
+
+
+def camera_alignment(frame: dict[str, object]) -> bool:
+    pose = frame.get("camera_pose")
+    start = frame.get("frame_start_ns")
+    observed = frame.get("camera_observed_ns")
+    return (
+        isinstance(pose, list)
+        and len(pose) == 5
+        and isinstance(start, int)
+        and isinstance(observed, int)
+        and observed >= start
+        and frame.get("first_person") is True
+    )

@@ -17,11 +17,11 @@ final class QualityCapture {
   private final Path directory;
   private final ThreadPoolExecutor writer =
       new ThreadPoolExecutor(
-          1,
-          1,
+          2,
+          2,
           0,
           TimeUnit.MILLISECONDS,
-          new ArrayBlockingQueue<>(2),
+          new ArrayBlockingQueue<>(4),
           action -> {
             var thread = new Thread(action, "shaderlod-quality-writer");
             thread.setDaemon(true);

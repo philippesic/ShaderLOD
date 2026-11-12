@@ -35,7 +35,6 @@ Package boundaries and forbidden dependencies are enforced by ArchUnit against c
 | `shaderlod_host/runtime_live.py:main` | `./verify --runtime` | Live client attempt and functional receipt | Built JARs, pinned runtime | `tests/test_functional_contract.py` |
 | `shaderlod_host/benchmark.py:analyze_frames` | Offline import or live fixed-scene capture | Complete-stream validity and descriptive frame analysis | Strict frame records | `tests/test_benchmark.py` |
 | `shaderlod_host/runtime_live.py:benchmark_session` | `python3 -m shaderlod_host session-open` | Foreground Linux/native-Windows client, watchdog, external command/results | Prepared profile and allocated display | `tests/test_benchmark.py` |
-
 | `shaderlod_host/comparison.py:execute_comparison` | `python3 -m shaderlod_host compare` | Frozen plan, paired routes, attempts and restored shader state | Live control protocol and frame receipts | `tests/test_comparison.py` |
 | `shaderlod_host/validation.py:validate_session` | `python3 -m shaderlod_host validate` | Functional probe receipt and preserved output | Existing host functional validator | `tests/test_functional_contract.py` |
 | `shaderlod_host/runtime_live.py:execute_campaign` | `python3 -m shaderlod_host qualify --spec` | Fixed fresh-session campaign and failure accounting | Session supervisor and frozen policy | `tests/test_campaign.py` |
