@@ -40,8 +40,8 @@ A source clone does not include those artifacts.
 
 ## Change and validate
 
-Keep the change within its authorized goal. Make invalid states explicit at the
-owning boundary and use supported extension points. [Optimization modules](optimizations.md),
+Make invalid states explicit at the owning boundary and use supported extension points.
+[Optimization modules](optimizations.md),
 [Iris integration](iris-integration.md) and [dependency updates](dependencies.md)
 own their particular implementation rules.
 
@@ -51,18 +51,10 @@ hook runs that gate. Live lifecycle checks, performance screens and qualificatio
 answer different questions; use the [benchmark procedure](benchmarks.md) as relevant.
 A documentation-only edit does not require a game launch.
 
-Maintaining affected tests, commands, navigation and current explanations is part
-of the change. Update the existing [entry-point map](architecture.md#entry-points)
-when a supported entry point changes. Keep command details in their topic owner;
-link them from navigation rather than creating another command list. Existing
-behavioral tests may suffice; add tests for meaningful new behavior and failure cases.
-Keep required-test changes and any safeguard replacement within the
+Update the [entry-point map](architecture.md#entry-points) when a supported entry point
+changes. Command details belong in their topic guide; navigation links there.
+Required-test changes and any safeguard replacement follow the
 [check maintenance rules](checks.md#tests).
-
-For multi-session work, keep authorization, current implementation, evidence and
-next action in the assigned task. Distinguish proposed decisions from approved
-ones. Rewrite state rather than appending progress logs. A question during work
-steers the task; it does not erase its objective or existing authorization.
 
 ## Documents and completion
 
@@ -81,11 +73,8 @@ steers the task; it does not erase its objective or existing authorization.
 
 For meaningful investigation closeout use the pinned
 [close-results skill](../skills/close-results/SKILL.md) with [results](results.md).
-Routine fixes do not automatically need result pages. Preserve required source and
-inputs before authorized pruning, update affected current docs and findings, validate
-the remaining project, and delete the completed task. A bounded investigation can
-finish with an honestly unresolved result. Reading an open task does not assign it;
-see the [task convention](../tasks/README.md).
+The result specification defines when a result is warranted and what to retain;
+the [task convention](../tasks/README.md) defines completion and task removal.
 
 ## Skill ownership and updates
 
@@ -93,14 +82,9 @@ see the [task convention](../tasks/README.md).
 their supporting docs. They call maintained commands and do not provide competing
 runners. Global `benchmark-design` designs or repairs methods; `repo-environment`
 handles environment work; `correct` repairs requested recurring workflow failures.
-They do not add automatic agent reviews or assignments.
 
 `skills/close-results` is a pinned copy of the shared p-stack procedure. Its
 [project specification](results.md#result-presentation-and-closeout) records the
 source revision and update path. Use the tracked copy for this project so an
 unrelated global sync does not silently change its closeout procedure. Shared
 updates are deliberate reviewed copies, not independently maintained variants.
-
-Evaluate these instructions through ordinary work. Skill/schema and link checks
-establish structural validity; they do not demonstrate better agent outcomes. Repair
-observed friction without adding a standing agent evaluation or maintenance framework.

@@ -24,6 +24,9 @@ Active needs a submitted frame through the selected pipeline (see [Iris integrat
 
 ## Process ownership
 
+The project does not use a benchmark scheduler or GPU lease service. The bounded
+manual Windows bridge in the [benchmark guide](benchmarks.md) is not such a service.
+
 The Linux watchdog owns the Java process group and stops it at the timeout, even if the submitting agent disappears. A nonblocking host/device advisory lock excludes other cooperating runs and returns busy instead of waiting; it does not see uncooperative processes, so check for other running clients before launch. Owned processes are identified by host, boot and process-birth identity, never by PID alone.
 
 Runtime executable inputs are hashed before and after each attempt; drift invalidates the attempt. This covers declared JVM inputs, compiled resources and discovered JARs, not every system library.

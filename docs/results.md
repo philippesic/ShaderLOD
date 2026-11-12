@@ -51,6 +51,11 @@ Identify the executed source, including any relevant dirty patch, dependency ver
 
 Raw records remain immutable while retained; this does not require permanent retention of every output. Closeout extracts useful measurements, conditions, limitations and conclusions into results/, verifies the retained evidence against the raw attempt, and then deletes superseded bulky outputs within the investigation's authorized scope. Keep only inputs or records still necessary to support the claim and not adequately represented by the compact result. Logs, captures, caches and frozen environments are not retained merely because they were produced. Do not delete active/shared work or select away unfavorable evidence. Record what was discarded and any resulting reproduction limits. Unclassified material needs extraction and verification before deletion; do not reopen an already completed extraction merely because its original bulk files still exist.
 
+Prepared client/world slots and reusable dependency caches are working resources,
+not superseded evidence. Their preservation follows the global rules for useful
+caches and shared work. Evidence has no automatic expiry; deletion follows verified
+closeout rather than age or disk pressure alone.
+
 A summary correction records the date, changed claim and reason in the result; materially new investigations get new results. Update FINDINGS to the current scoped conclusion without hiding relevant prior results.
 
 Before removing rejected implementation, verify that source and necessary dependency identities are recoverable. Preserve reusable code and regression tests only when they still serve the project. Apply authorized cleanup and validate the remaining project with ./check --full before closing its task. Closeout includes extracting evidence and removing superseded outputs; it grants no unrelated deletion or publication authority.

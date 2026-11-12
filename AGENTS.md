@@ -2,15 +2,13 @@
 
 A NeoForge 1.21.1 client mod that selects Iris packs natively and applies optional
 optimization modules. The canonical checkout is `/home/philip/ShaderLOD`.
-Global working preferences apply; this file owns local correctness boundaries and
-navigation. Confirm the target checkout before work.
+Global AGENTS.md owns working preferences and authorization; this file adds project
+navigation and correctness boundaries.
 
 ## Start with the assigned work
 
-Read the relevant task when assigned and load only the topic guidance needed.
-An open task does not authorize resuming it. Scan [FINDINGS](FINDINGS.md) for related
-investigations when researching an optimization or a previously studied failure;
-follow relevant results rather than reading every supporting record.
+For optimization research or a previously studied failure, scan
+[FINDINGS](FINDINGS.md) and follow the relevant results.
 
 | Work | Procedure and context |
 | --- | --- |
@@ -30,38 +28,29 @@ belong to [results and closeout](docs/results.md#result-presentation-and-closeou
 
 ## Correctness and code boundaries
 
-- Preserve original shader-pack archives, user-selected settings, native output resolution and
-  AA, and exact restoration on Off, Cancel and failed Apply. Internal approximations
-  follow the perceptual-quality and eligibility requirements in [optimization
+- Preserve original shader-pack archives, user-selected settings, native output
+  resolution and AA, and exact restoration on Off, Cancel and failed Apply.
+  Internal approximations follow the perceptual-quality and eligibility requirements in [optimization
   direction](docs/optimization-philosophy.md); distance alone proves nothing.
 - Keep packages within the [system map](docs/architecture.md). Settings belong to
   `shaderlod_host.config`, publication to `shaderlod_host.storage`, and launches to
   the maintained runtime owners. Unknown inputs refuse with a reason.
-- No comments, Javadoc or docstrings in authored code, tests, scripts, build files
-  or configuration. Rationale belongs in topic docs; exact exceptions follow
-  [checks](docs/checks.md). Never skip or disable a check or remove a test to pass.
+- The global comment preference is enforced here across authored code, tests,
+  scripts, build files and configuration, including Javadoc. Only the
+  [exact project exceptions](docs/checks.md#comment-exceptions) apply. Never skip or
+  disable a check or remove a test to pass.
 - A `TOOLS:` checksum mismatch requires stopping affected verification and reporting
   it; never edit a lock to obtain a pass. Use the maintained dependency-update path.
-- Portable checks do not establish rendering or performance. Live claims require
-  matching runtime-owned receipts from the [supported workflows](docs/benchmarks.md).
+- Live claims require matching runtime-owned receipts from the
+  [supported workflows](docs/benchmarks.md).
 
-## Local authority and preservation
-
-Routine factual updates to AGENTS.md, navigation, tests and current docs are part
-of an authorized change. Changing working policy, correctness guarantees, native
-quality or product support scope requires agreement. Keep reusable preferences in
-global instructions and project mechanics in their topic docs.
+## Project resources
 
 - Bounded live work on the allocated Asahi display is permitted within the assigned
   scope. Other hardware needs an explicit allocation for that work; historical runs
-  do not grant one. RTX 5080 is not allocated. Record budgets and allocation in the
-  assigned task; historical hardware coverage is not a new allocation.
-- Identify owned processes by host, boot and process birth, never PID alone. Use
-  maintained recovery paths and preserve active/shared work.
-- No scheduler, GPU lease service or automatic evidence expiry. Cleanup follows
-  global ownership rules and the [result specification](docs/results.md). Temporary
-  raw outputs live under `~/.local/share/shaderlod/evidence`; closeout extracts
-  compact evidence into results/ and removes superseded bulky outputs within scope.
-- The established user-owned origin is `git@github.com:philippesic/ShaderLOD.git`.
-  Commit coherent checkpoints and push under the global publishing convention.
-  Preserve implementation history; never force-push.
+  do not grant one. RTX 5080 is not allocated.
+- Runtime ownership and recovery follow the
+  [runtime guide](docs/runtime.md#process-ownership).
+- Temporary outputs use `~/.local/share/shaderlod/evidence`; the
+  [result specification](docs/results.md) owns extraction, retention and deletion.
+- Established origin: `git@github.com:philippesic/ShaderLOD.git`.
