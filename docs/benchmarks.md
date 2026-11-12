@@ -10,6 +10,8 @@ Use the maintained `python3 -m shaderlod_host` entry point. Keep one owned clien
 | `profile --session …` | Explain timing variation | Usually 10–20 seconds capture; optional sampled CPU/GPU stages. See [profiling](profiling.md) |
 | `qualify --spec …` | Frozen contribution/release evidence | Explicit fresh-session matrix and budget. Breadth, repeats, quality, sustained cases and interactions are chosen for the contribution; no universal automatic certificate |
 
+Execution commands return 0 for a complete/valid workflow, 1 for failed or incomplete work, and 2 for refused input. Campaign pause returns 3. Offline `qualify --policy` returns 1 when its recommendation is `do_not_promote`, including an otherwise valid inconclusive or slow result; that is not permission to retry until it passes.
+
 Cold startup, shader reload and world preparation are separate costs. The one-minute loop assumes a ready client. A slow, failed or non-settling attempt stays in the evidence. Do not replace the maintained harness with a custom timing wrapper.
 
 ## Prepare and own a session
@@ -68,6 +70,8 @@ The tracked sensitivity campaign is a harness control, not a product acceptance 
 For a long campaign, `--control PATH` accepts an explicit `{"action":"pause","after_sessions":N}` request only at a completed, closed session boundary. Exit 3 means paused; it is not failure or completion. Resume with the same command/output plus `--resume`, omitting the old pause request. Executed source, profile, world, protocol and completed prefix must match. Unknown/failed admitted work is not replayed, and spent reservations are not refunded. Verify the finished campaign directly with `verify --result /external/campaign/result.json`; assess it with `qualify --policy POLICY --result /external/campaign/result.json --review REVIEW --output-root /external/fresh-assessment`.
 
 `installation --spec benchmarks/comparisons/asahi-installation-makeup.json --launch LAUNCH --profile PROFILE --world WORLD --display DISPLAY --ownership-root OWNERSHIP --output-root /external/fresh-installation` compares a genuinely absent main mod against installed-Off in separate processes. Prepare that exact original pack first. Common measurement helpers remain in both arms; this isolates registration/mixin overhead, not absence of every shared class. Native pack failure is a compatibility outcome, not permission to reduce quality. This control is separate from ordinary candidate comparisons.
+
+After a campaign, `report --result /external/campaign/result.json --output-root /external/fresh-campaign-report` builds an offline view of the recorded policy decision and chronological compatible-series charts. It performs no new measurement or approval.
 
 Inspect the within-route timeline, chronological session placement and cross-comparison history. Preserve baseline drift and every repeat. Histories partition incompatible contexts; they do not connect unrelated devices/settings. A capped result concerns delivered throughput. An uncapped headroom diagnostic needs a separate declared operating mode.
 

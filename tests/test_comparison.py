@@ -157,3 +157,14 @@ def test_native_configuration_guard_includes_dh_caps_and_resources() -> None:
         assert configuration(native) != configuration(native | changes)
     with pytest.raises(ValueError, match="unknown"):
         configuration(native | {"dh": {"present": True, "enabled": None}})
+
+
+def test_authored_comparisons_are_executable() -> None:
+    from shaderlod_host.comparison import installation_plan
+
+    root = Path(__file__).resolve().parents[1] / "benchmarks/comparisons"
+    for path in root.glob("*.json"):
+        plan = ComparisonPlan.decode(json.loads(path.read_bytes()))
+        assert len(plan.schedule()) == len(plan.cases) * len(plan.arms) * plan.blocks
+        if "installation" in path.name:
+            assert installation_plan(plan)["fresh_processes"] == 2 * plan.blocks

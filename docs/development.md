@@ -6,7 +6,7 @@ Read [AGENTS](../AGENTS.md) for working rules and [architecture](architecture.md
 
 Follow [README setup](../README.md#setup), including enabling the pre-commit hook. Make routine implementation decisions within the assigned scope. Update current topic documentation with behavior changes; remove obsolete instructions. Use [optimization modules](optimizations.md) for module development and [dependencies](dependencies.md) for approved pin updates.
 
-Run `./check` while editing; it is explicitly partial. Run `./check --full` before committing and at handoff. The hook runs the full gate. See [checks](checks.md) for failure repairs and fresh validation. Use [runtime verification](runtime.md) for allocated live functional work. CPU checks do not establish rendering correctness or performance; benchmark design defines those methods.
+Run `./check` while editing; it is explicitly partial. Run `./check --full` before committing and at handoff. The hook runs the full gate. See [checks](checks.md) for failure repairs and fresh validation. Use [runtime verification](runtime.md) for allocated live functional work. CPU checks do not establish rendering correctness or performance; the [benchmark workflows](benchmarks.md) define those methods.
 
 ## Documents and completion
 

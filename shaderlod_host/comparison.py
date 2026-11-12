@@ -817,6 +817,20 @@ def verify_comparison(path: Path) -> dict[str, object]:
         observed = json.loads((directory / "observation.json").read_bytes())
         if row.get("summary") != summary:
             raise ValueError("comparison summary disagrees with captured evidence")
+        if plan.quality_cadence_ms:
+            from shaderlod_host.quality import verify_sequence
+
+            quality = verify_sequence(
+                directory / "quality.json",
+                observed,
+                plan.quality_cadence_ms,
+                plan.window_ms,
+            )
+            if (
+                row.get("workload_valid") is True
+                and quality.get("sequence_valid") is not True
+            ):
+                raise ValueError("invalid quality sequence promoted by comparison")
         if (
             row.get("workload_valid") is True
             and workload_failure(case, observed, plan.window_ms) is not None

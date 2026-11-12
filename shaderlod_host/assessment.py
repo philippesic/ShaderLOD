@@ -11,6 +11,7 @@ from shaderlod_host.benchmark import (
     positive,
     verify_frame_receipt,
     build_identity,
+    collector_identity,
 )
 
 
@@ -255,6 +256,7 @@ def assess(
                     selected.get("client_options"),
                     selected.get("loaded_main_class_sha256"),
                     selected.get("loaded_dev_class_sha256"),
+                    collector_identity(metadata),
                     next(
                         (
                             case

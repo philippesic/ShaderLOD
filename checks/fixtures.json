@@ -1,0 +1,6 @@
+{
+  "results/benchmark-workflows/chart.png": {
+    "sha256": "e8e5d45ba5bdae28fa36e3b79d3edbce7a3ca4611c84de677c3f091261c866b4",
+    "purpose": "Compact benchmark control figure; numerical inputs and Matplotlib regeneration source live beside it"
+  }
+}

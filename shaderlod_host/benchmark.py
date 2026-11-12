@@ -636,6 +636,7 @@ def verify_frame_receipt(path: Path) -> dict[str, object]:
         "elapsed_ns",
         "missing_frames",
         "generations",
+        "bins",
         "frame_ms_max",
         "frame_ms_p50",
         "frame_ms_p95",
@@ -717,3 +718,21 @@ def build_identity(metadata: object) -> str | None:
         and path.endswith(".jar")
     }
     return next(iter(matches)) if len(matches) == 1 else None
+
+
+def collector_identity(metadata: object) -> dict[str, str]:
+    if not isinstance(metadata, dict) or not isinstance(
+        metadata.get("executable_inputs"), dict
+    ):
+        return {}
+    result = {}
+    for name, digest in metadata["executable_inputs"].items():
+        normalized = str(name).replace("\\", "/")
+        for marker in (
+            "/build/classes/java/devClient/",
+            "/build/classes/java/benchmarkCore/",
+            "/build/resources/devClient/",
+        ):
+            if marker in normalized:
+                result[marker + normalized.split(marker, 1)[1]] = str(digest)
+    return result

@@ -1,0 +1,552 @@
+{
+  "schema": "shaderlod-benchmark-workflow-result-v1",
+  "sensitivity": {
+    "source": "/home/philip/.local/share/shaderlod-next/evidence/benchmark-rtx2080ti-sensitivity-02",
+    "sessions": [
+      {
+        "session": 1,
+        "result_sha256": "d8a7693ce87f17eedacc6cb8bbd18fffd13bbae3824b30b2481b3019e27bbc19",
+        "arms": [
+          {
+            "arm": "original",
+            "fps": 59.66332700530828,
+            "bins": [
+              {
+                "frames": 60,
+                "observed_interval_ns": 998213100,
+                "second": 0
+              },
+              {
+                "frames": 59,
+                "observed_interval_ns": 988935400,
+                "second": 1
+              },
+              {
+                "frames": 60,
+                "observed_interval_ns": 1008334600,
+                "second": 2
+              },
+              {
+                "frames": 59,
+                "observed_interval_ns": 993357000,
+                "second": 3
+              },
+              {
+                "frames": 60,
+                "observed_interval_ns": 1007145000,
+                "second": 4
+              },
+              {
+                "frames": 2,
+                "observed_interval_ns": 32229300,
+                "second": 5
+              }
+            ]
+          },
+          {
+            "arm": "delay-100ms",
+            "fps": 9.009363738871208,
+            "bins": [
+              {
+                "frames": 8,
+                "observed_interval_ns": 889095300,
+                "second": 0
+              },
+              {
+                "frames": 10,
+                "observed_interval_ns": 1108581300,
+                "second": 1
+              },
+              {
+                "frames": 8,
+                "observed_interval_ns": 899368600,
+                "second": 2
+              },
+              {
+                "frames": 9,
+                "observed_interval_ns": 1002663500,
+                "second": 3
+              },
+              {
+                "frames": 9,
+                "observed_interval_ns": 984099000,
+                "second": 4
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "session": 2,
+        "result_sha256": "d41883803cfe9e2bcca01c5a14b432956b5ef2efd8cb1976ca86ca4b4ac9464d",
+        "arms": [
+          {
+            "arm": "delay-100ms",
+            "fps": 8.965284706063768,
+            "bins": [
+              {
+                "frames": 8,
+                "observed_interval_ns": 897262600,
+                "second": 0
+              },
+              {
+                "frames": 9,
+                "observed_interval_ns": 1011839000,
+                "second": 1
+              },
+              {
+                "frames": 9,
+                "observed_interval_ns": 1007069600,
+                "second": 2
+              },
+              {
+                "frames": 9,
+                "observed_interval_ns": 994394400,
+                "second": 3
+              },
+              {
+                "frames": 9,
+                "observed_interval_ns": 997254000,
+                "second": 4
+              }
+            ]
+          },
+          {
+            "arm": "original",
+            "fps": 59.74401719926699,
+            "bins": [
+              {
+                "frames": 60,
+                "observed_interval_ns": 994379700,
+                "second": 0
+              },
+              {
+                "frames": 59,
+                "observed_interval_ns": 991240800,
+                "second": 1
+              },
+              {
+                "frames": 60,
+                "observed_interval_ns": 1007638900,
+                "second": 2
+              },
+              {
+                "frames": 60,
+                "observed_interval_ns": 1004570000,
+                "second": 3
+              },
+              {
+                "frames": 59,
+                "observed_interval_ns": 991633500,
+                "second": 4
+              },
+              {
+                "frames": 2,
+                "observed_interval_ns": 31960400,
+                "second": 5
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "session": 3,
+        "result_sha256": "7e6c564c0fdd549284eb368c186312255063628303c4e9640d8d68e7ed4e9c71",
+        "arms": [
+          {
+            "arm": "original",
+            "fps": 59.74474535505018,
+            "bins": [
+              {
+                "frames": 60,
+                "observed_interval_ns": 998602400,
+                "second": 0
+              },
+              {
+                "frames": 59,
+                "observed_interval_ns": 993300700,
+                "second": 1
+              },
+              {
+                "frames": 60,
+                "observed_interval_ns": 1006167000,
+                "second": 2
+              },
+              {
+                "frames": 59,
+                "observed_interval_ns": 985638600,
+                "second": 3
+              },
+              {
+                "frames": 60,
+                "observed_interval_ns": 1005545300,
+                "second": 4
+              },
+              {
+                "frames": 2,
+                "observed_interval_ns": 32108100,
+                "second": 5
+              }
+            ]
+          },
+          {
+            "arm": "delay-100ms",
+            "fps": 9.056207533178824,
+            "bins": [
+              {
+                "frames": 9,
+                "observed_interval_ns": 996451500,
+                "second": 0
+              },
+              {
+                "frames": 9,
+                "observed_interval_ns": 999726600,
+                "second": 1
+              },
+              {
+                "frames": 9,
+                "observed_interval_ns": 985894400,
+                "second": 2
+              },
+              {
+                "frames": 9,
+                "observed_interval_ns": 994117700,
+                "second": 3
+              },
+              {
+                "frames": 9,
+                "observed_interval_ns": 992777200,
+                "second": 4
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "session": 4,
+        "result_sha256": "3cbae61b7074a3ec850552d4ca21100cfbd8221110afd64ffb68ad86ec2e761c",
+        "arms": [
+          {
+            "arm": "delay-100ms",
+            "fps": 8.908491529583541,
+            "bins": [
+              {
+                "frames": 8,
+                "observed_interval_ns": 903318700,
+                "second": 0
+              },
+              {
+                "frames": 9,
+                "observed_interval_ns": 1014012100,
+                "second": 1
+              },
+              {
+                "frames": 9,
+                "observed_interval_ns": 1010250400,
+                "second": 2
+              },
+              {
+                "frames": 9,
+                "observed_interval_ns": 1011054600,
+                "second": 3
+              },
+              {
+                "frames": 9,
+                "observed_interval_ns": 1000472000,
+                "second": 4
+              }
+            ]
+          },
+          {
+            "arm": "original",
+            "fps": 59.665465115947256,
+            "bins": [
+              {
+                "frames": 60,
+                "observed_interval_ns": 996184500,
+                "second": 0
+              },
+              {
+                "frames": 59,
+                "observed_interval_ns": 991029000,
+                "second": 1
+              },
+              {
+                "frames": 60,
+                "observed_interval_ns": 1007809900,
+                "second": 2
+              },
+              {
+                "frames": 60,
+                "observed_interval_ns": 1004750100,
+                "second": 3
+              },
+              {
+                "frames": 59,
+                "observed_interval_ns": 994870300,
+                "second": 4
+              },
+              {
+                "frames": 1,
+                "observed_interval_ns": 16630300,
+                "second": 5
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "session": 5,
+        "result_sha256": "e9f6844bdd097ccd77547995de9174f6bbe31133f794bc46b674a033923914fb",
+        "arms": [
+          {
+            "arm": "original",
+            "fps": 59.729799113155835,
+            "bins": [
+              {
+                "frames": 60,
+                "observed_interval_ns": 997085000,
+                "second": 0
+              },
+              {
+                "frames": 59,
+                "observed_interval_ns": 992310700,
+                "second": 1
+              },
+              {
+                "frames": 60,
+                "observed_interval_ns": 1005913700,
+                "second": 2
+              },
+              {
+                "frames": 59,
+                "observed_interval_ns": 990645300,
+                "second": 3
+              },
+              {
+                "frames": 60,
+                "observed_interval_ns": 1005720000,
+                "second": 4
+              },
+              {
+                "frames": 2,
+                "observed_interval_ns": 30943900,
+                "second": 5
+              }
+            ]
+          },
+          {
+            "arm": "delay-100ms",
+            "fps": 9.016064643660782,
+            "bins": [
+              {
+                "frames": 8,
+                "observed_interval_ns": 891195900,
+                "second": 0
+              },
+              {
+                "frames": 9,
+                "observed_interval_ns": 999593700,
+                "second": 1
+              },
+              {
+                "frames": 10,
+                "observed_interval_ns": 1102519000,
+                "second": 2
+              },
+              {
+                "frames": 9,
+                "observed_interval_ns": 999984900,
+                "second": 3
+              },
+              {
+                "frames": 9,
+                "observed_interval_ns": 997797600,
+                "second": 4
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "session": 6,
+        "result_sha256": "c61b720d02eb895649d356f57034576c4e8a97e60e41d5884b162ab205a581e6",
+        "arms": [
+          {
+            "arm": "delay-100ms",
+            "fps": 8.930110821660511,
+            "bins": [
+              {
+                "frames": 8,
+                "observed_interval_ns": 901081200,
+                "second": 0
+              },
+              {
+                "frames": 9,
+                "observed_interval_ns": 1006613000,
+                "second": 1
+              },
+              {
+                "frames": 9,
+                "observed_interval_ns": 1001536400,
+                "second": 2
+              },
+              {
+                "frames": 9,
+                "observed_interval_ns": 1008810700,
+                "second": 3
+              },
+              {
+                "frames": 9,
+                "observed_interval_ns": 1009109200,
+                "second": 4
+              }
+            ]
+          },
+          {
+            "arm": "original",
+            "fps": 59.64791387286608,
+            "bins": [
+              {
+                "frames": 60,
+                "observed_interval_ns": 999255100,
+                "second": 0
+              },
+              {
+                "frames": 59,
+                "observed_interval_ns": 988082400,
+                "second": 1
+              },
+              {
+                "frames": 60,
+                "observed_interval_ns": 1008163000,
+                "second": 2
+              },
+              {
+                "frames": 59,
+                "observed_interval_ns": 991693300,
+                "second": 3
+              },
+              {
+                "frames": 60,
+                "observed_interval_ns": 1010138400,
+                "second": 4
+              },
+              {
+                "frames": 2,
+                "observed_interval_ns": 32181500,
+                "second": 5
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "assessment": {
+      "cases": [
+        {
+          "case": "coast-pan",
+          "interval": {
+            "achieved_coverage": 0.96875,
+            "high": -0.8484183424105378,
+            "low": -0.8506926659790255,
+            "median": -0.8494954275129745,
+            "method": "binomial order-statistic interval for median of independent session effects",
+            "requested_coverage": 0.95,
+            "sessions": 6
+          },
+          "margin": 0.01,
+          "session_effects": [
+            -0.8489966250445665,
+            -0.8499383682861258,
+            -0.8484183424105378,
+            -0.8506926659790255,
+            -0.8490524867398233,
+            -0.8502862842664674
+          ],
+          "state": "fails_margin"
+        }
+      ],
+      "limits": "Conditional on independent comparable sessions and declared coverage; no universal hardware/pack or perceptual claim; small samples remain inconclusive",
+      "policy_sha256": "530c4ead01744734ddcdee28e3db8a3ac6f97601218be1236eefae424bd4f954",
+      "problems": [],
+      "quality_review_complete": false,
+      "recommendation": "do_not_promote",
+      "schema": "shaderlod-qualification-assessment-v1"
+    }
+  },
+  "limits": [
+    "Harness regression sensitivity, not an optimization speedup",
+    "Native 1024x768 capped configuration",
+    "Six independent JVMs; per-frame bins are dependent",
+    "No universal small-effect, pack, hardware or perceptual guarantee"
+  ],
+  "sustained": {
+    "source": "/home/philip/.local/share/shaderlod-next/evidence/benchmark-native-campaigns-final/sustained-01",
+    "independent_sessions": 2,
+    "window_ms_per_arm": 300000,
+    "observations": [
+      {
+        "session": 1,
+        "arm": "original",
+        "frames": 17854,
+        "fps": 59.50909600798845,
+        "valid": true,
+        "capture_elapsed_ns": 300021361400
+      },
+      {
+        "session": 1,
+        "arm": "identity",
+        "frames": 17847,
+        "fps": 59.485715105140976,
+        "valid": true,
+        "capture_elapsed_ns": 300021609700
+      },
+      {
+        "session": 2,
+        "arm": "identity",
+        "frames": 17846,
+        "fps": 59.483070042664224,
+        "valid": true,
+        "capture_elapsed_ns": 300018139400
+      },
+      {
+        "session": 2,
+        "arm": "original",
+        "frames": 17846,
+        "fps": 59.48982391060125,
+        "valid": true,
+        "capture_elapsed_ns": 299984078400
+      }
+    ]
+  },
+  "native_final": {
+    "validation-final-01": {
+      "outcome": "PASS",
+      "elapsed_seconds": 12.359000000004016,
+      "failure": null
+    },
+    "quality-final-01": {
+      "state": "complete",
+      "elapsed_seconds": 23.656000000002678,
+      "failure": null
+    },
+    "interaction-final-01": {
+      "state": "complete",
+      "elapsed_seconds": 44.062000000005355,
+      "failure": null
+    },
+    "makeup-stages-final-01": {
+      "state": "complete",
+      "elapsed_seconds": 29.45300000000134,
+      "failure": null
+    }
+  },
+  "portable_tests": {
+    "python": 104,
+    "java": 38,
+    "fresh_gradle_tasks_executed": 99,
+    "fresh_gradle_tasks_reused": 0,
+    "underlying_caches_reused": true
+  }
+}

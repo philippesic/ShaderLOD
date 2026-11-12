@@ -63,3 +63,9 @@ Current answers within their stated scope. Read the linked result before applyin
 | F42 | The earlier program defined 61 controls across nine families; implementation coverage is not 549 performance wins. | [Result](results/legacy-mac-61-controls/result.md) |
 | F43 | Combined native-shader CPU profiles supplied scoped positive Mac evidence, with drift and family-specific limits. | [Result](results/legacy-mac-native-cpu-profiles/result.md) |
 | F44 | Fifteen later Mac backlog items closed with mixed/parked outcomes and no new generated-pack winner. | [Result](results/legacy-mac-backlog-outcomes/result.md) |
+
+## Benchmark workflows
+
+| ID | Conclusion | Result |
+| --- | --- | --- |
+| F45 | Reused-session validation/comparisons, profiling and frozen campaigns passed scoped RTX 2080 Ti/Asahi controls, including sustained captures and recovery. This qualifies the workflow, not an optimization or universal small-effect sensitivity. | [Result](results/benchmark-workflows/result.md) |

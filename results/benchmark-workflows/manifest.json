@@ -1,0 +1,1693 @@
+{
+  "schema": "shaderlod-selected-evidence-manifest-v1",
+  "artifact_root": "/home/philip/.local/share/shaderlod-next/evidence",
+  "scope": "Compact entrance to selected result, receipt, capture and source identities. The complete selected inventory stays external. Quality records identify PNGs; comparison records identify original archives. Not an exhaustive inventory of every pilot.",
+  "records": [
+    {
+      "path": "benchmark-analysis-final-inputs-02.tar",
+      "bytes": 6727680,
+      "sha256": "781b6d0a4759be18c4a974d45e12779d2a6677e8d596dfdcd781f6023a48d424"
+    },
+    {
+      "path": "benchmark-browser-checks-final-01.json",
+      "bytes": 1652,
+      "sha256": "ee84d82257dd037515a5ee75094f84076dddf8d8e75b177f42e5cda73a98c6f1"
+    },
+    {
+      "path": "benchmark-campaign-report-final-02/report.html",
+      "bytes": 356296,
+      "sha256": "7f955fe81f1666521dc67e1d3e40128a3792f84e804502a0fa110c12c59a0990"
+    },
+    {
+      "path": "benchmark-drift-session-01/closed.json",
+      "bytes": 343,
+      "sha256": "3d66c2a47eea910c55398e8bb7e49a46d499bc1f372a478369accf8d9f0f052e"
+    },
+    {
+      "path": "benchmark-drift-session-01/input-drift-control.json",
+      "bytes": 91,
+      "sha256": "3f9be395239fc245b6ef82818af1bfa62aa422ef86c80f0d066d7e47c7264d1b"
+    },
+    {
+      "path": "benchmark-drift-session-01/inputs.tar",
+      "bytes": 6707200,
+      "sha256": "50895bd5fa427a76074eea621156256ddaabf8702e259009ce8834a85beb9271"
+    },
+    {
+      "path": "benchmark-drift-session-01/session.json",
+      "bytes": 42813,
+      "sha256": "f8f4aa148987c555a01ef7ce5b94a03a4e9757dc4bf2bf0cc16abfd89b97039d"
+    },
+    {
+      "path": "benchmark-final-fresh-check-01.log",
+      "bytes": 2092,
+      "sha256": "db16fd9a1ce4e96e33ddc9c9f217b25d98980430fe8420a9474be028b8b34c7f"
+    },
+    {
+      "path": "benchmark-final-full-check-02.log",
+      "bytes": 955,
+      "sha256": "58aacc52ccad9453349d342b49ae14162b8e0858ee8d1f45474c89c039e6f977"
+    },
+    {
+      "path": "benchmark-final-session-02/closed.json",
+      "bytes": 343,
+      "sha256": "3d66c2a47eea910c55398e8bb7e49a46d499bc1f372a478369accf8d9f0f052e"
+    },
+    {
+      "path": "benchmark-final-session-02/failure.json",
+      "bytes": 21994,
+      "sha256": "17bbf6c2bece37d87f2f8779e1a1d1ecd719a2f934d229f9a348bbd1e13dfbbb"
+    },
+    {
+      "path": "benchmark-final-session-02/inputs.tar",
+      "bytes": 6707200,
+      "sha256": "482f7919cdc008cbddf066ec20c27b55abc22f454f984c0b672ed09fbab61bab"
+    },
+    {
+      "path": "benchmark-final-session-02/negative-control.json",
+      "bytes": 90,
+      "sha256": "dca85fb2712d48daa2a2f9c254b8cfb40ba2619828d698be716a720e50b37dd3"
+    },
+    {
+      "path": "benchmark-final-session-02/session.json",
+      "bytes": 42808,
+      "sha256": "94144a75dfc6f1b8b18d3b2cfb060ae04646548d95e2398d59f6800a7d8d951d"
+    },
+    {
+      "path": "benchmark-final-standalone-functional-01.json",
+      "bytes": 106093,
+      "sha256": "13927db4ce505b269be93e0e01dc788ec66b7e6f873c719a5f25ccf6a1493d70"
+    },
+    {
+      "path": "benchmark-history-final-03/report.html",
+      "bytes": 213301,
+      "sha256": "c5c984efbbd6ceb6fbe445bfa4d48c89544aba29ee67f90793e6fbaaf80e45ec"
+    },
+    {
+      "path": "benchmark-installation-01/receipt.json",
+      "bytes": 123,
+      "sha256": "e5b69cc42c5159c3880e1186e2b2e51ff8f8bc62ab8f5bdef07306f093566402"
+    },
+    {
+      "path": "benchmark-installation-01/report.html",
+      "bytes": 4887,
+      "sha256": "2ab3c53120c8197d59c1293690a39071e0a20e9330a24f44ff7d1b659aa9cc86"
+    },
+    {
+      "path": "benchmark-installation-01/result.json",
+      "bytes": 358,
+      "sha256": "cbce2ea96fc3c2353e3c52620d78c56969450da16fa8ee9e212d40cc380fec2a"
+    },
+    {
+      "path": "benchmark-installation-01/session-1/closed.json",
+      "bytes": 343,
+      "sha256": "3d66c2a47eea910c55398e8bb7e49a46d499bc1f372a478369accf8d9f0f052e"
+    },
+    {
+      "path": "benchmark-installation-01/session-1/inputs.tar",
+      "bytes": 6676480,
+      "sha256": "8799b9050010a48d6cfb72354b1ddec20a1647afefece0b9bfe51fb53d17824d"
+    },
+    {
+      "path": "benchmark-installation-01/session-1/session.json",
+      "bytes": 739808,
+      "sha256": "1615216234e8e70792d5b00b65d62d0b8631ad37cae82898453caad90566657a"
+    },
+    {
+      "path": "benchmark-installation-makeup-01/capture-1/receipt.json",
+      "bytes": 399,
+      "sha256": "17e1b3de3c883f4d8c3e927eded5ff546746a7eb209f6d6fb233b4111ad431a9"
+    },
+    {
+      "path": "benchmark-installation-makeup-01/capture-1/report.html",
+      "bytes": 16648,
+      "sha256": "242d4e4646bc8f182aedaba8b55f65d1b286b5e9da09f6fc1993908def593835"
+    },
+    {
+      "path": "benchmark-installation-makeup-01/capture-1/summary.json",
+      "bytes": 2412,
+      "sha256": "23adb6fa6d3f17f6d8f56f607d1317287a24461f8afab57fd3289e4b7f3fe4c0"
+    },
+    {
+      "path": "benchmark-installation-makeup-01/capture-2/receipt.json",
+      "bytes": 399,
+      "sha256": "88a69db4016a30481f8b9597351cf08e410d57a1bf8ff5bf6140552a97484126"
+    },
+    {
+      "path": "benchmark-installation-makeup-01/capture-2/report.html",
+      "bytes": 16597,
+      "sha256": "d281639ba16f39cbf25472b85fd9bda4b90c5dc8feed514906dcc42a96ec8c81"
+    },
+    {
+      "path": "benchmark-installation-makeup-01/capture-2/summary.json",
+      "bytes": 2369,
+      "sha256": "9c8f5252fcf6ca86ec6dca0ed6ee54251db004766b72787147842c10564d45a1"
+    },
+    {
+      "path": "benchmark-installation-makeup-01/receipt.json",
+      "bytes": 123,
+      "sha256": "f8bb04db73ebfe9ac912aef2c263c61da9116a242fcc8da9cf270f11f0182a60"
+    },
+    {
+      "path": "benchmark-installation-makeup-01/report.html",
+      "bytes": 1514766,
+      "sha256": "28536d854eb158ac1bb25f717d294258a09f2fc5b33385f5d9f98ffa854540d2"
+    },
+    {
+      "path": "benchmark-installation-makeup-01/result.json",
+      "bytes": 1491417,
+      "sha256": "5f0d75cbfdee936dad43dc9fe73d8da574923f6646194a90e84c00d7c82c4456"
+    },
+    {
+      "path": "benchmark-installation-makeup-01/session-1/closed.json",
+      "bytes": 343,
+      "sha256": "3d66c2a47eea910c55398e8bb7e49a46d499bc1f372a478369accf8d9f0f052e"
+    },
+    {
+      "path": "benchmark-installation-makeup-01/session-1/inputs.tar",
+      "bytes": 6686720,
+      "sha256": "d9c2668ed05af505e8656ae0012ebb6259b3d45363ea5ea8a9b1a650df76247c"
+    },
+    {
+      "path": "benchmark-installation-makeup-01/session-1/session.json",
+      "bytes": 740367,
+      "sha256": "671adb23fb95c013d5157c1fb5910c4f309e3e1024b8d5d00ac67aad5ac3865e"
+    },
+    {
+      "path": "benchmark-installation-makeup-01/session-2/closed.json",
+      "bytes": 343,
+      "sha256": "3d66c2a47eea910c55398e8bb7e49a46d499bc1f372a478369accf8d9f0f052e"
+    },
+    {
+      "path": "benchmark-installation-makeup-01/session-2/inputs.tar",
+      "bytes": 6686720,
+      "sha256": "ad6e135d3cea9636d2ea64c82a63ad270c7e5e703624615a6faf8e693958e675"
+    },
+    {
+      "path": "benchmark-installation-makeup-01/session-2/session.json",
+      "bytes": 731947,
+      "sha256": "368cd659bca54d6d4f2862ba78b0d581aaf7537cc12b0dd5f864a8927b0cb067"
+    },
+    {
+      "path": "benchmark-interaction-01/attempt-1/receipt.json",
+      "bytes": 399,
+      "sha256": "91044683cdc6dd99ee285437f5de11e4f5bdd24571dc20123d08e0ca77a4ab2f"
+    },
+    {
+      "path": "benchmark-interaction-01/attempt-1/report.html",
+      "bytes": 10915,
+      "sha256": "853beb9d5525e99e48f9856d5c7c85e8834aeeaf23d8383338f733f8fcda36b5"
+    },
+    {
+      "path": "benchmark-interaction-01/attempt-1/summary.json",
+      "bytes": 1830,
+      "sha256": "d8798b620a523b2d9b40b00322334363f88ff9984ffbd4732d024b562c59bc40"
+    },
+    {
+      "path": "benchmark-interaction-01/attempt-2/receipt.json",
+      "bytes": 399,
+      "sha256": "99c4d891b52e92ec357b6705754963421c26b3c716cc788866669e45bcc8f844"
+    },
+    {
+      "path": "benchmark-interaction-01/attempt-2/report.html",
+      "bytes": 11093,
+      "sha256": "325c4c6fb1b271a30c7ab964db0ee8ddb66832bdada4afb5878e6a94f6e11966"
+    },
+    {
+      "path": "benchmark-interaction-01/attempt-2/summary.json",
+      "bytes": 1830,
+      "sha256": "4474b3e8fbb17ba02daa7f5a959d1481bee8dd2a5b3585ffed6ece090da5e40e"
+    },
+    {
+      "path": "benchmark-interaction-01/attempt-3/receipt.json",
+      "bytes": 399,
+      "sha256": "ac3661cd0f92b1b83a3807e945be0a8a5c16a3a1a06aa02a4c8a89d7f0097913"
+    },
+    {
+      "path": "benchmark-interaction-01/attempt-3/report.html",
+      "bytes": 11209,
+      "sha256": "138db9ea0722a5d1acd540e54fb6474317d0e9c5f66f9a2c20aa2e4c298b39ab"
+    },
+    {
+      "path": "benchmark-interaction-01/attempt-3/summary.json",
+      "bytes": 1829,
+      "sha256": "236f849f155567c3e26074a03cc20127a35c2f5371f3f38d1348f68f0292e234"
+    },
+    {
+      "path": "benchmark-interaction-01/attempt-4/receipt.json",
+      "bytes": 399,
+      "sha256": "00b5720a02626b2877a759edc5644eab113abdc5b6f0be119236c0692bf1d40b"
+    },
+    {
+      "path": "benchmark-interaction-01/attempt-4/report.html",
+      "bytes": 11189,
+      "sha256": "9750139499d71749b1b04135e2abda4a676e32ee11af5d75947903d86d8d8a59"
+    },
+    {
+      "path": "benchmark-interaction-01/attempt-4/summary.json",
+      "bytes": 1831,
+      "sha256": "c0acc1d8cce691f983a6e651dce084efc8478b68dd5ab2b4307b3e101e360aec"
+    },
+    {
+      "path": "benchmark-interaction-01/receipt.json",
+      "bytes": 139,
+      "sha256": "6a0c48e7b4bc08619a10b015e31c956b3c11d2c711f8b066e6c489b16a1e32c4"
+    },
+    {
+      "path": "benchmark-interaction-01/report.html",
+      "bytes": 279385,
+      "sha256": "4fd541e1588af3aeee5d172e10104609c2ee596bc83e64b797fd57f73a17941d"
+    },
+    {
+      "path": "benchmark-interaction-01/result.json",
+      "bytes": 265138,
+      "sha256": "6024fb0a7e1325cdd5cafbb173005688683cc792b8c49c20a6200b21583be1ac"
+    },
+    {
+      "path": "benchmark-interruption-recovered-profile-01/receipt.json",
+      "bytes": 399,
+      "sha256": "1254deffc636feec727427aac2969c29f4d3f301311a47d3160d65023059116b"
+    },
+    {
+      "path": "benchmark-interruption-recovered-profile-01/report.html",
+      "bytes": 21382,
+      "sha256": "5736d5a149a3251cbb3699ae379408bf0612a980390ad738f8d806f7417e83f2"
+    },
+    {
+      "path": "benchmark-interruption-recovered-profile-01/summary.json",
+      "bytes": 1595,
+      "sha256": "a5174815f9eb2562a22d3c7bb716d978246504de1f84bbda01f1a49f281f5d7a"
+    },
+    {
+      "path": "benchmark-interruption-recovery-01/closed.json",
+      "bytes": 343,
+      "sha256": "3d66c2a47eea910c55398e8bb7e49a46d499bc1f372a478369accf8d9f0f052e"
+    },
+    {
+      "path": "benchmark-interruption-recovery-01/inputs.tar",
+      "bytes": 6707200,
+      "sha256": "7c06f803b36540acb0dd83bd0c8a07dd8aeadf6b5d9957bb9a8ceaf7490835a1"
+    },
+    {
+      "path": "benchmark-interruption-recovery-01/session.json",
+      "bytes": 42837,
+      "sha256": "c7ef7f2b91741e94df7dbc993b87c1c48441e7ca6e7653ab3904dc0b54693641"
+    },
+    {
+      "path": "benchmark-interruption-session-01/closed.json",
+      "bytes": 344,
+      "sha256": "5e790df17f94cfc2b2d694d3e5af0e981134f577e484651732fc2972d2fd21dd"
+    },
+    {
+      "path": "benchmark-interruption-session-01/inputs.tar",
+      "bytes": 6707200,
+      "sha256": "7c06f803b36540acb0dd83bd0c8a07dd8aeadf6b5d9957bb9a8ceaf7490835a1"
+    },
+    {
+      "path": "benchmark-interruption-session-01/session.json",
+      "bytes": 42833,
+      "sha256": "75eeabd8f23925a87a476f891efb19af9d6293e9e66b72518cd9a83ff35a7bd9"
+    },
+    {
+      "path": "benchmark-native-campaigns-final/resume-02/comparison-1/attempt-1/receipt.json",
+      "bytes": 399,
+      "sha256": "99dcd726d7367e1350a0d3290322b7680116cddd1f62fdbd1211bfa07babf656"
+    },
+    {
+      "path": "benchmark-native-campaigns-final/resume-02/comparison-1/attempt-1/report.html",
+      "bytes": 18336,
+      "sha256": "137ac581bf58e30cef5a227a464c58286f44233dd91c751275952e9a443c4b54"
+    },
+    {
+      "path": "benchmark-native-campaigns-final/resume-02/comparison-1/attempt-1/summary.json",
+      "bytes": 2306,
+      "sha256": "32e0c485dd5e8ef969bc069dbf7c56f7bd014dd2dd407656141229d9c38ecfb5"
+    },
+    {
+      "path": "benchmark-native-campaigns-final/resume-02/comparison-1/attempt-2/receipt.json",
+      "bytes": 399,
+      "sha256": "ae693822501501fbaf7cb2d0d4343f0aef9b61185ca9ede7ce87bb8dce86bf51"
+    },
+    {
+      "path": "benchmark-native-campaigns-final/resume-02/comparison-1/attempt-2/report.html",
+      "bytes": 11360,
+      "sha256": "b91f8d85920b29a53c437a7ab077a5be5e64c76d8d63b13a02187660cd1effed"
+    },
+    {
+      "path": "benchmark-native-campaigns-final/resume-02/comparison-1/attempt-2/summary.json",
+      "bytes": 2108,
+      "sha256": "b28503701de68fbbd4e380c9104c075a579334a402b4878a44f2ced69955f1a7"
+    },
+    {
+      "path": "benchmark-native-campaigns-final/resume-02/comparison-1/receipt.json",
+      "bytes": 139,
+      "sha256": "afdd98129a0a63c276481bc7d388a348339db98d4635b3ef044e628002abcace"
+    },
+    {
+      "path": "benchmark-native-campaigns-final/resume-02/comparison-1/report.html",
+      "bytes": 371162,
+      "sha256": "bd1170893f08a826e272c4e2c2a7ec299738043303c65ff24653e0422f6d5ac2"
+    },
+    {
+      "path": "benchmark-native-campaigns-final/resume-02/comparison-1/result.json",
+      "bytes": 354819,
+      "sha256": "ae0e5d627f198444ef069387a98f61a3577f1e4fee9f874b1e790746833a2778"
+    },
+    {
+      "path": "benchmark-native-campaigns-final/resume-02/comparison-2/attempt-1/receipt.json",
+      "bytes": 399,
+      "sha256": "cc014d4a97d2bb92af9259a0876bf67a1cf26a32ed09ee6c5f2a4ed21ec97f6d"
+    },
+    {
+      "path": "benchmark-native-campaigns-final/resume-02/comparison-2/attempt-1/report.html",
+      "bytes": 11211,
+      "sha256": "b02cb7b8e49015a71574fd676fd2e419482ffa69330b02bb1cd479ef194b86be"
+    },
+    {
+      "path": "benchmark-native-campaigns-final/resume-02/comparison-2/attempt-1/summary.json",
+      "bytes": 1997,
+      "sha256": "750e63950253506d913793ef688970176536334086a97a3d1342992e5e68f09d"
+    },
+    {
+      "path": "benchmark-native-campaigns-final/resume-02/comparison-2/attempt-2/receipt.json",
+      "bytes": 399,
+      "sha256": "f62eb1ca661e89fbe6c0cc12ca355d7ffd2a79d57aee6326f105cd0084cdd354"
+    },
+    {
+      "path": "benchmark-native-campaigns-final/resume-02/comparison-2/attempt-2/report.html",
+      "bytes": 18439,
+      "sha256": "3acd3d282caa2c71ee9aa69690721eab223788494667554e5040f1369a5f262d"
+    },
+    {
+      "path": "benchmark-native-campaigns-final/resume-02/comparison-2/attempt-2/summary.json",
+      "bytes": 2442,
+      "sha256": "ac78e86a9361ff95d78f18561c19230eafcf61eaf50174919726645965240949"
+    },
+    {
+      "path": "benchmark-native-campaigns-final/resume-02/comparison-2/receipt.json",
+      "bytes": 139,
+      "sha256": "c2a22b04444e139b362d2eb8f0cefb21e1c739e08cdcfaba1ae7a10ba22d0016"
+    },
+    {
+      "path": "benchmark-native-campaigns-final/resume-02/comparison-2/report.html",
+      "bytes": 371183,
+      "sha256": "12ad2e0b690d0f7152f8b790d2366fee9078338eeb37a5ce7ccb25450ccb07ab"
+    },
+    {
+      "path": "benchmark-native-campaigns-final/resume-02/comparison-2/result.json",
+      "bytes": 354850,
+      "sha256": "b541cc14e75bb0151127167421ebd864a0b90687a235cc2fa6ee100f98b6409e"
+    },
+    {
+      "path": "benchmark-native-campaigns-final/resume-02/result.json",
+      "bytes": 931,
+      "sha256": "6594fe7fc81028aefa4698006b1118d1dbc87157648fd38be2ba43171abbc75e"
+    },
+    {
+      "path": "benchmark-native-campaigns-final/resume-02/session-1/closed.json",
+      "bytes": 343,
+      "sha256": "3d66c2a47eea910c55398e8bb7e49a46d499bc1f372a478369accf8d9f0f052e"
+    },
+    {
+      "path": "benchmark-native-campaigns-final/resume-02/session-1/inputs.tar",
+      "bytes": 1423360,
+      "sha256": "98d8789604c51ad8f154969b133bbe7056c5b48bffa06f7321d701ce3fde39d2"
+    },
+    {
+      "path": "benchmark-native-campaigns-final/resume-02/session-1/session.json",
+      "bytes": 47695,
+      "sha256": "333a45338931953c64caf37cc89b17872209a0472273ceb22ca0af3c31d7cfa4"
+    },
+    {
+      "path": "benchmark-native-campaigns-final/resume-02/session-2/closed.json",
+      "bytes": 343,
+      "sha256": "3d66c2a47eea910c55398e8bb7e49a46d499bc1f372a478369accf8d9f0f052e"
+    },
+    {
+      "path": "benchmark-native-campaigns-final/resume-02/session-2/inputs.tar",
+      "bytes": 1423360,
+      "sha256": "98d8789604c51ad8f154969b133bbe7056c5b48bffa06f7321d701ce3fde39d2"
+    },
+    {
+      "path": "benchmark-native-campaigns-final/resume-02/session-2/session.json",
+      "bytes": 47694,
+      "sha256": "c497d5df7a442f15b6dcfa49119bd873daa005800bd157c003d8b703eb36cc77"
+    },
+    {
+      "path": "benchmark-native-campaigns-final/sustained-01/comparison-1/attempt-1/receipt.json",
+      "bytes": 399,
+      "sha256": "8363c58fb6d1dd1abb8365c61d3c8785df061e2bb18627fa99e8314e0b94dcea"
+    },
+    {
+      "path": "benchmark-native-campaigns-final/sustained-01/comparison-1/attempt-1/report.html",
+      "bytes": 684278,
+      "sha256": "7f0185adf9301db6a5550079d364a9b260d665e0fd9fe23db41cf6d822e628d6"
+    },
+    {
+      "path": "benchmark-native-campaigns-final/sustained-01/comparison-1/attempt-1/summary.json",
+      "bytes": 130894,
+      "sha256": "ad5f10adcd017e462299bb928b892755f1aad48647558e8f49eae41d3c5d762f"
+    },
+    {
+      "path": "benchmark-native-campaigns-final/sustained-01/comparison-1/attempt-2/receipt.json",
+      "bytes": 399,
+      "sha256": "23e9cc7d9ef93744ae54ad11bc4ded2ede63f111be5dd152a41197a77738757f"
+    },
+    {
+      "path": "benchmark-native-campaigns-final/sustained-01/comparison-1/attempt-2/report.html",
+      "bytes": 684152,
+      "sha256": "e239d6cc9b9d8fc9d5a94e1694053c564578522c3bbe5e0619059f8766b2ea45"
+    },
+    {
+      "path": "benchmark-native-campaigns-final/sustained-01/comparison-1/attempt-2/summary.json",
+      "bytes": 131027,
+      "sha256": "f8010eb4db007c7e34a0d082e6ffe49c6c4043d1cc230e4831bd01a8794c39aa"
+    },
+    {
+      "path": "benchmark-native-campaigns-final/sustained-01/comparison-1/receipt.json",
+      "bytes": 139,
+      "sha256": "888c0b15f9a964816d64485a123ed47fcd85ba93ef17060492c0e5a5955d7c79"
+    },
+    {
+      "path": "benchmark-native-campaigns-final/sustained-01/comparison-1/report.html",
+      "bytes": 655892,
+      "sha256": "62dd669f8155b0b236b420b2e35279cdaf1068a1d383c70975dd58f0c52cd1ed"
+    },
+    {
+      "path": "benchmark-native-campaigns-final/sustained-01/comparison-1/result.json",
+      "bytes": 612593,
+      "sha256": "5720ecba0ec5479f7304de4f53ec12144c4151a8133bee753b136fdf90d81f0c"
+    },
+    {
+      "path": "benchmark-native-campaigns-final/sustained-01/comparison-2/attempt-1/receipt.json",
+      "bytes": 399,
+      "sha256": "0f371f776889e798587895574db21bc718609e7b61f1274d37054efb4933da2d"
+    },
+    {
+      "path": "benchmark-native-campaigns-final/sustained-01/comparison-2/attempt-1/report.html",
+      "bytes": 684115,
+      "sha256": "3baf300bd4435a44eaa4f9833763b5bd4fdad0cf61298a17a7a85d9c1e8149e2"
+    },
+    {
+      "path": "benchmark-native-campaigns-final/sustained-01/comparison-2/attempt-1/summary.json",
+      "bytes": 130924,
+      "sha256": "37963d4edf19570895a8b861436e0e5b35b3ba84fc7b49dfc7a3f6712269ec3c"
+    },
+    {
+      "path": "benchmark-native-campaigns-final/sustained-01/comparison-2/attempt-2/receipt.json",
+      "bytes": 399,
+      "sha256": "2f7b64f0b0c30aac779d674191456d14610d9fcff4bdcf0d21f905fc7e83c48f"
+    },
+    {
+      "path": "benchmark-native-campaigns-final/sustained-01/comparison-2/attempt-2/report.html",
+      "bytes": 684031,
+      "sha256": "577856e2c16870b438962cae8c9db16c10489e3a3eb240b8d8bd9071fe4dc953"
+    },
+    {
+      "path": "benchmark-native-campaigns-final/sustained-01/comparison-2/attempt-2/summary.json",
+      "bytes": 130837,
+      "sha256": "c7a909ffccf9a96532eac58ec4fc71f1333272dcb98f9682605ae00c6253f237"
+    },
+    {
+      "path": "benchmark-native-campaigns-final/sustained-01/comparison-2/receipt.json",
+      "bytes": 139,
+      "sha256": "a0089af7a8f1786520c6ee8b43b16e7818422d4a100491d3bebe2d85cb0bd55a"
+    },
+    {
+      "path": "benchmark-native-campaigns-final/sustained-01/comparison-2/report.html",
+      "bytes": 655709,
+      "sha256": "15766c501ad95e41f32e341a8d58873ca847297022b24203d7f2bfaee9bdd842"
+    },
+    {
+      "path": "benchmark-native-campaigns-final/sustained-01/comparison-2/result.json",
+      "bytes": 612426,
+      "sha256": "9e0b06029af1ce76c333efed081bd481e12695eb4e44b4399282b6d37341e91b"
+    },
+    {
+      "path": "benchmark-native-campaigns-final/sustained-01/result.json",
+      "bytes": 941,
+      "sha256": "2292b899c5b4ff87fd45d0cae7ec57ff0b2536cc4d9c68dfb0f9780ce126d295"
+    },
+    {
+      "path": "benchmark-native-campaigns-final/sustained-01/session-1/closed.json",
+      "bytes": 343,
+      "sha256": "3d66c2a47eea910c55398e8bb7e49a46d499bc1f372a478369accf8d9f0f052e"
+    },
+    {
+      "path": "benchmark-native-campaigns-final/sustained-01/session-1/inputs.tar",
+      "bytes": 1433600,
+      "sha256": "9b582071034af620b7b05f2316f9205f298eb67619ec92fe8c6129ea4bab4285"
+    },
+    {
+      "path": "benchmark-native-campaigns-final/sustained-01/session-1/session.json",
+      "bytes": 47703,
+      "sha256": "d17f7869fc217b7d619a141d20eff4ebbab17094ff8ae21a812f4e0841b55909"
+    },
+    {
+      "path": "benchmark-native-campaigns-final/sustained-01/session-2/closed.json",
+      "bytes": 343,
+      "sha256": "3d66c2a47eea910c55398e8bb7e49a46d499bc1f372a478369accf8d9f0f052e"
+    },
+    {
+      "path": "benchmark-native-campaigns-final/sustained-01/session-2/inputs.tar",
+      "bytes": 1433600,
+      "sha256": "9b582071034af620b7b05f2316f9205f298eb67619ec92fe8c6129ea4bab4285"
+    },
+    {
+      "path": "benchmark-native-campaigns-final/sustained-01/session-2/session.json",
+      "bytes": 47704,
+      "sha256": "35e28a8b253597623786a5e3f618a9ad767e7f9290700d96f559639fc57e106c"
+    },
+    {
+      "path": "benchmark-native-campaigns-final/watchdog-final-01/result.json",
+      "bytes": 649,
+      "sha256": "13f8a421e71a35299e3a9ff39a8e35ced8473d038c3c274c2fc38d284f6e1f80"
+    },
+    {
+      "path": "benchmark-native-live-final/interaction-final-01/attempt-1/receipt.json",
+      "bytes": 399,
+      "sha256": "343e7c01b9d08cc249dabd6e846fa4ae37a43a2bbe5c39774aa4d47c2acf53c4"
+    },
+    {
+      "path": "benchmark-native-live-final/interaction-final-01/attempt-1/report.html",
+      "bytes": 16364,
+      "sha256": "b889fe7a28da38d07a63532917913a48df5c468189e554c3a272a832b1928a6f"
+    },
+    {
+      "path": "benchmark-native-live-final/interaction-final-01/attempt-1/summary.json",
+      "bytes": 1944,
+      "sha256": "75e4970e61aa9e48826097f9d2c75759cd4487cef5932a93e7be7e047959affd"
+    },
+    {
+      "path": "benchmark-native-live-final/interaction-final-01/attempt-2/receipt.json",
+      "bytes": 399,
+      "sha256": "100a56de599d770917e66594dcff5da5545d552601b51bb01f2b20576bf52b78"
+    },
+    {
+      "path": "benchmark-native-live-final/interaction-final-01/attempt-2/report.html",
+      "bytes": 16356,
+      "sha256": "2053741d3132df1121f1e7d5b9950a0c23dadf19765a4b24e89eb843f6642935"
+    },
+    {
+      "path": "benchmark-native-live-final/interaction-final-01/attempt-2/summary.json",
+      "bytes": 1945,
+      "sha256": "27884895f8dd972fd3a8661a47d29c4c0f4f1d9736821353fa29d98813ee5c58"
+    },
+    {
+      "path": "benchmark-native-live-final/interaction-final-01/attempt-3/receipt.json",
+      "bytes": 399,
+      "sha256": "25e585a7983f8da38968771b15bca80571e5316e2d7e6548fd5f6c34dc617b07"
+    },
+    {
+      "path": "benchmark-native-live-final/interaction-final-01/attempt-3/report.html",
+      "bytes": 16472,
+      "sha256": "d4768a2ecb18a9a6cad5e0232edfa04afe1c40b3b832f05dce9dca15a56a226b"
+    },
+    {
+      "path": "benchmark-native-live-final/interaction-final-01/attempt-3/summary.json",
+      "bytes": 2023,
+      "sha256": "772e3c6801f15d7b4e46e0e477edaebd3872c7d286988b536c36e1fc900c8779"
+    },
+    {
+      "path": "benchmark-native-live-final/interaction-final-01/attempt-4/receipt.json",
+      "bytes": 399,
+      "sha256": "b0290d8a5cc957ffada292fa43278933f730b74d6a3b5c8910f8b552d7c8d5cf"
+    },
+    {
+      "path": "benchmark-native-live-final/interaction-final-01/attempt-4/report.html",
+      "bytes": 16359,
+      "sha256": "f1aa2fd61d029bcab4e16bee6c6cfc86939d7dd168152eb79f2ca6636325b956"
+    },
+    {
+      "path": "benchmark-native-live-final/interaction-final-01/attempt-4/summary.json",
+      "bytes": 1945,
+      "sha256": "97a2918f12ee843d78e180b5aae8c5f6e17792f981cbac8d665fb92ab919bf97"
+    },
+    {
+      "path": "benchmark-native-live-final/interaction-final-01/receipt.json",
+      "bytes": 139,
+      "sha256": "a5528f3432f731259e62f81c48a206c3ba2dcabe13bd79fbd961d7510acfbd3d"
+    },
+    {
+      "path": "benchmark-native-live-final/interaction-final-01/report.html",
+      "bytes": 675881,
+      "sha256": "fff0e312fa8009776e7c79d7a8c1081b7eb7a805c0c658feb2f0ce34a1a2e3e2"
+    },
+    {
+      "path": "benchmark-native-live-final/interaction-final-01/result.json",
+      "bytes": 649621,
+      "sha256": "d0f1c957131586c9bf800acca90f8249f3c54a735fa7fa2613d7c816c8655824"
+    },
+    {
+      "path": "benchmark-native-live-final/live-final-01/closed.json",
+      "bytes": 343,
+      "sha256": "3d66c2a47eea910c55398e8bb7e49a46d499bc1f372a478369accf8d9f0f052e"
+    },
+    {
+      "path": "benchmark-native-live-final/live-final-01/inputs.tar",
+      "bytes": 6727680,
+      "sha256": "31538a90a4c4e9b0760a29497e389dba86ffe2970f7c22f4759e420321f33d5d"
+    },
+    {
+      "path": "benchmark-native-live-final/live-final-01/session.json",
+      "bytes": 48863,
+      "sha256": "4b49a396c44a5f6d1f10f301ecae5b3c5c3fb09a0d66af391d0a0a9959a3a195"
+    },
+    {
+      "path": "benchmark-native-live-final/makeup-stages-final-01/attempt-1/receipt.json",
+      "bytes": 399,
+      "sha256": "b0aaa4c1081380455a0fe073bd84e9eb60531659bdfbb9e43c41c7622d0a658a"
+    },
+    {
+      "path": "benchmark-native-live-final/makeup-stages-final-01/attempt-1/report.html",
+      "bytes": 138424,
+      "sha256": "2c29f8c26d4fce0165637a972c1c0d5863c8458c0cb2b5d6afb8e4df2890c9cf"
+    },
+    {
+      "path": "benchmark-native-live-final/makeup-stages-final-01/attempt-1/summary.json",
+      "bytes": 112388,
+      "sha256": "c18337d8e2c32730e0c23865ceb104a99e4b376fbc043d92f6f4e745b9578933"
+    },
+    {
+      "path": "benchmark-native-live-final/makeup-stages-final-01/attempt-2/receipt.json",
+      "bytes": 399,
+      "sha256": "b2b170690cf305c9220524f608fedee4c5a1dcb934b7a63545aaa8c3ae968d45"
+    },
+    {
+      "path": "benchmark-native-live-final/makeup-stages-final-01/attempt-2/report.html",
+      "bytes": 141703,
+      "sha256": "7a46e8428b48db25af4268d4f019b435bebc4e00f5796bb8da2b2b04ce5eba6b"
+    },
+    {
+      "path": "benchmark-native-live-final/makeup-stages-final-01/attempt-2/summary.json",
+      "bytes": 115403,
+      "sha256": "93edece9d357ed17ed534b40f98527079cfd715b58d26d3f7635fa41fe53770d"
+    },
+    {
+      "path": "benchmark-native-live-final/makeup-stages-final-01/receipt.json",
+      "bytes": 139,
+      "sha256": "bcd4ca0fcc1510cec760aebb2dbb9af4d9419f1f495157ca1ee43757f4e736a2"
+    },
+    {
+      "path": "benchmark-native-live-final/makeup-stages-final-01/report.html",
+      "bytes": 535412,
+      "sha256": "b4cf47c1cea2fb9d20bcf0024363ddb7df66e9c45bfaa829bae8f3b16ea376f9"
+    },
+    {
+      "path": "benchmark-native-live-final/makeup-stages-final-01/result.json",
+      "bytes": 507600,
+      "sha256": "ef337e5b89d18235aeab9c443ef1bb0965ae6b3a365e9d9963f21c07d8880d91"
+    },
+    {
+      "path": "benchmark-native-live-final/profiler-final-01/receipt.json",
+      "bytes": 399,
+      "sha256": "6a1ab392f98407aad3834464dff6800919ca71e9908ac510dc1ba9c7a7a423d5"
+    },
+    {
+      "path": "benchmark-native-live-final/profiler-final-01/report.html",
+      "bytes": 246158,
+      "sha256": "539e1193a0612937749e14618107952a60fc71d43fd803476e966ce35400dc3c"
+    },
+    {
+      "path": "benchmark-native-live-final/profiler-final-01/summary.json",
+      "bytes": 207988,
+      "sha256": "71ba45b5929a79e555c6263f8139aca01354d07841a4af4af7dfb58f42a2a019"
+    },
+    {
+      "path": "benchmark-native-live-final/quality-final-01/attempt-1/quality.json",
+      "bytes": 7017,
+      "sha256": "ad3cb2b79c8c5c1da42596429eda4aeb20a5dc91f34045280b16b7f1c383da72"
+    },
+    {
+      "path": "benchmark-native-live-final/quality-final-01/attempt-1/receipt.json",
+      "bytes": 399,
+      "sha256": "6cd114a322c1a8275daa9bec94b0f4ac4ab092fb0df50b2ad42a68f00f58ca5b"
+    },
+    {
+      "path": "benchmark-native-live-final/quality-final-01/attempt-1/report.html",
+      "bytes": 16452,
+      "sha256": "43980890597256ba8207376f4e3e12140735b13724b3141dfaeb8b8ef27567c3"
+    },
+    {
+      "path": "benchmark-native-live-final/quality-final-01/attempt-1/summary.json",
+      "bytes": 2023,
+      "sha256": "1fc198a6c1a3acda282c9594e38adbb2f03c12554c31a6b88ee7225e94064fa1"
+    },
+    {
+      "path": "benchmark-native-live-final/quality-final-01/attempt-2/quality.json",
+      "bytes": 7016,
+      "sha256": "f56fd16dd7c441e67ae5f5df9ab1180e398596652f2f6348f43b124b09e36fd6"
+    },
+    {
+      "path": "benchmark-native-live-final/quality-final-01/attempt-2/receipt.json",
+      "bytes": 399,
+      "sha256": "f31c49ff0c402168df042bf39b85dcd533cd3257ed1762c192df51c0ab023adb"
+    },
+    {
+      "path": "benchmark-native-live-final/quality-final-01/attempt-2/report.html",
+      "bytes": 16344,
+      "sha256": "2c1e408be25cb4041e1802ca7b3b6a4acacf3a71e8bf8ac1108d1e9a80dd3141"
+    },
+    {
+      "path": "benchmark-native-live-final/quality-final-01/attempt-2/summary.json",
+      "bytes": 1945,
+      "sha256": "6d14511985b2d22edef433d112b97f5539b6843d9ef3b3e831527ce636488f0c"
+    },
+    {
+      "path": "benchmark-native-live-final/quality-final-01/receipt.json",
+      "bytes": 139,
+      "sha256": "bdd42611c7638240ce4c1f03a1c288a868e861efab97e0c7d14d451182b94953"
+    },
+    {
+      "path": "benchmark-native-live-final/quality-final-01/report.html",
+      "bytes": 376970,
+      "sha256": "475198fa626ca3f4c5d054ea44454e9d31ed791bf8caab2dbadd7ca662a00c2b"
+    },
+    {
+      "path": "benchmark-native-live-final/quality-final-01/result.json",
+      "bytes": 360356,
+      "sha256": "dff0b322c3c5d9c8e68699083f3fda4f96518a538527e3f759f1efd3f7c7941c"
+    },
+    {
+      "path": "benchmark-native-live-final/validation-final-01/receipt.json",
+      "bytes": 121,
+      "sha256": "bc86ecfb989da2bc02d710c21884a2282f6a124ea23f101703fe822aacda584e"
+    },
+    {
+      "path": "benchmark-native-live-final/validation-final-01/result.json",
+      "bytes": 102228,
+      "sha256": "8d3a3a4d5ebd7b99bf69f4184d44ef796f62b269bba72968bfff3dcb850b5c85"
+    },
+    {
+      "path": "benchmark-natural-final-01/attempt-1/receipt.json",
+      "bytes": 399,
+      "sha256": "574e141e4cf3d05e770704b4b14c9420c4565d79e221b0ed8eda2f43f71c44ef"
+    },
+    {
+      "path": "benchmark-natural-final-01/attempt-1/report.html",
+      "bytes": 17749,
+      "sha256": "b7b105095714dca8ed45481264d5602ce5e52c68155d37a826040bb9b86eadc3"
+    },
+    {
+      "path": "benchmark-natural-final-01/attempt-1/summary.json",
+      "bytes": 4150,
+      "sha256": "4d21abef57ca2b01a23dba6333ee2ecfd3d86a76a6bbfd2b1addf44d16d3ef5a"
+    },
+    {
+      "path": "benchmark-natural-final-01/attempt-2/receipt.json",
+      "bytes": 399,
+      "sha256": "409ab0a17083718497a42fb0d10ee58c61552caffea3d103ae95627ac0eeb36e"
+    },
+    {
+      "path": "benchmark-natural-final-01/attempt-2/report.html",
+      "bytes": 17814,
+      "sha256": "e3e54bb229ae5f5991c2ec718cf8e25b1507ee90d6c18512ad3d6e6a7ce047ae"
+    },
+    {
+      "path": "benchmark-natural-final-01/attempt-2/summary.json",
+      "bytes": 4274,
+      "sha256": "e764ffd9bc6c4b00444fc2aa01db8e5f5930ef6d2a4e9a61b57d09b2e707f6e4"
+    },
+    {
+      "path": "benchmark-natural-final-01/receipt.json",
+      "bytes": 139,
+      "sha256": "8f612fab8f9cd6c923f0903fd5fd8003e2490541a7050577ba7b0c1321a25d93"
+    },
+    {
+      "path": "benchmark-natural-final-01/report.html",
+      "bytes": 351751,
+      "sha256": "9f17a3790687319fbdad14c1b901a0ed32f8e7d97ac144895242e197c09c7c64"
+    },
+    {
+      "path": "benchmark-natural-final-01/result.json",
+      "bytes": 335129,
+      "sha256": "31d308a7592a2c440c68b968fc25733e6cb67c9aa3ca60827de025e007f0bd24"
+    },
+    {
+      "path": "benchmark-observer-frames-01/attempt-1/receipt.json",
+      "bytes": 399,
+      "sha256": "7cdb40e6e1c658c112cf673ed871c3ad35a1c73e924ac93d11758408c1413f3f"
+    },
+    {
+      "path": "benchmark-observer-frames-01/attempt-1/report.html",
+      "bytes": 13490,
+      "sha256": "7f4cbd3a298263464e3101193f7f08a12733d1a7ced71e8d5aea39f8c8ed0c8d"
+    },
+    {
+      "path": "benchmark-observer-frames-01/attempt-1/summary.json",
+      "bytes": 2894,
+      "sha256": "6d606613d9f45dd09bfdab7de0c44994ba623305be905238932a08f4acd7551c"
+    },
+    {
+      "path": "benchmark-observer-frames-01/attempt-2/receipt.json",
+      "bytes": 399,
+      "sha256": "f750a061d256ac40c4a29200705e8dc57d9bf17d33a6e171526a59ba08324d50"
+    },
+    {
+      "path": "benchmark-observer-frames-01/attempt-2/report.html",
+      "bytes": 13390,
+      "sha256": "1f9be0ed7ce1c520a70cb70f350234a4a89c0e674d14bdc87a0cc52bdd4b8862"
+    },
+    {
+      "path": "benchmark-observer-frames-01/attempt-2/summary.json",
+      "bytes": 2867,
+      "sha256": "83111d40e2425184f18a2f173bfca2b766aa5695d25a433c6eff37a67bcf59c7"
+    },
+    {
+      "path": "benchmark-observer-frames-01/receipt.json",
+      "bytes": 139,
+      "sha256": "e9bbe931b1625f96a03fd8eeef711d9728245cd5759a3b95141ccdaa230ba230"
+    },
+    {
+      "path": "benchmark-observer-frames-01/report.html",
+      "bytes": 144232,
+      "sha256": "4294cfb86eabe715a3e5aad3424432ee77d4767f2203e5c10b0e0d94d736e8e8"
+    },
+    {
+      "path": "benchmark-observer-frames-01/result.json",
+      "bytes": 134722,
+      "sha256": "68e0ac4cc438143afd6a25f55010a47363dfaf0f70fd6c84e35be71e81f65a83"
+    },
+    {
+      "path": "benchmark-observer-frames-02/attempt-1/receipt.json",
+      "bytes": 399,
+      "sha256": "4cdb0e8393938062b5d10d3a19394f546e76a400b0dc40dbb99c87b600648f7c"
+    },
+    {
+      "path": "benchmark-observer-frames-02/attempt-1/report.html",
+      "bytes": 13072,
+      "sha256": "d13c60af52cd129b92e8c0a988120ae3b47edc82fba426cf11985d93883e8c74"
+    },
+    {
+      "path": "benchmark-observer-frames-02/attempt-1/summary.json",
+      "bytes": 2921,
+      "sha256": "0d3d04e03ec696edc526ec051836713f4436154173aed3c56bb9564969e3a28d"
+    },
+    {
+      "path": "benchmark-observer-frames-02/attempt-2/receipt.json",
+      "bytes": 399,
+      "sha256": "2eb11c989867d3bfee62fe121a8048a2423e236645a687a492ddf3233101a480"
+    },
+    {
+      "path": "benchmark-observer-frames-02/attempt-2/report.html",
+      "bytes": 13086,
+      "sha256": "65a55bb1e5bd3506620577ba8676309c55d4d51c9235f1967b78ba10d5f68250"
+    },
+    {
+      "path": "benchmark-observer-frames-02/attempt-2/summary.json",
+      "bytes": 2922,
+      "sha256": "2a7666ceb764ed0cf3d962a37565cc8eb4db9b6c1a82a5be7e364ef75c030c90"
+    },
+    {
+      "path": "benchmark-observer-frames-02/receipt.json",
+      "bytes": 139,
+      "sha256": "2b830353706666fef9b95ae4f434bc7a6ab039205b3b27434e9a4b26a2cee9f2"
+    },
+    {
+      "path": "benchmark-observer-frames-02/report.html",
+      "bytes": 144317,
+      "sha256": "a4f0821d961c2445ed6b142d61bc6e7b1a1bed54f22a3c0168bd5814892a5f8c"
+    },
+    {
+      "path": "benchmark-observer-frames-02/result.json",
+      "bytes": 134807,
+      "sha256": "3cfbc2bd2e92b455749b77f25c736d21cd0fe6ca385a13369c2d1ba8f55d3a3f"
+    },
+    {
+      "path": "benchmark-observer-memory-01/attempt-1/receipt.json",
+      "bytes": 399,
+      "sha256": "d7e474aeb9f481c037f404ca4b435b937c4e7a4688f844d8365a6e5144f6a431"
+    },
+    {
+      "path": "benchmark-observer-memory-01/attempt-1/report.html",
+      "bytes": 13166,
+      "sha256": "bfeb1375a37e107d36dbc8205586056c91e3c283f71839764f60dbd21d3e1887"
+    },
+    {
+      "path": "benchmark-observer-memory-01/attempt-1/summary.json",
+      "bytes": 2923,
+      "sha256": "4a081a223f1f2e600a1155c0ce1da08cab792d14c4cc50ae45576f412b174cc6"
+    },
+    {
+      "path": "benchmark-observer-memory-01/attempt-2/receipt.json",
+      "bytes": 399,
+      "sha256": "7b85e37c7aa3c7d665ac29744b5fc341d9b9a5638b75df4925357885efb05b66"
+    },
+    {
+      "path": "benchmark-observer-memory-01/attempt-2/report.html",
+      "bytes": 13273,
+      "sha256": "5167ce2087b4862e5c9a905a8ecd4f0d7ccc6e0031d7031c14f80a6449371ce3"
+    },
+    {
+      "path": "benchmark-observer-memory-01/attempt-2/summary.json",
+      "bytes": 2786,
+      "sha256": "6ef331dd3e8592ca0a3893537532fc29c9ffca6bbbeb1face8ec79e4ce40b96a"
+    },
+    {
+      "path": "benchmark-observer-memory-01/receipt.json",
+      "bytes": 139,
+      "sha256": "8585215ce3cf303435e9356f523496abafd147c79690a80a8cf8ea02819d71bb"
+    },
+    {
+      "path": "benchmark-observer-memory-01/report.html",
+      "bytes": 144197,
+      "sha256": "e530064fde15984eb43310eabbdd61c3a18feb2a57555c69af84f36cb2294a34"
+    },
+    {
+      "path": "benchmark-observer-memory-01/result.json",
+      "bytes": 134687,
+      "sha256": "9a1a9d0bcab108cf1816edec27368e9e19e118505424a90142527b1b797a9804"
+    },
+    {
+      "path": "benchmark-observer-stages-01/attempt-1/receipt.json",
+      "bytes": 399,
+      "sha256": "c2e66dbc89029e9f52b8c992538f1f7b4ac67529a123e59a3368836ec51b6c52"
+    },
+    {
+      "path": "benchmark-observer-stages-01/attempt-1/report.html",
+      "bytes": 58592,
+      "sha256": "d6179710e7e4907d24e840f1e9b859ecda70dbc8e428d49afac9cfd16346a77e"
+    },
+    {
+      "path": "benchmark-observer-stages-01/attempt-1/summary.json",
+      "bytes": 45297,
+      "sha256": "df0eabb7eefb2f4c31551b02c9796ed3d6dd84f0a7895345c808c9b4b4b03165"
+    },
+    {
+      "path": "benchmark-observer-stages-01/attempt-2/receipt.json",
+      "bytes": 399,
+      "sha256": "e4020f8dfc95e378b57834be85de987349d52094909a36e02b4afd966f82754f"
+    },
+    {
+      "path": "benchmark-observer-stages-01/attempt-2/report.html",
+      "bytes": 53681,
+      "sha256": "1379d6a684484358c5254d8bc55e17e89a05435ce67bd6dea58874a9fd1c5345"
+    },
+    {
+      "path": "benchmark-observer-stages-01/attempt-2/summary.json",
+      "bytes": 40366,
+      "sha256": "33530ef131cf18a2ac094ec042fb21451ce8da471514804655666f57ebb4f4d6"
+    },
+    {
+      "path": "benchmark-observer-stages-01/receipt.json",
+      "bytes": 139,
+      "sha256": "757bc4d139bcb62e7de4d0bc0649e5479dd4e82f06bf6266983226b0cf0baf9e"
+    },
+    {
+      "path": "benchmark-observer-stages-01/report.html",
+      "bytes": 229750,
+      "sha256": "439aa724d519c67352e538672f062dd9d98113f9a62c362159b78c49c8ab476e"
+    },
+    {
+      "path": "benchmark-observer-stages-01/result.json",
+      "bytes": 214625,
+      "sha256": "73cf8465af2708c2267496f510691500d35ae9149e0950bfc6cb328a6e2238ea"
+    },
+    {
+      "path": "benchmark-observer-stages-02/attempt-1/receipt.json",
+      "bytes": 399,
+      "sha256": "1a570c997318fa8e745df95f8d1a2b2d1e76e67a2afa3eea97d02c9476402bf7"
+    },
+    {
+      "path": "benchmark-observer-stages-02/attempt-1/report.html",
+      "bytes": 54485,
+      "sha256": "e02d1cf3f99f9162b249e19760ba60c82ce0f6da1b98349e7cfdb231e28694f0"
+    },
+    {
+      "path": "benchmark-observer-stages-02/attempt-1/summary.json",
+      "bytes": 41728,
+      "sha256": "91fde8aba86b2b37b07623dda38e3449fc4a9bf8305ee33ef1960df99b3e55ae"
+    },
+    {
+      "path": "benchmark-observer-stages-02/attempt-2/receipt.json",
+      "bytes": 399,
+      "sha256": "dc1e9a9f9c61c610282c08e1cf0dc1c61ad25a19b11223d1efb898910fe10253"
+    },
+    {
+      "path": "benchmark-observer-stages-02/attempt-2/report.html",
+      "bytes": 50002,
+      "sha256": "19befefc7775f00d4c01fb3ae25e19f27e0677f98351b4e24a74d69322ff225b"
+    },
+    {
+      "path": "benchmark-observer-stages-02/attempt-2/summary.json",
+      "bytes": 37167,
+      "sha256": "3dc8304f9d4bddb072ab3d5e54da2876a423f3d3f92cf16d0dbfc60fb6f2290e"
+    },
+    {
+      "path": "benchmark-observer-stages-02/receipt.json",
+      "bytes": 139,
+      "sha256": "2303d0fbd02066e777c5861a0fecafab50495fa98ae7aae7fec12b9fdecd66e2"
+    },
+    {
+      "path": "benchmark-observer-stages-02/report.html",
+      "bytes": 222522,
+      "sha256": "4a13119a2855d7c3e45ea5ea36c75eaa9283a1467b062b45fed75eec78fafe8e"
+    },
+    {
+      "path": "benchmark-observer-stages-02/result.json",
+      "bytes": 207855,
+      "sha256": "ecfba3a6c7a925a9290315816d2effbaadcbdd40758dcfc4171c4db0539bf35d"
+    },
+    {
+      "path": "benchmark-profiler-final-02/receipt.json",
+      "bytes": 399,
+      "sha256": "e57de17d07d05b293876353e05caf446bc6c4e0836be4c5b53a0f8d4c362049e"
+    },
+    {
+      "path": "benchmark-profiler-final-02/report.html",
+      "bytes": 96987,
+      "sha256": "201d422beb53481ed1200dc71e5963136d086902d01a4ac02bbe647be1da11a8"
+    },
+    {
+      "path": "benchmark-profiler-final-02/summary.json",
+      "bytes": 77505,
+      "sha256": "20a357c464bc3832a4a25c0afb750957942bfa4635418d71bc93778882f3d380"
+    },
+    {
+      "path": "benchmark-quality-asahi-final-01/receipt.json",
+      "bytes": 139,
+      "sha256": "6b3b7ee11315b195e8efe65c3bfc719308573ba82109cceea9b8dc8444e99ef8"
+    },
+    {
+      "path": "benchmark-quality-asahi-final-01/report.html",
+      "bytes": 769784,
+      "sha256": "0cca90858ea51b28b6e9d30e728fa0e5afbcf7ba6fc01d719d94229d4fca6e00"
+    },
+    {
+      "path": "benchmark-quality-asahi-final-01/result.json",
+      "bytes": 755007,
+      "sha256": "6f203c5ad49ded3a32e9e08b0ceebf18d89ce336cba00dc888db5fcffdf6e13f"
+    },
+    {
+      "path": "benchmark-quality-asahi-final-02/attempt-1/quality.json",
+      "bytes": 5816,
+      "sha256": "8872bf54ce9841c0637a88d587654c00fce04b109fa139d62fb80be3182fde08"
+    },
+    {
+      "path": "benchmark-quality-asahi-final-02/attempt-1/receipt.json",
+      "bytes": 399,
+      "sha256": "5afb7cbce70255307435933e105379864c1af28a1516f610fbe02ed0b7f9acff"
+    },
+    {
+      "path": "benchmark-quality-asahi-final-02/attempt-1/report.html",
+      "bytes": 11898,
+      "sha256": "8c65be31630ccd7f9aea693c794a41e68608dc03f0ba67138fbff60d9d29d322"
+    },
+    {
+      "path": "benchmark-quality-asahi-final-02/attempt-1/summary.json",
+      "bytes": 1753,
+      "sha256": "bfa7c5ebe503755500b5ab99d67f7fe066ed444412fee9e297f1a67d74e7bff2"
+    },
+    {
+      "path": "benchmark-quality-asahi-final-02/receipt.json",
+      "bytes": 139,
+      "sha256": "c6a9df3daed098b5e2538e6b591f8c25ff83698e26af7feab59e627684b8c652"
+    },
+    {
+      "path": "benchmark-quality-asahi-final-02/report.html",
+      "bytes": 209324,
+      "sha256": "41265c36591d400564d86ac47527f1e12c201948cdda4820a572ddcf9c1dcfee"
+    },
+    {
+      "path": "benchmark-quality-asahi-final-02/result.json",
+      "bytes": 197911,
+      "sha256": "f20b1d313ce8153052330edc3f0d662c2b17b063a7c214f481e9e262fa561de5"
+    },
+    {
+      "path": "benchmark-quality-asahi-final-03/attempt-1/quality.json",
+      "bytes": 6585,
+      "sha256": "b805408ed1fdfd38275b81dee1bc51a316929580a9b496e8ff37cc19548f1f9c"
+    },
+    {
+      "path": "benchmark-quality-asahi-final-03/attempt-1/receipt.json",
+      "bytes": 399,
+      "sha256": "b6020849bae64d725419ef7d8da88b129c945bda07dd4a7a2c4050a6c0eefacd"
+    },
+    {
+      "path": "benchmark-quality-asahi-final-03/attempt-1/report.html",
+      "bytes": 11373,
+      "sha256": "168bbc80d5be146eb2993b9798940f4985dbed49efbffd97da3ba20c8b62a4a6"
+    },
+    {
+      "path": "benchmark-quality-asahi-final-03/attempt-1/summary.json",
+      "bytes": 1754,
+      "sha256": "eaf6fecc65f66561b3932f587353b2f39eaebc66637c658326531448afff5940"
+    },
+    {
+      "path": "benchmark-quality-asahi-final-03/attempt-2/quality.json",
+      "bytes": 6623,
+      "sha256": "80e0c1913f6c64802512cda42a209fd4234764af0a459053cf7ce9000c254c38"
+    },
+    {
+      "path": "benchmark-quality-asahi-final-03/attempt-2/receipt.json",
+      "bytes": 399,
+      "sha256": "40b0a2fc168d76827b4ff7b0821ab56bd91e78cf575dc496f3c451fa3ed82843"
+    },
+    {
+      "path": "benchmark-quality-asahi-final-03/attempt-2/report.html",
+      "bytes": 11049,
+      "sha256": "11114546be5fde1d1ec48aef22c258f5b25202ee1d75dac3549a974fcc5446bd"
+    },
+    {
+      "path": "benchmark-quality-asahi-final-03/attempt-2/summary.json",
+      "bytes": 1675,
+      "sha256": "60d728e73fc8b1289723ff961e926c466b47f9f25da46f8c037a005af57e3ee6"
+    },
+    {
+      "path": "benchmark-quality-asahi-final-03/receipt.json",
+      "bytes": 139,
+      "sha256": "444f635dac0fd7473b55bddca5fe411f531428564708dd4cc569f4496b0ebd66"
+    },
+    {
+      "path": "benchmark-quality-asahi-final-03/report.html",
+      "bytes": 346258,
+      "sha256": "00b874ee9c0c0c8c2f7099346d90fb1051602fb9bcb419e84fe2e47def18cc07"
+    },
+    {
+      "path": "benchmark-quality-asahi-final-03/result.json",
+      "bytes": 330148,
+      "sha256": "8942d5d18457dc81f1f386970861f0231d892d92f7d06cce5961dce6ee482733"
+    },
+    {
+      "path": "benchmark-quality-defect-01/attempt-1/quality.json",
+      "bytes": 3141,
+      "sha256": "2eeb0e48da33e1ce06d683d7e206962b015e717259cc3fd69e3d76ab39a63d83"
+    },
+    {
+      "path": "benchmark-quality-defect-01/attempt-1/receipt.json",
+      "bytes": 399,
+      "sha256": "fa8fc27e0e6596243b0b0e37304c0e77c5c01425f1a79ba141436a0969b91f04"
+    },
+    {
+      "path": "benchmark-quality-defect-01/attempt-1/report.html",
+      "bytes": 10656,
+      "sha256": "f386b1390ab9ce675756d38bd08f5e5f656974f07106256c6d6e87c35481cc4a"
+    },
+    {
+      "path": "benchmark-quality-defect-01/attempt-1/summary.json",
+      "bytes": 1752,
+      "sha256": "cd83e05104e6f135d881999beb23495985865794dc007d652e937f9af758ef40"
+    },
+    {
+      "path": "benchmark-quality-defect-01/attempt-2/quality.json",
+      "bytes": 3579,
+      "sha256": "892a5af46e2850bf53528f7380117111004e0fcd99fc0492e71692be0595fbfa"
+    },
+    {
+      "path": "benchmark-quality-defect-01/attempt-2/receipt.json",
+      "bytes": 399,
+      "sha256": "15bb2df4c617d5abdaefa31b4b530af89b52d468d7413540dd2efda3468c835d"
+    },
+    {
+      "path": "benchmark-quality-defect-01/attempt-2/report.html",
+      "bytes": 11216,
+      "sha256": "2ad8e1b5862f5516d7e395ba0a10dd13e2ba01011c03614e9f565eabc851bb35"
+    },
+    {
+      "path": "benchmark-quality-defect-01/attempt-2/summary.json",
+      "bytes": 1830,
+      "sha256": "af22b75fdbba536e53749f6b817dfd8ee28e8acc6fb26086b88c10a5318eb60d"
+    },
+    {
+      "path": "benchmark-quality-defect-01/receipt.json",
+      "bytes": 139,
+      "sha256": "febb3a6d1beee80a40a74c230ec91cc2b6ef16c4851899466f9043e7f1147a7d"
+    },
+    {
+      "path": "benchmark-quality-defect-01/report.html",
+      "bytes": 141889,
+      "sha256": "9cbaff61e610faec7f481153209d6d8fb496bfd73a73815d0311a811217c3c8d"
+    },
+    {
+      "path": "benchmark-quality-defect-01/result.json",
+      "bytes": 132553,
+      "sha256": "000fc0056078b3c4ac588bf73a408e17c893480ac14deed3de9d1abfa6262164"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/comparison-1/attempt-1/receipt.json",
+      "bytes": 399,
+      "sha256": "3ddd91245ed8ce82a20d69f00a3d0977cfda094f331208df56ffb0fdd9478a5a"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/comparison-1/attempt-1/report.html",
+      "bytes": 17466,
+      "sha256": "a7b48357e9961ee1b97f2dc159d942a7f9f4a7d31e481c5269816e748ced0d52"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/comparison-1/attempt-1/summary.json",
+      "bytes": 2417,
+      "sha256": "2792dae6d20cc176b5c96790bc039e1b7d871428da0e8d71316574cd1519e566"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/comparison-1/attempt-2/receipt.json",
+      "bytes": 399,
+      "sha256": "9a877fad119f7775efb4be518d6546d3156e319c5cb8311b639bb84f4dc6f930"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/comparison-1/attempt-2/report.html",
+      "bytes": 10231,
+      "sha256": "6dc20d807760a02bf1edc161b99a1d9f5b39b865e2eaae6eb0877dd1c31af0b8"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/comparison-1/attempt-2/summary.json",
+      "bytes": 1999,
+      "sha256": "eb5902a6c356c26e5cc469f6d66121ac60da6401124d7e99b062944a6d9eef14"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/comparison-1/receipt.json",
+      "bytes": 139,
+      "sha256": "eccb42c89b42dc85520ac90ad42d27d2eb76b73e8a522ce9106fad023296d798"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/comparison-1/report.html",
+      "bytes": 147926,
+      "sha256": "a67849c6dd2ff561fd10b7b3d7d4c0794572982760cf29884aae3616310567c4"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/comparison-1/result.json",
+      "bytes": 141553,
+      "sha256": "d8a7693ce87f17eedacc6cb8bbd18fffd13bbae3824b30b2481b3019e27bbc19"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/comparison-2/attempt-1/receipt.json",
+      "bytes": 399,
+      "sha256": "da981ff497eade7adb7d2df0a24b82e3f420c12ea5e7050790b3e16f8cc2cde4"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/comparison-2/attempt-1/report.html",
+      "bytes": 10271,
+      "sha256": "1232e6886471770dd3eaad202c7e65e63ab17103a526fd8ea01f929cb315b3f9"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/comparison-2/attempt-1/summary.json",
+      "bytes": 2034,
+      "sha256": "432b980da614206108f47fa67399c507e456636b26b68dcc36d65e0fe128f791"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/comparison-2/attempt-2/receipt.json",
+      "bytes": 399,
+      "sha256": "19284c00969b6c5c2d246891576e679a44d580a7bac65adc482927200a3f7c19"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/comparison-2/attempt-2/report.html",
+      "bytes": 17451,
+      "sha256": "d49d388237f5ee45387d49a563b17004993774b7f779ff00eea2c70b28259355"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/comparison-2/attempt-2/summary.json",
+      "bytes": 2404,
+      "sha256": "e1017bf9cede4aaa4b2fc0b6eef5a6b1c31d512ece5f8f36ca7590e241a9edf4"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/comparison-2/receipt.json",
+      "bytes": 139,
+      "sha256": "30ea2d10a9fe6be70229f48bd1a7a28b0a257feb974522e3c8acec2e165b28b7"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/comparison-2/report.html",
+      "bytes": 147950,
+      "sha256": "01585050c8d72255af0a0436362f02c3ee22a7c7b5f63aa0fd383628a7eea0ce"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/comparison-2/result.json",
+      "bytes": 141577,
+      "sha256": "d41883803cfe9e2bcca01c5a14b432956b5ef2efd8cb1976ca86ca4b4ac9464d"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/comparison-3/attempt-1/receipt.json",
+      "bytes": 399,
+      "sha256": "c883369f1be1f2ef2e51de9c7c7a9ebcb222626bdde3d5bda191a4ea4ed787b4"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/comparison-3/attempt-1/report.html",
+      "bytes": 17385,
+      "sha256": "ef2d247090bc03dcc4ea5066bef0f8b9fb886e610793b451aa499809d858586d"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/comparison-3/attempt-1/summary.json",
+      "bytes": 2347,
+      "sha256": "5600c2a4d714be1e034d8bd02642a811c5820946d1c6e91a897be317da8c6fc6"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/comparison-3/attempt-2/receipt.json",
+      "bytes": 399,
+      "sha256": "7aa282c7cff399605070ffe2ff45f4ec1db1a2e7cc846e997457e4b06f8d899e"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/comparison-3/attempt-2/report.html",
+      "bytes": 10388,
+      "sha256": "c7b4bd4054565979de42f39a4ca9df51364cadde146f9e5ee85534027309a35b"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/comparison-3/attempt-2/summary.json",
+      "bytes": 2111,
+      "sha256": "3dbfe8f6179e274704a263e0085c3c2b05a080f53f4b3d01a71208492abb9650"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/comparison-3/receipt.json",
+      "bytes": 139,
+      "sha256": "0dc1086585c644c808e0b6d76d717e36a547326810f3a254195c682bf66c0f3e"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/comparison-3/report.html",
+      "bytes": 147974,
+      "sha256": "9dbff09d7866e12f0b02d6b48d4a5d7401499f2620b31ae47b6b9b7f77397b37"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/comparison-3/result.json",
+      "bytes": 141591,
+      "sha256": "7e6c564c0fdd549284eb368c186312255063628303c4e9640d8d68e7ed4e9c71"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/comparison-4/attempt-1/receipt.json",
+      "bytes": 399,
+      "sha256": "137824d94c84287a06f217feb9d1c01a20a5ad52ac6fc5797d8a84ea9283ea67"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/comparison-4/attempt-1/report.html",
+      "bytes": 10260,
+      "sha256": "1f561e2e810c2a4bd3d908e29e72c63bf89169e025194e05883bfebb6ef47d61"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/comparison-4/attempt-1/summary.json",
+      "bytes": 2024,
+      "sha256": "60d4fe79bb3dd5121e4481bf782f92e092de57d1db0d8bf6e23b69d5a2a7f8de"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/comparison-4/attempt-2/receipt.json",
+      "bytes": 399,
+      "sha256": "c97b537642de663487cf72efae6ef685a7ced7706e6500a070023736a8db6b1c"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/comparison-4/attempt-2/report.html",
+      "bytes": 17461,
+      "sha256": "4ba9bcc5ad2ed6f8dd39eefea590defe708177d607c2843905fd41ec2c23d9c9"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/comparison-4/attempt-2/summary.json",
+      "bytes": 2443,
+      "sha256": "848d3438ef03c3f73286081a6ec55777a10e75d226f8edcc7a916cbd0d2d9b3f"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/comparison-4/receipt.json",
+      "bytes": 139,
+      "sha256": "010daeb7ee35267b3aaf45f38cd2cc740fc75f97ef449d653dfbd913fa55a645"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/comparison-4/report.html",
+      "bytes": 147979,
+      "sha256": "0396c572877b2e396f20ee72fe01a8f54580b09706d35f466fe65bb4d3789dc4"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/comparison-4/result.json",
+      "bytes": 141606,
+      "sha256": "3cbae61b7074a3ec850552d4ca21100cfbd8221110afd64ffb68ad86ec2e761c"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/comparison-5/attempt-1/receipt.json",
+      "bytes": 399,
+      "sha256": "7515abbca86166e1f50afbad1b1034374b1712ad884795ddd82040ba8f48c6ec"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/comparison-5/attempt-1/report.html",
+      "bytes": 17414,
+      "sha256": "99909a81b7730ec38c6756e438b548c6fc7a3232760cd99fab2193c7bcabb826"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/comparison-5/attempt-1/summary.json",
+      "bytes": 2377,
+      "sha256": "58a5b18fb2ee63e40e6bfa3d3598e44c93fe575547473fa8e19e90b7b5d1c87b"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/comparison-5/attempt-2/receipt.json",
+      "bytes": 399,
+      "sha256": "cc4f59a17db8e9d4c73c355cf2c18e7680f677f3d3a070645c174c381c0d9a36"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/comparison-5/attempt-2/report.html",
+      "bytes": 10350,
+      "sha256": "8f89278601b0790687bbdf62e3cb9056a3c51942fa35e2f95dd17ffe0ec3466b"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/comparison-5/attempt-2/summary.json",
+      "bytes": 2076,
+      "sha256": "6d4df997305769b39c47f4a4688a787df45c9e690a82bb928f05e889f60a7f8d"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/comparison-5/receipt.json",
+      "bytes": 139,
+      "sha256": "741456e5d88b2d832127a3fa8616e86b728c8fb7e05e0df020373f6dfcc628e5"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/comparison-5/report.html",
+      "bytes": 147974,
+      "sha256": "e012508f85b9973df82bfc2a57090b623e743e16bf35ca82b9c5eedca2c7df52"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/comparison-5/result.json",
+      "bytes": 141591,
+      "sha256": "e9f6844bdd097ccd77547995de9174f6bbe31133f794bc46b674a033923914fb"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/comparison-6/attempt-1/receipt.json",
+      "bytes": 399,
+      "sha256": "52166b51688df10402240dba70912a4c29331139786dad2f16d133e5834878c0"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/comparison-6/attempt-1/report.html",
+      "bytes": 10234,
+      "sha256": "7082bb34c8f31f6ad56242b9f488b60230914553b0736f426b6c26a152908248"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/comparison-6/attempt-1/summary.json",
+      "bytes": 1999,
+      "sha256": "4bfbd1892b323c31fe3137e4ebd49aeeb54823b29bd858d3a75abc734fead5a6"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/comparison-6/attempt-2/receipt.json",
+      "bytes": 399,
+      "sha256": "0a7f2a044877d8979130971b42c8155a9518f42c39172bb1235acc6e26ec85c9"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/comparison-6/attempt-2/report.html",
+      "bytes": 17389,
+      "sha256": "cf1b7317d55aca67175c80e25a9d01dcdb160cee08ba205d26a3ff51b76f7b01"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/comparison-6/attempt-2/summary.json",
+      "bytes": 2347,
+      "sha256": "8a16f3d27db3e79574a591b6821243f6abb0253ff302e51adcbaccac459f0eb4"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/comparison-6/receipt.json",
+      "bytes": 139,
+      "sha256": "ed05c7fd482ec8087e1bc8258121564b7cb4ab88f45276ebc6de5e391af56f66"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/comparison-6/report.html",
+      "bytes": 147858,
+      "sha256": "f167abc32ff78681ad10135aaa21823a570af62f3b11fd114cfe0355084380f5"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/comparison-6/result.json",
+      "bytes": 141485,
+      "sha256": "c61b720d02eb895649d356f57034576c4e8a97e60e41d5884b162ab205a581e6"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/result.json",
+      "bytes": 1156,
+      "sha256": "91ab58c76409c841bda931695efeb5e01243716f7d91243fdf9f4942cf97dc1d"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/session-1/closed.json",
+      "bytes": 343,
+      "sha256": "3d66c2a47eea910c55398e8bb7e49a46d499bc1f372a478369accf8d9f0f052e"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/session-1/inputs.tar",
+      "bytes": 1290240,
+      "sha256": "e4668a175604da8104792ea0b5716dcaabc33e4f526238eb77ed6e49149c5c95"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/session-1/session.json",
+      "bytes": 46463,
+      "sha256": "c075116c2f0407b0d28bc8c2a8d375f46247b0b9fff7dac2127e279a1044f48e"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/session-2/closed.json",
+      "bytes": 343,
+      "sha256": "3d66c2a47eea910c55398e8bb7e49a46d499bc1f372a478369accf8d9f0f052e"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/session-2/inputs.tar",
+      "bytes": 1290240,
+      "sha256": "e4668a175604da8104792ea0b5716dcaabc33e4f526238eb77ed6e49149c5c95"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/session-2/session.json",
+      "bytes": 46463,
+      "sha256": "0bd56e6a6f94ea77c74f162bf0c921db2107f48e165a9ba22e8401b74dfc1b9a"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/session-3/closed.json",
+      "bytes": 343,
+      "sha256": "3d66c2a47eea910c55398e8bb7e49a46d499bc1f372a478369accf8d9f0f052e"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/session-3/inputs.tar",
+      "bytes": 1290240,
+      "sha256": "e4668a175604da8104792ea0b5716dcaabc33e4f526238eb77ed6e49149c5c95"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/session-3/session.json",
+      "bytes": 46461,
+      "sha256": "864cb8d1f0adf2d5ffb4089845b8fdaa9d38e2a35a0ec4d263efd5a2f90cdeb1"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/session-4/closed.json",
+      "bytes": 343,
+      "sha256": "3d66c2a47eea910c55398e8bb7e49a46d499bc1f372a478369accf8d9f0f052e"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/session-4/inputs.tar",
+      "bytes": 1290240,
+      "sha256": "e4668a175604da8104792ea0b5716dcaabc33e4f526238eb77ed6e49149c5c95"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/session-4/session.json",
+      "bytes": 46463,
+      "sha256": "30574f3702111037b14b96a9a4a91d9bf7d3a1aeaf62d42681117a3f797fe634"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/session-5/closed.json",
+      "bytes": 343,
+      "sha256": "3d66c2a47eea910c55398e8bb7e49a46d499bc1f372a478369accf8d9f0f052e"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/session-5/inputs.tar",
+      "bytes": 1290240,
+      "sha256": "e4668a175604da8104792ea0b5716dcaabc33e4f526238eb77ed6e49149c5c95"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/session-5/session.json",
+      "bytes": 46462,
+      "sha256": "6bb9e1e785d65393e50f7033277d9d310c405e7ce306a6d5ff83dc0f4b8004db"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/session-6/closed.json",
+      "bytes": 343,
+      "sha256": "3d66c2a47eea910c55398e8bb7e49a46d499bc1f372a478369accf8d9f0f052e"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/session-6/inputs.tar",
+      "bytes": 1290240,
+      "sha256": "e4668a175604da8104792ea0b5716dcaabc33e4f526238eb77ed6e49149c5c95"
+    },
+    {
+      "path": "benchmark-rtx2080ti-sensitivity-02/session-6/session.json",
+      "bytes": 46462,
+      "sha256": "0bc17f0bc5d3ebeb2bf44cf5c6aeadb7c9bbd54ae37ec69443c27bde04f246a7"
+    },
+    {
+      "path": "benchmark-watchdog-linux-final-01/result.json",
+      "bytes": 683,
+      "sha256": "e4336817bfbe55d8e5839380b3227bc665cad15b6950f6540ee08a83c1267994"
+    },
+    {
+      "path": "benchmark-weather-01/attempt-1/receipt.json",
+      "bytes": 399,
+      "sha256": "b81ec3bc053edeb4d980b3a9125e07d2e10767ab365e4aaec41a49d80f529171"
+    },
+    {
+      "path": "benchmark-weather-01/attempt-1/report.html",
+      "bytes": 11935,
+      "sha256": "b8a72707926cde809e971cecd8c585b23424c79121d675faf224ce8438db325a"
+    },
+    {
+      "path": "benchmark-weather-01/attempt-1/summary.json",
+      "bytes": 2312,
+      "sha256": "44cb3eb0e2bc197d13ba6137d5b3ac22bab45ae0504ec237e02a2066ddc48ea1"
+    },
+    {
+      "path": "benchmark-weather-01/attempt-2/receipt.json",
+      "bytes": 399,
+      "sha256": "75c0d3bd74c82fe267d7d4b17014914d67ec10f9cc803ab84e31912a5280b032"
+    },
+    {
+      "path": "benchmark-weather-01/attempt-2/report.html",
+      "bytes": 11968,
+      "sha256": "824422d0ce66843cddc4027ead8baafa58778b94edfd5ca014f0894f00994692"
+    },
+    {
+      "path": "benchmark-weather-01/attempt-2/summary.json",
+      "bytes": 2281,
+      "sha256": "16138564de54d9972eef9ba1cefd3e654da36f30213721e30098c04e8dbf6df8"
+    },
+    {
+      "path": "benchmark-weather-01/receipt.json",
+      "bytes": 139,
+      "sha256": "2dce5907b5922c7c20144611fa9183a2045c11b90e8708703412e9637432f651"
+    },
+    {
+      "path": "benchmark-weather-01/report.html",
+      "bytes": 142928,
+      "sha256": "646e9d31bdc267f4db4cdc05a597a254e2bac2a59e29e6f4011f723993501dc4"
+    },
+    {
+      "path": "benchmark-weather-01/result.json",
+      "bytes": 133510,
+      "sha256": "bd703d189eeb23568f2420189acad011e03c1904735b8c24424a1731eab7beca"
+    },
+    {
+      "path": "benchmark-windows-source-bridge-09.json",
+      "bytes": 674,
+      "sha256": "47dc1afaaffb0cd2cca4c4740176aed5ee060e825939fc3f3340359a4222877e"
+    },
+    {
+      "path": "windows-code-update-09.tar",
+      "bytes": 1280000,
+      "sha256": "36932fd2e66e4e286787f62b83926530e0e24a6e929955c84f444c0298c21a63"
+    },
+    {
+      "path": "windows-code-update-10.tar",
+      "bytes": 6727680,
+      "sha256": "139bc53f16086469e9dd9c537e52a9efce97f8c16ceee31e0c1d9fd4d9971713"
+    },
+    {
+      "path": "windows-final-live.tar.gz",
+      "bytes": 57060506,
+      "sha256": "525351eeced3fed1614dd4db6b7a36e7171583bf77950b1c78b161152b888a6a"
+    },
+    {
+      "path": "windows-qualified-campaigns.tar.gz",
+      "bytes": 10470626,
+      "sha256": "854776fed9a7de38b939a5f4732322d5fe8fc4adc756d7b54a44a81e42907dee"
+    },
+    {
+      "path": "benchmark-final-full-check-03.log",
+      "bytes": 955,
+      "sha256": "6c33efa2bdb7f6fb2abd58d21a7f085f90b41b478820667a7c9c319c5e82d278"
+    },
+    {
+      "path": "benchmark-browser-campaign-final-02.json",
+      "bytes": 480,
+      "sha256": "993ea4fe03d6a802e25534fc3b3a47fba26b9aca7d20648a38ff561355ab3ba3"
+    },
+    {
+      "path": "benchmark-final-cleanup-01.json",
+      "bytes": 727,
+      "sha256": "262b2cf899e058e88e6955b6c4692041b71f6abf778b64a275b7d3b14e94fc46"
+    },
+    {
+      "path": "benchmark-final-full-check-04.log",
+      "bytes": 307,
+      "sha256": "0a3f819acc100612a29ace2e1117ed85d2fbc4263d026c65171222e91d8d3bd4"
+    }
+  ],
+  "source_limit": "Earlier Windows class-only deployments need the preserved local source/build bridge; final Windows deployment includes source. Dependency/tool caches are explicit, not independent backups.",
+  "full_inventory": {
+    "path": "benchmark-qualified-artifact-manifest-01.json",
+    "sha256": "cf5651097b6878d71b8f7d8e163e88fcc993f726e7f36508751a760431196f38",
+    "records": 4600
+  }
+}

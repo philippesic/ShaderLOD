@@ -223,3 +223,24 @@ def test_managed_profile_artifact_restores_and_preserves_foreign_edit(
     restore_profile_artifact(profile, record)
     assert target.read_bytes() == b"original"
     assert (session / "profile-artifact-preimage.jar").read_bytes() == b"original"
+
+
+def test_collector_identity_tracks_helpers_separately_from_product() -> None:
+    from shaderlod_host.benchmark import collector_identity
+
+    current = {
+        "executable_inputs": {
+            "C:\\repo\\build\\classes\\java\\devClient\\FrameCapture.class": "a",
+            "C:\\repo\\build\\classes\\java\\main\\Product.class": "b",
+        }
+    }
+    identity = collector_identity(current)
+    assert identity == {"/build/classes/java/devClient/FrameCapture.class": "a"}
+    current["executable_inputs"][
+        "C:\\repo\\build\\classes\\java\\main\\Product.class"
+    ] = "changed-product"
+    assert collector_identity(current) == identity
+    current["executable_inputs"][
+        "C:\\repo\\build\\classes\\java\\devClient\\FrameCapture.class"
+    ] = "changed-instrument"
+    assert collector_identity(current) != identity
