@@ -44,14 +44,42 @@ Retain the runner, development-only controllers, reusable definitions, focused t
 
 ## Evidence and executed source
 
-Compact figure inputs and independent-session effects are in [result.json](result.json). Regenerate `chart.png` with Python and Matplotlib 3.10.7: `python figure.py` in this folder. The [regeneration source](figure.py) reads only the compact JSON. No plot library is required by the runner.
+Compact figure inputs and independent-session effects are in [result.json](result.json). Regenerate `chart.png` with Python and Matplotlib 3.10.7: `python figure.py` in this folder. The [regeneration source](figure.py) reads only the compact JSON. From the repository
+root, the existing local environment runs it as
+`MPLCONFIGDIR="$PWD/.local/cache/matplotlib" .local/tools/figures/bin/python results/benchmark-workflows/figure.py`.
+Optional tool setup follows [results](../../docs/results.md); actual package versions
+are in the closeout record. No plot library is required by the runner.
 
-Raw artifacts live under `/home/philip/.local/share/shaderlod/evidence`; the selected evidence manifest beside this result records exact paths and hashes. Each supervised session preserves its executed inputs and classes in `inputs.tar`; Windows transfers are separately retained source snapshots. Source was uncommitted during qualification and was frozen per attempt. Some earlier Windows class deployments did not refresh its Java source files: `benchmark-windows-source-bridge-09.json` joins the deployed executable members to a byte-identical Asahi build/source archive. Final Windows deployment includes current sources as well as classes. Exact bytecode and dependencies remain preserved even where source lineage needs this bridge. Git checkpoints describe the resulting implementation, not a claim that earlier runs executed the final commit byte-for-byte.
+Closed controls now use the [compact evidence index](evidence/index.json).
+The [original selected manifest](manifest.json) remains an input inventory: its paths
+and hashes identify the raw attempts, not files that must remain on disk. Validate
+retained records with `python3 results/benchmark-workflows/verify_evidence.py`.
+It verifies exact numerical streams, receipt observations, additional source text and
+all six plotted sessions' FPS/bins. The chart regenerates byte-for-byte from its
+compact inputs using Matplotlib 3.10.7. Git-backed sources were separately read and
+hashed at closeout; [source-recovery verification](source-recovery-verification.json)
+records that check.
 
-The six-JVM campaign is preserved locally at `benchmark-rtx2080ti-sensitivity-02`. Other principal records include `benchmark-natural-final-01`, `benchmark-quality-asahi-final-03`, `benchmark-profiler-final-02`, `benchmark-weather-01`, `benchmark-interaction-01`, `benchmark-installation-makeup-01`, `benchmark-interruption-session-01`, `benchmark-interruption-recovery-01`, `benchmark-final-session-02`, `benchmark-drift-session-01`, `benchmark-history-final-02` and `benchmark-final-standalone-functional-01.json`. Windows campaign continuation and sustained evidence are preserved in `benchmark-native-campaigns-final`; final validation, quality, combination and profiler evidence are in `benchmark-native-live-final`.
+The corpus retains successful, failed, interrupted and inconclusive attempts,
+conditions, telemetry, source identities and additional dirty source variants.
+Original source was frozen per attempt. Some earlier Windows class deployments did
+not refresh their Java source: the retained source-bridge record joins those
+executable identities to a matching Asahi build/source snapshot. This is historical
+lineage evidence, not a claim that every run executed the eventual Git commit.
+
+2026-11-12 closeout correction: earlier wording promised permanent raw artifacts,
+bytecode and dependency snapshots. Verified extraction replaces that policy. Bulky
+PNGs, copied worlds, binaries, verbose logs, frozen environments and HTML derivatives
+are superseded and deleted after closeout. Image hashes/dimensions, structured
+capture observations and prior visual judgments remain; independent pixel reanalysis
+and intact historical runtime replay are no longer available. The raw-bundle
+`verify` command cannot be applied after its referenced files are removed. These
+limits do not turn previous visual judgments into new quality qualification.
+[Closeout and storage verification](closeout.json) records extraction and disposal;
+[the one-time extraction method](extraction-method.json) identifies the procedure.
 
 The median interval follows the binomial order-statistic method described by [NIST](https://itl.nist.gov/div898/software/dataplot/refman1/auxillar/mediancl.htm). It assumes independent comparable session effects; it cannot create independence or representativeness. Timers follow the limitations in the [Khronos timer-query specification](https://registry.khronos.org/OpenGL/extensions/ARB/ARB_timer_query.txt). NVIDIA telemetry uses [NVML device-query units](https://docs.nvidia.com/deploy/nvml-api/latest/api/group__nvmlDeviceQueries.html); unsupported readings remain unavailable.
 
 [Selected evidence manifest](manifest.json) sha256:7f589d9d9d56c188a74f9b196dac12a0292cb57b78fca06ae95886fa4ffea7bd
 
-2026-11-12 location correction: the selected manifest now names the canonical artifact directory after the repository rename. All recorded artifact hashes are unchanged. Historical path compatibility follows the [result specification](../../docs/results.md#historical-artifact-access).
+2026-11-12 location correction: the selected manifest now names the canonical artifact directory after the repository rename. All recorded artifact hashes are unchanged. Historical path interpretation follows the [result specification](../../docs/results.md#historical-artifact-access).

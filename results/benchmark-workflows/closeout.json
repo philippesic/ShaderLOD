@@ -1,0 +1,377 @@
+{
+  "schema": "shaderlod-verified-extraction-closeout-v1",
+  "date": "2026-11-12",
+  "decision": "Retain compact observations, numerical streams, figures and source identities; delete superseded bulky execution outputs after verification.",
+  "benchmark_evidence_index_sha256": "adea3079aed9bc76efacdc5ebb232907c7fbafcad3a81c60200a8eeb78f790b6",
+  "retirement_supplement_index_sha256": "880bc1bebd41159b1a221a4d5e64bfab55c5c5ef4a98d80a03544e75652811cf",
+  "raw_outputs_deleted": {
+    "files": 8568,
+    "bytes": 1594120015,
+    "by_suffix": {
+      ".tar": {
+        "files": 37,
+        "bytes": 184156160
+      },
+      ".txt": {
+        "files": 55,
+        "bytes": 137352
+      },
+      ".json": {
+        "files": 6459,
+        "bytes": 83048060
+      },
+      ".gz": {
+        "files": 15,
+        "bytes": 71284762
+      },
+      ".log": {
+        "files": 138,
+        "bytes": 10859714
+      },
+      ".png": {
+        "files": 201,
+        "bytes": 1007835806
+      },
+      ".xml": {
+        "files": 24,
+        "bytes": 81343
+      },
+      ".jsonl": {
+        "files": 75,
+        "bytes": 7849693
+      },
+      ".html": {
+        "files": 134,
+        "bytes": 17225256
+      },
+      ".jar": {
+        "files": 27,
+        "bytes": 65133379
+      },
+      ".zip": {
+        "files": 16,
+        "bytes": 8557750
+      },
+      ".bundle": {
+        "files": 4,
+        "bytes": 70851695
+      },
+      "": {
+        "files": 1131,
+        "bytes": 2594250
+      },
+      ".py": {
+        "files": 13,
+        "bytes": 60513
+      },
+      ".owner": {
+        "files": 30,
+        "bytes": 11
+      },
+      ".sample": {
+        "files": 28,
+        "bytes": 51758
+      },
+      ".pack": {
+        "files": 2,
+        "bytes": 27362254
+      },
+      ".rev": {
+        "files": 2,
+        "bytes": 90604
+      },
+      ".idx": {
+        "files": 2,
+        "bytes": 635644
+      },
+      ".class": {
+        "files": 74,
+        "bytes": 258714
+      },
+      ".properties": {
+        "files": 6,
+        "bytes": 1434
+      },
+      ".dat_old": {
+        "files": 6,
+        "bytes": 10563
+      },
+      ".dat": {
+        "files": 27,
+        "bytes": 12689
+      },
+      ".mca": {
+        "files": 36,
+        "bytes": 34390016
+      },
+      ".java": {
+        "files": 6,
+        "bytes": 4665
+      },
+      ".patch": {
+        "files": 2,
+        "bytes": 3788
+      },
+      ".toml": {
+        "files": 10,
+        "bytes": 82040
+      },
+      ".lock": {
+        "files": 2,
+        "bytes": 6
+      },
+      ".sqlite": {
+        "files": 6,
+        "bytes": 1540096
+      }
+    },
+    "roots": [
+      "55f028fe258555544327b873e4137907516d873ebdd21d951b8b5398adeefaf5",
+      "631c4a4cb126543ce621a03719f7b566cc4ee412cd7f6f07f0a8459e3c08bd1d",
+      "86e431bf04abd609abcc6e84d03da4a9ad63d45b8704a8f1c787b358423ee2db",
+      "a9cd4efdc237c89c860edea709033c9b619e3a22618b96ae4633977dcff67046",
+      "ae53462d633b245b60e4f5ed2977ee8aa63c9e70081e9bba3dbd9b7f7b705c6e",
+      "benchmark-analysis-final-inputs-02.tar",
+      "benchmark-analysis-final-inputs.tar",
+      "benchmark-browser-campaign-final-02.json",
+      "benchmark-browser-checks-final-01.json",
+      "benchmark-campaign-report-final-01",
+      "benchmark-campaign-report-final-01.stdout.json",
+      "benchmark-campaign-report-final-02",
+      "benchmark-campaign-report-final-02.stdout.json",
+      "benchmark-comparison-render-final-01",
+      "benchmark-comparison-render-final-02",
+      "benchmark-comparison-render-final-02.stdout.json",
+      "benchmark-complete-close-01.json",
+      "benchmark-complete-ready-01.json",
+      "benchmark-complete-session-01",
+      "benchmark-control-history-01",
+      "benchmark-controls-session-01",
+      "benchmark-drift-close-01.json",
+      "benchmark-drift-ready-01.json",
+      "benchmark-drift-session-01",
+      "benchmark-figure-install.log",
+      "benchmark-final-cleanup-01.json",
+      "benchmark-final-close-01.json",
+      "benchmark-final-close-02.json",
+      "benchmark-final-close-03.json",
+      "benchmark-final-fresh-check-01.log",
+      "benchmark-final-full-check-02.log",
+      "benchmark-final-full-check-03.log",
+      "benchmark-final-full-check-04.log",
+      "benchmark-final-ready-01.json",
+      "benchmark-final-ready-02.json",
+      "benchmark-final-ready-03.json",
+      "benchmark-final-recover-02.json",
+      "benchmark-final-session-01",
+      "benchmark-final-session-02",
+      "benchmark-final-session-03",
+      "benchmark-final-standalone-functional-01",
+      "benchmark-final-standalone-functional-01.json",
+      "benchmark-final-standalone-functional-01.log",
+      "benchmark-frame-pilot-01",
+      "benchmark-frame-pilot-02",
+      "benchmark-frame-pilot-03",
+      "benchmark-history-01",
+      "benchmark-history-final-01",
+      "benchmark-history-final-01.stdout.json",
+      "benchmark-history-final-02",
+      "benchmark-history-final-02.stdout.json",
+      "benchmark-history-final-03",
+      "benchmark-history-final-03.stdout.json",
+      "benchmark-installation-01",
+      "benchmark-installation-makeup-01",
+      "benchmark-interaction-01",
+      "benchmark-interruption-profile-01.stdout.json",
+      "benchmark-interruption-ready-01.json",
+      "benchmark-interruption-recovered-profile-01",
+      "benchmark-interruption-recovered-profile-01.stdout.json",
+      "benchmark-interruption-recovery-01",
+      "benchmark-interruption-recovery-close-01.json",
+      "benchmark-interruption-recovery-ready-01.json",
+      "benchmark-interruption-session-01",
+      "benchmark-makeup-stages-02",
+      "benchmark-native-campaigns-final",
+      "benchmark-native-live-final",
+      "benchmark-natural-close-01.json",
+      "benchmark-natural-final-01",
+      "benchmark-natural-final-01.stdout.json",
+      "benchmark-natural-ready-01.json",
+      "benchmark-natural-session-01",
+      "benchmark-observer-frames-01",
+      "benchmark-observer-frames-02",
+      "benchmark-observer-memory-01",
+      "benchmark-observer-stages-01",
+      "benchmark-observer-stages-02",
+      "benchmark-pilot-session-01",
+      "benchmark-pilot-session-02",
+      "benchmark-pilot-session-03",
+      "benchmark-profile-makeup-01",
+      "benchmark-profile-primary-02",
+      "benchmark-profiler-final-02",
+      "benchmark-profiler-render-final-01",
+      "benchmark-profiler-render-final-02",
+      "benchmark-profiler-render-final-02.stdout.json",
+      "benchmark-qualified-artifact-manifest-01.json",
+      "benchmark-quality-asahi-01",
+      "benchmark-quality-asahi-02",
+      "benchmark-quality-asahi-final-01",
+      "benchmark-quality-asahi-final-02",
+      "benchmark-quality-asahi-final-03",
+      "benchmark-quality-defect-01",
+      "benchmark-recovered-profiler-02",
+      "benchmark-recovered-profiler-02.stdout.json",
+      "benchmark-report-stall-fixture-01",
+      "benchmark-route-null-01",
+      "benchmark-route-null-02",
+      "benchmark-route-session-01",
+      "benchmark-route-session-02",
+      "benchmark-route-slowdown-01",
+      "benchmark-route-slowdown-100ms-01",
+      "benchmark-rtx2080ti-sensitivity-02",
+      "benchmark-sensitivity-final-assessment-01",
+      "benchmark-sensitivity-final-assessment-01.stdout.json",
+      "benchmark-sensitivity-final-assessment-02",
+      "benchmark-sensitivity-final-assessment-02.stdout.json",
+      "benchmark-stage-asahi-01",
+      "benchmark-stage-makeup-01",
+      "benchmark-validation-asahi-01",
+      "benchmark-validation-asahi-final-03",
+      "benchmark-watchdog-linux-final-01",
+      "benchmark-weather-01",
+      "benchmark-windows-source-bridge-09.json",
+      "benchmark-world-natural-01",
+      "benchmark-world-recovery-01",
+      "coauthor-removal-y0kptnib",
+      "containment-cache-session",
+      "containment-cache-validation",
+      "containment-comparison",
+      "containment-session",
+      "containment-session-02",
+      "containment-validation",
+      "dee9d85620d210c1185947b954b0ff652b791a2eac9a4a166a87eb4c7b4a71bb",
+      "ed376411b254dbd411208aac51c4661b2e8fe6df04a30ecc916af8f7b95086ea",
+      "environment-readiness-20261111-i0rt_wa8",
+      "history-extraction-IWuDeKc0",
+      "legacy-probe-20261110",
+      "repository-cutover-fkco2lv0",
+      "watchdog-linux-01",
+      "windows-code-update-02.tar",
+      "windows-code-update-03.tar",
+      "windows-code-update-04.tar",
+      "windows-code-update-05.tar",
+      "windows-code-update-06.tar",
+      "windows-code-update-07.tar",
+      "windows-code-update-08.tar",
+      "windows-code-update-09.tar",
+      "windows-code-update-10.tar",
+      "windows-final-live.tar.gz",
+      "windows-live-08-close.txt",
+      "windows-live-09-ready.json",
+      "windows-qualified-campaigns.tar.gz",
+      "windows-runtime-freeze-01.json",
+      "windows-sensitivity-02.tar.gz",
+      "windows-source-transfer-01.tar",
+      "windows-stages-02-summary.json"
+    ]
+  },
+  "older_archive_copies_deleted": [
+    {
+      "path": ".local/pending-delete/shaderlod-transfer-20261030",
+      "bytes": 61446121
+    },
+    {
+      "path": ".local/pending-delete/shaderlod-doc-archive-20261031",
+      "bytes": 7890828
+    },
+    {
+      "path": ".local/pending-delete/shaderlod-experiment-records",
+      "bytes": 337056920
+    }
+  ],
+  "historical_snapshot": "Previously verified ~70 GiB duplicate snapshot deleted; original extraction inventory and manifest remain tracked.",
+  "retired_checkouts": {
+    "location": ".local/pending-delete",
+    "state": "ready-for-deletion; optional source safety copies, not active dependencies"
+  },
+  "source_recovery": {
+    "bundle": ".local/recovery/source-history.bundle",
+    "sha256": "72cf58c004d21b30f49747dbbbb9727d419e3018e675eaafee9f627316451f5a",
+    "restored_fsck": "PASS",
+    "original_rewritten_commit_ids": "all31verified"
+  },
+  "live_local_path_controls": [
+    {
+      "session": "containment-session",
+      "outcome": "failed startup: relative world-program argument-file path; restored, retained as failure"
+    },
+    {
+      "session": "containment-session-02",
+      "functional_seconds": 18.864672897034325,
+      "comparison_seconds": 37.61591700906865,
+      "comparison_state": "complete",
+      "close": "returncode0, inputs unchanged, artifact restored, no shader/world recovery journals"
+    },
+    {
+      "session": "containment-cache-session",
+      "functional_seconds": 19.725887050968595,
+      "close": "returncode0, inputs unchanged, artifact restored, no shader/world recovery journals"
+    }
+  ],
+  "scope": "Asahi M1, 2560x1600, no-DH diagnostic, pinned Reimagined/runtime; storage/display qualification only, no optimization acceptance or DH/PBR/perceptual qualification",
+  "portable_gate": "./check --full: PASS; 11 executed / 88 reused; 109 Python tests; no fresh-render claim from CPU checks",
+  "figure_regeneration": "Matplotlib3.10.7, byte-identical chart.png",
+  "outside_aliases_removed": true,
+  "remaining_host_registration": "systemd user symlinks target .local/services; /run sockets are ephemeral host runtime",
+  "limits": "Raw-image reanalysis and intact historical runtime replay unavailable. Optional local recovery and ignored resources are not Git backup.",
+  "figure_environment": [
+    {
+      "name": "contourpy",
+      "version": "1.4.0"
+    },
+    {
+      "name": "cycler",
+      "version": "0.12.1"
+    },
+    {
+      "name": "fonttools",
+      "version": "4.68.0"
+    },
+    {
+      "name": "kiwisolver",
+      "version": "1.5.1"
+    },
+    {
+      "name": "matplotlib",
+      "version": "3.10.7"
+    },
+    {
+      "name": "numpy",
+      "version": "2.5.4"
+    },
+    {
+      "name": "packaging",
+      "version": "26.3"
+    },
+    {
+      "name": "pillow",
+      "version": "13.0.0"
+    },
+    {
+      "name": "pip",
+      "version": "24.3.1"
+    },
+    {
+      "name": "pyparsing",
+      "version": "3.3.3"
+    },
+    {
+      "name": "python-dateutil",
+      "version": "4.0.0"
+    },
+    {
+      "name": "tzdata",
+      "version": "2026.6"
+    }
+  ]
+}

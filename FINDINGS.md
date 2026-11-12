@@ -54,7 +54,7 @@ Current answers within their stated scope. Read the linked result before applyin
 | F38 | DH profiling gained live observations but left important boundaries unqualified. | [Result](results/dh-profiling-coverage/result.md) |
 | F39 | Historical benchmark designs and early control comparisons expose measurement limits; optional-stack and in-process controls did not establish consistent gains. | [Result](results/profiling-and-benchmark-design-lessons/result.md) |
 | F40 | Earlier viewport, sampling-phase and runtime-readback mistakes provide concrete test-design lessons; old GL 4.1 sampler-zero/filter claims remain unproven | [Result](results/early-rendering-contract-lessons/result.md) |
-| F41 | Historical reports, compact measurements and source recovery now live here; the old checkout and bulk snapshot are no longer dependencies. | [Result](results/historical-evidence-extraction/result.md) |
+| F41 | Historical reports, compact measurements and source recovery now live here; the old checkout and bulk snapshot are no longer dependencies. [Earlier-copy supplement](results/historical-evidence-extraction/retirement.md) preserves additional observations and refusal boundaries. | [Result](results/historical-evidence-extraction/result.md) |
 
 ## Legacy MacBook Pro controls
 

@@ -9,10 +9,10 @@ The existing live setup is the Asahi MacBook Air (Apple M1, Mesa, 2560×1600) wi
 ## Running it
 
 ```
-./verify --runtime --profile run-client-absent-dh --without-dh --display /run/user/1000/shaderlod-display/environment.json --ownership-root /run/user/1000/shaderlod-ownership --timeout 180
+./verify --runtime --profile run-client-absent-dh --without-dh --display .local/display/environment.json --ownership-root .local/ownership --timeout 180
 ```
 
-All of `--profile`, `--display`, `--ownership-root` and `--timeout` are required; a bare `./verify --runtime` refuses. The receipt and its log go to `~/.local/share/shaderlod/evidence/attempts/<UTC time>-<mode>.json`, and the run prints the path as `RECEIPT:`. `--receipt PATH` overrides the location, but a path inside the repository refuses, because `build/` and profile directories are disposable. Use only a display and host window that is actually allocated; the command does not grant that. Prepare world copies with `shaderlod_host.storage.copytree`; never mutate a shared source world. A completed receipt is never overwritten.
+All of `--profile`, `--display`, `--ownership-root` and `--timeout` are required; a bare `./verify --runtime` refuses. The receipt and its log go to `.local/artifacts/attempts/<UTC time>-<mode>.json`, and the run prints the path as `RECEIPT:`. `--receipt PATH` overrides the location, with repository-local outputs restricted to `.local/artifacts`; source, `build/` and profile receipt destinations refuse. Explicit outside paths remain supported for callers running on other hosts, but project work uses the local artifact root. Use only a display and host window that is actually allocated; the command does not grant that. Prepare world copies with `shaderlod_host.storage.copytree`; never mutate a shared source world. A completed receipt is never overwritten.
 
 Bootstrap builds the main JAR, runs the package audit and the development probe, and reads the exact Java command from `build/moddev/functional-launch.json`. The lower-level executor is `python3 -m shaderlod_host.runtime_live --help`. `--shipping-jar` tests the packaged registration; `--native-control` runs without ShaderLOD as a negative reference and has no probe receipt.
 
@@ -37,6 +37,43 @@ Runtime executable inputs are hashed before and after each attempt; drift invali
 
 The shared Linux/native-Windows session controller, quick in-session validation, short comparisons and frozen multi-session qualification are documented in [benchmarks](benchmarks.md). It uses the same settings-screen functional probe and independent host validator. [Profiling](profiling.md) describes full-frame streams, renderer-stage diagnostics, pack mappings and separate motion captures.
 
-Native Windows supervision uses a kill-on-close owned process job; Linux uses an owned process group. Both refuse unknown process identity. `doctor --probe-worker --output-root EXTERNAL` exercises normal exit, deadline, direct-parent loss and campaign-ancestor loss cleanup. Raw evidence and executable input snapshots remain external.
+Native Windows supervision uses a kill-on-close owned process job; Linux uses an owned process group. Both refuse unknown process identity. `doctor --probe-worker --output-root .local/artifacts/FRESH` exercises normal exit, deadline, direct-parent loss and campaign-ancestor loss cleanup. Raw evidence and executable input snapshots stay under ignored `.local/artifacts` until verified closeout.
 
 DH-enabled functional acceptance requires structured `dh.enabled=true`; mod presence or a readiness string alone is insufficient. This proves configured enablement only, not rendered DH coverage. The Asahi native DH sampler-limit failure remains a blocked cell. No-DH validation does not replace it. Exhaustive loaded-system-library attestation and universal image/performance guarantees are not provided.
+
+## Asahi display setup
+
+The maintained virtual display uses KWin, Xwayland, D-Bus, `glxinfo` and `xrandr`
+provided by the host. Its native surface is 2560×1600 with hardware GL acceleration.
+The tracked template is `shaderlod_host/templates/systemd-units.json`; generate local
+units with:
+
+```
+python3 -m shaderlod_host display-units --output-root .local/services
+systemd-analyze --user verify .local/services/shaderlod-display.service .local/services/shaderlod-lid.service
+```
+
+Registration changes affect the host. Back up any existing owned units inside
+`.local/backups` and coordinate with active clients before replacing them. Link the
+generated files using absolute paths, reload, then enable the allocated services:
+
+```
+systemctl --user link "$PWD/.local/services/shaderlod-display.service" "$PWD/.local/services/shaderlod-lid.service"
+systemctl --user daemon-reload
+systemctl --user enable --now shaderlod-display.service shaderlod-lid.service
+python3 -m shaderlod_host display-check --timeout 30
+```
+
+The lid service inhibits lid-close sleep for this development host; it does not grant
+runtime allocation. Display configuration/data and the private environment file stay
+under `.local/display`; the publisher is maintained Python source in this repo.
+`display-check` verifies the current service invocation, private environment file,
+live Wayland socket, hardware GL and native surface with a bounded deadline. Readiness
+is not game, image-quality or performance qualification. The service's start check
+uses the same command, so a broken display fails startup instead of publishing stale
+readiness. Stop clients before restart or relocation of the checkout.
+
+Only registration symlinks under the user systemd configuration and ephemeral
+`/run/user/<uid>` sockets live outside the checkout. To retire this setup, stop owned
+clients, disable/stop both services, remove only their registration symlinks and
+reload the user manager. All persistent project state can then be managed here.

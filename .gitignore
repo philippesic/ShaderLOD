@@ -13,3 +13,5 @@ __pycache__/
 /run-client-absent-dh/
 
 /run-client-native-control/
+
+/.local/

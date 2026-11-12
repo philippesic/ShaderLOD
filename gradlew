@@ -36,6 +36,8 @@ done
 
 APP_BASE_NAME=${0##*/}
 APP_HOME=$( cd -P "${APP_HOME:-./}" > /dev/null && printf '%s\n' "$PWD" ) || exit
+GRADLE_USER_HOME="$APP_HOME/.local/gradle"
+export GRADLE_USER_HOME
 
 MAX_FD=maximum
 

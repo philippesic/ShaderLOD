@@ -156,12 +156,13 @@ def main() -> int:
     item = lock["jdk"].get(f"{sys.platform}-{arch}")
     if item is None:
         raise RuntimeError("TOOLS: unsupported platform")
-    cache = Path.home() / ".cache/shaderlod-foundation"
+    cache = root / ".local/tools/cache"
     cache.mkdir(parents=True, exist_ok=True)
+    (cache / "wheels").mkdir(exist_ok=True)
     runtime_artifacts(root, cache)
     archive = cache / item["url"].rsplit("/", 1)[1]
     acquire(item["url"], archive, item["sha256"])
-    install = Path.home() / ".local/share/shaderlod-jdks"
+    install = root / ".local/tools/jdks"
     java = install / "jdk-21.0.13+9"
     install_jdk(archive, java)
     release = (java / "release").read_text()
@@ -183,13 +184,16 @@ def main() -> int:
                 "install",
                 "--require-hashes",
                 "--only-binary=:all:",
+                "--find-links",
+                str(cache / "wheels"),
                 "-r",
                 str(pylock),
             ],
+            env=dict(os.environ, PIP_CACHE_DIR=str(cache / "pip")),
             check=True,
         )
         stamp.write_text(digest(pylock))
-    p2 = Path.home() / ".gradle/caches/p2-data"
+    p2 = root / ".local/gradle/caches/p2-data"
     for artifact in json.loads((root / "dependencies/greclipse.lock.json").read_text())[
         "artifacts"
     ]:
@@ -228,7 +232,11 @@ def main() -> int:
         primary["sha256"],
     )
     env = dict(
-        os.environ, JAVA_HOME=str(java), FOUNDATION_PYTHON=str(envdir / "bin/python")
+        os.environ,
+        JAVA_HOME=str(java),
+        FOUNDATION_PYTHON=str(envdir / "bin/python"),
+        GRADLE_USER_HOME=str(root / ".local/gradle"),
+        PIP_CACHE_DIR=str(cache / "pip"),
     )
     env["PATH"] = str(java / "bin") + ":" + env["PATH"]
     if sys.argv[1] == "check":

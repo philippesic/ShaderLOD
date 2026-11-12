@@ -20,29 +20,30 @@ Build current classes and JAR before opening a client. Use the allocated display
 
 ```
 ./check --full
-python3 -m shaderlod_host session-open --launch build/moddev/functional-launch.json --profile run-client-absent-dh --world ShaderLOD-Smoke --display /run/user/1000/shaderlod-display/environment.json --ownership-root /run/user/1000/shaderlod-ownership --session /external/fresh-session --timeout 900
+JAVA_HOME="$PWD/.local/tools/jdks/jdk-21.0.13+9" ./gradlew --no-daemon writeFunctionalLaunch -PfunctionalProbe
+python3 -m shaderlod_host session-open --launch build/moddev/functional-launch.json --profile run-client-absent-dh --world ShaderLOD-Smoke --display .local/display/environment.json --ownership-root .local/ownership --session .local/artifacts/fresh-session --timeout 900
 ```
 
 The foreground command owns the client. In another terminal:
 
 ```
-python3 -m shaderlod_host session-status --session /external/fresh-session --wait-ready --timeout 180
+python3 -m shaderlod_host session-status --session .local/artifacts/fresh-session --wait-ready --timeout 180
 python3 -m shaderlod_host validate --spec benchmarks/validation-asahi.json --plan
-python3 -m shaderlod_host validate --spec benchmarks/validation-asahi.json --session /external/fresh-session --output-root /external/fresh-validation
+python3 -m shaderlod_host validate --spec benchmarks/validation-asahi.json --session .local/artifacts/fresh-session --output-root .local/artifacts/fresh-validation
 python3 -m shaderlod_host compare --spec benchmarks/comparisons/asahi-null.json --plan
-python3 -m shaderlod_host compare --spec benchmarks/comparisons/asahi-null.json --session /external/fresh-session --output-root /external/fresh-comparison
-python3 -m shaderlod_host session-close --session /external/fresh-session
+python3 -m shaderlod_host compare --spec benchmarks/comparisons/asahi-null.json --session .local/artifacts/fresh-session --output-root .local/artifacts/fresh-comparison
+python3 -m shaderlod_host session-close --session .local/artifacts/fresh-session
 ```
 
 The supplied null comparison exercises the harness with a dev-only identity provider. Replace its case/arm definitions deliberately for real work. The development target is about one minute, not a requirement to run a full qualification after each edit. `--plan` resolves capture counts/order and the finite budget before launching anything.
 
 Native Windows uses the same Python CLI and control protocol. Invoke it in the logged-in interactive user's console. An SSH/WSL Session 0 process cannot stand in for that display. `benchmarks/windows/start.ps1` submits a bounded, manually started task with no recurring trigger; `session.ps1` invokes the maintained CLI. Supply a unique `ShaderLOD-*` task name, then remove that exact quiescent registration with `finish.ps1`. This is an interactive-session bridge, not a benchmark scheduling service. `-Spec PATH` runs `campaign.ps1` instead of an open session. Its task timeout must cover the specification's total budget and teardown.
 
-`prepare-windows` adopts a preserved native runtime into a fresh prepared slot using capacity-checked copies. `freeze-windows-runtime` preserves and relocates source-checkout-owned platform artifacts and JVM/logging configuration into a fresh external runtime snapshot. Shared JDK and Gradle artifact caches remain explicit dependencies. `prepare-profile` selects the pinned original development pack (or an explicit original-pack `--spec`) in an owned, quiescent prepared slot and preserves its prior Iris configuration externally. It does not edit shader option files, AA or resolution. Do not use setup commands on a personal play profile.
+`prepare-windows` adopts a preserved native runtime into a fresh prepared slot using capacity-checked copies. `freeze-windows-runtime` preserves and relocates source-checkout-owned platform artifacts and JVM/logging configuration into a fresh `.local/artifacts` runtime snapshot. The target checkout’s local JDK and Gradle artifact caches remain explicit dependencies. `prepare-profile` selects the pinned original development pack (or an explicit original-pack `--spec`) in an owned, quiescent prepared slot and preserves its prior Iris configuration in the local artifact output. It does not edit shader option files, AA or resolution. Do not use setup commands on a personal play profile.
 
 ## Worlds and repeatability
 
-A world definition identifies its initial tree and prior exposure. `prepare-world --source-root SOURCE --profile PROFILE --world NAME --spec WORLD.json --output-root EXTERNAL --ownership-root OWNERSHIP` makes a frozen original and one working copy, with capacity checks and before/after identity verification. It refuses existing destinations. Current world definitions are harness fixtures, not an unseen or representative release suite.
+A world definition identifies its initial tree and prior exposure. `prepare-world --source-root SOURCE --profile PROFILE --world NAME --spec WORLD.json --output-root .local/artifacts/FRESH --ownership-root OWNERSHIP` makes a frozen original and one working copy, with capacity checks and before/after identity verification. It refuses existing destinations. Current world definitions are harness fixtures, not an unseen or representative release suite.
 
 The controller admits only an integrated world, short routes through loaded chunks, fixed day/weather and declared native surface/dimension. The prepared player must support creative flight. The controller holds flight, gravity and velocity during conditioning and routes; it journals their preimages and restores them with the original player pose at close. It never changes game mode. Camera movement follows simulation ticks, with actual render-camera checkpoints and a progression check. A route that falls behind is invalid. Capture never slows route progression for a writer. Working worlds may still evolve through integrated-server activity; exact world identity at preparation is not bit-for-bit deterministic gameplay. Use paired blocks, independent sessions and relevant adverse cases to address residual variation. Record newly generated terrain/loading as an outcome if the mechanism affects it.
 
@@ -60,18 +61,18 @@ A practical starting matrix is up to three pack roles × four cases × three pai
 
 ```
 python3 -m shaderlod_host qualify --spec /authored/contribution.json --plan
-python3 -m shaderlod_host qualify --spec /authored/contribution.json --launch LAUNCH --profile PROFILE --world WORLD --display DISPLAY --ownership-root OWNERSHIP --output-root /external/fresh-campaign
-python3 -m shaderlod_host qualify --policy POLICY --runs /external/campaign/comparison-1/result.json /external/campaign/comparison-2/result.json --review REVIEW --output-root /external/fresh-assessment
-python3 -m shaderlod_host history --runs /external/first/result.json /external/later/result.json --output-root /external/fresh-history
+python3 -m shaderlod_host qualify --spec /authored/contribution.json --launch LAUNCH --profile PROFILE --world WORLD --display DISPLAY --ownership-root OWNERSHIP --output-root .local/artifacts/fresh-campaign
+python3 -m shaderlod_host qualify --policy POLICY --runs .local/artifacts/campaign/comparison-1/result.json .local/artifacts/campaign/comparison-2/result.json --review REVIEW --output-root .local/artifacts/fresh-assessment
+python3 -m shaderlod_host history --runs .local/artifacts/first/result.json .local/artifacts/later/result.json --output-root .local/artifacts/fresh-history
 ```
 
 The tracked sensitivity campaign is a harness control, not a product acceptance policy. Confirmation freezes the independent-session count. Frames and paired windows within one JVM do not count as independent trials. The conservative median interval can be inconclusive with small samples even when a point estimate looks good. Failed/missing cases, incompatible contexts and absent quality review prevent promotion. No lack-of-significance shortcut establishes equivalence or bounded harm.
 
-For a long campaign, `--control PATH` accepts an explicit `{"action":"pause","after_sessions":N}` request only at a completed, closed session boundary. Exit 3 means paused; it is not failure or completion. Resume with the same command/output plus `--resume`, omitting the old pause request. Executed source, profile, world, protocol and completed prefix must match. Unknown/failed admitted work is not replayed, and spent reservations are not refunded. Verify the finished campaign directly with `verify --result /external/campaign/result.json`; assess it with `qualify --policy POLICY --result /external/campaign/result.json --review REVIEW --output-root /external/fresh-assessment`.
+For a long campaign, `--control PATH` accepts an explicit `{"action":"pause","after_sessions":N}` request only at a completed, closed session boundary. Exit 3 means paused; it is not failure or completion. Resume with the same command/output plus `--resume`, omitting the old pause request. Executed source, profile, world, protocol and completed prefix must match. Unknown/failed admitted work is not replayed, and spent reservations are not refunded. Verify the finished campaign directly with `verify --result .local/artifacts/campaign/result.json`; assess it with `qualify --policy POLICY --result .local/artifacts/campaign/result.json --review REVIEW --output-root .local/artifacts/fresh-assessment`.
 
-`installation --spec benchmarks/comparisons/asahi-installation-makeup.json --launch LAUNCH --profile PROFILE --world WORLD --display DISPLAY --ownership-root OWNERSHIP --output-root /external/fresh-installation` compares a genuinely absent main mod against installed-Off in separate processes. Prepare that exact original pack first. Common measurement helpers remain in both arms; this isolates registration/mixin overhead, not absence of every shared class. Native pack failure is a compatibility outcome, not permission to reduce quality. This control is separate from ordinary candidate comparisons.
+`installation --spec benchmarks/comparisons/asahi-installation-makeup.json --launch LAUNCH --profile PROFILE --world WORLD --display DISPLAY --ownership-root OWNERSHIP --output-root .local/artifacts/fresh-installation` compares a genuinely absent main mod against installed-Off in separate processes. Prepare that exact original pack first. Common measurement helpers remain in both arms; this isolates registration/mixin overhead, not absence of every shared class. Native pack failure is a compatibility outcome, not permission to reduce quality. This control is separate from ordinary candidate comparisons.
 
-After a campaign, `report --result /external/campaign/result.json --output-root /external/fresh-campaign-report` builds an offline view of the recorded policy decision and chronological compatible-series charts. It performs no new measurement or approval.
+After a campaign, `report --result .local/artifacts/campaign/result.json --output-root .local/artifacts/fresh-campaign-report` builds an offline view of the recorded policy decision and chronological compatible-series charts. It performs no new measurement or approval.
 
 Inspect the within-route timeline, chronological session placement and cross-comparison history. Preserve baseline drift and every repeat. Histories partition incompatible contexts; they do not connect unrelated devices/settings. A capped result concerns delivered throughput. An uncapped headroom diagnostic needs a separate declared operating mode.
 

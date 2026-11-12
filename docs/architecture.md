@@ -17,7 +17,7 @@
 | `tests` | Python tests |
 | `dependencies` | Digest locks ([dependencies](dependencies.md)) |
 | `results` | Readable conclusions indexed by `FINDINGS.md`; frozen compact supporting records in `results/sources/` |
-| External artifact root | Working raw outputs under `~/.local/share/shaderlod/evidence`; extraction, retention and deletion rules in [results](results.md) |
+| `.local/` (ignored) | Project-local tools, dependency caches, artifacts, display state and recovery; layout and cleanup in [results](results.md) |
 | `tasks` | Open multi-session tasks |
 
 Package boundaries and forbidden dependencies are enforced by ArchUnit against compiled output, not by this table.
@@ -34,7 +34,10 @@ Package boundaries and forbidden dependencies are enforced by ArchUnit against c
 | `shaderlod_host/storage.py:publish` | Result finalization | Exclusive atomic completed result | Owned filesystem | `tests/test_host.py` |
 | `shaderlod_host/runtime_live.py:main` | `./verify --runtime` | Live client attempt and functional receipt | Built JARs, pinned runtime | `tests/test_functional_contract.py` |
 | `shaderlod_host/benchmark.py:analyze_frames` | Offline import or live fixed-scene capture | Complete-stream validity and descriptive frame analysis | Strict frame records | `tests/test_benchmark.py` |
-| `shaderlod_host/runtime_live.py:benchmark_session` | `python3 -m shaderlod_host session-open` | Foreground Linux/native-Windows client, watchdog, external command/results | Prepared profile and allocated display | `tests/test_benchmark.py` |
+| `shaderlod_host/runtime_live.py:write_display_units` | `python3 -m shaderlod_host display-units` | Generate local service units | Allocated Linux host | `tests/test_display.py` |
+| `shaderlod_host/runtime_live.py:publish_display_environment` | `python3 -m shaderlod_host display-publish` | Publish private display environment for service lifetime | Allocated Linux host | `tests/test_display.py` |
+| `shaderlod_host/runtime_live.py:check_display` | `python3 -m shaderlod_host display-check` | Bounded current-invocation and hardware GL readiness | Allocated Linux host | `tests/test_display.py` |
+| `shaderlod_host/runtime_live.py:benchmark_session` | `python3 -m shaderlod_host session-open` | Foreground Linux/native-Windows client, watchdog, local command/results | Prepared profile and allocated display | `tests/test_benchmark.py` |
 | `shaderlod_host/comparison.py:execute_comparison` | `python3 -m shaderlod_host compare` | Frozen plan, paired routes, attempts and restored shader state | Live control protocol and frame receipts | `tests/test_comparison.py` |
 | `shaderlod_host/validation.py:validate_session` | `python3 -m shaderlod_host validate` | Functional probe receipt and preserved output | Existing host functional validator | `tests/test_functional_contract.py` |
 | `shaderlod_host/runtime_live.py:execute_campaign` | `python3 -m shaderlod_host qualify --spec` | Fixed fresh-session campaign and failure accounting | Session supervisor and frozen policy | `tests/test_campaign.py` |
@@ -47,4 +50,4 @@ The settings screen stages an archive and provider IDs. Apply runs `SelectionTra
 
 ## Benchmark ownership
 
-The host owns plans, finite budgets, admission, receipts and analysis. The development-only controller owns real game selection, world-condition/pose control, capture and restoration. The existing integration/storage owners remain authoritative for native settings and file journals. GPU query ownership stays under `dev/measurement`. Semantic mappings label observed boundaries; they cannot manufacture timings or product eligibility. Raw evidence and input snapshots live externally. See [benchmarks](benchmarks.md).
+The host owns plans, finite budgets, admission, receipts and analysis. The development-only controller owns real game selection, world-condition/pose control, capture and restoration. The existing integration/storage owners remain authoritative for native settings and file journals. GPU query ownership stays under `dev/measurement`. Semantic mappings label observed boundaries; they cannot manufacture timings or product eligibility. Working raw evidence and input snapshots live in ignored `.local/artifacts`; verified compact conclusions live in tracked results. See [benchmarks](benchmarks.md).

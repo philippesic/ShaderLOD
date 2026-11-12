@@ -40,6 +40,9 @@ def main() -> int:
             "validate",
             "history",
             "installation",
+            "display-publish",
+            "display-check",
+            "display-units",
         ],
     )
     parser.add_argument("--request", type=Path)
@@ -58,7 +61,7 @@ def main() -> int:
     parser.add_argument("--profile", type=Path)
     parser.add_argument("--world", default="ShaderLOD-Smoke")
     parser.add_argument("--display", type=Path)
-    parser.add_argument("--timeout", type=int, default=180)
+    parser.add_argument("--timeout", type=int)
     parser.add_argument("--wait-ready", action="store_true")
     parser.add_argument("--telemetry", action="store_true")
     parser.add_argument("--without-shaderlod", action="store_true")
@@ -69,6 +72,37 @@ def main() -> int:
     parser.add_argument("--control", type=Path)
     parser.add_argument("--reserve-bytes", type=int, default=67108864)
     args = parser.parse_args()
+    if args.timeout is None:
+        args.timeout = 30 if args.mode == "display-check" else 180
+    if args.mode in {"display-publish", "display-check", "display-units"}:
+        from shaderlod_host.config import project_root
+        from shaderlod_host.runtime_live import (
+            publish_display_environment,
+            check_display,
+            write_display_units,
+        )
+
+        root = project_root()
+        if args.mode == "display-publish":
+            publish_display_environment(
+                args.display or root / ".local/display/environment.json"
+            )
+        elif args.mode == "display-check":
+            print(
+                json.dumps(
+                    check_display(
+                        args.display or root / ".local/display/environment.json",
+                        args.timeout,
+                    )
+                )
+            )
+        else:
+            print(
+                json.dumps(
+                    write_display_units(args.output_root or root / ".local/services")
+                )
+            )
+        return 0
     if (args.ancestor_pid is None) != (args.ancestor_birth is None):
         parser.error("internal ancestry requires both process ID and birth identity")
     if args.resume and (args.mode != "qualify" or args.spec is None):

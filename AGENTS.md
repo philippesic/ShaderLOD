@@ -51,6 +51,7 @@ belong to [results and closeout](docs/results.md#result-presentation-and-closeou
   do not grant one. RTX 5080 is not allocated.
 - Runtime ownership and recovery follow the
   [runtime guide](docs/runtime.md#process-ownership).
-- Temporary outputs use `~/.local/share/shaderlod/evidence`; the
+- Project-owned persistent state stays inside this checkout. Temporary outputs use
+  ignored `.local/artifacts`; the
   [result specification](docs/results.md) owns extraction, retention and deletion.
 - Established origin: `git@github.com:philippesic/ShaderLOD.git`.

@@ -46,3 +46,11 @@ Run `python3 results/historical-evidence-extraction/verify.py` from a full sourc
 [Fresh GitHub clone validation](published-validation.json) sha256:900ec2fc6e4639950ba7cb98dac57f1aac81191ee9521facecb03b343e6bcbe5
 
 [Final legacy Git recovery](git-recovery.json) sha256:200a0c139f4cc4676063723149f8fbb2e050b2044768978985da53d30af37a3b
+
+2026-11-12 storage closeout: the verified bulk history snapshot has been deleted.
+The retired clean checkout was moved into ignored `.local/pending-delete/`, pruned
+of extracted generated outputs and marked ready for deletion. A later scan found
+four separate older home-directory copies; their [supplementary extraction](retirement.md)
+retains additional reports, observations and source variants. Its limits apply
+alongside this result. Current project paths and cleanup live in
+[the result specification](../../docs/results.md#where-evidence-lives).

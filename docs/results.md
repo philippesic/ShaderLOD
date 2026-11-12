@@ -16,11 +16,36 @@ Compilation is not a level. A live level needs a runtime receipt. Missing data s
 
 ## Where evidence lives
 
-- Working raw outputs (logs, captures, PNGs, receipts) stay outside Git under `~/.local/share/shaderlod/evidence/`. `./verify --runtime` writes each attempt's receipt and log to `attempts/` there by default and refuses receipt paths inside the repository. Older bundles sit in directories named by their manifest digest.
-- `build/`, `run-client*/` profiles and other ignored repository directories are working copies. Before reclaiming them, preserve any unclassified or finding-dependent output. Retained compact evidence belongs in results/; raw inputs still needed during an investigation belong under the external evidence root, not in disposable build/profile trees.
-- `results/sources/` holds compact, dated records and archived reports that back a finding. They are never edited after the finding cites them; a correction is a new record.
-- `FINDINGS.md` is a short question/conclusion/result map. Scope belongs in the conclusion.
-- `results/<descriptive-name>/result.md` explains each meaningful investigation. Keep supporting compact numerical data and figure-generation inputs beside it; temporary raw logs stay external until verified extraction and cleanup.
+All project-owned persistent data stays inside this checkout. A clone contains the
+tracked knowledge; ignored working resources are local and are not backed up by Git.
+
+| Location | Contents and cleanup |
+| --- | --- |
+| `results/` (tracked) | Conclusions, compact measurements, figure inputs, supporting source and explicit limitations |
+| `.local/artifacts/` (ignored) | Active receipts, logs, captures, snapshots and reports; extract, verify, then delete superseded raw outputs at closeout |
+| `.local/tools/`, `.local/gradle/`, `.local/cache/` (ignored) | Pinned tool installations, dependency caches and owned renderer caches; reproducible, retain while useful |
+| `.local/display/`, `.local/services/`, `.local/ownership/` (ignored) | Host display state, generated service files and run ownership |
+| `.local/recovery/` (ignored) | Small Git recovery bundle and manifest for retired refs and pre-metadata-rewrite source identities; not a raw artifact archive |
+| `.local/pending-delete/` (ignored) | Explicitly retired material already covered by verified extraction; its marker explains deletion eligibility |
+| `.local/work/`, `.local/backups/`, `.local/state/` (ignored) | Temporary maintenance work, owned configuration backups and local checkpoints |
+| `build/`, `run-client*/` (ignored) | Regenerable builds and prepared client/world slots; preserve active/shared inputs and unclassified evidence before reclaiming |
+
+`./verify --runtime` defaults to `.local/artifacts/attempts/`. New run commands use
+fresh paths under `.local/artifacts`; do not place findings or reusable tools in
+ignored run trees. Repository-local receipts and sessions refuse source/build
+locations. Immutable old records may contain absolute paths from former machines:
+those are provenance labels, not required storage locations or instructions to
+recreate aliases. No user-home ShaderLOD artifact directory is required.
+
+The operating system still requires user-service registration symlinks and ephemeral
+runtime sockets outside the checkout. Their targets, authored setup and persistent
+state stay here; [runtime setup](runtime.md#asahi-display-setup) owns registration.
+System packages and generic shared caches are host infrastructure, not project data.
+
+`FINDINGS.md` is the short question/conclusion/result map. Keep useful numerical data
+and executable figure inputs beside each result. `results/sources/` holds dated
+supporting reports; cited execution records are immutable while retained. Corrections
+get a new source record rather than changing the original.
 
 ## Reporting
 
@@ -47,6 +72,13 @@ A result starts with a finding-led title and a short explanation of what happene
 
 Figures must name quantities and units, show controls and uncertainty when available, and distinguish independent runs from samples within a run. Keep numerical data and executable regeneration instructions. Do not invent error bars or interpret missing observations as zero. Figures explain the result; logs are supporting material.
 
+Optional figure tools also stay local. For a Matplotlib result, create
+`.local/tools/figures` with `python3 -m venv .local/tools/figures` and install its
+recorded version using `.local/tools/figures/bin/python -m pip` with
+`PIP_CACHE_DIR="$PWD/.local/tools/cache/pip"`. Set
+`MPLCONFIGDIR="$PWD/.local/cache/matplotlib"` when rendering. The result owns its
+figure command and package versions; these optional tools are not runner dependencies.
+
 Identify the executed source, including any relevant dirty patch, dependency versions and tested inputs. Keep compact measurements with SHA-256 identities sufficient to check the conclusions and regenerate figures. Preserve failures, exclusions and missingness in that retained data. Mark unavailable provenance explicitly and limit reproducibility claims accordingly.
 
 Raw records remain immutable while retained; this does not require permanent retention of every output. Closeout extracts useful measurements, conditions, limitations and conclusions into results/, verifies the retained evidence against the raw attempt, and then deletes superseded bulky outputs within the investigation's authorized scope. Keep only inputs or records still necessary to support the claim and not adequately represented by the compact result. Logs, captures, caches and frozen environments are not retained merely because they were produced. Do not delete active/shared work or select away unfavorable evidence. Record what was discarded and any resulting reproduction limits. Unclassified material needs extraction and verification before deletion; do not reopen an already completed extraction merely because its original bulk files still exist.
@@ -66,7 +98,7 @@ Historical imports identify what was inspected, do not relabel old measurements 
 
 AGENTS.md holds rules every agent needs; README.md introduces the product. Current architecture belongs in docs/architecture.md; setup, topic navigation and development procedures belong in docs/development.md. Other docs remain current topic guides. Never accumulate obsolete instructions or commit diaries in docs.
 
-Use one descriptive result folder per coherent question or investigation, not per run, commit or session. Basic result sections are: conclusion-led title and explanation; useful chart or table when warranted; conditions and limitations; decision; evidence and executed-source references. Optional result.json holds structured facts or figure inputs. Optional figures and small tables stay beside result.md. Small supporting reports belong in results/sources/. Large execution records are temporary external working material unless a specific result requires their continued retention.
+Use one descriptive result folder per coherent question or investigation, not per run, commit or session. Basic result sections are: conclusion-led title and explanation; useful chart or table when warranted; conditions and limitations; decision; evidence and executed-source references. Optional result.json holds structured facts or figure inputs. Optional figures and small tables stay beside result.md. Small supporting reports belong in results/sources/. Large execution records are temporary ignored local working material unless a specific result requires their continued retention.
 
 FINDINGS contains a short scoped conclusion and link for each result. Group by topic when helpful. Negative and inconclusive results are established knowledge about what happened, not proof of universal impossibility. Avoid copying full writeups into the index.
 
@@ -80,6 +112,15 @@ The [extraction result](../results/historical-evidence-extraction/result.md) rec
 
 The [source-recovery map](../results/historical-evidence-extraction/source-recovery.json) identifies authored source in main's Git history or compact retained source records, including dirty variants that were absent from published history. Use a full Git clone for history-backed source recovery. Validate compact evidence with `python3 results/historical-evidence-extraction/verify.py`; this is an offline evidence check, not a new benchmark or live qualification.
 
-The active artifact directory is `~/.local/share/shaderlod/evidence`. The old `~/.local/share/shaderlod-next` data path is a compatibility symlink to `~/.local/share/shaderlod`, so immutable receipts and recovery records remain accessible at their recorded locations. Use the canonical name for new work. Historical source checkout paths inside records remain provenance labels; do not recreate or use a second `ShaderLOD-next` checkout.
+Closed benchmark controls are retained in the [compact evidence corpus](../results/benchmark-workflows/evidence/index.json).
+Validate it with `python3 results/benchmark-workflows/verify_evidence.py`. Its indexed
+paths are labels for original records; bulky images, copied worlds, runtime binaries
+and duplicate reports are removed after verified extraction. See the result for the
+resulting reanalysis limits. The old `shaderlod-next` and user-home artifact aliases
+are unnecessary and must not be recreated.
 
-[Commit identity mapping](../results/sources/commit-id-map.json) resolves earlier source citations to equivalent rewritten commits. Original execution records retain their recorded identities; the mapping identifies their Git recovery bundle.
+[Commit identity mapping](../results/sources/commit-id-map.json) resolves earlier source citations to equivalent rewritten commits. Original execution records retain their recorded identities; the original bundle path is a historical label. Current optional recovery is
+`.local/recovery/source-history.bundle`, identified by its adjacent manifest. A normal
+full clone contains the published implementation histories and compact evidence;
+this optional bundle additionally preserves retired private refs and original commit
+metadata from before the coauthor correction.

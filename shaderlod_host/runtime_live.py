@@ -7,6 +7,7 @@ from pathlib import Path
 import socket
 import shlex
 import shutil
+import signal
 import subprocess
 import sys
 import threading
@@ -15,6 +16,9 @@ import time
 from shaderlod_host.config import (
     display_environment,
     evidence_root,
+    project_root,
+    validate_artifact_path,
+    display_publication,
     worker_environment,
 )
 from shaderlod_host.functional_contract import verify_functional
@@ -24,6 +28,114 @@ from shaderlod_host.storage import (
     profile_artifact,
 )
 from shaderlod_host.worker import birth, boot
+
+
+def publish_display_environment(path: Path) -> None:
+    from shaderlod_host.storage import replace
+
+    record = display_publication()
+    if sys.platform != "linux" or not record["invocation_id"]:
+        raise ValueError("display publisher requires a systemd service invocation")
+    path.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
+    replace(path, record)
+    while True:
+        signal.pause()
+
+
+def checked_display_environment(
+    path: Path, invocation: str, owner_uid: int
+) -> dict[str, str]:
+    metadata = path.stat()
+    if metadata.st_uid != owner_uid or metadata.st_mode & 0o077:
+        raise ValueError("display environment must be private to this user")
+    record = json.loads(path.read_bytes())
+    if not invocation or record.get("invocation_id") != invocation:
+        raise ValueError("display environment belongs to a stale service invocation")
+    environment = display_environment(path)
+    socket_path = Path(environment["XDG_RUNTIME_DIR"]) / environment["WAYLAND_DISPLAY"]
+    if not socket_path.is_socket():
+        raise ValueError("display Wayland socket unavailable")
+    return environment
+
+
+def check_display(path: Path, timeout: int) -> dict[str, object]:
+    if sys.platform != "linux" or not 1 <= timeout <= 45:
+        raise ValueError("Linux display check with a 1–45 second deadline required")
+    deadline = time.monotonic() + timeout
+    reason = "environment not published"
+    while time.monotonic() < deadline:
+        try:
+            invocation = subprocess.check_output(
+                [
+                    "systemctl",
+                    "--user",
+                    "show",
+                    "shaderlod-display.service",
+                    "-p",
+                    "InvocationID",
+                    "--value",
+                ],
+                text=True,
+                timeout=min(5, max(0.1, deadline - time.monotonic())),
+            ).strip()
+            environment = checked_display_environment(path, invocation, os.getuid())
+            graphics = subprocess.run(
+                ["glxinfo", "-B"],
+                env=environment,
+                text=True,
+                capture_output=True,
+                timeout=min(10, max(0.1, deadline - time.monotonic())),
+            )
+            if graphics.returncode or "Accelerated: yes" not in graphics.stdout:
+                raise ValueError("hardware-accelerated GLX unavailable")
+            screen = subprocess.run(
+                ["xrandr", "--current"],
+                env=environment,
+                text=True,
+                capture_output=True,
+                timeout=min(10, max(0.1, deadline - time.monotonic())),
+            )
+            if screen.returncode or "current 2560 x 1600" not in screen.stdout:
+                raise ValueError("native 2560x1600 virtual surface unavailable")
+            return {
+                "state": "ready",
+                "environment_file": str(path),
+                "resolution": "2560x1600",
+                "hardware_accelerated": True,
+            }
+        except (OSError, ValueError, subprocess.SubprocessError) as error:
+            reason = str(error)
+            time.sleep(0.2)
+    raise ValueError("display did not become ready: " + reason)
+
+
+def write_display_units(output: Path) -> dict[str, object]:
+    from shaderlod_host.storage import publish_bytes
+
+    root = project_root()
+    if not output.resolve().is_relative_to(root / ".local"):
+        raise ValueError(
+            "generated service files require repository-local .local storage"
+        )
+    templates = json.loads(
+        (root / "shaderlod_host/templates/systemd-units.json").read_bytes()
+    )
+    written = []
+    for name, template in templates.items():
+        data = template.replace("@REPOSITORY@", str(root)).encode()
+        path = output / name
+        if path.exists():
+            if path.read_bytes() != data:
+                raise ValueError(
+                    "service output changed; preserve it and choose a fresh output directory"
+                )
+        else:
+            publish_bytes(path, data)
+        written.append(str(path))
+    return {
+        "files": written,
+        "registration": "link these unit files with systemctl --user; existing configuration requires backup and coordination",
+    }
 
 
 def executable_inputs(
@@ -127,13 +239,8 @@ def read_functional(path: Path) -> tuple[dict[str, object] | None, str | None]:
 def attempt_receipt(requested: Path | None, repository: Path, mode: str) -> Path:
     if requested is None:
         stamp = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())
-        requested = evidence_root() / "attempts" / f"{stamp}-{mode}.json"
-    resolved = requested.resolve()
-    if resolved.is_relative_to(repository.resolve()):
-        raise ValueError(
-            "receipts belong outside the repository; omit --receipt to use "
-            + str(evidence_root() / "attempts")
-        )
+        requested = evidence_root(repository) / "attempts" / f"{stamp}-{mode}.json"
+    resolved = validate_artifact_path(requested, repository)
     if resolved.exists() or resolved.with_suffix("").exists():
         raise ValueError("receipt already exists; choose a new --receipt or omit it")
     resolved.parent.mkdir(parents=True, exist_ok=True)
@@ -155,8 +262,9 @@ def benchmark_session(
     if sys.platform not in {"linux", "win32"} or not 1 <= timeout <= 14400:
         raise ValueError("Linux/Windows session with 1–14400 second deadline required")
     root = Path(__file__).resolve().parents[1]
-    if session.exists() or session.resolve().is_relative_to(root):
-        raise ValueError("fresh external session directory required")
+    session = validate_artifact_path(session, root)
+    if session.exists():
+        raise ValueError("fresh session directory required")
     if not world or world in {".", ".."} or "/" in world or "\\" in world:
         raise ValueError("single prepared world name required")
     if not profile.is_dir() or not (profile / "saves" / world).is_dir():
@@ -1086,8 +1194,9 @@ def campaign_attempts(
 def freeze_windows_runtime(legacy: Path, output: Path, root: Path) -> dict[str, object]:
     from shaderlod_host.storage import publish_bytes, replace_bytes
 
-    if os.name != "nt" or output.exists() or output.resolve().is_relative_to(root):
-        raise ValueError("fresh external native Windows runtime destination required")
+    output = validate_artifact_path(output, root)
+    if os.name != "nt" or output.exists():
+        raise ValueError("fresh native Windows runtime destination required")
     manifest_path = root / "build/moddev/windows-launch.json"
     manifest = json.loads(manifest_path.read_bytes())
     legacy = legacy.resolve(strict=True)

@@ -4,11 +4,11 @@ Use [benchmark sessions](benchmarks.md) to reuse a ready client and world. Frame
 
 ```
 python3 -m shaderlod_host profile --spec benchmarks/profiles/frame.json --plan
-python3 -m shaderlod_host profile --spec benchmarks/profiles/frame.json --session /external/session --output-root /external/fresh-profile
-python3 -m shaderlod_host profile --spec benchmarks/profiles/stages.json --session /external/session --output-root /external/fresh-stage-profile
-python3 -m shaderlod_host verify --result /external/fresh-profile/receipt.json
-python3 -m shaderlod_host report --result /external/fresh-profile/receipt.json --output-root /external/fresh-render
-python3 -m shaderlod_host report --frames /external/frames.jsonl --output-root /external/fresh-import
+python3 -m shaderlod_host profile --spec benchmarks/profiles/frame.json --session .local/artifacts/session --output-root .local/artifacts/fresh-profile
+python3 -m shaderlod_host profile --spec benchmarks/profiles/stages.json --session .local/artifacts/session --output-root .local/artifacts/fresh-stage-profile
+python3 -m shaderlod_host verify --result .local/artifacts/fresh-profile/receipt.json
+python3 -m shaderlod_host report --result .local/artifacts/fresh-profile/receipt.json --output-root .local/artifacts/fresh-render
+python3 -m shaderlod_host report --frames .local/artifacts/frames.jsonl --output-root .local/artifacts/fresh-import
 ```
 
 Open `report.html` locally without a server or network. It offers frame-time/FPS and optional CPU/GPU stage tracks, time selection, panning, point tooltips, route markers, a selected-interval stage table and CSV export. `summary.json`, `observation.json` and exact `frames.jsonl` support agents without HTML scraping. Raw spikes and gaps remain visible. Orange markers identify diagnostic submissions; periodic timing spikes may be observer effects, not shader behavior. An imported stream has no newly established live provenance. `report --result` verifies preserved evidence and writes a separate current rendering with source/renderer identities. Original reports and raw records remain unchanged. Comparison derivatives link back to raw source assets; campaign derivatives use the history view. Complete frame streams show zero-throughput bins during a stall; missing observations never become invented zero timings. Receipt verification checks file identity and frame reduction, not qualification by itself.

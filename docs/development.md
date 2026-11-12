@@ -15,18 +15,20 @@ git config core.hooksPath .githooks
 ```
 
 The first check acquires and verifies the pinned JDK, Gradle and Python tools;
-subsequent runs reuse user-local caches. See [dependencies](dependencies.md) for
+subsequent runs reuse ignored repository-local caches. See [dependencies](dependencies.md) for
 pins and repair/update paths. Run `./check --full` for the complete portable gate.
 To build a development JAR after setup, use the pinned JDK:
 
 ```
-JAVA_HOME=~/.local/share/shaderlod-jdks/jdk-21.0.13+9 ./gradlew --no-daemon jar
+JAVA_HOME="$PWD/.local/tools/jdks/jdk-21.0.13+9" ./gradlew --no-daemon jar
 ```
 
 The shipping JAR is `build/libs/shaderlod-0.1.0.jar`. The development probe JAR is
 separate and is not a distribution artifact. Live profiles, worlds and captures
-are external inputs prepared through [runtime](runtime.md) and [benchmarks](benchmarks.md).
-A source clone does not include those artifacts.
+are ignored local working inputs prepared through [runtime](runtime.md) and [benchmarks](benchmarks.md).
+A source clone does not include those artifacts. Keep project-owned persistent data
+inside this checkout; the [storage layout](results.md#where-evidence-lives) distinguishes
+tracked findings, working resources and disposable outputs.
 
 ## Topic map
 
