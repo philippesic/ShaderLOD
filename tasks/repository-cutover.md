@@ -31,7 +31,8 @@ removed after checking its tip was retained on main. The subsequent trailer clea
 rewrites 31 newer commit IDs without source-tree changes; results/sources/commit-id-map.json
 maps the original identities, which remain recoverable in the published-main bundle.
 Legacy published branch tips are unchanged. Verified recovery bundles preserve both repositories; the legacy bundle
-was restored and checked, including all 820 refs.
+was restored and checked, including all 820 refs at cutover. The final refreshed recovery bundle also restores
+all 823 refs present at extraction closeout, with fsck passing.
 
 A fresh clone from GitHub passed ./check --full: 99 Gradle tasks executed, none reused
 at task level, 104 Python and 38 Java tests passed. Downloaded tools and lower-level
@@ -54,7 +55,11 @@ With both old locations hidden, the offline verifier passes, all 2,939 Git-backe
 source variants recover with matching SHA-256, and the calibration figure regenerates
 byte-identically. The isolated full gate passes (11 tasks executed/88 reused; 104
 Python tests executed). A final byte audit checked all 184,669 current old-checkout
-entries outside .git with zero differences. Neither old directory has been deleted. Keep the new repository's prepared runtime profiles/evidence and small Git
+entries outside .git with zero differences. A fresh GitHub clone, with both old
+locations hidden, passed the evidence verifier, a deliberate corruption rejection,
+all source recovery and ./check --full (99 tasks executed/0 reused; 104 Python and
+38 Java tests passed; lower-level dependency/tool caches reused). Neither old
+directory has been deleted. Keep the new repository's prepared runtime profiles/evidence and small Git
 recovery bundles outside the old-directory retirement scope.
 
 Cutover receipts, audit, recovery bundles and clean-clone check log are under
@@ -63,9 +68,10 @@ Rename, T3 workspace change and old-checkout deletion have not been performed.
 Long-term hardware and independent backup setup remain separate decisions.
 
 ## Next
-Publish the verified extraction and confirm its evidence/source recovery from a
-fresh remote clone. Extraction scope, retained-data integrity and intentional omissions
-belong in results/historical-evidence-extraction/result.md.
+Historical extraction and verification are complete. Scope, retained-data integrity,
+source recovery and intentional omissions are in
+results/historical-evidence-extraction/result.md. No further historical-artifact
+extraction is a prerequisite to retiring the old directories within that scope.
 
 When Philip requests the final switch, confirm both checkouts have no new active work
 or owned processes, recheck preservation of any changes since this audit, rename the

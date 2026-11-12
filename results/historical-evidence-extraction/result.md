@@ -42,3 +42,7 @@ Run `python3 results/historical-evidence-extraction/verify.py` from a full sourc
 [Isolated verification and check coverage](verification.json) sha256:af04506d17127ebc5dc9fd26c85131149bf6495e512c4411495b2c5781c3e99a
 
 [Final old-checkout byte audit](old-checkout-audit.json) sha256:6bde95fdcbb69606383f12bf5d9ac255aaed8b150bceb58fb229053dd233c00e
+
+[Fresh GitHub clone validation](published-validation.json) sha256:900ec2fc6e4639950ba7cb98dac57f1aac81191ee9521facecb03b343e6bcbe5
+
+[Final legacy Git recovery](git-recovery.json) sha256:200a0c139f4cc4676063723149f8fbb2e050b2044768978985da53d30af37a3b

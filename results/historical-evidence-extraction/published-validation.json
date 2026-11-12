@@ -1,0 +1,33 @@
+{
+  "schema": "shaderlod-published-historical-evidence-check-v1",
+  "source": "git@github.com:philippesic/ShaderLOD.git",
+  "commit": "49ee3097bf02d7a1db902a40f7c57547ecff8157",
+  "old_locations_hidden": true,
+  "retained_evidence_verifier": "PASS",
+  "corrupted_retained_file": "REJECTED",
+  "clone_restored_clean": true,
+  "git_source_blobs_sha256_verified": 2939,
+  "portable_gate": {
+    "command": "./check --full",
+    "result": "PASS",
+    "gradle_tasks_executed": 99,
+    "gradle_tasks_reused": 0,
+    "python_tests_passed": 104,
+    "java": {
+      "tests": 38,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "limits": "Downloaded tools, JDK/Gradle/Python artifacts and lower-level compilation/dependency caches reused; no live game or GPU measurement."
+  },
+  "old_checkout_byte_audit": {
+    "entries": 184669,
+    "differences": 0
+  },
+  "source_recovery": {
+    "main_git_blobs": 2939,
+    "additional_source_records": 24,
+    "all_sha256_verified": true
+  }
+}
