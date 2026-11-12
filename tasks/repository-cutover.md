@@ -15,24 +15,40 @@ No raw archive deletion or force-push is authorized.
 ## Done when
 Remote main contains the exact reviewed new tree and both prior histories, old branch
 history remains recoverable after branch removal, a fresh published clone passes
-portable setup/checks, and remaining workspace/deletion actions have clear prerequisites.
+portable setup/checks, and Philip's later workspace switch and old-checkout retirement
+are complete without removing required artifacts.
 
 ## State
-Owner: this conversation, main in /home/philip/ShaderLOD-next. Both working checkouts
-were clean before changes. The original remote has main and rtx5080-audit; the new
-repository started with an independent Git root. Guidance/skills and benchmark work
-are complete. Long-term hardware and backup setup remain separate decisions.
+Owner: this conversation, main in /home/philip/ShaderLOD-next, tracking the existing
+user-owned GitHub origin. Main now contains the rebuilt tree and both independent
+histories through a normal fast-forward push. The remote rtx5080-audit branch was
+removed after checking its tip was retained on main. Original cited commit IDs remain
+reachable. Verified recovery bundles preserve both repositories; the legacy bundle
+was restored and checked, including all 820 refs.
+
+A fresh clone from GitHub passed ./check --full: 99 Gradle tasks executed, none reused
+at task level, 104 Python and 38 Java tests passed. Downloaded tools and lower-level
+dependency caches were reused. This documentation cutover adds no live rendering or
+performance claim. The README is user-focused; contributor setup/navigation lives in
+docs/development.md. Completed agent-operations work no longer has an active task.
 
 The retained artifact snapshot at
 /home/philip/.local/share/shaderlod-next/evidence/history/original-repository holds
-original source, Git history and ignored evidence. Readable results do not replace
-raw measurements and reproduction inputs. Verify current working files against this
-snapshot before recommending removal of /home/philip/ShaderLOD. Preserve any new or
-changed valuable material separately rather than rewriting the historical snapshot.
+original source, Git history and ignored evidence. The current old checkout's 184,669
+regular files and symlinks outside .git all matched this snapshot, with no missing or
+changed entries. Git preservation was checked separately. No symlink from the new
+checkout resolves into the old checkout. Readable results do not replace raw
+measurements and reproduction inputs; keep this archive after deleting the working
+checkout. These copies share a disk and are not an independent disaster backup.
+
+Cutover receipts, audit, recovery bundles and clean-clone check log are under
+/home/philip/.local/share/shaderlod-next/evidence/repository-cutover-fkco2lv0.
+Rename, T3 workspace change and old-checkout deletion have not been performed.
+Long-term hardware and independent backup setup remain separate decisions.
 
 ## Next
-Preserve verified Git recovery bundles, audit the old working tree against retained
-artifacts, validate the new source from a clean clone, and publish a tree-preserving
-cutover commit retaining both legacy branch tips. Verify remote main before removing
-the legacy branch. Leave rename, T3 project selection and old-working-checkout deletion
-with the planned later cutover; retain the external evidence archive.
+When Philip requests the final switch, confirm both checkouts have no new active work
+or owned processes, recheck preservation of any changes since this audit, rename the
+new checkout and select it in T3, then retire the old working checkout. Keep the raw
+artifact archive and recovery bundles. Validate path-sensitive setup after the rename
+and remove this task and its AGENTS navigation when the switch is finished.

@@ -69,7 +69,8 @@ steers the task; it does not erase its objective or existing authorization.
 | Home | Owns |
 | --- | --- |
 | `AGENTS.md` | Local boundaries and routing every agent needs |
-| `README.md` | Introduction, setup and topic navigation |
+| `README.md` | Product introduction, requirements and usage |
+| `docs/development.md` | Contributor setup, topic navigation and development procedure |
 | `docs/architecture.md` | Current ownership, behavior and supported entry points |
 | `docs/checks.md` | Validation selection, coverage and failure repairs |
 | Other topic docs | Current detailed mechanics and their maintained commands |
