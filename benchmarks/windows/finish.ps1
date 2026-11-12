@@ -4,7 +4,7 @@ param(
 )
 $ErrorActionPreference='Stop'
 $task=Get-ScheduledTask -TaskName $TaskName
-if (-not $TaskName.StartsWith('ShaderLODNext-') -or $task.State -eq 'Running') { throw 'Owned, quiescent ShaderLODNext task required' }
+if (-not $TaskName.StartsWith('ShaderLOD-') -or $task.State -eq 'Running') { throw 'Owned, quiescent ShaderLOD task required' }
 $owned=$false
 foreach ($action in $task.Actions) {
     if ($action.Arguments.Contains($Repository+'\benchmarks\windows\session.ps1') -or $action.Arguments.Contains($Repository+'\benchmarks\windows\campaign.ps1')) { $owned=$true }

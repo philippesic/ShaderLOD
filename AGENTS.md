@@ -1,7 +1,8 @@
-# ShaderLOD-next
+# ShaderLOD
 
 A NeoForge 1.21.1 client mod that selects Iris packs natively and applies optional
-optimization modules. Global working preferences apply; this file owns local
+optimization modules. The canonical checkout is `/home/philip/ShaderLOD`.
+Global working preferences apply; this file owns local
 correctness boundaries and navigation. Confirm the target checkout before work.
 
 ## Start with the assigned work
@@ -58,12 +59,12 @@ global instructions and project mechanics in their topic docs.
   maintained recovery paths and preserve active/shared work.
 - No scheduler, GPU lease service or automatic evidence expiry. Cleanup follows
   global ownership rules and the [result specification](docs/results.md). Temporary
-  raw outputs live under `~/.local/share/shaderlod-next/evidence`; closeout extracts
+  raw outputs live under `~/.local/share/shaderlod/evidence`; closeout extracts
   compact evidence into results/ and removes superseded bulky outputs within scope.
 - The established user-owned origin is `git@github.com:philippesic/ShaderLOD.git`.
   Commit coherent checkpoints and push under the global publishing convention.
-  Preserve legacy history during the agreed main-branch cutover; never force-push.
+  Preserve implementation history; never force-push.
 
-Active transition: [repository cutover](tasks/repository-cutover.md). The long-term
+Remaining old-directory cleanup: [repository cutover](tasks/repository-cutover.md). The long-term
 [machine choice](tasks/machine-choice.md) remains separate. Tasks are context, not
 unrelated assignments.

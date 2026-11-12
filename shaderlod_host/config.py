@@ -26,7 +26,7 @@ def display_environment(path: Path) -> dict[str, str]:
 
 def evidence_root() -> Path:
     data = os.environ.get("XDG_DATA_HOME") or str(Path.home() / ".local/share")
-    return Path(data) / "shaderlod-next/evidence"
+    return Path(data) / "shaderlod/evidence"
 
 
 def worker_environment(overrides: dict[str, str] | None = None) -> dict[str, str]:

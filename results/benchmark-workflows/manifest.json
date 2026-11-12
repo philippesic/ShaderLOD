@@ -1,6 +1,6 @@
 {
   "schema": "shaderlod-selected-evidence-manifest-v1",
-  "artifact_root": "/home/philip/.local/share/shaderlod-next/evidence",
+  "artifact_root": "/home/philip/.local/share/shaderlod/evidence",
   "scope": "Compact entrance to selected result, receipt, capture and source identities. The complete selected inventory stays external. Quality records identify PNGs; comparison records identify original archives. Not an exhaustive inventory of every pilot.",
   "records": [
     {

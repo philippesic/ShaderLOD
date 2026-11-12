@@ -17,7 +17,7 @@ def test_default_receipt_is_outside_repository(
     repository = tmp_path / "repo"
     repository.mkdir()
     receipt = attempt_receipt(None, repository, "without-dh")
-    assert receipt.parent == tmp_path / "data/shaderlod-next/evidence/attempts"
+    assert receipt.parent == tmp_path / "data/shaderlod/evidence/attempts"
     assert receipt.name.endswith("-without-dh.json")
     assert receipt.parent.is_dir()
 
