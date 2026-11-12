@@ -175,7 +175,7 @@ def main() -> int:
     envdir = cache / ("py313-" + digest(pylock)[:16])
     stamp = envdir / "ready"
     if not stamp.exists():
-        venv.create(envdir, with_pip=True)
+        venv.create(envdir, with_pip=True, symlinks=True)
         subprocess.run(
             [
                 str(envdir / "bin/python"),

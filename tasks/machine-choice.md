@@ -16,7 +16,11 @@ source checkout, maintained commands and required live assets are verified there
 ## State
 Philip selected RTX 2080 Ti (WSL) as the primary T3/development machine, with
 Asahi secondary. Both source checkouts use /home/philip/ShaderLOD and the same
-established origin. T3 registration and source synchronization are being verified.
+established origin. T3 registration, icon and source synchronization are verified. Asahi and Mac
+registrations are archived secondary/history; RTX 2080 Ti is the active pinned
+project. Python 3.13.2 is installed inside the primary checkout. Its cold portable
+check exposed a copied-venv shared-library failure; the maintained bootstrap now
+uses symlinks and the corrected cold path is being checked.
 This selection does not establish a newly prepared or qualified live runtime. Native Windows supervision, prepared
 runtime/profile reuse and cross-host evidence transfers are implemented and exercised.
 Benchmark controls passed on RTX 2080 Ti at its observed native 1024x768 surface and

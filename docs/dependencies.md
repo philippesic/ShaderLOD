@@ -1,6 +1,6 @@
 # Dependencies and pins
 
-The maintained check tools and runtime dependency sets are pinned by digest. `./check` and `./verify` bootstrap them into ignored repository-local storage: `.local/tools/cache` for acquired tools and wheels, `.local/tools/jdks` for the JDK, and `.local/gradle` for Gradle distributions and dependencies and verify each hash before use. First acquisition needs network; later runs reuse the caches. Both bootstrap and the wrapper default to this local Gradle home. Bootstrap also puts pip downloads under `.local/tools/cache/pip`. Generic user-wide caches may serve other projects; ShaderLOD does not require or clean them.
+The maintained check tools and runtime dependency sets are pinned by digest. `./check` and `./verify` bootstrap them into ignored repository-local storage: `.local/tools/cache` for acquired tools and wheels, `.local/tools/jdks` for the JDK, and `.local/gradle` for Gradle distributions and dependencies and verify each hash before use. First acquisition needs network; later runs reuse the caches. Checker virtual environments link their base interpreter so project-local standalone Python installations retain their shared-library lookup. Both bootstrap and the wrapper default to this local Gradle home. Bootstrap also puts pip downloads under `.local/tools/cache/pip`. Generic user-wide caches may serve other projects; ShaderLOD does not require or clean them.
 
 | File | Pins |
 | --- | --- |
