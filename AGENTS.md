@@ -47,9 +47,10 @@ belong to [results and closeout](docs/results.md#result-presentation-and-closeou
 
 ## Project resources
 
-- Bounded live work on the allocated Asahi display is permitted within the assigned
-  scope. Other hardware needs an explicit allocation for that work; historical runs
-  do not grant one. RTX 5080 is not allocated.
+- Bounded live development work on the primary RTX 2080 Ti and allocated Asahi
+  display is permitted within the assigned scope, with ownership checks from the
+  runtime guide. Other hardware needs an explicit allocation; historical runs do
+  not grant one. RTX 5080 is not allocated.
 - Runtime ownership and recovery follow the
   [runtime guide](docs/runtime.md#process-ownership).
 - Project-owned persistent state stays inside this checkout. Temporary outputs use

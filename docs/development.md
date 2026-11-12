@@ -11,7 +11,9 @@ RTX 2080 Ti (WSL) is the primary development machine; Asahi is secondary. Each
 has its own `/home/philip/ShaderLOD` checkout of the established origin. Push source
 changes before switching machines and fast-forward a clean destination checkout.
 Ignored tools, prepared clients/worlds and host setup are local resources, not part
-of Git synchronization. A source checkout alone does not qualify a runtime or GPU.
+of Git synchronization. A source checkout alone does not qualify a runtime or GPU. On the 2080 Ti, editing
+and portable checks run in WSL; GPU benchmarks use the maintained native Windows
+supervision and preparation path in [benchmarks](benchmarks.md).
 
 T3 uses the primary machine’s pinned ShaderLOD project. Secondary/historical project
 registrations retain their threads and point to their own checkouts. The shared
@@ -22,7 +24,10 @@ project favicon is tracked at `assets/shaderlod.svg`.
 Use Python 3.13 and Git. If the host has a different Python version, install a
 project-local 3.13 interpreter at `.local/tools/python/bin/python3`; `./check` and
 `./verify` prefer it without changing the system Python. On the 2080 Ti this points
-to the local uv-managed Python 3.13.2 installation. Enable the local hook once per clone:
+to the project-local standalone Python 3.13.2 installation. Use that interpreter
+for guide commands written as `python3` too, or put its `bin` directory first in
+that terminal’s PATH. This does not require changing global shell settings.
+Enable the local hook once per clone:
 
 ```
 git config core.hooksPath .githooks
