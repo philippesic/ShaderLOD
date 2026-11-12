@@ -1,7 +1,8 @@
 # ShaderLOD
 
 A NeoForge 1.21.1 client mod that selects Iris packs natively and applies optional
-optimization modules. The canonical checkout is `/home/philip/ShaderLOD`.
+optimization modules. The primary development machine is RTX 2080 Ti (WSL),
+with an Asahi secondary checkout. Both use `/home/philip/ShaderLOD`.
 Global AGENTS.md owns working preferences and authorization; this file adds project
 navigation and correctness boundaries.
 

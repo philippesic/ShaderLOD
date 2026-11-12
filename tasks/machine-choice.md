@@ -14,7 +14,10 @@ Philip selects the ongoing development machine and allocation, and its intended
 source checkout, maintained commands and required live assets are verified there.
 
 ## State
-Long-term development placement remains open. Native Windows supervision, prepared
+Philip selected RTX 2080 Ti (WSL) as the primary T3/development machine, with
+Asahi secondary. Both source checkouts use /home/philip/ShaderLOD and the same
+established origin. T3 registration and source synchronization are being verified.
+This selection does not establish a newly prepared or qualified live runtime. Native Windows supervision, prepared
 runtime/profile reuse and cross-host evidence transfers are implemented and exercised.
 Benchmark controls passed on RTX 2080 Ti at its observed native 1024x768 surface and
 Asahi M1 at 2560x1600; see the [workflow qualification](../results/benchmark-workflows/result.md).
@@ -26,7 +29,7 @@ requirement to keep Asahi. Source remote synchronization does not select the fut
 hardware or provision every live asset automatically.
 
 ## Next
-When Philip chooses where development will continue, verify the actual checkout,
+Verify the selected primary machine’s actual checkout,
 runtime and prepared world/profile there using maintained commands. Reuse applicable
 qualification and exercise affected paths after a move. Preserve required evidence
 and inputs; do not repeat the known DH failure without a new hypothesis.

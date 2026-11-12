@@ -117,6 +117,7 @@ def scan(path: str, text: str, entries: list[dict[str, object]]) -> list[str]:
         ".yml": "config",
         ".yaml": "config",
         ".xml": "xml",
+        ".svg": "xml",
         ".html": "xml",
         ".lockfile": "config",
     }.get(suffix)

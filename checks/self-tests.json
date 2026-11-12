@@ -705,6 +705,20 @@
           }
         ]
       }
+    },
+    {
+      "name": "svg-comment",
+      "engine": "comments",
+      "bad": {
+        "files": {
+          "assets/icon.svg": "<svg xmlns=\"http://www.w3.org/2000/svg\"><!-- forbidden --><path fill=\"#abcdef\"/></svg>"
+        }
+      },
+      "control": {
+        "files": {
+          "assets/icon.svg": "<svg xmlns=\"http://www.w3.org/2000/svg\"><path fill=\"#abcdef\"/></svg>"
+        }
+      }
     }
   ],
   "D9": [

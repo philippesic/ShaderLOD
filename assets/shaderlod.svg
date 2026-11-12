@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>ShaderLOD</title>
+  <defs>
+    <linearGradient id="sky" x1="8" y1="4" x2="56" y2="62" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#12334b"/>
+      <stop offset="1" stop-color="#081522"/>
+    </linearGradient>
+    <linearGradient id="terrain" x1="16" y1="25" x2="48" y2="43" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#91f5cd"/>
+      <stop offset="1" stop-color="#2fb7aa"/>
+    </linearGradient>
+  </defs>
+  <rect x="1" y="1" width="62" height="62" rx="15" fill="url(#sky)"/>
+  <rect x="1.5" y="1.5" width="61" height="61" rx="14.5" stroke="#80d9d2" stroke-opacity=".18"/>
+  <circle cx="45" cy="18" r="6" fill="#ffd47a"/>
+  <path d="m11 43 21-10 21 10-21 11z" fill="#163e57"/>
+  <path d="m11 36 21-10 21 10-21 11z" fill="#23798b"/>
+  <path d="m11 29 21-11 21 11-21 11z" fill="url(#terrain)"/>
+  <path d="m11 29 21 11v5L11 34z" fill="#2d9a9e"/>
+  <path d="m32 40 21-11v5L32 45z" fill="#1e697e"/>
+  <path d="m20 25 12-6 12 6-12 7z" fill="#c7ffe4" fill-opacity=".75"/>
+</svg>
