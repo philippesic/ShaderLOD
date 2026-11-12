@@ -10,6 +10,24 @@ A warm `./check` after a one-file edit takes about 5 to 8 seconds. A warm `--ful
 
 `build/reports/foundation/gradle-tasks.json` lists every task as executed, reused, not-run or failed, and labels the run `full` or `partial`. A partial pass is not a full pass, and reused results are not fresh executions. Nothing here grants live-functional or performance evidence.
 
+## Select the evidence needed
+
+| Need | Maintained lane | Limit |
+| --- | --- | --- |
+| Ordinary code, test or documentation edit | `./check` during work; `./check --full` at checkpoints and handoff | Portable correctness only; no live or speed claim |
+| Rendering lifecycle, activation or restoration change | Ready-session `validate`; use `./verify --runtime` when startup or packaged launch behavior also needs exercise | Relevant live functional behavior, not perceptual equivalence |
+| Candidate optimization during development | Short paired `compare`, with separate relevant quality captures | Exploratory evidence; not retention or release acceptance |
+| Explain costly work or frame variation | `profile`, starting with frames and adding diagnostics as needed | Instrumentation can perturb work; spans do not prove exclusive effect costs |
+| Retain a substantial contribution or defend a release | Frozen `qualify` protocol, scoped coverage and explicit quality review | Only the declared candidate, policy and supported envelope |
+| Recheck preserved evidence or rebuild its view | Offline `verify`, `report` or `history` | Integrity or a derived view; no new runtime observations |
+
+Detailed invocation, costs, ownership and recovery belong in the
+[benchmark guide](benchmarks.md), [profiler guide](profiling.md) and
+[standalone runtime guide](runtime.md). Select affected cases rather than launching
+all lanes after every change. Changes to measurements need affected instrument and
+analysis checks; changes only to prose do not require fresh GPU evidence. Exclusions,
+failed attempts and missing integration coverage remain explicit.
+
 ## Tests
 
 Add Python tests under `tests/` and Java tests under `src/test/java`; discovery picks them up. `checks/tests.json` lists required test names that must exist and pass; ordinary new tests need no entry. Failed, skipped or zero-test suites fail the check.
@@ -20,7 +38,7 @@ Each failure starts with a rule ID. Fix the cause; do not weaken the rule. A rul
 
 | Rule | Rejects | Fix |
 | --- | --- | --- |
-| D1 | Live evidence labels without runtime-owned verification; bare `./verify --runtime` | Produce live evidence through `./verify --runtime` with explicit allocation arguments; keep synthetic labels |
+| D1 | Live evidence labels without runtime-owned verification; bare `./verify --runtime` | Use runtime-owned receipts from maintained live workflows; standalone `./verify --runtime` requires explicit allocation arguments. Keep CPU evidence scoped |
 | D3 | File writes outside the storage, runtime and check owners | Publish results through `shaderlod_host.storage.publish` or `checks/publisher.py` |
 | D5 | Measurements without a count, missing values without a reason, unknown health | Use `Measured` with a positive count or `Missing` with a reason; health is PASS or FAIL |
 | D6a | Broad `catch`/`except` | Catch the specific exception, or add an exact failure adapter that rethrows or returns `"unavailable"` |

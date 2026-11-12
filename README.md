@@ -30,11 +30,15 @@ None yet. Agent rules and the documentation map are in [AGENTS.md](AGENTS.md).
 ## Navigation
 
 - [Benchmarks](docs/benchmarks.md): fast validation, one-minute comparisons, qualification and recovery.
+- [Optimize skill](skills/optimize/SKILL.md): investigate, implement and evaluate an optimization.
 - [Benchmark skill](skills/benchmark/SKILL.md): the maintained agent measurement procedure.
 - [Profiling](docs/profiling.md): interactive timelines, structured data and pack mappings.
 - [Optimization direction](docs/optimization-philosophy.md): one reusable product and perceptual quality.
 - [Architecture](docs/architecture.md): how the project works.
-- [Development](docs/development.md): changing and validating it.
+- [Development](docs/development.md): changing, maintaining and closing work.
+- [Checks](docs/checks.md): selecting validation and repairing failures.
+- [Iris integration](docs/iris-integration.md): activation, native settings and compatibility.
+- [Dependencies](docs/dependencies.md): pins and the supported update path.
 - [Results](docs/results.md): result format and closeout rules.
 - [FINDINGS](FINDINGS.md): established conclusions and supporting results.
 - [Tasks](tasks/README.md): unfinished-work convention.

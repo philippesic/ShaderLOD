@@ -31,7 +31,17 @@ Compilation is not a level. A live level needs a runtime receipt. Missing data s
 
 ## Result presentation and closeout
 
-Use the shared `close-results` skill; its tracked source is `skills/close-results/SKILL.md`. This document is the project specification it reads.
+Use the tracked [close-results procedure](../skills/close-results/SKILL.md).
+Its canonical shared source is p-stack `policy/skills/close-results/SKILL.md`, pinned
+here to revision `0a8b4561f5af1cb7adc6238c0e171d38e0298c4c`. This document owns the
+project's result format, validation and cleanup boundaries; shared procedure changes
+do not set ShaderLOD acceptance criteria.
+
+To update the pinned copy, compare the canonical revision with the tracked skill,
+review it against this specification, copy the approved bytes and update this
+revision together. Validate the skill and local links, run the project gate and
+commit both files. Keep shared improvements in p-stack rather than editing two
+independent procedures. Global p-stack sync does not update this project copy.
 
 A result starts with a finding-led title and a short explanation of what happened and why it matters. Include a useful chart for measurements or a small table for functional outcomes. State tested conditions, limitations, evidence level, and the decision: retain, revise, discard or unresolved. Separate observations from causes and from acceptance decisions. An unresolved result names what evidence would resolve it. Failed investigations receive the same treatment as successful ones. Do not create a result for every routine check.
 

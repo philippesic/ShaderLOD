@@ -1,6 +1,6 @@
 # Optimization modules
 
-Follow [optimization direction](optimization-philosophy.md) and the [benchmark skill](../skills/benchmark/SKILL.md) before choosing a mechanism or claiming support.
+Follow [optimization direction](optimization-philosophy.md) and the [optimize skill](../skills/optimize/SKILL.md) before choosing a mechanism or claiming support.
 
 No optimization exists yet. Start one only from measured work, which needs the profiler and benchmark workflow in [benchmark workflows](benchmarks.md). The development identity provider proves loading, not a speedup.
 
