@@ -15,9 +15,14 @@ of Git synchronization. A source checkout alone does not qualify a runtime or GP
 and portable checks run in WSL; GPU benchmarks use the maintained native Windows
 supervision and preparation path in [benchmarks](benchmarks.md).
 
-T3 uses the primary machine’s pinned ShaderLOD project. Secondary/historical project
-registrations retain their threads and point to their own checkouts. The shared
-project favicon is tracked at `assets/shaderlod.svg`.
+The 2080 Ti T3 project is pinned, while secondary/historical registrations retain
+their threads and point to their own checkouts. Pinning and archiving do not set
+new-thread routing: the current Mac T3 client inherits the current thread or draft’s
+machine, and grouped repositories may still select an archived representative.
+Explicitly select RTX 2080 Ti in the new draft’s machine selector before submitting.
+A persistent ShaderLOD-specific machine default is not configured; see the
+[T3 routing task](../tasks/t3-default-machine.md). The shared project favicon is
+tracked at `assets/shaderlod.svg`.
 
 ## Setup
 
