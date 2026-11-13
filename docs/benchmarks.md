@@ -22,7 +22,7 @@ Every capture summary carries two readouts. Read them before the FPS.
 
 `half_window_drift` is the throughput change from the first half of a window to the second. Selecting an arm reloads the shader pipeline, and on Asahi a window opened one second later ran about 8% fast for four to five seconds before settling. The tracked development comparisons therefore wait eight seconds. Keep `warmup_ms` long enough to cover the reload on the machine in use, and treat a large drift on a fixed or slowly panning scene as an unsettled window, not an effect. A route through changing scenery drifts for legitimate reasons: compare its arms, not its halves.
 
-Asahi held no-change pairs within about 0.25% for roughly the first 100 seconds of sustained capture and became erratic afterwards. Keep its comparisons short and let it rest between sessions; a long campaign there needs its own stability evidence first.
+Asahi held no-change pairs within about 0.25% for about the first two minutes of sustained capture and became erratic afterwards. Keep its comparisons short and let it rest between sessions; a long campaign there needs its own stability evidence first.
 
 ## Prepare and own a session
 

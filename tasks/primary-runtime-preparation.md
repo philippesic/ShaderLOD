@@ -27,12 +27,17 @@ native Windows controls passed at their observed 1024x768 surface; see the
 [workflow result](../results/benchmark-workflows/result.md). The new source checkout
 has not acquired a freshly validated native Windows client/world in this setup.
 Asahi's original Reimagined with enabled DH remains sampler-limited; no-DH evidence
-does not replace it.
+does not replace it. Every earlier RTX 2080 Ti window without an injected delay
+sat at the 60 FPS frame limiter, and the GPU was about a third busy at 1024×768
+([F48](../FINDINGS.md)), so that configuration cannot show a speedup.
 
 ## Next
 Before the first live optimization run, inspect current native Windows assets and
 ownership, prepare the intended slot through maintained benchmark commands, and run
-bounded lifecycle validation. Keep persistent project inputs/artifacts inside its
+bounded lifecycle validation. Set the prepared profile's frame limiter to Unlimited
+with vsync off, choose a surface where the GPU is the bottleneck, and run an
+unchanged-shader comparison to learn what size of effect the machine resolves. Keep
+persistent project inputs/artifacts inside its
 checkout and preserve useful originals during adoption. Reuse applicable historical
 qualification with explicit limits; do not repeat the known Asahi DH failure without
 a new hypothesis.

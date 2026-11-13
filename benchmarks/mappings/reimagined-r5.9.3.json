@@ -5,8 +5,8 @@
   "required_options": {"SHADOW": "true", "GBUFFERS_TERRAIN": "true"},
   "labels": [
     {"namespace": "shadow/", "label": "Shadow scene rendering (combined)", "programs": ["shaders/world0/shadow.vsh", "shaders/world0/shadow.fsh"]},
-    {"namespace": "main/", "label": "Main scene rendering (multiple shared programs)", "programs": ["shaders/world0/gbuffers_terrain.fsh", "shaders/world0/gbuffers_water.fsh"]}
+    {"namespace": "main/", "label": "Main scene rendering with deferred, composite and final passes (combined)", "programs": ["shaders/world0/gbuffers_terrain.fsh", "shaders/world0/gbuffers_water.fsh"]}
   ],
   "source": "Original r5.9.3 archive; public Iris shadow-pass state and NeoForge render-stage boundaries",
-  "limits": "Intervals between public boundaries may include multiple programs and engine work. Composite/post effects outside these boundaries remain combined or unmapped. No AO/reflection split, additive total or exclusive GPU occupancy claim. Option/dimension/graph changes require admission."
+  "limits": "Intervals between public boundaries may include multiple programs and engine work. Iris runs its deferred passes before translucent terrain and its composite and final passes before the after-level boundary, so the intervals ending at after_translucent_blocks and after_level contain that post-processing together with scene geometry. No per-pass, AO or reflection split, additive total or exclusive GPU occupancy claim. Option/dimension/graph changes require admission."
 }

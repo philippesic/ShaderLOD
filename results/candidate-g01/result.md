@@ -17,6 +17,8 @@ Evidence level: source-inspected historical import. Asahi at native 2560×1600 a
 
 Discard from active implementation under the final retention decision. Revisit only with a changed mechanism, stronger correctness evidence or a deliberately revised acceptance scope; do not re-enable it solely because one cell improved.
 
+2026-11-12 correction: the original decision parked this candidate; it did not discard it. On MakeUp it removed a dead frame copy and gained 3.24% on RTX 5080 (two processes, SD 0.04) and 8.14% on Asahi (four runs, SD 1.78). Reimagined, Unbound and BSL were never measured: each was held because nobody had shown that the copied buffer is unused afterwards in that pack. The RTX 5080 conclusion kept the MakeUp result as a scoped experimental gain. It failed the keep rule only because a held cell did not count as positive. Reason for the correction: the import recorded a scoped gain as a discard.
+
 ## Evidence and executed source
 
 [asahi-campaign-conclusions.json](../sources/asahi-campaign-conclusions.json) sha256:c18e64071107702e72a05b5a9c58fb6352f3d528b15d6cd272f631b4661c1e9c

@@ -4,7 +4,7 @@ Current answers within their stated scope. Read the linked result before applyin
 
 | ID | Conclusion | Result |
 | --- | --- | --- |
-| F1 | None of the sixteen historical candidates met the original keep bar; implementations remain in Git history | [Result](results/historical-optimization-retention/result.md) |
+| F1 | None of the sixteen historical candidates met the 2026-11-08 keep rule: positive on all four packs and both machines. All were parked, three with scoped gains (F11, F12, F22); implementations remain in Git history | [Result](results/historical-optimization-retention/result.md) |
 | F2 | Unchanged-shader null runs varied from −9.70% to +10.24%, so the calibration failed; a ~3% effect cannot be detected with that setup | [Result](results/asahi-null-calibration/result.md) |
 | F3 | Bounded tasks, uploads, residency, hooks and restoration worked in original-pack runs | [Result](results/dh-observation-hooks/result.md) |
 | F4 | GPU timing covered only 39 of 162 frame intervals, with unknown health, 43 unresolved queries and one imbalanced scope; it is not a cost breakdown | [Result](results/incomplete-gpu-cost-capture/result.md) |
@@ -19,8 +19,8 @@ Current answers within their stated scope. Read the linked result before applyin
 
 | ID | Conclusion | Result |
 | --- | --- | --- |
-| F11 | G01: Avoid framebuffer copies / identity transfers; no cross-pack/cross-machine qualification. | [Result](results/candidate-g01/result.md) |
-| F12 | G02: Omit unused mip generations / passes; no cross-pack/cross-machine qualification. | [Result](results/candidate-g02/result.md) |
+| F11 | G01: Avoid framebuffer copies / identity transfers. MakeUp gained 3.2% on RTX 5080 and 8.1% on Asahi; the other three packs were never measured. Parked under the all-pack rule. | [Result](results/candidate-g01/result.md) |
+| F12 | G02: Omit unused mip generations / passes. BSL gained 4.0% on RTX 5080; Reimagined and Unbound lost 5.7% and 10.0%. Parked. | [Result](results/candidate-g02/result.md) |
 | F13 | G03: Reject transparent cutout fragments earlier; no cross-pack/cross-machine qualification. | [Result](results/candidate-g03/result.md) |
 | F14 | G04: Skip noncontributing translucent lighting / cloud work; no cross-pack/cross-machine qualification. | [Result](results/candidate-g04/result.md) |
 | F15 | G05: Reflection traversal / depth-query reuse; no cross-pack/cross-machine qualification. | [Result](results/candidate-g05/result.md) |
@@ -30,7 +30,7 @@ Current answers within their stated scope. Read the linked result before applyin
 | F19 | G09: POM height-query reuse / empty-prefix skipping; no cross-pack/cross-machine qualification. | [Result](results/candidate-g09/result.md) |
 | F20 | G10: Reuse identical filter taps; no cross-pack/cross-machine qualification. | [Result](results/candidate-g10/result.md) |
 | F21 | C01: Additional terrain occlusion queries; no cross-pack/cross-machine qualification. | [Result](results/candidate-c01/result.md) |
-| F22 | C02: Hardware coarse shading; no cross-pack/cross-machine qualification. | [Result](results/candidate-c02/result.md) |
+| F22 | C02: Hardware coarse shading. Three packs gained 1.8–2.2% on RTX 5080 as a bloom quality trade-off; Asahi lacks the hardware feature, so the two-machine rule cannot be met. Parked. | [Result](results/candidate-c02/result.md) |
 | F23 | N01: CPU command compaction / admission and scalar caching; no cross-pack/cross-machine qualification. | [Result](results/candidate-n01/result.md) |
 | F24 | N02: Eliminate unused attachments and target pairs; no cross-pack/cross-machine qualification. | [Result](results/candidate-n02/result.md) |
 | F25 | N03: Eliminate terminal copies with dead lifetime; no cross-pack/cross-machine qualification. | [Result](results/candidate-n03/result.md) |
@@ -50,7 +50,7 @@ Current answers within their stated scope. Read the linked result before applyin
 | F34 | The RTX 2080 Ti screen exposed admission gaps and limited single-run evidence. | [Result](results/rtx2080ti-screen/result.md) |
 | F35 | Two RTX 2080 Ti baseline blocks established only bounded functional evidence. | [Result](results/rtx2080ti-baseline/result.md) |
 | F36 | Motion review found no gross defect but did not establish visual equivalence. | [Result](results/rtx5080-rendering-review/result.md) |
-| F37 | Additional work observation did not explain away the RTX regressions. | [Result](results/rtx5080-regression-diagnosis/result.md) |
+| F37 | Additional work observation did not explain the RTX regressions: 22 of 23 measured shader-rewriting cells on Reimagined, Unbound and BSL were slower, and no control separated the rewriting path from the mechanisms. | [Result](results/rtx5080-regression-diagnosis/result.md) |
 | F38 | DH profiling gained live observations but left important boundaries unqualified. | [Result](results/dh-profiling-coverage/result.md) |
 | F39 | Historical benchmark designs and early control comparisons expose measurement limits; optional-stack and in-process controls did not establish consistent gains. | [Result](results/profiling-and-benchmark-design-lessons/result.md) |
 | F40 | Earlier viewport, sampling-phase and runtime-readback mistakes provide concrete test-design lessons; old GL 4.1 sampler-zero/filter claims remain unproven | [Result](results/early-rendering-contract-lessons/result.md) |
@@ -68,7 +68,9 @@ Current answers within their stated scope. Read the linked result before applyin
 
 | ID | Conclusion | Result |
 | --- | --- | --- |
-| F45 | Reused-session validation/comparisons, profiling and frozen campaigns passed scoped RTX 2080 Ti/Asahi controls, including sustained captures and recovery. This qualifies the workflow, not an optimization or universal small-effect sensitivity. | [Result](results/benchmark-workflows/result.md) |
+| F45 | Reused-session validation/comparisons, profiling and frozen campaigns passed scoped RTX 2080 Ti/Asahi controls, including sustained captures and recovery. This qualifies the workflow, not an optimization or universal small-effect sensitivity; F48 limits its speed sensitivity. | [Result](results/benchmark-workflows/result.md) |
+
+| F48 | Every retained RTX 2080 Ti window without an injected delay sat at the 60 FPS frame limiter, so that setup cannot show a speedup. Asahi agrees to about 0.25% on unchanged shaders once the warm-up covers the shader reload, for about two minutes of sustained capture; the later degradation is unexplained. | [Result](results/benchmark-sensitivity-audit/result.md) |
 
 ## Additional historical lessons and extraction
 

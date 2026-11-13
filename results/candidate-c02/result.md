@@ -17,6 +17,8 @@ Evidence level: source-inspected historical import. Asahi at native 2560×1600 a
 
 Discard from active implementation under the final retention decision. Revisit only with a changed mechanism, stronger correctness evidence or a deliberately revised acceptance scope; do not re-enable it solely because one cell improved.
 
+2026-11-12 correction: the original decision parked this candidate; it did not discard it. On RTX 5080 it gained 2.01% on Reimagined, 1.77% on Unbound and 2.24% on BSL (two processes each); MakeUp had no isolated bloom route. It lowers bloom shading rate, so it is a quality trade-off that needs perceptual review, and Asahi's GPU lacks the feature. A rule requiring both machines can therefore never pass it, whatever its merit on hardware that supports it. Reason for the correction: the import recorded a scoped, hardware-gated gain as a discard.
+
 ## Evidence and executed source
 
 [asahi-campaign-conclusions.json](../sources/asahi-campaign-conclusions.json) sha256:c18e64071107702e72a05b5a9c58fb6352f3d528b15d6cd272f631b4661c1e9c

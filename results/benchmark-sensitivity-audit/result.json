@@ -1,0 +1,1032 @@
+{
+ "schema": "shaderlod-benchmark-sensitivity-audit-v1",
+ "date": "2026-11-12",
+ "executed_source": {
+  "base_commit": "62665d3a77a7ba42576be2298b145b4a9a4d11d7",
+  "harness_commit": "3e0c816a6485a813051c7f36e875f1d0c4ec3eb4",
+  "note": "Live sessions ran the working tree at 62665d3 plus the benchmark-readout changes later committed unchanged as 3e0c816. The pinned-heap session also carried two uncommitted JVM flags in linux-arm64.gradle, reverted afterwards."
+ },
+ "retained_evidence": {
+  "corpus": "results/benchmark-workflows/evidence",
+  "frame_limit_states": [
+   {
+    "machine": "asahi",
+    "arm": "delay",
+    "state": "unobserved",
+    "windows": 1
+   },
+   {
+    "machine": "asahi",
+    "arm": "no-delay",
+    "state": "below_limit",
+    "windows": 30
+   },
+   {
+    "machine": "asahi",
+    "arm": "no-delay",
+    "state": "unobserved",
+    "windows": 1
+   },
+   {
+    "machine": "rtx2080ti",
+    "arm": "delay",
+    "state": "below_limit",
+    "windows": 8
+   },
+   {
+    "machine": "rtx2080ti",
+    "arm": "no-delay",
+    "state": "limited",
+    "windows": 20
+   },
+   {
+    "machine": "unidentified",
+    "arm": "delay",
+    "state": "unobserved",
+    "windows": 1
+   },
+   {
+    "machine": "unidentified",
+    "arm": "no-delay",
+    "state": "unobserved",
+    "windows": 3
+   }
+  ],
+  "rtx2080ti_stage_profile": {
+   "source_record": "results/benchmark-workflows/evidence/records-013.json",
+   "frame_ms_p50": 16.7073,
+   "fps": 59.599287192525175,
+   "gpu_ms_sum_of_span_means": 5.682988465225015,
+   "cpu_ms_sum_of_span_means": 3.5786322033898306,
+   "largest_gpu_spans": [
+    {
+     "from": "main/minecraft:after_weather",
+     "to": "main/minecraft:after_level",
+     "gpu_mean_ms": 1.932534779661017
+    },
+    {
+     "from": "frame-start",
+     "to": "shadow/minecraft:after_solid_blocks",
+     "gpu_mean_ms": 1.2365754576271188
+    },
+    {
+     "from": "main/minecraft:after_block_entities",
+     "to": "main/minecraft:after_translucent_blocks",
+     "gpu_mean_ms": 1.0180447457627118
+    },
+    {
+     "from": "main/minecraft:after_sky",
+     "to": "main/minecraft:after_solid_blocks",
+     "gpu_mean_ms": 0.7041594482758621
+    }
+   ]
+  },
+  "asahi_no_change_pairs": [
+   {
+    "source_record": "results/benchmark-workflows/evidence/records-018.json",
+    "case": "natural-translation",
+    "started_unix_ns": 1794441056961537426,
+    "original_fps": 11.532683368384149,
+    "identity_fps": 18.979448642294855,
+    "identity_over_original_minus_one": 0.6457096788354884,
+    "original_per_second_fps": [
+     16.88,
+     10.73,
+     8.93,
+     9.61
+    ],
+    "identity_per_second_fps": [
+     23.32,
+     19.35,
+     18.45,
+     14.88
+    ]
+   },
+   {
+    "source_record": "results/benchmark-workflows/evidence/records-016.json",
+    "case": "natural-translation",
+    "started_unix_ns": 1794441140679212546,
+    "original_fps": 19.39870743649707,
+    "identity_fps": 19.120598198595342,
+    "identity_over_original_minus_one": -0.01433648292352141,
+    "original_per_second_fps": [
+     24.02,
+     20.92,
+     18.93,
+     17.93,
+     17.36,
+     17.34
+    ],
+    "identity_per_second_fps": [
+     25.05,
+     20.5,
+     18.69,
+     17.18,
+     16.05,
+     17.25
+    ]
+   },
+   {
+    "source_record": "results/benchmark-workflows/evidence/records-022.json",
+    "case": "night-rain",
+    "started_unix_ns": 1794441399030063141,
+    "original_fps": 17.41614733559871,
+    "identity_fps": 17.743443698049145,
+    "identity_over_original_minus_one": 0.01879269600466915,
+    "original_per_second_fps": [
+     21.96,
+     18.44,
+     15.41,
+     16.16,
+     15.35
+    ],
+    "identity_per_second_fps": [
+     23.11,
+     17.66,
+     17.61,
+     17.09,
+     13.59
+    ]
+   },
+   {
+    "source_record": "results/benchmark-workflows/evidence/records-016.json",
+    "case": "natural-translation",
+    "started_unix_ns": 1794441660370096504,
+    "original_fps": 17.141610530034882,
+    "identity_fps": 17.041122671567408,
+    "identity_over_original_minus_one": -0.005862218039046185,
+    "original_per_second_fps": [
+     20.84,
+     18.8,
+     17.87,
+     15.42,
+     14.99,
+     15.01
+    ],
+    "identity_per_second_fps": [
+     22.03,
+     18.42,
+     17.75,
+     15.44,
+     15.25,
+     13.44
+    ]
+   },
+   {
+    "source_record": "results/benchmark-workflows/evidence/records-019.json",
+    "case": "natural-translation",
+    "started_unix_ns": 1794445865598900708,
+    "original_fps": 13.674248681016918,
+    "identity_fps": 11.566072405948098,
+    "identity_over_original_minus_one": -0.15417126924095403,
+    "original_per_second_fps": [
+     17.43,
+     13.73,
+     11.67,
+     11.86
+    ],
+    "identity_per_second_fps": [
+     13.81,
+     11.63,
+     10.36,
+     10.7
+    ]
+   },
+   {
+    "source_record": "results/benchmark-workflows/evidence/records-013.json",
+    "case": "natural-translation",
+    "started_unix_ns": 1794446281154873578,
+    "original_fps": 17.708209098970443,
+    "identity_fps": 17.53644911315795,
+    "identity_over_original_minus_one": -0.009699455481496422,
+    "original_per_second_fps": [
+     20.62,
+     18.74,
+     17.86,
+     17.48,
+     17.17,
+     17.11,
+     17.09,
+     17.08,
+     16.95,
+     17.07
+    ],
+    "identity_per_second_fps": [
+     20.54,
+     18.93,
+     17.77,
+     17.37,
+     15.63,
+     17.18,
+     17.1,
+     16.82,
+     17.06,
+     17.08
+    ]
+   },
+   {
+    "source_record": "results/benchmark-workflows/evidence/records-044.json",
+    "case": "coast-pan",
+    "started_unix_ns": 1794512488200341891,
+    "original_fps": 21.294542158200002,
+    "identity_fps": 21.205689441945324,
+    "identity_over_original_minus_one": -0.004172558188599629,
+    "original_per_second_fps": [
+     22.57,
+     21.89,
+     21.52,
+     21.14,
+     21.06,
+     21.03,
+     20.96,
+     20.96,
+     20.9,
+     20.94
+    ],
+    "identity_per_second_fps": [
+     22.44,
+     21.72,
+     21.51,
+     20.6,
+     21.02,
+     20.95,
+     20.97,
+     21.01,
+     20.95,
+     20.93
+    ]
+   }
+  ],
+  "asahi_static_profile": {
+   "source_record": "results/benchmark-workflows/evidence/records-004.json",
+   "fps": 21.249297496846555,
+   "frames": 424,
+   "per_second_fps": [
+    21.27,
+    21.29,
+    21.26,
+    21.19,
+    21.23,
+    21.24,
+    21.24,
+    21.28,
+    21.23,
+    21.25,
+    21.25,
+    21.28,
+    21.22,
+    21.25,
+    21.33,
+    21.22,
+    21.18,
+    21.25,
+    21.25,
+    21.28
+   ]
+  }
+ },
+ "live": {
+  "host": "Apple M1 MacBook Air, 8 GB, Fedora Asahi Remix 42, KWin virtual display",
+  "pack": "ComplementaryReimagined_r5.9.3.zip, original options, no Distant Horizons",
+  "default_heap": {
+   "note": "JVM default heap; first session after the machine had been idle",
+   "state": "complete",
+   "restored": true,
+   "failure": null,
+   "elapsed_seconds": 205.588,
+   "result_sha256": "62890fe2a63486e6fc8b64a023ab42859186f9d1a13e1868bf123447ff524289",
+   "protocol_sha256": "8c270994418b01c122e7ec46d99ca47d917d02445a731727935ef0b4ef375b95",
+   "definition": {
+    "arms": [
+     {
+      "delay_ms": 0,
+      "id": "original",
+      "modules": []
+     },
+     {
+      "delay_ms": 0,
+      "id": "identity",
+      "modules": [
+       "identity-probe"
+      ]
+     }
+    ],
+    "blocks": 4,
+    "budget_ms": 420000,
+    "cases": [
+     {
+      "conditions": {
+       "day_time": 6000,
+       "weather": "clear"
+      },
+      "dimension": "minecraft:overworld",
+      "from": [
+       0.5,
+       131.0,
+       0.5,
+       -45.0,
+       30.0
+      ],
+      "id": "coast-pan",
+      "pack": "ComplementaryReimagined_r5.9.3.zip",
+      "sha256": "fed6c879e732cf7fc7bc6570ebb1def43235aa7e96f62859fbdbdbfa0b484b38",
+      "surface": [
+       2560,
+       1600
+      ],
+      "to": [
+       0.5,
+       131.0,
+       0.5,
+       -25.0,
+       30.0
+      ]
+     }
+    ],
+    "instrument": "frames",
+    "quality_cadence_ms": 0,
+    "schema": "shaderlod-comparison-v1",
+    "scope": "development",
+    "seed": 7,
+    "warmup_ms": 8000,
+    "window_ms": 10000
+   },
+   "renderer": {
+    "renderer": "Apple M1 (G13G B1)",
+    "vendor": "Mesa",
+    "version": "4.6 (Core Profile) Mesa 25.1.0-asahi20250221"
+   },
+   "surface": [
+    2560,
+    1600
+   ],
+   "client_options": {
+    "fov": 70,
+    "max_fps": 60,
+    "render_distance": 8,
+    "simulation_distance": 5,
+    "vsync": false
+   },
+   "runtime": {
+    "java.runtime.version": "21.0.13+9-LTS",
+    "java.vendor": "Eclipse Adoptium",
+    "os.arch": "aarch64",
+    "os.name": "Linux",
+    "os.version": "6.14.2-401.asahi.fc42.aarch64+16k"
+   },
+   "loaded_main_class_sha256": "f00feaaa57e12da76004b686782fb76a2e7f0277743fe4dad49ed9b11ec0ddb2",
+   "loaded_dev_class_sha256": "3224df3961687378c8029b89bf4b69904ec1eed9b6f1d4694674da0ad28d8edd",
+   "frame_limit": {
+    "limited": 0,
+    "meaning": "No window sat at a configured frame limit",
+    "unobserved": 0,
+    "windows": 8
+   },
+   "largest_half_window_drift": 0.028116461468582155,
+   "windows": [
+    {
+     "block": 0,
+     "arm": "original",
+     "fps": 21.00693243054922,
+     "frames": 210,
+     "half_window_drift": -0.007139351207331224,
+     "frame_limit": "below_limit",
+     "frame_ms_p50": 47.610008,
+     "frame_ms_p95": 49.771777,
+     "frame_ms_max": 51.855966,
+     "selection_seconds": 3.561,
+     "window_started_seconds": 12.395,
+     "per_second_fps": [
+      21.27,
+      21.06,
+      21.08,
+      21.01,
+      21.01,
+      20.92,
+      20.95,
+      20.99,
+      20.9,
+      20.91
+     ],
+     "heap_used_bytes": 1064847552,
+     "heap_committed_bytes": 1255145472,
+     "heap_limit_bytes": 1476395008,
+     "frames_sha256": "35e00d47f7c86c2d5f4061a407033ebff2545c990e63a2962142b11ae0f3c206"
+    },
+    {
+     "block": 0,
+     "arm": "identity",
+     "fps": 21.002582189770678,
+     "frames": 210,
+     "half_window_drift": -0.005322636914077861,
+     "frame_limit": "below_limit",
+     "frame_ms_p50": 47.582759,
+     "frame_ms_p95": 49.382915,
+     "frame_ms_max": 51.02974,
+     "selection_seconds": 5.839,
+     "window_started_seconds": 37.207,
+     "per_second_fps": [
+      21.12,
+      21.03,
+      21.07,
+      21.01,
+      21.07,
+      20.97,
+      20.99,
+      20.96,
+      20.89,
+      20.92
+     ],
+     "heap_used_bytes": 802533272,
+     "heap_committed_bytes": 1335885824,
+     "heap_limit_bytes": 1476395008,
+     "frames_sha256": "3766a8ed85667a9c03ace2e5a3b55423659a0333aeb84cee0e095facffa83cb0"
+    },
+    {
+     "block": 1,
+     "arm": "identity",
+     "fps": 20.900075846375245,
+     "frames": 209,
+     "half_window_drift": -0.007686719025045918,
+     "frame_limit": "below_limit",
+     "frame_ms_p50": 47.705964,
+     "frame_ms_p95": 50.035686,
+     "frame_ms_max": 62.961596,
+     "selection_seconds": 5.407,
+     "window_started_seconds": 61.502,
+     "per_second_fps": [
+      20.95,
+      21.0,
+      21.0,
+      20.97,
+      20.99,
+      20.97,
+      20.98,
+      20.98,
+      20.63,
+      20.55
+     ],
+     "heap_used_bytes": 1295412216,
+     "heap_committed_bytes": 1380974592,
+     "heap_limit_bytes": 1476395008,
+     "frames_sha256": "486db0ef6c3c97907db8c1d4c6b557dd743c2ff536e47edfdb178a8408023c7c"
+    },
+    {
+     "block": 1,
+     "arm": "original",
+     "fps": 20.948466243715817,
+     "frames": 209,
+     "half_window_drift": -0.005031320569106046,
+     "frame_limit": "below_limit",
+     "frame_ms_p50": 47.726713,
+     "frame_ms_p95": 50.054228,
+     "frame_ms_max": 61.422058,
+     "selection_seconds": 5.94,
+     "window_started_seconds": 86.327,
+     "per_second_fps": [
+      20.85,
+      21.07,
+      21.05,
+      21.01,
+      21.03,
+      20.95,
+      20.97,
+      20.68,
+      20.95,
+      20.93
+     ],
+     "heap_used_bytes": 1210874704,
+     "heap_committed_bytes": 1457520640,
+     "heap_limit_bytes": 1476395008,
+     "frames_sha256": "ea1c21cbfba28568739a9a904927c77b00b75a2f2b0b61fbd079cf0e9be5c61d"
+    },
+    {
+     "block": 2,
+     "arm": "original",
+     "fps": 20.926559288008605,
+     "frames": 209,
+     "half_window_drift": -0.004616496679452853,
+     "frame_limit": "below_limit",
+     "frame_ms_p50": 47.580676,
+     "frame_ms_p95": 50.576171,
+     "frame_ms_max": 58.359857,
+     "selection_seconds": 6.344,
+     "window_started_seconds": 111.539,
+     "per_second_fps": [
+      21.14,
+      20.98,
+      20.95,
+      21.02,
+      20.77,
+      21.01,
+      20.97,
+      21.01,
+      20.63,
+      20.78
+     ],
+     "heap_used_bytes": 1192843072,
+     "heap_committed_bytes": 1476395008,
+     "heap_limit_bytes": 1476395008,
+     "frames_sha256": "870ac7602eaebdd40bcc98989eb948bf10811a046185ccfba0b25e10ae9a0bcf"
+    },
+    {
+     "block": 2,
+     "arm": "identity",
+     "fps": 20.559141759417525,
+     "frames": 205,
+     "half_window_drift": -0.02100748352617754,
+     "frame_limit": "below_limit",
+     "frame_ms_p50": 47.953332,
+     "frame_ms_p95": 52.820271,
+     "frame_ms_max": 82.773093,
+     "selection_seconds": 7.111,
+     "window_started_seconds": 137.571,
+     "per_second_fps": [
+      20.78,
+      20.87,
+      21.03,
+      21.0,
+      20.21,
+      20.39,
+      20.84,
+      20.17,
+      20.45,
+      19.86
+     ],
+     "heap_used_bytes": 1241741368,
+     "heap_committed_bytes": 1476395008,
+     "heap_limit_bytes": 1476395008,
+     "frames_sha256": "4826f918760e0e5374a99c3062fe5220652650291b4305c5124d62b046ad5ef0"
+    },
+    {
+     "block": 3,
+     "arm": "identity",
+     "fps": 19.752729664931415,
+     "frames": 197,
+     "half_window_drift": -0.01215439370199578,
+     "frame_limit": "below_limit",
+     "frame_ms_p50": 48.820139,
+     "frame_ms_p95": 59.967351,
+     "frame_ms_max": 84.838116,
+     "selection_seconds": 7.563,
+     "window_started_seconds": 164.106,
+     "per_second_fps": [
+      20.81,
+      19.75,
+      19.27,
+      20.21,
+      19.34,
+      20.2,
+      19.82,
+      18.99,
+      19.3,
+      19.84
+     ],
+     "heap_used_bytes": 1017923216,
+     "heap_committed_bytes": 1476395008,
+     "heap_limit_bytes": 1476395008,
+     "frames_sha256": "ff3e395f179a860926dd1be4db018e307b06d549f69a9f324b17e7795bf7cd10"
+    },
+    {
+     "block": 3,
+     "arm": "original",
+     "fps": 19.15511073427256,
+     "frames": 191,
+     "half_window_drift": -0.028116461468582155,
+     "frame_limit": "below_limit",
+     "frame_ms_p50": 50.037353,
+     "frame_ms_p95": 62.955721,
+     "frame_ms_max": 120.781011,
+     "selection_seconds": 7.477,
+     "window_started_seconds": 190.557,
+     "per_second_fps": [
+      20.87,
+      20.23,
+      18.67,
+      17.56,
+      20.03,
+      20.35,
+      17.52,
+      18.9,
+      18.36,
+      19.16
+     ],
+     "heap_used_bytes": 1126555512,
+     "heap_committed_bytes": 1476395008,
+     "heap_limit_bytes": 1476395008,
+     "frames_sha256": "98922a4620bc0b7f9de5ff11bbc61250065a6c15b756499caa6d7f82828338b4"
+    }
+   ],
+   "pair_effects": [
+    {
+     "block": 0,
+     "identity_over_original_minus_one": -0.00020708596045260208
+    },
+    {
+     "block": 1,
+     "identity_over_original_minus_one": -0.002309973282893174
+    },
+    {
+     "block": 2,
+     "identity_over_original_minus_one": -0.017557474381448723
+    },
+    {
+     "block": 3,
+     "identity_over_original_minus_one": 0.031198928523529013
+    }
+   ]
+  },
+  "pinned_heap": {
+   "note": "Same specification with -Xms2560m -Xmx2560m added as a local uncommitted experiment; opened about four minutes after the first session closed",
+   "state": "incomplete",
+   "restored": false,
+   "failure": "; restoration failed: session failed or closed; inspect preserved evidence",
+   "elapsed_seconds": 253.911,
+   "result_sha256": "383838f908652711095dbbe26b90621aaa1c1e68f5fba3e9d5c5f53ac7748455",
+   "protocol_sha256": "8c270994418b01c122e7ec46d99ca47d917d02445a731727935ef0b4ef375b95",
+   "definition": {
+    "arms": [
+     {
+      "delay_ms": 0,
+      "id": "original",
+      "modules": []
+     },
+     {
+      "delay_ms": 0,
+      "id": "identity",
+      "modules": [
+       "identity-probe"
+      ]
+     }
+    ],
+    "blocks": 4,
+    "budget_ms": 420000,
+    "cases": [
+     {
+      "conditions": {
+       "day_time": 6000,
+       "weather": "clear"
+      },
+      "dimension": "minecraft:overworld",
+      "from": [
+       0.5,
+       131.0,
+       0.5,
+       -45.0,
+       30.0
+      ],
+      "id": "coast-pan",
+      "pack": "ComplementaryReimagined_r5.9.3.zip",
+      "sha256": "fed6c879e732cf7fc7bc6570ebb1def43235aa7e96f62859fbdbdbfa0b484b38",
+      "surface": [
+       2560,
+       1600
+      ],
+      "to": [
+       0.5,
+       131.0,
+       0.5,
+       -25.0,
+       30.0
+      ]
+     }
+    ],
+    "instrument": "frames",
+    "quality_cadence_ms": 0,
+    "schema": "shaderlod-comparison-v1",
+    "scope": "development",
+    "seed": 7,
+    "warmup_ms": 8000,
+    "window_ms": 10000
+   },
+   "renderer": {
+    "renderer": "Apple M1 (G13G B1)",
+    "vendor": "Mesa",
+    "version": "4.6 (Core Profile) Mesa 25.1.0-asahi20250221"
+   },
+   "surface": [
+    2560,
+    1600
+   ],
+   "client_options": {
+    "fov": 70,
+    "max_fps": 60,
+    "render_distance": 8,
+    "simulation_distance": 5,
+    "vsync": false
+   },
+   "runtime": {
+    "java.runtime.version": "21.0.13+9-LTS",
+    "java.vendor": "Eclipse Adoptium",
+    "os.arch": "aarch64",
+    "os.name": "Linux",
+    "os.version": "6.14.2-401.asahi.fc42.aarch64+16k"
+   },
+   "loaded_main_class_sha256": "f00feaaa57e12da76004b686782fb76a2e7f0277743fe4dad49ed9b11ec0ddb2",
+   "loaded_dev_class_sha256": "3224df3961687378c8029b89bf4b69904ec1eed9b6f1d4694674da0ad28d8edd",
+   "frame_limit": {
+    "limited": 0,
+    "meaning": "No window sat at a configured frame limit",
+    "unobserved": 0,
+    "windows": 8
+   },
+   "largest_half_window_drift": 0.022254112965044315,
+   "windows": [
+    {
+     "block": 0,
+     "arm": "original",
+     "fps": 19.941690690826455,
+     "frames": 199,
+     "half_window_drift": -0.0011252405927607567,
+     "frame_limit": "below_limit",
+     "frame_ms_p50": 48.481316,
+     "frame_ms_p95": 64.856373,
+     "frame_ms_max": 89.894216,
+     "selection_seconds": 5.898,
+     "window_started_seconds": 15.085,
+     "per_second_fps": [
+      18.19,
+      20.79,
+      20.55,
+      19.76,
+      20.47,
+      20.31,
+      20.28,
+      20.29,
+      18.16,
+      20.59
+     ],
+     "heap_used_bytes": 1694442576,
+     "heap_committed_bytes": 2684354560,
+     "heap_limit_bytes": 2684354560,
+     "frames_sha256": "e93b8098efc1d50948f2347eb166c12ea5cf739270ecdd0364a21580cb7407c3"
+    },
+    {
+     "block": 0,
+     "arm": "identity",
+     "fps": 18.484998360892497,
+     "frames": 184,
+     "half_window_drift": -0.014318408775215175,
+     "frame_limit": "below_limit",
+     "frame_ms_p50": 50.614919,
+     "frame_ms_p95": 70.213464,
+     "frame_ms_max": 123.835587,
+     "selection_seconds": 9.042,
+     "window_started_seconds": 43.167,
+     "per_second_fps": [
+      19.6,
+      19.89,
+      19.98,
+      15.29,
+      18.29,
+      19.11,
+      19.38,
+      17.55,
+      16.0,
+      19.79
+     ],
+     "heap_used_bytes": 2189297576,
+     "heap_committed_bytes": 2684354560,
+     "heap_limit_bytes": 2684354560,
+     "frames_sha256": "396f4bfc2ae0c1d019e3e8069f5bef212ffb9766d3d3ab84ab17012ac63c55bf"
+    },
+    {
+     "block": 1,
+     "arm": "identity",
+     "fps": 18.380192703568863,
+     "frames": 183,
+     "half_window_drift": -0.016626420416964827,
+     "frame_limit": "below_limit",
+     "frame_ms_p50": 51.734887,
+     "frame_ms_p95": 69.796936,
+     "frame_ms_max": 145.440406,
+     "selection_seconds": 10.426,
+     "window_started_seconds": 72.605,
+     "per_second_fps": [
+      20.55,
+      18.48,
+      18.08,
+      18.51,
+      17.2,
+      20.61,
+      20.52,
+      16.4,
+      16.65,
+      16.96
+     ],
+     "heap_used_bytes": 742054256,
+     "heap_committed_bytes": 2684354560,
+     "heap_limit_bytes": 2684354560,
+     "frames_sha256": "3fdb9a2ccdbfdb2d9f1856b36b969917d278445f880ddf5894cbe31253f5c018"
+    },
+    {
+     "block": 1,
+     "arm": "original",
+     "fps": 17.972946135074007,
+     "frames": 179,
+     "half_window_drift": -0.016581149984373655,
+     "frame_limit": "below_limit",
+     "frame_ms_p50": 53.016182,
+     "frame_ms_p95": 72.864053,
+     "frame_ms_max": 133.270433,
+     "selection_seconds": 9.774,
+     "window_started_seconds": 101.364,
+     "per_second_fps": [
+      18.15,
+      19.06,
+      16.81,
+      17.22,
+      19.41,
+      18.77,
+      18.69,
+      16.81,
+      16.42,
+      18.52
+     ],
+     "heap_used_bytes": 1185856360,
+     "heap_committed_bytes": 2684354560,
+     "heap_limit_bytes": 2684354560,
+     "frames_sha256": "b96e2af902397f2a3990843b67cede4743adcd5a9995d453bc1257cc946e7e03"
+    },
+    {
+     "block": 2,
+     "arm": "original",
+     "fps": 17.90564592878527,
+     "frames": 178,
+     "half_window_drift": 0.020966477657494487,
+     "frame_limit": "below_limit",
+     "frame_ms_p50": 54.364851,
+     "frame_ms_p95": 70.909903,
+     "frame_ms_max": 83.876269,
+     "selection_seconds": 10.664,
+     "window_started_seconds": 131.062,
+     "per_second_fps": [
+      18.91,
+      17.38,
+      16.87,
+      17.48,
+      18.03,
+      18.21,
+      17.91,
+      17.72,
+      19.12,
+      17.49
+     ],
+     "heap_used_bytes": 1016515888,
+     "heap_committed_bytes": 2684354560,
+     "heap_limit_bytes": 2684354560,
+     "frames_sha256": "14d8c5305df0ca72540692811b626a6c65991583fbcbe38726c78492927f8fef"
+    },
+    {
+     "block": 2,
+     "arm": "identity",
+     "fps": 18.23859194315053,
+     "frames": 182,
+     "half_window_drift": -0.022254112965044315,
+     "frame_limit": "below_limit",
+     "frame_ms_p50": 52.852395,
+     "frame_ms_p95": 69.344323,
+     "frame_ms_max": 105.60071,
+     "selection_seconds": 10.488,
+     "window_started_seconds": 160.566,
+     "per_second_fps": [
+      19.01,
+      19.22,
+      18.37,
+      17.31,
+      18.29,
+      18.59,
+      18.8,
+      18.91,
+      17.89,
+      15.98
+     ],
+     "heap_used_bytes": 1355302184,
+     "heap_committed_bytes": 2684354560,
+     "heap_limit_bytes": 2684354560,
+     "frames_sha256": "2d87dbad67556dabfc1856021962b176ca8752d0c4741479c7ce9e4af03c14c4"
+    },
+    {
+     "block": 3,
+     "arm": "identity",
+     "fps": 18.09390564595329,
+     "frames": 180,
+     "half_window_drift": 0.004257694873407214,
+     "frame_limit": "below_limit",
+     "frame_ms_p50": 51.877924,
+     "frame_ms_p95": 71.97308,
+     "frame_ms_max": 157.54334,
+     "selection_seconds": 10.073,
+     "window_started_seconds": 189.647,
+     "per_second_fps": [
+      19.56,
+      17.96,
+      15.64,
+      18.21,
+      19.03,
+      19.23,
+      19.49,
+      18.47,
+      16.25,
+      17.2
+     ],
+     "heap_used_bytes": 1641747616,
+     "heap_committed_bytes": 2684354560,
+     "heap_limit_bytes": 2684354560,
+     "frames_sha256": "e71558cd6b53e4ae0c8cb2f7f6e2d60a111ed8756883d65861fb427872ba6cad"
+    },
+    {
+     "block": 3,
+     "arm": "original",
+     "fps": 17.792245689456127,
+     "frames": 177,
+     "half_window_drift": 0.02098815732512027,
+     "frame_limit": "below_limit",
+     "frame_ms_p50": 54.681966,
+     "frame_ms_p95": 69.65044,
+     "frame_ms_max": 118.418164,
+     "selection_seconds": 10.858,
+     "window_started_seconds": 219.589,
+     "per_second_fps": [
+      17.54,
+      16.97,
+      16.61,
+      19.07,
+      17.99,
+      17.85,
+      18.5,
+      18.12,
+      17.45,
+      17.88
+     ],
+     "heap_used_bytes": 1846228136,
+     "heap_committed_bytes": 2684354560,
+     "heap_limit_bytes": 2684354560,
+     "frames_sha256": "6ba22b1a25263750ad767abdfcb78fb73c165054d3139501bdb761db1976e1f6"
+    }
+   ],
+   "pair_effects": [
+    {
+     "block": 0,
+     "identity_over_original_minus_one": -0.07304758420528823
+    },
+    {
+     "block": 1,
+     "identity_over_original_minus_one": 0.022658865465585487
+    },
+    {
+     "block": 2,
+     "identity_over_original_minus_one": 0.0185944710226853
+    },
+    {
+     "block": 3,
+     "identity_over_original_minus_one": 0.016954574580539283
+    }
+   ]
+  },
+  "sessions_closed": {
+   "audit-session-01": {
+    "inputs_unchanged": true,
+    "profile_artifact_restored": true,
+    "restoration": "profile artifact restored; shader/world state is established by acknowledged close and recovery journals",
+    "returncode": 0,
+    "schema": "shaderlod-session-close-v1",
+    "shader_recovery_pending": false,
+    "telemetry_errors": [],
+    "telemetry_stopped": true,
+    "world_recovery_pending": false
+   },
+   "audit-session-02": {
+    "inputs_unchanged": true,
+    "profile_artifact_restored": true,
+    "restoration": "profile artifact restored; shader/world state is established by acknowledged close and recovery journals",
+    "returncode": 134,
+    "schema": "shaderlod-session-close-v1",
+    "shader_recovery_pending": true,
+    "telemetry_errors": [],
+    "telemetry_stopped": true,
+    "world_recovery_pending": true
+   },
+   "audit-session-03-recovery": {
+    "inputs_unchanged": true,
+    "profile_artifact_restored": true,
+    "restoration": "profile artifact restored; shader/world state is established by acknowledged close and recovery journals",
+    "returncode": 0,
+    "schema": "shaderlod-session-close-v1",
+    "shader_recovery_pending": false,
+    "telemetry_errors": [],
+    "telemetry_stopped": true,
+    "world_recovery_pending": false
+   }
+  },
+  "crash": {
+   "session": "pinned_heap",
+   "signal": "SIGSEGV (0xb) at pc=0x0000ffff48159c08, pid=993207, tid=993501",
+   "problematic_frame": "J 29648 c2 net.minecraft.world.ticks.LevelTicks.sortContainersToTick(J)V minecraft@1.21.1 (166 bytes) @ 0x0000ffff48159c08 [0x0000ffff48159740+0x00000000000004c8]",
+   "elapsed": "Time: Thu Nov 12 20:33:34 2026 PST elapsed time: 250.333506 seconds (0d 0h 4m 10s)",
+   "thread": "Current thread (0x0000ffff59ef7f80):  JavaThread \"Server thread\"        [_thread_in_Java, id=993501, stack(0x0000fffe5b200000,0x0000fffe5b400000) (2048K)]",
+   "recovery": "A fresh session on the same profile and world restored the shader journal at startup and the world journal at readiness, then closed with returncode 0 and no pending journals"
+  }
+ },
+ "discarded_raw_outputs": "Session directories, per-window frame streams, reports, input snapshots and the JVM crash log under .local/artifacts/audit-* were deleted after this extraction. Per-window frame-stream digests are retained; the raw streams are not, so per-frame reanalysis is unavailable."
+}

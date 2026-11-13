@@ -4,7 +4,9 @@
 
 ## Target
 
-The existing live setup is the Asahi MacBook Air (Apple M1, Mesa, 2560×1600) with pinned Complementary Reimagined r5.9.3, its original options, native resolution and native AA, with Distant Horizons enabled. Running without DH (`--without-dh`) is a separate diagnostic and does not substitute for the DH-enabled target. The benchmark implementation was additionally allocated native Windows RTX 2080 Ti access. Its actual observed native monitor was 1024×768; it is a separate configuration, not a substitute for the Asahi surface.
+The working live setup is the Asahi MacBook Air (Apple M1, Mesa, 2560×1600) with pinned Complementary Reimagined r5.9.3, its original options, native resolution and native AA, without Distant Horizons. The intended target has DH enabled, and that configuration is blocked on Asahi: the original pack exceeds the fragment sampler limit with DH, with or without ShaderLOD ([F9, F10](../FINDINGS.md)). Running without DH (`--without-dh`) does not substitute for it.
+
+The primary development machine is the RTX 2080 Ti under native Windows. Its checkout has no prepared client or world yet ([task](../tasks/primary-runtime-preparation.md)). Its earlier controls ran on an observed 1024×768 monitor with the frame limiter at 60, which cannot show a speedup ([F48](../FINDINGS.md)); it is a separate configuration, not a substitute for the Asahi surface.
 
 ## Running it
 
