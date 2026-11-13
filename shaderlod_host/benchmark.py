@@ -253,11 +253,11 @@ def frame_limit(
             "reason": "frame limiter and vsync settings were not recorded",
         }
     limits = [cap] if cap < UNLIMITED_FRAME_RATE else []
+    monitor = observed.get("monitor")
+    refresh = monitor[2] if isinstance(monitor, list) and len(monitor) == 3 else None
+    median = summary.get("frame_ms_p50")
+    tail = summary.get("frame_ms_p95")
     if vsync:
-        monitor = observed.get("monitor")
-        refresh = (
-            monitor[2] if isinstance(monitor, list) and len(monitor) == 3 else None
-        )
         if type(refresh) is not int or refresh < 1:
             return {
                 "state": "unobserved",
@@ -266,13 +266,27 @@ def frame_limit(
             }
         limits.append(refresh)
     if not limits:
+        if (
+            type(refresh) is int
+            and refresh > 0
+            and isinstance(median, (int, float))
+            and isinstance(tail, (int, float))
+            and not isinstance(median, bool)
+            and not isinstance(tail, bool)
+            and abs(median - 1000 / refresh) <= 15 / refresh
+            and tail <= median * 1.05
+        ):
+            return {
+                "state": "limited",
+                "limit_fps": refresh,
+                "reason": "frame intervals match the display refresh although the game's limiter and vsync are off; frames are being capped outside the game",
+            }
         return {
             "state": "unlimited",
             "limit_fps": None,
             "reason": "frame limiter unlimited and vsync off",
         }
     limit = min(limits)
-    median = summary.get("frame_ms_p50")
     if (
         not isinstance(median, (int, float))
         or isinstance(median, bool)
@@ -556,6 +570,75 @@ def stage_summary(value: object) -> list[dict[str, object]]:
     ]
 
 
+def pass_summary(value: object) -> dict[str, object]:
+    if not isinstance(value, dict):
+        raise ValueError("pass profile required")
+    cpu, gpu = value.get("cpu"), value.get("gpu")
+    if not isinstance(cpu, list) or not isinstance(gpu, list):
+        raise ValueError("invalid pass stream")
+    completed: dict[int, int] = {}
+    for row in gpu:
+        if (
+            not isinstance(row, dict)
+            or type(row.get("span_id")) is not int
+            or type(row.get("gpu_elapsed_ns")) is not int
+            or row["gpu_elapsed_ns"] < 0
+        ):
+            raise ValueError("invalid pass GPU interval")
+        completed[row["span_id"]] = row["gpu_elapsed_ns"]
+    frames: dict[int, list[tuple[str, int, int | None]]] = {}
+    for row in cpu:
+        if (
+            not isinstance(row, dict)
+            or not isinstance(row.get("from"), str)
+            or type(row.get("submission")) is not int
+            or type(row.get("span_id")) is not int
+            or type(row.get("wall_ns")) is not int
+            or row["wall_ns"] < 0
+        ):
+            raise ValueError("invalid pass CPU interval")
+        frames.setdefault(row["submission"], []).append(
+            (row["from"], row["wall_ns"], completed.get(row["span_id"]))
+        )
+    complete = [
+        rows for rows in frames.values() if all(row[2] is not None for row in rows)
+    ]
+    totals: dict[str, dict[str, int]] = {}
+    for rows in frames.values():
+        for owner, wall, _ in rows:
+            group = totals.setdefault(owner, {"spans": 0, "cpu": 0, "gpu": 0})
+            group["spans"] += 1
+            group["cpu"] += wall
+    for rows in complete:
+        for owner, _, elapsed in rows:
+            totals[owner]["gpu"] += elapsed or 0
+    gpu_total = sum(group["gpu"] for group in totals.values())
+    groups: list[dict[str, object]] = [
+        {
+            "group": owner,
+            "intervals_per_frame": group["spans"] / len(frames),
+            "cpu_ms_per_frame": group["cpu"] / len(frames) / 1000000,
+            "gpu_ms_per_frame": group["gpu"] / len(complete) / 1000000
+            if complete
+            else None,
+            "gpu_share": group["gpu"] / gpu_total if gpu_total else None,
+        }
+        for owner, group in sorted(
+            totals.items(), key=lambda item: (-item[1]["gpu"], -item[1]["cpu"], item[0])
+        )
+    ]
+    return {
+        "sampled_frames": len(frames),
+        "complete_frames": len(complete),
+        "gpu_ms_per_frame": gpu_total / len(complete) / 1000000 if complete else None,
+        "groups": groups,
+        "health": {
+            key: item for key, item in value.items() if key not in {"cpu", "gpu"}
+        },
+        "meaning": "Time between consecutive Iris render-group events on sampled frames, owned by the innermost open group. GPU values use only frames whose every interval completed; they follow command-stream timestamps, include waits and are not exclusive occupancy",
+    }
+
+
 def save_live_capture(
     observed: dict[str, object], destination: Path
 ) -> dict[str, object]:
@@ -627,6 +710,8 @@ def save_live_capture(
         analysis["diagnostic_limits"] = (
             "Sampled stage intervals; missing GPU completions and shared shader effects prevent exclusive cost attribution"
         )
+    if "pass_profile" in observed:
+        analysis["pass_summary"] = pass_summary(observed["pass_profile"])
     if (
         observed.get("valid") is not True
         or capture.get("overflow") is not False

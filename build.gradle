@@ -68,6 +68,7 @@ dependencies {
 	errorprone 'com.google.errorprone:error_prone_core:2.52.0'
 	implementation sourceSets.benchmarkCore.output
 	compileOnly 'net.fabricmc:sponge-mixin:0.15.2+mixin.0.8.7'
+	devClientCompileOnly 'net.fabricmc:sponge-mixin:0.15.2+mixin.0.8.7'
 	compileOnly runtimeJars
 	testRuntimeOnly runtimeJars
 	testImplementation sourceSets.devClient.output

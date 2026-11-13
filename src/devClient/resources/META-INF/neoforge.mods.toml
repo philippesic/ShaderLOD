@@ -6,3 +6,5 @@ modId="shaderlod_dev"
 version="0.1.0"
 displayName="ShaderLOD development instrumentation"
 description="Bounded frame capture, functional control and sampled stage diagnostics"
+[[mixins]]
+config="shaderlod_dev.mixins.json"

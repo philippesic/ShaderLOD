@@ -64,17 +64,27 @@ def class_methods(data: bytes) -> set[str]:
 def test_registered_iris_mixin_selectors_match_pinned_jar() -> None:
     root = Path(__file__).resolve().parents[1]
     lock = json.loads((root / "dependencies/runtime.lock.json").read_text())
-    config = json.loads((root / "src/main/resources/shaderlod.mixins.json").read_text())
-    source_root = root / "src/main/java"
+    registrations = (
+        ("src/main/resources/shaderlod.mixins.json", "src/main/java"),
+        ("src/devClient/resources/shaderlod_dev.mixins.json", "src/devClient/java"),
+    )
     with zipfile.ZipFile(
         root / "dependencies/runtime" / lock["artifacts"]["iris"]["filename"]
     ) as jar:
-        registered = config.get("mixins", []) + config.get("client", [])
-        assert registered
-        for name in registered:
-            source = (
-                source_root / (config["package"] + "." + name).replace(".", "/")
-            ).with_suffix(".java")
+        registered_sources: list[Path] = []
+        for config_path, source_path in registrations:
+            config = json.loads((root / config_path).read_text())
+            names = config.get("mixins", []) + config.get("client", [])
+            assert names, f"{config_path}: no registered mixins"
+            registered_sources.extend(
+                (
+                    root
+                    / source_path
+                    / (config["package"] + "." + name).replace(".", "/")
+                ).with_suffix(".java")
+                for name in names
+            )
+        for source in registered_sources:
             text = source.read_text()
             target = re.search(r'@Mixin\(targets = "([^"]+)"', text)
             if target:
@@ -86,7 +96,7 @@ def test_registered_iris_mixin_selectors_match_pinned_jar() -> None:
                 assert imported, f"{source}: target import missing"
                 owner = imported[1]
             methods = class_methods(jar.read(owner.replace(".", "/") + ".class"))
-            selectors = re.findall(r'method = "([^"]+)"', text)
+            selectors = re.findall(r'method\s*=\s*"([^"]+)"', text)
             assert selectors, f"{source}: no supported method selectors"
             for selector in selectors:
                 matches = (

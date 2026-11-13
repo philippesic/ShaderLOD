@@ -256,6 +256,17 @@ def test_frame_limit_distinguishes_capped_headroom_and_unobserved_state() -> Non
     assert below["limit_fps"] == 60
     unlimited: dict[str, object] = {"client_options": {"max_fps": 260, "vsync": False}}
     assert frame_limit(unlimited, {"frame_ms_p50": 3.2})["state"] == "unlimited"
+    paced: dict[str, object] = unlimited | {"monitor": [3840, 2160, 60]}
+    external = frame_limit(paced, {"frame_ms_p50": 16.69, "frame_ms_p95": 16.9})
+    assert (external["state"], external["limit_fps"]) == ("limited", 60)
+    assert "outside the game" in str(external["reason"])
+    free_running: tuple[dict[str, object], ...] = (
+        {"frame_ms_p50": 16.69, "frame_ms_p95": 19.0},
+        {"frame_ms_p50": 15.9, "frame_ms_p95": 16.0},
+        {"frame_ms_p50": 47.3, "frame_ms_p95": 49.0},
+    )
+    for free in free_running:
+        assert frame_limit(paced, free)["state"] == "unlimited"
     synced: dict[str, object] = {
         "client_options": {"max_fps": 260, "vsync": True},
         "monitor": [1024, 768, 60],
@@ -290,3 +301,60 @@ def test_half_window_drift_reports_settling_and_refuses_single_frames() -> None:
     assert settling["second_half_fps"] == 20000000
     assert settling["relative_change"] == pytest.approx(-0.2)
     assert half_window_drift(stream([50]))["relative_change"] is None
+
+
+def test_pass_summary_attributes_owned_intervals_and_excludes_incomplete_gpu_frames() -> (
+    None
+):
+    from shaderlod_host.benchmark import pass_summary
+
+    def span(identity: int, frame: int, owner: str, wall: int) -> dict[str, object]:
+        return {
+            "span_id": identity,
+            "submission": frame,
+            "generation": 1,
+            "from": owner,
+            "to": "next",
+            "started_ns": identity,
+            "wall_ns": wall,
+        }
+
+    cpu = [
+        span(1, 10, "ungrouped", 1000000),
+        span(2, 10, "composite/composite1", 2000000),
+        span(3, 10, "composite/composite1", 1000000),
+        span(4, 20, "ungrouped", 1000000),
+        span(5, 20, "composite/composite1", 3000000),
+    ]
+    gpu = [
+        cpu[0] | {"gpu_elapsed_ns": 2000000},
+        cpu[1] | {"gpu_elapsed_ns": 5000000},
+        cpu[2] | {"gpu_elapsed_ns": 1000000},
+        cpu[3] | {"gpu_elapsed_ns": 9000000},
+    ]
+    summary = pass_summary({"cpu": cpu, "gpu": gpu, "overflow": False})
+    assert (summary["sampled_frames"], summary["complete_frames"]) == (2, 1)
+    assert summary["gpu_ms_per_frame"] == 8
+    groups = summary["groups"]
+    assert isinstance(groups, list)
+    assert groups[0] == {
+        "group": "composite/composite1",
+        "intervals_per_frame": 1.5,
+        "cpu_ms_per_frame": 3,
+        "gpu_ms_per_frame": 6,
+        "gpu_share": 0.75,
+    }
+    assert groups[1]["gpu_ms_per_frame"] == 2
+    assert summary["health"] == {"overflow": False}
+    empty = pass_summary({"cpu": cpu[:1], "gpu": []})
+    assert empty["complete_frames"] == 0
+    assert empty["gpu_ms_per_frame"] is None
+    invalid_streams: tuple[object, ...] = (
+        None,
+        {"cpu": [], "gpu": None},
+        {"cpu": [{"from": 1}], "gpu": []},
+        {"cpu": [], "gpu": [{"span_id": 1, "gpu_elapsed_ns": -1}]},
+    )
+    for invalid in invalid_streams:
+        with pytest.raises(ValueError):
+            pass_summary(invalid)

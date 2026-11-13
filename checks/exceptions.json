@@ -130,5 +130,53 @@
     "owner": "ShaderLOD",
     "decision": "docs/iris-integration.md",
     "expires": "permanent"
+  },
+  {
+    "rule": "D8",
+    "path": "src/devClient/java/com/pp/shaderlod/dev/mixin/IrisGroupBeginMixin.java",
+    "kind": "directive",
+    "token": "@SuppressWarnings(\"UnusedMethod\")",
+    "sha256": "683310e9533cf1e9577cead94ef4ece0956aef634b519509220c8b65ae00f948",
+    "reason": "Development-only handler for the pinned Iris debug-group begin call has an injected caller and an imposed group id and CallbackInfo parameter.",
+    "review": true,
+    "owner": "ShaderLOD",
+    "decision": "docs/iris-integration.md",
+    "expires": "permanent"
+  },
+  {
+    "rule": "D8",
+    "path": "src/devClient/java/com/pp/shaderlod/dev/mixin/IrisGroupBeginMixin.java",
+    "kind": "directive",
+    "token": "@SuppressWarnings(\"UnusedVariable\")",
+    "sha256": "29532ef866b85e3bfeb215f1abe29d3ec3258a70f1405e3004c845fdb7f229bf",
+    "reason": "Development-only handler for the pinned Iris debug-group begin call has an injected caller and an imposed group id and CallbackInfo parameter.",
+    "review": true,
+    "owner": "ShaderLOD",
+    "decision": "docs/iris-integration.md",
+    "expires": "permanent"
+  },
+  {
+    "rule": "D8",
+    "path": "src/devClient/java/com/pp/shaderlod/dev/mixin/IrisGroupEndMixin.java",
+    "kind": "directive",
+    "token": "@SuppressWarnings(\"UnusedMethod\")",
+    "sha256": "683310e9533cf1e9577cead94ef4ece0956aef634b519509220c8b65ae00f948",
+    "reason": "Development-only handler for the pinned Iris debug-group end call has an injected caller and an imposed CallbackInfo parameter.",
+    "review": true,
+    "owner": "ShaderLOD",
+    "decision": "docs/iris-integration.md",
+    "expires": "permanent"
+  },
+  {
+    "rule": "D8",
+    "path": "src/devClient/java/com/pp/shaderlod/dev/mixin/IrisGroupEndMixin.java",
+    "kind": "directive",
+    "token": "@SuppressWarnings(\"UnusedVariable\")",
+    "sha256": "29532ef866b85e3bfeb215f1abe29d3ec3258a70f1405e3004c845fdb7f229bf",
+    "reason": "Development-only handler for the pinned Iris debug-group end call has an injected caller and an imposed CallbackInfo parameter.",
+    "review": true,
+    "owner": "ShaderLOD",
+    "decision": "docs/iris-integration.md",
+    "expires": "permanent"
   }
 ]

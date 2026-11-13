@@ -12,6 +12,7 @@ import net.minecraft.client.Minecraft;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 
 final class BenchmarkControl {
+  private static final int UNLIMITED_FRAMERATE = 260;
   private final Path directory;
   private final BenchmarkWorld world;
   private java.util.concurrent.CompletableFuture<java.util.Map<String, Object>> worldAction;
@@ -36,6 +37,9 @@ final class BenchmarkControl {
   private FrameCapture capture;
   private CaptureSpool spool;
   private com.pp.shaderlod.dev.measurement.StageProfiler stages;
+  private com.pp.shaderlod.dev.measurement.StageProfiler passes;
+  private Integer originalFramerateLimit;
+  private Boolean originalVsync;
   private long callbacks;
   private int spooled;
   private long spooledAt;
@@ -71,9 +75,15 @@ final class BenchmarkControl {
   BenchmarkControl(Path directory) {
     this.directory = directory;
     world = new BenchmarkWorld(directory);
+    RenderGroups.observe(owner -> {
+      if (passes != null) {
+        passes.boundary(owner);
+      }
+    });
   }
 
   void frame(long timestamp, long generation) {
+    RenderGroups.reset();
     if (capture != null) {
       contextLost |= observingFrame && !worldRendered;
       observingFrame = true;
@@ -108,6 +118,7 @@ final class BenchmarkControl {
       }
       if (stages != null) {
         stages.begin(generation, ++callbacks);
+        passes.begin(generation, callbacks);
       }
       if (delayMillis != 0) {
         long delayStart = System.nanoTime();
@@ -176,6 +187,7 @@ final class BenchmarkControl {
   void endFrame() {
     if (stages != null) {
       stages.end();
+      passes.end();
     }
     if (capture != null && qualityClock != null && qualityClock.due(System.nanoTime())) {
       long readbackStart = System.nanoTime();
@@ -238,6 +250,8 @@ final class BenchmarkControl {
         if (stages != null) {
           stages.finish();
           stages = null;
+          passes.finish();
+          passes = null;
         }
         pendingSelect = false;
         worldAction = null;
@@ -277,6 +291,10 @@ final class BenchmarkControl {
           if (originalFullscreen != null
               && Minecraft.getInstance().getWindow().isFullscreen() != originalFullscreen) {
             Minecraft.getInstance().getWindow().toggleFullScreen();
+          }
+          if (originalFramerateLimit != null) {
+            Minecraft.getInstance().options.framerateLimit().set(originalFramerateLimit);
+            Minecraft.getInstance().options.enableVsync().set(originalVsync);
           }
           Minecraft.getInstance().stop();
         }
@@ -326,6 +344,8 @@ final class BenchmarkControl {
           if (stages != null) {
             record.put("stage_profile", stages.finish());
             stages = null;
+            record.put("pass_profile", passes.finish());
+            passes = null;
           }
           record.put("checkpoints", java.util.List.copyOf(checkpoints));
           record.put("view_checkpoints", java.util.List.copyOf(viewCheckpoints));
@@ -414,6 +434,12 @@ final class BenchmarkControl {
         if (!client.getWindow().isFullscreen()) {
           client.getWindow().toggleFullScreen();
         }
+        if (originalFramerateLimit == null) {
+          originalFramerateLimit = client.options.framerateLimit().get();
+          originalVsync = client.options.enableVsync().get();
+        }
+        client.options.framerateLimit().set(UNLIMITED_FRAMERATE);
+        client.options.enableVsync().set(false);
         org.lwjgl.glfw.GLFW.glfwFocusWindow(client.getWindow().getWindow());
         client.setScreen(null);
         if (request.payload().isEmpty()) {
@@ -516,10 +542,14 @@ final class BenchmarkControl {
         AtomicFiles.publish(
             directory.resolve("capture-" + sequence + "-started.json"),
             gson.toJson(state()).getBytes(StandardCharsets.UTF_8));
-        stages =
+        boolean diagnostic =
             request.payload().has("diagnostic")
-                    && request.payload().get("diagnostic").getAsBoolean()
-                ? new com.pp.shaderlod.dev.measurement.StageProfiler()
+                && request.payload().get("diagnostic").getAsBoolean();
+        stages =
+            diagnostic ? new com.pp.shaderlod.dev.measurement.StageProfiler("frame-start") : null;
+        passes =
+            diagnostic
+                ? new com.pp.shaderlod.dev.measurement.StageProfiler(RenderGroups.UNGROUPED)
                 : null;
         callbacks = 0;
         capture = new FrameCapture(200000);

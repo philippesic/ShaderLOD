@@ -86,7 +86,10 @@ def exceptions(entries: list[dict[str, object]]) -> list[str]:
             if e["kind"] not in ("license", "shebang") and not (
                 e["kind"] == "directive"
                 and str(e["path"]).startswith(
-                    "src/main/java/com/pp/shaderlod/integration/mixin/"
+                    (
+                        "src/main/java/com/pp/shaderlod/integration/mixin/",
+                        "src/devClient/java/com/pp/shaderlod/dev/mixin/",
+                    )
                 )
                 and e["token"]
                 in (

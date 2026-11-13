@@ -493,6 +493,42 @@
           }
         ]
       }
+    },
+    {
+      "name": "permanent-directive-site",
+      "engine": "policy",
+      "bad": {
+        "entries": [
+          {
+            "rule": "D8",
+            "path": "src/devClient/java/com/pp/shaderlod/dev/Probe.java",
+            "kind": "directive",
+            "token": "@SuppressWarnings(\"UnusedMethod\")",
+            "sha256": "683310e9533cf1e9577cead94ef4ece0956aef634b519509220c8b65ae00f948",
+            "reason": "Injected Mixin handler",
+            "review": true,
+            "owner": "ShaderLOD",
+            "decision": "docs/iris-integration.md",
+            "expires": "permanent"
+          }
+        ]
+      },
+      "control": {
+        "entries": [
+          {
+            "rule": "D8",
+            "path": "src/devClient/java/com/pp/shaderlod/dev/mixin/Probe.java",
+            "kind": "directive",
+            "token": "@SuppressWarnings(\"UnusedMethod\")",
+            "sha256": "683310e9533cf1e9577cead94ef4ece0956aef634b519509220c8b65ae00f948",
+            "reason": "Injected Mixin handler",
+            "review": true,
+            "owner": "ShaderLOD",
+            "decision": "docs/iris-integration.md",
+            "expires": "permanent"
+          }
+        ]
+      }
     }
   ],
   "D8": [

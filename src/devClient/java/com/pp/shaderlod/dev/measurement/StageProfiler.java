@@ -11,6 +11,7 @@ public final class StageProfiler {
   private final List<Map<String, Object>> gpu = new ArrayList<>();
   private final boolean supported;
   private final int counterBits;
+  private final String origin;
   private String previous;
   private long started;
   private long frame;
@@ -21,7 +22,8 @@ public final class StageProfiler {
   private long activeSpan;
   private final Map<Long, Map<String, Object>> spans = new LinkedHashMap<>();
 
-  public StageProfiler() {
+  public StageProfiler(String origin) {
+    this.origin = java.util.Objects.requireNonNull(origin);
     var caps = org.lwjgl.opengl.GL.getCapabilities();
     boolean timer = caps.OpenGL33 || caps.GL_ARB_timer_query;
     counterBits =
@@ -37,7 +39,7 @@ public final class StageProfiler {
     generation = observedGeneration;
     sampling = frame % 10 == 0;
     if (sampling) {
-      previous = "frame-start";
+      previous = origin;
       started = System.nanoTime();
       activeSpan = ++spanId;
       if (supported) {

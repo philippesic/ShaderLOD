@@ -20,6 +20,10 @@ Reloads, dimension changes and DH transitions invalidate prepared state. Pending
 
 The mixins in `integration/mixin` use exact-descriptor injection and redirect selectors pinned to Iris 1.8.12. A selector that stops matching fails startup. Error Prone cannot see their reflective callers, so each mixin method has one exact `UnusedMethod` directive and each required `CallbackInfo` parameter an exact `UnusedVariable` directive, listed in `checks/exceptions.json`. No lint is disabled globally.
 
+## Development-only render-group hooks
+
+The development mod, never the shipping JAR, registers `shaderlod_dev.mixins.json`. Its two mixins inject at the head of Iris's static `GLDebug.pushGroup(int, String)` and `GLDebug.popGroup()`, which Iris calls around every world phase and full-screen pass whether or not GL debugging is active. They only report the group name to the [profiler](profiling.md#render-groups-which-pass-is-expensive); they issue no GL calls. Their selectors are checked against the pinned JAR with the shipping ones, and their lint directives are listed the same way.
+
 ## Sampler binding indices
 
 `SamplerUnitBudgetMixin` and `SamplerIndexPolicy` correct how Iris sizes texture binding indices. Fragment-stage limits count active sampler resources, but binding indices use the combined texture-unit namespace, and Iris leaves holes in that namespace. Fifteen active samplers can therefore need binding index sixteen while staying within a sixteen-resource fragment limit.
