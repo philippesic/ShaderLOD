@@ -30,6 +30,20 @@ Revise the measurement setup; retain the two readouts and the longer warm-up. Be
 - Asahi supports short comparisons on a rested machine. Sustained campaigns there are unresolved until the late degradation is explained; a repeat of the default-heap session after a measured rest would separate heat from memory.
 - F45's qualification of the workflow stands for lifecycle, recovery and slowdown rejection. It does not cover speedup sensitivity on either machine.
 
+## Follow-up on the RTX 2080 Ti, 2026-11-12
+
+Later the same day the 2080 Ti was given a virtual 2560×1440 display and a freshly prepared native Windows client, and sessions began turning the frame limiter off themselves. That removes the limiter problem above and supplies the unchanged-shader control this result asked for.
+
+| Check | Observation |
+| --- | --- |
+| Uncapped throughput, original Reimagined, no DH | 217.7 FPS over 20 seconds, between 212.6 and 223.3 FPS in every second; frame limit reads unlimited |
+| Unchanged shaders: original against the identity copy, three alternating pairs | −0.07%, +0.43% and +0.05%; every window drifted under 1% between its halves |
+| Where the time goes | Per sampled frame the GPU intervals summed to 4.8 ms and the render thread to 4.9 ms against a 4.5 ms median frame, so CPU and GPU are close to balanced at this resolution. Deferred, composite and final passes held 58% of GPU time |
+| Reimagined with Distant Horizons 3.3.3 | Links and renders without fallback, which Asahi cannot do. 168.7 FPS; the `Terrain solid` group grew from 0.52 to 1.50 ms, which is where DH terrain is currently counted |
+| Functional lifecycle validation at 2560×1440 | PASS in 13.3 seconds: activation, Off, Cancel and failed-Apply restoration |
+
+Limits: one scene and one session per check. Three pairs inside one process are not independent trials; a campaign of fresh sessions is still needed before a small effect is claimed. With CPU and GPU balanced, a GPU saving will show less than its full size; 3840×2160 is available on the virtual display. The DH check used an ad-hoc copy of the prepared profile with DH's existing configuration, and how much DH terrain was drawn was not verified. A virtual display has no physical scan-out. [Compact measurements](rtx2080ti-follow-up.json) sha256:153fcbad6aa563433e03bd7713162dbcb83c7743dfee9e2fdd3b4cc88befac8d
+
 ## Evidence and executed source
 
 [Compact measurements](result.json) sha256:db012a2d77895114d35ea4d729106ec85db9ec51bf9bdc9eef05fc1d56a30202

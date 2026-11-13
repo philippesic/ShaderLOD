@@ -1,0 +1,909 @@
+{
+ "schema": "shaderlod-rtx2080ti-follow-up-v1",
+ "date": "2026-11-12",
+ "source_commit": "0d48e1474b83d6356cb4ece2cfec326c244369ff",
+ "host": "RTX 2080 Ti, native Windows 11 IoT Enterprise LTSC build 26100, NVIDIA driver 610.88, virtual display 2560x1440 at 60 Hz (Virtual Display Driver 25.7.23), frame limiter off, vsync off",
+ "pack": "ComplementaryReimagined_r5.9.3.zip, original options",
+ "case": "coast-pan in ShaderLOD-Smoke, render distance 8",
+ "frames_without_dh": {
+  "fps": 217.67333588285496,
+  "frames": 4361,
+  "valid": true,
+  "frame_limit": "unlimited",
+  "half_window_drift": 0.0020603189953747325,
+  "frame_ms_p50": 4.5095,
+  "frame_ms_p95": 6.2483,
+  "frame_ms_max": 25.3703,
+  "per_second_fps": [
+   216.79,
+   217.58,
+   218.98,
+   218.08,
+   217.03,
+   218.78,
+   217.77,
+   212.6,
+   219.24,
+   217.37,
+   219.26,
+   216.83,
+   218.08,
+   218.07,
+   218.88,
+   218.27,
+   218.59,
+   217.09,
+   216.77,
+   217.22,
+   223.26
+  ],
+  "dh": {
+   "present": false,
+   "readiness": "unavailable: mod absent",
+   "version": "absent"
+  },
+  "surface": [
+   2560,
+   1440
+  ],
+  "monitor": [
+   2560,
+   1440,
+   60
+  ],
+  "client_options": {
+   "fov": 70,
+   "max_fps": 260,
+   "render_distance": 8,
+   "simulation_distance": 5,
+   "vsync": false
+  },
+  "renderer": {
+   "renderer": "NVIDIA GeForce RTX 2080 Ti/PCIe/SSE2",
+   "vendor": "NVIDIA Corporation",
+   "version": "3.2.0 NVIDIA 610.88"
+  },
+  "frames_sha256": "9b440509b3dd688d97009a51aae0e17a22c37d64ffc5f8c4b2839ded6e0f59b0"
+ },
+ "passes_without_dh": {
+  "fps": 203.97670952114962,
+  "frame_ms_p50": 4.4982,
+  "sampled_frames": 204,
+  "complete_frames": 204,
+  "gpu_ms_per_frame": 4.80420674509804,
+  "query_totals": {
+   "pending": 0,
+   "lost": 0,
+   "invalid": 0
+  },
+  "overflow": false,
+  "groups": [
+   {
+    "cpu_ms_per_frame": 0.0430328431372549,
+    "gpu_ms_per_frame": 0.7625220392156863,
+    "gpu_share": 0.1587196554340056,
+    "group": "deferred/deferred1",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.03412156862745098,
+    "gpu_ms_per_frame": 0.5572315294117647,
+    "gpu_share": 0.11598824925266477,
+    "group": "composite/composite1",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.39675490196078433,
+    "gpu_ms_per_frame": 0.5179852549019608,
+    "gpu_share": 0.10781910154688613,
+    "group": "Terrain solid",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.031694117647058824,
+    "gpu_ms_per_frame": 0.40937615686274514,
+    "gpu_share": 0.08521201908732405,
+    "group": "composite/composite6",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.06489558823529412,
+    "gpu_ms_per_frame": 0.40350368627450983,
+    "gpu_share": 0.08398965899754914,
+    "group": "Sky",
+    "intervals_per_frame": 2.0
+   },
+   {
+    "cpu_ms_per_frame": 2.0299892156862747,
+    "gpu_ms_per_frame": 0.3325388235294117,
+    "gpu_share": 0.0692182583251058,
+    "group": "ungrouped",
+    "intervals_per_frame": 27.0
+   },
+   {
+    "cpu_ms_per_frame": 0.031221078431372548,
+    "gpu_ms_per_frame": 0.331508862745098,
+    "gpu_share": 0.06900387105183438,
+    "group": "composite/composite7",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.03941176470588235,
+    "gpu_ms_per_frame": 0.29344345098039215,
+    "gpu_share": 0.06108052099960237,
+    "group": "composite/composite",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.4431485294117647,
+    "gpu_ms_per_frame": 0.2902409411764706,
+    "gpu_share": 0.060413915673512016,
+    "group": "Shadow Terrain solid",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.030052941176470588,
+    "gpu_ms_per_frame": 0.206777568627451,
+    "gpu_share": 0.04304093882688042,
+    "group": "composite/composite4",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.08119705882352941,
+    "gpu_ms_per_frame": 0.16741286274509803,
+    "gpu_share": 0.03484713952327663,
+    "group": "Clear textures",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.03414607843137255,
+    "gpu_ms_per_frame": 0.10179921568627451,
+    "gpu_share": 0.021189599259054597,
+    "group": "composite/composite5",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.04996372549019608,
+    "gpu_ms_per_frame": 0.06725976470588235,
+    "gpu_share": 0.01400018114843011,
+    "group": "Shadow Entities",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.03924460784313725,
+    "gpu_ms_per_frame": 0.06021380392156863,
+    "gpu_share": 0.012533558007887075,
+    "group": "final",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.09546960784313725,
+    "gpu_ms_per_frame": 0.05873490196078431,
+    "gpu_share": 0.012225723220740725,
+    "group": "Hand solid",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.03766568627450981,
+    "gpu_ms_per_frame": 0.05411686274509804,
+    "gpu_share": 0.011264474161174693,
+    "group": "Outline",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.25788823529411764,
+    "gpu_ms_per_frame": 0.051038117647058824,
+    "gpu_share": 0.01062363057108969,
+    "group": "Terrain translucent",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.17960833333333334,
+    "gpu_ms_per_frame": 0.04162635294117647,
+    "gpu_share": 0.008664563194256746,
+    "group": "Shadow Terrain translucent",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.03383382352941176,
+    "gpu_ms_per_frame": 0.0358161568627451,
+    "gpu_share": 0.007455165600291875,
+    "group": "composite/composite3",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.1492799019607843,
+    "gpu_ms_per_frame": 0.014875921568627451,
+    "gpu_share": 0.0030964365935762573,
+    "group": "Void",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.3197441176470588,
+    "gpu_ms_per_frame": 0.011373333333333334,
+    "gpu_share": 0.002367369669287877,
+    "group": "composite",
+    "intervals_per_frame": 8.0
+   },
+   {
+    "cpu_ms_per_frame": 0.025459313725490196,
+    "gpu_ms_per_frame": 0.009004549019607842,
+    "gpu_share": 0.0018743050616619721,
+    "group": "Sun",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.02336078431372549,
+    "gpu_ms_per_frame": 0.007859607843137256,
+    "gpu_share": 0.0016359845152702445,
+    "group": "Moon",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.07024950980392157,
+    "gpu_ms_per_frame": 0.006831686274509804,
+    "gpu_share": 0.0014220217065971398,
+    "group": "Rain snow",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.08076911764705882,
+    "gpu_ms_per_frame": 0.005172705882352941,
+    "gpu_share": 0.0010767034303073861,
+    "group": "deferred",
+    "intervals_per_frame": 2.0
+   },
+   {
+    "cpu_ms_per_frame": 0.06136078431372549,
+    "gpu_ms_per_frame": 0.0008334117647058823,
+    "gpu_share": 0.0001734754162185572,
+    "group": "GUI",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.03005049019607843,
+    "gpu_ms_per_frame": 0.0007193725490196078,
+    "gpu_share": 0.00014973804983593137,
+    "group": "begin",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.023051470588235295,
+    "gpu_ms_per_frame": 0.0006633725490196078,
+    "gpu_share": 0.00013808159894377535,
+    "group": "prepare",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.02101666666666667,
+    "gpu_ms_per_frame": 0.0006534901960784313,
+    "gpu_share": 0.00013602457819810075,
+    "group": "shadowcomp",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.031248529411764706,
+    "gpu_ms_per_frame": 0.0006368627450980392,
+    "gpu_share": 0.0001325635591656959,
+    "group": "World border",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.020648039215686278,
+    "gpu_ms_per_frame": 0.0006244705882352941,
+    "gpu_share": 0.00012998412045286584,
+    "group": "Sunset",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.03475735294117647,
+    "gpu_ms_per_frame": 0.0006133333333333334,
+    "gpu_share": 0.00012766589072361352,
+    "group": "Debug",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.020655392156862743,
+    "gpu_ms_per_frame": 0.0006076862745098039,
+    "gpu_share": 0.00012649045029751376,
+    "group": "Stars",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.038065686274509805,
+    "gpu_ms_per_frame": 0.0005905882352941177,
+    "gpu_share": 0.00012293147789626724,
+    "group": "Custom sky",
+    "intervals_per_frame": 1.0
+   }
+  ],
+  "frames_sha256": "ecb4a8f60bec3f0c2495ea5059bdd32f371c241948153767cb339133d2800acf"
+ },
+ "no_change_comparison": {
+  "state": "complete",
+  "restored": true,
+  "failure": null,
+  "elapsed_seconds": 143.36,
+  "result_sha256": "360ca2f1d356f426ac3f5af8c6afdca64711f3b942069b2dd1c9616ef00648d2",
+  "protocol_sha256": "dd5a979568eb13b0c78bdf06aff7ab7717a7e4f3024efb790c28da7fa19d1d32",
+  "definition": {
+   "arms": [
+    {
+     "delay_ms": 0,
+     "id": "original",
+     "modules": []
+    },
+    {
+     "delay_ms": 0,
+     "id": "identity",
+     "modules": [
+      "identity-probe"
+     ]
+    }
+   ],
+   "blocks": 3,
+   "budget_ms": 300000,
+   "cases": [
+    {
+     "conditions": {
+      "day_time": 6000,
+      "weather": "clear"
+     },
+     "dimension": "minecraft:overworld",
+     "from": [
+      0.5,
+      131.0,
+      0.5,
+      -45.0,
+      30.0
+     ],
+     "id": "coast-pan",
+     "pack": "ComplementaryReimagined_r5.9.3.zip",
+     "sha256": "fed6c879e732cf7fc7bc6570ebb1def43235aa7e96f62859fbdbdbfa0b484b38",
+     "surface": [
+      2560,
+      1440
+     ],
+     "to": [
+      0.5,
+      131.0,
+      0.5,
+      -25.0,
+      30.0
+     ]
+    }
+   ],
+   "instrument": "frames",
+   "quality_cadence_ms": 0,
+   "schema": "shaderlod-comparison-v1",
+   "scope": "development",
+   "seed": 7,
+   "warmup_ms": 8000,
+   "window_ms": 10000
+  },
+  "frame_limit": {
+   "limited": 0,
+   "meaning": "No window sat at a configured frame limit",
+   "unobserved": 0,
+   "windows": 6
+  },
+  "largest_half_window_drift": 0.009218919054764796,
+  "windows": [
+   {
+    "block": 0,
+    "arm": "original",
+    "fps": 215.26355539273925,
+    "frames": 2160,
+    "half_window_drift": -0.006969429709417385,
+    "frame_limit": "unlimited",
+    "frame_ms_p50": 4.5667,
+    "frame_ms_p95": 6.1833,
+    "frame_ms_max": 23.5004,
+    "selection_seconds": 2.734,
+    "per_second_fps": [
+     215.88,
+     215.24,
+     217.01,
+     215.55,
+     216.37,
+     216.0,
+     216.18,
+     215.21,
+     214.49,
+     210.71,
+     215.26
+    ]
+   },
+   {
+    "block": 0,
+    "arm": "identity",
+    "fps": 215.1145721453436,
+    "frames": 2157,
+    "half_window_drift": -0.0029838002519269047,
+    "frame_limit": "unlimited",
+    "frame_ms_p50": 4.5952,
+    "frame_ms_p95": 6.2577,
+    "frame_ms_max": 13.8156,
+    "selection_seconds": 2.719,
+    "per_second_fps": [
+     216.13,
+     213.71,
+     215.82,
+     214.83,
+     216.67,
+     214.92,
+     215.17,
+     214.8,
+     214.11,
+     214.84,
+     220.47
+    ]
+   },
+   {
+    "block": 1,
+    "arm": "identity",
+    "fps": 214.37906250690492,
+    "frames": 2151,
+    "half_window_drift": -0.005438957452366666,
+    "frame_limit": "unlimited",
+    "frame_ms_p50": 4.6317,
+    "frame_ms_p95": 6.2127,
+    "frame_ms_max": 15.3167,
+    "selection_seconds": 2.625,
+    "per_second_fps": [
+     216.22,
+     213.96,
+     214.37,
+     215.27,
+     214.99,
+     215.22,
+     215.04,
+     211.08,
+     214.74,
+     212.75,
+     218.83
+    ]
+   },
+   {
+    "block": 1,
+    "arm": "original",
+    "fps": 213.45548822972938,
+    "frames": 2141,
+    "half_window_drift": -0.009218919054764796,
+    "frame_limit": "unlimited",
+    "frame_ms_p50": 4.6246,
+    "frame_ms_p95": 6.4888,
+    "frame_ms_max": 12.8135,
+    "selection_seconds": 2.718,
+    "per_second_fps": [
+     216.28,
+     214.82,
+     213.99,
+     213.29,
+     213.88,
+     213.81,
+     211.85,
+     213.14,
+     212.53,
+     211.02,
+     212.11
+    ]
+   },
+   {
+    "block": 2,
+    "arm": "original",
+    "fps": 213.63549959663465,
+    "frames": 2143,
+    "half_window_drift": -0.005820317921742091,
+    "frame_limit": "unlimited",
+    "frame_ms_p50": 4.6358,
+    "frame_ms_p95": 6.2056,
+    "frame_ms_max": 10.2771,
+    "selection_seconds": 2.687,
+    "per_second_fps": [
+     214.44,
+     214.28,
+     214.16,
+     213.98,
+     214.35,
+     213.82,
+     212.66,
+     212.88,
+     212.71,
+     213.12,
+     212.59
+    ]
+   },
+   {
+    "block": 2,
+    "arm": "identity",
+    "fps": 213.74860966199944,
+    "frames": 2144,
+    "half_window_drift": -0.0044530932952616675,
+    "frame_limit": "unlimited",
+    "frame_ms_p50": 4.6278,
+    "frame_ms_p95": 6.2344,
+    "frame_ms_max": 12.0851,
+    "selection_seconds": 2.625,
+    "per_second_fps": [
+     215.26,
+     214.17,
+     212.92,
+     213.96,
+     214.82,
+     213.95,
+     212.85,
+     213.28,
+     212.98,
+     213.37,
+     212.23
+    ]
+   }
+  ],
+  "pair_effects": [
+   {
+    "block": 0,
+    "identity_over_original_minus_one": -0.0006920969372815611
+   },
+   {
+    "block": 1,
+    "identity_over_original_minus_one": 0.004326776907144003
+   },
+   {
+    "block": 2,
+    "identity_over_original_minus_one": 0.000529453511136202
+   }
+  ]
+ },
+ "frames_with_dh": {
+  "fps": 168.68904395312106,
+  "frames": 3379,
+  "valid": true,
+  "frame_limit": "unlimited",
+  "half_window_drift": -0.0050837524183663385,
+  "frame_ms_p50": 5.7152,
+  "frame_ms_p95": 7.2745,
+  "frame_ms_max": 21.1275,
+  "per_second_fps": [
+   171.67,
+   170.14,
+   171.77,
+   169.1,
+   165.51,
+   170.05,
+   170.47,
+   170.82,
+   164.1,
+   167.51,
+   168.8,
+   166.99,
+   168.32,
+   167.93,
+   168.36,
+   167.37,
+   169.8,
+   171.69,
+   167.3,
+   166.0,
+   171.05
+  ],
+  "dh": {
+   "enabled": true,
+   "present": true,
+   "readiness": "enabled=true; distance=256; mode=DEFAULT; rendered coverage unknown",
+   "version": "3.3.3"
+  },
+  "surface": [
+   2560,
+   1440
+  ],
+  "monitor": [
+   2560,
+   1440,
+   60
+  ],
+  "client_options": {
+   "fov": 70,
+   "max_fps": 260,
+   "render_distance": 8,
+   "simulation_distance": 5,
+   "vsync": false
+  },
+  "renderer": {
+   "renderer": "NVIDIA GeForce RTX 2080 Ti/PCIe/SSE2",
+   "vendor": "NVIDIA Corporation",
+   "version": "3.2.0 NVIDIA 610.88"
+  },
+  "frames_sha256": "3212bf5195c02c837ea0bf166126ed408916c281098c35f26288bc711c0192cb"
+ },
+ "passes_with_dh": {
+  "fps": 165.62950192688322,
+  "frame_ms_p50": 5.7276,
+  "sampled_frames": 165,
+  "complete_frames": 165,
+  "gpu_ms_per_frame": 5.900143903030303,
+  "query_totals": {
+   "pending": 0,
+   "lost": 0,
+   "invalid": 0
+  },
+  "overflow": false,
+  "groups": [
+   {
+    "cpu_ms_per_frame": 1.0611963636363635,
+    "gpu_ms_per_frame": 1.4950595878787878,
+    "gpu_share": 0.2533937497881921,
+    "group": "Terrain solid",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.08398303030303031,
+    "gpu_ms_per_frame": 0.7857821090909092,
+    "gpu_share": 0.13318016001056057,
+    "group": "deferred/deferred1",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.03550303030303031,
+    "gpu_ms_per_frame": 0.6101855030303031,
+    "gpu_share": 0.10341874928116802,
+    "group": "composite/composite1",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.09959454545454545,
+    "gpu_ms_per_frame": 0.4895177696969697,
+    "gpu_share": 0.08296708991208744,
+    "group": "Sky",
+    "intervals_per_frame": 2.0
+   },
+   {
+    "cpu_ms_per_frame": 0.05473818181818182,
+    "gpu_ms_per_frame": 0.3778338909090909,
+    "gpu_share": 0.06403808061614161,
+    "group": "composite/composite6",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 1.1128860606060607,
+    "gpu_ms_per_frame": 0.3057033696969697,
+    "gpu_share": 0.05181286672346432,
+    "group": "ungrouped",
+    "intervals_per_frame": 27.0
+   },
+   {
+    "cpu_ms_per_frame": 0.020887272727272727,
+    "gpu_ms_per_frame": 0.30250162424242427,
+    "gpu_share": 0.05127021123790895,
+    "group": "composite/composite7",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.07046666666666668,
+    "gpu_ms_per_frame": 0.27610763636363633,
+    "gpu_share": 0.04679676307925778,
+    "group": "composite/composite",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.2949,
+    "gpu_ms_per_frame": 0.26916712727272724,
+    "gpu_share": 0.04562043429728613,
+    "group": "Shadow Terrain solid",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.04985757575757576,
+    "gpu_ms_per_frame": 0.18389895757575758,
+    "gpu_share": 0.03116855463157558,
+    "group": "composite/composite4",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.21805272727272726,
+    "gpu_ms_per_frame": 0.14401008484848485,
+    "gpu_share": 0.0244078936404452,
+    "group": "Clear textures",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.6744872727272727,
+    "gpu_ms_per_frame": 0.1437321696969697,
+    "gpu_share": 0.024360790526337692,
+    "group": "Terrain translucent",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.022463636363636363,
+    "gpu_ms_per_frame": 0.11715316363636363,
+    "gpu_share": 0.01985598411865751,
+    "group": "composite/composite5",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.09150484848484848,
+    "gpu_ms_per_frame": 0.0774912,
+    "gpu_share": 0.01313378135746836,
+    "group": "Shadow Entities",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.17019454545454543,
+    "gpu_ms_per_frame": 0.06393115151515151,
+    "gpu_share": 0.010835524110236801,
+    "group": "Hand solid",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.022205454545454546,
+    "gpu_ms_per_frame": 0.06146366060606061,
+    "gpu_share": 0.010417315512337417,
+    "group": "final",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.06517818181818182,
+    "gpu_ms_per_frame": 0.054945939393939394,
+    "gpu_share": 0.00931264394512806,
+    "group": "Outline",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.10396060606060606,
+    "gpu_ms_per_frame": 0.05141779393939394,
+    "gpu_share": 0.008714667774964921,
+    "group": "Shadow Terrain translucent",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.023138181818181818,
+    "gpu_ms_per_frame": 0.030631757575757576,
+    "gpu_share": 0.005191696690656165,
+    "group": "composite/composite3",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.03597090909090909,
+    "gpu_ms_per_frame": 0.012848484848484849,
+    "gpu_share": 0.002177656182569698,
+    "group": "Moon",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.12149818181818182,
+    "gpu_ms_per_frame": 0.010284993939393939,
+    "gpu_share": 0.001743176795079792,
+    "group": "Void",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.0446430303030303,
+    "gpu_ms_per_frame": 0.009225890909090909,
+    "gpu_share": 0.001563672185072047,
+    "group": "Sun",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.05145151515151515,
+    "gpu_ms_per_frame": 0.007579927272727272,
+    "gpu_share": 0.0012847021017291182,
+    "group": "composite",
+    "intervals_per_frame": 8.0
+   },
+   {
+    "cpu_ms_per_frame": 0.017827272727272726,
+    "gpu_ms_per_frame": 0.006662787878787879,
+    "gpu_share": 0.001129258538146143,
+    "group": "Rain snow",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.029775757575757577,
+    "gpu_ms_per_frame": 0.006342787878787879,
+    "gpu_share": 0.0010750225728444072,
+    "group": "deferred",
+    "intervals_per_frame": 2.0
+   },
+   {
+    "cpu_ms_per_frame": 0.06108181818181818,
+    "gpu_ms_per_frame": 0.0013723151515151514,
+    "gpu_share": 0.00023259011543944427,
+    "group": "GUI",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.005572121212121212,
+    "gpu_ms_per_frame": 0.0007109818181818182,
+    "gpu_share": 0.00012050245381585681,
+    "group": "World border",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.013283030303030303,
+    "gpu_ms_per_frame": 0.0006898424242424243,
+    "gpu_share": 0.00011691959307774213,
+    "group": "begin",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.007267272727272727,
+    "gpu_ms_per_frame": 0.0006632727272727273,
+    "gpu_share": 0.000112416364443598,
+    "group": "Stars",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.019196363636363636,
+    "gpu_ms_per_frame": 0.0006615272727272727,
+    "gpu_share": 0.00011212053190558853,
+    "group": "Debug",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.025056969696969696,
+    "gpu_ms_per_frame": 0.000656290909090909,
+    "gpu_share": 0.00011123303429156012,
+    "group": "Custom sky",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.007881818181818183,
+    "gpu_ms_per_frame": 0.0006547393939393939,
+    "gpu_share": 0.00011097007203555171,
+    "group": "prepare",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.005764848484848485,
+    "gpu_ms_per_frame": 0.000634569696969697,
+    "gpu_share": 0.0001075515627074423,
+    "group": "shadowcomp",
+    "intervals_per_frame": 1.0
+   },
+   {
+    "cpu_ms_per_frame": 0.006967878787878788,
+    "gpu_ms_per_frame": 0.0006209939393939394,
+    "gpu_share": 0.00010525064296736865,
+    "group": "Sunset",
+    "intervals_per_frame": 1.0
+   }
+  ],
+  "frames_sha256": "f4a5ca3eeae1b76d48f97496e123b707a810e62db2ca4409472551d611dfc635"
+ },
+ "validation": {
+  "outcome": "PASS",
+  "elapsed_seconds": 13.266,
+  "restored": true,
+  "failure": null,
+  "surface": [
+   2560,
+   1440
+  ],
+  "dh_enabled": false,
+  "scope": "live loading, actual activation, Off/Cancel/failed Apply restoration; no perceptual or performance verdict"
+ },
+ "virtual_display": {
+  "driver": "Virtual Display Driver 25.7.23 (MttVDD)",
+  "provider": "MikeTheTech",
+  "driver_version": "11.30.4.434",
+  "store_inf": "oem6.inf",
+  "device_instance": "ROOT\\DISPLAY\\0000",
+  "signer": "SignPath Foundation",
+  "signer_thumbprint": "3CF8CF26D8BA266C3A483AB7D26D4A818E317D76",
+  "driver_zip_sha256": "e24210692b442b39af763536330ce78b423f19342b7a7792c26de3944e418b3a",
+  "installer_tool": "nefcon v1.14.0",
+  "installer_tool_zip_sha256": "a15557da24a9efca203158de3b43b0eaf982db231f0194031f1ed428bc13e669",
+  "method": "Steps of the driver repository's Community Scripts/silent-install.ps1, run by hand after checking signatures"
+ },
+ "windows_working_copy": {
+  "root": "C:\\ShaderLOD",
+  "contents": "shaderlod_host, benchmarks and dependencies from the source commit plus its built classes, resources and shipping JAR",
+  "prepared_with": [
+   "prepare-windows",
+   "freeze-windows-runtime",
+   "prepare-profile"
+  ],
+  "dh_slot": "run-benchmark-dh: an ad-hoc copy of the prepared profile with the pinned Distant Horizons JAR added, launched through the maintained session-open command with a copied launch description"
+ },
+ "discarded_raw_outputs": "Session directories, frame streams, reports and validation images under C:\\ShaderLOD\\.local\\artifacts were deleted after this extraction; the prepared runtime, profile preparation record and both profile slots were kept."
+}

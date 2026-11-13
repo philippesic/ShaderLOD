@@ -17,34 +17,28 @@ are verified on the primary machine, with matching bounded functional evidence.
 ## State
 Both source checkouts use /home/philip/ShaderLOD and the established origin. RTX
 2080 Ti is the active pinned T3 project; Asahi is an archived secondary registration.
-The shared favicon is tracked. The primary checkout has project-local Python 3.13.2
-and pinned tools. Its full portable gate passed: 109 Python tests; 38 Gradle tasks
-executed, 61 reused. Cold acquisition exposed missing dependency metadata checksums;
-verified official Maven metadata was added without changing versions or existing pins.
+The portable gate passes in WSL on the primary.
 
-These are WSL source/build checks, not native Windows GPU qualification. Earlier
-native Windows controls passed at their observed 1024x768 surface; see the
-[workflow result](../results/benchmark-workflows/result.md). The new source checkout
-has not acquired a freshly validated native Windows client/world in this setup.
-Asahi's original Reimagined with enabled DH remains sampler-limited; no-DH evidence
-does not replace it. Every earlier RTX 2080 Ti window without an injected delay
-sat at the 60 FPS frame limiter, and the GPU was about a third busy at 1024×768
-([F48](../FINDINGS.md)), so that configuration cannot show a speedup. Sessions now
-turn the limiter off themselves. On 2026-11-12 no monitor was attached, which is why
-Windows reported 1024×768; Philip approved installing a virtual display driver. The
-interactive console session was logged in and WSL-launched Windows processes ran
-elevated. Earlier native assets remain under `C:\ShaderLODBench`, `C:\ShaderLODNext`,
-`C:\ShaderLODNextEvidence` and `C:\ShaderLODNextRuntime`. The GPU is shared with
-Philip's vLLM benchmarks; ShaderLOD runs wait until it is idle.
+On 2026-11-12 the native Windows side was prepared and exercised
+([F48](../FINDINGS.md), [setup](../docs/runtime.md#rtx-2080-ti-windows-setup)): a
+virtual 2560×1440 display, a working copy at `C:\ShaderLOD` at commit 0d48e14 made
+with `prepare-windows`, `freeze-windows-runtime` and `prepare-profile`, sessions
+through `start.ps1`, an uncapped frame capture, the render-group profile, a
+three-pair unchanged-shader comparison, lifecycle validation and clean closes. An
+ad-hoc `run-benchmark-dh` slot showed that original Reimagined with Distant Horizons
+links and renders there. Earlier native assets remain under `C:\ShaderLODBench`,
+`C:\ShaderLODNext`, `C:\ShaderLODNextEvidence` and `C:\ShaderLODNextRuntime`; the
+new copy still reads its JDK and libraries from `C:\ShaderLODBench`.
+
+Not yet done: the working copy lives outside the checkout, which the storage rule
+does not provide for; updating it is a manual file copy; the DH slot is not made by
+a maintained command, because `prepare-windows` leaves DH out; and sensitivity rests
+on three pairs in one process.
 
 ## Next
-Before the first live optimization run, inspect current native Windows assets and
-ownership, prepare the intended slot through maintained benchmark commands, and run
-bounded lifecycle validation. Confirm the GPU is idle first. Install a virtual
-display at a realistic resolution, confirm the frame-limit readout says unlimited,
-and run an unchanged-shader comparison to learn what size of effect the machine
-resolves. Then confirm that original Reimagined with Distant Horizons links and
-renders there. Keep persistent project inputs/artifacts inside its
-checkout and preserve useful originals during adoption. Reuse applicable historical
-qualification with explicit limits; do not repeat the known Asahi DH failure without
-a new hypothesis.
+Decide with Philip whether `C:\ShaderLOD` is the accepted Windows home and whether
+2560×1440 or 3840×2160 is the benchmark surface. Then give the copy step and the DH
+slot maintained commands, and run a fresh-session unchanged-shader campaign to state
+what size of effect the machine resolves. Check that the GPU is idle before each
+run; it is shared with Philip's other projects. Do not repeat the known Asahi DH
+failure without a new hypothesis.

@@ -70,7 +70,7 @@ Current answers within their stated scope. Read the linked result before applyin
 | --- | --- | --- |
 | F45 | Reused-session validation/comparisons, profiling and frozen campaigns passed scoped RTX 2080 Ti/Asahi controls, including sustained captures and recovery. This qualifies the workflow, not an optimization or universal small-effect sensitivity; F48 limits its speed sensitivity. | [Result](results/benchmark-workflows/result.md) |
 
-| F48 | Every retained RTX 2080 Ti window without an injected delay sat at the 60 FPS frame limiter, so that setup cannot show a speedup. Asahi agrees to about 0.25% on unchanged shaders once the warm-up covers the shader reload, for about two minutes of sustained capture; the later degradation is unexplained. | [Result](results/benchmark-sensitivity-audit/result.md) |
+| F48 | Every retained RTX 2080 Ti window without an injected delay sat at the 60 FPS frame limiter, so that setup cannot show a speedup. Asahi agrees to about 0.25% on unchanged shaders once the warm-up covers the shader reload, for about two minutes of sustained capture; the later degradation is unexplained. With a virtual 2560×1440 display and the limiter off, the 2080 Ti ran 218 FPS, three unchanged pairs agreed within 0.43%, and Reimagined with Distant Horizons links and runs there. | [Result](results/benchmark-sensitivity-audit/result.md) |
 
 ## Additional historical lessons and extraction
 
