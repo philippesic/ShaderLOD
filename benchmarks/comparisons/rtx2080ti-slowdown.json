@@ -22,8 +22,8 @@
       ],
       "dimension": "minecraft:overworld",
       "surface": [
-        2560,
-        1440
+        3840,
+        2160
       ]
     }
   ],

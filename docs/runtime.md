@@ -6,13 +6,21 @@
 
 The working live setup is the Asahi MacBook Air (Apple M1, Mesa, 2560×1600) with pinned Complementary Reimagined r5.9.3, its original options, native resolution and native AA, without Distant Horizons. The intended target has DH enabled, and that configuration is blocked on Asahi: the original pack exceeds the fragment sampler limit with DH, with or without ShaderLOD ([F9, F10](../FINDINGS.md)). Running without DH (`--without-dh`) does not substitute for it.
 
-The primary development machine is the RTX 2080 Ti under native Windows, at 2560×1440 on a virtual display. Original Reimagined runs there with and without DH ([F48](../FINDINGS.md)); its remaining setup work is in the [task](../tasks/primary-runtime-preparation.md). Its earlier controls ran at 1024×768 with the frame limiter at 60 and cannot show a speedup. It is a separate configuration, not a substitute for the Asahi surface.
+The primary development machine is the RTX 2080 Ti under native Windows, on a virtual display. Its benchmark surface is 3840×2160, where the GPU is the bottleneck; 2560×1440 is a secondary check closer to ordinary play, at which CPU and GPU time per frame are about equal. Original Reimagined runs there with and without DH ([F48](../FINDINGS.md)); its remaining setup work is in the [task](../tasks/primary-runtime-preparation.md). Its earlier controls ran at 1024×768 with the frame limiter at 60 and cannot show a speedup. It is a separate configuration, not a substitute for the Asahi surface.
 
 ## RTX 2080 Ti Windows setup
 
 The machine has no monitor attached. A signed virtual display (Virtual Display Driver 25.7.23, device `ROOT\DISPLAY\0000`, driver store entry `oem6.inf`) gives the logged-in desktop a 2560×1440 surface; 3840×2160 is also offered. Its settings live in `C:\VirtualDisplayDriver\vdd_settings.xml`. Installing it added the SignPath Foundation certificate (thumbprint `3CF8CF26D8BA266C3A483AB7D26D4A818E317D76`) to the machine's trusted publishers. The authors advise removing the driver before a major GPU driver update. To remove it from an elevated prompt: `pnputil /remove-device "ROOT\DISPLAY\0000"`, `pnputil /delete-driver oem6.inf /uninstall`, delete that certificate from `Cert:\LocalMachine\TrustedPublisher`, and delete `C:\VirtualDisplayDriver`.
 
-Native Windows execution needs a Windows path, so the game runs from a working copy at `C:\ShaderLOD`: the host package, benchmark definitions, dependencies and built classes of one commit, named in its `SOURCE_COMMIT`, plus the slot made by `prepare-windows`, `freeze-windows-runtime` and `prepare-profile`. Copying a new commit's files there is still a manual step. Commands run with `C:\ShaderLOD\tools\python\python.exe`; the game itself must start through `benchmarks/windows/start.ps1` so that it lands in the logged-in desktop. The GPU is shared with other projects: check that it is idle before a run.
+Native Windows execution needs a Windows path, so the game runs from a working copy at `C:\ShaderLOD`. Philip accepted this location on 2026-11-13 as the one exception to keeping project state inside the checkout. It holds the host package, benchmark definitions, dependencies and built classes of one commit, named in its `SOURCE_COMMIT`, plus prepared state that survives updates: the profile slots, `tools`, `build/moddev` launch descriptions, `ownership` and `.local`.
+
+Refresh it from a clean WSL checkout after each commit that matters for a run:
+
+```
+python3 -m shaderlod_host sync-windows --output-root /mnt/c/ShaderLOD
+```
+
+It builds with the pinned JDK, checks the pinned runtime artifacts, and replaces only the code; it refuses while a Java process runs on Windows or tracked files have uncommitted changes. A fresh copy is prepared once, from Windows, in this order: `prepare-windows` (the no-DH slot `run-benchmark`), `freeze-windows-runtime`, `prepare-windows-dh --profile CANONICAL` (the slot `run-benchmark-dh` with Distant Horizons and its own `build\moddev\windows-launch-dh.json`), then `prepare-profile` for each slot. Commands run with `C:\ShaderLOD\tools\python\python.exe`; the game itself must start through `benchmarks/windows/start.ps1` so that it lands in the logged-in desktop. A session switches the fullscreen video mode to the surface its comparison or validation names, so the desktop resolution does not need changing. The GPU is shared with other projects: check that it is idle before a run.
 
 ## Running it
 

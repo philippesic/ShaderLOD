@@ -34,6 +34,17 @@ def test_balanced_schedule_and_finite_matrix() -> None:
             ComparisonPlan.decode(spec() | changes)
 
 
+def test_one_native_surface_per_comparison() -> None:
+    data = spec()
+    assert isinstance(data["cases"], list)
+    second = json.loads(json.dumps(data["cases"][0]))
+    second["id"] = "coast-pan-4k"
+    second["surface"] = [3840, 2160]
+    data["cases"].append(second)
+    with pytest.raises(ValueError, match="one native surface"):
+        ComparisonPlan.decode(data)
+
+
 def test_route_out_of_bounds_refuses_before_game() -> None:
     data = spec()
     assert isinstance(data["cases"], list)
@@ -53,7 +64,7 @@ def test_failed_activation_is_preserved_and_restored(tmp_path: Path) -> None:
         payload: dict[str, object] | None,
     ) -> dict[str, object]:
         actions.append(action)
-        return {"ready": True} if action == "status" else {}
+        return {"ready": True, "surface": [2560, 1600]} if action == "status" else {}
 
     result = execute_comparison(
         ComparisonPlan.decode(spec()),
@@ -77,7 +88,11 @@ def test_route_and_measured_generation_drift_cannot_promote(tmp_path: Path) -> N
         payload: dict[str, object] | None,
     ) -> dict[str, object]:
         if action == "status":
-            return {"ready": True, "pose": [0.5, 131, 0.5, -45, 30]}
+            return {
+                "ready": True,
+                "pose": [0.5, 131, 0.5, -45, 30],
+                "surface": [2560, 1600],
+            }
         if action == "select":
             return {
                 "activation": {"linked": True, "witnesses": ["submitted-frame:abc"]},

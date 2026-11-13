@@ -33,6 +33,8 @@ def main() -> int:
             "session-close",
             "session-recover",
             "prepare-windows",
+            "prepare-windows-dh",
+            "sync-windows",
             "prepare-profile",
             "prepare-world",
             "freeze-windows-runtime",
@@ -340,6 +342,36 @@ def main() -> int:
                     sort_keys=True,
                 )
             )
+        return 0
+    if args.mode == "sync-windows":
+        if args.output_root is None:
+            parser.error(
+                "sync-windows requires --output-root, such as /mnt/c/ShaderLOD"
+            )
+        if args.output_root.parts[:2] != ("/", "mnt"):
+            parser.error("sync-windows writes to a Windows drive under /mnt")
+        from shaderlod_host.runtime_live import sync_windows
+
+        print(
+            json.dumps(
+                sync_windows(Path(__file__).resolve().parents[1], args.output_root),
+                sort_keys=True,
+            )
+        )
+        return 0
+    if args.mode == "prepare-windows-dh":
+        if args.profile is None:
+            parser.error("--profile canonical profile required")
+        if sys.platform != "win32":
+            parser.error("native Windows preparation required")
+        from shaderlod_host.runtime_live import prepare_windows_dh
+
+        print(
+            json.dumps(
+                prepare_windows_dh(args.profile, Path(__file__).resolve().parents[1]),
+                sort_keys=True,
+            )
+        )
         return 0
     if args.mode == "prepare-windows":
         if args.source_root is None or args.profile is None:

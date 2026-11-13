@@ -57,6 +57,12 @@ def display_publication() -> dict[str, object]:
     }
 
 
+def build_environment(repository: Path) -> dict[str, str]:
+    environment = dict(os.environ)
+    environment["JAVA_HOME"] = str(repository / ".local/tools/jdks/jdk-21.0.13+9")
+    return environment
+
+
 def worker_environment(overrides: dict[str, str] | None = None) -> dict[str, str]:
     environment = dict(os.environ) if overrides is None else dict(overrides)
     environment["PYTHONPATH"] = str(project_root())

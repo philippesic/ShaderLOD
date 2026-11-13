@@ -15,6 +15,7 @@ from shaderlod_host.benchmark import (
     positive,
     session_command,
     save_live_capture,
+    settle_surface,
 )
 from shaderlod_host.storage import publish, publish_bytes
 
@@ -198,6 +199,8 @@ class ComparisonPlan:
             {a.identity for a in arms}
         ) != len(arms):
             raise ValueError("duplicate case/arm identity")
+        if len({c.surface for c in cases}) != 1:
+            raise ValueError("one native surface per comparison required")
         blocks = positive(data["blocks"], "blocks")
         window = positive(data["window_ms"], "window_ms")
         budget = positive(data["budget_ms"], "budget_ms")
@@ -469,6 +472,7 @@ def execute_comparison(
                 if name not in inputs:
                     publish_bytes(output / name, payload)
                     inputs[name] = case.sha256
+        initial = settle_surface(call, list(plan.cases[0].surface), initial, 30)
         if initial.get("ready") is not True and initial.get("world_loaded") is not True:
             raise ValueError(
                 "session is not ready; wait for ready status before comparison"
@@ -490,6 +494,7 @@ def execute_comparison(
                     "day_time": case.day_time,
                     "weather": case.weather,
                     "pose": list(case.start),
+                    "surface": list(case.surface),
                 },
             )
             if case.identity not in baselines:

@@ -56,7 +56,7 @@ The shipping JAR is `build/libs/shaderlod-0.1.0.jar`. The development probe JAR 
 separate and is not a distribution artifact. Live profiles, worlds and captures
 are ignored local working inputs prepared through [runtime](runtime.md) and [benchmarks](benchmarks.md).
 A source clone does not include those artifacts. Keep project-owned persistent data
-inside this checkout; the [storage layout](results.md#where-evidence-lives) distinguishes
+inside this checkout, apart from the [Windows working copy](runtime.md#rtx-2080-ti-windows-setup); the [storage layout](results.md#where-evidence-lives) distinguishes
 tracked findings, working resources and disposable outputs.
 
 ## Topic map

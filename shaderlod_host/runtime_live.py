@@ -12,8 +12,10 @@ import subprocess
 import sys
 import threading
 import time
+from typing import Callable
 
 from shaderlod_host.config import (
+    build_environment,
     display_environment,
     evidence_root,
     project_root,
@@ -947,6 +949,160 @@ def prepare_windows_runtime(
     }
 
 
+WINDOWS_SOURCE = ("shaderlod_host", "benchmarks", "dependencies")
+WINDOWS_BUILD = (
+    "build/classes/java/main",
+    "build/classes/java/devClient",
+    "build/classes/java/benchmarkCore",
+    "build/resources/main",
+    "build/resources/devClient",
+    "build/libs/shaderlod-0.1.0.jar",
+)
+
+
+def gradle_build(root: Path) -> None:
+    subprocess.run(
+        ["./gradlew", "--no-daemon", "--quiet", "jar", "devClientClasses"],
+        cwd=root,
+        env=build_environment(root),
+        check=True,
+    )
+
+
+def windows_java_running() -> bool:
+    listing = subprocess.run(
+        [
+            "/mnt/c/Windows/System32/tasklist.exe",
+            "/FO",
+            "CSV",
+            "/NH",
+            "/FI",
+            "IMAGENAME eq java.exe",
+        ],
+        capture_output=True,
+        check=True,
+    ).stdout
+    return b"java.exe" in listing.lower()
+
+
+def runtime_payloads(root: Path) -> dict[str, bytes]:
+    lock = json.loads((root / "dependencies/runtime.lock.json").read_bytes())
+    pin = json.loads((root / "dependencies/primary-pack.json").read_bytes())
+    expected = {
+        item["filename"]: item["hashes"]["sha256"]
+        for item in lock["artifacts"].values()
+    } | {pin["filename"]: pin["sha256"]}
+    payloads = {}
+    for name, digest in expected.items():
+        payload = (root / "dependencies/runtime" / name).read_bytes()
+        if hashlib.sha256(payload).hexdigest() != digest:
+            raise ValueError("runtime artifact hash mismatch: " + name)
+        payloads[name] = payload
+    return payloads
+
+
+def sync_windows(
+    root: Path,
+    output: Path,
+    build: Callable[[Path], None] = gradle_build,
+    java_running: Callable[[], bool] = windows_java_running,
+) -> dict[str, object]:
+    import io
+    import tarfile
+
+    from shaderlod_host.storage import publish_bytes, replace_bytes
+
+    if output.is_symlink() or (output.exists() and not output.is_dir()):
+        raise ValueError("regular destination directory required")
+    if java_running():
+        raise ValueError("a Java process is running on Windows; close sessions first")
+    git = ["git", "-C", str(root)]
+    if subprocess.run(
+        git + ["status", "--porcelain", "--untracked-files=no"],
+        capture_output=True,
+        check=True,
+    ).stdout:
+        raise ValueError("commit or discard tracked changes before syncing")
+    commit = (
+        subprocess.run(git + ["rev-parse", "HEAD"], capture_output=True, check=True)
+        .stdout.decode()
+        .strip()
+    )
+    build(root)
+    payloads = runtime_payloads(root)
+    staging = output / (".sync-" + commit)
+    if staging.exists():
+        shutil.rmtree(staging)
+    staging.mkdir(parents=True)
+    archive = subprocess.run(
+        git + ["archive", "--format=tar", commit, *WINDOWS_SOURCE],
+        capture_output=True,
+        check=True,
+    ).stdout
+    with tarfile.open(fileobj=io.BytesIO(archive)) as bundle:
+        bundle.extractall(staging, filter="data")
+    for name, payload in payloads.items():
+        publish_bytes(staging / "dependencies/runtime" / name, payload)
+    for relative in WINDOWS_BUILD:
+        source = root / relative
+        target = staging / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        if source.is_dir():
+            shutil.copytree(source, target)
+        else:
+            shutil.copy2(source, target)
+    previous_path = output / "SOURCE_COMMIT"
+    previous = previous_path.read_text().strip() if previous_path.exists() else None
+    retired = output / (".retired-" + commit)
+    if retired.exists():
+        shutil.rmtree(retired)
+    for relative in WINDOWS_SOURCE + WINDOWS_BUILD:
+        current = output / relative
+        if current.exists():
+            (retired / relative).parent.mkdir(parents=True, exist_ok=True)
+            current.rename(retired / relative)
+        current.parent.mkdir(parents=True, exist_ok=True)
+        (staging / relative).rename(current)
+    replace_bytes(previous_path, (commit + "\n").encode())
+    shutil.rmtree(staging)
+    shutil.rmtree(retired, ignore_errors=True)
+    return {
+        "schema": "shaderlod-windows-sync-v1",
+        "commit": commit,
+        "previous_commit": previous,
+        "destination": str(output),
+        "runtime_artifacts": sorted(payloads),
+        "preserved": "profile slots, tools, build/moddev launch descriptions, ownership and .local",
+    }
+
+
+def prepare_windows_dh(canonical_profile: Path, root: Path) -> dict[str, object]:
+    from shaderlod_host.storage import copytree, publish_bytes
+
+    profile = root / "run-benchmark-dh"
+    manifest_path = root / "build/moddev/windows-launch.json"
+    manifest = json.loads(manifest_path.read_bytes())
+    if "runtime_snapshot" not in manifest:
+        raise ValueError("prepare-windows and freeze-windows-runtime must run first")
+    copytree(canonical_profile, profile, 1073741824)
+    payloads = runtime_payloads(root)
+    pin = json.loads((root / "dependencies/primary-pack.json").read_bytes())
+    for name, payload in payloads.items():
+        publish_bytes(
+            profile / ("shaderpacks" if name == pin["filename"] else "mods") / name,
+            payload,
+        )
+    manifest["cwd"] = str(profile)
+    launch = root / "build/moddev/windows-launch-dh.json"
+    publish(launch, manifest)
+    return {
+        "schema": "shaderlod-windows-dh-slot-v1",
+        "launch": str(launch),
+        "profile": str(profile),
+        "mods": sorted(name for name in payloads if name != pin["filename"]),
+    }
+
+
 def execute_campaign(
     campaign: object,
     launch: Path,
@@ -1381,6 +1537,7 @@ def execute_installation(
                         "day_time": case.day_time,
                         "weather": case.weather,
                         "pose": list(case.start),
+                        "surface": list(case.surface),
                     },
                 )
                 conditions_deadline = min(deadline - 15, time.monotonic() + 10)

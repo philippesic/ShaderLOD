@@ -30,15 +30,19 @@ links and renders there. Earlier native assets remain under `C:\ShaderLODBench`,
 `C:\ShaderLODNext`, `C:\ShaderLODNextEvidence` and `C:\ShaderLODNextRuntime`; the
 new copy still reads its JDK and libraries from `C:\ShaderLODBench`.
 
-Not yet done: the working copy lives outside the checkout, which the storage rule
-does not provide for; updating it is a manual file copy; the DH slot is not made by
-a maintained command, because `prepare-windows` leaves DH out; and sensitivity rests
-on three pairs in one process.
+On 2026-11-13 Philip accepted `C:\ShaderLOD` as the Windows home and chose
+3840×2160 as the benchmark surface with 2560×1440 as a secondary check. The code
+now has `sync-windows` (refresh the copy from a clean WSL checkout),
+`prepare-windows-dh` (a maintained DH slot) and session-selected fullscreen modes;
+the RTX 2080 Ti definitions name 3840×2160, with `rtx2080ti-null-1440p.json` and
+`validation-rtx2080ti-dh.json` added, and a six-session no-change campaign
+`rtx2080ti-null-sessions.json`. None of this has run on the machine yet: the GPU
+was handed to Philip's vLLM work first.
 
 ## Next
-Decide with Philip whether `C:\ShaderLOD` is the accepted Windows home and whether
-2560×1440 or 3840×2160 is the benchmark surface. Then give the copy step and the DH
-slot maintained commands, and run a fresh-session unchanged-shader campaign to state
+When the 2080 Ti is free: sync the copy, replace the ad-hoc `run-benchmark-dh`
+with `prepare-windows-dh` plus `prepare-profile`, validate both slots at
+3840×2160, then run `rtx2080ti-null-sessions.json` and the 1440p check and record
 what size of effect the machine resolves. Check that the GPU is idle before each
 run; it is shared with Philip's other projects. Do not repeat the known Asahi DH
 failure without a new hypothesis.

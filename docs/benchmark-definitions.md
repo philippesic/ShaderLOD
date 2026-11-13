@@ -7,7 +7,7 @@ A `shaderlod-comparison-v1` definition contains:
 | Field | Meaning |
 | --- | --- |
 | `scope` | `development`, `contribution`, or `release`; this label never grants acceptance |
-| `cases` | Distinct IDs, original pack filename and SHA-256, five-coordinate `from`/`to` poses, dimension and native surface; optional `day_time` (default 6000) and `weather` (`clear`, `rain`, `thunder`) |
+| `cases` | Distinct IDs, original pack filename and SHA-256, five-coordinate `from`/`to` poses, dimension and native surface (one surface per comparison; the session switches the fullscreen mode to it and refuses if the monitor does not offer it); optional `day_time` (default 6000) and `weather` (`clear`, `rain`, `thunder`) |
 | `arms` | Distinct IDs, exact module lists, and explicit `delay_ms` test control (normally zero) |
 | `blocks` | Complete paired blocks within this process; not independent JVM samples |
 | `window_ms`, `warmup_ms` | Up to 60 seconds per development window or 300 seconds per contribution/release window. Fixed arm-symmetric measurement and conditioning, with bounded readiness separately recorded. The warm-up must outlast the shader reload that precedes each window |

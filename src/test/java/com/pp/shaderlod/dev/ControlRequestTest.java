@@ -32,4 +32,30 @@ class ControlRequestTest {
     }
     assertThrows(IllegalArgumentException.class, () -> ControlRequest.decode(null, 1));
   }
+
+  @Test
+  void prepareAcceptsOnlyBoundedSurfacesAlongsideConditions() {
+    String prefix =
+        "{\"schema\":\"shaderlod-control-v2\",\"sequence\":1,\"action\":\"prepare\",\"duration_ms\":0,\"payload\":";
+    for (String payload :
+        java.util.List.of(
+            "{\"surface\":[3840,2160]}",
+            "{\"day_time\":6000,\"weather\":\"clear\",\"surface\":[2560,1440]}",
+            "{\"day_time\":6000,\"weather\":\"rain\",\"pose\":[0,64,0,0,0],\"surface\":[2560,1600]}")) {
+      assertEquals(
+          payload.contains("3840") ? 3840 : 2560,
+          decode(prefix + payload + "}").payload().getAsJsonArray("surface").get(0).getAsInt());
+    }
+    for (String payload :
+        java.util.List.of(
+            "{\"surface\":[3840]}",
+            "{\"surface\":[0,2160]}",
+            "{\"surface\":[3840.5,2160]}",
+            "{\"surface\":[\"3840\",2160]}",
+            "{\"surface\":[20000,2160]}",
+            "{\"surface\":[3840,2160],\"weather\":\"clear\"}",
+            "{\"surface\":[3840,2160],\"zoom\":1}")) {
+      assertThrows(IllegalArgumentException.class, () -> decode(prefix + payload + "}"));
+    }
+  }
 }

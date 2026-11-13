@@ -4,6 +4,7 @@ from pathlib import Path
 import pytest
 
 from shaderlod_host.benchmark import (
+    settle_surface,
     Frame,
     WorkflowPlan,
     analyze_frames,
@@ -281,6 +282,41 @@ def test_frame_limit_distinguishes_capped_headroom_and_unobserved_state() -> Non
     )
     for observed, summary in unobserved:
         assert frame_limit(observed, summary)["state"] == "unobserved"
+
+
+def test_settle_surface_switches_once_and_refuses_unready_or_stuck_sessions() -> None:
+    calls: list[tuple[str, object]] = []
+    states = iter(
+        [
+            {"ready": True, "surface": [2560, 1440]},
+            {"ready": False, "surface": [3840, 2160]},
+            {"ready": True, "surface": [3840, 2160]},
+        ]
+    )
+
+    def call(action: str, payload: object = None) -> dict[str, object]:
+        calls.append((action, payload))
+        return next(states) if action == "status" else {}
+
+    matching = {"ready": True, "surface": [3840, 2160]}
+    assert settle_surface(call, [3840, 2160], matching, 1) is matching
+    assert calls == []
+    assert settle_surface(
+        call, [3840, 2160], {"ready": True, "surface": [2560, 1440]}, 5
+    ) == {
+        "ready": True,
+        "surface": [3840, 2160],
+    }
+    assert calls[0] == ("prepare", {"surface": [3840, 2160]})
+    with pytest.raises(ValueError, match="not ready"):
+        settle_surface(call, [3840, 2160], {"ready": False, "surface": [2560, 1440]}, 1)
+    with pytest.raises(ValueError, match="did not take effect"):
+        settle_surface(
+            lambda action, payload=None: {"ready": True, "surface": [2560, 1440]},
+            [3840, 2160],
+            {"ready": True, "surface": [2560, 1440]},
+            0,
+        )
 
 
 def test_half_window_drift_reports_settling_and_refuses_single_frames() -> None:

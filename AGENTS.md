@@ -53,7 +53,8 @@ belong to [results and closeout](docs/results.md#result-presentation-and-closeou
   not grant one. RTX 5080 is not allocated.
 - Runtime ownership and recovery follow the
   [runtime guide](docs/runtime.md#process-ownership).
-- Project-owned persistent state stays inside this checkout. Temporary outputs use
-  ignored `.local/artifacts`; the
+- Project-owned persistent state stays inside this checkout, except the native
+  Windows working copy at `C:\ShaderLOD` ([runtime](docs/runtime.md#rtx-2080-ti-windows-setup)).
+  Temporary outputs use ignored `.local/artifacts`; the
   [result specification](docs/results.md) owns extraction, retention and deletion.
 - Established origin: `git@github.com:philippesic/ShaderLOD.git`.

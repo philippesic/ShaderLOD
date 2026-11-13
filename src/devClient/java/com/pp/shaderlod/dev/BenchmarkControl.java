@@ -21,6 +21,7 @@ final class BenchmarkControl {
   private boolean idleClosing;
   private long lastActivity = System.nanoTime();
   private Boolean originalFullscreen;
+  private java.util.Optional<com.mojang.blaze3d.platform.VideoMode> originalVideoMode;
   private final Gson gson = new Gson();
   private long sequence;
   private long started;
@@ -288,6 +289,10 @@ final class BenchmarkControl {
         }
         lastActivity = System.nanoTime();
         if (closing) {
+          if (originalVideoMode != null) {
+            Minecraft.getInstance().getWindow().setPreferredFullscreenVideoMode(originalVideoMode);
+            Minecraft.getInstance().getWindow().changeFullscreenVideoMode();
+          }
           if (originalFullscreen != null
               && Minecraft.getInstance().getWindow().isFullscreen() != originalFullscreen) {
             Minecraft.getInstance().getWindow().toggleFullScreen();
@@ -438,11 +443,15 @@ final class BenchmarkControl {
           originalFramerateLimit = client.options.framerateLimit().get();
           originalVsync = client.options.enableVsync().get();
         }
+        if (request.payload().has("surface")) {
+          var surface = request.payload().getAsJsonArray("surface");
+          selectSurface(surface.get(0).getAsInt(), surface.get(1).getAsInt());
+        }
         client.options.framerateLimit().set(UNLIMITED_FRAMERATE);
         client.options.enableVsync().set(false);
         org.lwjgl.glfw.GLFW.glfwFocusWindow(client.getWindow().getWindow());
         client.setScreen(null);
-        if (request.payload().isEmpty()) {
+        if (!request.payload().has("day_time")) {
           worldAction = world.set(false);
         } else {
           String weather = request.payload().get("weather").getAsString();
@@ -737,6 +746,36 @@ final class BenchmarkControl {
     } catch (IOException failure) {
       return "unavailable";
     }
+  }
+
+  private void selectSurface(int width, int height) throws IOException {
+    var window = Minecraft.getInstance().getWindow();
+    var monitor = window.findBestMonitor();
+    if (monitor == null) {
+      throw new IOException("Fullscreen monitor unavailable");
+    }
+    var current = org.lwjgl.glfw.GLFW.glfwGetVideoMode(monitor.getMonitor());
+    if (current != null && current.width() == width && current.height() == height) {
+      return;
+    }
+    monitor.refreshVideoModes();
+    com.mojang.blaze3d.platform.VideoMode chosen = null;
+    for (int index = 0; index < monitor.getModeCount(); index++) {
+      var mode = monitor.getMode(index);
+      if (mode.getWidth() == width
+          && mode.getHeight() == height
+          && (chosen == null || mode.getRefreshRate() > chosen.getRefreshRate())) {
+        chosen = mode;
+      }
+    }
+    if (chosen == null) {
+      throw new IOException("Monitor does not offer the requested surface");
+    }
+    if (originalVideoMode == null) {
+      originalVideoMode = window.getPreferredFullscreenVideoMode();
+    }
+    window.setPreferredFullscreenVideoMode(java.util.Optional.of(chosen));
+    window.changeFullscreenVideoMode();
   }
 
   private static java.util.List<Double> vector(com.google.gson.JsonArray array) {

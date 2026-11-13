@@ -3,7 +3,12 @@ import json
 from pathlib import Path
 import time
 
-from shaderlod_host.benchmark import object_fields, positive, session_command
+from shaderlod_host.benchmark import (
+    object_fields,
+    positive,
+    session_command,
+    settle_surface,
+)
 from shaderlod_host.functional_contract import verify_functional
 from shaderlod_host.storage import publish
 
@@ -37,6 +42,14 @@ def validate_session(
     observed = None
     restored = False
     try:
+        settle_surface(
+            lambda action, payload=None: session_command(
+                session, action, 0, 10, payload
+            ),
+            list(surface),
+            initial,
+            30,
+        )
         session_command(session, "prepare", 0, 10)
         session_command(session, "validate", 0, 60)
         pin = json.loads(

@@ -6,7 +6,7 @@ import math
 import socket
 import time
 from pathlib import Path
-from typing import Iterable
+from typing import Callable, Iterable
 
 from shaderlod_host.storage import publish, publish_bytes
 
@@ -358,6 +358,29 @@ def render_frames(frames: tuple[Frame, ...], analysis: dict[str, object]) -> str
         .replace("@@SUMMARY@@", summary)
         .replace("@@FALLBACK@@", fallback)
     )
+
+
+def settle_surface(
+    call: Callable[..., dict[str, object]],
+    surface: list[int],
+    observed: dict[str, object],
+    timeout: float,
+) -> dict[str, object]:
+    if observed.get("surface") == surface:
+        return observed
+    if observed.get("ready") is not True:
+        raise ValueError(
+            "session is not ready; wait for ready status before comparison"
+        )
+    call("prepare", payload={"surface": surface})
+    deadline = time.monotonic() + timeout
+    while True:
+        observed = call("status")
+        if observed.get("surface") == surface and observed.get("ready") is True:
+            return observed
+        if time.monotonic() >= deadline:
+            raise ValueError("requested native surface did not take effect")
+        time.sleep(0.2)
 
 
 def session_command(

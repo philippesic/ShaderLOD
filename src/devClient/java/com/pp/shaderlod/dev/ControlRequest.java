@@ -57,11 +57,19 @@ public record ControlRequest(
     if (action.equals("select")) {
       requireFields(payload, Set.of("pack", "sha256", "modules"));
     } else if (action.equals("prepare") && !payload.isEmpty()) {
-      requireFields(
-          payload,
+      var conditions = new java.util.HashSet<>(payload.keySet());
+      if (conditions.remove("surface")) {
+        requireSurface(payload.get("surface"));
+      }
+      if (conditions.isEmpty()) {
+        return new ControlRequest(sequence, action, duration, payload);
+      }
+      if (!conditions.equals(
           payload.has("pose")
               ? Set.of("day_time", "weather", "pose")
-              : Set.of("day_time", "weather"));
+              : Set.of("day_time", "weather"))) {
+        throw new IllegalArgumentException("Unexpected action payload");
+      }
       if (!payload.get("day_time").toString().matches("[0-9]+")
           || payload.get("day_time").getAsLong() >= 24000
           || !payload.get("weather").isJsonPrimitive()
@@ -96,6 +104,19 @@ public record ControlRequest(
       throw new IllegalArgumentException("Unexpected payload");
     }
     return new ControlRequest(sequence, action, duration, payload);
+  }
+
+  private static void requireSurface(com.google.gson.JsonElement value) {
+    if (!value.isJsonArray() || value.getAsJsonArray().size() != 2) {
+      throw new IllegalArgumentException("Surface width and height required");
+    }
+    for (var side : value.getAsJsonArray()) {
+      if (!side.isJsonPrimitive()
+          || !side.toString().matches("[1-9][0-9]{0,4}")
+          || side.getAsInt() > 16384) {
+        throw new IllegalArgumentException("Bounded integer surface required");
+      }
+    }
   }
 
   private static void requireFields(JsonObject payload, Set<String> fields) {
