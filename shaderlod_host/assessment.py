@@ -6,6 +6,7 @@ from pathlib import Path
 from statistics import median
 
 from shaderlod_host.benchmark import (
+    frame_limit,
     label,
     object_fields,
     positive,
@@ -284,6 +285,13 @@ def assess(
             ):
                 problems.append(case + ": invalid throughput")
                 continue
+            limit = frame_limit(observed, summary)
+            if limit["state"] == "limited":
+                problems.append(
+                    case + ": frame-limited throughput cannot bound a speed effect"
+                )
+            elif limit["state"] == "unobserved":
+                problems.append(case + ": frame limit state unobserved")
             block = str(path.resolve()) + ":" + str(row.get("block"))
             pair = grouped[case].setdefault(key, {}).setdefault(block, {})
             if arm in pair:

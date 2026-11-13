@@ -217,6 +217,86 @@ def analyze_frames(frames: Iterable[Frame]) -> dict[str, object]:
     }
 
 
+def half_window_drift(frames: tuple[Frame, ...]) -> dict[str, object]:
+    origin = frames[0].timestamp_ns - frames[0].interval_ns
+    midpoint = origin + (frames[-1].timestamp_ns - origin) / 2
+    first = [row for row in frames if row.timestamp_ns <= midpoint]
+    if not first or len(first) == len(frames):
+        return {
+            "relative_change": None,
+            "reason": "fewer than one frame in each half of the window",
+        }
+    first_ns = first[-1].timestamp_ns - origin
+    second_ns = frames[-1].timestamp_ns - first[-1].timestamp_ns
+    first_fps = len(first) * 1000000000 / first_ns
+    second_fps = (len(frames) - len(first)) * 1000000000 / second_ns
+    return {
+        "first_half_fps": first_fps,
+        "second_half_fps": second_fps,
+        "relative_change": second_fps / first_fps - 1,
+    }
+
+
+UNLIMITED_FRAME_RATE = 260
+
+
+def frame_limit(
+    observed: dict[str, object], summary: dict[str, object]
+) -> dict[str, object]:
+    options = observed.get("client_options")
+    cap = options.get("max_fps") if isinstance(options, dict) else None
+    vsync = options.get("vsync") if isinstance(options, dict) else None
+    if type(cap) is not int or cap < 1 or type(vsync) is not bool:
+        return {
+            "state": "unobserved",
+            "limit_fps": None,
+            "reason": "frame limiter and vsync settings were not recorded",
+        }
+    limits = [cap] if cap < UNLIMITED_FRAME_RATE else []
+    if vsync:
+        monitor = observed.get("monitor")
+        refresh = (
+            monitor[2] if isinstance(monitor, list) and len(monitor) == 3 else None
+        )
+        if type(refresh) is not int or refresh < 1:
+            return {
+                "state": "unobserved",
+                "limit_fps": None,
+                "reason": "vsync is on and the display refresh rate was not recorded",
+            }
+        limits.append(refresh)
+    if not limits:
+        return {
+            "state": "unlimited",
+            "limit_fps": None,
+            "reason": "frame limiter unlimited and vsync off",
+        }
+    limit = min(limits)
+    median = summary.get("frame_ms_p50")
+    if (
+        not isinstance(median, (int, float))
+        or isinstance(median, bool)
+        or not math.isfinite(median)
+        or median <= 0
+    ):
+        return {
+            "state": "unobserved",
+            "limit_fps": limit,
+            "reason": "median frame interval unavailable",
+        }
+    if median <= 1050 / limit:
+        return {
+            "state": "limited",
+            "limit_fps": limit,
+            "reason": "median frame interval sits at the configured frame limit; faster rendering cannot raise this throughput",
+        }
+    return {
+        "state": "below_limit",
+        "limit_fps": limit,
+        "reason": "median frame interval is longer than the frame limit period, so the limiter does not bound most frames",
+    }
+
+
 def import_capture(source: Path, destination: Path) -> dict[str, object]:
     if destination.exists():
         raise ValueError("fresh report directory required")
@@ -485,6 +565,8 @@ def save_live_capture(
     frames = tuple(Frame.decode(row) for row in capture["frames"])
     analysis = analyze_frames(frames)
     analysis["benchmark_qualified"] = False
+    analysis["frame_limit"] = frame_limit(observed, analysis)
+    analysis["half_window_drift"] = half_window_drift(frames)
     analysis["events"] = observed.get("checkpoints", [])
     if "stage_profile" in observed:
         analysis["stage_summary"] = stage_summary(observed["stage_profile"])
@@ -614,7 +696,8 @@ def verify_frame_receipt(path: Path) -> dict[str, object]:
             or hashlib.sha256(asset.read_bytes()).hexdigest() != expected
         ):
             raise ValueError("capture digest disagreement: " + name)
-    recomputed = analyze_frames(read_frames(path.parent / "frames.jsonl"))
+    retained = read_frames(path.parent / "frames.jsonl")
+    recomputed = analyze_frames(retained)
     summary = json.loads((path.parent / "summary.json").read_bytes())
     observed = json.loads((path.parent / "observation.json").read_bytes())
     capture = observed.get("capture")
@@ -647,6 +730,14 @@ def verify_frame_receipt(path: Path) -> dict[str, object]:
         recomputed["valid"] is not True or summary.get("fps") != recomputed["fps"]
     ):
         raise ValueError("invalid stream promoted by summary")
+    if "frame_limit" in summary and summary["frame_limit"] != frame_limit(
+        observed, recomputed
+    ):
+        raise ValueError("capture analysis disagreement: frame_limit")
+    if "half_window_drift" in summary and summary[
+        "half_window_drift"
+    ] != half_window_drift(retained):
+        raise ValueError("capture analysis disagreement: half_window_drift")
     return {
         "schema": "shaderlod-capture-verification-v1",
         "integrity": "PASS",

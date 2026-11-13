@@ -58,7 +58,7 @@
   ],
   "blocks": 1,
   "window_ms": 4000,
-  "warmup_ms": 1000,
+  "warmup_ms": 8000,
   "budget_ms": 180000,
   "seed": 7,
   "interaction": [

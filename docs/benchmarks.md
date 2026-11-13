@@ -6,13 +6,23 @@ Use the maintained `python3 -m shaderlod_host` entry point. Keep one owned clien
 | --- | --- | --- |
 | `./check`, `./check --full` | Ordinary edits; portable checks | Seconds warm; no runtime claim |
 | `validate --session …` | Relevant live lifecycle changes | Ready-session checks took 12 seconds on RTX 2080 Ti and 19 seconds on Asahi. Tests loading, real activation, Off, Cancel and failed Apply; no speed/quality verdict |
-| `compare --session …` | Development feedback | Ten seconds per arm plus selection/conditioning/restoration. Ready-session pilots took 32–48 seconds. Exploratory FPS/frame-time timelines; no retention |
+| `compare --session …` | Development feedback | Ten seconds per arm plus an eight-second warm-up, selection and restoration: about 25 seconds per window on Asahi. Exploratory FPS/frame-time timelines; no retention |
 | `profile --session …` | Explain timing variation | Usually 10–20 seconds capture; optional sampled CPU/GPU stages. See [profiling](profiling.md) |
 | `qualify --spec …` | Frozen contribution/release evidence | Explicit fresh-session matrix and budget. Breadth, repeats, quality, sustained cases and interactions are chosen for the contribution; no universal automatic certificate |
 
 Execution commands return 0 for a complete/valid workflow, 1 for failed or incomplete work, and 2 for refused input. Campaign pause returns 3. Offline `qualify --policy` returns 1 when its recommendation is `do_not_promote`, including an otherwise valid inconclusive or slow result; that is not permission to retry until it passes.
 
 Cold startup, shader reload and world preparation are separate costs. The one-minute loop assumes a ready client. A slow, failed or non-settling attempt stays in the evidence. Do not replace the maintained harness with a custom timing wrapper.
+
+## Can this window show a speed change?
+
+Every capture summary carries two readouts. Read them before the FPS.
+
+`frame_limit` compares the median frame interval with the game's frame limiter and vsync. `limited` means the window sat at that limit: faster rendering cannot raise its throughput, so it cannot show a speedup, and a slowdown read from it is a lower bound. `unobserved` means the limiter state was not recorded. `qualify --policy` promotes neither. A comparison result counts affected windows in its own `frame_limit` field. Measure speed with the limiter set to Unlimited and vsync off in the prepared profile, at a surface where the GPU is the bottleneck. The prepared profiles currently ship `maxFps:60`: that does not bind Asahi near 20 FPS, and it bound every retained RTX 2080 Ti window at 1024×768 ([F48](../FINDINGS.md)).
+
+`half_window_drift` is the throughput change from the first half of a window to the second. Selecting an arm reloads the shader pipeline, and on Asahi a window opened one second later ran about 8% fast for four to five seconds before settling. The tracked development comparisons therefore wait eight seconds. Keep `warmup_ms` long enough to cover the reload on the machine in use, and treat a large drift on a fixed or slowly panning scene as an unsettled window, not an effect. A route through changing scenery drifts for legitimate reasons: compare its arms, not its halves.
+
+Asahi held no-change pairs within about 0.25% for roughly the first 100 seconds of sustained capture and became erratic afterwards. Keep its comparisons short and let it rest between sessions; a long campaign there needs its own stability evidence first.
 
 ## Prepare and own a session
 

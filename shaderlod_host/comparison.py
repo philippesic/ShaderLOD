@@ -684,6 +684,8 @@ def execute_comparison(
         "interactions": interaction_effects(results, plan.interaction)
         if plan.interaction
         else [],
+        "frame_limit": frame_limit_scope(results),
+        "largest_half_window_drift": largest_half_window_drift(results),
         "qualification": "unqualified",
         "retention": "unresolved: independent-session/coverage/quality and acceptance policy required",
     }
@@ -698,6 +700,45 @@ def execute_comparison(
         },
     )
     return result
+
+
+def frame_limit_scope(rows: list[dict[str, object]]) -> dict[str, object]:
+    states = [
+        str(limit.get("state"))
+        for row in rows
+        for summary in [row.get("summary")]
+        if isinstance(summary, dict)
+        for limit in [summary.get("frame_limit")]
+        if isinstance(limit, dict)
+    ]
+    limited = states.count("limited")
+    unobserved = states.count("unobserved") + len(rows) - len(states)
+    if limited:
+        meaning = "Windows at the configured frame limit cannot show a speedup; a slowdown estimate from them is a lower bound"
+    elif unobserved:
+        meaning = "Frame limiter state was not recorded for every window; speed sensitivity is unestablished"
+    else:
+        meaning = "No window sat at a configured frame limit"
+    return {
+        "windows": len(rows),
+        "limited": limited,
+        "unobserved": unobserved,
+        "meaning": meaning,
+    }
+
+
+def largest_half_window_drift(rows: list[dict[str, object]]) -> float | None:
+    changes = [
+        abs(change)
+        for row in rows
+        for summary in [row.get("summary")]
+        if isinstance(summary, dict)
+        for drift in [summary.get("half_window_drift")]
+        if isinstance(drift, dict)
+        for change in [drift.get("relative_change")]
+        if isinstance(change, float)
+    ]
+    return max(changes) if changes else None
 
 
 def render_comparison(result: dict[str, object]) -> str:

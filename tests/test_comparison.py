@@ -121,6 +121,41 @@ def test_route_and_measured_generation_drift_cannot_promote(tmp_path: Path) -> N
     assert result["state"] == "incomplete"
     assert result["observations"]
     assert result["restored"] is True
+    rows = result["observations"]
+    assert isinstance(rows, list)
+    assert rows[0]["summary"]["frame_limit"]["state"] == "unobserved"
+    scope = result["frame_limit"]
+    assert isinstance(scope, dict)
+    assert (scope["windows"], scope["limited"], scope["unobserved"]) == (1, 0, 1)
+
+
+def test_frame_limit_scope_counts_limited_and_unrecorded_windows() -> None:
+    from shaderlod_host.comparison import frame_limit_scope
+
+    rows: list[dict[str, object]] = [
+        {"summary": {"frame_limit": {"state": "limited"}}},
+        {"summary": {"frame_limit": {"state": "below_limit"}}},
+        {"summary": {"frame_limit": {"state": "unobserved"}}},
+        {"summary": {}},
+    ]
+    scope = frame_limit_scope(rows)
+    assert (scope["windows"], scope["limited"], scope["unobserved"]) == (4, 1, 2)
+    assert "cannot show a speedup" in str(scope["meaning"])
+    clear = frame_limit_scope([{"summary": {"frame_limit": {"state": "unlimited"}}}])
+    assert (clear["limited"], clear["unobserved"]) == (0, 0)
+
+
+def test_largest_half_window_drift_ignores_windows_without_a_measurement() -> None:
+    from shaderlod_host.comparison import largest_half_window_drift
+
+    rows: list[dict[str, object]] = [
+        {"summary": {"half_window_drift": {"relative_change": -0.031}}},
+        {"summary": {"half_window_drift": {"relative_change": 0.004}}},
+        {"summary": {"half_window_drift": {"relative_change": None}}},
+        {"summary": {}},
+    ]
+    assert largest_half_window_drift(rows) == 0.031
+    assert largest_half_window_drift([{"summary": {}}]) is None
 
 
 def test_native_configuration_guard_includes_dh_caps_and_resources() -> None:

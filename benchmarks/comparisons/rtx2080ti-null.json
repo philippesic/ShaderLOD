@@ -43,7 +43,7 @@
   ],
   "blocks": 1,
   "window_ms": 10000,
-  "warmup_ms": 1000,
-  "budget_ms": 60000,
+  "warmup_ms": 8000,
+  "budget_ms": 100000,
   "seed": 7
 }

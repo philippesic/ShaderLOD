@@ -244,3 +244,49 @@ def test_collector_identity_tracks_helpers_separately_from_product() -> None:
         "C:\\repo\\build\\classes\\java\\devClient\\FrameCapture.class"
     ] = "changed-instrument"
     assert collector_identity(current) != identity
+
+
+def test_frame_limit_distinguishes_capped_headroom_and_unobserved_state() -> None:
+    from shaderlod_host.benchmark import frame_limit
+
+    capped: dict[str, object] = {"client_options": {"max_fps": 60, "vsync": False}}
+    assert frame_limit(capped, {"frame_ms_p50": 16.71})["state"] == "limited"
+    below = frame_limit(capped, {"frame_ms_p50": 55.0})
+    assert below["state"] == "below_limit"
+    assert below["limit_fps"] == 60
+    unlimited: dict[str, object] = {"client_options": {"max_fps": 260, "vsync": False}}
+    assert frame_limit(unlimited, {"frame_ms_p50": 3.2})["state"] == "unlimited"
+    synced: dict[str, object] = {
+        "client_options": {"max_fps": 260, "vsync": True},
+        "monitor": [1024, 768, 60],
+    }
+    assert frame_limit(synced, {"frame_ms_p50": 16.68})["state"] == "limited"
+    assert frame_limit(synced, {"frame_ms_p50": 30.0})["limit_fps"] == 60
+    unobserved: tuple[tuple[dict[str, object], dict[str, object]], ...] = (
+        ({}, {"frame_ms_p50": 16.7}),
+        ({"client_options": {"max_fps": True, "vsync": False}}, {"frame_ms_p50": 9.0}),
+        ({"client_options": {"max_fps": 260, "vsync": True}}, {"frame_ms_p50": 9.0}),
+        (capped, {"frame_ms_p50": None}),
+    )
+    for observed, summary in unobserved:
+        assert frame_limit(observed, summary)["state"] == "unobserved"
+
+
+def test_half_window_drift_reports_settling_and_refuses_single_frames() -> None:
+    from shaderlod_host.benchmark import Frame, half_window_drift
+
+    def stream(intervals: list[int]) -> tuple[Frame, ...]:
+        clock = 1000
+        rows = []
+        for index, interval in enumerate(intervals, 1):
+            clock += interval
+            rows.append(Frame(index, clock, interval, 1))
+        return tuple(rows)
+
+    steady = half_window_drift(stream([50] * 40))
+    assert steady["relative_change"] == 0
+    settling = half_window_drift(stream([40] * 25 + [50] * 20))
+    assert settling["first_half_fps"] == 25000000
+    assert settling["second_half_fps"] == 20000000
+    assert settling["relative_change"] == pytest.approx(-0.2)
+    assert half_window_drift(stream([50]))["relative_change"] is None

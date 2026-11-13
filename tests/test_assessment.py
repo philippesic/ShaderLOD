@@ -25,8 +25,14 @@ def policy_spec(sessions: int = 6) -> dict[str, object]:
 
 
 def run_fixture(
-    root: Path, policy: QualificationPolicy, jvm: int, multiplier: float = 1.2
+    root: Path,
+    policy: QualificationPolicy,
+    jvm: int,
+    multiplier: float = 1.2,
+    client_options: dict[str, object] | None = None,
 ) -> Path:
+    if client_options is None:
+        client_options = {"max_fps": 260, "vsync": False}
     spec = json.loads(
         (
             Path(__file__).resolve().parents[1]
@@ -69,7 +75,7 @@ def run_fixture(
                     "submitted-frame:" + archive,
                 ],
             },
-            "client_options": {},
+            "client_options": client_options,
             "loaded_main_class_sha256": "a" * 64,
             "loaded_dev_class_sha256": "b" * 64,
         }
@@ -179,6 +185,33 @@ def test_acceptance_needs_independent_sessions_and_quality(tmp_path: Path) -> No
     result = assess(policy, reused, review(policy, reused))
     assert result["recommendation"] == "do_not_promote"
     assert result["problems"]
+
+
+def test_frame_limited_or_unobserved_throughput_cannot_pass(tmp_path: Path) -> None:
+    policy = QualificationPolicy.decode(policy_spec())
+    capped = [
+        run_fixture(
+            tmp_path / ("capped-" + str(i)),
+            policy,
+            i,
+            client_options={"max_fps": 60, "vsync": False},
+        )
+        for i in range(6)
+    ]
+    result = assess(policy, capped, review(policy, capped))
+    assert result["recommendation"] == "do_not_promote"
+    problems = result["problems"]
+    assert isinstance(problems, list)
+    assert any("frame-limited" in problem for problem in problems)
+    unobserved = [
+        run_fixture(tmp_path / ("unobserved-" + str(i)), policy, i, client_options={})
+        for i in range(6)
+    ]
+    result = assess(policy, unobserved, review(policy, unobserved))
+    assert result["recommendation"] == "do_not_promote"
+    problems = result["problems"]
+    assert isinstance(problems, list)
+    assert any("unobserved" in problem for problem in problems)
 
 
 def test_regression_and_missing_coverage_cannot_pass(tmp_path: Path) -> None:
