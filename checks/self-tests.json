@@ -719,6 +719,22 @@
           "assets/icon.svg": "<svg xmlns=\"http://www.w3.org/2000/svg\"><path fill=\"#abcdef\"/></svg>"
         }
       }
+    },
+    {
+      "name": "search-configuration",
+      "engine": "comments",
+      "bad": {
+        "files": {
+          ".gitattributes": "# prose\nresults/sources/history/*.json -diff\n",
+          ".ignore": "# prose\nresults/sources/history/*.json\n"
+        }
+      },
+      "control": {
+        "files": {
+          ".gitattributes": "results/sources/history/*.json -diff\n",
+          ".ignore": "results/sources/history/*.json\n"
+        }
+      }
     }
   ],
   "D9": [

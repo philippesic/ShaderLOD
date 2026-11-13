@@ -123,7 +123,7 @@ def scan(path: str, text: str, entries: list[dict[str, object]]) -> list[str]:
     }.get(suffix)
     if path in ("check", "verify", "gradlew", ".githooks/pre-commit"):
         language = "shell"
-    if path in (".gitignore", ".github/CODEOWNERS"):
+    if path in (".gitignore", ".gitattributes", ".ignore", ".github/CODEOWNERS"):
         language = "config"
     if language is None:
         if suffix in (".md", ".json", ".csv", ".jar") or path in (

@@ -112,6 +112,8 @@ The [extraction result](../results/historical-evidence-extraction/result.md) rec
 
 The [source-recovery map](../results/historical-evidence-extraction/source-recovery.json) identifies authored source in main's Git history or compact retained source records, including dirty variants that were absent from published history. Use a full Git clone for history-backed source recovery. Validate compact evidence with `python3 results/historical-evidence-extraction/verify.py`; this is an offline evidence check, not a new benchmark or live qualification.
 
+Retained records are single lines of up to two megabytes. `.gitattributes` marks them `-diff` and `.ignore` lists them, so `git grep` reports a binary match instead of printing the line and ripgrep-based search skips them. Search them on purpose with `git grep -a PATTERN -- results/sources/history`, or name the file. New record locations of that shape belong in both files.
+
 Closed benchmark controls are retained in the [compact evidence corpus](../results/benchmark-workflows/evidence/index.json).
 Validate it with `python3 results/benchmark-workflows/verify_evidence.py`. Its indexed
 paths are labels for original records; bulky images, copied worlds, runtime binaries

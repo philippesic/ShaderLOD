@@ -1,0 +1,7 @@
+results/benchmark-workflows/evidence/*.json -diff
+results/historical-evidence-extraction/retirement-supplement/*.json -diff
+results/historical-evidence-extraction/source-recovery.json -diff
+results/sources/history/*.json -diff
+results/sources/earlier-rendering-lessons.json -diff
+results/sources/historical-guides.json -diff
+results/sources/legacy-mac-investigation-reports.json -diff
