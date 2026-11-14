@@ -1,6 +1,6 @@
 # Distant Horizons terrain is the largest single GPU cost in a Reimagined frame at 4K
 
-At 3840×2160 on the RTX 2080 Ti, Distant Horizons (DH) added 3.2 ms of GPU time to an 8.7 ms frame. Most of that went to one draw, `LOD Opaque`, which at 2.37 ms was the most expensive group in the frame, ahead of the pack's main lighting pass `deferred1` (1.74 ms). About two thirds of that draw scaled with pixel count and one third did not. DH also took about 2.3 ms of render-thread CPU per frame at either resolution. These numbers say where DH-specific work would act; they do not show that any of it can be removed.
+At 3840×2160 on the RTX 2080 Ti, Distant Horizons (DH) added 3.2 ms of GPU time to an 8.7 ms frame. Most of that went to one draw, `LOD Opaque`, which at 2.37 ms was the most expensive group in the frame, ahead of the pack's main lighting pass `deferred1` (1.74 ms). In a two-point fit across resolutions, about two thirds of that draw scaled with pixel count; this split is a hypothesis. DH also took about 2.3 ms of render-thread CPU per frame at either resolution. These numbers say where DH-specific work would act; they do not show that any of it can be removed.
 
 | Group, ms per sampled frame | GPU 4K with DH | GPU 4K without DH | GPU 1440p with DH | CPU 4K with DH |
 | --- | --- | --- | --- | --- |
@@ -18,8 +18,8 @@ Values are from 82–145 sampled frames per profile, all with complete GPU queri
 
 These are observations from one scene; the causes are supported hypotheses, not established.
 
-- **DH opaque shading.** Fitting the two resolutions gives about 0.43 ms per megapixel plus about 0.8 ms that does not scale. At 4K that is about 1.6 ms of per-pixel work on distant terrain, which is the kind of work ShaderLOD exists to reduce. The pack's DH terrain program, how many DH fragments are later hidden by nearer terrain, and how much detail survives at that distance are the questions to answer next.
-- **DH geometry.** The fixed 0.8 ms of `LOD Opaque` depends on how much DH geometry is drawn, which is set by DH's own quality and distance settings rather than by the pack.
+- **DH opaque shading.** A straight line through the two resolutions gives about 0.19 ms per megapixel plus about 0.8 ms that did not scale in these observations. At 4K that suggests about 1.6 ms of per-pixel work on distant terrain. Two points cannot separate per-pixel work from resolution-dependent scheduling or instrumentation effects, so treat this split as a hypothesis for choosing experiments. Per-pixel work on distant terrain is the kind of work ShaderLOD exists to reduce. The pack's DH terrain program, how many DH fragments are later hidden by nearer terrain, and how much detail survives at that distance are the questions to answer next.
+- **DH geometry.** The 0.8 ms of `LOD Opaque` that did not scale may be geometry work, which DH's own quality and distance settings control rather than the pack; this is not established.
 - **Pack passes over DH.** `composite1` cost 0.23 ms more with DH at 4K, about 20%. Some full-screen pass work grows with DH content; which pass effect does so is not identified.
 - **CPU submission.** DH's render-thread time was about 2.3 ms regardless of resolution, with `LOD Transparent` taking more CPU (0.77 ms) than GPU (0.44 ms). At 4K the frame is GPU-bound, so this time did not limit throughput; at lower resolutions or on a faster GPU it will matter more.
 - **Shadows.** DH sections inside the shadow pass took under 0.01 ms, so DH terrain is not a shadow-map cost in this configuration.
