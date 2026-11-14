@@ -1747,7 +1747,7 @@ def contain_windows_runtime(root: Path, external: Path) -> dict[str, object]:
     for path in referenced:
         key = hashlib.sha256(str(path.relative_to(external)).encode()).hexdigest()[:16]
         mapping[path] = (
-            target / ("assets" if path.is_dir() else "lib") / (key + "-" + path.name)
+            target / ("assets" if path.is_dir() else "lib") / key / path.name
         )
     copied = 0
     for source, destination in sorted(mapping.items()):

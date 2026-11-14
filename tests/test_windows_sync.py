@@ -179,7 +179,8 @@ def test_contain_copies_outside_runtime_inputs_and_rewrites_references(
     assert (contained / "jdk/jdk/lib/modules").read_bytes() == b"modules"
     rewritten = json.loads(launch.read_bytes())["argv"]
     assert rewritten[0] == str(contained / "jdk/jdk/bin/java")
-    assert str(contained / "lib") in rewritten[2] and "-a.jar" in rewritten[2]
+    copied_jar = next((contained / "lib").glob("*/a.jar"))
+    assert str(copied_jar) in rewritten[2]
     assert str(inside) in rewritten[2]
     program = (root / "build/moddev/benchmarkRunProgramArgs.txt").read_text()
     copied_assets = Path(program.splitlines()[1].strip('"'))
@@ -191,7 +192,7 @@ def test_contain_copies_outside_runtime_inputs_and_rewrites_references(
         root / "build/moddev/benchmarkRunProgramArgs.txt",
     ):
         assert str(external) not in path.read_text()
-    next((contained / "lib").glob("*-b.jar")).write_bytes(b"other")
+    next((contained / "lib").glob("*/b.jar")).write_bytes(b"other")
     launch.write_text(
         json.dumps({"argv": [str(java), "-cp", str(jars[1])], "cwd": str(root)})
     )
