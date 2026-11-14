@@ -142,9 +142,25 @@ class NvidiaSensors:
             self.library = None
 
 
+VIRTUAL_MACHINE_GPU_PID = 4
+
+
+def gpu_admission(processes: dict[str, object], windows: bool) -> list[int]:
+    pids = processes.get("pids")
+    if not isinstance(pids, list):
+        return []
+    if windows:
+        return [pid for pid in pids if pid == VIRTUAL_MACHINE_GPU_PID]
+    return [int(pid) for pid in pids]
+
+
 def gpu_contamination(
-    samples: list[dict[str, object]], started_unix_ns: int, ended_unix_ns: int
+    samples: list[dict[str, object]],
+    started_unix_ns: int,
+    ended_unix_ns: int,
+    ambient: set[int] | None = None,
 ) -> dict[str, object]:
+    allowed = (ambient or set()) - {VIRTUAL_MACHINE_GPU_PID}
     inside = [
         sample
         for sample in samples
@@ -158,7 +174,7 @@ def gpu_contamination(
         processes = gpu.get("compute_processes") if isinstance(gpu, dict) else None
         pids = processes.get("pids") if isinstance(processes, dict) else None
         if isinstance(pids, list):
-            foreign.update(int(pid) for pid in pids)
+            foreign.update(int(pid) for pid in pids if int(pid) not in allowed)
         else:
             unknown += 1
     state = "foreign" if foreign else "unobserved" if not inside or unknown else "clean"
@@ -167,7 +183,8 @@ def gpu_contamination(
         "samples": len(inside),
         "unknown_samples": unknown,
         "foreign_pids": sorted(foreign),
-        "meaning": "GPU compute processes sampled at 1 Hz during the window; a screen, not proof that no short foreign work overlapped",
+        "ambient_pids": sorted(allowed),
+        "meaning": "GPU processes sampled at 1 Hz during the window, excluding the owned client and processes present at session start; a screen, not proof that no short foreign work overlapped",
     }
 
 

@@ -413,3 +413,25 @@ def test_gpu_contamination_separates_clean_foreign_and_unobserved() -> None:
     assert gpu_contamination([{"unix_ns": 150, "gpu": {}}], 100, 300)["state"] == (
         "unobserved"
     )
+
+
+def test_gpu_contamination_ignores_ambient_desktop_but_not_virtual_machine_work() -> (
+    None
+):
+    from shaderlod_host.telemetry import gpu_admission, gpu_contamination
+
+    def sample(at: int, pids: list[int]) -> dict[str, object]:
+        return {"unix_ns": at, "gpu": {"compute_processes": {"pids": pids}}}
+
+    ambient = {2564, 11208, 9000}
+    desktop = [sample(100, [2564, 11208, 9000])]
+    assert gpu_contamination(desktop, 0, 200, ambient)["state"] == "clean"
+    assert gpu_contamination(desktop, 0, 200)["state"] == "foreign"
+    newcomer = [sample(100, [2564, 31337])]
+    assert gpu_contamination(newcomer, 0, 200, ambient)["foreign_pids"] == [31337]
+    virtual = [sample(100, [4, 2564])]
+    assert gpu_contamination(virtual, 0, 200, ambient | {4})["foreign_pids"] == [4]
+    assert gpu_admission({"pids": [2564, 11208]}, True) == []
+    assert gpu_admission({"pids": [2564, 4]}, True) == [4]
+    assert gpu_admission({"pids": [77]}, False) == [77]
+    assert gpu_admission({"unavailable": 3}, True) == []

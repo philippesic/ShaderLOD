@@ -271,8 +271,7 @@ def benchmark_session(
         raise ValueError("single prepared world name required")
     if not profile.is_dir() or not (profile / "saves" / world).is_dir():
         raise ValueError("prepared profile and selected world required")
-    if telemetry_enabled:
-        refuse_foreign_gpu_work()
+    gpu_baseline = refuse_foreign_gpu_work() if telemetry_enabled else None
     launch = json.loads(launch_path.read_bytes())
     if not isinstance(launch.get("argv"), list) or not all(
         isinstance(a, str) for a in launch["argv"]
@@ -472,6 +471,7 @@ def benchmark_session(
                         "build_sha256": hashlib.sha256(
                             shipping.read_bytes()
                         ).hexdigest(),
+                        "gpu_baseline": gpu_baseline,
                         "instrumentation": {
                             "telemetry": "1hz" if telemetry_enabled else "disabled",
                             "frames": "complete-entry-v1",
@@ -543,21 +543,22 @@ def benchmark_session(
         return status
 
 
-def refuse_foreign_gpu_work() -> None:
-    from shaderlod_host.telemetry import NvidiaSensors
+def refuse_foreign_gpu_work() -> dict[str, object]:
+    from shaderlod_host.telemetry import NvidiaSensors, gpu_admission
 
     sensors = NvidiaSensors()
     try:
         processes = sensors.compute_processes()
     finally:
         sensors.close()
-    pids = processes.get("pids")
-    if isinstance(pids, list) and pids:
+    foreign = gpu_admission(processes, os.name == "nt")
+    if foreign:
         raise ValueError(
-            "foreign GPU compute processes present: "
-            + ", ".join(str(pid) for pid in pids)
-            + "; wait until the GPU is idle"
+            "foreign GPU work present (process "
+            + ", ".join(str(pid) for pid in foreign)
+            + "); wait until the GPU is idle"
         )
+    return processes
 
 
 def record_telemetry(

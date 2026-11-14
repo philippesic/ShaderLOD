@@ -669,11 +669,12 @@ def execute_comparison(
         except (OSError, ValueError, RuntimeError) as error:
             failure = (failure or "") + "; restoration failed: " + str(error)
     samples = telemetry_samples(session)
+    ambient = ambient_gpu_processes(session)
     for row in results:
         bounds = row.get("window_unix_ns")
         if isinstance(bounds, list) and len(bounds) == 2:
             row["gpu_contamination"] = gpu_contamination(
-                samples, int(bounds[0]), int(bounds[1])
+                samples, int(bounds[0]), int(bounds[1]), ambient
             )
     result: dict[str, object] = {
         "schema": "shaderlod-comparison-result-v1",
@@ -716,6 +717,26 @@ def execute_comparison(
         },
     )
     return result
+
+
+def ambient_gpu_processes(session: Path) -> set[int]:
+    ambient: set[int] = set()
+    for name, key in (("session.json", "gpu_baseline"), ("child.json", None)):
+        try:
+            record = json.loads((session / name).read_bytes())
+        except (OSError, ValueError):
+            continue
+        if not isinstance(record, dict):
+            continue
+        if key is None:
+            if type(record.get("pid")) is int:
+                ambient.add(int(record["pid"]))
+            continue
+        baseline = record.get(key)
+        pids = baseline.get("pids") if isinstance(baseline, dict) else None
+        if isinstance(pids, list):
+            ambient.update(int(pid) for pid in pids)
+    return ambient
 
 
 def telemetry_samples(session: Path) -> list[dict[str, object]]:
