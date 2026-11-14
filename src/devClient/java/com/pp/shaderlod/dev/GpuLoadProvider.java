@@ -9,7 +9,7 @@ import java.util.Map;
 
 public final class GpuLoadProvider implements OptimizationProvider {
   static final String MEMBER = "shaders/world0/final.fsh";
-  static final int ITERATIONS = 32;
+  static final int ITERATIONS = 22;
 
   @Override
   public String id() {
