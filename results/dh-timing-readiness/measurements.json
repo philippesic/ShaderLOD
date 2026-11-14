@@ -1,0 +1,1823 @@
+{
+ "schema": "shaderlod-dh-timing-readiness-v1",
+ "date": "2026-11-13",
+ "source_commit": "a8fa239",
+ "host": "RTX 2080 Ti, native Windows 11 IoT Enterprise LTSC 26100, NVIDIA 610.88, virtual display; 3840x2160 fullscreen; frame limiter off, vsync off",
+ "pack": "ComplementaryReimagined_r5.9.3.zip, original options",
+ "dh": "Distant Horizons 3.3.3 on run-benchmark-dh; frozen dataset identity 9a5a026be00411b9aa9bbb3a5fa809f3f8881f4e3bdc7d55ea75f33f16fee365; generator plan overridden to DISABLED during sessions",
+ "case": "coast-pan in ShaderLOD-Smoke, render distance 8, noon, clear",
+ "campaigns": {
+  "no_change": {
+   "spec": "rtx2080ti-dh-null-sessions.json",
+   "spec_sha256": "34e865e703fa2ab0c31e6da1f7bd365b775d176fda28c19d438d2dfd1faa4e8a",
+   "campaign_sha256": "96a3bc501824bbda86f369397148f7e2f50c9eabfd5f9e1d6404f0bf5eeb7620",
+   "result_sha256": "006315324cc28fc7f3f47e085f93fc3f5fbfb200a958aae3b4f8437b177b69e5",
+   "state": "complete",
+   "failures": [],
+   "assessment": {
+    "cases": [
+     {
+      "case": "coast-pan",
+      "interval": {
+       "achieved_coverage": 0.96875,
+       "high": 0.000595505382428474,
+       "low": -0.00014054768303883858,
+       "median": -5.04491575165078e-06,
+       "method": "binomial order-statistic interval for median of independent session effects",
+       "requested_coverage": 0.95,
+       "sessions": 6
+      },
+      "margin": 0.01,
+      "session_effects": [
+       -1.4734991848897039e-06,
+       2.6904870434663053e-05,
+       0.000595505382428474,
+       -0.00014054768303883858,
+       -0.00011250745412383356,
+       -8.616332318411857e-06
+      ],
+      "state": "fails_margin"
+     }
+    ],
+    "limits": "Conditional on independent comparable sessions and declared coverage; no universal hardware/pack or perceptual claim; small samples remain inconclusive",
+    "policy_sha256": "4a0e3098d6b596bd63886c2e5b5e4a7a25019652b7dc7266e87b754e5bbf28fd",
+    "problems": [],
+    "quality_review_complete": false,
+    "recommendation": "do_not_promote",
+    "schema": "shaderlod-qualification-assessment-v1"
+   },
+   "sessions": [
+    {
+     "result_sha256": "aaee2423d51ece299ac5a022da8fac18ee9a6e997bae7d0cf5d31654131c42b9",
+     "state": "complete",
+     "restored": true,
+     "dh_dataset": {
+      "config_sha256": "8e15fe10a4b96945e4d18354db4633601c6cc7e15df327463424ec1bdcb30df3",
+      "identity": "9a5a026be00411b9aa9bbb3a5fa809f3f8881f4e3bdc7d55ea75f33f16fee365",
+      "restored_files": [
+       "data/DistantHorizons.sqlite"
+      ],
+      "state": "prepared"
+     },
+     "readiness": {
+      "state": "stable",
+      "intervals": 15,
+      "last_fps": [
+       82.44,
+       82.46,
+       82.41,
+       82.35,
+       82.04,
+       82.4,
+       82.33,
+       82.15,
+       82.19,
+       82.38,
+       82.45,
+       82.33,
+       82.44,
+       82.07,
+       82.16
+      ],
+      "last_dh_per_frame": [
+       330.0
+      ],
+      "screenshots": [
+       {
+        "case": "coast-pan",
+        "image": "quality-9.png",
+        "image_has_variation": true,
+        "image_sha256": "1413424d287182b674fdbd5c1ca6e1d2391e063d861492567fc4888e8595d32f"
+       }
+      ]
+     },
+     "windows": [
+      {
+       "block": 0,
+       "arm": "original",
+       "fps": 82.826,
+       "half_window_drift": -0.00513,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.549,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 0,
+       "arm": "identity",
+       "fps": 82.833,
+       "half_window_drift": -0.00707,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.53,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 1,
+       "arm": "identity",
+       "fps": 82.815,
+       "half_window_drift": -0.00658,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.54,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 1,
+       "arm": "original",
+       "fps": 82.781,
+       "half_window_drift": -0.00829,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.542,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 2,
+       "arm": "original",
+       "fps": 82.816,
+       "half_window_drift": -0.0069,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.535,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 2,
+       "arm": "identity",
+       "fps": 82.751,
+       "half_window_drift": -0.00718,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.527,
+       "gpu_contamination": "clean",
+       "contamination_samples": 10
+      },
+      {
+       "block": 3,
+       "arm": "identity",
+       "fps": 82.767,
+       "half_window_drift": -0.00658,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.537,
+       "gpu_contamination": "clean",
+       "contamination_samples": 10
+      },
+      {
+       "block": 3,
+       "arm": "original",
+       "fps": 82.774,
+       "half_window_drift": -0.00709,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.537,
+       "gpu_contamination": "clean",
+       "contamination_samples": 10
+      }
+     ],
+     "telemetry": {
+      "samples": 421,
+      "temperature_c": [
+       38,
+       63
+      ],
+      "graphics_clock_mhz_after_first_third": [
+       1350,
+       1950
+      ],
+      "power_w_max": 307.3,
+      "limit_reason_bits_seen": [
+       0,
+       1,
+       4
+      ]
+     }
+    },
+    {
+     "result_sha256": "5a51be703b8256f8b4c450233c1dd60d746230ff2ca463aa800115cf5e47a2e7",
+     "state": "complete",
+     "restored": true,
+     "dh_dataset": {
+      "config_sha256": "8e15fe10a4b96945e4d18354db4633601c6cc7e15df327463424ec1bdcb30df3",
+      "identity": "9a5a026be00411b9aa9bbb3a5fa809f3f8881f4e3bdc7d55ea75f33f16fee365",
+      "restored_files": [
+       "data/DistantHorizons.sqlite"
+      ],
+      "state": "prepared"
+     },
+     "readiness": {
+      "state": "stable",
+      "intervals": 15,
+      "last_fps": [
+       82.2,
+       82.2,
+       82.03,
+       82.11,
+       81.48,
+       82.01,
+       82.23,
+       82.26,
+       82.25,
+       82.21,
+       81.92,
+       82.03,
+       82.26,
+       82.09,
+       82.27
+      ],
+      "last_dh_per_frame": [
+       330.0
+      ],
+      "screenshots": [
+       {
+        "case": "coast-pan",
+        "image": "quality-9.png",
+        "image_has_variation": true,
+        "image_sha256": "05db9f2bc1c6f424490808577f46540ad7f15bca08d2a833a211c58bb396a001"
+       }
+      ]
+     },
+     "windows": [
+      {
+       "block": 0,
+       "arm": "identity",
+       "fps": 82.762,
+       "half_window_drift": -0.00644,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.534,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 0,
+       "arm": "original",
+       "fps": 82.701,
+       "half_window_drift": -0.00733,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.479,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 1,
+       "arm": "original",
+       "fps": 82.694,
+       "half_window_drift": -0.00702,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.517,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 1,
+       "arm": "identity",
+       "fps": 82.687,
+       "half_window_drift": -0.00675,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.484,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 2,
+       "arm": "identity",
+       "fps": 82.693,
+       "half_window_drift": -0.00729,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.534,
+       "gpu_contamination": "clean",
+       "contamination_samples": 10
+      },
+      {
+       "block": 2,
+       "arm": "original",
+       "fps": 82.739,
+       "half_window_drift": -0.00689,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.54,
+       "gpu_contamination": "clean",
+       "contamination_samples": 10
+      },
+      {
+       "block": 3,
+       "arm": "original",
+       "fps": 82.695,
+       "half_window_drift": -0.00705,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.533,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 3,
+       "arm": "identity",
+       "fps": 82.707,
+       "half_window_drift": -0.0073,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.53,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      }
+     ],
+     "telemetry": {
+      "samples": 420,
+      "temperature_c": [
+       55,
+       64
+      ],
+      "graphics_clock_mhz_after_first_third": [
+       420,
+       1950
+      ],
+      "power_w_max": 309.0,
+      "limit_reason_bits_seen": [
+       0,
+       1,
+       4
+      ]
+     }
+    },
+    {
+     "result_sha256": "e69c0cd3a42e9ab0a57940a12859a958771d05dda6b64b81067939ee8c6eb8a4",
+     "state": "complete",
+     "restored": true,
+     "dh_dataset": {
+      "config_sha256": "8e15fe10a4b96945e4d18354db4633601c6cc7e15df327463424ec1bdcb30df3",
+      "identity": "9a5a026be00411b9aa9bbb3a5fa809f3f8881f4e3bdc7d55ea75f33f16fee365",
+      "restored_files": [
+       "data/DistantHorizons.sqlite"
+      ],
+      "state": "prepared"
+     },
+     "readiness": {
+      "state": "stable",
+      "intervals": 15,
+      "last_fps": [
+       82.17,
+       82.07,
+       82.12,
+       82.22,
+       82.02,
+       81.75,
+       81.79,
+       82.14,
+       81.95,
+       81.74,
+       81.98,
+       81.89,
+       81.81,
+       82.11,
+       82.18
+      ],
+      "last_dh_per_frame": [
+       330.0
+      ],
+      "screenshots": [
+       {
+        "case": "coast-pan",
+        "image": "quality-9.png",
+        "image_has_variation": true,
+        "image_sha256": "5fdbbcf43ce9ff7f88f36010726b51b9913f521e57eed0826babe611faad6e40"
+       }
+      ]
+     },
+     "windows": [
+      {
+       "block": 0,
+       "arm": "original",
+       "fps": 82.636,
+       "half_window_drift": -0.00731,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.78,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 0,
+       "arm": "identity",
+       "fps": 82.67,
+       "half_window_drift": -0.00708,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.546,
+       "gpu_contamination": "clean",
+       "contamination_samples": 10
+      },
+      {
+       "block": 1,
+       "arm": "identity",
+       "fps": 82.656,
+       "half_window_drift": -0.00626,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.534,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 1,
+       "arm": "original",
+       "fps": 82.553,
+       "half_window_drift": -0.00626,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.65,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 2,
+       "arm": "original",
+       "fps": 82.538,
+       "half_window_drift": -0.00607,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.536,
+       "gpu_contamination": "clean",
+       "contamination_samples": 10
+      },
+      {
+       "block": 2,
+       "arm": "identity",
+       "fps": 82.603,
+       "half_window_drift": -0.00739,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.541,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 3,
+       "arm": "identity",
+       "fps": 82.563,
+       "half_window_drift": -0.00668,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.527,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 3,
+       "arm": "original",
+       "fps": 82.574,
+       "half_window_drift": -0.00785,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.541,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      }
+     ],
+     "telemetry": {
+      "samples": 422,
+      "temperature_c": [
+       54,
+       65
+      ],
+      "graphics_clock_mhz_after_first_third": [
+       1110,
+       1950
+      ],
+      "power_w_max": 306.2,
+      "limit_reason_bits_seen": [
+       0,
+       1,
+       4
+      ]
+     }
+    },
+    {
+     "result_sha256": "4be90be0143ad4b4124b71306ebbaf14b65305023ef6e0c60001eb28f9a6f903",
+     "state": "complete",
+     "restored": true,
+     "dh_dataset": {
+      "config_sha256": "8e15fe10a4b96945e4d18354db4633601c6cc7e15df327463424ec1bdcb30df3",
+      "identity": "9a5a026be00411b9aa9bbb3a5fa809f3f8881f4e3bdc7d55ea75f33f16fee365",
+      "restored_files": [
+       "data/DistantHorizons.sqlite"
+      ],
+      "state": "prepared"
+     },
+     "readiness": {
+      "state": "stable",
+      "intervals": 15,
+      "last_fps": [
+       81.72,
+       81.74,
+       81.61,
+       81.46,
+       81.68,
+       81.34,
+       81.82,
+       81.74,
+       81.26,
+       81.81,
+       81.63,
+       81.65,
+       81.73,
+       81.7,
+       81.72
+      ],
+      "last_dh_per_frame": [
+       330.0
+      ],
+      "screenshots": [
+       {
+        "case": "coast-pan",
+        "image": "quality-9.png",
+        "image_has_variation": true,
+        "image_sha256": "b3ed59cee0384309ac958e14415724d65238ed47d6920b2d1e62ed10280cc2f9"
+       }
+      ]
+     },
+     "windows": [
+      {
+       "block": 0,
+       "arm": "identity",
+       "fps": 82.598,
+       "half_window_drift": -0.00654,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.524,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 0,
+       "arm": "original",
+       "fps": 82.597,
+       "half_window_drift": -0.00672,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.551,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 1,
+       "arm": "original",
+       "fps": 82.568,
+       "half_window_drift": -0.00655,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.551,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 1,
+       "arm": "identity",
+       "fps": 82.487,
+       "half_window_drift": -0.00919,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.55,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 2,
+       "arm": "identity",
+       "fps": 82.599,
+       "half_window_drift": -0.00672,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.543,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 2,
+       "arm": "original",
+       "fps": 82.623,
+       "half_window_drift": -0.00658,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.548,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 3,
+       "arm": "original",
+       "fps": 82.6,
+       "half_window_drift": -0.00728,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.531,
+       "gpu_contamination": "clean",
+       "contamination_samples": 10
+      },
+      {
+       "block": 3,
+       "arm": "identity",
+       "fps": 82.601,
+       "half_window_drift": -0.00668,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.524,
+       "gpu_contamination": "clean",
+       "contamination_samples": 10
+      }
+     ],
+     "telemetry": {
+      "samples": 421,
+      "temperature_c": [
+       56,
+       65
+      ],
+      "graphics_clock_mhz_after_first_third": [
+       1455,
+       1950
+      ],
+      "power_w_max": 306.5,
+      "limit_reason_bits_seen": [
+       0,
+       1,
+       4
+      ]
+     }
+    },
+    {
+     "result_sha256": "0a67d60bdda0fe03a119309ce180c6112e90d247348267608b5502d58151a523",
+     "state": "complete",
+     "restored": true,
+     "dh_dataset": {
+      "config_sha256": "8e15fe10a4b96945e4d18354db4633601c6cc7e15df327463424ec1bdcb30df3",
+      "identity": "9a5a026be00411b9aa9bbb3a5fa809f3f8881f4e3bdc7d55ea75f33f16fee365",
+      "restored_files": [
+       "data/DistantHorizons.sqlite"
+      ],
+      "state": "prepared"
+     },
+     "readiness": {
+      "state": "stable",
+      "intervals": 15,
+      "last_fps": [
+       81.85,
+       82.05,
+       82.22,
+       82.06,
+       81.41,
+       82.16,
+       82.05,
+       82.07,
+       81.94,
+       81.49,
+       81.95,
+       81.95,
+       81.84,
+       82.0,
+       81.89
+      ],
+      "last_dh_per_frame": [
+       330.0
+      ],
+      "screenshots": [
+       {
+        "case": "coast-pan",
+        "image": "quality-9.png",
+        "image_has_variation": true,
+        "image_sha256": "9d708b3f124f98d03f0248f28b6fc419d04e6e9bb1013760d9c74b0acd89bd0b"
+       }
+      ]
+     },
+     "windows": [
+      {
+       "block": 0,
+       "arm": "original",
+       "fps": 82.584,
+       "half_window_drift": -0.00693,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.536,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 0,
+       "arm": "identity",
+       "fps": 82.524,
+       "half_window_drift": -0.00657,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.543,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 1,
+       "arm": "identity",
+       "fps": 82.53,
+       "half_window_drift": -0.0064,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.531,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 1,
+       "arm": "original",
+       "fps": 82.494,
+       "half_window_drift": -0.00587,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.533,
+       "gpu_contamination": "clean",
+       "contamination_samples": 10
+      },
+      {
+       "block": 2,
+       "arm": "original",
+       "fps": 82.561,
+       "half_window_drift": -0.00675,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.541,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 2,
+       "arm": "identity",
+       "fps": 82.525,
+       "half_window_drift": -0.00654,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.536,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 3,
+       "arm": "identity",
+       "fps": 82.501,
+       "half_window_drift": -0.00652,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.538,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 3,
+       "arm": "original",
+       "fps": 82.484,
+       "half_window_drift": -0.00652,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.543,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      }
+     ],
+     "telemetry": {
+      "samples": 423,
+      "temperature_c": [
+       55,
+       65
+      ],
+      "graphics_clock_mhz_after_first_third": [
+       420,
+       1950
+      ],
+      "power_w_max": 307.7,
+      "limit_reason_bits_seen": [
+       0,
+       1,
+       4
+      ]
+     }
+    },
+    {
+     "result_sha256": "25e12a20f83311a8c3a9d435693cb4db434da4b92f0f587a871c7c90c6cfbc73",
+     "state": "complete",
+     "restored": true,
+     "dh_dataset": {
+      "config_sha256": "8e15fe10a4b96945e4d18354db4633601c6cc7e15df327463424ec1bdcb30df3",
+      "identity": "9a5a026be00411b9aa9bbb3a5fa809f3f8881f4e3bdc7d55ea75f33f16fee365",
+      "restored_files": [
+       "data/DistantHorizons.sqlite"
+      ],
+      "state": "prepared"
+     },
+     "readiness": {
+      "state": "stable",
+      "intervals": 30,
+      "last_fps": [
+       81.76,
+       81.8,
+       81.3,
+       81.46,
+       81.18,
+       80.85,
+       81.57,
+       81.55,
+       81.69,
+       81.41,
+       81.99,
+       81.92,
+       81.73,
+       81.77,
+       81.55
+      ],
+      "last_dh_per_frame": [
+       330.0
+      ],
+      "screenshots": [
+       {
+        "case": "coast-pan",
+        "image": "quality-9.png",
+        "image_has_variation": true,
+        "image_sha256": "e25e57989f86ce39f905f858d458eaf37f8e75aca212e155357cae749c2c957f"
+       }
+      ]
+     },
+     "windows": [
+      {
+       "block": 0,
+       "arm": "identity",
+       "fps": 82.621,
+       "half_window_drift": -0.00654,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.551,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 0,
+       "arm": "original",
+       "fps": 82.631,
+       "half_window_drift": -0.00703,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.529,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 1,
+       "arm": "original",
+       "fps": 82.638,
+       "half_window_drift": -0.007,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.572,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 1,
+       "arm": "identity",
+       "fps": 82.6,
+       "half_window_drift": -0.00654,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.541,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 2,
+       "arm": "identity",
+       "fps": 82.634,
+       "half_window_drift": -0.00719,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.529,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 2,
+       "arm": "original",
+       "fps": 82.559,
+       "half_window_drift": -0.0071,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.545,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 3,
+       "arm": "original",
+       "fps": 82.552,
+       "half_window_drift": -0.00626,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.533,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 3,
+       "arm": "identity",
+       "fps": 82.561,
+       "half_window_drift": -0.00636,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.541,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      }
+     ],
+     "telemetry": {
+      "samples": 452,
+      "temperature_c": [
+       55,
+       64
+      ],
+      "graphics_clock_mhz_after_first_third": [
+       465,
+       1950
+      ],
+      "power_w_max": 306.3,
+      "limit_reason_bits_seen": [
+       0,
+       1,
+       4
+      ]
+     }
+    }
+   ]
+  },
+  "gpu_detection": {
+   "spec": "rtx2080ti-dh-detection.json",
+   "spec_sha256": "399339713f9ca20ffa1dc00a384f3a48d85fb41cee2ba6da2f944f8395405541",
+   "campaign_sha256": "66cf72e9a5a4c6d5221470c8d600982515989b7275e535098c011dbca7592fbe",
+   "result_sha256": "500a4c18f2efa2ffc522fa5a1c4f117e7a54964089788bc9bf5d94026354b832",
+   "state": "complete",
+   "failures": [],
+   "assessment": {
+    "cases": [
+     {
+      "case": "coast-pan",
+      "interval": {
+       "achieved_coverage": 0.96875,
+       "high": 0.008544713176114715,
+       "low": 0.007331286130576764,
+       "median": 0.008085698374100225,
+       "method": "binomial order-statistic interval for median of independent session effects",
+       "requested_coverage": 0.95,
+       "sessions": 6
+      },
+      "margin": 0.001,
+      "session_effects": [
+       0.008544713176114715,
+       0.00816691260355884,
+       0.008319963186597001,
+       0.007842067268089892,
+       0.00800448414464161,
+       0.007331286130576764
+      ],
+      "state": "meets_margin"
+     }
+    ],
+    "limits": "Conditional on independent comparable sessions and declared coverage; no universal hardware/pack or perceptual claim; small samples remain inconclusive",
+    "policy_sha256": "3fdfd11fa4a3923a2f8742fc68c5c0b84ffd2fefc02c94735976913df72a7b82",
+    "problems": [],
+    "quality_review_complete": false,
+    "recommendation": "do_not_promote",
+    "schema": "shaderlod-qualification-assessment-v1"
+   },
+   "sessions": [
+    {
+     "result_sha256": "c7bb895d85b38db34ddb95597501d637f69b38734d50c3de2d95152de73bdaae",
+     "state": "complete",
+     "restored": true,
+     "dh_dataset": {
+      "config_sha256": "8e15fe10a4b96945e4d18354db4633601c6cc7e15df327463424ec1bdcb30df3",
+      "identity": "9a5a026be00411b9aa9bbb3a5fa809f3f8881f4e3bdc7d55ea75f33f16fee365",
+      "restored_files": [
+       "data/DistantHorizons.sqlite"
+      ],
+      "state": "prepared"
+     },
+     "readiness": {
+      "state": "stable",
+      "intervals": 15,
+      "last_fps": [
+       82.56,
+       82.13,
+       82.29,
+       82.19,
+       82.5,
+       82.22,
+       81.72,
+       82.28,
+       82.26,
+       82.26,
+       82.2,
+       81.97,
+       81.77,
+       82.15,
+       82.0
+      ],
+      "last_dh_per_frame": [
+       330.0
+      ],
+      "screenshots": [
+       {
+        "case": "coast-pan",
+        "image": "quality-9.png",
+        "image_has_variation": true,
+        "image_sha256": "33980e3bbf4eaa9c38898eae9544cf71671f92f69309690e3cdea98f526920dd"
+       }
+      ]
+     },
+     "windows": [
+      {
+       "block": 0,
+       "arm": "gpu-load",
+       "fps": 82.097,
+       "half_window_drift": -0.00663,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.541,
+       "gpu_contamination": "clean",
+       "contamination_samples": 10
+      },
+      {
+       "block": 0,
+       "arm": "original",
+       "fps": 82.676,
+       "half_window_drift": -0.00583,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.517,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 1,
+       "arm": "original",
+       "fps": 82.735,
+       "half_window_drift": -0.00775,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.537,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 1,
+       "arm": "gpu-load",
+       "fps": 81.997,
+       "half_window_drift": -0.00796,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.535,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 2,
+       "arm": "gpu-load",
+       "fps": 81.997,
+       "half_window_drift": -0.00634,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.533,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 2,
+       "arm": "original",
+       "fps": 82.684,
+       "half_window_drift": -0.0067,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.542,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 3,
+       "arm": "original",
+       "fps": 82.679,
+       "half_window_drift": -0.00746,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.532,
+       "gpu_contamination": "clean",
+       "contamination_samples": 10
+      },
+      {
+       "block": 3,
+       "arm": "gpu-load",
+       "fps": 81.965,
+       "half_window_drift": -0.00689,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.543,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      }
+     ],
+     "telemetry": {
+      "samples": 421,
+      "temperature_c": [
+       38,
+       64
+      ],
+      "graphics_clock_mhz_after_first_third": [
+       420,
+       1950
+      ],
+      "power_w_max": 309.1,
+      "limit_reason_bits_seen": [
+       0,
+       1,
+       4
+      ]
+     }
+    },
+    {
+     "result_sha256": "1afe541ab8af0f54f3b0de4d634bf2fa59291b8b47e9d49552d1482019e46059",
+     "state": "complete",
+     "restored": true,
+     "dh_dataset": {
+      "config_sha256": "8e15fe10a4b96945e4d18354db4633601c6cc7e15df327463424ec1bdcb30df3",
+      "identity": "9a5a026be00411b9aa9bbb3a5fa809f3f8881f4e3bdc7d55ea75f33f16fee365",
+      "restored_files": [
+       "data/DistantHorizons.sqlite"
+      ],
+      "state": "prepared"
+     },
+     "readiness": {
+      "state": "stable",
+      "intervals": 15,
+      "last_fps": [
+       81.44,
+       81.96,
+       82.06,
+       81.82,
+       81.62,
+       82.02,
+       82.05,
+       82.3,
+       82.11,
+       81.85,
+       81.99,
+       81.83,
+       82.15,
+       82.15,
+       81.72
+      ],
+      "last_dh_per_frame": [
+       330.0
+      ],
+      "screenshots": [
+       {
+        "case": "coast-pan",
+        "image": "quality-9.png",
+        "image_has_variation": true,
+        "image_sha256": "4ff6087b9640190bdf3408f2a901e64cb81ec7bc8ee7868b6e0f082aca41a97d"
+       }
+      ]
+     },
+     "windows": [
+      {
+       "block": 0,
+       "arm": "original",
+       "fps": 82.659,
+       "half_window_drift": -0.00616,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.529,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 0,
+       "arm": "gpu-load",
+       "fps": 82.025,
+       "half_window_drift": -0.00711,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.543,
+       "gpu_contamination": "clean",
+       "contamination_samples": 10
+      },
+      {
+       "block": 1,
+       "arm": "gpu-load",
+       "fps": 81.987,
+       "half_window_drift": -0.00669,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.552,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 1,
+       "arm": "original",
+       "fps": 82.584,
+       "half_window_drift": -0.00555,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.539,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 2,
+       "arm": "original",
+       "fps": 82.668,
+       "half_window_drift": -0.00737,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.534,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 2,
+       "arm": "gpu-load",
+       "fps": 81.939,
+       "half_window_drift": -0.00773,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.533,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 3,
+       "arm": "gpu-load",
+       "fps": 81.928,
+       "half_window_drift": -0.00673,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.533,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 3,
+       "arm": "original",
+       "fps": 82.633,
+       "half_window_drift": -0.00593,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.527,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      }
+     ],
+     "telemetry": {
+      "samples": 421,
+      "temperature_c": [
+       54,
+       64
+      ],
+      "graphics_clock_mhz_after_first_third": [
+       1845,
+       1950
+      ],
+      "power_w_max": 313.8,
+      "limit_reason_bits_seen": [
+       0,
+       1,
+       4
+      ]
+     }
+    },
+    {
+     "result_sha256": "54b2fd4ff9766e9897aa6161c0ecd86da60ea72d0c02a56e0bb541f3bb0256c9",
+     "state": "complete",
+     "restored": true,
+     "dh_dataset": {
+      "config_sha256": "8e15fe10a4b96945e4d18354db4633601c6cc7e15df327463424ec1bdcb30df3",
+      "identity": "9a5a026be00411b9aa9bbb3a5fa809f3f8881f4e3bdc7d55ea75f33f16fee365",
+      "restored_files": [
+       "data/DistantHorizons.sqlite"
+      ],
+      "state": "prepared"
+     },
+     "readiness": {
+      "state": "stable",
+      "intervals": 15,
+      "last_fps": [
+       81.98,
+       82.19,
+       82.17,
+       82.07,
+       81.86,
+       82.07,
+       81.95,
+       82.03,
+       82.11,
+       81.67,
+       81.14,
+       82.11,
+       82.14,
+       81.92,
+       82.12
+      ],
+      "last_dh_per_frame": [
+       330.0
+      ],
+      "screenshots": [
+       {
+        "case": "coast-pan",
+        "image": "quality-9.png",
+        "image_has_variation": true,
+        "image_sha256": "44486f7fface8efeff6d4161227d54842fbf91ac93e9fcd0697b88ba8d7ba36b"
+       }
+      ]
+     },
+     "windows": [
+      {
+       "block": 0,
+       "arm": "gpu-load",
+       "fps": 81.976,
+       "half_window_drift": -0.00731,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.543,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 0,
+       "arm": "original",
+       "fps": 82.639,
+       "half_window_drift": -0.00636,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.534,
+       "gpu_contamination": "clean",
+       "contamination_samples": 10
+      },
+      {
+       "block": 1,
+       "arm": "original",
+       "fps": 82.613,
+       "half_window_drift": -0.00715,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.53,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 1,
+       "arm": "gpu-load",
+       "fps": 81.913,
+       "half_window_drift": -0.00644,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.535,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 2,
+       "arm": "gpu-load",
+       "fps": 81.913,
+       "half_window_drift": -0.0066,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.54,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 2,
+       "arm": "original",
+       "fps": 82.557,
+       "half_window_drift": -0.00616,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.522,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 3,
+       "arm": "original",
+       "fps": 82.607,
+       "half_window_drift": -0.00694,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.534,
+       "gpu_contamination": "clean",
+       "contamination_samples": 10
+      },
+      {
+       "block": 3,
+       "arm": "gpu-load",
+       "fps": 81.9,
+       "half_window_drift": -0.00657,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.489,
+       "gpu_contamination": "clean",
+       "contamination_samples": 10
+      }
+     ],
+     "telemetry": {
+      "samples": 421,
+      "temperature_c": [
+       55,
+       64
+      ],
+      "graphics_clock_mhz_after_first_third": [
+       1305,
+       1950
+      ],
+      "power_w_max": 310.1,
+      "limit_reason_bits_seen": [
+       0,
+       1,
+       4
+      ]
+     }
+    },
+    {
+     "result_sha256": "79b6bbfca7b4f0ecef2d78c13d9ec04d0e342eee1157962ed94f227039c88a74",
+     "state": "complete",
+     "restored": true,
+     "dh_dataset": {
+      "config_sha256": "8e15fe10a4b96945e4d18354db4633601c6cc7e15df327463424ec1bdcb30df3",
+      "identity": "9a5a026be00411b9aa9bbb3a5fa809f3f8881f4e3bdc7d55ea75f33f16fee365",
+      "restored_files": [
+       "data/DistantHorizons.sqlite"
+      ],
+      "state": "prepared"
+     },
+     "readiness": {
+      "state": "stable",
+      "intervals": 15,
+      "last_fps": [
+       81.52,
+       82.04,
+       82.14,
+       81.55,
+       82.12,
+       82.08,
+       82.04,
+       82.15,
+       81.89,
+       82.02,
+       82.11,
+       82.04,
+       82.1,
+       81.99,
+       82.07
+      ],
+      "last_dh_per_frame": [
+       330.0
+      ],
+      "screenshots": [
+       {
+        "case": "coast-pan",
+        "image": "quality-9.png",
+        "image_has_variation": true,
+        "image_sha256": "e657c3632c8ce3a8965f20aa8904500d00e8ea9712d9895a37eee6ec183b07c8"
+       }
+      ]
+     },
+     "windows": [
+      {
+       "block": 0,
+       "arm": "original",
+       "fps": 82.56,
+       "half_window_drift": -0.00626,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.548,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 0,
+       "arm": "gpu-load",
+       "fps": 81.914,
+       "half_window_drift": -0.00726,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.54,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 1,
+       "arm": "gpu-load",
+       "fps": 81.922,
+       "half_window_drift": -0.00749,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.537,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 1,
+       "arm": "original",
+       "fps": 82.56,
+       "half_window_drift": -0.00666,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.541,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 2,
+       "arm": "original",
+       "fps": 82.52,
+       "half_window_drift": -0.00631,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.524,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 2,
+       "arm": "gpu-load",
+       "fps": 81.91,
+       "half_window_drift": -0.00746,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.528,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 3,
+       "arm": "gpu-load",
+       "fps": 81.91,
+       "half_window_drift": -0.00719,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.516,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 3,
+       "arm": "original",
+       "fps": 82.57,
+       "half_window_drift": -0.00528,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.522,
+       "gpu_contamination": "clean",
+       "contamination_samples": 10
+      }
+     ],
+     "telemetry": {
+      "samples": 422,
+      "temperature_c": [
+       56,
+       64
+      ],
+      "graphics_clock_mhz_after_first_third": [
+       1830,
+       1950
+      ],
+      "power_w_max": 308.0,
+      "limit_reason_bits_seen": [
+       0,
+       1,
+       4
+      ]
+     }
+    },
+    {
+     "result_sha256": "1135d958691f15aafb12cfc255b174b2f34f4cd5bc79a09f3f3120d4fd245dc9",
+     "state": "complete",
+     "restored": true,
+     "dh_dataset": {
+      "config_sha256": "8e15fe10a4b96945e4d18354db4633601c6cc7e15df327463424ec1bdcb30df3",
+      "identity": "9a5a026be00411b9aa9bbb3a5fa809f3f8881f4e3bdc7d55ea75f33f16fee365",
+      "restored_files": [
+       "data/DistantHorizons.sqlite"
+      ],
+      "state": "prepared"
+     },
+     "readiness": {
+      "state": "stable",
+      "intervals": 15,
+      "last_fps": [
+       82.01,
+       82.02,
+       81.91,
+       82.08,
+       82.07,
+       81.53,
+       82.11,
+       81.98,
+       81.73,
+       81.85,
+       81.35,
+       81.38,
+       81.5,
+       81.56,
+       82.01
+      ],
+      "last_dh_per_frame": [
+       330.0
+      ],
+      "screenshots": [
+       {
+        "case": "coast-pan",
+        "image": "quality-9.png",
+        "image_has_variation": true,
+        "image_sha256": "449cc63f6b32315e479941a2f51960c5d8c271b265d6265d6868ec2d16a07a81"
+       }
+      ]
+     },
+     "windows": [
+      {
+       "block": 0,
+       "arm": "gpu-load",
+       "fps": 81.633,
+       "half_window_drift": 7e-05,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.535,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 0,
+       "arm": "original",
+       "fps": 82.492,
+       "half_window_drift": -0.00609,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.541,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 1,
+       "arm": "original",
+       "fps": 82.554,
+       "half_window_drift": -0.00652,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.527,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 1,
+       "arm": "gpu-load",
+       "fps": 81.893,
+       "half_window_drift": -0.00689,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.547,
+       "gpu_contamination": "clean",
+       "contamination_samples": 10
+      },
+      {
+       "block": 2,
+       "arm": "gpu-load",
+       "fps": 81.881,
+       "half_window_drift": -0.00733,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.547,
+       "gpu_contamination": "clean",
+       "contamination_samples": 10
+      },
+      {
+       "block": 2,
+       "arm": "original",
+       "fps": 82.494,
+       "half_window_drift": -0.00549,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.473,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 3,
+       "arm": "original",
+       "fps": 82.459,
+       "half_window_drift": -0.00542,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.536,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 3,
+       "arm": "gpu-load",
+       "fps": 81.809,
+       "half_window_drift": -0.00602,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.537,
+       "gpu_contamination": "clean",
+       "contamination_samples": 10
+      }
+     ],
+     "telemetry": {
+      "samples": 422,
+      "temperature_c": [
+       56,
+       64
+      ],
+      "graphics_clock_mhz_after_first_third": [
+       1350,
+       1950
+      ],
+      "power_w_max": 307.5,
+      "limit_reason_bits_seen": [
+       0,
+       1,
+       4
+      ]
+     }
+    },
+    {
+     "result_sha256": "1bdc22d47e10431a3234c1149cdcd45611bed0324161beb3fafc659f6a907471",
+     "state": "complete",
+     "restored": true,
+     "dh_dataset": {
+      "config_sha256": "8e15fe10a4b96945e4d18354db4633601c6cc7e15df327463424ec1bdcb30df3",
+      "identity": "9a5a026be00411b9aa9bbb3a5fa809f3f8881f4e3bdc7d55ea75f33f16fee365",
+      "restored_files": [
+       "data/DistantHorizons.sqlite"
+      ],
+      "state": "prepared"
+     },
+     "readiness": {
+      "state": "stable",
+      "intervals": 15,
+      "last_fps": [
+       82.06,
+       81.84,
+       82.11,
+       81.91,
+       81.91,
+       82.02,
+       82.19,
+       82.14,
+       81.89,
+       81.97,
+       82.03,
+       82.02,
+       81.89,
+       82.07,
+       82.01
+      ],
+      "last_dh_per_frame": [
+       330.0
+      ],
+      "screenshots": [
+       {
+        "case": "coast-pan",
+        "image": "quality-9.png",
+        "image_has_variation": true,
+        "image_sha256": "fbda7b6ebbb8156e5da7ced3aace440c477e802d837dfef140d1e0a5e9d9fe78"
+       }
+      ]
+     },
+     "windows": [
+      {
+       "block": 0,
+       "arm": "original",
+       "fps": 82.385,
+       "half_window_drift": 0.00144,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.523,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 0,
+       "arm": "gpu-load",
+       "fps": 82.004,
+       "half_window_drift": -0.00736,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.477,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 1,
+       "arm": "gpu-load",
+       "fps": 82.068,
+       "half_window_drift": -0.00679,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.533,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 1,
+       "arm": "original",
+       "fps": 82.631,
+       "half_window_drift": -0.00514,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.534,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 2,
+       "arm": "original",
+       "fps": 82.72,
+       "half_window_drift": -0.00728,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.527,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 2,
+       "arm": "gpu-load",
+       "fps": 81.983,
+       "half_window_drift": -0.00801,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.549,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 3,
+       "arm": "gpu-load",
+       "fps": 82.043,
+       "half_window_drift": -0.00669,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.538,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      },
+      {
+       "block": 3,
+       "arm": "original",
+       "fps": 82.683,
+       "half_window_drift": -0.00636,
+       "frame_limit": "unlimited",
+       "dh_per_frame": 343.534,
+       "gpu_contamination": "clean",
+       "contamination_samples": 11
+      }
+     ],
+     "telemetry": {
+      "samples": 421,
+      "temperature_c": [
+       55,
+       64
+      ],
+      "graphics_clock_mhz_after_first_third": [
+       1860,
+       1950
+      ],
+      "power_w_max": 306.3,
+      "limit_reason_bits_seen": [
+       0,
+       1,
+       4
+      ]
+     }
+    }
+   ]
+  }
+ }
+}

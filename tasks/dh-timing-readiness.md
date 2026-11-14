@@ -29,23 +29,19 @@ On 2026-11-13 Philip chose to build the four checks below before any optimizatio
 - Results are recorded, and FINDINGS and the docs are updated.
 
 ## State
-D, B.1 and B.3 are built, and D is validated on the 2080 Ti (2026-11-13).
-- Native-Windows NVML lists desktop processes such as dwm and explorer, so these form each session's ambient baseline.
-- WSL CUDA work appears as process 4. A 12 s WSL CUDA job flagged exactly the overlapping window as `foreign`; the other windows read `clean`.
-- Telemetry recorded the GPU warming from 30 to 53 °C during a session.
-
-A is built but not yet exercised live:
-- the `prepare-dh-dataset` freeze, with restore on each DH session;
-- `dh_settings` in status and in the configuration guard;
-- the generator plan overridden to `DISABLED` during sessions, unless `--dh-generation` is given;
-- the `DhApiBeforeBufferRenderEvent` counter and per-capture `dh_submission`;
-- the comparison `stability` rule with case screenshots;
-- qualification checks for DH runs.
-
-C is not built. The DH 3.3.3 public API has no pending-work signal.
+Built, piloted and committed (2026-11-13). The frozen campaigns are running.
+- **D is validated live.**
+  - Native-Windows NVML lists desktop processes, so these form each session's ambient baseline.
+  - WSL CUDA work appears as process 4, and a 12 s WSL CUDA job flagged exactly the overlapping window.
+- **A: frozen dataset.** The settled DH dataset is frozen on `run-benchmark-dh`, identity 9a5a026b…. A generation session grew it from 62.7 to 72.0 MB in 90 s, after which it held still for 3.5 min. Sessions restore it; one restored a rewritten database.
+- **A: witness and its cost.** The witness counted a constant 330 draws per frame at the fixed pose. Its cost is not distinguishable from session noise: 82.8 against 82.7 FPS with it on and off.
+- **B pilot: thermal decline.** At 4K with DH, frame rate fell from 84 to 82 FPS over about 3 min while the GPU warmed from 33 to 62 °C and its clock fell from 1950 to 1875 MHz, then flattened.
+- **Frozen readiness rule.** Conditioning 150 s, then 15 intervals within 1.5% frame rate and 1% DH draws per frame, with a 180 s timeout.
+- **C pilot.** `gpu-load-probe` with 32 iterations raised the final-pass GPU time from 0.133 to 0.298 ms and slowed frames by 1.36–1.54%. It is frozen at 22 iterations, aiming at about 1%.
+- **Fixed during piloting.** Sessions close after 120 s without commands, so conditioning now polls status. With the witness off, windows now read unobserved instead of zero.
+- **Acceptance.** Fixed in `benchmarks/README.md` at a8fa239, before the first run.
 
 ## Next
-1. Build the settled dataset on the 2080 Ti (`-DhGeneration` session, then `prepare-dh-dataset`).
-2. Pilot DH readiness to choose conditioning and tolerances, and measure the witness overhead with `-WithoutDhWitness`.
-3. Build C.
-4. Write the frozen DH no-change and detection campaigns, and run them.
+1. Finish `dh-null-01` and `dh-detect-01` on the 2080 Ti.
+2. Judge them against the frozen acceptance, record the result and FINDINGS, and report to Philip.
+3. If both pass, Gate 2 is met for this workload; E (more views and quality review) still precedes any substantial implementation.
