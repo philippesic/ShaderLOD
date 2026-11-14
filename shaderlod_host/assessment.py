@@ -143,6 +143,45 @@ def median_interval(values: list[float], confidence: float) -> dict[str, object]
     }
 
 
+def dh_workload(
+    result: dict[str, object], rows: list[object]
+) -> dict[str, object] | None:
+    selections = [
+        row.get("selection")
+        for row in rows
+        if isinstance(row, dict) and isinstance(row.get("selection"), dict)
+    ]
+    first = selections[0] if selections else None
+    dh = first.get("dh") if isinstance(first, dict) else None
+    if not isinstance(dh, dict) or dh.get("present") is not True:
+        return None
+    dataset = result.get("dh_dataset")
+    return {
+        "settings": first.get("dh_settings") if isinstance(first, dict) else None,
+        "dataset": dataset.get("identity") if isinstance(dataset, dict) else None,
+        "config_sha256": dataset.get("config_sha256")
+        if isinstance(dataset, dict)
+        else None,
+    }
+
+
+def dh_problems(result: dict[str, object], rows: list[object]) -> list[str]:
+    found = []
+    dataset = result.get("dh_dataset")
+    if not isinstance(dataset, dict) or dataset.get("state") != "prepared":
+        found.append("DH dataset is not the frozen prepared dataset")
+    readiness = result.get("readiness")
+    if not isinstance(readiness, dict) or readiness.get("state") != "stable":
+        found.append("DH workload readiness was not established")
+    for row in rows:
+        summary = row.get("summary") if isinstance(row, dict) else None
+        submission = summary.get("dh_submission") if isinstance(summary, dict) else None
+        if not isinstance(submission, dict) or submission.get("state") != "counted":
+            found.append("DH submission was not counted in every window")
+            break
+    return found
+
+
 def assess(
     policy: QualificationPolicy,
     runs: list[Path],
@@ -153,6 +192,7 @@ def assess(
     }
     compatibility: dict[str, str] = {}
     problems: list[str] = []
+    workloads: set[str] = set()
     result_hashes = []
     for path in runs:
         from shaderlod_host.comparison import verify_comparison
@@ -175,6 +215,12 @@ def assess(
         rows = result.get("observations")
         if not isinstance(rows, list):
             raise ValueError("observation list required")
+        workload = dh_workload(result, rows)
+        if workload is not None:
+            workloads.add(json.dumps(workload, sort_keys=True))
+            problems.extend(
+                str(path) + ": " + item for item in dh_problems(result, rows)
+            )
         definition = json.loads((path.parent / "plan.json").read_bytes())["definition"]
         from shaderlod_host.comparison import ComparisonPlan
 
@@ -321,6 +367,8 @@ def assess(
             if arm in pair:
                 raise ValueError("duplicate observation in comparison pair")
             pair[arm] = fps
+    if len(workloads) > 1:
+        problems.append("DH settings or dataset identity differ between sessions")
     outcomes: list[dict[str, object]] = []
     family_confidence = 1 - (1 - policy.confidence) / len(policy.cases)
     for case, sessions in grouped.items():

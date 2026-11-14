@@ -32,6 +32,8 @@ final class BenchmarkControl {
   private boolean durableChunks = true;
   private String captureDimension;
   private long activeWorldFrames;
+  private long renderedFrames;
+  private long captureBufferRenders;
   private boolean observingFrame;
   private boolean worldRendered;
   private java.util.List<String> selectedModules = java.util.List.of();
@@ -86,6 +88,7 @@ final class BenchmarkControl {
   void frame(long timestamp, long generation) {
     RenderGroups.reset();
     DhSections.reset();
+    renderedFrames++;
     if (capture != null) {
       contextLost |= observingFrame && !worldRendered;
       observingFrame = true;
@@ -298,6 +301,9 @@ final class BenchmarkControl {
               && Minecraft.getInstance().getWindow().isFullscreen() != originalFullscreen) {
             Minecraft.getInstance().getWindow().toggleFullScreen();
           }
+          if (net.neoforged.fml.ModList.get().isLoaded("distanthorizons")) {
+            DhControl.restore();
+          }
           if (originalFramerateLimit != null) {
             Minecraft.getInstance().options.framerateLimit().set(originalFramerateLimit);
             Minecraft.getInstance().options.enableVsync().set(originalVsync);
@@ -361,6 +367,7 @@ final class BenchmarkControl {
           record.put("delay_ms", delayMillis);
           record.put("context_lost", contextLost);
           record.put("active_world_frames", activeWorldFrames);
+          record.put("dh_buffer_renders", dhBufferRenders() - captureBufferRenders);
           record.put("executed_delay_ns", delayExecuted);
           record.put("quality_cadence_ns", qualityCadence);
           record.put("quality_skipped_slots", qualityClock == null ? 0 : qualityClock.skipped());
@@ -450,6 +457,11 @@ final class BenchmarkControl {
         }
         client.options.framerateLimit().set(UNLIMITED_FRAMERATE);
         client.options.enableVsync().set(false);
+        if (net.neoforged.fml.ModList.get().isLoaded("distanthorizons")) {
+          DhControl.prepare(
+              com.pp.shaderlod.dev.config.DevelopmentSettings.dhWitness(),
+              com.pp.shaderlod.dev.config.DevelopmentSettings.dhGeneration());
+        }
         org.lwjgl.glfw.GLFW.glfwFocusWindow(client.getWindow().getWindow());
         client.setScreen(null);
         if (!request.payload().has("day_time")) {
@@ -543,6 +555,7 @@ final class BenchmarkControl {
         duration = millis * 1000000;
         contextLost = false;
         activeWorldFrames = 0;
+        captureBufferRenders = dhBufferRenders();
         observingFrame = false;
         worldRendered = false;
         captureWidth = Minecraft.getInstance().getMainRenderTarget().width;
@@ -670,6 +683,11 @@ final class BenchmarkControl {
             runtime.maxMemory()));
     record.put("dimension", String.valueOf(net.irisshaders.iris.Iris.getCurrentDimension()));
     record.put("dh", com.pp.shaderlod.integration.DhObservation.current());
+    record.put("dh_settings", com.pp.shaderlod.integration.DhObservation.settings());
+    record.put("dh_witness", dhWitnessed());
+    record.put("dh_buffer_renders", dhBufferRenders());
+    record.put("rendered_frames", renderedFrames);
+    record.put("monotonic_ns", System.nanoTime());
     record.put(
         "probe_invocations",
         java.util.Map.of(
@@ -747,6 +765,14 @@ final class BenchmarkControl {
     } catch (IOException failure) {
       return "unavailable";
     }
+  }
+
+  private static boolean dhWitnessed() {
+    return net.neoforged.fml.ModList.get().isLoaded("distanthorizons") && DhControl.witnessed();
+  }
+
+  private static long dhBufferRenders() {
+    return dhWitnessed() ? DhControl.bufferRenders() : -1;
   }
 
   private void selectSurface(int width, int height) throws IOException {

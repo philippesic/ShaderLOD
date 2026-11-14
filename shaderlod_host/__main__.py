@@ -34,6 +34,7 @@ def main() -> int:
             "session-recover",
             "prepare-windows",
             "prepare-windows-dh",
+            "prepare-dh-dataset",
             "sync-windows",
             "prepare-profile",
             "prepare-world",
@@ -67,6 +68,8 @@ def main() -> int:
     parser.add_argument("--wait-ready", action="store_true")
     parser.add_argument("--telemetry", action="store_true")
     parser.add_argument("--without-shaderlod", action="store_true")
+    parser.add_argument("--dh-generation", action="store_true")
+    parser.add_argument("--without-dh-witness", action="store_true")
     parser.add_argument("--source-root", type=Path)
     parser.add_argument("--output-root", type=Path)
     parser.add_argument("--ownership-root", type=Path)
@@ -313,6 +316,19 @@ def main() -> int:
             )
         )
         return 0
+    if args.mode == "prepare-dh-dataset":
+        from shaderlod_host.storage import BusyRefusal, prepare_dh_dataset
+        import socket
+
+        if args.profile is None or args.ownership_root is None:
+            parser.error(
+                "prepare-dh-dataset requires --profile --world --ownership-root"
+            )
+        with BusyRefusal(args.ownership_root, socket.gethostname() + ":gpu:0"):
+            print(
+                json.dumps(prepare_dh_dataset(args.profile, args.world), sort_keys=True)
+            )
+        return 0
     if args.mode == "prepare-profile":
         from shaderlod_host.storage import BusyRefusal, prepare_primary_profile
         import socket
@@ -472,6 +488,8 @@ def main() -> int:
                 else (args.ancestor_pid, args.ancestor_birth),
                 args.telemetry,
                 args.without_shaderlod,
+                args.dh_generation,
+                not args.without_dh_witness,
             )
         except CommandIncomplete as error:
             print(json.dumps({"status": "incomplete", "reason": str(error)}))

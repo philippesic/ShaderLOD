@@ -260,6 +260,8 @@ def benchmark_session(
     ancestor: tuple[int, str] | None = None,
     telemetry_enabled: bool = False,
     without_shaderlod: bool = False,
+    dh_generation: bool = False,
+    dh_witness: bool = True,
 ) -> int:
     if sys.platform not in {"linux", "win32"} or not 1 <= timeout <= 14400:
         raise ValueError("Linux/Windows session with 1–14400 second deadline required")
@@ -272,6 +274,20 @@ def benchmark_session(
     if not profile.is_dir() or not (profile / "saves" / world).is_dir():
         raise ValueError("prepared profile and selected world required")
     gpu_baseline = refuse_foreign_gpu_work() if telemetry_enabled else None
+    dh_installed = any((profile / "mods").glob("DistantHorizons-*.jar"))
+    dh_dataset: dict[str, object] | None = None
+    if dh_installed:
+        from shaderlod_host.storage import restore_dh_dataset
+
+        dh_dataset = (
+            {"state": "generating"}
+            if dh_generation
+            else restore_dh_dataset(profile, world)
+        )
+        config = profile / "config/DistantHorizons.toml"
+        dh_dataset["config_sha256"] = (
+            hashlib.sha256(config.read_bytes()).hexdigest() if config.exists() else None
+        )
     launch = json.loads(launch_path.read_bytes())
     if not isinstance(launch.get("argv"), list) or not all(
         isinstance(a, str) for a in launch["argv"]
@@ -284,6 +300,8 @@ def benchmark_session(
     argv[position:position] = [
         "-Dshaderlod.functionalProbe=false",
         "-Dshaderlod.benchmarkDirectory=" + str(session.resolve()),
+        "-Dshaderlod.dhGeneration=" + str(dh_generation).lower(),
+        "-Dshaderlod.dhWitness=" + str(dh_witness).lower(),
     ]
     profile = profile.resolve(strict=True)
     shipping = Path(launch["shipping_jar"])
@@ -472,6 +490,7 @@ def benchmark_session(
                             shipping.read_bytes()
                         ).hexdigest(),
                         "gpu_baseline": gpu_baseline,
+                        "dh_dataset": dh_dataset,
                         "instrumentation": {
                             "telemetry": "1hz" if telemetry_enabled else "disabled",
                             "frames": "complete-entry-v1",

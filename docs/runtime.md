@@ -20,7 +20,12 @@ Refresh it from a clean WSL checkout after each commit that matters for a run:
 python3 -m shaderlod_host sync-windows --output-root /mnt/c/ShaderLOD
 ```
 
-It builds with the pinned JDK, checks the pinned runtime artifacts, and replaces only the code; it refuses while a Java process runs on Windows or tracked files have uncommitted changes. A fresh copy is prepared once, from Windows, in this order: `prepare-windows` (the no-DH slot `run-benchmark`), `freeze-windows-runtime`, `prepare-windows-dh --profile CANONICAL` (the slot `run-benchmark-dh` with Distant Horizons and its own `build\moddev\windows-launch-dh.json`), then `prepare-profile` for each slot. Commands run with `C:\ShaderLOD\tools\python\python.exe`; the game itself must start through `benchmarks/windows/start.ps1` so that it lands in the logged-in desktop. A session switches the fullscreen video mode to the surface its comparison or validation names, so the desktop resolution does not need changing. The GPU is shared with other projects: check that it is idle before a run.
+It builds with the pinned JDK, checks the pinned runtime artifacts, and replaces only the code; it refuses while a Java process runs on Windows or tracked files have uncommitted changes. A fresh copy is prepared once, from Windows, in this order: `prepare-windows` (the no-DH slot `run-benchmark`), `freeze-windows-runtime`, `prepare-windows-dh --profile CANONICAL` (the slot `run-benchmark-dh` with Distant Horizons and its own `build\moddev\windows-launch-dh.json`), then `prepare-profile` for each slot. To freeze a settled DH dataset for a slot:
+1. Open a DH session with `start.ps1 -DistantHorizons -DhGeneration`.
+2. Hold the scene's case poses until the world's `DistantHorizons.sqlite` stops growing, then close the session.
+3. Run `prepare-dh-dataset` (see [benchmarks](benchmarks.md#distant-horizons-workload)).
+
+`-WithoutDhWitness` opens a session without the DH submission counter. Commands run with `C:\ShaderLOD\tools\python\python.exe`; the game itself must start through `benchmarks/windows/start.ps1` so that it lands in the logged-in desktop. A session switches the fullscreen video mode to the surface its comparison or validation names, so the desktop resolution does not need changing. The GPU is shared with other projects: check that it is idle before a run.
 
 ## Running it
 

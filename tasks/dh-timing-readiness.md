@@ -29,14 +29,23 @@ On 2026-11-13 Philip chose to build the four checks below before any optimizatio
 - Results are recorded, and FINDINGS and the docs are updated.
 
 ## State
-D and B.1/B.3 are built (2026-11-13), but not yet validated on the 2080 Ti.
-- Telemetry samples now include GPU compute PIDs from NVML.
-- Each comparison window gets a `gpu_contamination` verdict, and qualification refuses anything but `clean`.
-- `session-open --telemetry` refuses while compute processes are present; the Windows session script always passes `--telemetry`, as campaigns already did.
-- Campaign definitions must alternate the leading arm, and the tracked 2080 Ti campaigns use seeds 0 and 1.
-- Not yet validated: whether native-Windows NVML lists WSL CUDA processes, so check that first.
+D, B.1 and B.3 are built, and D is validated on the 2080 Ti (2026-11-13).
+- Native-Windows NVML lists desktop processes such as dwm and explorer, so these form each session's ambient baseline.
+- WSL CUDA work appears as process 4. A 12 s WSL CUDA job flagged exactly the overlapping window as `foreign`; the other windows read `clean`.
+- Telemetry recorded the GPU warming from 30 to 53 °C during a session.
 
-The DH 3.3.3 public API has no pending-work signal (checked against the pinned jar). The 2080 Ti telemetry from the earlier campaigns was deleted during extraction.
+A is built but not yet exercised live:
+- the `prepare-dh-dataset` freeze, with restore on each DH session;
+- `dh_settings` in status and in the configuration guard;
+- the generator plan overridden to `DISABLED` during sessions, unless `--dh-generation` is given;
+- the `DhApiBeforeBufferRenderEvent` counter and per-capture `dh_submission`;
+- the comparison `stability` rule with case screenshots;
+- qualification checks for DH runs.
+
+C is not built. The DH 3.3.3 public API has no pending-work signal.
 
 ## Next
-Validate D on the 2080 Ti with a harmless WSL CUDA process. Then build A (DH settings and dataset identity, empirical readiness, buffer-render count witness, screenshots) and C (GPU detection provider), then run the pilots and frozen campaigns.
+1. Build the settled dataset on the 2080 Ti (`-DhGeneration` session, then `prepare-dh-dataset`).
+2. Pilot DH readiness to choose conditioning and tolerances, and measure the witness overhead with `-WithoutDhWitness`.
+3. Build C.
+4. Write the frozen DH no-change and detection campaigns, and run them.

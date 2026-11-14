@@ -3,6 +3,12 @@ package com.pp.shaderlod.integration;
 import net.neoforged.fml.ModList;
 
 public record DhObservation(boolean present, String version, Boolean enabled, String readiness) {
+  public static java.util.Map<String, Object> settings() {
+    return ModList.get().isLoaded("distanthorizons")
+        ? DhApiObservation.settings()
+        : java.util.Map.of();
+  }
+
   public static DhObservation current() {
     var mod = ModList.get().getModContainerById("distanthorizons");
     return mod.map(value ->

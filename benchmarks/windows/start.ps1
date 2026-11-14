@@ -6,7 +6,9 @@ param(
     [string]$Spec,
     [string]$Control,
     [switch]$Resume,
-    [switch]$DistantHorizons
+    [switch]$DistantHorizons,
+    [switch]$DhGeneration,
+    [switch]$WithoutDhWitness
 )
 $ErrorActionPreference='Stop'
 if ($Timeout -lt 1 -or $Timeout -gt 14400) { throw 'Bounded session timeout required' }
@@ -18,6 +20,8 @@ if ($Spec) { $arguments='-NoProfile -NonInteractive -ExecutionPolicy Bypass -Fil
 if ($Control) { $arguments+=' -Control "'+$Control+'"' }
 if ($Resume) { $arguments+=' -Resume' }
 if ($DistantHorizons) { $arguments+=' -DistantHorizons' }
+if ($DhGeneration) { $arguments+=' -DhGeneration' }
+if ($WithoutDhWitness) { $arguments+=' -WithoutDhWitness' }
 $action=New-ScheduledTaskAction -Execute "$env:SystemRoot\System32\WindowsPowerShell\v1.0\powershell.exe" -Argument $arguments
 $principal=New-ScheduledTaskPrincipal -UserId $user -LogonType Interactive -RunLevel Limited
 $settings=New-ScheduledTaskSettingsSet -ExecutionTimeLimit (New-TimeSpan -Seconds ($Timeout+30))

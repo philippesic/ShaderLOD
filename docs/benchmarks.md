@@ -30,6 +30,23 @@ Each comparison window carries `gpu_contamination`, built from the session's 1 H
 
 Asahi held no-change pairs within about 0.25% for about the first two minutes of sustained capture and became erratic afterwards. Keep its comparisons short and let it rest between sessions; a long campaign there needs its own stability evidence first.
 
+## Distant Horizons workload
+
+DH builds and loads its distant terrain in the background, so the same scene can draw different amounts of it from one session to the next. Four mechanisms keep a DH timing result comparable:
+
+- **Frozen dataset.** `prepare-dh-dataset --profile SLOT --world WORLD --ownership-root OWNERSHIP` copies the world's `DistantHorizons.sqlite` files into `SLOT/shaderlod-dh-dataset/WORLD/` with a manifest identity. Every later session on that slot restores those files before launch, and records the identity and a hash of `config/DistantHorizons.toml` in `session.json` as `dh_dataset`. DH may rewrite its database during a session; the next session starts from the frozen copy again.
+- **No generation while measuring.** When it prepares the client, the session overrides DH's generator plan to `DISABLED` through DH's API and clears the override at close; the configuration file is not edited. `session-open --dh-generation` leaves generation on, and is only for building a dataset.
+- **Recorded settings.** Status and every capture carry `dh_settings` (distance, quality levels, mode, transparency, overdraw prevention, generator plan). They are part of the configuration that comparisons check between arms.
+- **Submission witness and readiness.** The session counts DH's `DhApiBeforeBufferRenderEvent` callbacks. Each capture summary reports them per frame as `dh_submission`, which shows submission, not visible coverage. A comparison with a `stability` rule:
+  1. screenshots each case;
+  2. waits `conditioning_ms`;
+  3. requires `intervals` consecutive status intervals whose frame rate and DH submissions per frame stay within `fps_tolerance` and `dh_tolerance`;
+  4. fails if that does not happen within `timeout_ms`.
+
+  DH 3.3.3 exposes no signal that its loading has finished, so this rule bounds leftover background work without proving it is gone. `session-open --without-dh-witness` turns the counter off, for measuring its own cost.
+
+`qualify --policy` refuses a DH run when the dataset is not the frozen one, readiness was not stable, or any window lacks a submission count. It also refuses when the settings or dataset identity differ between sessions.
+
 ## Prepare and own a session
 
 Build current classes and JAR before opening a client. Use the allocated display and host. Existing input/ownership checks refuse concurrent cooperating runs and executable drift. They do not detect every unrelated application using the GPU.

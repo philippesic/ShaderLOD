@@ -131,6 +131,64 @@ class Arm:
 
 
 @dataclass(frozen=True)
+class Stability:
+    conditioning_ms: int
+    interval_ms: int
+    intervals: int
+    fps_tolerance: float
+    dh_tolerance: float
+    timeout_ms: int
+
+    @classmethod
+    def decode(cls, value: object) -> "Stability":
+        data = object_fields(
+            value,
+            {
+                "conditioning_ms",
+                "interval_ms",
+                "intervals",
+                "fps_tolerance",
+                "dh_tolerance",
+                "timeout_ms",
+            },
+            "stability",
+        )
+        integers = {
+            key: data[key]
+            for key in ("conditioning_ms", "interval_ms", "intervals", "timeout_ms")
+        }
+        tolerances = {key: data[key] for key in ("fps_tolerance", "dh_tolerance")}
+        if (
+            any(type(item) is not int for item in integers.values())
+            or any(type(item) not in (int, float) for item in tolerances.values())
+            or not 0 <= int(str(integers["conditioning_ms"])) <= 600000
+            or not 250 <= int(str(integers["interval_ms"])) <= 10000
+            or not 2 <= int(str(integers["intervals"])) <= 60
+            or not 1000 <= int(str(integers["timeout_ms"])) <= 600000
+            or not all(0 < float(str(item)) <= 0.2 for item in tolerances.values())
+        ):
+            raise ValueError("bounded conditioning, intervals and tolerances required")
+        return cls(
+            int(str(data["conditioning_ms"])),
+            int(str(data["interval_ms"])),
+            int(str(data["intervals"])),
+            float(str(data["fps_tolerance"])),
+            float(str(data["dh_tolerance"])),
+            int(str(data["timeout_ms"])),
+        )
+
+    def wire(self) -> dict[str, object]:
+        return {
+            "conditioning_ms": self.conditioning_ms,
+            "interval_ms": self.interval_ms,
+            "intervals": self.intervals,
+            "fps_tolerance": self.fps_tolerance,
+            "dh_tolerance": self.dh_tolerance,
+            "timeout_ms": self.timeout_ms,
+        }
+
+
+@dataclass(frozen=True)
 class ComparisonPlan:
     scope: str
     cases: tuple[Case, ...]
@@ -143,6 +201,7 @@ class ComparisonPlan:
     instrument: str = "frames"
     quality_cadence_ms: int = 0
     interaction: tuple[str, str, str, str] | None = None
+    stability: "Stability | None" = None
 
     @classmethod
     def decode(cls, value: object) -> "ComparisonPlan":
@@ -172,6 +231,11 @@ class ComparisonPlan:
             | (
                 {"quality_cadence_ms"}
                 if isinstance(value, dict) and "quality_cadence_ms" in value
+                else set()
+            )
+            | (
+                {"stability"}
+                if isinstance(value, dict) and "stability" in value
                 else set()
             ),
             "comparison",
@@ -218,7 +282,11 @@ class ComparisonPlan:
             or seed < 0
         ):
             raise ValueError("invalid comparison limits or seed")
-        if len(cases) * len(arms) * blocks * (window + warmup) >= budget:
+        stability = Stability.decode(data["stability"]) if "stability" in data else None
+        settling = (
+            0 if stability is None else stability.conditioning_ms + stability.timeout_ms
+        )
+        if len(cases) * len(arms) * blocks * (window + warmup) + settling >= budget:
             raise ValueError("budget needs lifecycle headroom")
         instrument = data.get("instrument", "frames")
         cadence = data.get("quality_cadence_ms", 0)
@@ -274,6 +342,7 @@ class ComparisonPlan:
             str(instrument),
             cadence,
             interaction,
+            stability,
         )
 
     def schedule(self) -> tuple[tuple[int, Case, Arm], ...]:
@@ -325,6 +394,8 @@ class ComparisonPlan:
 
         if self.interaction is not None:
             record["interaction"] = list(self.interaction)
+        if self.stability is not None:
+            record["stability"] = self.stability.wire()
         return record
 
     def describe(self) -> dict[str, object]:
@@ -439,6 +510,7 @@ def execute_comparison(
     restored = False
     inputs: dict[str, str] = {}
     baselines: dict[str, dict[str, object]] = {}
+    readiness: dict[str, object] | None = None
 
     def call(
         action: str, duration: int = 0, payload: dict[str, object] | None = None
@@ -474,6 +546,11 @@ def execute_comparison(
                     publish_bytes(output / name, payload)
                     inputs[name] = case.sha256
         initial = settle_surface(call, list(plan.cases[0].surface), initial, 30)
+        if plan.stability is not None:
+            readiness = settle_workload(call, plan, output)
+            if readiness["state"] != "stable":
+                raise ValueError("workload did not settle before its timeout")
+            initial = call("status")
         if initial.get("ready") is not True and initial.get("world_loaded") is not True:
             raise ValueError(
                 "session is not ready; wait for ready status before comparison"
@@ -678,6 +755,8 @@ def execute_comparison(
             )
     result: dict[str, object] = {
         "schema": "shaderlod-comparison-result-v1",
+        "readiness": readiness,
+        "dh_dataset": session_dh_dataset(session),
         "scope": plan.scope,
         "started_unix_ns": time.time_ns()
         - int((time.monotonic() - started) * 1000000000),
@@ -717,6 +796,113 @@ def execute_comparison(
         },
     )
     return result
+
+
+def settle_workload(
+    call: Callable[..., dict[str, object]], plan: "ComparisonPlan", output: Path
+) -> dict[str, object]:
+    stability = plan.stability
+    if stability is None:
+        return {"state": "not_requested"}
+    screenshots = []
+    for case in plan.cases:
+        call(
+            "prepare",
+            payload={
+                "day_time": case.day_time,
+                "weather": case.weather,
+                "pose": list(case.start),
+                "surface": list(case.surface),
+            },
+        )
+        shot = call("screenshot")
+        screenshots.append(
+            {
+                "case": case.identity,
+                "image": shot.get("image"),
+                "image_sha256": shot.get("image_sha256"),
+                "image_has_variation": shot.get("image_has_variation"),
+            }
+        )
+    first = plan.cases[0]
+    call(
+        "prepare",
+        payload={
+            "day_time": first.day_time,
+            "weather": first.weather,
+            "pose": list(first.start),
+            "surface": list(first.surface),
+        },
+    )
+    time.sleep(stability.conditioning_ms / 1000)
+    deadline = time.monotonic() + stability.timeout_ms / 1000
+    trace: list[dict[str, object]] = []
+    previous = call("status")
+    state = "timeout"
+    while time.monotonic() < deadline:
+        time.sleep(stability.interval_ms / 1000)
+        current = call("status")
+        interval = workload_interval(previous, current)
+        previous = current
+        if interval is None:
+            trace.append({"unreadable": True})
+            continue
+        trace.append(interval)
+        recent = [row for row in trace[-stability.intervals :] if "fps" in row]
+        if len(recent) == stability.intervals and steady(
+            recent, stability.fps_tolerance, stability.dh_tolerance
+        ):
+            state = "stable"
+            break
+    record: dict[str, object] = {
+        "state": state,
+        "rule": stability.wire(),
+        "trace": trace,
+        "screenshots": screenshots,
+        "meaning": "Stable frame rate and DH submission over consecutive intervals after a fixed conditioning period; this bounds but does not prove the absence of background loading",
+    }
+    publish(output / "readiness.json", record)
+    return record
+
+
+def workload_interval(
+    previous: dict[str, object], current: dict[str, object]
+) -> dict[str, object] | None:
+    values = []
+    for key in ("monotonic_ns", "rendered_frames", "dh_buffer_renders"):
+        before, after = previous.get(key), current.get(key)
+        if type(before) is not int or type(after) is not int:
+            return None
+        values.append((int(before), int(after)))
+    (start, end), (frames_before, frames_after), (dh_before, dh_after) = values
+    frames = frames_after - frames_before
+    if end <= start or frames <= 0:
+        return None
+    row: dict[str, object] = {"fps": frames / ((end - start) / 1e9)}
+    if dh_before >= 0 and dh_after >= 0:
+        row["dh_per_frame"] = (dh_after - dh_before) / frames
+    return row
+
+
+def steady(rows: list[dict[str, object]], fps: float, dh: float) -> bool:
+    for key, tolerance in (("fps", fps), ("dh_per_frame", dh)):
+        values = [float(str(row[key])) for row in rows if key in row]
+        if key == "dh_per_frame" and not values:
+            continue
+        if len(values) != len(rows):
+            return False
+        mean = sum(values) / len(values)
+        if mean <= 0 or (max(values) - min(values)) / mean > tolerance:
+            return False
+    return True
+
+
+def session_dh_dataset(session: Path) -> object:
+    try:
+        record = json.loads((session / "session.json").read_bytes())
+    except (OSError, ValueError):
+        return None
+    return record.get("dh_dataset") if isinstance(record, dict) else None
 
 
 def ambient_gpu_processes(session: Path) -> set[int]:
@@ -991,6 +1177,7 @@ def configuration(observed: dict[str, object]) -> dict[str, object]:
         "dh": {key: dh.get(key) for key in ("present", "version", "enabled")}
         if isinstance(dh, dict)
         else None,
+        "dh_settings": observed.get("dh_settings"),
         "runtime": observed.get("runtime"),
         "renderer": observed.get("renderer"),
     }

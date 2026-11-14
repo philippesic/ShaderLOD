@@ -8,6 +8,14 @@ public final class DevelopmentSettings {
         .map(java.nio.file.Path::of);
   }
 
+  public static boolean dhGeneration() {
+    return Boolean.getBoolean("shaderlod.dhGeneration");
+  }
+
+  public static boolean dhWitness() {
+    return !"false".equals(System.getProperty("shaderlod.dhWitness"));
+  }
+
   public static boolean functionalProbe() {
     return Boolean.getBoolean("shaderlod.functionalProbe");
   }

@@ -431,3 +431,69 @@ def prepare_world(
     }
     publish(evidence / "manifest.json", result)
     return result
+
+
+DH_DATASET = "shaderlod-dh-dataset"
+
+
+def dh_dataset_files(world: Path) -> dict[str, Path]:
+    return {
+        path.relative_to(world).as_posix(): path
+        for path in sorted(world.rglob("DistantHorizons.sqlite*"))
+        if path.is_file() and not path.is_symlink()
+    }
+
+
+def prepare_dh_dataset(profile: Path, world: str) -> dict[str, object]:
+    source = profile / "saves" / world
+    target = profile / DH_DATASET / world
+    if not source.is_dir():
+        raise ValueError("prepared world required")
+    if target.exists():
+        raise ValueError(
+            "DH dataset already prepared; remove it deliberately to re-prepare"
+        )
+    files = dh_dataset_files(source)
+    if not files:
+        raise ValueError("world has no DH data to freeze")
+    hashes = {}
+    for relative, path in files.items():
+        payload = path.read_bytes()
+        publish_bytes(target / relative, payload)
+        hashes[relative] = digest(payload)
+    record: dict[str, object] = {
+        "schema": "shaderlod-dh-dataset-v1",
+        "world": world,
+        "files": hashes,
+        "identity": digest(canonical(hashes)),
+    }
+    publish(target / "manifest.json", record)
+    return record
+
+
+def restore_dh_dataset(profile: Path, world: str) -> dict[str, object]:
+    manifest = profile / DH_DATASET / world / "manifest.json"
+    if not manifest.exists():
+        return {"state": "unprepared"}
+    record = mapping(json.loads(manifest.read_bytes()), "DH dataset manifest")
+    expected = mapping(record.get("files"), "DH dataset files")
+    working = profile / "saves" / world
+    restored = []
+    for relative, path in dh_dataset_files(working).items():
+        if relative not in expected:
+            path.unlink()
+            restored.append(relative)
+    for relative, wanted in expected.items():
+        current = working / relative
+        if current.exists() and digest(current.read_bytes()) == wanted:
+            continue
+        payload = (profile / DH_DATASET / world / relative).read_bytes()
+        if digest(payload) != wanted:
+            raise ValueError("frozen DH dataset damaged: " + relative)
+        replace_bytes(current, payload)
+        restored.append(relative)
+    return {
+        "state": "prepared",
+        "identity": record["identity"],
+        "restored_files": sorted(restored),
+    }

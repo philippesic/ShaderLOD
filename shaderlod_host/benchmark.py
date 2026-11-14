@@ -217,6 +217,23 @@ def analyze_frames(frames: Iterable[Frame]) -> dict[str, object]:
     }
 
 
+def dh_submission(
+    observed: dict[str, object], frames: tuple[Frame, ...]
+) -> dict[str, object]:
+    renders = observed.get("dh_buffer_renders")
+    if type(renders) is not int or renders < 0 or not frames:
+        return {
+            "state": "unobserved",
+            "meaning": "DH buffer submissions were not counted in this window",
+        }
+    return {
+        "state": "counted",
+        "buffer_renders": renders,
+        "per_frame": round(renders / len(frames), 3),
+        "meaning": "DH buffer render events per completed frame; a submission witness, not visible coverage",
+    }
+
+
 def half_window_drift(frames: tuple[Frame, ...]) -> dict[str, object]:
     origin = frames[0].timestamp_ns - frames[0].interval_ns
     midpoint = origin + (frames[-1].timestamp_ns - origin) / 2
@@ -673,6 +690,7 @@ def save_live_capture(
     analysis["benchmark_qualified"] = False
     analysis["frame_limit"] = frame_limit(observed, analysis)
     analysis["half_window_drift"] = half_window_drift(frames)
+    analysis["dh_submission"] = dh_submission(observed, frames)
     analysis["events"] = observed.get("checkpoints", [])
     if "stage_profile" in observed:
         analysis["stage_summary"] = stage_summary(observed["stage_profile"])
@@ -846,6 +864,10 @@ def verify_frame_receipt(path: Path) -> dict[str, object]:
         "half_window_drift"
     ] != half_window_drift(retained):
         raise ValueError("capture analysis disagreement: half_window_drift")
+    if "dh_submission" in summary and summary["dh_submission"] != dh_submission(
+        observed, retained
+    ):
+        raise ValueError("capture analysis disagreement: dh_submission")
     return {
         "schema": "shaderlod-capture-verification-v1",
         "integrity": "PASS",
