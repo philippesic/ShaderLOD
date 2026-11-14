@@ -2,3 +2,4 @@ com.pp.shaderlod.dev.IdentityProvider
 com.pp.shaderlod.dev.ReloadFailureProvider
 com.pp.shaderlod.dev.VisualFaultProvider
 com.pp.shaderlod.dev.IdentityCompanionProvider
+com.pp.shaderlod.dev.GpuLoadProvider
