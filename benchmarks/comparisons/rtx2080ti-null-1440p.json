@@ -44,6 +44,6 @@
   "blocks": 2,
   "window_ms": 10000,
   "warmup_ms": 8000,
-  "budget_ms": 120000,
+  "budget_ms": 180000,
   "seed": 7
 }
