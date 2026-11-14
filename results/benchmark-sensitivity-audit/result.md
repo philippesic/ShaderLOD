@@ -44,6 +44,25 @@ Later the same day the 2080 Ti was given a virtual 2560×1440 display and a fres
 
 Limits: one scene and one session per check. Three pairs inside one process are not independent trials; a campaign of fresh sessions is still needed before a small effect is claimed. With CPU and GPU balanced, a GPU saving will show less than its full size; 3840×2160 is available on the virtual display. The DH check used an ad-hoc copy of the prepared profile with DH's existing configuration, and how much DH terrain was drawn was not verified. A virtual display has no physical scan-out. [Compact measurements](rtx2080ti-follow-up.json) sha256:153fcbad6aa563433e03bd7713162dbcb83c7743dfee9e2fdd3b4cc88befac8d
 
+## 4K and fresh-session controls on the RTX 2080 Ti, 2026-11-13
+
+The benchmark surface moved to 3840×2160, with 2560×1440 as a secondary check, and sessions now select that fullscreen mode themselves. Both prepared slots, without and with Distant Horizons, were rebuilt through the maintained `sync-windows` and `prepare-windows-dh` commands and passed lifecycle validation at 3840×2160. Each campaign below ran six fresh game processes, each comparing the original pack with the identity provider in alternating blocks.
+
+| Check | Observation |
+| --- | --- |
+| Throughput at 3840×2160 | 113–116 FPS without DH, about half the 216 FPS at 2560×1440, so the GPU now limits the frame. With DH, 92.6 FPS in one window. No window was frame-limited |
+| Six sessions, four blocks, 3840×2160 | Session effects −0.017% to −0.10%; interval for the median, at 96.9% coverage, −0.10% to −0.017%. Single pairs ranged from −0.66% to +0.35% |
+| Six sessions, four blocks, 2560×1440 | Session effects −0.16% to +0.06%; interval −0.16% to +0.06%, which contains zero. Single pairs ranged from −0.85% to +0.45% |
+| Six sessions, three blocks, 3840×2160 | Session effects −0.05% to −0.19%, every one negative, with pairs alternating in sign by block |
+
+Throughput fell in every session, by about 1.3% over the first two minutes and fastest at the start. With three blocks the identity arm ran later in two of them, which explains the uniformly negative three-block result. `qualify --policy` now refuses to promote sessions whose arms did not lead equally often, and the tracked no-change campaigns use four blocks. Four blocks cancel a steady decline but not one that slows down, and every four-block 4K session began with a pair near −0.4%. The remaining −0.05% at 4K is that residual or a real cost of the identity provider; this experiment does not separate them.
+
+What the machine resolves: six fresh sessions bound the median effect to an interval about 0.1 percentage points wide at 4K and 0.2 points wide at 1440p, an order of magnitude finer than the 1% minimum gain used by the tracked policies. A single pair varies by up to about ±0.6% at 4K and ±0.9% at 1440p. Treat an effect smaller than about 0.1% as unresolved at either surface.
+
+A first four-block 4K campaign stopped after its first session: eight windows at about 25 seconds each, including the shader reload at 4K, exceeded the 220-second session budget, and the eighth window timed out. That session closed and restored cleanly; the budget is now 300 seconds. The 1440p campaign used 220 seconds and completed. All runs are kept in the record.
+
+Limits: one scene, one pack and one machine state; the DH figure is one window, and how much DH terrain was drawn is unverified. The decline over a session is not explained; heat is likely but unmeasured. The 4K and 1440p campaigns ran back to back, not interleaved. The frozen runtime passed log4j a `C:/` path that it reads as a URL, so these clients logged with the default configuration; `freeze-windows-runtime` now writes a file URI, and the existing snapshot is unchanged. [Compact measurements](rtx2080ti-4k-readiness.json) sha256:b9b2fea336533e33d06627372e5c0b654b96713d0f6160c01be3f99613881466
+
 ## Evidence and executed source
 
 [Compact measurements](result.json) sha256:db012a2d77895114d35ea4d729106ec85db9ec51bf9bdc9eef05fc1d56a30202

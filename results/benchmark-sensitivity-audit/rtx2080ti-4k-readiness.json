@@ -1,0 +1,1712 @@
+{
+ "schema": "shaderlod-rtx2080ti-4k-readiness-v1",
+ "date": "2026-11-13",
+ "host": "RTX 2080 Ti, native Windows 11 IoT Enterprise LTSC build 26100, NVIDIA driver 610.88, Virtual Display Driver 25.7.23; desktop 2560x1440, sessions select 3840x2160 (reported refresh 244 Hz) or 2560x1440 fullscreen modes; frame limiter off, vsync off",
+ "pack": "ComplementaryReimagined_r5.9.3.zip, original options",
+ "case": "coast-pan in ShaderLOD-Smoke, render distance 8",
+ "arms": "original against the identity-probe provider",
+ "working_copy": {
+  "sync_commits": [
+   "3aacbb2",
+   "43ea6bd",
+   "b63acea",
+   "1520a82"
+  ],
+  "dh_slot": "run-benchmark-dh made by prepare-windows-dh from C:\\ShaderLODBench\\canonical-client, then prepare-profile; replaces the ad-hoc slot"
+ },
+ "validation": {
+  "no_dh_3840x2160": {
+   "outcome": "PASS",
+   "failure": null,
+   "restored": true,
+   "surface": [
+    3840,
+    2160
+   ],
+   "elapsed_seconds": 17.780999999988126,
+   "scope": "live loading, actual activation, Off/Cancel/failed Apply restoration; no perceptual or performance verdict",
+   "result_sha256": "902043189b7271cf7e9133f62d1852622a13e9081bb86837381d59ad76b67db7"
+  },
+  "dh_3840x2160": {
+   "outcome": "PASS",
+   "failure": null,
+   "restored": true,
+   "surface": [
+    3840,
+    2160
+   ],
+   "elapsed_seconds": 18.610000000015134,
+   "scope": "live loading, actual activation, Off/Cancel/failed Apply restoration; no perceptual or performance verdict",
+   "result_sha256": "c9092f3f8a6e25318b8f6fc671cf2d3ceca0cfa0e0b167ef74166422e5038926"
+  }
+ },
+ "single_session": {
+  "no_dh_3840x2160": {
+   "state": "complete",
+   "failure": null,
+   "restored": true,
+   "elapsed_seconds": 48.8,
+   "protocol_sha256": "0e6b34b9b511a8d188fa5d957730f94f0b7fd783c0499609a70b026c6945da46",
+   "result_sha256": "894934d0868defdcabd4ff68fd4c2e194782976d1416d9cf2f872265fb997d61",
+   "windows": [
+    {
+     "block": 0,
+     "arm": "original",
+     "fps": 116.018,
+     "frame_ms_p50": 8.6176,
+     "frame_ms_p95": 10.4821,
+     "half_window_drift": -0.00736,
+     "frame_limit": "unlimited"
+    },
+    {
+     "block": 0,
+     "arm": "identity",
+     "fps": 115.445,
+     "frame_ms_p50": 8.643,
+     "frame_ms_p95": 10.5345,
+     "half_window_drift": -0.00577,
+     "frame_limit": "unlimited"
+    }
+   ]
+  },
+  "no_dh_2560x1440_after_switch": {
+   "state": "complete",
+   "failure": null,
+   "restored": true,
+   "elapsed_seconds": 50.59,
+   "protocol_sha256": "5dfbb51195600d196e2c0bb661bb310a882a24c68e0888b23fa49d765c77b353",
+   "result_sha256": "b524308939b8e82c8096486775ac595ca84851c5bdb82a71f9806ef068c4123b",
+   "windows": [
+    {
+     "block": 0,
+     "arm": "original",
+     "fps": 215.982,
+     "frame_ms_p50": 4.5535,
+     "frame_ms_p95": 6.2724,
+     "half_window_drift": -0.00431,
+     "frame_limit": "unlimited"
+    },
+    {
+     "block": 0,
+     "arm": "identity",
+     "fps": 215.116,
+     "frame_ms_p50": 4.5909,
+     "frame_ms_p95": 6.1784,
+     "half_window_drift": -0.00307,
+     "frame_limit": "unlimited"
+    }
+   ]
+  },
+  "dh_3840x2160": {
+   "state": "complete",
+   "failure": null,
+   "restored": true,
+   "elapsed_seconds": 50.36,
+   "protocol_sha256": "0e6b34b9b511a8d188fa5d957730f94f0b7fd783c0499609a70b026c6945da46",
+   "result_sha256": "d3ac5f86f39e0ec52d8516e8bea07d5cd0562a626568aea4df5c6a0dfdbe4b56",
+   "windows": [
+    {
+     "block": 0,
+     "arm": "original",
+     "fps": 92.601,
+     "frame_ms_p50": 10.7109,
+     "frame_ms_p95": 12.3343,
+     "half_window_drift": -0.01561,
+     "frame_limit": "unlimited"
+    },
+    {
+     "block": 0,
+     "arm": "identity",
+     "fps": 91.228,
+     "frame_ms_p50": 11.0779,
+     "frame_ms_p95": 12.4474,
+     "half_window_drift": -0.00758,
+     "frame_limit": "unlimited"
+    }
+   ]
+  }
+ },
+ "campaigns": {
+  "3840x2160_three_blocks": {
+   "spec": "rtx2080ti-null-sessions.json at b63acea^ (three blocks)",
+   "spec_sha256": null,
+   "campaign_sha256": "9956ab0ea4d6e4346ea48b5c2a03e5669686a5e72803c23ecbb0f549be97fbc6",
+   "result_sha256": "f0d001595efe905eb6963ed0655e501800bc78e3fc3eb6554b0c9751c3211060",
+   "state": "complete",
+   "failures": [],
+   "recommendation": "do_not_promote",
+   "problems": [],
+   "case": {
+    "case": "coast-pan",
+    "interval": {
+     "achieved_coverage": 0.96875,
+     "high": -0.0005079169645050285,
+     "low": -0.0019051433045870203,
+     "median": -0.0015002665596025588,
+     "method": "binomial order-statistic interval for median of independent session effects",
+     "requested_coverage": 0.95,
+     "sessions": 6
+    },
+    "margin": 0.01,
+    "session_effects": [
+     -0.0016040849514542543,
+     -0.0019051433045870203,
+     -0.0013964481677508633,
+     -0.0016792913247400953,
+     -0.0007166192025122031,
+     -0.0005079169645050285
+    ],
+    "state": "fails_margin"
+   },
+   "sessions": [
+    {
+     "state": "complete",
+     "failure": null,
+     "restored": true,
+     "elapsed_seconds": 145.83,
+     "protocol_sha256": "64184f67a0a6c35291532fda8cded0d340d47736ad9a281cd2fcf21fe991bd48",
+     "result_sha256": "8960addc75034f06765fa66af70d56b4f06bda379e2527f5af7c812967f980f9",
+     "windows": [
+      {
+       "block": 0,
+       "arm": "original",
+       "fps": 115.658,
+       "frame_ms_p50": 8.6138,
+       "frame_ms_p95": 10.5783,
+       "half_window_drift": -0.00676,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 0,
+       "arm": "identity",
+       "fps": 115.243,
+       "frame_ms_p50": 8.6927,
+       "frame_ms_p95": 10.1219,
+       "half_window_drift": -0.00519,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 1,
+       "arm": "identity",
+       "fps": 114.611,
+       "frame_ms_p50": 8.703,
+       "frame_ms_p95": 10.2924,
+       "half_window_drift": -0.00497,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 1,
+       "arm": "original",
+       "fps": 114.405,
+       "frame_ms_p50": 8.7236,
+       "frame_ms_p95": 10.2721,
+       "half_window_drift": -0.00616,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 2,
+       "arm": "original",
+       "fps": 114.181,
+       "frame_ms_p50": 8.7105,
+       "frame_ms_p95": 10.2325,
+       "half_window_drift": -0.00564,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 2,
+       "arm": "identity",
+       "fps": 113.998,
+       "frame_ms_p50": 8.7347,
+       "frame_ms_p95": 10.2621,
+       "half_window_drift": -0.00372,
+       "frame_limit": "unlimited"
+      }
+     ]
+    },
+    {
+     "state": "complete",
+     "failure": null,
+     "restored": true,
+     "elapsed_seconds": 145.22,
+     "protocol_sha256": "64184f67a0a6c35291532fda8cded0d340d47736ad9a281cd2fcf21fe991bd48",
+     "result_sha256": "7cfbb82140585dad0e92d5ef268a61cd4a17a6a388d5d4cb6e1296612a578411",
+     "windows": [
+      {
+       "block": 0,
+       "arm": "original",
+       "fps": 115.171,
+       "frame_ms_p50": 8.6466,
+       "frame_ms_p95": 10.4257,
+       "half_window_drift": -0.00756,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 0,
+       "arm": "identity",
+       "fps": 114.441,
+       "frame_ms_p50": 8.734,
+       "frame_ms_p95": 10.3748,
+       "half_window_drift": -0.00607,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 1,
+       "arm": "identity",
+       "fps": 114.216,
+       "frame_ms_p50": 8.7415,
+       "frame_ms_p95": 10.4554,
+       "half_window_drift": -0.00608,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 1,
+       "arm": "original",
+       "fps": 114.049,
+       "frame_ms_p50": 8.7323,
+       "frame_ms_p95": 10.5139,
+       "half_window_drift": -0.00746,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 2,
+       "arm": "original",
+       "fps": 113.71,
+       "frame_ms_p50": 8.7083,
+       "frame_ms_p95": 10.2108,
+       "half_window_drift": -0.00588,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 2,
+       "arm": "identity",
+       "fps": 113.493,
+       "frame_ms_p50": 8.7933,
+       "frame_ms_p95": 10.1729,
+       "half_window_drift": -0.00379,
+       "frame_limit": "unlimited"
+      }
+     ]
+    },
+    {
+     "state": "complete",
+     "failure": null,
+     "restored": true,
+     "elapsed_seconds": 145.27,
+     "protocol_sha256": "64184f67a0a6c35291532fda8cded0d340d47736ad9a281cd2fcf21fe991bd48",
+     "result_sha256": "39f7a36465324289308334745b32390351242db58def989d63a62cee85852135",
+     "windows": [
+      {
+       "block": 0,
+       "arm": "original",
+       "fps": 114.709,
+       "frame_ms_p50": 8.7039,
+       "frame_ms_p95": 10.2265,
+       "half_window_drift": -0.00629,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 0,
+       "arm": "identity",
+       "fps": 114.304,
+       "frame_ms_p50": 8.7233,
+       "frame_ms_p95": 10.4659,
+       "half_window_drift": -0.00585,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 1,
+       "arm": "identity",
+       "fps": 114.198,
+       "frame_ms_p50": 8.7202,
+       "frame_ms_p95": 10.507,
+       "half_window_drift": -0.00546,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 1,
+       "arm": "original",
+       "fps": 113.702,
+       "frame_ms_p50": 8.7845,
+       "frame_ms_p95": 10.6318,
+       "half_window_drift": -0.00525,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 2,
+       "arm": "original",
+       "fps": 113.576,
+       "frame_ms_p50": 8.7852,
+       "frame_ms_p95": 10.3582,
+       "half_window_drift": -0.00646,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 2,
+       "arm": "identity",
+       "fps": 113.417,
+       "frame_ms_p50": 8.7826,
+       "frame_ms_p95": 10.5002,
+       "half_window_drift": -0.00406,
+       "frame_limit": "unlimited"
+      }
+     ]
+    },
+    {
+     "state": "complete",
+     "failure": null,
+     "restored": true,
+     "elapsed_seconds": 145.56,
+     "protocol_sha256": "64184f67a0a6c35291532fda8cded0d340d47736ad9a281cd2fcf21fe991bd48",
+     "result_sha256": "1682eb482f12ebe6b63c0b866871e93a532e3716cd58a2fa0b4ae57941e8431a",
+     "windows": [
+      {
+       "block": 0,
+       "arm": "original",
+       "fps": 114.666,
+       "frame_ms_p50": 8.7256,
+       "frame_ms_p95": 10.3935,
+       "half_window_drift": -0.00633,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 0,
+       "arm": "identity",
+       "fps": 114.296,
+       "frame_ms_p50": 8.7251,
+       "frame_ms_p95": 10.3723,
+       "half_window_drift": -0.00483,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 1,
+       "arm": "identity",
+       "fps": 113.935,
+       "frame_ms_p50": 8.7299,
+       "frame_ms_p95": 10.493,
+       "half_window_drift": -0.00713,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 1,
+       "arm": "original",
+       "fps": 113.771,
+       "frame_ms_p50": 8.7693,
+       "frame_ms_p95": 10.4472,
+       "half_window_drift": -0.00565,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 2,
+       "arm": "original",
+       "fps": 113.669,
+       "frame_ms_p50": 8.7645,
+       "frame_ms_p95": 10.312,
+       "half_window_drift": -0.00587,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 2,
+       "arm": "identity",
+       "fps": 113.478,
+       "frame_ms_p50": 8.7987,
+       "frame_ms_p95": 10.4217,
+       "half_window_drift": -0.00373,
+       "frame_limit": "unlimited"
+      }
+     ]
+    },
+    {
+     "state": "complete",
+     "failure": null,
+     "restored": true,
+     "elapsed_seconds": 145.47,
+     "protocol_sha256": "64184f67a0a6c35291532fda8cded0d340d47736ad9a281cd2fcf21fe991bd48",
+     "result_sha256": "bcd7b2000f883d9d20602a386de65296500844114845082e9fc35c621652e7cf",
+     "windows": [
+      {
+       "block": 0,
+       "arm": "original",
+       "fps": 114.54,
+       "frame_ms_p50": 8.6669,
+       "frame_ms_p95": 10.3936,
+       "half_window_drift": -0.0092,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 0,
+       "arm": "identity",
+       "fps": 114.365,
+       "frame_ms_p50": 8.7326,
+       "frame_ms_p95": 10.3375,
+       "half_window_drift": -0.00549,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 1,
+       "arm": "identity",
+       "fps": 113.922,
+       "frame_ms_p50": 8.7949,
+       "frame_ms_p95": 10.4767,
+       "half_window_drift": -0.00721,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 1,
+       "arm": "original",
+       "fps": 113.656,
+       "frame_ms_p50": 8.7559,
+       "frame_ms_p95": 10.4689,
+       "half_window_drift": -0.00561,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 2,
+       "arm": "original",
+       "fps": 113.624,
+       "frame_ms_p50": 8.7957,
+       "frame_ms_p95": 10.3968,
+       "half_window_drift": -0.0052,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 2,
+       "arm": "identity",
+       "fps": 113.543,
+       "frame_ms_p50": 8.7707,
+       "frame_ms_p95": 10.4182,
+       "half_window_drift": -0.00385,
+       "frame_limit": "unlimited"
+      }
+     ]
+    },
+    {
+     "state": "complete",
+     "failure": null,
+     "restored": true,
+     "elapsed_seconds": 145.42,
+     "protocol_sha256": "64184f67a0a6c35291532fda8cded0d340d47736ad9a281cd2fcf21fe991bd48",
+     "result_sha256": "16ba2795c4257c2d1a8b7d1bcccd84d730365063acefbd654aa3e0c05051cf3a",
+     "windows": [
+      {
+       "block": 0,
+       "arm": "original",
+       "fps": 114.739,
+       "frame_ms_p50": 8.7039,
+       "frame_ms_p95": 10.5705,
+       "half_window_drift": -0.0058,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 0,
+       "arm": "identity",
+       "fps": 114.366,
+       "frame_ms_p50": 8.6933,
+       "frame_ms_p95": 10.3261,
+       "half_window_drift": -0.00503,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 1,
+       "arm": "identity",
+       "fps": 114.029,
+       "frame_ms_p50": 8.7598,
+       "frame_ms_p95": 10.4154,
+       "half_window_drift": -0.00861,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 1,
+       "arm": "original",
+       "fps": 113.736,
+       "frame_ms_p50": 8.7517,
+       "frame_ms_p95": 10.4676,
+       "half_window_drift": -0.00545,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 2,
+       "arm": "original",
+       "fps": 113.595,
+       "frame_ms_p50": 8.7989,
+       "frame_ms_p95": 10.4789,
+       "half_window_drift": -0.0054,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 2,
+       "arm": "identity",
+       "fps": 113.538,
+       "frame_ms_p50": 8.7919,
+       "frame_ms_p95": 10.5301,
+       "half_window_drift": -0.00473,
+       "frame_limit": "unlimited"
+      }
+     ]
+    }
+   ]
+  },
+  "3840x2160_four_blocks_220s_budget": {
+   "spec": "rtx2080ti-null-sessions.json at b63acea",
+   "spec_sha256": null,
+   "campaign_sha256": "ea7f29665613633333d32ad757816e4c222337aababeb8d15c72fd0c2200409e",
+   "result_sha256": "7530473a525fb8d2913ff48677aaa10dc96f4efae3b8c197ce2daf2688a46fed",
+   "state": "incomplete",
+   "failures": [
+    {
+     "failure": "planned comparison incomplete; no automatic retry",
+     "session": 1
+    }
+   ],
+   "recommendation": "do_not_promote",
+   "problems": [
+    "C:\\ShaderLOD\\.local\\artifacts\\null-sessions-4k-02\\comparison-1\\result.json: failed/incomplete attempt or restoration",
+    "coast-pan: independent session count differs from frozen stopping rule",
+    "coast-pan: missing paired arm"
+   ],
+   "case": {
+    "case": "coast-pan",
+    "interval": {
+     "achieved_coverage": null,
+     "high": null,
+     "low": null,
+     "median": -0.0018756413323220977,
+     "method": "binomial order-statistic interval for median of independent session effects",
+     "requested_coverage": 0.95,
+     "sessions": 1
+    },
+    "margin": 0.01,
+    "session_effects": [
+     -0.0018756413323220977
+    ],
+    "state": "inconclusive"
+   },
+   "sessions": [
+    {
+     "state": "incomplete",
+     "failure": "command timed out; reconcile outcome before another command",
+     "restored": true,
+     "elapsed_seconds": 192.09,
+     "protocol_sha256": "fd844901dccbc1cb9ae0fed43973cef9f8b818e705dbe7370195558ba3712399",
+     "result_sha256": "bf5729bbee3fd540315440c1deaa81a606cd1cb789e38c7c231290c11cadfedc",
+     "windows": [
+      {
+       "block": 0,
+       "arm": "original",
+       "fps": 116.249,
+       "frame_ms_p50": 8.615,
+       "frame_ms_p95": 10.288,
+       "half_window_drift": -0.00724,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 0,
+       "arm": "identity",
+       "fps": 115.372,
+       "frame_ms_p50": 8.6585,
+       "frame_ms_p95": 10.3298,
+       "half_window_drift": -0.00579,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 1,
+       "arm": "identity",
+       "fps": 114.932,
+       "frame_ms_p50": 8.6688,
+       "frame_ms_p95": 10.3971,
+       "half_window_drift": -0.01036,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 1,
+       "arm": "original",
+       "fps": 114.498,
+       "frame_ms_p50": 8.7142,
+       "frame_ms_p95": 10.3481,
+       "half_window_drift": -0.00611,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 2,
+       "arm": "original",
+       "fps": 114.299,
+       "frame_ms_p50": 8.7056,
+       "frame_ms_p95": 10.3886,
+       "half_window_drift": -0.00527,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 2,
+       "arm": "identity",
+       "fps": 114.084,
+       "frame_ms_p50": 8.7534,
+       "frame_ms_p95": 10.43,
+       "half_window_drift": -0.00548,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 3,
+       "arm": "identity",
+       "fps": 113.854,
+       "frame_ms_p50": 8.743,
+       "frame_ms_p95": 10.4667,
+       "half_window_drift": -0.00654,
+       "frame_limit": "unlimited"
+      }
+     ]
+    }
+   ]
+  },
+  "3840x2160_four_blocks": {
+   "spec": "rtx2080ti-null-sessions.json",
+   "spec_sha256": "5c4517f0ef274d4313619fa5bebe1616858a81826d4f8c2e1c63b0cbd01ea412",
+   "campaign_sha256": "75752ca63cdceb3a8b1f525fec6d7be816220f1948a98cbaf61b83d73af1810d",
+   "result_sha256": "8aa76d28f1b5996464860bfe3f78d8c3f5d8991ec70bed4a8068f688da8daeab",
+   "state": "complete",
+   "failures": [],
+   "recommendation": "do_not_promote",
+   "problems": [],
+   "case": {
+    "case": "coast-pan",
+    "interval": {
+     "achieved_coverage": 0.96875,
+     "high": -0.00017472306366589363,
+     "low": -0.0009955713011247647,
+     "median": -0.0004901818115162493,
+     "method": "binomial order-statistic interval for median of independent session effects",
+     "requested_coverage": 0.95,
+     "sessions": 6
+    },
+    "margin": 0.01,
+    "session_effects": [
+     -0.0005649042577334229,
+     -0.0004154593652990757,
+     -0.000585460031530316,
+     -0.00023635785645581553,
+     -0.00017472306366589363,
+     -0.0009955713011247647
+    ],
+    "state": "fails_margin"
+   },
+   "sessions": [
+    {
+     "state": "complete",
+     "failure": null,
+     "restored": true,
+     "elapsed_seconds": 192.58,
+     "protocol_sha256": "04047c52f3912d26644f5600271c10c8cd8287783006006afa095b90c8c3ba6f",
+     "result_sha256": "f66bf2e650a2e732fc3204cca4c53a243852831674196b301240b2dc91e75e46",
+     "windows": [
+      {
+       "block": 0,
+       "arm": "original",
+       "fps": 115.645,
+       "frame_ms_p50": 8.603,
+       "frame_ms_p95": 10.428,
+       "half_window_drift": -0.00615,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 0,
+       "arm": "identity",
+       "fps": 114.938,
+       "frame_ms_p50": 8.675,
+       "frame_ms_p95": 10.4655,
+       "half_window_drift": -0.00547,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 1,
+       "arm": "identity",
+       "fps": 114.731,
+       "frame_ms_p50": 8.6642,
+       "frame_ms_p95": 10.5403,
+       "half_window_drift": -0.00702,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 1,
+       "arm": "original",
+       "fps": 114.328,
+       "frame_ms_p50": 8.6949,
+       "frame_ms_p95": 10.4064,
+       "half_window_drift": -0.00963,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 2,
+       "arm": "original",
+       "fps": 113.916,
+       "frame_ms_p50": 8.7368,
+       "frame_ms_p95": 10.7548,
+       "half_window_drift": -0.00593,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 2,
+       "arm": "identity",
+       "fps": 113.668,
+       "frame_ms_p50": 8.7881,
+       "frame_ms_p95": 10.6853,
+       "half_window_drift": -0.00479,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 3,
+       "arm": "identity",
+       "fps": 113.623,
+       "frame_ms_p50": 8.7392,
+       "frame_ms_p95": 10.6247,
+       "half_window_drift": -0.00534,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 3,
+       "arm": "original",
+       "fps": 113.503,
+       "frame_ms_p50": 8.8182,
+       "frame_ms_p95": 10.5052,
+       "half_window_drift": -0.00529,
+       "frame_limit": "unlimited"
+      }
+     ]
+    },
+    {
+     "state": "complete",
+     "failure": null,
+     "restored": true,
+     "elapsed_seconds": 192.67,
+     "protocol_sha256": "04047c52f3912d26644f5600271c10c8cd8287783006006afa095b90c8c3ba6f",
+     "result_sha256": "cb1dfccbcdc638e0d6ea602761b2795e4b336cadfe416a45d6e2c98628da1534",
+     "windows": [
+      {
+       "block": 0,
+       "arm": "original",
+       "fps": 114.65,
+       "frame_ms_p50": 8.6828,
+       "frame_ms_p95": 10.3964,
+       "half_window_drift": -0.00857,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 0,
+       "arm": "identity",
+       "fps": 114.256,
+       "frame_ms_p50": 8.7261,
+       "frame_ms_p95": 10.3604,
+       "half_window_drift": -0.00819,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 1,
+       "arm": "identity",
+       "fps": 113.877,
+       "frame_ms_p50": 8.7645,
+       "frame_ms_p95": 10.503,
+       "half_window_drift": -0.00625,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 1,
+       "arm": "original",
+       "fps": 113.742,
+       "frame_ms_p50": 8.7551,
+       "frame_ms_p95": 10.4933,
+       "half_window_drift": -0.00654,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 2,
+       "arm": "original",
+       "fps": 113.589,
+       "frame_ms_p50": 8.7995,
+       "frame_ms_p95": 10.4432,
+       "half_window_drift": -0.00462,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 2,
+       "arm": "identity",
+       "fps": 113.453,
+       "frame_ms_p50": 8.7894,
+       "frame_ms_p95": 10.4979,
+       "half_window_drift": -0.00433,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 3,
+       "arm": "identity",
+       "fps": 113.448,
+       "frame_ms_p50": 8.8078,
+       "frame_ms_p95": 10.3098,
+       "half_window_drift": -0.00579,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 3,
+       "arm": "original",
+       "fps": 113.408,
+       "frame_ms_p50": 8.8092,
+       "frame_ms_p95": 10.308,
+       "half_window_drift": -0.00565,
+       "frame_limit": "unlimited"
+      }
+     ]
+    },
+    {
+     "state": "complete",
+     "failure": null,
+     "restored": true,
+     "elapsed_seconds": 192.23,
+     "protocol_sha256": "04047c52f3912d26644f5600271c10c8cd8287783006006afa095b90c8c3ba6f",
+     "result_sha256": "fe00471b7229a3adc2e8e09a3da2f09527419828ab1c7e5d27eeb3fabaed3c0d",
+     "windows": [
+      {
+       "block": 0,
+       "arm": "original",
+       "fps": 114.759,
+       "frame_ms_p50": 8.6887,
+       "frame_ms_p95": 10.6801,
+       "half_window_drift": -0.00607,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 0,
+       "arm": "identity",
+       "fps": 114.0,
+       "frame_ms_p50": 8.7423,
+       "frame_ms_p95": 10.579,
+       "half_window_drift": -0.00432,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 1,
+       "arm": "identity",
+       "fps": 113.772,
+       "frame_ms_p50": 8.7425,
+       "frame_ms_p95": 10.521,
+       "half_window_drift": -0.00387,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 1,
+       "arm": "original",
+       "fps": 113.753,
+       "frame_ms_p50": 8.7956,
+       "frame_ms_p95": 10.7421,
+       "half_window_drift": -0.00563,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 2,
+       "arm": "original",
+       "fps": 113.652,
+       "frame_ms_p50": 8.7839,
+       "frame_ms_p95": 10.4995,
+       "half_window_drift": -0.00485,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 2,
+       "arm": "identity",
+       "fps": 113.501,
+       "frame_ms_p50": 8.8102,
+       "frame_ms_p95": 10.4628,
+       "half_window_drift": -0.00355,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 3,
+       "arm": "identity",
+       "fps": 113.59,
+       "frame_ms_p50": 8.7836,
+       "frame_ms_p95": 10.5754,
+       "half_window_drift": -0.00418,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 3,
+       "arm": "original",
+       "fps": 113.54,
+       "frame_ms_p50": 8.7858,
+       "frame_ms_p95": 10.4696,
+       "half_window_drift": -0.00463,
+       "frame_limit": "unlimited"
+      }
+     ]
+    },
+    {
+     "state": "complete",
+     "failure": null,
+     "restored": true,
+     "elapsed_seconds": 192.42,
+     "protocol_sha256": "04047c52f3912d26644f5600271c10c8cd8287783006006afa095b90c8c3ba6f",
+     "result_sha256": "9c18991ce0fa3b71c84215d3b14663d6d309dbd508cacd8ae5244734dc2dbc43",
+     "windows": [
+      {
+       "block": 0,
+       "arm": "original",
+       "fps": 114.669,
+       "frame_ms_p50": 8.6798,
+       "frame_ms_p95": 10.451,
+       "half_window_drift": -0.00602,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 0,
+       "arm": "identity",
+       "fps": 113.961,
+       "frame_ms_p50": 8.74,
+       "frame_ms_p95": 10.5139,
+       "half_window_drift": -0.00746,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 1,
+       "arm": "identity",
+       "fps": 113.719,
+       "frame_ms_p50": 8.7536,
+       "frame_ms_p95": 10.521,
+       "half_window_drift": -0.00578,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 1,
+       "arm": "original",
+       "fps": 113.563,
+       "frame_ms_p50": 8.8222,
+       "frame_ms_p95": 10.5404,
+       "half_window_drift": -0.00496,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 2,
+       "arm": "original",
+       "fps": 113.518,
+       "frame_ms_p50": 8.79,
+       "frame_ms_p95": 10.5052,
+       "half_window_drift": -0.00544,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 2,
+       "arm": "identity",
+       "fps": 113.415,
+       "frame_ms_p50": 8.771,
+       "frame_ms_p95": 10.511,
+       "half_window_drift": -0.00461,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 3,
+       "arm": "identity",
+       "fps": 113.36,
+       "frame_ms_p50": 8.7909,
+       "frame_ms_p95": 10.6178,
+       "half_window_drift": -0.00516,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 3,
+       "arm": "original",
+       "fps": 113.31,
+       "frame_ms_p50": 8.7709,
+       "frame_ms_p95": 10.6031,
+       "half_window_drift": -0.00533,
+       "frame_limit": "unlimited"
+      }
+     ]
+    },
+    {
+     "state": "complete",
+     "failure": null,
+     "restored": true,
+     "elapsed_seconds": 192.14,
+     "protocol_sha256": "04047c52f3912d26644f5600271c10c8cd8287783006006afa095b90c8c3ba6f",
+     "result_sha256": "6b59a35f3006b5d0663135bd16141ca2ff329018ee765ec22a11cbd14ebb9646",
+     "windows": [
+      {
+       "block": 0,
+       "arm": "original",
+       "fps": 114.527,
+       "frame_ms_p50": 8.6771,
+       "frame_ms_p95": 10.4941,
+       "half_window_drift": -0.00666,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 0,
+       "arm": "identity",
+       "fps": 114.105,
+       "frame_ms_p50": 8.7325,
+       "frame_ms_p95": 10.4909,
+       "half_window_drift": -0.00754,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 1,
+       "arm": "identity",
+       "fps": 113.789,
+       "frame_ms_p50": 8.7207,
+       "frame_ms_p95": 10.4544,
+       "half_window_drift": -0.0051,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 1,
+       "arm": "original",
+       "fps": 113.668,
+       "frame_ms_p50": 8.7663,
+       "frame_ms_p95": 10.3931,
+       "half_window_drift": -0.0052,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 2,
+       "arm": "original",
+       "fps": 113.555,
+       "frame_ms_p50": 8.7658,
+       "frame_ms_p95": 10.3593,
+       "half_window_drift": -0.00538,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 2,
+       "arm": "identity",
+       "fps": 113.482,
+       "frame_ms_p50": 8.7941,
+       "frame_ms_p95": 10.4899,
+       "half_window_drift": -0.00464,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 3,
+       "arm": "identity",
+       "fps": 113.441,
+       "frame_ms_p50": 8.8205,
+       "frame_ms_p95": 10.5018,
+       "half_window_drift": -0.00492,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 3,
+       "arm": "original",
+       "fps": 113.408,
+       "frame_ms_p50": 8.7448,
+       "frame_ms_p95": 10.417,
+       "half_window_drift": -0.00587,
+       "frame_limit": "unlimited"
+      }
+     ]
+    },
+    {
+     "state": "complete",
+     "failure": null,
+     "restored": true,
+     "elapsed_seconds": 191.08,
+     "protocol_sha256": "04047c52f3912d26644f5600271c10c8cd8287783006006afa095b90c8c3ba6f",
+     "result_sha256": "92f97c23c45cf15efd7c56035da371f6dbd90aa2fdff62d78aaef6da4b8f8a93",
+     "windows": [
+      {
+       "block": 0,
+       "arm": "original",
+       "fps": 114.194,
+       "frame_ms_p50": 8.6644,
+       "frame_ms_p95": 10.2354,
+       "half_window_drift": -0.00495,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 0,
+       "arm": "identity",
+       "fps": 113.941,
+       "frame_ms_p50": 8.6794,
+       "frame_ms_p95": 10.1437,
+       "half_window_drift": -0.0068,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 1,
+       "arm": "identity",
+       "fps": 113.354,
+       "frame_ms_p50": 8.751,
+       "frame_ms_p95": 10.1906,
+       "half_window_drift": -0.01027,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 1,
+       "arm": "original",
+       "fps": 113.483,
+       "frame_ms_p50": 8.7629,
+       "frame_ms_p95": 10.1284,
+       "half_window_drift": -0.00417,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 2,
+       "arm": "original",
+       "fps": 113.43,
+       "frame_ms_p50": 8.748,
+       "frame_ms_p95": 10.1057,
+       "half_window_drift": -0.00512,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 2,
+       "arm": "identity",
+       "fps": 113.333,
+       "frame_ms_p50": 8.7437,
+       "frame_ms_p95": 10.0839,
+       "half_window_drift": -0.00357,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 3,
+       "arm": "identity",
+       "fps": 113.339,
+       "frame_ms_p50": 8.8017,
+       "frame_ms_p95": 10.1891,
+       "half_window_drift": -0.0045,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 3,
+       "arm": "original",
+       "fps": 113.281,
+       "frame_ms_p50": 8.7989,
+       "frame_ms_p95": 10.2061,
+       "half_window_drift": -0.00521,
+       "frame_limit": "unlimited"
+      }
+     ]
+    }
+   ]
+  },
+  "2560x1440_four_blocks": {
+   "spec": "rtx2080ti-null-sessions-1440p.json",
+   "spec_sha256": "bd028cda7b80eb1a38c71bd515b744534ffcb454b764bbd6c5b1f949a803950b",
+   "campaign_sha256": "98d56eb1b9fed11a7b517ec29788b5c04c820b30bbec60eca02efc6b0972c188",
+   "result_sha256": "c9d44d09281cbe17c49cd2e60c995884a4fa657922963de01e19fcd8b4e949a0",
+   "state": "complete",
+   "failures": [],
+   "recommendation": "do_not_promote",
+   "problems": [],
+   "case": {
+    "case": "coast-pan",
+    "interval": {
+     "achieved_coverage": 0.96875,
+     "high": 0.0005765898797921443,
+     "low": -0.0015543810832030491,
+     "median": -0.0005167312139983671,
+     "method": "binomial order-statistic interval for median of independent session effects",
+     "requested_coverage": 0.95,
+     "sessions": 6
+    },
+    "margin": 0.01,
+    "session_effects": [
+     -5.05343275225556e-07,
+     0.0005765898797921443,
+     -0.0011594809388522642,
+     -0.0015543810832030491,
+     -0.0003357437284719489,
+     -0.0006977186995247853
+    ],
+    "state": "fails_margin"
+   },
+   "sessions": [
+    {
+     "state": "complete",
+     "failure": null,
+     "restored": true,
+     "elapsed_seconds": 190.83,
+     "protocol_sha256": "8a97d9610d2e59d613eed8288d511a02451406f55130eeacabe0cc9a177442f8",
+     "result_sha256": "7ff2516ad9246b9770ae492cdb5d51d36e86345ee493dece958872b5b2592a74",
+     "windows": [
+      {
+       "block": 0,
+       "arm": "original",
+       "fps": 216.447,
+       "frame_ms_p50": 4.5749,
+       "frame_ms_p95": 6.1737,
+       "half_window_drift": -0.00425,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 0,
+       "arm": "identity",
+       "fps": 215.345,
+       "frame_ms_p50": 4.5965,
+       "frame_ms_p95": 6.1832,
+       "half_window_drift": -0.00311,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 1,
+       "arm": "identity",
+       "fps": 215.289,
+       "frame_ms_p50": 4.6014,
+       "frame_ms_p95": 6.1431,
+       "half_window_drift": -0.00501,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 1,
+       "arm": "original",
+       "fps": 214.916,
+       "frame_ms_p50": 4.6046,
+       "frame_ms_p95": 6.0899,
+       "half_window_drift": -0.00314,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 2,
+       "arm": "original",
+       "fps": 214.205,
+       "frame_ms_p50": 4.6314,
+       "frame_ms_p95": 6.03,
+       "half_window_drift": -0.00025,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 2,
+       "arm": "identity",
+       "fps": 213.923,
+       "frame_ms_p50": 4.6484,
+       "frame_ms_p95": 6.0652,
+       "half_window_drift": -0.00404,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 3,
+       "arm": "identity",
+       "fps": 214.111,
+       "frame_ms_p50": 4.6328,
+       "frame_ms_p95": 6.2256,
+       "half_window_drift": -0.00495,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 3,
+       "arm": "original",
+       "fps": 213.829,
+       "frame_ms_p50": 4.6267,
+       "frame_ms_p95": 6.1483,
+       "half_window_drift": -0.00352,
+       "frame_limit": "unlimited"
+      }
+     ]
+    },
+    {
+     "state": "complete",
+     "failure": null,
+     "restored": true,
+     "elapsed_seconds": 190.69,
+     "protocol_sha256": "8a97d9610d2e59d613eed8288d511a02451406f55130eeacabe0cc9a177442f8",
+     "result_sha256": "786abb88d2de4c9732e9c3e4074d22342d81ce79a708d022feea9d0c946c1c44",
+     "windows": [
+      {
+       "block": 0,
+       "arm": "original",
+       "fps": 214.831,
+       "frame_ms_p50": 4.6007,
+       "frame_ms_p95": 6.1484,
+       "half_window_drift": 0.00152,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 0,
+       "arm": "identity",
+       "fps": 215.263,
+       "frame_ms_p50": 4.5926,
+       "frame_ms_p95": 6.0528,
+       "half_window_drift": -0.00741,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 1,
+       "arm": "identity",
+       "fps": 214.447,
+       "frame_ms_p50": 4.6186,
+       "frame_ms_p95": 6.0815,
+       "half_window_drift": -0.00447,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 1,
+       "arm": "original",
+       "fps": 214.43,
+       "frame_ms_p50": 4.6466,
+       "frame_ms_p95": 6.0877,
+       "half_window_drift": -0.00434,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 2,
+       "arm": "original",
+       "fps": 214.095,
+       "frame_ms_p50": 4.6402,
+       "frame_ms_p95": 6.212,
+       "half_window_drift": -0.00516,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 2,
+       "arm": "identity",
+       "fps": 213.696,
+       "frame_ms_p50": 4.6477,
+       "frame_ms_p95": 6.1023,
+       "half_window_drift": -0.00504,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 3,
+       "arm": "identity",
+       "fps": 213.598,
+       "frame_ms_p50": 4.6459,
+       "frame_ms_p95": 6.0641,
+       "half_window_drift": -0.00396,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 3,
+       "arm": "original",
+       "fps": 213.369,
+       "frame_ms_p50": 4.6499,
+       "frame_ms_p95": 6.2067,
+       "half_window_drift": -0.00321,
+       "frame_limit": "unlimited"
+      }
+     ]
+    },
+    {
+     "state": "complete",
+     "failure": null,
+     "restored": true,
+     "elapsed_seconds": 190.8,
+     "protocol_sha256": "8a97d9610d2e59d613eed8288d511a02451406f55130eeacabe0cc9a177442f8",
+     "result_sha256": "8a628f0ac64b2c0e7f455eb53bb0d94d157efc64d7803bcacfd4d738e5f96b0e",
+     "windows": [
+      {
+       "block": 0,
+       "arm": "original",
+       "fps": 215.642,
+       "frame_ms_p50": 4.549,
+       "frame_ms_p95": 6.1656,
+       "half_window_drift": -0.00089,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 0,
+       "arm": "identity",
+       "fps": 215.164,
+       "frame_ms_p50": 4.5937,
+       "frame_ms_p95": 6.1728,
+       "half_window_drift": -0.00478,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 1,
+       "arm": "identity",
+       "fps": 214.52,
+       "frame_ms_p50": 4.6087,
+       "frame_ms_p95": 6.0829,
+       "half_window_drift": -0.00382,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 1,
+       "arm": "original",
+       "fps": 214.558,
+       "frame_ms_p50": 4.6291,
+       "frame_ms_p95": 6.1032,
+       "half_window_drift": -0.00226,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 2,
+       "arm": "original",
+       "fps": 214.138,
+       "frame_ms_p50": 4.6064,
+       "frame_ms_p95": 6.0923,
+       "half_window_drift": -0.00516,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 2,
+       "arm": "identity",
+       "fps": 213.75,
+       "frame_ms_p50": 4.6469,
+       "frame_ms_p95": 6.1563,
+       "half_window_drift": -0.003,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 3,
+       "arm": "identity",
+       "fps": 213.416,
+       "frame_ms_p50": 4.6492,
+       "frame_ms_p95": 6.1586,
+       "half_window_drift": -0.00265,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 3,
+       "arm": "original",
+       "fps": 213.525,
+       "frame_ms_p50": 4.6225,
+       "frame_ms_p95": 6.0326,
+       "half_window_drift": -0.00396,
+       "frame_limit": "unlimited"
+      }
+     ]
+    },
+    {
+     "state": "complete",
+     "failure": null,
+     "restored": true,
+     "elapsed_seconds": 190.64,
+     "protocol_sha256": "8a97d9610d2e59d613eed8288d511a02451406f55130eeacabe0cc9a177442f8",
+     "result_sha256": "95ca6b118f81d0ccec183b5d6779e8d1c723e49b5a8c3a2db09bafa45f5559c1",
+     "windows": [
+      {
+       "block": 0,
+       "arm": "original",
+       "fps": 215.12,
+       "frame_ms_p50": 4.5664,
+       "frame_ms_p95": 6.195,
+       "half_window_drift": -0.0028,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 0,
+       "arm": "identity",
+       "fps": 215.367,
+       "frame_ms_p50": 4.5819,
+       "frame_ms_p95": 6.1855,
+       "half_window_drift": -0.00338,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 1,
+       "arm": "identity",
+       "fps": 214.039,
+       "frame_ms_p50": 4.621,
+       "frame_ms_p95": 6.2233,
+       "half_window_drift": -0.005,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 1,
+       "arm": "original",
+       "fps": 214.326,
+       "frame_ms_p50": 4.6107,
+       "frame_ms_p95": 6.2184,
+       "half_window_drift": -0.00471,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 2,
+       "arm": "original",
+       "fps": 213.541,
+       "frame_ms_p50": 4.6509,
+       "frame_ms_p95": 6.0718,
+       "half_window_drift": -0.00489,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 2,
+       "arm": "identity",
+       "fps": 213.164,
+       "frame_ms_p50": 4.6253,
+       "frame_ms_p95": 6.145,
+       "half_window_drift": 0.00348,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 3,
+       "arm": "identity",
+       "fps": 211.754,
+       "frame_ms_p50": 4.6476,
+       "frame_ms_p95": 6.6606,
+       "half_window_drift": -0.00141,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 3,
+       "arm": "original",
+       "fps": 213.575,
+       "frame_ms_p50": 4.6466,
+       "frame_ms_p95": 6.1137,
+       "half_window_drift": -0.00502,
+       "frame_limit": "unlimited"
+      }
+     ]
+    },
+    {
+     "state": "complete",
+     "failure": null,
+     "restored": true,
+     "elapsed_seconds": 190.53,
+     "protocol_sha256": "8a97d9610d2e59d613eed8288d511a02451406f55130eeacabe0cc9a177442f8",
+     "result_sha256": "d8010df94340d7a0c659f5d4bc5c08c1d48c325d8e4ddaabf037e5a2b5f6c214",
+     "windows": [
+      {
+       "block": 0,
+       "arm": "original",
+       "fps": 215.379,
+       "frame_ms_p50": 4.5745,
+       "frame_ms_p95": 6.187,
+       "half_window_drift": -0.00079,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 0,
+       "arm": "identity",
+       "fps": 214.84,
+       "frame_ms_p50": 4.6071,
+       "frame_ms_p95": 6.0679,
+       "half_window_drift": -0.00984,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 1,
+       "arm": "identity",
+       "fps": 214.568,
+       "frame_ms_p50": 4.6494,
+       "frame_ms_p95": 6.0294,
+       "half_window_drift": -0.00278,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 1,
+       "arm": "original",
+       "fps": 213.613,
+       "frame_ms_p50": 4.6191,
+       "frame_ms_p95": 6.127,
+       "half_window_drift": 0.00154,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 2,
+       "arm": "original",
+       "fps": 214.058,
+       "frame_ms_p50": 4.6361,
+       "frame_ms_p95": 6.0285,
+       "half_window_drift": -0.00521,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 2,
+       "arm": "identity",
+       "fps": 213.438,
+       "frame_ms_p50": 4.6566,
+       "frame_ms_p95": 6.0977,
+       "half_window_drift": -0.00836,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 3,
+       "arm": "identity",
+       "fps": 213.498,
+       "frame_ms_p50": 4.6406,
+       "frame_ms_p95": 6.1241,
+       "half_window_drift": -0.00483,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 3,
+       "arm": "original",
+       "fps": 213.108,
+       "frame_ms_p50": 4.6488,
+       "frame_ms_p95": 6.1828,
+       "half_window_drift": 0.00059,
+       "frame_limit": "unlimited"
+      }
+     ]
+    },
+    {
+     "state": "complete",
+     "failure": null,
+     "restored": true,
+     "elapsed_seconds": 190.56,
+     "protocol_sha256": "8a97d9610d2e59d613eed8288d511a02451406f55130eeacabe0cc9a177442f8",
+     "result_sha256": "f83f7e31fa7fec64f94a939405ab5873c838a24c85070efc1fa97beb75c39d40",
+     "windows": [
+      {
+       "block": 0,
+       "arm": "original",
+       "fps": 215.366,
+       "frame_ms_p50": 4.5808,
+       "frame_ms_p95": 6.1759,
+       "half_window_drift": -0.00238,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 0,
+       "arm": "identity",
+       "fps": 214.601,
+       "frame_ms_p50": 4.6049,
+       "frame_ms_p95": 6.1716,
+       "half_window_drift": -0.00583,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 1,
+       "arm": "identity",
+       "fps": 214.263,
+       "frame_ms_p50": 4.6351,
+       "frame_ms_p95": 6.0664,
+       "half_window_drift": -0.00321,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 1,
+       "arm": "original",
+       "fps": 213.893,
+       "frame_ms_p50": 4.647,
+       "frame_ms_p95": 6.1554,
+       "half_window_drift": -0.00477,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 2,
+       "arm": "original",
+       "fps": 214.14,
+       "frame_ms_p50": 4.6297,
+       "frame_ms_p95": 6.0723,
+       "half_window_drift": -0.00409,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 2,
+       "arm": "identity",
+       "fps": 213.756,
+       "frame_ms_p50": 4.6404,
+       "frame_ms_p95": 6.0727,
+       "half_window_drift": -0.00121,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 3,
+       "arm": "identity",
+       "fps": 213.537,
+       "frame_ms_p50": 4.6435,
+       "frame_ms_p95": 6.1481,
+       "half_window_drift": -0.00396,
+       "frame_limit": "unlimited"
+      },
+      {
+       "block": 3,
+       "arm": "original",
+       "fps": 213.452,
+       "frame_ms_p50": 4.642,
+       "frame_ms_p95": 6.064,
+       "half_window_drift": -0.00397,
+       "frame_limit": "unlimited"
+      }
+     ]
+    }
+   ]
+  }
+ }
+}

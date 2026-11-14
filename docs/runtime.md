@@ -6,7 +6,7 @@
 
 The working live setup is the Asahi MacBook Air (Apple M1, Mesa, 2560×1600) with pinned Complementary Reimagined r5.9.3, its original options, native resolution and native AA, without Distant Horizons. The intended target has DH enabled, and that configuration is blocked on Asahi: the original pack exceeds the fragment sampler limit with DH, with or without ShaderLOD ([F9, F10](../FINDINGS.md)). Running without DH (`--without-dh`) does not substitute for it.
 
-The primary development machine is the RTX 2080 Ti under native Windows, on a virtual display. Its benchmark surface is 3840×2160, where the GPU is the bottleneck; 2560×1440 is a secondary check closer to ordinary play, at which CPU and GPU time per frame are about equal. Original Reimagined runs there with and without DH ([F48](../FINDINGS.md)); its remaining setup work is in the [task](../tasks/primary-runtime-preparation.md). Its earlier controls ran at 1024×768 with the frame limiter at 60 and cannot show a speedup. It is a separate configuration, not a substitute for the Asahi surface.
+The primary development machine is the RTX 2080 Ti under native Windows, on a virtual display. Its benchmark surface is 3840×2160, where the GPU is the bottleneck; 2560×1440 is a secondary check closer to ordinary play, at which CPU and GPU time per frame are about equal. Original Reimagined runs and validates there with and without DH at 3840×2160 ([F48](../FINDINGS.md)). Its earlier controls ran at 1024×768 with the frame limiter at 60 and cannot show a speedup. It is a separate configuration, not a substitute for the Asahi surface.
 
 ## RTX 2080 Ti Windows setup
 

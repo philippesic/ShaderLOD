@@ -1389,7 +1389,7 @@ def freeze_windows_runtime(legacy: Path, output: Path, root: Path) -> dict[str, 
     entries = [
         base_vm,
         "-Xmx6G",
-        "-Dlog4j2.configurationFile=" + (output / "logging.xml").as_posix(),
+        "-Dlog4j2.configurationFile=" + (output / "logging.xml").as_uri(),
         "-Djava.net.preferIPv6Addresses=system",
         "-DignoreList=mixinextras-neoforge-0.5.3.jar,client-extra,neoforge-",
         "-DlegacyClassPath.file="
