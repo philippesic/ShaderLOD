@@ -367,7 +367,8 @@ final class BenchmarkControl {
           record.put("delay_ms", delayMillis);
           record.put("context_lost", contextLost);
           record.put("active_world_frames", activeWorldFrames);
-          record.put("dh_buffer_renders", dhBufferRenders() - captureBufferRenders);
+          record.put(
+              "dh_buffer_renders", dhWitnessed() ? dhBufferRenders() - captureBufferRenders : -1);
           record.put("executed_delay_ns", delayExecuted);
           record.put("quality_cadence_ns", qualityCadence);
           record.put("quality_skipped_slots", qualityClock == null ? 0 : qualityClock.skipped());
