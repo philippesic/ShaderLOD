@@ -85,6 +85,7 @@ final class BenchmarkControl {
 
   void frame(long timestamp, long generation) {
     RenderGroups.reset();
+    DhSections.reset();
     if (capture != null) {
       contextLost |= observingFrame && !worldRendered;
       observingFrame = true;
