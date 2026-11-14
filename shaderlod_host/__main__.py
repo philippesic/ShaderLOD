@@ -36,6 +36,7 @@ def main() -> int:
             "prepare-windows-dh",
             "prepare-dh-dataset",
             "sync-windows",
+            "contain-windows-runtime",
             "prepare-profile",
             "prepare-world",
             "freeze-windows-runtime",
@@ -374,6 +375,28 @@ def main() -> int:
                 sort_keys=True,
             )
         )
+        return 0
+    if args.mode == "contain-windows-runtime":
+        from shaderlod_host.storage import BusyRefusal
+        import socket
+
+        if args.source_root is None or args.ownership_root is None:
+            parser.error(
+                "contain-windows-runtime requires --source-root --ownership-root"
+            )
+        if sys.platform != "win32":
+            parser.error("native Windows preparation required")
+        from shaderlod_host.runtime_live import contain_windows_runtime
+
+        with BusyRefusal(args.ownership_root, socket.gethostname() + ":gpu:0"):
+            print(
+                json.dumps(
+                    contain_windows_runtime(
+                        Path(__file__).resolve().parents[1], args.source_root
+                    ),
+                    sort_keys=True,
+                )
+            )
         return 0
     if args.mode == "prepare-windows-dh":
         if args.profile is None:

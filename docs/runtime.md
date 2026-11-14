@@ -20,7 +20,15 @@ Refresh it from a clean WSL checkout after each commit that matters for a run:
 python3 -m shaderlod_host sync-windows --output-root /mnt/c/ShaderLOD
 ```
 
-It builds with the pinned JDK, checks the pinned runtime artifacts, and replaces only the code; it refuses while a Java process runs on Windows or tracked files have uncommitted changes. A fresh copy is prepared once, from Windows, in this order: `prepare-windows` (the no-DH slot `run-benchmark`), `freeze-windows-runtime`, `prepare-windows-dh --profile CANONICAL` (the slot `run-benchmark-dh` with Distant Horizons and its own `build\moddev\windows-launch-dh.json`), then `prepare-profile` for each slot. To freeze a settled DH dataset for a slot:
+It builds with the pinned JDK, checks the pinned runtime artifacts, and replaces only the code; it refuses while a Java process runs on Windows or tracked files have uncommitted changes. A fresh copy is prepared once, from Windows, in this order:
+
+1. `prepare-windows` makes the no-DH slot `run-benchmark`.
+2. `freeze-windows-runtime`.
+3. `prepare-windows-dh --profile CANONICAL` makes the slot `run-benchmark-dh`, with Distant Horizons and its own `build\moddev\windows-launch-dh.json`.
+4. `prepare-profile` for each slot.
+5. `contain-windows-runtime --source-root OLD --ownership-root C:\ShaderLOD\ownership` copies everything the launch still reads from the old runtime location (the JDK and the library JARs) into `.local\artifacts\windows-runtime\external`. It rewrites the launch descriptions to point there and refuses if any outside reference remains.
+
+The current copy was prepared from a legacy runtime that has since been retired, and it reads nothing outside `C:\ShaderLOD`. Its source profile is kept at `C:\ShaderLOD\canonical-client` for re-preparing slots. Recreating the copy from nothing would need a new adopted runtime. To freeze a settled DH dataset for a slot:
 1. Open a DH session with `start.ps1 -DistantHorizons -DhGeneration`.
 2. Hold the scene's case poses until the world's `DistantHorizons.sqlite` stops growing, then close the session.
 3. Run `prepare-dh-dataset` (see [benchmarks](benchmarks.md#distant-horizons-workload)).

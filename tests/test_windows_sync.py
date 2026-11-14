@@ -1,4 +1,5 @@
 import hashlib
+import os
 import json
 from pathlib import Path
 import subprocess
@@ -126,3 +127,59 @@ def test_dh_slot_adds_every_pinned_mod_and_its_own_launch(tmp_path: Path) -> Non
     assert written["argv"] == ["java"]
     with pytest.raises(ValueError):
         prepare_windows_dh(canonical, root)
+
+
+def test_contain_copies_outside_runtime_inputs_and_rewrites_references(
+    tmp_path: Path,
+) -> None:
+    from shaderlod_host.runtime_live import contain_windows_runtime
+
+    external = tmp_path / "Bench"
+    root = tmp_path / "ShaderLOD"
+    java = external / "tools/java/jdk/bin/java"
+    java.parent.mkdir(parents=True)
+    java.write_bytes(b"java")
+    (external / "tools/java/jdk/lib").mkdir()
+    (external / "tools/java/jdk/lib/modules").write_bytes(b"modules")
+    jars = [external / "cache" / name for name in ("a.jar", "b.jar", "c.jar")]
+    for jar in jars:
+        jar.parent.mkdir(parents=True, exist_ok=True)
+        jar.write_bytes(jar.name.encode())
+    inside = root / "build/classes/java/main"
+    inside.mkdir(parents=True)
+    launch = root / "build/moddev/windows-launch.json"
+    launch.parent.mkdir(parents=True)
+    launch.write_text(
+        json.dumps(
+            {
+                "argv": [
+                    str(java),
+                    "-cp",
+                    os.pathsep.join([str(inside), str(jars[0]), str(jars[1])]),
+                ],
+                "cwd": str(root / "run-benchmark"),
+            }
+        )
+    )
+    (root / "build/moddev/developmentLegacyClasspath.txt").write_text(
+        str(jars[2]) + "\n"
+    )
+    vm = root / ".local/artifacts/windows-runtime/vm-args.txt"
+    vm.parent.mkdir(parents=True)
+    vm.write_text("-Xmx6G\n-Dfoo=" + jars[0].as_posix() + "\n")
+    result = contain_windows_runtime(root, external)
+    contained = root / ".local/artifacts/windows-runtime/external"
+    assert result["files"] == 3
+    assert (contained / "tools/java/jdk/lib/modules").read_bytes() == b"modules"
+    rewritten = json.loads(launch.read_bytes())["argv"]
+    assert rewritten[0] == str(contained / "tools/java/jdk/bin/java")
+    assert str(contained / "cache/a.jar") in rewritten[2]
+    assert str(inside) in rewritten[2]
+    for path in (launch, vm, root / "build/moddev/developmentLegacyClasspath.txt"):
+        assert str(external) not in path.read_text()
+    (contained / "cache/b.jar").write_bytes(b"other")
+    launch.write_text(
+        json.dumps({"argv": [str(java), "-cp", str(jars[1])], "cwd": str(root)})
+    )
+    with pytest.raises(ValueError, match="differs"):
+        contain_windows_runtime(root, external)

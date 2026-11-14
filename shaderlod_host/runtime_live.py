@@ -1689,3 +1689,107 @@ def execute_installation(
         },
     )
     return result
+
+
+def contain_windows_runtime(root: Path, external: Path) -> dict[str, object]:
+    from shaderlod_host.storage import replace_bytes
+
+    snapshot = root / ".local/artifacts/windows-runtime"
+    target = snapshot / "external"
+    manifests = [
+        path
+        for path in (
+            root / "build/moddev/windows-launch.json",
+            root / "build/moddev/windows-launch-dh.json",
+        )
+        if path.exists()
+    ]
+    texts = [
+        path
+        for path in (
+            root / "build/moddev/developmentLegacyClasspath.txt",
+            snapshot / "vm-args.txt",
+        )
+        if path.exists()
+    ]
+    if not manifests:
+        raise ValueError("prepared Windows launch description required")
+    prefixes = {str(external), external.as_posix()}
+
+    def outside(token: str) -> Path | None:
+        if any(token.startswith(prefix) for prefix in prefixes):
+            return Path(token)
+        return None
+
+    def tokens(value: str) -> list[str]:
+        found = []
+        for line in value.splitlines():
+            for part in line.replace("=", ";").replace(os.pathsep, ";").split(";"):
+                if part.strip():
+                    found.append(part.strip())
+        return found
+
+    referenced: set[Path] = set()
+    homes: set[Path] = set()
+    for path in manifests:
+        argv = json.loads(path.read_bytes())["argv"]
+        java = outside(argv[0])
+        if java is not None:
+            homes.add(java.parent.parent)
+        for item in argv[1:]:
+            referenced.update(p for p in map(outside, tokens(item)) if p is not None)
+    for path in texts:
+        referenced.update(
+            p for p in map(outside, tokens(path.read_text())) if p is not None
+        )
+    referenced = {p for p in referenced if not any(p.is_relative_to(h) for h in homes)}
+    missing = [str(p) for p in referenced if not p.is_file()] + [
+        str(h) for h in homes if not (h / "bin").is_dir()
+    ]
+    if missing:
+        raise ValueError("external runtime inputs missing: " + ", ".join(missing[:5]))
+    copied = 0
+    for home in homes:
+        destination = target / home.relative_to(external)
+        if not destination.exists():
+            shutil.copytree(home, destination)
+    for path in sorted(referenced):
+        destination = target / path.relative_to(external)
+        if not destination.exists():
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(path, destination)
+            copied += 1
+        if (
+            hashlib.sha256(destination.read_bytes()).hexdigest()
+            != hashlib.sha256(path.read_bytes()).hexdigest()
+        ):
+            raise ValueError("contained copy differs: " + str(path))
+
+    def relocate(value: str) -> str:
+        for prefix in prefixes:
+            replacement = str(target) if "\\" in prefix else target.as_posix()
+            value = value.replace(prefix, replacement)
+        return value
+
+    for path in manifests:
+        record = json.loads(path.read_bytes())
+        record["argv"] = [relocate(item) for item in record["argv"]]
+        replace_bytes(path, json.dumps(record, sort_keys=True).encode())
+    for path in texts:
+        replace_bytes(path, relocate(path.read_text()).encode())
+    remaining = [
+        str(path)
+        for path in manifests + texts
+        if any(prefix in path.read_text() for prefix in prefixes)
+    ]
+    if remaining:
+        raise ValueError("external references remain in " + ", ".join(remaining))
+    return {
+        "schema": "shaderlod-windows-containment-v1",
+        "external": str(external),
+        "contained_under": str(target),
+        "java_homes": sorted(str(h) for h in homes),
+        "files": len(referenced),
+        "copied": copied,
+        "rewritten": [str(p) for p in manifests + texts],
+    }
