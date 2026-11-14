@@ -1696,38 +1696,33 @@ def contain_windows_runtime(root: Path, external: Path) -> dict[str, object]:
 
     snapshot = root / ".local/artifacts/windows-runtime"
     target = snapshot / "external"
-    manifests = [
-        path
-        for path in (
-            root / "build/moddev/windows-launch.json",
-            root / "build/moddev/windows-launch-dh.json",
-        )
-        if path.exists()
-    ]
-    texts = [
-        path
-        for path in (
-            root / "build/moddev/developmentLegacyClasspath.txt",
-            snapshot / "vm-args.txt",
-        )
-        if path.exists()
-    ]
+    manifests = sorted((root / "build/moddev").glob("windows-launch*.json"))
     if not manifests:
         raise ValueError("prepared Windows launch description required")
-    prefixes = {str(external), external.as_posix()}
+    texts = [
+        path
+        for path in sorted((root / "build/moddev").glob("*.txt"))
+        + [snapshot / "vm-args.txt"]
+        if path.is_file()
+    ]
+
+    def forms(path: Path) -> list[str]:
+        native = str(path)
+        return [native.replace("\\", "\\\\"), native, path.as_posix()]
 
     def outside(token: str) -> Path | None:
-        if any(token.startswith(prefix) for prefix in prefixes):
-            return Path(token)
+        cleaned = token.strip().strip('"').replace("\\\\", "\\")
+        if any(cleaned.startswith(prefix) for prefix in forms(external)[1:]):
+            return Path(cleaned)
         return None
 
     def tokens(value: str) -> list[str]:
-        found = []
-        for line in value.splitlines():
-            for part in line.replace("=", ";").replace(os.pathsep, ";").split(";"):
-                if part.strip():
-                    found.append(part.strip())
-        return found
+        return [
+            part
+            for line in value.splitlines()
+            for part in line.replace("=", ";").replace(os.pathsep, ";").split(";")
+            if part.strip()
+        ]
 
     referenced: set[Path] = set()
     homes: set[Path] = set()
@@ -1743,32 +1738,40 @@ def contain_windows_runtime(root: Path, external: Path) -> dict[str, object]:
             p for p in map(outside, tokens(path.read_text())) if p is not None
         )
     referenced = {p for p in referenced if not any(p.is_relative_to(h) for h in homes)}
-    missing = [str(p) for p in referenced if not p.is_file()] + [
+    missing = [str(p) for p in referenced if not p.exists()] + [
         str(h) for h in homes if not (h / "bin").is_dir()
     ]
     if missing:
         raise ValueError("external runtime inputs missing: " + ", ".join(missing[:5]))
+    mapping: dict[Path, Path] = {h: target / "jdk" / h.name for h in homes}
+    for path in referenced:
+        key = hashlib.sha256(str(path.relative_to(external)).encode()).hexdigest()[:16]
+        mapping[path] = (
+            target / ("assets" if path.is_dir() else "lib") / (key + "-" + path.name)
+        )
     copied = 0
-    for home in homes:
-        destination = target / home.relative_to(external)
-        if not destination.exists():
-            shutil.copytree(home, destination)
-    for path in sorted(referenced):
-        destination = target / path.relative_to(external)
-        if not destination.exists():
-            destination.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(path, destination)
-            copied += 1
-        if (
+    for source, destination in sorted(mapping.items()):
+        if destination.exists():
+            continue
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        if source.is_dir():
+            shutil.copytree(source, destination)
+        else:
+            shutil.copy2(source, destination)
+        copied += 1
+    for source, destination in mapping.items():
+        if source.is_file() and (
             hashlib.sha256(destination.read_bytes()).hexdigest()
-            != hashlib.sha256(path.read_bytes()).hexdigest()
+            != hashlib.sha256(source.read_bytes()).hexdigest()
         ):
-            raise ValueError("contained copy differs: " + str(path))
+            raise ValueError("contained copy differs: " + str(source))
+
+    order = sorted(mapping.items(), key=lambda item: -len(str(item[0])))
 
     def relocate(value: str) -> str:
-        for prefix in prefixes:
-            replacement = str(target) if "\\" in prefix else target.as_posix()
-            value = value.replace(prefix, replacement)
+        for source, destination in order:
+            for old, new in zip(forms(source), forms(destination)):
+                value = value.replace(old, new)
         return value
 
     for path in manifests:
@@ -1780,7 +1783,7 @@ def contain_windows_runtime(root: Path, external: Path) -> dict[str, object]:
     remaining = [
         str(path)
         for path in manifests + texts
-        if any(prefix in path.read_text() for prefix in prefixes)
+        if any(form in path.read_text() for form in forms(external))
     ]
     if remaining:
         raise ValueError("external references remain in " + ", ".join(remaining))

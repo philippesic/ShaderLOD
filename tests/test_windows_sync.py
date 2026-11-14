@@ -164,20 +164,34 @@ def test_contain_copies_outside_runtime_inputs_and_rewrites_references(
     (root / "build/moddev/developmentLegacyClasspath.txt").write_text(
         str(jars[2]) + "\n"
     )
+    assets = external / "cache/assets"
+    (assets / "objects").mkdir(parents=True)
+    (assets / "objects/ab").write_bytes(b"asset")
+    (root / "build/moddev/benchmarkRunProgramArgs.txt").write_text(
+        '"--assetsDir"\n"' + str(assets) + '"\n'
+    )
     vm = root / ".local/artifacts/windows-runtime/vm-args.txt"
     vm.parent.mkdir(parents=True)
     vm.write_text("-Xmx6G\n-Dfoo=" + jars[0].as_posix() + "\n")
     result = contain_windows_runtime(root, external)
     contained = root / ".local/artifacts/windows-runtime/external"
-    assert result["files"] == 3
-    assert (contained / "tools/java/jdk/lib/modules").read_bytes() == b"modules"
+    assert result["files"] == 4
+    assert (contained / "jdk/jdk/lib/modules").read_bytes() == b"modules"
     rewritten = json.loads(launch.read_bytes())["argv"]
-    assert rewritten[0] == str(contained / "tools/java/jdk/bin/java")
-    assert str(contained / "cache/a.jar") in rewritten[2]
+    assert rewritten[0] == str(contained / "jdk/jdk/bin/java")
+    assert str(contained / "lib") in rewritten[2] and "-a.jar" in rewritten[2]
     assert str(inside) in rewritten[2]
-    for path in (launch, vm, root / "build/moddev/developmentLegacyClasspath.txt"):
+    program = (root / "build/moddev/benchmarkRunProgramArgs.txt").read_text()
+    copied_assets = Path(program.splitlines()[1].strip('"'))
+    assert (copied_assets / "objects/ab").read_bytes() == b"asset"
+    for path in (
+        launch,
+        vm,
+        root / "build/moddev/developmentLegacyClasspath.txt",
+        root / "build/moddev/benchmarkRunProgramArgs.txt",
+    ):
         assert str(external) not in path.read_text()
-    (contained / "cache/b.jar").write_bytes(b"other")
+    next((contained / "lib").glob("*-b.jar")).write_bytes(b"other")
     launch.write_text(
         json.dumps({"argv": [str(java), "-cp", str(jars[1])], "cwd": str(root)})
     )
