@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+import time
 
 import pytest
 
@@ -370,6 +371,9 @@ def test_pass_summary_attributes_owned_intervals_and_excludes_incomplete_gpu_fra
     ]
     summary = pass_summary({"cpu": cpu, "gpu": gpu, "overflow": False})
     assert (summary["sampled_frames"], summary["complete_frames"]) == (2, 1)
+    assert summary["attribution"] == "unusable"
+    complete = pass_summary({"cpu": cpu[:3], "gpu": gpu[:3], "overflow": False})
+    assert complete["attribution"] == "usable"
     assert summary["gpu_ms_per_frame"] == 8
     groups = summary["groups"]
     assert isinstance(groups, list)
@@ -435,3 +439,66 @@ def test_gpu_contamination_ignores_ambient_desktop_but_not_virtual_machine_work(
     assert gpu_admission({"pids": [2564, 4]}, True) == [4]
     assert gpu_admission({"pids": [77]}, False) == [77]
     assert gpu_admission({"unavailable": 3}, True) == []
+
+
+def test_profile_plan_declares_surface_pose_and_warmup(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    import shaderlod_host.benchmark as benchmark
+
+    spec = {
+        "schema": "shaderlod-workflow-v1",
+        "scope": "profile",
+        "workload": "fixed-ready-scene",
+        "arms": ["original"],
+        "blocks": 1,
+        "window_ms": 10000,
+        "budget_ms": 90000,
+        "instrument": "diagnostic",
+        "surface": [3840, 2160],
+        "pose": [0.5, 131, 0.5, 135, 10],
+        "warmup_ms": 30000,
+    }
+    plan = WorkflowPlan.decode(spec)
+    assert plan.surface == (3840, 2160) and plan.pose == (0.5, 131.0, 0.5, 135.0, 10.0)
+    assert plan.describe()["warmup_ms"] == 30000
+    for change in (
+        {"surface": [3840]},
+        {"pose": [0, 1, 2]},
+        {"warmup_ms": 400000},
+        {"warmup_ms": 85000},
+    ):
+        with pytest.raises(ValueError):
+            WorkflowPlan.decode(spec | change)
+    calls: list[tuple[str, object]] = []
+    surface = [[2560, 1440]]
+    now = [0.0]
+
+    def command(
+        session: Path,
+        action: str,
+        duration: int,
+        timeout: float,
+        payload: object = None,
+    ) -> dict[str, object]:
+        calls.append((action, payload))
+        if action == "prepare" and isinstance(payload, dict) and "surface" in payload:
+            surface[0] = list(payload["surface"])
+        return {"ready": True, "surface": surface[0]}
+
+    def sleep(seconds: float) -> None:
+        now[0] += seconds
+
+    monkeypatch.setattr(benchmark, "session_command", command)
+    monkeypatch.setattr(time, "sleep", sleep)
+    monkeypatch.setattr(time, "monotonic", lambda: now[0])
+    placed = benchmark.place_profile(Path("session"), plan)
+    assert placed["surface"] == [3840, 2160]
+    assert ("prepare", {"surface": [3840, 2160]}) in calls
+    assert any(
+        action == "prepare"
+        and isinstance(payload, dict)
+        and payload.get("pose") == [0.5, 131.0, 0.5, 135.0, 10.0]
+        for action, payload in calls
+    )
+    assert [action for action, _ in calls].count("status") >= 3

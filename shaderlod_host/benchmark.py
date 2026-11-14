@@ -44,9 +44,13 @@ class WorkflowPlan:
     window_ms: int
     budget_ms: int
     instrument: str
+    surface: tuple[int, int] | None = None
+    pose: tuple[float, ...] | None = None
+    warmup_ms: int = 0
 
     @classmethod
     def decode(cls, value: object) -> "WorkflowPlan":
+        optional = {"surface", "pose", "warmup_ms"}
         data = object_fields(
             value,
             {
@@ -58,7 +62,8 @@ class WorkflowPlan:
                 "window_ms",
                 "budget_ms",
                 "instrument",
-            },
+            }
+            | (optional & set(value) if isinstance(value, dict) else set()),
             "workflow",
         )
         if data["schema"] != "shaderlod-workflow-v1":
@@ -82,7 +87,26 @@ class WorkflowPlan:
             raise ValueError("unknown instrument")
         if scope in {"contribution", "release"} and instrument != "frames":
             raise ValueError("qualification requires minimally instrumented outcomes")
-        if len(arms) * blocks * window >= budget:
+        surface = None
+        if "surface" in data:
+            size = data["surface"]
+            if not isinstance(size, list) or len(size) != 2:
+                raise ValueError("profile surface needs width and height")
+            surface = (positive(size[0], "width"), positive(size[1], "height"))
+        pose = None
+        if "pose" in data:
+            raw = data["pose"]
+            if (
+                not isinstance(raw, list)
+                or len(raw) != 5
+                or any(type(item) not in (int, float) for item in raw)
+            ):
+                raise ValueError("profile pose needs five coordinates")
+            pose = tuple(float(str(item)) for item in raw)
+        warmup = data.get("warmup_ms", 0)
+        if type(warmup) is not int or not 0 <= warmup <= 300000:
+            raise ValueError("bounded profile warm-up required")
+        if len(arms) * blocks * window + warmup >= budget:
             raise ValueError("budget must leave time beyond capture for lifecycle work")
         return cls(
             scope,
@@ -92,6 +116,9 @@ class WorkflowPlan:
             window,
             budget,
             instrument,
+            surface,
+            pose,
+            warmup,
         )
 
     def describe(self) -> dict[str, object]:
@@ -105,6 +132,9 @@ class WorkflowPlan:
             "capture_ms": len(self.arms) * self.blocks * self.window_ms,
             "budget_ms": self.budget_ms,
             "instrument": self.instrument,
+            "surface": None if self.surface is None else list(self.surface),
+            "pose": None if self.pose is None else list(self.pose),
+            "warmup_ms": self.warmup_ms,
             "live_capability": "profile capture; comparison uses shaderlod-comparison-v1",
             "acceptance": "no retention policy supplied",
         }
@@ -375,6 +405,31 @@ def render_frames(frames: tuple[Frame, ...], analysis: dict[str, object]) -> str
         .replace("@@SUMMARY@@", summary)
         .replace("@@FALLBACK@@", fallback)
     )
+
+
+def place_profile(session: Path, plan: WorkflowPlan) -> dict[str, object]:
+    def call(
+        action: str, payload: dict[str, object] | None = None
+    ) -> dict[str, object]:
+        return session_command(session, action, 0, 30, payload)
+
+    observed = call("status")
+    if plan.surface is not None:
+        observed = settle_surface(call, list(plan.surface), observed, 30)
+    if plan.pose is not None:
+        payload: dict[str, object] = {
+            "day_time": 6000,
+            "weather": "clear",
+            "pose": list(plan.pose),
+        }
+        if plan.surface is not None:
+            payload["surface"] = list(plan.surface)
+        call("prepare", payload)
+    settled = time.monotonic() + plan.warmup_ms / 1000
+    while time.monotonic() < settled:
+        time.sleep(min(20.0, max(0.0, settled - time.monotonic())))
+        observed = call("status")
+    return call("status")
 
 
 def settle_surface(
@@ -667,9 +722,14 @@ def pass_summary(value: object) -> dict[str, object]:
             totals.items(), key=lambda item: (-item[1]["gpu"], -item[1]["cpu"], item[0])
         )
     ]
+    usable = bool(frames) and len(complete) >= 0.9 * len(frames)
     return {
         "sampled_frames": len(frames),
         "complete_frames": len(complete),
+        "attribution": "usable" if usable else "unusable",
+        "attribution_meaning": "GPU attribution needs at least 90% of sampled frames complete; meeting that is not proof that missing frames were unbiased"
+        if usable
+        else "Too many sampled frames lost a GPU query; do not read per-group GPU time from this capture",
         "gpu_ms_per_frame": gpu_total / len(complete) / 1000000 if complete else None,
         "groups": groups,
         "health": {

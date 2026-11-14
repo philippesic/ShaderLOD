@@ -561,17 +561,25 @@ def main() -> int:
                     )
                 if args.output_root.exists():
                     raise ValueError("fresh profile output required before capture")
+                from shaderlod_host.benchmark import place_profile
+
+                status = place_profile(args.session, plan)
                 payload = None
+                if plan.pose is not None:
+                    payload = {
+                        "from": list(plan.pose),
+                        "to": list(plan.pose),
+                        "delay_ms": 0,
+                    }
                 if plan.instrument == "diagnostic":
-                    status = session_command(args.session, "status", 0, 5)
                     pose = status.get("pose")
                     if not isinstance(pose, list) or len(pose) != 5:
                         raise ValueError(
                             "ready player pose required for diagnostic profile"
                         )
                     payload = {
-                        "from": pose,
-                        "to": pose,
+                        "from": list(plan.pose) if plan.pose is not None else pose,
+                        "to": list(plan.pose) if plan.pose is not None else pose,
                         "delay_ms": 0,
                         "diagnostic": True,
                     }
@@ -585,6 +593,10 @@ def main() -> int:
                 from shaderlod_host.benchmark import save_live_capture
 
                 try:
+                    if plan.surface is not None and observed.get("surface") != list(
+                        plan.surface
+                    ):
+                        raise ValueError("profile ran at a different surface")
                     summary = save_live_capture(observed, args.output_root)
                 except (OSError, ValueError) as error:
                     from shaderlod_host.storage import publish

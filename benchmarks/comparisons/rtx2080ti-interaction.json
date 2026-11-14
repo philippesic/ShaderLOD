@@ -56,10 +56,10 @@
       "delay_ms": 0
     }
   ],
-  "blocks": 1,
+  "blocks": 2,
   "window_ms": 4000,
   "warmup_ms": 8000,
-  "budget_ms": 180000,
+  "budget_ms": 288000,
   "seed": 7,
   "interaction": [
     "original",
