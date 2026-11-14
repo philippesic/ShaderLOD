@@ -24,7 +24,7 @@
     "test_health_and_evidence",
     "test_publisher_once",
     "test_runtime_refusal",
-    "test_registered_iris_mixin_selectors_match_pinned_jar",
+    "test_registered_mixin_selectors_match_pinned_jars",
     "test_runner_death_stops_owned_group_without_foreign_kill",
     "test_recovery_is_idempotent_and_preserves_budget",
     "test_source_drift_and_attempt_replay_refused",

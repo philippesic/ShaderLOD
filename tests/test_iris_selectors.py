@@ -61,16 +61,38 @@ def class_methods(data: bytes) -> set[str]:
     return methods
 
 
-def test_registered_iris_mixin_selectors_match_pinned_jar() -> None:
+def test_registered_mixin_selectors_match_pinned_jars() -> None:
     root = Path(__file__).resolve().parents[1]
     lock = json.loads((root / "dependencies/runtime.lock.json").read_text())
     registrations = (
-        ("src/main/resources/shaderlod.mixins.json", "src/main/java"),
-        ("src/devClient/resources/shaderlod_dev.mixins.json", "src/devClient/java"),
+        ("iris", "src/main/resources/shaderlod.mixins.json", "src/main/java"),
+        (
+            "iris",
+            "src/devClient/resources/shaderlod_dev.mixins.json",
+            "src/devClient/java",
+        ),
+        (
+            "distanthorizons",
+            "src/devClient/resources/shaderlod_dev_dh.mixins.json",
+            "src/devClient/java",
+        ),
     )
-    with zipfile.ZipFile(
-        root / "dependencies/runtime" / lock["artifacts"]["iris"]["filename"]
-    ) as jar:
+    for artifact in ("iris", "distanthorizons"):
+        check_registrations(
+            root,
+            root / "dependencies/runtime" / lock["artifacts"][artifact]["filename"],
+            [
+                (config, source)
+                for owner, config, source in registrations
+                if owner == artifact
+            ],
+        )
+
+
+def check_registrations(
+    root: Path, archive: Path, registrations: list[tuple[str, str]]
+) -> None:
+    with zipfile.ZipFile(archive) as jar:
         registered_sources: list[Path] = []
         for config_path, source_path in registrations:
             config = json.loads((root / config_path).read_text())
@@ -86,7 +108,7 @@ def test_registered_iris_mixin_selectors_match_pinned_jar() -> None:
             )
         for source in registered_sources:
             text = source.read_text()
-            target = re.search(r'@Mixin\(targets = "([^"]+)"', text)
+            target = re.search(r'@Mixin\(\s*targets\s*=\s*"([^"]+)"', text)
             if target:
                 owner = target[1]
             else:
@@ -105,7 +127,7 @@ def test_registered_iris_mixin_selectors_match_pinned_jar() -> None:
                     else any(method.startswith(selector + "(") for method in methods)
                 )
                 assert matches, (
-                    f"{source}: pinned Iris lacks {owner}.{selector}; review integration before updating"
+                    f"{source}: pinned {archive.name} lacks {owner}.{selector}; review integration before updating"
                 )
 
 

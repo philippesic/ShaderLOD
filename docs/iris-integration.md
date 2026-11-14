@@ -22,7 +22,7 @@ The mixins in `integration/mixin` use exact-descriptor injection and redirect se
 
 ## Development-only render-group hooks
 
-The development mod, never the shipping JAR, registers `shaderlod_dev.mixins.json`. Its two mixins inject at the head of Iris's static `GLDebug.pushGroup(int, String)` and `GLDebug.popGroup()`, which Iris calls around every world phase and full-screen pass whether or not GL debugging is active. They only report the group name to the [profiler](profiling.md#render-groups-which-pass-is-expensive); they issue no GL calls. Their selectors are checked against the pinned JAR with the shipping ones, and their lint directives are listed the same way.
+The development mod, never the shipping JAR, registers `shaderlod_dev.mixins.json`. Its two mixins inject at the head of Iris's static `GLDebug.pushGroup(int, String)` and `GLDebug.popGroup()`, which Iris calls around every world phase and full-screen pass whether or not GL debugging is active. They only report the group name to the [profiler](profiling.md#render-groups-which-pass-is-expensive); they issue no GL calls. Their selectors are checked against the pinned JAR with the shipping ones, and their lint directives are listed the same way. A second, optional configuration, `shaderlod_dev_dh.mixins.json`, applies only when Distant Horizons is installed: it injects at the head of DH's NeoForge profiler wrapper (`ProfilerWrapper_neoforge.push` and `popPush`, and `ProfileBlock_neoforge.close`) to report DH's own stage names the same way. Its three mixins mark a section beginning, changing and ending; their selectors are checked against the pinned DH JAR.
 
 ## Sampler binding indices
 

@@ -8,3 +8,5 @@ displayName="ShaderLOD development instrumentation"
 description="Bounded frame capture, functional control and sampled stage diagnostics"
 [[mixins]]
 config="shaderlod_dev.mixins.json"
+[[mixins]]
+config="shaderlod_dev_dh.mixins.json"

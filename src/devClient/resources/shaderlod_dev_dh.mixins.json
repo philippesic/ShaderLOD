@@ -1,0 +1,14 @@
+{
+  "required": false,
+  "minVersion": "0.8",
+  "package": "com.pp.shaderlod.dev.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "DhSectionBeginMixin",
+    "DhSectionChangeMixin",
+    "DhSectionEndMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
