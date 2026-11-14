@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+import time
 
 import pytest
 
@@ -123,7 +124,9 @@ def test_steady_needs_every_interval_within_tolerance() -> None:
     }
 
 
-def test_settle_workload_screens_cases_then_waits_for_stability(tmp_path: Path) -> None:
+def test_settle_workload_screens_cases_then_waits_for_stability(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     spec = json.loads(
         (
             Path(__file__).resolve().parents[1]
@@ -152,6 +155,22 @@ def test_settle_workload_screens_cases_then_waits_for_stability(tmp_path: Path) 
     record = settle_workload(call, plan, tmp_path)
     assert record["state"] == "stable"
     assert actions[:3] == ["prepare", "screenshot", "prepare"]
+    conditioned = ComparisonPlan.decode(
+        spec | {"stability": stability() | {"conditioning_ms": 45000}}
+    )
+    actions.clear()
+    sleeps: list[float] = []
+    now = [0.0]
+
+    def fake_sleep(seconds: float) -> None:
+        sleeps.append(seconds)
+        now[0] += seconds
+
+    monkeypatch.setattr(time, "sleep", fake_sleep)
+    monkeypatch.setattr(time, "monotonic", lambda: now[0])
+    assert settle_workload(call, conditioned, tmp_path / "second")["state"] == "stable"
+    assert max(sleeps) <= 20.0
+    assert actions.count("status") >= 3
     assert (tmp_path / "readiness.json").exists()
 
 

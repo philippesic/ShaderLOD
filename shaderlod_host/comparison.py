@@ -834,7 +834,10 @@ def settle_workload(
             "surface": list(first.surface),
         },
     )
-    time.sleep(stability.conditioning_ms / 1000)
+    conditioned = time.monotonic() + stability.conditioning_ms / 1000
+    while time.monotonic() < conditioned:
+        time.sleep(min(20.0, max(0.0, conditioned - time.monotonic())))
+        call("status")
     deadline = time.monotonic() + stability.timeout_ms / 1000
     trace: list[dict[str, object]] = []
     previous = call("status")
