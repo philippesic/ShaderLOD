@@ -48,6 +48,20 @@ class Campaign:
                 )
             if plan.quality_cadence_ms or plan.instrument != "frames":
                 raise ValueError("quality/diagnostics are separate from confirmation")
+        for case in policy.cases:
+            leading = [
+                next(
+                    arm.identity
+                    for _, scheduled, arm in plan.schedule()
+                    if scheduled.identity == case
+                    and arm.identity in {policy.reference, policy.candidate}
+                )
+                for plan in plans
+            ]
+            if 2 * leading.count(policy.reference) != len(leading):
+                raise ValueError(
+                    "sessions must lead with each policy arm equally often; vary the seeds"
+                )
         startup = positive(record["startup_ms"], "startup_ms")
         budget = positive(record["budget_ms"], "budget_ms")
         if (

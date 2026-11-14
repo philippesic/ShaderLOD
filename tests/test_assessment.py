@@ -31,6 +31,7 @@ def run_fixture(
     multiplier: float = 1.2,
     client_options: dict[str, object] | None = None,
     blocks: int = 2,
+    contamination: str = "clean",
 ) -> Path:
     if client_options is None:
         client_options = {"max_fps": 260, "vsync": False}
@@ -135,6 +136,7 @@ def run_fixture(
                 "case": "coast-pan",
                 "arm": arm,
                 "block": block,
+                "gpu_contamination": {"state": contamination},
                 "attempt": directory.name,
                 "selection": selected,
                 "summary": summary,
@@ -195,6 +197,23 @@ def test_acceptance_needs_independent_sessions_and_quality(tmp_path: Path) -> No
     result = assess(policy, reused, review(policy, reused))
     assert result["recommendation"] == "do_not_promote"
     assert result["problems"]
+
+
+def test_foreign_or_unobserved_gpu_work_cannot_pass(tmp_path: Path) -> None:
+    policy = QualificationPolicy.decode(policy_spec())
+    for state, problem in (
+        ("foreign", "foreign GPU work"),
+        ("unobserved", "GPU contamination unobserved"),
+    ):
+        runs = [
+            run_fixture(tmp_path / (state + str(i)), policy, i, contamination=state)
+            for i in range(6)
+        ]
+        result = assess(policy, runs, review(policy, runs))
+        assert result["recommendation"] == "do_not_promote"
+        problems = result["problems"]
+        assert isinstance(problems, list)
+        assert any(problem in str(item) for item in problems)
 
 
 def test_unbalanced_arm_order_cannot_pass(tmp_path: Path) -> None:

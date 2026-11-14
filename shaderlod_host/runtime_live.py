@@ -271,6 +271,8 @@ def benchmark_session(
         raise ValueError("single prepared world name required")
     if not profile.is_dir() or not (profile / "saves" / world).is_dir():
         raise ValueError("prepared profile and selected world required")
+    if telemetry_enabled:
+        refuse_foreign_gpu_work()
     launch = json.loads(launch_path.read_bytes())
     if not isinstance(launch.get("argv"), list) or not all(
         isinstance(a, str) for a in launch["argv"]
@@ -539,6 +541,23 @@ def benchmark_session(
             },
         )
         return status
+
+
+def refuse_foreign_gpu_work() -> None:
+    from shaderlod_host.telemetry import NvidiaSensors
+
+    sensors = NvidiaSensors()
+    try:
+        processes = sensors.compute_processes()
+    finally:
+        sensors.close()
+    pids = processes.get("pids")
+    if isinstance(pids, list) and pids:
+        raise ValueError(
+            "foreign GPU compute processes present: "
+            + ", ".join(str(pid) for pid in pids)
+            + "; wait until the GPU is idle"
+        )
 
 
 def record_telemetry(

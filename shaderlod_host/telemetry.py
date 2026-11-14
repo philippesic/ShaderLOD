@@ -91,6 +91,8 @@ class NvidiaSensors:
                 ("used", ctypes.c_ulonglong),
             ]
 
+        record["compute_processes"] = self.compute_processes()
+
         memory = Memory()
         result = self.library.nvmlDeviceGetMemoryInfo(self.handle, ctypes.byref(memory))
         record["memory_used_bytes"] = (
@@ -98,10 +100,75 @@ class NvidiaSensors:
         )
         return record
 
+    def compute_processes(self) -> dict[str, object]:
+        if self.library is None:
+            return {"unavailable": self.reason}
+
+        class Process(ctypes.Structure):
+            _fields_ = [
+                ("pid", ctypes.c_uint),
+                ("used_memory", ctypes.c_ulonglong),
+                ("gpu_instance", ctypes.c_uint),
+                ("compute_instance", ctypes.c_uint),
+            ]
+
+        query = None
+        for symbol in (
+            "nvmlDeviceGetComputeRunningProcesses_v3",
+            "nvmlDeviceGetComputeRunningProcesses_v2",
+        ):
+            query = getattr(self.library, symbol, None)
+            if query is not None:
+                break
+        if query is None:
+            return {"unavailable": "compute process query absent"}
+        count = ctypes.c_uint(0)
+        result = query(self.handle, ctypes.byref(count), None)
+        if result == 0:
+            return {"pids": []}
+        if result != 7:
+            return {"unavailable": result}
+        capacity = count.value + 8
+        buffer = (Process * capacity)()
+        count = ctypes.c_uint(capacity)
+        result = query(self.handle, ctypes.byref(count), buffer)
+        if result != 0:
+            return {"unavailable": result}
+        return {"pids": sorted(buffer[i].pid for i in range(count.value))}
+
     def close(self) -> None:
         if self.library is not None:
             self.library.nvmlShutdown()
             self.library = None
+
+
+def gpu_contamination(
+    samples: list[dict[str, object]], started_unix_ns: int, ended_unix_ns: int
+) -> dict[str, object]:
+    inside = [
+        sample
+        for sample in samples
+        if isinstance(sample.get("unix_ns"), int)
+        and started_unix_ns <= int(str(sample["unix_ns"])) <= ended_unix_ns
+    ]
+    foreign: set[int] = set()
+    unknown = 0
+    for sample in inside:
+        gpu = sample.get("gpu")
+        processes = gpu.get("compute_processes") if isinstance(gpu, dict) else None
+        pids = processes.get("pids") if isinstance(processes, dict) else None
+        if isinstance(pids, list):
+            foreign.update(int(pid) for pid in pids)
+        else:
+            unknown += 1
+    state = "foreign" if foreign else "unobserved" if not inside or unknown else "clean"
+    return {
+        "state": state,
+        "samples": len(inside),
+        "unknown_samples": unknown,
+        "foreign_pids": sorted(foreign),
+        "meaning": "GPU compute processes sampled at 1 Hz during the window; a screen, not proof that no short foreign work overlapped",
+    }
 
 
 def host_sample(pid: int | None = None) -> dict[str, object]:

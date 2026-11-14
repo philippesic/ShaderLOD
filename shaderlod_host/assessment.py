@@ -308,6 +308,14 @@ def assess(
                 )
             elif limit["state"] == "unobserved":
                 problems.append(case + ": frame limit state unobserved")
+            contamination = row.get("gpu_contamination")
+            contamination_state = (
+                contamination.get("state") if isinstance(contamination, dict) else None
+            )
+            if contamination_state == "foreign":
+                problems.append(case + ": foreign GPU work during a measured window")
+            elif contamination_state != "clean":
+                problems.append(case + ": GPU contamination unobserved")
             block = str(path.resolve()) + ":" + str(row.get("block"))
             pair = grouped[case].setdefault(key, {}).setdefault(block, {})
             if arm in pair:

@@ -105,7 +105,7 @@ def test_campaign_verification_accepts_preserved_windows_paths(tmp_path: Path) -
         json.dumps(
             {
                 "schema": "shaderlod-campaign-v1",
-                "sessions": [definition, definition],
+                "sessions": [definition | {"seed": 0}, definition | {"seed": 1}],
                 "policy": policy.wire(),
                 "startup_ms": 120000,
                 "budget_ms": 900000,

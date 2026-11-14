@@ -17,7 +17,7 @@ def test_campaign_freezes_independent_repetition_and_lifecycle_budget() -> None:
     plan["scope"] = "contribution"
     record = {
         "schema": "shaderlod-campaign-v1",
-        "sessions": [plan, plan | {"seed": 9}],
+        "sessions": [plan | {"seed": 0}, plan | {"seed": 1}],
         "policy": policy_spec(2),
         "startup_ms": 120000,
         "budget_ms": 600000,
@@ -29,6 +29,7 @@ def test_campaign_freezes_independent_repetition_and_lifecycle_budget() -> None:
         {"budget_ms": 300000},
         {"sessions": [plan]},
         {"policy": policy_spec(3)},
+        {"sessions": [plan | {"seed": 0}, plan | {"seed": 0}]},
     ):
         with pytest.raises(ValueError):
             Campaign.decode(record | changes)

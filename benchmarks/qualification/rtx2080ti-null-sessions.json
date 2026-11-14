@@ -48,7 +48,7 @@
       "window_ms": 10000,
       "warmup_ms": 8000,
       "budget_ms": 300000,
-      "seed": 7
+      "seed": 0
     },
     {
       "schema": "shaderlod-comparison-v1",
@@ -97,7 +97,7 @@
       "window_ms": 10000,
       "warmup_ms": 8000,
       "budget_ms": 300000,
-      "seed": 7
+      "seed": 1
     },
     {
       "schema": "shaderlod-comparison-v1",
@@ -146,7 +146,7 @@
       "window_ms": 10000,
       "warmup_ms": 8000,
       "budget_ms": 300000,
-      "seed": 7
+      "seed": 0
     },
     {
       "schema": "shaderlod-comparison-v1",
@@ -195,7 +195,7 @@
       "window_ms": 10000,
       "warmup_ms": 8000,
       "budget_ms": 300000,
-      "seed": 7
+      "seed": 1
     },
     {
       "schema": "shaderlod-comparison-v1",
@@ -244,7 +244,7 @@
       "window_ms": 10000,
       "warmup_ms": 8000,
       "budget_ms": 300000,
-      "seed": 7
+      "seed": 0
     },
     {
       "schema": "shaderlod-comparison-v1",
@@ -293,7 +293,7 @@
       "window_ms": 10000,
       "warmup_ms": 8000,
       "budget_ms": 300000,
-      "seed": 7
+      "seed": 1
     }
   ],
   "policy": {

@@ -93,7 +93,7 @@
       "window_ms": 5000,
       "warmup_ms": 1000,
       "budget_ms": 90000,
-      "seed": 2
+      "seed": 1
     }
   ],
   "policy": {

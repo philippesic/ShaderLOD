@@ -24,6 +24,10 @@ Every capture summary carries two readouts. Read them before the FPS.
 
 Throughput also falls slowly across a session: on the RTX 2080 Ti at 3840×2160 every window ran about 0.2% slower than the one before, about 1.3% over two minutes. Each block runs the arms in the reverse order of the block before, so an even number of blocks cancels a steady decline; an odd number leaves one arm later on average. Three blocks gave every session in a no-change campaign an effect of −0.05% to −0.19%, with the pairs alternating in sign. `qualify --policy` therefore refuses to promote a session whose arms did not lead equally often. A one-block development comparison is order-confounded by the same amount. The decline is fastest at the start of a session, so even four blocks leave about −0.05% at 4K ([F48](../FINDINGS.md)); treat smaller effects as unresolved.
 
+A campaign must also lead with each policy arm in half of its sessions; the definition loader refuses one whose seeds give every session the same first arm.
+
+Each comparison window carries `gpu_contamination`, built from the session's 1 Hz telemetry: `clean` when every sample in the window saw no GPU compute process, `foreign` when one appeared, and `unobserved` when there were no samples or a query failed. `qualify --policy` promotes only clean windows. A session opened with `--telemetry` refuses to start while any compute process is on the GPU; the Windows session script and campaigns always pass it. The RTX 2080 Ti is shared with another project's GPU work, so a one-second screen does not replace coordinating with it: a job shorter than a second can still slip between samples. A GPU without NVML reads as `unobserved`, so such a machine cannot promote timing results.
+
 Asahi held no-change pairs within about 0.25% for about the first two minutes of sustained capture and became erratic afterwards. Keep its comparisons short and let it rest between sessions; a long campaign there needs its own stability evidence first.
 
 ## Prepare and own a session

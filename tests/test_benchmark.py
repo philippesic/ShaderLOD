@@ -394,3 +394,22 @@ def test_pass_summary_attributes_owned_intervals_and_excludes_incomplete_gpu_fra
     for invalid in invalid_streams:
         with pytest.raises(ValueError):
             pass_summary(invalid)
+
+
+def test_gpu_contamination_separates_clean_foreign_and_unobserved() -> None:
+    from shaderlod_host.telemetry import gpu_contamination
+
+    def sample(at: int, processes: object) -> dict[str, object]:
+        return {"unix_ns": at, "gpu": {"compute_processes": processes}}
+
+    clean = [sample(t, {"pids": []}) for t in (100, 200, 300)]
+    assert gpu_contamination(clean, 100, 300)["state"] == "clean"
+    foreign = clean + [sample(250, {"pids": [4242]}), sample(900, {"pids": [7]})]
+    verdict = gpu_contamination(foreign, 100, 300)
+    assert (verdict["state"], verdict["foreign_pids"]) == ("foreign", [4242])
+    assert gpu_contamination(clean, 400, 500)["state"] == "unobserved"
+    unknown = clean + [sample(150, {"unavailable": 3})]
+    assert gpu_contamination(unknown, 100, 300)["state"] == "unobserved"
+    assert gpu_contamination([{"unix_ns": 150, "gpu": {}}], 100, 300)["state"] == (
+        "unobserved"
+    )

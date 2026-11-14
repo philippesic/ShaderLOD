@@ -48,7 +48,7 @@
       "window_ms": 300000,
       "warmup_ms": 3000,
       "budget_ms": 800000,
-      "seed": 7
+      "seed": 0
     },
     {
       "schema": "shaderlod-comparison-v1",
@@ -97,7 +97,7 @@
       "window_ms": 300000,
       "warmup_ms": 3000,
       "budget_ms": 800000,
-      "seed": 8
+      "seed": 1
     }
   ],
   "policy": {

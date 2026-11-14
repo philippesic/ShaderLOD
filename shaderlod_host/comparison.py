@@ -18,6 +18,7 @@ from shaderlod_host.benchmark import (
     settle_surface,
 )
 from shaderlod_host.storage import publish, publish_bytes
+from shaderlod_host.telemetry import gpu_contamination
 
 
 def vector(value: object) -> tuple[float, ...]:
@@ -580,11 +581,13 @@ def execute_comparison(
             if plan.quality_cadence_ms:
                 capture_payload["quality_cadence_ms"] = plan.quality_cadence_ms
             window_started = time.monotonic() - started
+            window_started_unix_ns = time.time_ns()
             observed = call(
                 "capture",
                 plan.window_ms,
                 capture_payload,
             )
+            window_ended_unix_ns = time.time_ns()
             summary = save_live_capture(observed, case_dir)
             if plan.quality_cadence_ms:
                 from shaderlod_host.quality import save_sequence
@@ -635,6 +638,7 @@ def execute_comparison(
                 "conditioning": conditioned,
                 "window_started_seconds": window_started,
                 "window_ended_seconds": time.monotonic() - started,
+                "window_unix_ns": [window_started_unix_ns, window_ended_unix_ns],
             }
             results.append(row)
             publish(case_dir / "comparison.json", row)
@@ -664,6 +668,13 @@ def execute_comparison(
             restored = True
         except (OSError, ValueError, RuntimeError) as error:
             failure = (failure or "") + "; restoration failed: " + str(error)
+    samples = telemetry_samples(session)
+    for row in results:
+        bounds = row.get("window_unix_ns")
+        if isinstance(bounds, list) and len(bounds) == 2:
+            row["gpu_contamination"] = gpu_contamination(
+                samples, int(bounds[0]), int(bounds[1])
+            )
     result: dict[str, object] = {
         "schema": "shaderlod-comparison-result-v1",
         "scope": plan.scope,
@@ -705,6 +716,18 @@ def execute_comparison(
         },
     )
     return result
+
+
+def telemetry_samples(session: Path) -> list[dict[str, object]]:
+    samples = []
+    for path in sorted((session / "telemetry").glob("*.json")):
+        try:
+            record = json.loads(path.read_bytes())
+        except (OSError, ValueError):
+            continue
+        if isinstance(record, dict):
+            samples.append(record)
+    return samples
 
 
 def frame_limit_scope(rows: list[dict[str, object]]) -> dict[str, object]:
