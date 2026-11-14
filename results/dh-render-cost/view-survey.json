@@ -1,0 +1,601 @@
+{
+ "schema": "shaderlod-dh-view-survey-v1",
+ "date": "2026-11-13",
+ "source_commit": "1e0d572",
+ "host": "RTX 2080 Ti native Windows, 3840x2160, DH 3.3.3 frozen dataset 9a5a026b, generator plan DISABLED",
+ "pack": "ComplementaryReimagined_r5.9.3.zip original options",
+ "views": {
+  "coast": {
+   "pose": [
+    0.5,
+    131,
+    0.5,
+    -35,
+    30
+   ],
+   "fps": 85.08,
+   "frame_ms_p50": 11.712,
+   "gpu_ms_per_frame": 11.59,
+   "attribution": "usable",
+   "complete_frames": 85,
+   "sampled_frames": 85,
+   "dh_submission": {
+    "buffer_renders": 292744,
+    "meaning": "DH buffer render events per completed frame; a submission witness, not visible coverage",
+    "per_frame": 344.405,
+    "state": "counted"
+   },
+   "summary_sha256": "589fd36764c64e9ce77eb903b339f47cb1a521d5a1fb45dd2100a933b7c0f53e",
+   "groups": [
+    {
+     "group": "Terrain solid/DH-RenderLevel/DH LOD Opaque",
+     "gpu_ms_per_frame": 2.3016,
+     "cpu_ms_per_frame": 0.7078,
+     "gpu_share": 0.1986
+    },
+    {
+     "group": "deferred/deferred1",
+     "gpu_ms_per_frame": 1.711,
+     "cpu_ms_per_frame": 0.0744,
+     "gpu_share": 0.1476
+    },
+    {
+     "group": "composite/composite1",
+     "gpu_ms_per_frame": 1.3175,
+     "cpu_ms_per_frame": 0.0441,
+     "gpu_share": 0.1137
+    },
+    {
+     "group": "Terrain solid",
+     "gpu_ms_per_frame": 1.0008,
+     "cpu_ms_per_frame": 0.1896,
+     "gpu_share": 0.0863
+    },
+    {
+     "group": "Sky",
+     "gpu_ms_per_frame": 0.8387,
+     "cpu_ms_per_frame": 0.1044,
+     "gpu_share": 0.0724
+    },
+    {
+     "group": "composite/composite6",
+     "gpu_ms_per_frame": 0.7638,
+     "cpu_ms_per_frame": 0.0583,
+     "gpu_share": 0.0659
+    },
+    {
+     "group": "composite/composite7",
+     "gpu_ms_per_frame": 0.6064,
+     "cpu_ms_per_frame": 0.0213,
+     "gpu_share": 0.0523
+    },
+    {
+     "group": "ungrouped",
+     "gpu_ms_per_frame": 0.5328,
+     "cpu_ms_per_frame": 1.2742,
+     "gpu_share": 0.046
+    },
+    {
+     "group": "composite/composite",
+     "gpu_ms_per_frame": 0.4456,
+     "cpu_ms_per_frame": 0.0744,
+     "gpu_share": 0.0384
+    },
+    {
+     "group": "Terrain translucent/DH-RenderLevel/DH LOD Transparent",
+     "gpu_ms_per_frame": 0.4195,
+     "cpu_ms_per_frame": 0.7343,
+     "gpu_share": 0.0362
+    },
+    {
+     "group": "composite/composite4",
+     "gpu_ms_per_frame": 0.2811,
+     "cpu_ms_per_frame": 0.0552,
+     "gpu_share": 0.0243
+    },
+    {
+     "group": "Clear textures",
+     "gpu_ms_per_frame": 0.2579,
+     "cpu_ms_per_frame": 0.2376,
+     "gpu_share": 0.0222
+    },
+    {
+     "group": "composite/composite5",
+     "gpu_ms_per_frame": 0.2521,
+     "cpu_ms_per_frame": 0.0256,
+     "gpu_share": 0.0217
+    },
+    {
+     "group": "Shadow Terrain solid",
+     "gpu_ms_per_frame": 0.2121,
+     "cpu_ms_per_frame": 0.2208,
+     "gpu_share": 0.0183
+    }
+   ]
+  },
+  "horizon": {
+   "pose": [
+    0.5,
+    131,
+    0.5,
+    -35,
+    0
+   ],
+   "fps": 91.45,
+   "frame_ms_p50": 10.897,
+   "gpu_ms_per_frame": 10.78,
+   "attribution": "usable",
+   "complete_frames": 91,
+   "sampled_frames": 91,
+   "dh_submission": {
+    "buffer_renders": 267180,
+    "meaning": "DH buffer render events per completed frame; a submission witness, not visible coverage",
+    "per_frame": 292.319,
+    "state": "counted"
+   },
+   "summary_sha256": "4543abb2f5e24dfd249e9c989e4fcb4b51177655e91028a179543bf45328f11c",
+   "groups": [
+    {
+     "group": "deferred/deferred1",
+     "gpu_ms_per_frame": 1.681,
+     "cpu_ms_per_frame": 0.0719,
+     "gpu_share": 0.1559
+    },
+    {
+     "group": "composite/composite1",
+     "gpu_ms_per_frame": 1.6212,
+     "cpu_ms_per_frame": 0.0395,
+     "gpu_share": 0.1504
+    },
+    {
+     "group": "Terrain solid/DH-RenderLevel/DH LOD Opaque",
+     "gpu_ms_per_frame": 1.5216,
+     "cpu_ms_per_frame": 0.6227,
+     "gpu_share": 0.1412
+    },
+    {
+     "group": "Sky",
+     "gpu_ms_per_frame": 1.0523,
+     "cpu_ms_per_frame": 0.0994,
+     "gpu_share": 0.0976
+    },
+    {
+     "group": "composite/composite6",
+     "gpu_ms_per_frame": 0.7775,
+     "cpu_ms_per_frame": 0.0558,
+     "gpu_share": 0.0721
+    },
+    {
+     "group": "composite/composite",
+     "gpu_ms_per_frame": 0.5964,
+     "cpu_ms_per_frame": 0.0737,
+     "gpu_share": 0.0553
+    },
+    {
+     "group": "Terrain solid",
+     "gpu_ms_per_frame": 0.5842,
+     "cpu_ms_per_frame": 0.1584,
+     "gpu_share": 0.0542
+    },
+    {
+     "group": "composite/composite7",
+     "gpu_ms_per_frame": 0.5626,
+     "cpu_ms_per_frame": 0.0242,
+     "gpu_share": 0.0522
+    },
+    {
+     "group": "ungrouped",
+     "gpu_ms_per_frame": 0.5332,
+     "cpu_ms_per_frame": 1.1036,
+     "gpu_share": 0.0495
+    },
+    {
+     "group": "Terrain translucent/DH-RenderLevel/DH LOD Transparent",
+     "gpu_ms_per_frame": 0.3496,
+     "cpu_ms_per_frame": 0.6585,
+     "gpu_share": 0.0324
+    },
+    {
+     "group": "composite/composite4",
+     "gpu_ms_per_frame": 0.2837,
+     "cpu_ms_per_frame": 0.0548,
+     "gpu_share": 0.0263
+    },
+    {
+     "group": "composite/composite5",
+     "gpu_ms_per_frame": 0.2546,
+     "cpu_ms_per_frame": 0.0249,
+     "gpu_share": 0.0236
+    },
+    {
+     "group": "Clear textures",
+     "gpu_ms_per_frame": 0.2374,
+     "cpu_ms_per_frame": 0.2204,
+     "gpu_share": 0.022
+    },
+    {
+     "group": "final",
+     "gpu_ms_per_frame": 0.1312,
+     "cpu_ms_per_frame": 0.0222,
+     "gpu_share": 0.0122
+    }
+   ]
+  },
+  "inland": {
+   "pose": [
+    0.5,
+    131,
+    0.5,
+    145,
+    15
+   ],
+   "fps": 75.72,
+   "frame_ms_p50": 13.2,
+   "gpu_ms_per_frame": 13.025,
+   "attribution": "usable",
+   "complete_frames": 75,
+   "sampled_frames": 75,
+   "dh_submission": {
+    "buffer_renders": 249810,
+    "meaning": "DH buffer render events per completed frame; a submission witness, not visible coverage",
+    "per_frame": 330.437,
+    "state": "counted"
+   },
+   "summary_sha256": "3b0721a84b33b544a7db45788994f3e7988bb9878fa173c287e87a012e658bfc",
+   "groups": [
+    {
+     "group": "Terrain solid/DH-RenderLevel/DH LOD Opaque",
+     "gpu_ms_per_frame": 3.5155,
+     "cpu_ms_per_frame": 0.7013,
+     "gpu_share": 0.2699
+    },
+    {
+     "group": "deferred/deferred1",
+     "gpu_ms_per_frame": 1.9409,
+     "cpu_ms_per_frame": 0.0744,
+     "gpu_share": 0.149
+    },
+    {
+     "group": "composite/composite1",
+     "gpu_ms_per_frame": 1.5101,
+     "cpu_ms_per_frame": 0.0416,
+     "gpu_share": 0.1159
+    },
+    {
+     "group": "Sky",
+     "gpu_ms_per_frame": 0.9394,
+     "cpu_ms_per_frame": 0.0962,
+     "gpu_share": 0.0721
+    },
+    {
+     "group": "composite/composite6",
+     "gpu_ms_per_frame": 0.7939,
+     "cpu_ms_per_frame": 0.0622,
+     "gpu_share": 0.0609
+    },
+    {
+     "group": "Terrain solid",
+     "gpu_ms_per_frame": 0.6918,
+     "cpu_ms_per_frame": 0.1537,
+     "gpu_share": 0.0531
+    },
+    {
+     "group": "composite/composite7",
+     "gpu_ms_per_frame": 0.6371,
+     "cpu_ms_per_frame": 0.0233,
+     "gpu_share": 0.0489
+    },
+    {
+     "group": "ungrouped",
+     "gpu_ms_per_frame": 0.5371,
+     "cpu_ms_per_frame": 1.0923,
+     "gpu_share": 0.0412
+    },
+    {
+     "group": "Terrain translucent/DH-RenderLevel/DH LOD Transparent",
+     "gpu_ms_per_frame": 0.4142,
+     "cpu_ms_per_frame": 0.7555,
+     "gpu_share": 0.0318
+    },
+    {
+     "group": "composite/composite",
+     "gpu_ms_per_frame": 0.4094,
+     "cpu_ms_per_frame": 0.0813,
+     "gpu_share": 0.0314
+    },
+    {
+     "group": "composite/composite4",
+     "gpu_ms_per_frame": 0.2955,
+     "cpu_ms_per_frame": 0.0595,
+     "gpu_share": 0.0227
+    },
+    {
+     "group": "Clear textures",
+     "gpu_ms_per_frame": 0.2753,
+     "cpu_ms_per_frame": 0.2092,
+     "gpu_share": 0.0211
+    },
+    {
+     "group": "composite/composite5",
+     "gpu_ms_per_frame": 0.2567,
+     "cpu_ms_per_frame": 0.025,
+     "gpu_share": 0.0197
+    },
+    {
+     "group": "Shadow Terrain solid",
+     "gpu_ms_per_frame": 0.155,
+     "cpu_ms_per_frame": 0.1902,
+     "gpu_share": 0.0119
+    }
+   ]
+  },
+  "down": {
+   "pose": [
+    0.5,
+    131,
+    0.5,
+    55,
+    70
+   ],
+   "fps": 99.08,
+   "frame_ms_p50": 10.027,
+   "gpu_ms_per_frame": 9.921,
+   "attribution": "usable",
+   "complete_frames": 99,
+   "sampled_frames": 99,
+   "dh_submission": {
+    "buffer_renders": 154596,
+    "meaning": "DH buffer render events per completed frame; a submission witness, not visible coverage",
+    "per_frame": 156.158,
+    "state": "counted"
+   },
+   "summary_sha256": "256cf52517270ff83236f28899d33bbc31578a00946245cca099be1d261dc914",
+   "groups": [
+    {
+     "group": "Terrain solid/DH-RenderLevel/DH LOD Opaque",
+     "gpu_ms_per_frame": 1.7071,
+     "cpu_ms_per_frame": 0.3621,
+     "gpu_share": 0.1721
+    },
+    {
+     "group": "Terrain solid",
+     "gpu_ms_per_frame": 1.3118,
+     "cpu_ms_per_frame": 0.1949,
+     "gpu_share": 0.1322
+    },
+    {
+     "group": "deferred/deferred1",
+     "gpu_ms_per_frame": 1.2793,
+     "cpu_ms_per_frame": 0.0802,
+     "gpu_share": 0.129
+    },
+    {
+     "group": "composite/composite1",
+     "gpu_ms_per_frame": 0.859,
+     "cpu_ms_per_frame": 0.0392,
+     "gpu_share": 0.0866
+    },
+    {
+     "group": "composite/composite6",
+     "gpu_ms_per_frame": 0.7604,
+     "cpu_ms_per_frame": 0.0758,
+     "gpu_share": 0.0767
+    },
+    {
+     "group": "Sky",
+     "gpu_ms_per_frame": 0.6992,
+     "cpu_ms_per_frame": 0.0996,
+     "gpu_share": 0.0705
+    },
+    {
+     "group": "ungrouped",
+     "gpu_ms_per_frame": 0.5407,
+     "cpu_ms_per_frame": 1.3112,
+     "gpu_share": 0.0545
+    },
+    {
+     "group": "composite/composite7",
+     "gpu_ms_per_frame": 0.4683,
+     "cpu_ms_per_frame": 0.0298,
+     "gpu_share": 0.0472
+    },
+    {
+     "group": "Shadow Terrain solid",
+     "gpu_ms_per_frame": 0.4147,
+     "cpu_ms_per_frame": 0.2774,
+     "gpu_share": 0.0418
+    },
+    {
+     "group": "composite/composite4",
+     "gpu_ms_per_frame": 0.2851,
+     "cpu_ms_per_frame": 0.0608,
+     "gpu_share": 0.0287
+    },
+    {
+     "group": "composite/composite5",
+     "gpu_ms_per_frame": 0.2575,
+     "cpu_ms_per_frame": 0.0278,
+     "gpu_share": 0.026
+    },
+    {
+     "group": "Clear textures",
+     "gpu_ms_per_frame": 0.2555,
+     "cpu_ms_per_frame": 0.2112,
+     "gpu_share": 0.0257
+    },
+    {
+     "group": "composite/composite",
+     "gpu_ms_per_frame": 0.2015,
+     "cpu_ms_per_frame": 0.0776,
+     "gpu_share": 0.0203
+    },
+    {
+     "group": "Terrain translucent/DH-RenderLevel/DH LOD Transparent",
+     "gpu_ms_per_frame": 0.1883,
+     "cpu_ms_per_frame": 0.4085,
+     "gpu_share": 0.019
+    }
+   ]
+  }
+ },
+ "comparison": {
+  "state": "complete",
+  "result_sha256": "dc294cb6ebb691762660e0024a52f283dc9bae1e96012f5264c7ffa06802f375",
+  "screenshots": [
+   {
+    "case": "coast",
+    "image": "quality-29.png",
+    "image_has_variation": true,
+    "image_sha256": "a0eebf6ff256b17018bf566bcdd3e0da7e6ebb5e73ffcbf29d0bba01b37f2f1a"
+   },
+   {
+    "case": "horizon",
+    "image": "quality-31.png",
+    "image_has_variation": true,
+    "image_sha256": "7fedfd4689b5a3fc8ceca7c8d90ef572d7a9d35525666df468b9c1ea686178c2"
+   },
+   {
+    "case": "inland",
+    "image": "quality-33.png",
+    "image_has_variation": true,
+    "image_sha256": "ee27f229ebed8a37b29e295640bbebc6d3e0e627075a29a49a87ae47df7fd91e"
+   },
+   {
+    "case": "down",
+    "image": "quality-35.png",
+    "image_has_variation": true,
+    "image_sha256": "6ca713ad9282be620aa4225a7663b9b4126027466b895a97e2c5626961146020"
+   }
+  ],
+  "windows": [
+   {
+    "case": "down",
+    "block": 0,
+    "arm": "identity",
+    "fps": 100.0,
+    "dh_per_frame": 157.223,
+    "contamination": "clean"
+   },
+   {
+    "case": "down",
+    "block": 0,
+    "arm": "original",
+    "fps": 99.97,
+    "dh_per_frame": 157.222,
+    "contamination": "clean"
+   },
+   {
+    "case": "down",
+    "block": 1,
+    "arm": "original",
+    "fps": 99.92,
+    "dh_per_frame": 157.227,
+    "contamination": "clean"
+   },
+   {
+    "case": "down",
+    "block": 1,
+    "arm": "identity",
+    "fps": 99.77,
+    "dh_per_frame": 157.222,
+    "contamination": "clean"
+   },
+   {
+    "case": "horizon",
+    "block": 0,
+    "arm": "identity",
+    "fps": 90.39,
+    "dh_per_frame": 307.291,
+    "contamination": "clean"
+   },
+   {
+    "case": "horizon",
+    "block": 0,
+    "arm": "original",
+    "fps": 90.5,
+    "dh_per_frame": 307.31,
+    "contamination": "clean"
+   },
+   {
+    "case": "horizon",
+    "block": 1,
+    "arm": "original",
+    "fps": 90.38,
+    "dh_per_frame": 307.335,
+    "contamination": "clean"
+   },
+   {
+    "case": "horizon",
+    "block": 1,
+    "arm": "identity",
+    "fps": 90.27,
+    "dh_per_frame": 307.333,
+    "contamination": "clean"
+   },
+   {
+    "case": "coast",
+    "block": 0,
+    "arm": "identity",
+    "fps": 83.37,
+    "dh_per_frame": 343.923,
+    "contamination": "clean"
+   },
+   {
+    "case": "coast",
+    "block": 0,
+    "arm": "original",
+    "fps": 83.41,
+    "dh_per_frame": 343.919,
+    "contamination": "clean"
+   },
+   {
+    "case": "coast",
+    "block": 1,
+    "arm": "original",
+    "fps": 83.36,
+    "dh_per_frame": 343.89,
+    "contamination": "clean"
+   },
+   {
+    "case": "coast",
+    "block": 1,
+    "arm": "identity",
+    "fps": 83.3,
+    "dh_per_frame": 343.89,
+    "contamination": "clean"
+   },
+   {
+    "case": "inland",
+    "block": 0,
+    "arm": "original",
+    "fps": 75.61,
+    "dh_per_frame": 329.226,
+    "contamination": "clean"
+   },
+   {
+    "case": "inland",
+    "block": 0,
+    "arm": "identity",
+    "fps": 75.58,
+    "dh_per_frame": 329.219,
+    "contamination": "clean"
+   },
+   {
+    "case": "inland",
+    "block": 1,
+    "arm": "identity",
+    "fps": 75.62,
+    "dh_per_frame": 329.208,
+    "contamination": "clean"
+   },
+   {
+    "case": "inland",
+    "block": 1,
+    "arm": "original",
+    "fps": 75.61,
+    "dh_per_frame": 329.221,
+    "contamination": "clean"
+   }
+  ]
+ }
+}

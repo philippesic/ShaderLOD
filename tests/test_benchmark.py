@@ -502,3 +502,11 @@ def test_profile_plan_declares_surface_pose_and_warmup(
         for action, payload in calls
     )
     assert [action for action, _ in calls].count("status") >= 3
+
+
+def test_tracked_profiles_decode() -> None:
+    root = Path(__file__).resolve().parents[1] / "benchmarks/profiles"
+    plans = [
+        WorkflowPlan.decode(json.loads(p.read_bytes())) for p in root.glob("*.json")
+    ]
+    assert any(plan.pose is not None for plan in plans)

@@ -1,0 +1,24 @@
+{
+  "schema": "shaderlod-workflow-v1",
+  "scope": "profile",
+  "workload": "fixed-ready-scene",
+  "arms": [
+    "original"
+  ],
+  "blocks": 1,
+  "window_ms": 10000,
+  "budget_ms": 90000,
+  "instrument": "diagnostic",
+  "surface": [
+    3840,
+    2160
+  ],
+  "warmup_ms": 20000,
+  "pose": [
+    0.5,
+    131,
+    0.5,
+    -35,
+    30
+  ]
+}

@@ -36,6 +36,21 @@ Evidence level: live-functional with bounded diagnostic measurement on one machi
 
 Retain the DH stage groups as the standard way to profile DH. The candidate areas for DH-specific work, in order of measured GPU size at 4K: per-pixel shading in `LOD Opaque`, DH geometry volume, pack passes that grow with DH content, and render-thread submission. Optimization remains parked until Philip approves readiness. Before choosing among them, profile more views and DH distances, and measure how many DH fragments are hidden by nearer terrain.
 
+## Four views from the same spot, 2026-11-13
+
+Later the same day, four views were profiled from the spawn point at 3840×2160, with DH on the frozen dataset and generation disabled. The screenshots changed the picture of the main benchmark scene. `coast-pan` looks mostly at a large flat sand platform the player stands on; real terrain appears only in a band at the horizon. The `inland` view shows ordinary mixed near and far terrain: hills, trees and a lake.
+
+| View (yaw, pitch) | FPS | GPU ms per frame | DH GPU ms | DH share | DH draws per frame |
+| --- | --- | --- | --- | --- | --- |
+| coast (−35°, 30°) | 85.1 | 11.59 | 2.75 | 24% | 344 |
+| horizon (−35°, 0°) | 91.4 | 10.78 | 1.90 | 18% | 292 |
+| inland (145°, 15°) | 75.7 | 13.03 | 3.96 | 30% | 330 |
+| down (55°, 70°) | 99.1 | 9.92 | 1.93 | 19% | 156 |
+
+Looking almost straight down at the platform, no DH terrain is visible, yet DH still took 1.93 ms of GPU time and submitted 156 buffers per frame. This suggests that much of DH's cost here goes into terrain that never reaches the screen, but it is one observation: whether that work is occluded fragments, vertex work or something else is not measured. Short paired windows in all four views agreed within about 0.1%, and every profile's GPU attribution was usable.
+
+The tracked comparisons gain `inland-pan` (mixed near and far terrain, the highest DH share) and `ground-look` (no visible DH terrain) in `benchmarks/comparisons/rtx2080ti-views.json`. Each of the three views has a fixed-pose profile in `benchmarks/profiles/rtx2080ti-*-stages.json`. [Survey record](view-survey.json) sha256:f290b28a3d7f124643a91ed6b253624387ee3cada577d4b76bdec321e2ffdd4f. The record holds the screenshot identities; the images were inspected and not retained.
+
 ## Evidence and executed source
 
 [Compact measurements](measurements.json) sha256:f43d968d0b6961855d6a000257611fabe7295fe02eedb9244a563a7dfdb8bafc
