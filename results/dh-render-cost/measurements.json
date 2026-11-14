@@ -1,0 +1,1718 @@
+{
+ "schema": "shaderlod-dh-render-cost-v1",
+ "date": "2026-11-13",
+ "source_commit": "30c9306 (profiles); 5dfdca4 (first, unbounded DH profile)",
+ "host": "RTX 2080 Ti, native Windows 11 IoT Enterprise LTSC 26100, NVIDIA 610.88, virtual display; frame limiter off, vsync off",
+ "pack": "ComplementaryReimagined_r5.9.3.zip, original options",
+ "dh": "Distant Horizons 3.3.3, canonical profile configuration (distance 256, mode DEFAULT); rendered coverage not measured",
+ "scene": "ShaderLOD-Smoke, fixed ready pose after the coast-pan comparison restored it; render distance 8; day 6000, clear",
+ "instrument": "benchmarks/profiles/stages.json: 10 s diagnostic window, GPU timestamp queries on every 10th frame; DH sections reported to depth two",
+ "profiles": {
+  "dh_3840x2160_a": {
+   "surface": [
+    3840,
+    2160
+   ],
+   "dh": true,
+   "fps": 82.72,
+   "frame_ms_p50": 11.945,
+   "sampled_frames": 82,
+   "complete_frames": 82,
+   "gpu_ms_per_frame": 11.8758,
+   "queries": {
+    "pending": 0,
+    "lost": 0,
+    "invalid": 0
+   },
+   "overflow": false,
+   "frames_sha256": "a26b68633e238a2ffd75f8e18298fb524786a9109be58cbd7fedd92e505dadd4",
+   "summary_sha256": "5529f495b23c1a0fca260c0f03193296f347038c0f6613eac6e69b661f1cce42",
+   "groups": [
+    {
+     "group": "Terrain solid/DH-RenderLevel/DH LOD Opaque",
+     "gpu_ms_per_frame": 2.3681,
+     "cpu_ms_per_frame": 0.732,
+     "gpu_share": 0.1994,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "deferred/deferred1",
+     "gpu_ms_per_frame": 1.739,
+     "cpu_ms_per_frame": 0.0921,
+     "gpu_share": 0.1464,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "composite/composite1",
+     "gpu_ms_per_frame": 1.3487,
+     "cpu_ms_per_frame": 0.0423,
+     "gpu_share": 0.1136,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Terrain solid",
+     "gpu_ms_per_frame": 1.0212,
+     "cpu_ms_per_frame": 0.2252,
+     "gpu_share": 0.086,
+     "intervals_per_frame": 2.0
+    },
+    {
+     "group": "Sky",
+     "gpu_ms_per_frame": 0.8319,
+     "cpu_ms_per_frame": 0.1216,
+     "gpu_share": 0.07,
+     "intervals_per_frame": 2.0
+    },
+    {
+     "group": "composite/composite6",
+     "gpu_ms_per_frame": 0.7714,
+     "cpu_ms_per_frame": 0.0599,
+     "gpu_share": 0.065,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "composite/composite7",
+     "gpu_ms_per_frame": 0.6204,
+     "cpu_ms_per_frame": 0.0246,
+     "gpu_share": 0.0522,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "ungrouped",
+     "gpu_ms_per_frame": 0.5551,
+     "cpu_ms_per_frame": 1.3733,
+     "gpu_share": 0.0467,
+     "intervals_per_frame": 27.0
+    },
+    {
+     "group": "composite/composite",
+     "gpu_ms_per_frame": 0.461,
+     "cpu_ms_per_frame": 0.0763,
+     "gpu_share": 0.0388,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Terrain translucent/DH-RenderLevel/DH LOD Transparent",
+     "gpu_ms_per_frame": 0.4431,
+     "cpu_ms_per_frame": 0.7872,
+     "gpu_share": 0.0373,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "composite/composite4",
+     "gpu_ms_per_frame": 0.2871,
+     "cpu_ms_per_frame": 0.0551,
+     "gpu_share": 0.0242,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Clear textures",
+     "gpu_ms_per_frame": 0.2765,
+     "cpu_ms_per_frame": 0.2673,
+     "gpu_share": 0.0233,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "composite/composite5",
+     "gpu_ms_per_frame": 0.2577,
+     "cpu_ms_per_frame": 0.0268,
+     "gpu_share": 0.0217,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Shadow Terrain solid",
+     "gpu_ms_per_frame": 0.224,
+     "cpu_ms_per_frame": 0.2793,
+     "gpu_share": 0.0189,
+     "intervals_per_frame": 2.0
+    },
+    {
+     "group": "final",
+     "gpu_ms_per_frame": 0.1322,
+     "cpu_ms_per_frame": 0.0259,
+     "gpu_share": 0.0111,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Outline",
+     "gpu_ms_per_frame": 0.1139,
+     "cpu_ms_per_frame": 0.0737,
+     "gpu_share": 0.0096,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Hand solid",
+     "gpu_ms_per_frame": 0.1002,
+     "cpu_ms_per_frame": 0.1647,
+     "gpu_share": 0.0084,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Shadow Entities",
+     "gpu_ms_per_frame": 0.0674,
+     "cpu_ms_per_frame": 0.1026,
+     "gpu_share": 0.0057,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "composite/composite3",
+     "gpu_ms_per_frame": 0.0653,
+     "cpu_ms_per_frame": 0.027,
+     "gpu_share": 0.0055,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Terrain translucent",
+     "gpu_ms_per_frame": 0.0553,
+     "cpu_ms_per_frame": 0.1304,
+     "gpu_share": 0.0047,
+     "intervals_per_frame": 2.0
+    },
+    {
+     "group": "Shadow Terrain translucent",
+     "gpu_ms_per_frame": 0.0443,
+     "cpu_ms_per_frame": 0.1194,
+     "gpu_share": 0.0037,
+     "intervals_per_frame": 2.0
+    },
+    {
+     "group": "Sun",
+     "gpu_ms_per_frame": 0.015,
+     "cpu_ms_per_frame": 0.0513,
+     "gpu_share": 0.0013,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Terrain solid/DH-RenderLevel/DH LOD GL setup",
+     "gpu_ms_per_frame": 0.0128,
+     "cpu_ms_per_frame": 0.0491,
+     "gpu_share": 0.0011,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Moon",
+     "gpu_ms_per_frame": 0.0103,
+     "cpu_ms_per_frame": 0.0369,
+     "gpu_share": 0.0009,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Void",
+     "gpu_ms_per_frame": 0.0093,
+     "cpu_ms_per_frame": 0.1639,
+     "gpu_share": 0.0008,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "composite",
+     "gpu_ms_per_frame": 0.0062,
+     "cpu_ms_per_frame": 0.0571,
+     "gpu_share": 0.0005,
+     "intervals_per_frame": 8.0
+    },
+    {
+     "group": "Rain snow",
+     "gpu_ms_per_frame": 0.0058,
+     "cpu_ms_per_frame": 0.0211,
+     "gpu_share": 0.0005,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Terrain solid/DH-RenderLevel",
+     "gpu_ms_per_frame": 0.0058,
+     "cpu_ms_per_frame": 0.0557,
+     "gpu_share": 0.0005,
+     "intervals_per_frame": 8.0
+    },
+    {
+     "group": "Terrain translucent/DH-RenderLevel/DH LOD GL setup",
+     "gpu_ms_per_frame": 0.0042,
+     "cpu_ms_per_frame": 0.0643,
+     "gpu_share": 0.0004,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Shadow Terrain solid/DH-RenderLevel/DH render thread tasks",
+     "gpu_ms_per_frame": 0.0029,
+     "cpu_ms_per_frame": 0.1328,
+     "gpu_share": 0.0002,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Terrain translucent/DH-RenderLevel",
+     "gpu_ms_per_frame": 0.0025,
+     "cpu_ms_per_frame": 0.0288,
+     "gpu_share": 0.0002,
+     "intervals_per_frame": 4.0
+    },
+    {
+     "group": "deferred",
+     "gpu_ms_per_frame": 0.002,
+     "cpu_ms_per_frame": 0.0328,
+     "gpu_share": 0.0002,
+     "intervals_per_frame": 2.0
+    },
+    {
+     "group": "Terrain solid/DH-RenderLevel/DH LOD build render list",
+     "gpu_ms_per_frame": 0.0018,
+     "cpu_ms_per_frame": 0.092,
+     "gpu_share": 0.0002,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Terrain solid/DH-RenderLevel/DH Custom Objects",
+     "gpu_ms_per_frame": 0.0018,
+     "cpu_ms_per_frame": 0.262,
+     "gpu_share": 0.0001,
+     "intervals_per_frame": 2.0
+    },
+    {
+     "group": "Terrain solid/DH-RenderLevel/DH render thread tasks",
+     "gpu_ms_per_frame": 0.0016,
+     "cpu_ms_per_frame": 0.0257,
+     "gpu_share": 0.0001,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Shadow Terrain solid/DH-RenderLevel",
+     "gpu_ms_per_frame": 0.0015,
+     "cpu_ms_per_frame": 0.0211,
+     "gpu_share": 0.0001,
+     "intervals_per_frame": 2.0
+    },
+    {
+     "group": "GUI",
+     "gpu_ms_per_frame": 0.0013,
+     "cpu_ms_per_frame": 0.0894,
+     "gpu_share": 0.0001,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Debug",
+     "gpu_ms_per_frame": 0.0008,
+     "cpu_ms_per_frame": 0.0257,
+     "gpu_share": 0.0001,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Custom sky",
+     "gpu_ms_per_frame": 0.0007,
+     "cpu_ms_per_frame": 0.0299,
+     "gpu_share": 0.0001,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Terrain translucent/DH-RenderLevel/DH LOD cleanup",
+     "gpu_ms_per_frame": 0.0007,
+     "cpu_ms_per_frame": 0.009,
+     "gpu_share": 0.0001,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Shadow Terrain translucent/DH-RenderLevel",
+     "gpu_ms_per_frame": 0.0007,
+     "cpu_ms_per_frame": 0.0107,
+     "gpu_share": 0.0001,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Stars",
+     "gpu_ms_per_frame": 0.0007,
+     "cpu_ms_per_frame": 0.0076,
+     "gpu_share": 0.0001,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "shadowcomp",
+     "gpu_ms_per_frame": 0.0006,
+     "cpu_ms_per_frame": 0.0085,
+     "gpu_share": 0.0001,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Sunset",
+     "gpu_ms_per_frame": 0.0006,
+     "cpu_ms_per_frame": 0.012,
+     "gpu_share": 0.0001,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Terrain solid/DH-RenderLevel/DH LOD cleanup",
+     "gpu_ms_per_frame": 0.0006,
+     "cpu_ms_per_frame": 0.0081,
+     "gpu_share": 0.0001,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "World border",
+     "gpu_ms_per_frame": 0.0006,
+     "cpu_ms_per_frame": 0.0078,
+     "gpu_share": 0.0,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "begin",
+     "gpu_ms_per_frame": 0.0006,
+     "cpu_ms_per_frame": 0.0169,
+     "gpu_share": 0.0,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "prepare",
+     "gpu_ms_per_frame": 0.0006,
+     "cpu_ms_per_frame": 0.0084,
+     "gpu_share": 0.0,
+     "intervals_per_frame": 1.0
+    }
+   ]
+  },
+  "dh_3840x2160_b": {
+   "surface": [
+    3840,
+    2160
+   ],
+   "dh": true,
+   "fps": 82.64,
+   "frame_ms_p50": 11.95,
+   "sampled_frames": 83,
+   "complete_frames": 83,
+   "gpu_ms_per_frame": 11.8817,
+   "queries": {
+    "pending": 0,
+    "lost": 0,
+    "invalid": 0
+   },
+   "overflow": false,
+   "frames_sha256": "fa01f33d3d6370bcd285ad7cb22e132005bfb74d41a7253fe07c15a432a2e508",
+   "summary_sha256": "ff6bf3f3db313344beab3c414bdb5d7bb02e85560bcd8eb7b9bc6c20ef823912",
+   "groups": [
+    {
+     "group": "Terrain solid/DH-RenderLevel/DH LOD Opaque",
+     "gpu_ms_per_frame": 2.3641,
+     "cpu_ms_per_frame": 0.7098,
+     "gpu_share": 0.199,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "deferred/deferred1",
+     "gpu_ms_per_frame": 1.7462,
+     "cpu_ms_per_frame": 0.0857,
+     "gpu_share": 0.147,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "composite/composite1",
+     "gpu_ms_per_frame": 1.3441,
+     "cpu_ms_per_frame": 0.0395,
+     "gpu_share": 0.1131,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Terrain solid",
+     "gpu_ms_per_frame": 1.0182,
+     "cpu_ms_per_frame": 0.2051,
+     "gpu_share": 0.0857,
+     "intervals_per_frame": 2.0
+    },
+    {
+     "group": "Sky",
+     "gpu_ms_per_frame": 0.7896,
+     "cpu_ms_per_frame": 0.1126,
+     "gpu_share": 0.0665,
+     "intervals_per_frame": 2.0
+    },
+    {
+     "group": "composite/composite6",
+     "gpu_ms_per_frame": 0.7725,
+     "cpu_ms_per_frame": 0.056,
+     "gpu_share": 0.065,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "composite/composite7",
+     "gpu_ms_per_frame": 0.6214,
+     "cpu_ms_per_frame": 0.0232,
+     "gpu_share": 0.0523,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "ungrouped",
+     "gpu_ms_per_frame": 0.5585,
+     "cpu_ms_per_frame": 1.269,
+     "gpu_share": 0.047,
+     "intervals_per_frame": 27.0
+    },
+    {
+     "group": "composite/composite",
+     "gpu_ms_per_frame": 0.4613,
+     "cpu_ms_per_frame": 0.0739,
+     "gpu_share": 0.0388,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Terrain translucent/DH-RenderLevel/DH LOD Transparent",
+     "gpu_ms_per_frame": 0.4388,
+     "cpu_ms_per_frame": 0.7568,
+     "gpu_share": 0.0369,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Clear textures",
+     "gpu_ms_per_frame": 0.3289,
+     "cpu_ms_per_frame": 0.2542,
+     "gpu_share": 0.0277,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "composite/composite4",
+     "gpu_ms_per_frame": 0.288,
+     "cpu_ms_per_frame": 0.0511,
+     "gpu_share": 0.0242,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "composite/composite5",
+     "gpu_ms_per_frame": 0.2578,
+     "cpu_ms_per_frame": 0.023,
+     "gpu_share": 0.0217,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Shadow Terrain solid",
+     "gpu_ms_per_frame": 0.228,
+     "cpu_ms_per_frame": 0.265,
+     "gpu_share": 0.0192,
+     "intervals_per_frame": 2.0
+    },
+    {
+     "group": "final",
+     "gpu_ms_per_frame": 0.1324,
+     "cpu_ms_per_frame": 0.0232,
+     "gpu_share": 0.0111,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Outline",
+     "gpu_ms_per_frame": 0.1138,
+     "cpu_ms_per_frame": 0.0659,
+     "gpu_share": 0.0096,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Hand solid",
+     "gpu_ms_per_frame": 0.1001,
+     "cpu_ms_per_frame": 0.1567,
+     "gpu_share": 0.0084,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Shadow Entities",
+     "gpu_ms_per_frame": 0.0673,
+     "cpu_ms_per_frame": 0.0958,
+     "gpu_share": 0.0057,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "composite/composite3",
+     "gpu_ms_per_frame": 0.0653,
+     "cpu_ms_per_frame": 0.025,
+     "gpu_share": 0.0055,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Terrain translucent",
+     "gpu_ms_per_frame": 0.0555,
+     "cpu_ms_per_frame": 0.1197,
+     "gpu_share": 0.0047,
+     "intervals_per_frame": 2.0
+    },
+    {
+     "group": "Shadow Terrain translucent",
+     "gpu_ms_per_frame": 0.0439,
+     "cpu_ms_per_frame": 0.1115,
+     "gpu_share": 0.0037,
+     "intervals_per_frame": 2.0
+    },
+    {
+     "group": "Terrain solid/DH-RenderLevel/DH LOD GL setup",
+     "gpu_ms_per_frame": 0.0136,
+     "cpu_ms_per_frame": 0.0438,
+     "gpu_share": 0.0011,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Sun",
+     "gpu_ms_per_frame": 0.0116,
+     "cpu_ms_per_frame": 0.0468,
+     "gpu_share": 0.001,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Moon",
+     "gpu_ms_per_frame": 0.0103,
+     "cpu_ms_per_frame": 0.0337,
+     "gpu_share": 0.0009,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "composite",
+     "gpu_ms_per_frame": 0.0064,
+     "cpu_ms_per_frame": 0.0485,
+     "gpu_share": 0.0005,
+     "intervals_per_frame": 8.0
+    },
+    {
+     "group": "Void",
+     "gpu_ms_per_frame": 0.0061,
+     "cpu_ms_per_frame": 0.1491,
+     "gpu_share": 0.0005,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Rain snow",
+     "gpu_ms_per_frame": 0.0059,
+     "cpu_ms_per_frame": 0.0203,
+     "gpu_share": 0.0005,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Terrain solid/DH-RenderLevel",
+     "gpu_ms_per_frame": 0.0053,
+     "cpu_ms_per_frame": 0.0426,
+     "gpu_share": 0.0004,
+     "intervals_per_frame": 8.0
+    },
+    {
+     "group": "Terrain translucent/DH-RenderLevel/DH LOD GL setup",
+     "gpu_ms_per_frame": 0.0042,
+     "cpu_ms_per_frame": 0.0596,
+     "gpu_share": 0.0004,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Shadow Terrain solid/DH-RenderLevel/DH render thread tasks",
+     "gpu_ms_per_frame": 0.0031,
+     "cpu_ms_per_frame": 0.2056,
+     "gpu_share": 0.0003,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Terrain translucent/DH-RenderLevel",
+     "gpu_ms_per_frame": 0.0026,
+     "cpu_ms_per_frame": 0.0259,
+     "gpu_share": 0.0002,
+     "intervals_per_frame": 4.0
+    },
+    {
+     "group": "Terrain solid/DH-RenderLevel/DH Custom Objects",
+     "gpu_ms_per_frame": 0.002,
+     "cpu_ms_per_frame": 0.2479,
+     "gpu_share": 0.0002,
+     "intervals_per_frame": 2.0
+    },
+    {
+     "group": "deferred",
+     "gpu_ms_per_frame": 0.0018,
+     "cpu_ms_per_frame": 0.0275,
+     "gpu_share": 0.0002,
+     "intervals_per_frame": 2.0
+    },
+    {
+     "group": "Shadow Terrain solid/DH-RenderLevel",
+     "gpu_ms_per_frame": 0.0016,
+     "cpu_ms_per_frame": 0.0196,
+     "gpu_share": 0.0001,
+     "intervals_per_frame": 2.0
+    },
+    {
+     "group": "Terrain solid/DH-RenderLevel/DH LOD build render list",
+     "gpu_ms_per_frame": 0.0015,
+     "cpu_ms_per_frame": 0.0842,
+     "gpu_share": 0.0001,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "GUI",
+     "gpu_ms_per_frame": 0.0013,
+     "cpu_ms_per_frame": 0.0778,
+     "gpu_share": 0.0001,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Terrain solid/DH-RenderLevel/DH render thread tasks",
+     "gpu_ms_per_frame": 0.0011,
+     "cpu_ms_per_frame": 0.0247,
+     "gpu_share": 0.0001,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Stars",
+     "gpu_ms_per_frame": 0.0007,
+     "cpu_ms_per_frame": 0.0062,
+     "gpu_share": 0.0001,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "begin",
+     "gpu_ms_per_frame": 0.0007,
+     "cpu_ms_per_frame": 0.014,
+     "gpu_share": 0.0001,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "shadowcomp",
+     "gpu_ms_per_frame": 0.0007,
+     "cpu_ms_per_frame": 0.0076,
+     "gpu_share": 0.0001,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "World border",
+     "gpu_ms_per_frame": 0.0007,
+     "cpu_ms_per_frame": 0.0052,
+     "gpu_share": 0.0001,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Terrain translucent/DH-RenderLevel/DH LOD cleanup",
+     "gpu_ms_per_frame": 0.0007,
+     "cpu_ms_per_frame": 0.008,
+     "gpu_share": 0.0001,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Sunset",
+     "gpu_ms_per_frame": 0.0007,
+     "cpu_ms_per_frame": 0.0108,
+     "gpu_share": 0.0001,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Shadow Terrain translucent/DH-RenderLevel",
+     "gpu_ms_per_frame": 0.0006,
+     "cpu_ms_per_frame": 0.0096,
+     "gpu_share": 0.0001,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "prepare",
+     "gpu_ms_per_frame": 0.0006,
+     "cpu_ms_per_frame": 0.0074,
+     "gpu_share": 0.0001,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Custom sky",
+     "gpu_ms_per_frame": 0.0006,
+     "cpu_ms_per_frame": 0.0295,
+     "gpu_share": 0.0001,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Debug",
+     "gpu_ms_per_frame": 0.0006,
+     "cpu_ms_per_frame": 0.0201,
+     "gpu_share": 0.0,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Terrain solid/DH-RenderLevel/DH LOD cleanup",
+     "gpu_ms_per_frame": 0.0005,
+     "cpu_ms_per_frame": 0.0067,
+     "gpu_share": 0.0,
+     "intervals_per_frame": 1.0
+    }
+   ]
+  },
+  "no_dh_3840x2160_a": {
+   "surface": [
+    3840,
+    2160
+   ],
+   "dh": false,
+   "fps": 113.48,
+   "frame_ms_p50": 8.724,
+   "sampled_frames": 113,
+   "complete_frames": 113,
+   "gpu_ms_per_frame": 8.7029,
+   "queries": {
+    "pending": 0,
+    "lost": 0,
+    "invalid": 0
+   },
+   "overflow": false,
+   "frames_sha256": "fb99fa15785275f845557103be6dbba7b65df6da50136689af8cda83bdb12c6f",
+   "summary_sha256": "2981a88415e1d29ca16241d954d65c2ce089078d1c77bf585a8e352a24a7bdce",
+   "groups": [
+    {
+     "group": "deferred/deferred1",
+     "gpu_ms_per_frame": 1.6931,
+     "cpu_ms_per_frame": 0.0296,
+     "gpu_share": 0.1945,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "composite/composite1",
+     "gpu_ms_per_frame": 1.1178,
+     "cpu_ms_per_frame": 0.0308,
+     "gpu_share": 0.1284,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Terrain solid",
+     "gpu_ms_per_frame": 1.0494,
+     "cpu_ms_per_frame": 0.392,
+     "gpu_share": 0.1206,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Sky",
+     "gpu_ms_per_frame": 0.8394,
+     "cpu_ms_per_frame": 0.0657,
+     "gpu_share": 0.0964,
+     "intervals_per_frame": 2.0
+    },
+    {
+     "group": "composite/composite6",
+     "gpu_ms_per_frame": 0.7586,
+     "cpu_ms_per_frame": 0.0348,
+     "gpu_share": 0.0872,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "composite/composite7",
+     "gpu_ms_per_frame": 0.5916,
+     "cpu_ms_per_frame": 0.029,
+     "gpu_share": 0.068,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "ungrouped",
+     "gpu_ms_per_frame": 0.5396,
+     "cpu_ms_per_frame": 1.9891,
+     "gpu_share": 0.062,
+     "intervals_per_frame": 27.0
+    },
+    {
+     "group": "composite/composite",
+     "gpu_ms_per_frame": 0.455,
+     "cpu_ms_per_frame": 0.0283,
+     "gpu_share": 0.0523,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "composite/composite4",
+     "gpu_ms_per_frame": 0.2841,
+     "cpu_ms_per_frame": 0.0309,
+     "gpu_share": 0.0326,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Clear textures",
+     "gpu_ms_per_frame": 0.2711,
+     "cpu_ms_per_frame": 0.0751,
+     "gpu_share": 0.0312,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Shadow Terrain solid",
+     "gpu_ms_per_frame": 0.2321,
+     "cpu_ms_per_frame": 0.4766,
+     "gpu_share": 0.0267,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "composite/composite5",
+     "gpu_ms_per_frame": 0.2268,
+     "cpu_ms_per_frame": 0.0309,
+     "gpu_share": 0.0261,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "final",
+     "gpu_ms_per_frame": 0.1317,
+     "cpu_ms_per_frame": 0.0271,
+     "gpu_share": 0.0151,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Outline",
+     "gpu_ms_per_frame": 0.1163,
+     "cpu_ms_per_frame": 0.0324,
+     "gpu_share": 0.0134,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Hand solid",
+     "gpu_ms_per_frame": 0.1004,
+     "cpu_ms_per_frame": 0.0491,
+     "gpu_share": 0.0115,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Shadow Entities",
+     "gpu_ms_per_frame": 0.0744,
+     "cpu_ms_per_frame": 0.0431,
+     "gpu_share": 0.0086,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "composite/composite3",
+     "gpu_ms_per_frame": 0.0652,
+     "cpu_ms_per_frame": 0.0375,
+     "gpu_share": 0.0075,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Terrain translucent",
+     "gpu_ms_per_frame": 0.0566,
+     "cpu_ms_per_frame": 0.2046,
+     "gpu_share": 0.0065,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Shadow Terrain translucent",
+     "gpu_ms_per_frame": 0.0429,
+     "cpu_ms_per_frame": 0.1943,
+     "gpu_share": 0.0049,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Moon",
+     "gpu_ms_per_frame": 0.0154,
+     "cpu_ms_per_frame": 0.0225,
+     "gpu_share": 0.0018,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Sun",
+     "gpu_ms_per_frame": 0.0116,
+     "cpu_ms_per_frame": 0.0237,
+     "gpu_share": 0.0013,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Void",
+     "gpu_ms_per_frame": 0.0074,
+     "cpu_ms_per_frame": 0.1411,
+     "gpu_share": 0.0009,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "composite",
+     "gpu_ms_per_frame": 0.0061,
+     "cpu_ms_per_frame": 0.2921,
+     "gpu_share": 0.0007,
+     "intervals_per_frame": 8.0
+    },
+    {
+     "group": "Rain snow",
+     "gpu_ms_per_frame": 0.0057,
+     "cpu_ms_per_frame": 0.0641,
+     "gpu_share": 0.0007,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "deferred",
+     "gpu_ms_per_frame": 0.0041,
+     "cpu_ms_per_frame": 0.0539,
+     "gpu_share": 0.0005,
+     "intervals_per_frame": 2.0
+    },
+    {
+     "group": "GUI",
+     "gpu_ms_per_frame": 0.0013,
+     "cpu_ms_per_frame": 0.0457,
+     "gpu_share": 0.0002,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Stars",
+     "gpu_ms_per_frame": 0.0007,
+     "cpu_ms_per_frame": 0.0217,
+     "gpu_share": 0.0001,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Debug",
+     "gpu_ms_per_frame": 0.0007,
+     "cpu_ms_per_frame": 0.0279,
+     "gpu_share": 0.0001,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "begin",
+     "gpu_ms_per_frame": 0.0007,
+     "cpu_ms_per_frame": 0.0298,
+     "gpu_share": 0.0001,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "World border",
+     "gpu_ms_per_frame": 0.0007,
+     "cpu_ms_per_frame": 0.031,
+     "gpu_share": 0.0001,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "prepare",
+     "gpu_ms_per_frame": 0.0007,
+     "cpu_ms_per_frame": 0.0293,
+     "gpu_share": 0.0001,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "shadowcomp",
+     "gpu_ms_per_frame": 0.0006,
+     "cpu_ms_per_frame": 0.0281,
+     "gpu_share": 0.0001,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Custom sky",
+     "gpu_ms_per_frame": 0.0006,
+     "cpu_ms_per_frame": 0.0452,
+     "gpu_share": 0.0001,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Sunset",
+     "gpu_ms_per_frame": 0.0005,
+     "cpu_ms_per_frame": 0.0206,
+     "gpu_share": 0.0001,
+     "intervals_per_frame": 1.0
+    }
+   ]
+  },
+  "no_dh_3840x2160_b": {
+   "surface": [
+    3840,
+    2160
+   ],
+   "dh": false,
+   "fps": 113.49,
+   "frame_ms_p50": 8.769,
+   "sampled_frames": 113,
+   "complete_frames": 113,
+   "gpu_ms_per_frame": 8.7086,
+   "queries": {
+    "pending": 0,
+    "lost": 0,
+    "invalid": 0
+   },
+   "overflow": false,
+   "frames_sha256": "216512a783f38cfbd0abb62334ea176bf60ddfa149993f1a898c75d007c2c156",
+   "summary_sha256": "b53b16c41e1afe2ebe91bdf1d2412fe98c413f66c738b7df3375fb855c65ace3",
+   "groups": [
+    {
+     "group": "deferred/deferred1",
+     "gpu_ms_per_frame": 1.6964,
+     "cpu_ms_per_frame": 0.028,
+     "gpu_share": 0.1948,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "composite/composite1",
+     "gpu_ms_per_frame": 1.1191,
+     "cpu_ms_per_frame": 0.0294,
+     "gpu_share": 0.1285,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Terrain solid",
+     "gpu_ms_per_frame": 1.0508,
+     "cpu_ms_per_frame": 0.4866,
+     "gpu_share": 0.1207,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Sky",
+     "gpu_ms_per_frame": 0.834,
+     "cpu_ms_per_frame": 0.061,
+     "gpu_share": 0.0958,
+     "intervals_per_frame": 2.0
+    },
+    {
+     "group": "composite/composite6",
+     "gpu_ms_per_frame": 0.7621,
+     "cpu_ms_per_frame": 0.0347,
+     "gpu_share": 0.0875,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "composite/composite7",
+     "gpu_ms_per_frame": 0.5927,
+     "cpu_ms_per_frame": 0.0262,
+     "gpu_share": 0.0681,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "ungrouped",
+     "gpu_ms_per_frame": 0.5454,
+     "cpu_ms_per_frame": 1.9426,
+     "gpu_share": 0.0626,
+     "intervals_per_frame": 27.0
+    },
+    {
+     "group": "composite/composite",
+     "gpu_ms_per_frame": 0.4564,
+     "cpu_ms_per_frame": 0.0285,
+     "gpu_share": 0.0524,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "composite/composite4",
+     "gpu_ms_per_frame": 0.2845,
+     "cpu_ms_per_frame": 0.0269,
+     "gpu_share": 0.0327,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Clear textures",
+     "gpu_ms_per_frame": 0.2748,
+     "cpu_ms_per_frame": 0.068,
+     "gpu_share": 0.0316,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Shadow Terrain solid",
+     "gpu_ms_per_frame": 0.2291,
+     "cpu_ms_per_frame": 0.4557,
+     "gpu_share": 0.0263,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "composite/composite5",
+     "gpu_ms_per_frame": 0.227,
+     "cpu_ms_per_frame": 0.0286,
+     "gpu_share": 0.0261,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "final",
+     "gpu_ms_per_frame": 0.1318,
+     "cpu_ms_per_frame": 0.0271,
+     "gpu_share": 0.0151,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Outline",
+     "gpu_ms_per_frame": 0.114,
+     "cpu_ms_per_frame": 0.0277,
+     "gpu_share": 0.0131,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Hand solid",
+     "gpu_ms_per_frame": 0.0979,
+     "cpu_ms_per_frame": 0.0462,
+     "gpu_share": 0.0112,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Shadow Entities",
+     "gpu_ms_per_frame": 0.0696,
+     "cpu_ms_per_frame": 0.0436,
+     "gpu_share": 0.008,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "composite/composite3",
+     "gpu_ms_per_frame": 0.068,
+     "cpu_ms_per_frame": 0.0296,
+     "gpu_share": 0.0078,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Terrain translucent",
+     "gpu_ms_per_frame": 0.0565,
+     "cpu_ms_per_frame": 0.1879,
+     "gpu_share": 0.0065,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Shadow Terrain translucent",
+     "gpu_ms_per_frame": 0.0426,
+     "cpu_ms_per_frame": 0.1971,
+     "gpu_share": 0.0049,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Moon",
+     "gpu_ms_per_frame": 0.0161,
+     "cpu_ms_per_frame": 0.0208,
+     "gpu_share": 0.0019,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Sun",
+     "gpu_ms_per_frame": 0.0117,
+     "cpu_ms_per_frame": 0.0212,
+     "gpu_share": 0.0013,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "composite",
+     "gpu_ms_per_frame": 0.0062,
+     "cpu_ms_per_frame": 0.2631,
+     "gpu_share": 0.0007,
+     "intervals_per_frame": 8.0
+    },
+    {
+     "group": "Rain snow",
+     "gpu_ms_per_frame": 0.0058,
+     "cpu_ms_per_frame": 0.0563,
+     "gpu_share": 0.0007,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Void",
+     "gpu_ms_per_frame": 0.0055,
+     "cpu_ms_per_frame": 0.149,
+     "gpu_share": 0.0006,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "deferred",
+     "gpu_ms_per_frame": 0.0041,
+     "cpu_ms_per_frame": 0.0537,
+     "gpu_share": 0.0005,
+     "intervals_per_frame": 2.0
+    },
+    {
+     "group": "GUI",
+     "gpu_ms_per_frame": 0.0013,
+     "cpu_ms_per_frame": 0.0423,
+     "gpu_share": 0.0001,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Custom sky",
+     "gpu_ms_per_frame": 0.0007,
+     "cpu_ms_per_frame": 0.0464,
+     "gpu_share": 0.0001,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "prepare",
+     "gpu_ms_per_frame": 0.0007,
+     "cpu_ms_per_frame": 0.03,
+     "gpu_share": 0.0001,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "shadowcomp",
+     "gpu_ms_per_frame": 0.0007,
+     "cpu_ms_per_frame": 0.0295,
+     "gpu_share": 0.0001,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Debug",
+     "gpu_ms_per_frame": 0.0007,
+     "cpu_ms_per_frame": 0.0254,
+     "gpu_share": 0.0001,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Stars",
+     "gpu_ms_per_frame": 0.0007,
+     "cpu_ms_per_frame": 0.0196,
+     "gpu_share": 0.0001,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "World border",
+     "gpu_ms_per_frame": 0.0007,
+     "cpu_ms_per_frame": 0.0217,
+     "gpu_share": 0.0001,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Sunset",
+     "gpu_ms_per_frame": 0.0006,
+     "cpu_ms_per_frame": 0.0195,
+     "gpu_share": 0.0001,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "begin",
+     "gpu_ms_per_frame": 0.0006,
+     "cpu_ms_per_frame": 0.0281,
+     "gpu_share": 0.0001,
+     "intervals_per_frame": 1.0
+    }
+   ]
+  },
+  "dh_2560x1440": {
+   "surface": [
+    2560,
+    1440
+   ],
+   "dh": true,
+   "fps": 145.2,
+   "frame_ms_p50": 6.502,
+   "sampled_frames": 145,
+   "complete_frames": 145,
+   "gpu_ms_per_frame": 6.6516,
+   "queries": {
+    "pending": 0,
+    "lost": 0,
+    "invalid": 0
+   },
+   "overflow": false,
+   "frames_sha256": "4c1c7f24889bc041efcd0901f467d30b2a69f89c28be68c871d87895ae73ec9d",
+   "summary_sha256": "d5648c43dc61aca3430e7701c822a38933cf496044663ac3ed0b5eeca0a2084d",
+   "groups": [
+    {
+     "group": "Terrain solid/DH-RenderLevel/DH LOD Opaque",
+     "gpu_ms_per_frame": 1.4775,
+     "cpu_ms_per_frame": 0.7898,
+     "gpu_share": 0.2221,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "deferred/deferred1",
+     "gpu_ms_per_frame": 0.7996,
+     "cpu_ms_per_frame": 0.0828,
+     "gpu_share": 0.1202,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "composite/composite1",
+     "gpu_ms_per_frame": 0.6097,
+     "cpu_ms_per_frame": 0.0409,
+     "gpu_share": 0.0917,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Terrain solid",
+     "gpu_ms_per_frame": 0.5397,
+     "cpu_ms_per_frame": 0.2206,
+     "gpu_share": 0.0811,
+     "intervals_per_frame": 2.0
+    },
+    {
+     "group": "Sky",
+     "gpu_ms_per_frame": 0.4059,
+     "cpu_ms_per_frame": 0.1188,
+     "gpu_share": 0.061,
+     "intervals_per_frame": 2.0
+    },
+    {
+     "group": "composite/composite6",
+     "gpu_ms_per_frame": 0.3712,
+     "cpu_ms_per_frame": 0.0575,
+     "gpu_share": 0.0558,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "ungrouped",
+     "gpu_ms_per_frame": 0.3292,
+     "cpu_ms_per_frame": 1.5337,
+     "gpu_share": 0.0495,
+     "intervals_per_frame": 27.0
+    },
+    {
+     "group": "composite/composite7",
+     "gpu_ms_per_frame": 0.3134,
+     "cpu_ms_per_frame": 0.0223,
+     "gpu_share": 0.0471,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Shadow Terrain solid",
+     "gpu_ms_per_frame": 0.2854,
+     "cpu_ms_per_frame": 0.2382,
+     "gpu_share": 0.0429,
+     "intervals_per_frame": 2.0
+    },
+    {
+     "group": "composite/composite",
+     "gpu_ms_per_frame": 0.2769,
+     "cpu_ms_per_frame": 0.0774,
+     "gpu_share": 0.0416,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Terrain translucent/DH-RenderLevel/DH LOD Transparent",
+     "gpu_ms_per_frame": 0.2554,
+     "cpu_ms_per_frame": 0.8229,
+     "gpu_share": 0.0384,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "composite/composite4",
+     "gpu_ms_per_frame": 0.1834,
+     "cpu_ms_per_frame": 0.0537,
+     "gpu_share": 0.0276,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Clear textures",
+     "gpu_ms_per_frame": 0.16,
+     "cpu_ms_per_frame": 0.2643,
+     "gpu_share": 0.0241,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "composite/composite5",
+     "gpu_ms_per_frame": 0.1183,
+     "cpu_ms_per_frame": 0.025,
+     "gpu_share": 0.0178,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Hand solid",
+     "gpu_ms_per_frame": 0.0748,
+     "cpu_ms_per_frame": 0.1743,
+     "gpu_share": 0.0113,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Shadow Entities",
+     "gpu_ms_per_frame": 0.0694,
+     "cpu_ms_per_frame": 0.0985,
+     "gpu_share": 0.0104,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "final",
+     "gpu_ms_per_frame": 0.0613,
+     "cpu_ms_per_frame": 0.025,
+     "gpu_share": 0.0092,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Outline",
+     "gpu_ms_per_frame": 0.0608,
+     "cpu_ms_per_frame": 0.0851,
+     "gpu_share": 0.0091,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Terrain translucent",
+     "gpu_ms_per_frame": 0.0591,
+     "cpu_ms_per_frame": 0.1475,
+     "gpu_share": 0.0089,
+     "intervals_per_frame": 2.0
+    },
+    {
+     "group": "Shadow Terrain translucent",
+     "gpu_ms_per_frame": 0.0483,
+     "cpu_ms_per_frame": 0.1117,
+     "gpu_share": 0.0073,
+     "intervals_per_frame": 2.0
+    },
+    {
+     "group": "composite/composite3",
+     "gpu_ms_per_frame": 0.0308,
+     "cpu_ms_per_frame": 0.0258,
+     "gpu_share": 0.0046,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Moon",
+     "gpu_ms_per_frame": 0.0251,
+     "cpu_ms_per_frame": 0.0349,
+     "gpu_share": 0.0038,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Void",
+     "gpu_ms_per_frame": 0.0174,
+     "cpu_ms_per_frame": 0.1686,
+     "gpu_share": 0.0026,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "deferred",
+     "gpu_ms_per_frame": 0.0149,
+     "cpu_ms_per_frame": 0.0282,
+     "gpu_share": 0.0022,
+     "intervals_per_frame": 2.0
+    },
+    {
+     "group": "Sun",
+     "gpu_ms_per_frame": 0.0092,
+     "cpu_ms_per_frame": 0.047,
+     "gpu_share": 0.0014,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Shadow Terrain solid/DH-RenderLevel/DH render thread tasks",
+     "gpu_ms_per_frame": 0.0077,
+     "cpu_ms_per_frame": 0.1,
+     "gpu_share": 0.0012,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Terrain solid/DH-RenderLevel/DH LOD GL setup",
+     "gpu_ms_per_frame": 0.0074,
+     "cpu_ms_per_frame": 0.0588,
+     "gpu_share": 0.0011,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Rain snow",
+     "gpu_ms_per_frame": 0.0066,
+     "cpu_ms_per_frame": 0.0216,
+     "gpu_share": 0.001,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Terrain solid/DH-RenderLevel",
+     "gpu_ms_per_frame": 0.0061,
+     "cpu_ms_per_frame": 0.0606,
+     "gpu_share": 0.0009,
+     "intervals_per_frame": 8.0
+    },
+    {
+     "group": "composite",
+     "gpu_ms_per_frame": 0.006,
+     "cpu_ms_per_frame": 0.0522,
+     "gpu_share": 0.0009,
+     "intervals_per_frame": 8.0
+    },
+    {
+     "group": "Terrain translucent/DH-RenderLevel/DH LOD GL setup",
+     "gpu_ms_per_frame": 0.0044,
+     "cpu_ms_per_frame": 0.0757,
+     "gpu_share": 0.0007,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Terrain translucent/DH-RenderLevel",
+     "gpu_ms_per_frame": 0.0025,
+     "cpu_ms_per_frame": 0.0353,
+     "gpu_share": 0.0004,
+     "intervals_per_frame": 4.0
+    },
+    {
+     "group": "Terrain solid/DH-RenderLevel/DH Custom Objects",
+     "gpu_ms_per_frame": 0.0019,
+     "cpu_ms_per_frame": 0.2623,
+     "gpu_share": 0.0003,
+     "intervals_per_frame": 2.0
+    },
+    {
+     "group": "Terrain solid/DH-RenderLevel/DH render thread tasks",
+     "gpu_ms_per_frame": 0.0016,
+     "cpu_ms_per_frame": 0.0486,
+     "gpu_share": 0.0002,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Shadow Terrain solid/DH-RenderLevel",
+     "gpu_ms_per_frame": 0.0014,
+     "cpu_ms_per_frame": 0.0222,
+     "gpu_share": 0.0002,
+     "intervals_per_frame": 2.0
+    },
+    {
+     "group": "Terrain solid/DH-RenderLevel/DH LOD build render list",
+     "gpu_ms_per_frame": 0.0011,
+     "cpu_ms_per_frame": 0.0943,
+     "gpu_share": 0.0002,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "GUI",
+     "gpu_ms_per_frame": 0.0008,
+     "cpu_ms_per_frame": 0.0902,
+     "gpu_share": 0.0001,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Shadow Terrain translucent/DH-RenderLevel",
+     "gpu_ms_per_frame": 0.0007,
+     "cpu_ms_per_frame": 0.0123,
+     "gpu_share": 0.0001,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "begin",
+     "gpu_ms_per_frame": 0.0007,
+     "cpu_ms_per_frame": 0.0135,
+     "gpu_share": 0.0001,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Custom sky",
+     "gpu_ms_per_frame": 0.0007,
+     "cpu_ms_per_frame": 0.0309,
+     "gpu_share": 0.0001,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Sunset",
+     "gpu_ms_per_frame": 0.0007,
+     "cpu_ms_per_frame": 0.0119,
+     "gpu_share": 0.0001,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Terrain translucent/DH-RenderLevel/DH LOD cleanup",
+     "gpu_ms_per_frame": 0.0007,
+     "cpu_ms_per_frame": 0.0115,
+     "gpu_share": 0.0001,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "shadowcomp",
+     "gpu_ms_per_frame": 0.0006,
+     "cpu_ms_per_frame": 0.0076,
+     "gpu_share": 0.0001,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "World border",
+     "gpu_ms_per_frame": 0.0006,
+     "cpu_ms_per_frame": 0.0094,
+     "gpu_share": 0.0001,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "prepare",
+     "gpu_ms_per_frame": 0.0006,
+     "cpu_ms_per_frame": 0.0076,
+     "gpu_share": 0.0001,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Debug",
+     "gpu_ms_per_frame": 0.0006,
+     "cpu_ms_per_frame": 0.0306,
+     "gpu_share": 0.0001,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Terrain solid/DH-RenderLevel/DH LOD cleanup",
+     "gpu_ms_per_frame": 0.0006,
+     "cpu_ms_per_frame": 0.0114,
+     "gpu_share": 0.0001,
+     "intervals_per_frame": 1.0
+    },
+    {
+     "group": "Stars",
+     "gpu_ms_per_frame": 0.0006,
+     "cpu_ms_per_frame": 0.0083,
+     "gpu_share": 0.0001,
+     "intervals_per_frame": 1.0
+    }
+   ]
+  }
+ },
+ "unbounded_first_attempt": {
+  "note": "All DH profiler sections reported; DH Custom Objects produced about 370 intervals per frame, exhausting the query pool",
+  "sampled_frames": 59,
+  "complete_frames": 1,
+  "lost_queries": 27618,
+  "overflow": true
+ },
+ "throughput_pairs": {
+  "dh_3840x2160": {
+   "state": "complete",
+   "restored": true,
+   "windows": [
+    {
+     "block": 0,
+     "arm": "original",
+     "fps": 84.35
+    },
+    {
+     "block": 0,
+     "arm": "identity",
+     "fps": 84.06
+    },
+    {
+     "block": 1,
+     "arm": "identity",
+     "fps": 83.62
+    },
+    {
+     "block": 1,
+     "arm": "original",
+     "fps": 83.38
+    }
+   ],
+   "result_sha256": "7a43ec680f5bba32b8354efa665f63ea891ee961205bb0491eab10212fc61a87"
+  },
+  "no_dh_3840x2160": {
+   "state": "complete",
+   "restored": true,
+   "windows": [
+    {
+     "block": 0,
+     "arm": "original",
+     "fps": 115.49
+    },
+    {
+     "block": 0,
+     "arm": "identity",
+     "fps": 114.78
+    },
+    {
+     "block": 1,
+     "arm": "identity",
+     "fps": 114.41
+    },
+    {
+     "block": 1,
+     "arm": "original",
+     "fps": 114.32
+    }
+   ],
+   "result_sha256": "1c438c5de6338ab03f42253249e584d2d5322451c5f2da52462366ecaec06082"
+  },
+  "dh_3840x2160_first_session": {
+   "state": "complete",
+   "restored": true,
+   "windows": [
+    {
+     "block": 0,
+     "arm": "original",
+     "fps": 84.33
+    },
+    {
+     "block": 0,
+     "arm": "identity",
+     "fps": 83.4
+    },
+    {
+     "block": 1,
+     "arm": "identity",
+     "fps": 83.31
+    },
+    {
+     "block": 1,
+     "arm": "original",
+     "fps": 83.22
+    }
+   ],
+   "result_sha256": "9316d493ed1a932fa7c77a7438836972ed16cf03bfc87276993155351c22ee6a"
+  },
+  "dh_3840x2160_timed_out": {
+   "state": "incomplete",
+   "restored": false,
+   "windows": [
+    {
+     "block": 0,
+     "arm": "original",
+     "fps": 91.46
+    },
+    {
+     "block": 0,
+     "arm": "identity",
+     "fps": 89.69
+    },
+    {
+     "block": 1,
+     "arm": "identity",
+     "fps": 88.02
+    }
+   ],
+   "result_sha256": "1937926f832fd347631c21b91771309eddf9b1f35d8a28ebdd7ebd3aecf4d648"
+  }
+ }
+}

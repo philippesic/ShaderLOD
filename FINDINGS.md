@@ -71,6 +71,7 @@ Current answers within their stated scope. Read the linked result before applyin
 | F45 | Reused-session validation/comparisons, profiling and frozen campaigns passed scoped RTX 2080 Ti/Asahi controls, including sustained captures and recovery. This qualifies the workflow, not an optimization or universal small-effect sensitivity; F48 limits its speed sensitivity. | [Result](results/benchmark-workflows/result.md) |
 
 | F48 | Every retained RTX 2080 Ti window without an injected delay sat at the 60 FPS frame limiter, so that setup cannot show a speedup. Asahi agrees to about 0.25% on unchanged shaders once the warm-up covers the shader reload, for about two minutes of sustained capture; the later degradation is unexplained. With the limiter off on a virtual display, the 2080 Ti runs about 115 FPS at 3840×2160, where the GPU limits the frame, and Reimagined with Distant Horizons validates there. Six fresh unchanged-shader sessions bound the median effect within about 0.1 percentage points at 4K and 0.2 at 1440p; arm order must be balanced within a session because throughput declines as it runs. | [Result](results/benchmark-sensitivity-audit/result.md) |
+| F49 | At 4K on the RTX 2080 Ti, Distant Horizons added 3.2 ms to an 8.7 ms Reimagined frame; its `LOD Opaque` draw (2.37 ms, about two thirds per-pixel) was the most expensive group in the frame, and DH took about 2.3 ms of render-thread CPU. One view; candidate areas, not proven savings. | [Result](results/dh-render-cost/result.md) |
 
 ## Additional historical lessons and extraction
 
