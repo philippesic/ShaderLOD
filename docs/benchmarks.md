@@ -53,7 +53,7 @@ Build current classes and JAR before opening a client. Use the allocated display
 
 ```
 ./check --full
-JAVA_HOME="$PWD/.local/tools/jdks/jdk-21.0.13+9" ./gradlew --no-daemon writeFunctionalLaunch -PfunctionalProbe
+GRADLE_USER_HOME="$PWD/.local/gradle" JAVA_HOME="$PWD/.local/tools/jdks/jdk-21.0.13+9" ./gradlew --no-daemon writeFunctionalLaunch -PfunctionalProbe
 python3 -m shaderlod_host session-open --launch build/moddev/functional-launch.json --profile run-client-absent-dh --world ShaderLOD-Smoke --display .local/display/environment.json --ownership-root .local/ownership --session .local/artifacts/fresh-session --timeout 900
 ```
 

@@ -60,6 +60,7 @@ def display_publication() -> dict[str, object]:
 def build_environment(repository: Path) -> dict[str, str]:
     environment = dict(os.environ)
     environment["JAVA_HOME"] = str(repository / ".local/tools/jdks/jdk-21.0.13+9")
+    environment["GRADLE_USER_HOME"] = str(repository / ".local/gradle")
     return environment
 
 

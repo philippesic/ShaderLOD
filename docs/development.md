@@ -49,7 +49,7 @@ pins and repair/update paths. Run `./check --full` for the complete portable gat
 To build a development JAR after setup, use the pinned JDK:
 
 ```
-JAVA_HOME="$PWD/.local/tools/jdks/jdk-21.0.13+9" ./gradlew --no-daemon jar
+GRADLE_USER_HOME="$PWD/.local/gradle" JAVA_HOME="$PWD/.local/tools/jdks/jdk-21.0.13+9" ./gradlew --no-daemon jar
 ```
 
 The shipping JAR is `build/libs/shaderlod-0.1.0.jar`. The development probe JAR is

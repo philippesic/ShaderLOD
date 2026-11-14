@@ -53,7 +53,7 @@ Each failure starts with a rule ID. Fix the cause; do not weaken the rule. A rul
 | S3 | Nested `AGENTS.md`/`CLAUDE.md`, or `CLAUDE.md` other than `@AGENTS.md` | Keep one root `AGENTS.md`; edit it instead |
 | S4 | Tracked binaries, raw outputs, generated files, oversized authored files | Keep raw output outside Git; declare legitimate assets with digest and purpose in `checks/fixtures.json` |
 | S5 | Status/history documents, task files without the template, findings without scope or evidence hash | Put open work in `tasks/NAME.md`, a short map in `FINDINGS.md` linking result pages with scope, evidence level and `sha256:` provenance |
-| T-* | Real third-party tool failures (formatters, types, tests, architecture) | Read the tool output above the failure. Python formatting: run the command printed with T-PFMT. Java and Gradle formatting: `JAVA_HOME="$PWD/.local/tools/jdks/jdk-21.0.13+9" ./gradlew --no-daemon -q spotlessApply` |
+| T-* | Real third-party tool failures (formatters, types, tests, architecture) | Read the tool output above the failure. Python formatting: run the command printed with T-PFMT. Java and Gradle formatting: `GRADLE_USER_HOME="$PWD/.local/gradle" JAVA_HOME="$PWD/.local/tools/jdks/jdk-21.0.13+9" ./gradlew --no-daemon -q spotlessApply` |
 
 A failing run ends with one line naming the failed Gradle task, for example `CHECK: partial FAIL in :commentBan`; the rule lines above it give the location.
 
