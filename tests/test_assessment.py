@@ -30,6 +30,7 @@ def run_fixture(
     jvm: int,
     multiplier: float = 1.2,
     client_options: dict[str, object] | None = None,
+    blocks: int = 2,
 ) -> Path:
     if client_options is None:
         client_options = {"max_fps": 260, "vsync": False}
@@ -39,11 +40,20 @@ def run_fixture(
             / "benchmarks/comparisons/asahi-null.json"
         ).read_bytes()
     )
-    plan = ComparisonPlan.decode(spec | {"scope": "contribution"})
+    plan = ComparisonPlan.decode(
+        spec | {"scope": "contribution", "blocks": blocks, "budget_ms": 200000}
+    )
     root.mkdir()
     (root / "plan.json").write_text(json.dumps({"definition": plan.wire()}))
     rows = []
-    for i, arm in enumerate((policy.reference, policy.candidate)):
+    arms = (policy.reference, policy.candidate)
+    schedule = [
+        (block, arm)
+        for block in range(blocks)
+        for arm in (arms if block % 2 == 0 else arms[::-1])
+    ]
+    for attempt, (block, arm) in enumerate(schedule):
+        i = arms.index(arm)
         rate = 60 * (multiplier if i else 1)
         interval = round(1000000000 / rate)
         count = round(rate * 10)
@@ -118,13 +128,13 @@ def run_fixture(
                 ],
             },
         }
-        directory = root / ("attempt-" + str(i + 1))
+        directory = root / ("attempt-" + str(attempt + 1))
         summary = save_live_capture(observation, directory)
         rows.append(
             {
                 "case": "coast-pan",
                 "arm": arm,
-                "block": 0,
+                "block": block,
                 "attempt": directory.name,
                 "selection": selected,
                 "summary": summary,
@@ -185,6 +195,22 @@ def test_acceptance_needs_independent_sessions_and_quality(tmp_path: Path) -> No
     result = assess(policy, reused, review(policy, reused))
     assert result["recommendation"] == "do_not_promote"
     assert result["problems"]
+
+
+def test_unbalanced_arm_order_cannot_pass(tmp_path: Path) -> None:
+    policy = QualificationPolicy.decode(policy_spec())
+    for blocks in (1, 3):
+        runs = [
+            run_fixture(
+                tmp_path / (str(blocks) + "-" + str(i)), policy, i, blocks=blocks
+            )
+            for i in range(6)
+        ]
+        result = assess(policy, runs, review(policy, runs))
+        assert result["recommendation"] == "do_not_promote"
+        problems = result["problems"]
+        assert isinstance(problems, list)
+        assert any("unbalanced" in str(problem) for problem in problems)
 
 
 def test_frame_limited_or_unobserved_throughput_cannot_pass(tmp_path: Path) -> None:

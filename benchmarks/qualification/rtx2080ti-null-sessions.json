@@ -44,10 +44,10 @@
           "delay_ms": 0
         }
       ],
-      "blocks": 3,
+      "blocks": 4,
       "window_ms": 10000,
       "warmup_ms": 8000,
-      "budget_ms": 180000,
+      "budget_ms": 220000,
       "seed": 7
     },
     {
@@ -93,10 +93,10 @@
           "delay_ms": 0
         }
       ],
-      "blocks": 3,
+      "blocks": 4,
       "window_ms": 10000,
       "warmup_ms": 8000,
-      "budget_ms": 180000,
+      "budget_ms": 220000,
       "seed": 7
     },
     {
@@ -142,10 +142,10 @@
           "delay_ms": 0
         }
       ],
-      "blocks": 3,
+      "blocks": 4,
       "window_ms": 10000,
       "warmup_ms": 8000,
-      "budget_ms": 180000,
+      "budget_ms": 220000,
       "seed": 7
     },
     {
@@ -191,10 +191,10 @@
           "delay_ms": 0
         }
       ],
-      "blocks": 3,
+      "blocks": 4,
       "window_ms": 10000,
       "warmup_ms": 8000,
-      "budget_ms": 180000,
+      "budget_ms": 220000,
       "seed": 7
     },
     {
@@ -240,10 +240,10 @@
           "delay_ms": 0
         }
       ],
-      "blocks": 3,
+      "blocks": 4,
       "window_ms": 10000,
       "warmup_ms": 8000,
-      "budget_ms": 180000,
+      "budget_ms": 220000,
       "seed": 7
     },
     {
@@ -289,10 +289,10 @@
           "delay_ms": 0
         }
       ],
-      "blocks": 3,
+      "blocks": 4,
       "window_ms": 10000,
       "warmup_ms": 8000,
-      "budget_ms": 180000,
+      "budget_ms": 220000,
       "seed": 7
     }
   ],
@@ -313,5 +313,5 @@
     "quality_criteria": "Harness no-change control only; no optimization or product acceptance"
   },
   "startup_ms": 120000,
-  "budget_ms": 1900000
+  "budget_ms": 2200000
 }

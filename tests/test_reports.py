@@ -108,7 +108,7 @@ def test_campaign_verification_accepts_preserved_windows_paths(tmp_path: Path) -
                 "sessions": [definition, definition],
                 "policy": policy.wire(),
                 "startup_ms": 120000,
-                "budget_ms": 600000,
+                "budget_ms": 900000,
             }
         )
     )

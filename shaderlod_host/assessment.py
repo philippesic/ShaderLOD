@@ -190,6 +190,22 @@ def assess(
             )
         if not set(policy.cases) <= {case.identity for case in plan.cases}:
             problems.append(str(path) + ": policy coverage missing from frozen plan")
+        leading: dict[str, list[str]] = {}
+        for row in rows:
+            if (
+                isinstance(row, dict)
+                and row.get("arm") in {policy.reference, policy.candidate}
+                and isinstance(row.get("case"), str)
+            ):
+                firsts = leading.setdefault(str(row["case"]), [])
+                if len(firsts) <= int(row.get("block", 0)):
+                    firsts.append(str(row["arm"]))
+        for case, firsts in leading.items():
+            if 2 * firsts.count(policy.reference) != len(firsts):
+                problems.append(
+                    case
+                    + ": arm order is unbalanced within a session, so steady drift biases the effect"
+                )
         for index, row in enumerate(rows):
             if (
                 not isinstance(row, dict)
